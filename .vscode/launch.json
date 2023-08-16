@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "inputs": [
+      {
+        "id": "project",
+        "type": "pickString",
+        "description": "Which project?",
+        "options": [
+          {"value": "packages/wireyui-core"},
+        ]
+      }
+    ],
+    "configurations": [
+      {
+          "type": "node",
+          "request": "attach",
+          "name": "Attach (node)",
+          "processId": "${command:PickProcess}"
+      },
+      {
+        "name": "Debug Windows",
+        "cwd": "${workspaceFolder}",
+        "type": "reactnative",
+        "request": "launch",
+        "platform": "windows"
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest: current file",
+        //"env": { "NODE_ENV": "test" },
+        "runtimeArgs": ["--inspect-brk"],
+        "cwd": "${workspaceFolder}/${input:project}",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+        "args": ["${fileBasenameNoExtension}", "--runInBand", "--config", "${workspaceFolder}/${input:project}/jest.config.cjs"],
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+  

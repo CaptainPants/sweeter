@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.indentSize": 4,
+		"javascript.preferences.quoteStyle": "single",
+		"typescript.tsdk": "node_modules\\typescript\\lib",
+		"search.exclude": {
+			"**/build": true
+		},
+		"files.exclude": {
+			"**/node_modules": true
+		}
+	}
+}

@@ -7,3 +7,5 @@ build
 # error logs from yarn
 yarn-error.log
 msbuild.binlog
+
+**/*.tsbuildinfo

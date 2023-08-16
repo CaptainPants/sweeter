@@ -13,16 +13,15 @@
         ".": "./build/index.js"
     },
     "scripts": {
+        "clean": "rimraf build",
         "typecheck": "tsc",
         "format": "prettier --write src",
-        "lint": "eslint src/**/*.{ts,tsx}",
+        "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "test": "jest --silent=false src",
-        "test:only": "jest --silent=false",
         "verify:fix": "corepack pnpm run format && corepack pnpm run lint --fix && corepack pnpm run test && corepack pnpm run typecheck",
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
-        "clean": "rimraf build",
-        "build": "tsc",
-        "watch": "tsc --watch"
+        "watch": "tsc --watch",
+        "build": "tsc"
     },
     "engines": {
         "pnpm": "8.6.7"

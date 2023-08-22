@@ -6,6 +6,7 @@
 	],
 	"settings": {
 		"editor.indentSize": 4,
+		"editor.detectIndentation": false,
 		"javascript.preferences.quoteStyle": "single",
 		"typescript.tsdk": "node_modules\\typescript\\lib",
 		"search.exclude": {

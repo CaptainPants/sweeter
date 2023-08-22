@@ -12,7 +12,8 @@
         "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "noEmit": true,
+        "noEmit": false,
+        "declaration": true,
         /*"jsx": "react-jsx",*/
         "incremental": true,
         "esModuleInterop": true,

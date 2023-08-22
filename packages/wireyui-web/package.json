@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/wireyui-core",
+    "name": "@captainpants/wireyui-web",
     "version": "0.0.3",
     "repository": "https://github.com/CaptainPants/wireyui-core",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
@@ -10,22 +10,23 @@
     "main": "./build/index.js",
     "types": "./build/index.d.ts",
     "exports": {
-        ".": "./build/index.js",
-        "./jsx-runtime": "./build/jsx-runtime.js"
+        ".": "./build/index.js"
     },
     "scripts": {
-        "clean": "rimraf build && rimraf tsconfig.tsbuildinfo",
+        "clean": "rimraf build",
         "typecheck": "tsc",
         "format": "prettier --write src",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "test": "jest --silent=false src",
         "verify:fix": "corepack pnpm run format && corepack pnpm run lint --fix && corepack pnpm run test && corepack pnpm run typecheck",
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
-        "watch": "pnpm run copy_jsx_defs && tsc --watch",
-        "build": "pnpm run copy_jsx_defs &&tsc",
-        "copy_jsx_defs": "copyfiles -u 1 ./src/definitions.d.ts ./build"
+        "watch": "tsc --watch",
+        "build": "tsc"
     },
     "engines": {
         "pnpm": "8.6.7"
+    },
+    "dependencies": {
+        "@captainpants/wireyui-core": "workspace:^"
     }
 }

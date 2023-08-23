@@ -11,7 +11,7 @@ export interface Element {
     readonly type: ElementType;
     readonly key: Key | null | undefined;
     readonly props: {
-        readonly children?: unknown;
+        readonly children?: unknown[];
     }
 }
 
@@ -27,11 +27,11 @@ export type Component<Props = {}> = (props: Props, factoryContext: FactoryContex
  */
 export interface NonComponentProps {};
 
-export type Props<ComponentType extends ElementType> = ComponentType extends Component<infer Props> ? Props : NonComponentProps;
-export type Attributes<ComponentType extends ElementType> = Props<ComponentType> & IntrinsicAttributes;
-export type ChildrenType<ComponentType extends ElementType> = Props<ComponentType> extends { children: infer Children } ? Children : never[];
+export type PropsFor<ComponentType extends () => Element> = ComponentType extends Component<infer Props> ? Props : NonComponentProps;
+export type Attributes<ComponentType extends () => Element> = PropsFor<ComponentType> & IntrinsicAttributes;
+export type ChildrenTypeFor<ComponentType extends () => Element> = PropsFor<ComponentType> extends { children: infer Children } ? Children : never;
 
 /**
  * Convenience variant of ChildrenType that has result as a tuple that can be used on a rest parameter (e.g. for _jsx)
  */
-export type ChildrenTuple<ComponentType extends ElementType> = Props<ComponentType> extends { children: infer Children } ? (Children extends unknown[] ? Children : [Children]) : [];
+export type ChildrenTupleFor<ComponentType extends () => Element> = PropsFor<ComponentType> extends { children: infer Children } ? (Children extends unknown[] ? Children : [Children]) : [];

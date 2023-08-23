@@ -1,8 +1,8 @@
 
 import * as types from './types.js';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         type Element = types.Element;
         type IntrinsicAttributes = types.IntrinsicAttributes;  

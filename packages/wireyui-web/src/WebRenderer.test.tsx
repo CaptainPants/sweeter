@@ -1,11 +1,11 @@
-import { Root } from "./Root";
+import { WebRenderer } from "./WebRenderer";
 
 function Component() {
     return <div id="test" />;
 }
 
 it('Root', () => {
-    const root = new Root();
+    const root = new WebRenderer();
 
     root.render(document.getElementById('#id')!, <Component />)
 });

@@ -1,9 +1,13 @@
-import { Attributes, ChildrenTuple, ElementType } from "./types";
+import { Attributes, ChildrenTupleFor, Element } from "./types";
 
-export function _jsx<ComponentType extends ElementType>(type: ComponentType, attributes: Attributes<ComponentType>, ...children: ChildrenTuple<ComponentType>): JSX.Element {
+export function _jsx<ComponentType extends () => Element>(
+    type: ComponentType, 
+    attributes: Attributes<ComponentType>, 
+    ...children: ChildrenTupleFor<ComponentType>
+): JSX.Element {
     const { key, ...restOfAttributes } = attributes;
 
-    const props: { children?: unknown } = restOfAttributes;
+    const props: { children?: unknown[] } = restOfAttributes;
     props.children = children;
 
     const result: JSX.Element = {

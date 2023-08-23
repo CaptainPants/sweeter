@@ -8,6 +8,7 @@
     "verify:fix": "lerna run verify:fix",
     "verify": "lerna run verify",
     "format": "lerna run format",
+    "test": "lerna run test",
     "watch-libs": "lerna run --stream --concurrency= watch --scope @captainpants/core",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",
     "publish-all:dry-run": "pnpm run publish-all --dry-run",

@@ -4,7 +4,7 @@ import * as types from './types.js';
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
-        type Element = types.Element;
+        type Element = types.JSXElement;
         type IntrinsicAttributes = types.IntrinsicAttributes;  
         
         interface ElementChildrenAttribute {

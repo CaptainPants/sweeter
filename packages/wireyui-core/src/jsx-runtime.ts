@@ -1,6 +1,6 @@
-import { Attributes, ChildrenTupleFor, Element } from "./types";
+import { Attributes, ChildrenTupleFor, JSXElement } from "./types";
 
-export function _jsx<ComponentType extends () => Element>(
+export function jsx<ComponentType extends () => JSXElement>(
     type: ComponentType, 
     attributes: Attributes<ComponentType>, 
     ...children: ChildrenTupleFor<ComponentType>

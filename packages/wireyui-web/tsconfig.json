@@ -4,10 +4,6 @@
         "src/**/*.ts",
         "src/**/*.tsx"
     ],
-    "exclude": [
-        "src/**/*.test.ts",
-        "src/**/*.test.tsx"
-    ],
     "compilerOptions": {
         "jsxImportSource": "@captainpants/wireyui-core",
         "jsx": "react-jsx",

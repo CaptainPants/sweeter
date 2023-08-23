@@ -1,3 +1,4 @@
+import { JSXElement } from "@captainpants/wireyui-core";
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -13,7 +14,7 @@ export class WebRenderer{
         this.#options = options ?? {};
     }
 
-    render(element: Element, rootComponent: JSX.Element) {
-        throw 'Test';
+    render(element: Element, rootComponent: JSXElement) {
+        throw 'Something';
     }
 }

@@ -15,15 +15,14 @@
     },
     "scripts": {
         "clean": "rimraf build && rimraf tsconfig.tsbuildinfo",
-        "typecheck": "tsc",
+        "typecheck": "tsc --noEmit",
         "format": "prettier --write src",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "test": "jest --silent=false src",
         "verify:fix": "corepack pnpm run format && corepack pnpm run lint --fix && corepack pnpm run test && corepack pnpm run typecheck",
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
-        "watch": "pnpm run copy_jsx_defs && tsc --watch",
-        "build": "pnpm run copy_jsx_defs && tsc && rimraf --glob \"./build/**/*.test.{d.ts,js}\"",
-        "copy_jsx_defs": "copyfiles -u 1 ./src/definitions.d.ts ./build"
+        "watch": "tsc --project ./tsconfig.build.json --watch",
+        "build": "tsc --project ./tsconfig.build.json"
     },
     "engines": {
         "pnpm": "8.6.7"

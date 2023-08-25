@@ -1,4 +1,4 @@
-import { WebRenderer } from "./WebRenderer";
+import { WebRenderer } from './WebRenderer';
 
 function Component() {
     return <div id="test" />;
@@ -7,5 +7,5 @@ function Component() {
 it('Root', () => {
     const root = new WebRenderer();
 
-    root.render(document.getElementById('#id')!, <Component />)
+    root.start(document.getElementById('#id')!, <Component />);
 });

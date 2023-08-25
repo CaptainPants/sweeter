@@ -5,6 +5,7 @@
         "src/**/*.tsx"
     ],
     "compilerOptions": {
+        "rootDir": "src",
         "lib": [
             "ES2020", // No DOM here
         ],

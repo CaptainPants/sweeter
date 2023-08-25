@@ -5,6 +5,7 @@
         "src/**/*.tsx"
     ],
     "compilerOptions": {
+        "rootDir": "src",
         "jsxImportSource": "@captainpants/wireyui-core",
         "jsx": "react-jsx",
         "outDir": "./build"

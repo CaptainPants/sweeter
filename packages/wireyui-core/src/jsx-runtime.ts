@@ -1,8 +1,13 @@
-import { Attributes, ChildrenTupleFor, JSXElement } from "./types";
+import {
+    Attributes,
+    ChildrenTupleFor,
+    JSXElement,
+    JSXSingleElement,
+} from './types';
 
-export function jsx<ComponentType extends () => JSXElement>(
-    type: ComponentType, 
-    attributes: Attributes<ComponentType>, 
+export function jsx<ComponentType extends () => JSXSingleElement>(
+    type: ComponentType,
+    attributes: Attributes<ComponentType>,
     ...children: ChildrenTupleFor<ComponentType>
 ): JSX.Element {
     const { key, ...restOfAttributes } = attributes;
@@ -10,10 +15,10 @@ export function jsx<ComponentType extends () => JSXElement>(
     const props: { children?: unknown[] } = restOfAttributes;
     props.children = children;
 
-    const result: JSX.Element = {
+    const result: JSXElement = {
         type,
         props: props,
-        key
+        key,
     };
 
     return result;

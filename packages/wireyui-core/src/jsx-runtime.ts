@@ -1,5 +1,5 @@
 import {
-    Attributes,
+    PropsWithIntrinsicAttributesFor,
     ChildrenTupleFor,
     JSXElement,
     JSXSingleElement,
@@ -7,9 +7,17 @@ import {
 
 export function jsx<ComponentType extends () => JSXSingleElement>(
     type: ComponentType,
-    attributes: Attributes<ComponentType>,
+    attributes: PropsWithIntrinsicAttributesFor<ComponentType>,
     ...children: ChildrenTupleFor<ComponentType>
 ): JSX.Element {
+    if (!attributes.key && children.length < 1) {
+        return {
+            type,
+            props: attributes as { readonly children?: unknown[] },
+            key: undefined
+        };
+    }
+    
     const { key, ...restOfAttributes } = attributes;
 
     const props: { children?: unknown[] } = restOfAttributes;
@@ -17,7 +25,7 @@ export function jsx<ComponentType extends () => JSXSingleElement>(
 
     const result: JSXElement = {
         type,
-        props: props,
+        props,
         key,
     };
 

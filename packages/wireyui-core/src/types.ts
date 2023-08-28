@@ -9,7 +9,7 @@ type Key = string | number;
  */
 export interface JSXSingleElement {
     readonly type: ElementType;
-    readonly key: Key | null | undefined;
+    readonly key: Key | undefined;
     readonly props: {
         readonly children?: unknown[];
     };
@@ -24,14 +24,14 @@ export type JSXElement =
     | JSXElement[];
 
 export interface IntrinsicAttributes {
-    key?: Key | null | undefined;
+    readonly key?: Key | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Component<Props = {}> = (
     props: Props,
     factoryContext: FactoryContext,
-) => JSX.Element;
+) => JSXSingleElement;
 
 /**
  * The goal is to let the -web package provide this
@@ -40,8 +40,10 @@ export interface NonComponentProps {}
 
 export type PropsFor<ComponentType extends () => JSXSingleElement> =
     ComponentType extends Component<infer Props> ? Props : NonComponentProps;
-export type Attributes<ComponentType extends () => JSXSingleElement> =
+
+export type PropsWithIntrinsicAttributesFor<ComponentType extends () => JSXSingleElement> =
     PropsFor<ComponentType> & IntrinsicAttributes;
+
 export type ChildrenTypeFor<ComponentType extends () => JSXSingleElement> =
     PropsFor<ComponentType> extends { children: infer Children }
         ? Children

@@ -10,7 +10,10 @@
     "main": "./build/index.js",
     "types": "./build/index.d.ts",
     "exports": {
-        ".": "./build/index.js"
+        ".": {
+            "import": "./build/index.js",
+            "require": "./build/cjs/index.js"
+        }
     },
     "scripts": {
         "clean": "rimraf build",
@@ -21,7 +24,9 @@
         "verify:fix": "corepack pnpm run format && corepack pnpm run lint --fix && corepack pnpm run test && corepack pnpm run typecheck",
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
         "watch": "tsc --project ./tsconfig.build.json --watch",
-        "build": "tsc --project ./tsconfig.build.json"
+        "build:esm": "tsc --project ./tsconfig.build.json",
+        "build:cjs": "rollup --config ./rollup.config.mjs",
+        "build": "pnpm run build:esm && pnpm run build:cjs"
     },
     "engines": {
         "pnpm": "8.6.7"

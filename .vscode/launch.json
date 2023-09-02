@@ -7,6 +7,7 @@
         "description": "Which project?",
         "options": [
           {"value": "packages/wireyui-core"},
+          {"value": "packages/wireyui-web"},
         ]
       }
     ],
@@ -32,7 +33,7 @@
         "runtimeArgs": ["--inspect-brk"],
         "cwd": "${workspaceFolder}/${input:project}",
         "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
-        "args": ["${fileBasenameNoExtension}", "--runInBand", "--config", "${workspaceFolder}/${input:project}/jest.config.cjs"],
+        "args": ["${fileBasenameNoExtension}", "--runInBand", "--config", "${workspaceFolder}/${input:project}/jest.config.mjs"],
         "console": "integratedTerminal"
       }
     ]

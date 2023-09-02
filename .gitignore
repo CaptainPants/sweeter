@@ -9,3 +9,4 @@ yarn-error.log
 msbuild.binlog
 
 **/*.tsbuildinfo
+**/.rollup.cache

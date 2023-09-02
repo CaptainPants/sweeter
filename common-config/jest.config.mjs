@@ -2,6 +2,5 @@
 export default {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    resolver: 'ts-jest-resolver',
-    transformIgnorePatterns: []
+    resolver: 'ts-jest-resolver'
 };

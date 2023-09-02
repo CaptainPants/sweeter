@@ -4,7 +4,7 @@ export default {
 
     ],
     output: {
-        format: 'es',
+        format: 'commonjs',
         dir: './build/cjs'
     },
   };

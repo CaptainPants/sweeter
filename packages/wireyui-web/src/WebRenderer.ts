@@ -13,6 +13,6 @@ export class WebRenderer {
     }
 
     start(element: HTMLElement, rootComponent: JSXElement): void {
-        throw 'Something';
+        console.error('TODO');
     }
 }

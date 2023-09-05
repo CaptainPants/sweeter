@@ -14,10 +14,10 @@ export function jsx<ComponentType extends () => JSXSingleElement>(
         return {
             type,
             props: attributes as { readonly children?: unknown[] },
-            key: undefined
+            key: undefined,
         };
     }
-    
+
     const { key, ...restOfAttributes } = attributes;
 
     const props: { children?: unknown[] } = restOfAttributes;

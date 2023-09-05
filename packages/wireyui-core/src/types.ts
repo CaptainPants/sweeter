@@ -41,8 +41,9 @@ export interface NonComponentProps {}
 export type PropsFor<ComponentType extends () => JSXSingleElement> =
     ComponentType extends Component<infer Props> ? Props : NonComponentProps;
 
-export type PropsWithIntrinsicAttributesFor<ComponentType extends () => JSXSingleElement> =
-    PropsFor<ComponentType> & IntrinsicAttributes;
+export type PropsWithIntrinsicAttributesFor<
+    ComponentType extends () => JSXSingleElement,
+> = PropsFor<ComponentType> & IntrinsicAttributes;
 
 export type ChildrenTypeFor<ComponentType extends () => JSXSingleElement> =
     PropsFor<ComponentType> extends { children: infer Children }

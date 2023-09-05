@@ -1,4 +1,4 @@
-import { Signal } from "./Signal";
+import { Signal } from './Signal';
 
 export class MutableSignal<T> extends Signal<T> {
     constructor(initialValue: T) {

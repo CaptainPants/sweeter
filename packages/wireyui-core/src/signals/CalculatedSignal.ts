@@ -1,4 +1,4 @@
-import { Signal } from "./Signal";
+import { Signal } from './Signal';
 
 export class CalculatedSignal<T> extends Signal<T> {
     constructor(calculation: () => T) {

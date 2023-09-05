@@ -1,4 +1,4 @@
-import { SignalListener } from "./types";
+import { SignalListener } from './types';
 
 export class Signal<T> {
     constructor(initialValue: T) {
@@ -8,8 +8,7 @@ export class Signal<T> {
     #value: T;
     #listeners: Set<SignalListener<T>> = new Set();
 
-    public get value(): T
-    {
+    public get value(): T {
         return this.#value;
     }
 
@@ -22,6 +21,6 @@ export class Signal<T> {
 
         return () => {
             this.#listeners.delete(listener);
-        }
+        };
     }
 }

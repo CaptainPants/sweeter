@@ -4,3 +4,10 @@ interface SymbolConstructor {
     readonly asyncDispose: unique symbol;
 }
 
+interface Disposable {
+    [Symbol.dispose](): void;
+}
+
+interface AsyncDisposable {
+    [Symbol.dispose](): void;
+}

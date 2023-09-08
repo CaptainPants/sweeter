@@ -13,10 +13,6 @@
         ".": {
             "import": "./build/index.js",
             "require": "./build/cjs/index.js"
-        },
-        "./jsx-runtime": {
-            "import": "./build/jsx-runtime.js",
-            "require": "./build/cjs/jsx-runtime.js"
         }
     },
     "scripts": {

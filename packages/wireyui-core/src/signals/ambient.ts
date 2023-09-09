@@ -7,15 +7,15 @@ export type AmbientSignalUsageListener<T> = (signal: Signal<T>) => void;
 const listenerStack: AmbientSignalUsageListener<unknown>[] = [];
 
 export function listenForSignalUsage(
+    callback: () => void,
     listener: AmbientSignalUsageListener<unknown>,
-): Disposable & { readonly listener: AmbientSignalUsageListener<unknown> } {
+): void {
     // This is just for giving useful error checks
     const previousTop = listenerStack[listenerStack.length - 1];
 
     listenerStack.push(listener);
 
-    return {
-        listener,
+    using _ = {
         [Symbol.dispose]() {
             const afterPopTop = listenerStack[listenerStack.length - 1];
 
@@ -28,4 +28,6 @@ export function listenForSignalUsage(
             }
         },
     };
+
+    callback();
 }

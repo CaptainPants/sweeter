@@ -13,11 +13,8 @@ declare global {
          * can use declaration merging to extend the definition of Element.
          */
         interface ElementAlternatives { 
-            html: HTMLElement;
-            svg: SVGElement;
+            "wireyui-web": HTMLElement | SVGElement;
         }
-        
-        //type Element = ElementType<ElementAlternatives>;
     }
 }
 

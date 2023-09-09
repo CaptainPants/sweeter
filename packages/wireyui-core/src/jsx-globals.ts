@@ -17,19 +17,13 @@ declare global {
          * can use declaration merging to extend the definition of Element.
          */
         interface ElementAlternatives { 
-            number: number;
-            string: string;
-            boolean: boolean;
-            null: null;
-            undefined: undefined;
+            "wireyui-core": number | string | boolean | null | undefined;
         }
 
         interface IntrinsicElements {
             core: { banana: number };
         }
-        
-        type ElementType<TAlternatives> = TAlternatives[keyof TAlternatives] | ElementType<TAlternatives>[];
 
-        type Element = ElementType<ElementAlternatives>;
+        type Element = ElementAlternatives[keyof ElementAlternatives] | Element[];
     }
 }

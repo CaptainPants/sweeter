@@ -13,7 +13,7 @@ export type Component<Props = {}> = (
 ) => JSXElement;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ElementTypeConstraint = Component<any> | string | undefined;
+export type ElementTypeConstraint = Component<any> | string;
 
 /**
  * The goal is to let the -web package provide this

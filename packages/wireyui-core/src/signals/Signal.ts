@@ -17,10 +17,34 @@ export class Signal<T> {
     }
 
     public listen(listener: SignalListener<T>): () => void {
+        const count = this.#listeners.size;
+
         this.#listeners.add(listener);
 
+        if (count === 1) {
+            this._firstListenerAttached();
+        }
+
         return () => {
-            this.#listeners.delete(listener);
+            this.unlisten(listener);
         };
+    }
+
+    public unlisten(listener: SignalListener<T>): void {
+        const count = this.#listeners.size;
+
+        this.#listeners.delete(listener);
+
+        if (count == 1) {
+            this._lastListenerDetached();
+        }
+    }
+
+    protected _lastListenerDetached() {
+
+    }
+
+    protected _firstListenerAttached() {
+
     }
 }

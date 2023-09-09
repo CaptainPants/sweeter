@@ -2,16 +2,21 @@ import { Signal } from '.';
 
 import '../internal/polyfill.js';
 
-export type AmbientSignalUsageListener<T> = (signal: Signal<T>) => void;
+type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 
-const listenerStack: AmbientSignalUsageListener<unknown>[] = [];
+const listenerStack: AmbientSignalUsageListener[] = [];
 
-export function listenForSignalUsage(
-    callback: () => void,
-    listener: AmbientSignalUsageListener<unknown>,
-): void {
+export function listenForSignalUsage<T>(
+    callback: () => T
+): { result: T, dependencies: Set<Signal<unknown>> } {
     // This is just for giving useful error checks
     const previousTop = listenerStack[listenerStack.length - 1];
+
+    const dependencies = new Set<Signal<unknown>>;
+
+    const listener = (signal: Signal<unknown>) => {
+        dependencies.add(signal);
+    }
 
     listenerStack.push(listener);
 
@@ -29,5 +34,10 @@ export function listenForSignalUsage(
         },
     };
 
-    callback();
+    const result = callback();
+
+    return {
+        result,
+        dependencies
+    }
 }

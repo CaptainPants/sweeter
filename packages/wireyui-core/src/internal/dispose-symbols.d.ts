@@ -8,5 +8,5 @@ interface Disposable {
 }
 
 interface AsyncDisposable {
-    [Symbol.dispose](): void;
+    [Symbol.asyncDispose](): void;
 }

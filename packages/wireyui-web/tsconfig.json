@@ -6,7 +6,7 @@
     ],
     "compilerOptions": {
         "rootDir": "src",
-        "jsxImportSource": "@captainpants/wireyui-core",
+        "jsxImportSource": "@captainpants/wireyui-web",
         "jsx": "react-jsx",
         "outDir": "./build"
     }

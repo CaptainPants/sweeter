@@ -1,5 +1,3 @@
-
-
 export interface FactoryContext {}
 
 export type JSXKey = string | number;
@@ -18,10 +16,15 @@ export type ElementTypeConstraint = Component<any> | string;
 /**
  * The goal is to let the -web package provide this
  */
-export type NonComponentProps<ElementName> = ElementName extends keyof JSX.IntrinsicElements ? JSX.IntrinsicElements[ElementName] : { _unrecognized: 1 };
+export type NonComponentProps<ElementName> =
+    ElementName extends keyof JSX.IntrinsicElements
+        ? JSX.IntrinsicElements[ElementName]
+        : { _unrecognized: 1 };
 
 export type PropsFor<ComponentType extends ElementTypeConstraint> =
-    ComponentType extends Component<infer Props> ? Props : NonComponentProps<ComponentType>;
+    ComponentType extends Component<infer Props>
+        ? Props
+        : NonComponentProps<ComponentType>;
 
 export type PropsWithIntrinsicAttributesFor<
     ComponentType extends ElementTypeConstraint,

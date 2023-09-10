@@ -12,8 +12,8 @@ declare global {
          * This is not standard. I am hoping that by structuring in this way we
          * can use declaration merging to extend the definition of Element.
          */
-        interface ElementAlternatives { 
-            "wireyui-web": HTMLElement | SVGElement;
+        interface ElementAlternatives {
+            'wireyui-web': HTMLElement | SVGElement;
         }
     }
 }

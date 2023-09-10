@@ -12,6 +12,10 @@ export class Signal<T> {
         return this.#value;
     }
 
+    public get anyListeners() {
+        return this.#listeners.size > 0;
+    }
+
     protected _set(value: T) {
         this.#value = value;
     }
@@ -40,11 +44,7 @@ export class Signal<T> {
         }
     }
 
-    protected _lastListenerDetached() {
+    protected _lastListenerDetached() {}
 
-    }
-
-    protected _firstListenerAttached() {
-
-    }
+    protected _firstListenerAttached() {}
 }

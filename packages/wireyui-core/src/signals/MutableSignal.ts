@@ -1,6 +1,6 @@
-import { Signal } from './Signal';
+import { SignalBase } from './SignalBase';
 
-export class MutableSignal<T> extends Signal<T> {
+export class MutableSignal<T> extends SignalBase<T> {
     constructor(initialValue: T) {
         super(initialValue);
     }

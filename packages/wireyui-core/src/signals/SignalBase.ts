@@ -1,6 +1,7 @@
-import { SignalListener } from './types';
+import { announceSignalUsage } from './ambient';
+import { Signal, SignalListener } from './types';
 
-export class Signal<T> {
+export class SignalBase<T> implements Signal<T> {
     constructor(initialValue: T) {
         this.#value = initialValue;
     }
@@ -9,6 +10,11 @@ export class Signal<T> {
     #listeners: Set<SignalListener<T>> = new Set();
 
     public get value(): T {
+        announceSignalUsage(this);
+        return this.#value;
+    }
+
+    public peek(): T {
         return this.#value;
     }
 
@@ -17,7 +23,12 @@ export class Signal<T> {
     }
 
     protected _set(value: T) {
+        const previous = this.#value;
         this.#value = value;
+
+        for (const listener of this.#listeners) {
+            listener(previous, value);
+        }
     }
 
     public listen(listener: SignalListener<T>): () => void {

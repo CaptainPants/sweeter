@@ -1,10 +1,11 @@
-import { Signal } from './Signal';
-import { listenForSignalUsage } from './ambient';
+import { SignalBase } from './SignalBase';
+import { collectSignalUsage } from './ambient';
+import { Signal } from './types';
 
-export class CalculatedSignal<T> extends Signal<T> {
+export class CalculatedSignal<T> extends SignalBase<T> {
     constructor(calculation: () => T) {
         const { result: initialValue, dependencies } =
-            listenForSignalUsage(calculation);
+            collectSignalUsage(calculation);
 
         super(initialValue);
 
@@ -23,7 +24,7 @@ export class CalculatedSignal<T> extends Signal<T> {
     };
 
     #recalculate() {
-        const { result, dependencies: nextDependencies } = listenForSignalUsage(
+        const { result, dependencies: nextDependencies } = collectSignalUsage(
             this.#calculation,
         );
 

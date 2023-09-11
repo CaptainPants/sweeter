@@ -1,4 +1,9 @@
-export type SignalListener<T> = (previous: T, next: T) => void;
+import { SignalState } from './SignalState';
+
+export type SignalListener<T> = (
+    previous: SignalState<T>,
+    next: SignalState<T>,
+) => void;
 
 export interface Signal<T> {
     readonly value: T;

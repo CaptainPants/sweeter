@@ -2,11 +2,11 @@ import { SignalBase } from './SignalBase';
 
 export class MutableSignal<T> extends SignalBase<T> {
     constructor(initialValue: T) {
-        super(initialValue);
+        super({ mode: 'SUCCESS', value: initialValue });
     }
 
     set(value: T): void {
-        super._set(value);
+        super._set({ mode: 'SUCCESS', value: value });
     }
 }
 

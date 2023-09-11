@@ -1,25 +1,39 @@
 import { SignalBase } from './SignalBase';
+import { SignalState } from './SignalState';
 import { collectSignalUsage } from './ambient';
 import { Signal } from './types';
 
+function wrap<T>(callback: () => T): () => SignalState<T> {
+    return () => {
+        try {
+            const result = callback();
+            return { mode: 'SUCCESS', value: result };
+        } catch (ex) {
+            return { mode: 'ERROR', error: ex };
+        }
+    };
+}
+
 export class CalculatedSignal<T> extends SignalBase<T> {
     constructor(calculation: () => T) {
+        const wrapped = wrap(calculation);
+
         const { result: initialValue, dependencies } =
-            collectSignalUsage(calculation);
+            collectSignalUsage(wrapped);
 
         super(initialValue);
 
-        this.#calculation = calculation;
+        this.#calculation = wrapped;
         this.#dependencies = dependencies;
     }
 
-    #calculation: () => T;
+    #calculation: () => SignalState<T>;
     #dependencies: Set<Signal<unknown>>;
 
     /**
      * Bound as its used as its passed to .listen calls.
      */
-    #dependentListener = () => {
+    #dependencyListener = () => {
         this.#recalculate();
     };
 
@@ -48,20 +62,20 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #attach() {
         for (const dep of this.#dependencies) {
-            dep.listen(this.#dependentListener);
+            dep.listen(this.#dependencyListener);
         }
     }
 
     #detach() {
         for (const dep of this.#dependencies) {
-            dep.unlisten(this.#dependentListener);
+            dep.unlisten(this.#dependencyListener);
         }
     }
 
     #detachExcept(set: Set<Signal<unknown>>) {
         for (const dep of this.#dependencies) {
             if (!set.has(dep)) {
-                dep.unlisten(this.#dependentListener);
+                dep.unlisten(this.#dependencyListener);
             }
         }
     }

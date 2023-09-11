@@ -11,10 +11,10 @@ export function announceSignalUsage(signal: Signal<unknown>): void {
 }
 
 export function untrack(callback: () => void): void {
-    callForSignalUsage(callback, () => {});
+    callAndInvokeListenerForEachDependency(callback, () => {});
 }
 
-export function collectSignalUsage<T>(callback: () => T): {
+export function callAndReturnDependencies<T>(callback: () => T): {
     result: T;
     dependencies: Set<Signal<unknown>>;
 } {
@@ -24,27 +24,22 @@ export function collectSignalUsage<T>(callback: () => T): {
         dependencies.add(signal);
     };
 
-    const result = callForSignalUsage(callback, listener);
+    const result = callAndInvokeListenerForEachDependency(callback, listener);
 
     return { result, dependencies };
 }
 
-export function callForSignalUsage<T>(
+export function callAndInvokeListenerForEachDependency<T>(
     callback: () => T,
     listener: AmbientSignalUsageListener,
 ): T {
-    // This is just for giving useful error checks
-    const previousTop = listenerStack[listenerStack.length - 1];
-
     listenerStack.push(listener);
 
     using _ = {
         [Symbol.dispose]() {
-            const afterPopTop = listenerStack[listenerStack.length - 1];
+            const removed = listenerStack.pop();
 
-            listenerStack.pop();
-
-            if (afterPopTop !== previousTop) {
+            if (removed !== listener) {
                 throw new Error(
                     'Unexpected top element on listener stack, this probably indicates a missing dispose or out of order disposal.',
                 );

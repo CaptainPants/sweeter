@@ -5,7 +5,7 @@ export class MutableSignal<T> extends SignalBase<T> {
         super({ mode: 'SUCCESS', value: initialValue });
     }
 
-    set(value: T): void {
+    update(value: T): void {
         super._set({ mode: 'SUCCESS', value: value });
     }
 }

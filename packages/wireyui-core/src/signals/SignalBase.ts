@@ -59,7 +59,8 @@ export class SignalBase<T> implements Signal<T> {
 
         this.#listeners.add(listener);
 
-        if (count === 1) {
+        // Was 0, increased to 1
+        if (count === 0) {
             this._firstListenerAttached();
         }
 

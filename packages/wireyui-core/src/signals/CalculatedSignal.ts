@@ -1,6 +1,6 @@
 import { SignalBase } from './SignalBase';
 import { SignalState } from './SignalState';
-import { collectSignalUsage } from './ambient';
+import { callAndReturnDependencies } from './ambient';
 import { Signal } from './types';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
@@ -19,7 +19,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         const wrapped = wrap(calculation);
 
         const { result: initialValue, dependencies } =
-            collectSignalUsage(wrapped);
+            callAndReturnDependencies(wrapped);
 
         super(initialValue);
 
@@ -38,7 +38,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     };
 
     #recalculate() {
-        const { result, dependencies: nextDependencies } = collectSignalUsage(
+        const { result, dependencies: nextDependencies } = callAndReturnDependencies(
             this.#calculation,
         );
 

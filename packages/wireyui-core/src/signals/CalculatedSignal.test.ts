@@ -3,7 +3,7 @@ import { expect } from '@jest/globals';
 import { calc, mutable } from ".";
 import { SignalState } from "./SignalState";
 
-it('CalculatedSignal listeners invoked with correct value after update', () => {
+it('CalculatedSignal listeners invoked with correct value after dependency updated', () => {
     const mutableSignal = mutable(1);
     const calculatedSignal = calc(() => mutableSignal.value + 1);
 

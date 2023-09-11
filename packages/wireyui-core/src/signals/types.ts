@@ -10,7 +10,7 @@ export interface Signal<T> {
 
     peek(): T;
 
-    readonly anyListeners: boolean;
+    readonly listenerCount: number;
 
     listen(listener: SignalListener<T>): () => void;
 

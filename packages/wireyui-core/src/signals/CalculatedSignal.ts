@@ -42,7 +42,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             this.#calculation,
         );
 
-        if (this.anyListeners) {
+        if (this.listenerCount > 0) {
             this.#detachExcept(nextDependencies);
             this.#attach();
         }

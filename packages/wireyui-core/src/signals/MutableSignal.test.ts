@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals';
 
-import { mutable } from ".";
+import { calc, mutable } from ".";
 import { SignalState } from "./SignalState";
 
 it('MutableSignal listeners invoked with correct value after update', () => {
@@ -20,4 +20,23 @@ it('MutableSignal listeners invoked with correct value after update', () => {
 
     expect(prevStored).toEqual({ mode: 'SUCCESS', value: 1 } satisfies SignalState<number>);
     expect(nextStored).toEqual({ mode: 'SUCCESS', value: 2 } satisfies SignalState<number>);
+});
+
+// This might be very wrong..
+it('MutableSignal listeners not attached unless depdendent calculated signal listeners added', () => {
+    const mutableSignal = mutable(1);
+    const calculatedSignal = calc(() => mutableSignal.value + 1);
+
+    expect(mutableSignal.listenerCount).toEqual(0);
+
+    const remove = calculatedSignal.listen(
+        (prev, next) => {
+        }
+    );
+
+    expect(mutableSignal.listenerCount).toEqual(1);
+
+    remove();
+
+    expect(mutableSignal.listenerCount).toEqual(0);
 });

@@ -22,8 +22,8 @@ export class SignalBase<T> implements Signal<T> {
         return this.#state.value;
     }
 
-    public get anyListeners() {
-        return this.#listeners.size > 0;
+    public get listenerCount(): number {
+        return this.#listeners.size;
     }
 
     /**

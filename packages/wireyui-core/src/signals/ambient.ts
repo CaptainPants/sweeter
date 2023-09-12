@@ -4,10 +4,10 @@ import '../internal/polyfill.js';
 
 type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 
-const listenerStack: AmbientSignalUsageListener[] = [];
+let ambientUsageListener: AmbientSignalUsageListener | undefined;
 
 export function announceSignalUsage(signal: Signal<unknown>): void {
-    listenerStack[listenerStack.length - 1]?.(signal);
+    ambientUsageListener?.(signal);
 }
 
 export function untrack(callback: () => void): void {
@@ -33,21 +33,11 @@ export function callAndInvokeListenerForEachDependency<T>(
     callback: () => T,
     listener: AmbientSignalUsageListener,
 ): T {
-    listenerStack.push(listener);
-
-    using _ = {
-        [Symbol.dispose]() {
-            const removed = listenerStack.pop();
-
-            if (removed !== listener) {
-                throw new Error(
-                    'Unexpected top element on listener stack, this probably indicates a missing dispose or out of order disposal.',
-                );
-            }
-        },
-    };
-
-    const result = callback();
-
-    return result;
+    const saved = ambientUsageListener;
+    ambientUsageListener = listener;
+    try {
+        return callback();
+    } finally {
+        ambientUsageListener = saved;
+    }
 }

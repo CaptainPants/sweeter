@@ -20,11 +20,13 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
         const { result: initialValue, dependencies } =
             callAndReturnDependencies(wrapped);
-
+        
         super(initialValue);
 
         this.#calculation = wrapped;
         this.#dependencies = dependencies;
+
+        this.#attach();
     }
 
     #calculation: () => SignalState<T>;
@@ -38,37 +40,20 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     };
 
     #recalculate() {
-        const { result, dependencies: nextDependencies } = callAndReturnDependencies(
-            this.#calculation,
-        );
+        const { result, dependencies: nextDependencies } =
+            callAndReturnDependencies(this.#calculation);
 
-        if (this.listenerCount > 0) {
-            this.#detachExcept(nextDependencies);
-            this.#attach();
-        }
+        this.#detachExcept(nextDependencies);
+        this.#attach();
 
         this.#dependencies = nextDependencies;
 
         this._set(result);
     }
 
-    protected override _firstListenerAttached(): void {
-        this.#attach();
-    }
-
-    protected override _lastListenerDetached(): void {
-        this.#detach();
-    }
-
     #attach() {
         for (const dep of this.#dependencies) {
             dep.listen(this.#dependencyListener);
-        }
-    }
-
-    #detach() {
-        for (const dep of this.#dependencies) {
-            dep.unlisten(this.#dependencyListener);
         }
     }
 

@@ -1,5 +1,6 @@
 import { SignalState } from './SignalState';
 import { announceSignalUsage } from './ambient';
+import { WeakListenerSet } from './internal/WeakListenerSet';
 import { Signal, SignalListener } from './types';
 
 export class SignalBase<T> implements Signal<T> {
@@ -8,7 +9,7 @@ export class SignalBase<T> implements Signal<T> {
     }
 
     #state: SignalState<T>;
-    #listeners: Set<SignalListener<T>> = new Set();
+    #listeners = new WeakListenerSet<SignalListener<T>>();
 
     public get value(): T {
         announceSignalUsage(this);
@@ -20,10 +21,6 @@ export class SignalBase<T> implements Signal<T> {
             throw this.#state.error;
         }
         return this.#state.value;
-    }
-
-    public get listenerCount(): number {
-        return this.#listeners.size;
     }
 
     /**
@@ -42,27 +39,11 @@ export class SignalBase<T> implements Signal<T> {
     }
 
     #announceChange(previous: SignalState<T>, next: SignalState<T>) {
-        for (const listener of this.#listeners) {
-            try {
-                listener(previous, next);
-            } catch (ex) {
-                // A listener throwing an exception should not cause an error to be propagated
-                // unfortunately this leaves us logging the error (console.error) and moving
-                // on.
-                console.error('Error in signal listener ', ex);
-            }
-        }
+        this.#listeners.announce(previous, next);
     }
 
     public listen(listener: SignalListener<T>): () => void {
-        const count = this.#listeners.size;
-
         this.#listeners.add(listener);
-
-        // Was 0, increased to 1
-        if (count === 0) {
-            this._firstListenerAttached();
-        }
 
         return () => {
             this.unlisten(listener);
@@ -70,16 +51,6 @@ export class SignalBase<T> implements Signal<T> {
     }
 
     public unlisten(listener: SignalListener<T>): void {
-        const count = this.#listeners.size;
-
-        this.#listeners.delete(listener);
-
-        if (count == 1) {
-            this._lastListenerDetached();
-        }
+        this.#listeners.remove(listener);
     }
-
-    protected _lastListenerDetached() {}
-
-    protected _firstListenerAttached() {}
 }

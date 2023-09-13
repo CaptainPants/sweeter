@@ -1,3 +1,4 @@
+import { Signal } from './index.js';
 import * as types from './types.js';
 
 declare global {
@@ -20,12 +21,12 @@ declare global {
             'wireyui-core': number | string | boolean | null | undefined;
         }
 
-        interface IntrinsicElements {
-            core: { banana: number };
-        }
+        interface IntrinsicElements {}
 
+        /** JSX Element */
         type Element =
             | ElementAlternatives[keyof ElementAlternatives]
+            | Signal<Element>
             | Element[];
     }
 }

@@ -1,10 +1,12 @@
 import {
     ChildrenTupleFor,
-    ElementTypeConstraint,
+    ComponentOrIntrinsicElementTypeConstraint,
     PropsWithIntrinsicAttributesFor,
 } from '@captainpants/wireyui-core';
 
-export function jsx<ComponentType extends ElementTypeConstraint>(
+export function jsx<
+    ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
+>(
     type: ComponentType,
     attributes: Omit<
         PropsWithIntrinsicAttributesFor<ComponentType>,

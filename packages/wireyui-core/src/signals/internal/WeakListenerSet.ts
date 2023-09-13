@@ -12,8 +12,15 @@ export class WeakListenerSet<Listener extends (...args: any[]) => void> {
         this.#listenerRefs.add(weakRef);
     }
 
+    /**
+     * The number of live listeners attached to this
+     * @returns
+     */
     public getLiveCount() {
-        return [...this.#listenerRefs].reduce((prev, weakRef) => prev + (weakRef.deref() ? 1 : 0), 0);
+        return [...this.#listenerRefs].reduce(
+            (prev, weakRef) => prev + (weakRef.deref() ? 1 : 0),
+            0,
+        );
     }
 
     public remove(listener: Listener) {

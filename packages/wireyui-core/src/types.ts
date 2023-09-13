@@ -11,36 +11,44 @@ export type Component<Props = {}> = (
 ) => JSXElement;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ElementTypeConstraint = Component<any> | string;
+export type ComponentOrIntrinsicElementTypeConstraint = Component<any> | string;
 
 /**
  * The goal is to let the -web package provide this
  */
-export type NonComponentProps<ElementName> =
+export type IntrinsicElementProps<ElementName> =
     ElementName extends keyof JSX.IntrinsicElements
         ? JSX.IntrinsicElements[ElementName]
-        : { _unrecognized: 1 };
+        : never;
 
-export type PropsFor<ComponentType extends ElementTypeConstraint> =
-    ComponentType extends Component<infer Props>
-        ? Props
-        : NonComponentProps<ComponentType>;
+export type PropsFor<
+    ComponentOrIntrinsicElementType extends
+        ComponentOrIntrinsicElementTypeConstraint,
+> = ComponentOrIntrinsicElementType extends Component<infer Props>
+    ? Props
+    : IntrinsicElementProps<ComponentOrIntrinsicElementType>;
 
 export type PropsWithIntrinsicAttributesFor<
-    ComponentType extends ElementTypeConstraint,
-> = PropsFor<ComponentType> & JSX.IntrinsicAttributes;
+    ComponentOrIntrinsicElementType extends
+        ComponentOrIntrinsicElementTypeConstraint,
+> = PropsFor<ComponentOrIntrinsicElementType> & JSX.IntrinsicAttributes;
 
-export type ChildrenTypeFor<ComponentType extends ElementTypeConstraint> =
-    PropsFor<ComponentType> extends { children: infer Children }
-        ? Children
-        : never;
+export type ChildrenTypeFor<
+    ComponentOrIntrinsicElementType extends
+        ComponentOrIntrinsicElementTypeConstraint,
+> = PropsFor<ComponentOrIntrinsicElementType> extends {
+    children: infer Children;
+}
+    ? Children
+    : never;
 
 /**
  * Convenience variant of ChildrenType that has result as a tuple that can be used on a rest parameter (e.g. for _jsx)
  */
-export type ChildrenTupleFor<ComponentType extends ElementTypeConstraint> =
-    PropsFor<ComponentType> extends { children: infer Children }
-        ? Children extends unknown[]
-            ? Children
-            : [Children]
-        : [];
+export type ChildrenTupleFor<
+    ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
+> = PropsFor<ComponentType> extends { children: infer Children }
+    ? Children extends unknown[]
+        ? Children
+        : [Children]
+    : [];

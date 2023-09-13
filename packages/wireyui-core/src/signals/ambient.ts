@@ -4,17 +4,29 @@ import '../internal/polyfill.js';
 
 type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 
-let ambientUsageListener: AmbientSignalUsageListener | undefined;
+let _ambientUsageListener: AmbientSignalUsageListener | undefined;
+let _ambientListenerExpectsReadonly: boolean = false;
 
 export function announceSignalUsage(signal: Signal<unknown>): void {
-    ambientUsageListener?.(signal);
+    _ambientUsageListener?.(signal);
 }
 
 export function untrack(callback: () => void): void {
-    callAndInvokeListenerForEachDependency(callback, () => {});
+    callAndInvokeListenerForEachDependency(callback, () => {}, false);
 }
 
-export function callAndReturnDependencies<T>(callback: () => T): {
+export function announceMutatingSignal(signal: Signal<unknown>) {
+    if (_ambientListenerExpectsReadonly) {
+        throw new TypeError(
+            'Mutating a signal inside a CalculatedSignal is not allowed.',
+        );
+    }
+}
+
+export function callAndReturnDependencies<T>(
+    callback: () => T,
+    readonly: boolean,
+): {
     result: T;
     dependencies: Set<Signal<unknown>>;
 } {
@@ -24,7 +36,11 @@ export function callAndReturnDependencies<T>(callback: () => T): {
         dependencies.add(signal);
     };
 
-    const result = callAndInvokeListenerForEachDependency(callback, listener);
+    const result = callAndInvokeListenerForEachDependency(
+        callback,
+        listener,
+        readonly,
+    );
 
     return { result, dependencies };
 }
@@ -32,12 +48,22 @@ export function callAndReturnDependencies<T>(callback: () => T): {
 export function callAndInvokeListenerForEachDependency<T>(
     callback: () => T,
     listener: AmbientSignalUsageListener,
+    readonly: boolean,
 ): T {
-    const saved = ambientUsageListener;
-    ambientUsageListener = listener;
+    // Save
+    const saved_ambientUsageListener = _ambientUsageListener;
+    const saved_ambientListenerExpectsReadonly =
+        _ambientListenerExpectsReadonly;
+
+    // Replace
+    _ambientUsageListener = listener;
+    _ambientListenerExpectsReadonly = readonly;
+
     try {
         return callback();
     } finally {
-        ambientUsageListener = saved;
+        // Restore
+        _ambientUsageListener = saved_ambientUsageListener;
+        _ambientListenerExpectsReadonly = saved_ambientListenerExpectsReadonly;
     }
 }

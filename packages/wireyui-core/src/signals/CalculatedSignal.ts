@@ -19,8 +19,8 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         const wrapped = wrap(calculation);
 
         const { result: initialValue, dependencies } =
-            callAndReturnDependencies(wrapped);
-        
+            callAndReturnDependencies(wrapped, true);
+
         super(initialValue);
 
         this.#calculation = wrapped;
@@ -41,7 +41,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #recalculate() {
         const { result, dependencies: nextDependencies } =
-            callAndReturnDependencies(this.#calculation);
+            callAndReturnDependencies(this.#calculation, true);
 
         this.#detachExcept(nextDependencies);
         this.#attach();

@@ -1,14 +1,20 @@
+/**
+ * Global cache of weakrefs for listeners. Slightly ugly typings as we don't know the parameter
+ * type, but its a lookup by the object itself to an existing WeakRef, so definitionally the
+ * types should match.
+ */
+const weakRefCache = new WeakMap<object, WeakRef<object>>();
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class WeakListenerSet<Listener extends (...args: any[]) => void> {
-    #weakRefCache = new WeakMap<Listener, WeakRef<Listener>>();
     #listenerRefs = new Set<WeakRef<Listener>>();
 
     public add(listener: Listener) {
-        let weakRef = this.#weakRefCache.get(listener);
+        let weakRef = weakRefCache.get(listener) as WeakRef<Listener>;
         if (!weakRef) {
             weakRef = new WeakRef(listener);
         }
-        this.#weakRefCache.set(listener, weakRef);
+        weakRefCache.set(listener, weakRef);
         this.#listenerRefs.add(weakRef);
     }
 
@@ -24,12 +30,17 @@ export class WeakListenerSet<Listener extends (...args: any[]) => void> {
     }
 
     public remove(listener: Listener) {
-        const weakRef = this.#weakRefCache.get(listener);
+        const weakRef = weakRefCache.get(listener) as WeakRef<Listener>;
         if (weakRef) {
             this.#listenerRefs.delete(weakRef);
         }
     }
 
+    /**
+     * Note that any exceptions thrown while invoking are swallowed, so if you need to handle
+     * errors, catch them in the callback.
+     * @param args
+     */
     public announce(...args: Parameters<Listener>) {
         for (const ref of this.#listenerRefs) {
             const listener = ref.deref();
@@ -38,7 +49,10 @@ export class WeakListenerSet<Listener extends (...args: any[]) => void> {
                 try {
                     listener(...args);
                 } catch (ex) {
-                    console.error('Error invoking listener', listener);
+                    console.error(
+                        'Error swallowed while invoking listener',
+                        listener,
+                    );
                 }
             } else {
                 this.#listenerRefs.delete(ref);

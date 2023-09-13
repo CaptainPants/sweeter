@@ -14,3 +14,7 @@ export interface Signal<T> {
 
     unlisten(listener: SignalListener<T>): void;
 }
+
+export interface MutableSignal<T> extends Signal<T> {
+    update(value: T): void;
+}

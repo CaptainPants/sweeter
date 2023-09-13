@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals';
 
-import { mutable } from '.';
-import { callAndReturnDependencies } from './ambient';
+import { mutable } from './MutableValueSignal.js';
+import { callAndReturnDependencies } from './ambient.js';
 
 it('CalculatedSignal listeners invoked with correct value after update', () => {
     const mutableSignal1 = mutable(1);

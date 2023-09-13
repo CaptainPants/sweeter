@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals';
 
-import { mutable } from '.';
+import { mutable } from './MutableValueSignal.js';
 import { SignalState } from './SignalState';
 
 it('MutableSignal listeners invoked with correct value after update', () => {

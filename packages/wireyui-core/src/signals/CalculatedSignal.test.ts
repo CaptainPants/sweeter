@@ -1,7 +1,8 @@
 import { expect } from '@jest/globals';
 
-import { calc, mutable } from '.';
-import { SignalState } from './SignalState';
+import { SignalState } from './SignalState.js';
+import { mutable } from './MutableValueSignal.js';
+import { calc } from './CalculatedSignal.js';
 
 it('CalculatedSignal listeners invoked with correct value after dependency updated', () => {
     const mutableSignal = mutable(1);

@@ -21,12 +21,12 @@
     },
     "verify": {
       "dependsOn": [
-        "^build"
+        "^verify"
       ]
     },
     "verify:fix": {
       "dependsOn": [
-        "^build"
+        "^verify:fix"
       ]
     },
     "build": {

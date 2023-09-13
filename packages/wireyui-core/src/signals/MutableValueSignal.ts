@@ -1,7 +1,7 @@
 import { SignalBase } from './SignalBase';
 import { announceMutatingSignal } from './ambient';
 
-export class MutableSignal<T> extends SignalBase<T> {
+export class MutableValueSignal<T> extends SignalBase<T> {
     constructor(initialValue: T) {
         super({ mode: 'SUCCESS', value: initialValue });
     }
@@ -12,6 +12,6 @@ export class MutableSignal<T> extends SignalBase<T> {
     }
 }
 
-export function mutable<T>(initialValue: T): MutableSignal<T> {
-    return new MutableSignal<T>(initialValue);
+export function mutable<T>(initialValue: T): MutableValueSignal<T> {
+    return new MutableValueSignal<T>(initialValue);
 }

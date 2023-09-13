@@ -1,7 +1,7 @@
-import { SignalState } from './SignalState';
-import { announceSignalUsage } from './ambient';
-import { WeakListenerSet } from './internal/WeakListenerSet';
-import { Signal, SignalListener } from './types';
+import { SignalState } from './SignalState.js';
+import { announceSignalUsage } from './ambient.js';
+import { WeakListenerSet } from './internal/WeakListenerSet.js';
+import { Signal, SignalListener } from './types.js';
 
 export class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {

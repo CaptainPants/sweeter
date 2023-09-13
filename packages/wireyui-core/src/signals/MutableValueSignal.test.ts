@@ -1,9 +1,17 @@
 import { expect } from '@jest/globals';
 
 import { mutable } from './MutableValueSignal.js';
-import { SignalState } from './SignalState';
+import { SignalState } from './SignalState.js';
 
-it('MutableSignal listeners invoked with correct value after update', () => {
+it('MutableValueSignal has initial value', () => {
+    const signal = mutable(23);
+
+    const value = signal.value;
+
+    expect(value).toStrictEqual(23);
+});
+
+it('MutableValueSignal listeners invoked with correct value after update', () => {
     const signal = mutable(1);
 
     let prevStored: SignalState<number> | undefined;
@@ -14,7 +22,7 @@ it('MutableSignal listeners invoked with correct value after update', () => {
         nextStored = next;
     });
 
-    signal.update(2);
+    signal.value = 2;
 
     expect(prevStored).toEqual({
         mode: 'SUCCESS',

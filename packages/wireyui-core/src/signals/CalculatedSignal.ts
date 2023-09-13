@@ -1,7 +1,7 @@
-import { SignalBase } from './SignalBase';
-import { SignalState } from './SignalState';
-import { callAndReturnDependencies } from './ambient';
-import { Signal } from './types';
+import { SignalBase } from './SignalBase.js';
+import { SignalState } from './SignalState.js';
+import { callAndReturnDependencies } from './ambient.js';
+import { Signal } from './types.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
     return () => {

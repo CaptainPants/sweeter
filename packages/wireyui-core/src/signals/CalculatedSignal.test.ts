@@ -16,7 +16,7 @@ it('CalculatedSignal listeners invoked with correct value after dependency updat
         nextStored = next;
     });
 
-    mutableSignal.update(2);
+    mutableSignal.value = 2;
 
     expect(prevStored).toEqual({
         mode: 'SUCCESS',

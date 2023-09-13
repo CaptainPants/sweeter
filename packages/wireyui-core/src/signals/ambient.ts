@@ -1,4 +1,4 @@
-import { Signal } from '.';
+import { Signal } from './index.js';
 
 import '../internal/polyfill.js';
 

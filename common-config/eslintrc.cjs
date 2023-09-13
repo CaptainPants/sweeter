@@ -4,8 +4,10 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
-    //'plugin:import/recommended',
-    //'plugin:import/typescript',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    // Fix up typescript imports to have .js
+    'plugin:require-extensions/recommended'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: { 
@@ -21,4 +23,14 @@ module.exports = {
         "args": "none"
     }],
   },
+  settings: {
+    "import/resolver": {
+        "typescript": {
+          "directory": "./tsconfig.json"
+        },
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
+  }
 }

@@ -1,4 +1,4 @@
-import { SignalState } from './SignalState';
+import { SignalState } from './SignalState.js';
 
 export type SignalListener<T> = (
     previous: SignalState<T>,
@@ -16,5 +16,5 @@ export interface Signal<T> {
 }
 
 export interface MutableSignal<T> extends Signal<T> {
-    update(value: T): void;
+    value: T;
 }

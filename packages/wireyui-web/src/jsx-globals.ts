@@ -9,13 +9,10 @@ declare global {
         }
 
         /**
-         * This is not standard. I am hoping that by structuring in this way we
-         * can use declaration merging to extend the definition of Element.
+         * Extends off the same from wireyui-core to populate JSX.Element
          */
         interface ElementAlternatives {
             'wireyui-web': HTMLElement | SVGElement;
         }
     }
 }
-
-export {};

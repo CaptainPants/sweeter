@@ -41,14 +41,3 @@ export type ChildrenTypeFor<
 }
     ? Children
     : never;
-
-/**
- * Convenience variant of ChildrenType that has result as a tuple that can be used on a rest parameter (e.g. for _jsx)
- */
-export type ChildrenTupleFor<
-    ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
-> = PropsFor<ComponentType> extends { children: infer Children }
-    ? Children extends unknown[]
-        ? Children
-        : [Children]
-    : [];

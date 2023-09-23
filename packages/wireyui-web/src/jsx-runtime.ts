@@ -1,6 +1,7 @@
 import {
     ChildrenTupleFor,
     ComponentOrIntrinsicElementTypeConstraint,
+    JSXElement,
     PropsWithIntrinsicAttributesFor,
 } from '@captainpants/wireyui-core';
 
@@ -13,6 +14,6 @@ export function jsx<
         'children'
     >,
     ...children: ChildrenTupleFor<ComponentType>
-): JSX.Element {
+): JSXElement {
     return document.createElement('div');
 }

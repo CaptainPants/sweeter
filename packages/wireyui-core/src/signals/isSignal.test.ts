@@ -1,12 +1,15 @@
-import { calc, derived, mutable, mutableCalc } from ".";
-import { isMutableSignal, isSignal } from "./isSignal";
+import { calc, derived, mutable, mutableCalc } from './index.js';
+import { isMutableSignal, isSignal } from './isSignal.js';
 
 it('isSignal for all signal types return true', () => {
     const a = mutable(0);
     const b = calc(() => 1);
 
     const c = mutable({ prop: 1 });
-    const d = mutableCalc(() => 1, () => {});
+    const d = mutableCalc(
+        () => 1,
+        () => {},
+    );
     const e = derived(c, 'prop');
 
     expect(isSignal(a)).toBe(true);
@@ -20,7 +23,10 @@ it('isMutableSignal for mutable signal types return true', () => {
     const a = mutable(0);
 
     const c = mutable({ prop: 1 });
-    const d = mutableCalc(() => 1, () => {});
+    const d = mutableCalc(
+        () => 1,
+        () => {},
+    );
     const e = derived(c, 'prop');
 
     expect(isMutableSignal(a)).toBe(true);

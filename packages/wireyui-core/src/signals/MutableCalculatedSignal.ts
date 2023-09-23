@@ -39,25 +39,31 @@ export function derived<TSource, TKey extends keyof TSource>(
     key: TKey,
 ): MutableCalculatedSignal<TSource[TKey]> {
     return new MutableCalculatedSignal<TSource[TKey]>(
-        () => source.value[key], 
-        value => {
+        () => source.value[key],
+        (value) => {
             const sourceObjectOriginal = source.value;
 
             if (Array.isArray(sourceObjectOriginal)) {
-                if (typeof key !== 'number') throw new TypeError('If source is an array, key must be a number.');
+                if (typeof key !== 'number')
+                    throw new TypeError(
+                        'If source is an array, key must be a number.',
+                    );
 
                 const copy = [...sourceObjectOriginal] as TSource;
                 copy[key as TKey] = value;
                 source.value = copy;
-            }
-            else if (typeof sourceObjectOriginal === 'object' && sourceObjectOriginal !== null) {
+            } else if (
+                typeof sourceObjectOriginal === 'object' &&
+                sourceObjectOriginal !== null
+            ) {
                 const copy = { ...sourceObjectOriginal } as TSource;
                 copy[key] = value;
                 source.value = copy;
+            } else {
+                throw new TypeError(
+                    `Unexpected type ${typeof sourceObjectOriginal}`,
+                );
             }
-            else {
-                throw new TypeError(`Unexpected type ${typeof sourceObjectOriginal}`);
-            }
-        }
+        },
     );
 }

@@ -1,4 +1,4 @@
-import { WebRenderer } from './WebRenderer';
+import { WebRenderer } from './WebRenderer.js';
 
 function Component() {
     return <div id="test" />;

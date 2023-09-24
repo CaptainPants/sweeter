@@ -1,11 +1,31 @@
-import { JSXElement } from '@captainpants/wireyui-core';
+import { KeysMatching } from '@captainpants/wireyui-core';
+
+type PrefixedNames<
+    TNames extends string,
+    TPrefix extends string,
+> = TNames extends `${TPrefix}${infer S}` ? S : never;
+
+type EventHandlerNames = PrefixedNames<keyof HTMLElement, 'on'>;
+
+type ExcludedSimpleProperties = 'innerHTML' | 'innerText' | 'outerText';
+
+type SimpleTypedPropertyNames = Exclude<KeysMatching<
+    HTMLElement,
+    string | number | boolean
+>, ExcludedSimpleProperties>;
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         interface IntrinsicElements {
-            div: { id?: string | undefined; children?: JSXElement };
-            cored: { banana: number };
+            div: JSX.CommonAttributes;
+        }
+
+        interface CommonAttributeParts {
+            'wireyui-web': Partial<
+                Pick<HTMLElement, `on${EventHandlerNames}`>
+            > &
+                Partial<Pick<HTMLElement, SimpleTypedPropertyNames>>;
         }
 
         /**

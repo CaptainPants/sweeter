@@ -1,6 +1,16 @@
 import { Signal } from './index.js';
 import * as types from './types.js';
 
+/**
+ * Borrowed from https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+    k: infer I,
+) => void
+    ? I
+    : never;
+
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
@@ -11,7 +21,11 @@ declare global {
         /**
          * Attributes that apply to all element types - in HTML this is most things
          */
-        interface CommonAttributes {}
+        interface CommonAttributeParts {}
+
+        type CommonAttributes = UnionToIntersection<
+            CommonAttributeParts[keyof CommonAttributeParts]
+        >;
 
         interface ElementChildrenAttribute {
             // eslint-disable-next-line @typescript-eslint/ban-types

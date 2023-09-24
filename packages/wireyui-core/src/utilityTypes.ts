@@ -24,6 +24,9 @@ export type ReadonlyKeys<T> = {
         P
     >;
 }[keyof T];
+
+export type OnlyWritableProperties<T> = Pick<T, WritableKeys<T>>;
+
 // === END ===
 
 /**

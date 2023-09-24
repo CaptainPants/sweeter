@@ -1,4 +1,7 @@
-import { KeysMatching } from '@captainpants/wireyui-core';
+import {
+    KeysMatching,
+    OnlyWritableProperties,
+} from '@captainpants/wireyui-core';
 
 type PrefixedNames<
     TNames extends string,
@@ -29,14 +32,20 @@ type EventHandlerProperties<TElement extends Element> = {
 type ExcludedSimpleProperties = 'innerHTML' | 'innerText' | 'outerText';
 
 type SimpleTypesProperties<TElement extends Element> = Partial<
-    Pick<
-        TElement,
-        Exclude<
-            KeysMatching<TElement, string | number | boolean>,
-            ExcludedSimpleProperties
+    OnlyWritableProperties<
+        Pick<
+            TElement,
+            Exclude<
+                KeysMatching<TElement, string | number | boolean>,
+                ExcludedSimpleProperties
+            >
         >
     >
 >;
+
+type ManuallySpecifiedProperties = {
+    style?: Record<string, string>;
+};
 
 interface IntrinsicTypeMap {
     html: HTMLHtmlElement;
@@ -48,23 +57,23 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         interface IntrinsicElementParts {
-            'wireyui-web': {
-                [Key in keyof IntrinsicTypeMap]: IntrinsicElementAttributes<Key>;
-            };
+            'wireyui-web': keyof IntrinsicTypeMap;
         }
 
         interface IntrinsicElementAttributeParts<TElementType extends string> {
             'wireyui-web': TElementType extends keyof IntrinsicTypeMap
                 ? EventHandlerProperties<IntrinsicTypeMap[TElementType]> &
-                      SimpleTypesProperties<IntrinsicTypeMap[TElementType]>
+                      SimpleTypesProperties<IntrinsicTypeMap[TElementType]> &
+                      ManuallySpecifiedProperties
                 : EventHandlerProperties<HTMLElement> &
-                      SimpleTypesProperties<HTMLElement>;
+                      SimpleTypesProperties<HTMLElement> &
+                      ManuallySpecifiedProperties;
         }
 
         /**
          * Extends off the same from wireyui-core to populate JSX.Element
          */
-        interface ElementAlternatives {
+        interface ElementPossibilityParts {
             'wireyui-web': HTMLElement | SVGElement;
         }
     }

@@ -32,7 +32,7 @@ export function jsx<ComponentType extends string | Component<unknown>>(
 function renderDOMElement<TElementType extends string>(
     type: TElementType,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
-) {
+): HTMLElement | SVGElement {
     const ele = document.createElement(type);
     // assign attributes and set up signals
     return ele;

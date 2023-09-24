@@ -14,16 +14,22 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
+        /**
+         * Props that apply to all elements.
+         */
         interface IntrinsicAttributes {
             readonly key?: types.JSXKey | undefined;
         }
 
         /**
-         * Attributes that apply to all element types - in HTML this is most things
+         * Use this to extend IntrinsicElementAttributes.
          */
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         interface IntrinsicElementAttributeParts<TElementType extends string> {}
 
+        /**
+         * Extended by declaration merging into IntrinsicElementAttributeParts.
+         */
         type IntrinsicElementAttributes<TElementType extends string> =
             UnionToIntersection<
                 IntrinsicElementAttributeParts<TElementType>[keyof IntrinsicElementAttributeParts<TElementType>]
@@ -35,22 +41,29 @@ declare global {
         }
 
         /**
-         * This is not standard. I am hoping that by structuring in this way we
-         * can use declaration merging to extend the definition of Element.
+         * Use this to add to the Element union.
          */
-        interface ElementAlternatives {
+        interface ElementPossibilityParts {
             'wireyui-core': number | string | boolean | null | undefined;
         }
 
+        /**
+         * Expected to be { 'string': '<union>' | '<of>' | '<allowed>' | '<elements>' }
+         * The key is ignored, and will generally be named for the assembly.
+         */
         interface IntrinsicElementParts {}
 
-        type IntrinsicElements = UnionToIntersection<
-            IntrinsicElementParts[keyof IntrinsicElementParts]
-        >;
+        /**
+         * Extended by declaration merging into IntrinsicElementParts.
+         */
+        type IntrinsicElements = {
+            [Key in IntrinsicElementParts[keyof IntrinsicElementParts] &
+                string]: IntrinsicElementAttributes<Key>;
+        };
 
         /** JSX Element */
         type Element =
-            | ElementAlternatives[keyof ElementAlternatives]
+            | ElementPossibilityParts[keyof ElementPossibilityParts]
             | Signal<Element>
             | Element[];
     }

@@ -19,7 +19,7 @@ export type ComponentOrIntrinsicElementTypeConstraint = Component<any> | string;
 export type IntrinsicElementProps<ElementName> =
     ElementName extends keyof JSX.IntrinsicElements
         ? JSX.IntrinsicElements[ElementName]
-        : never;
+        : JSX.CommonAttributes;
 
 export type PropsFor<
     ComponentOrIntrinsicElementType extends

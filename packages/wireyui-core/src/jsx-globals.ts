@@ -8,6 +8,11 @@ declare global {
             readonly key?: types.JSXKey | undefined;
         }
 
+        /**
+         * Attributes that apply to all element types - in HTML this is most things
+         */
+        interface CommonAttributes {}
+
         interface ElementChildrenAttribute {
             // eslint-disable-next-line @typescript-eslint/ban-types
             children: {}; // specify children name to use

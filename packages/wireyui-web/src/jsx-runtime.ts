@@ -10,26 +10,35 @@ export function jsx<
     ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
 >(
     type: ComponentType,
-    attributes: PropsWithIntrinsicAttributesFor<ComponentType>,
+    props: PropsWithIntrinsicAttributesFor<ComponentType>,
 ): JSXElement {
     switch (typeof type) {
         case 'function':
             {
                 // Component function
-                return renderComponent(type, attributes);
+                return renderComponent(type, props);
             }
             break;
 
         case 'string':
             {
                 // intrinsic
-                return document.createElement(type);
+                return renderDOMElement(type, props);
             }
             break;
 
         default:
             throw new TypeError(`Unexpected type ${type}`);
     }
+}
+
+function renderDOMElement<Type extends string>(
+    type: Type,
+    props: PropsWithIntrinsicAttributesFor<Type>,
+) {
+    const ele = document.createElement(type);
+    // assign attributes and set up signals
+    return ele;
 }
 
 function renderComponent<ComponentType extends Component<unknown>>(

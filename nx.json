@@ -16,17 +16,17 @@
   "targetDefaults": {
     "test": {
       "dependsOn": [
-        "^build"
+        "build"
       ]
     },
     "verify": {
       "dependsOn": [
-        "^verify"
+        "build"
       ]
     },
     "verify:fix": {
       "dependsOn": [
-        "^verify:fix"
+        "build"
       ]
     },
     "build": {

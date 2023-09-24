@@ -21,11 +21,13 @@ declare global {
         /**
          * Attributes that apply to all element types - in HTML this is most things
          */
-        interface CommonAttributeParts {}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        interface IntrinsicElementAttributeParts<TElementType extends string> {}
 
-        type CommonAttributes = UnionToIntersection<
-            CommonAttributeParts[keyof CommonAttributeParts]
-        >;
+        type IntrinsicElementAttributes<TElementType extends string> =
+            UnionToIntersection<
+                IntrinsicElementAttributeParts<TElementType>[keyof IntrinsicElementAttributeParts<TElementType>]
+            >;
 
         interface ElementChildrenAttribute {
             // eslint-disable-next-line @typescript-eslint/ban-types
@@ -40,7 +42,11 @@ declare global {
             'wireyui-core': number | string | boolean | null | undefined;
         }
 
-        interface IntrinsicElements {}
+        interface IntrinsicElementParts {}
+
+        type IntrinsicElements = UnionToIntersection<
+            IntrinsicElementParts[keyof IntrinsicElementParts]
+        >;
 
         /** JSX Element */
         type Element =

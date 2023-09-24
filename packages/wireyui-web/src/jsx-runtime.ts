@@ -1,14 +1,11 @@
 import {
     Component,
-    ComponentOrIntrinsicElementTypeConstraint,
     JSXElement,
     PropsWithIntrinsicAttributesFor,
     isSignal,
 } from '@captainpants/wireyui-core';
 
-export function jsx<
-    ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
->(
+export function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,
     props: PropsWithIntrinsicAttributesFor<ComponentType>,
 ): JSXElement {
@@ -32,18 +29,18 @@ export function jsx<
     }
 }
 
-function renderDOMElement<Type extends string>(
-    type: Type,
-    props: PropsWithIntrinsicAttributesFor<Type>,
+function renderDOMElement<TElementType extends string>(
+    type: TElementType,
+    props: PropsWithIntrinsicAttributesFor<TElementType>,
 ) {
     const ele = document.createElement(type);
     // assign attributes and set up signals
     return ele;
 }
 
-function renderComponent<ComponentType extends Component<unknown>>(
-    Component: ComponentType,
-    props: PropsWithIntrinsicAttributesFor<ComponentType>,
+function renderComponent<TComponentType extends Component<unknown>>(
+    Component: TComponentType,
+    props: PropsWithIntrinsicAttributesFor<TComponentType>,
 ): JSXElement {
     const res = Component(props, {});
 

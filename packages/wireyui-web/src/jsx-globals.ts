@@ -2,6 +2,7 @@ import {
     KeysMatching,
     OnlyWritableProperties,
 } from '@captainpants/wireyui-core';
+import { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 type PrefixedNames<
     TNames extends string,
@@ -48,23 +49,21 @@ type ManuallySpecifiedProperties = {
     children?: JSX.Element;
 };
 
-interface IntrinsicTypeMap {
-    html: HTMLHtmlElement;
-    head: HTMLHeadElement;
-    div: HTMLDivElement;
-}
-
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         interface IntrinsicElementParts {
-            'wireyui-web': keyof IntrinsicTypeMap;
+            'wireyui-web': keyof HTMLElementTagNameMap;
         }
 
         interface IntrinsicElementAttributeParts<TElementType extends string> {
-            'wireyui-web': TElementType extends keyof IntrinsicTypeMap
-                ? EventHandlerProperties<IntrinsicTypeMap[TElementType]> &
-                      SimpleTypesProperties<IntrinsicTypeMap[TElementType]> &
+            'wireyui-web': TElementType extends keyof IntrinsicElementTypeMap
+                ? EventHandlerProperties<
+                      IntrinsicElementTypeMap[TElementType]
+                  > &
+                      SimpleTypesProperties<
+                          IntrinsicElementTypeMap[TElementType]
+                      > &
                       ManuallySpecifiedProperties
                 : EventHandlerProperties<HTMLElement> &
                       SimpleTypesProperties<HTMLElement> &
@@ -75,7 +74,8 @@ declare global {
          * Extends off the same from wireyui-core to populate JSX.Element
          */
         interface ElementPossibilityParts {
-            'wireyui-web': HTMLElement | SVGElement;
+            'wireyui-web': HTMLElement | SVGElement | Text;
         }
     }
 }
+document.createElement('div');

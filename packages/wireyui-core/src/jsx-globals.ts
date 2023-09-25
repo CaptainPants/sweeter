@@ -48,7 +48,7 @@ declare global {
         }
 
         /**
-         * Expected to be { 'string': '<union>' | '<of>' | '<allowed>' | '<elements>' }
+         * Expected to be { 'string': '\<union>' | '\<of>' | '\<allowed>' | '\<elements>' }
          * The key is ignored, and will generally be named for the assembly.
          */
         interface IntrinsicElementParts {}

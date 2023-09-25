@@ -2,6 +2,7 @@ import {
     Component,
     JSXElement,
     PropsWithIntrinsicAttributesFor,
+    flatten,
     isSignal,
 } from '@captainpants/wireyui-core';
 
@@ -34,7 +35,11 @@ function renderDOMElement<TElementType extends string>(
     props: PropsWithIntrinsicAttributesFor<TElementType>,
 ): HTMLElement | SVGElement {
     const ele = document.createElement(type);
+
     // assign attributes and set up signals
+
+    addChildren(ele, props.children);
+
     return ele;
 }
 
@@ -46,9 +51,30 @@ function renderComponent<TComponentType extends Component<unknown>>(
 
     if (isSignal(res)) {
         // signal means the result can change and we need to handle that..
-    } else {
+        return res.value;
+    } else if (Array.isArray(res)) {
         // static element/list of element result
+        return res.map((x) => (isSignal(x) ? x.value : x));
+    } else {
+        return res;
     }
+}
 
-    return res;
+function addChildren(parent: Node, children: JSX.Element): void {
+    flatten(children, (child) => {
+        switch (typeof child) {
+            case 'undefined':
+                break;
+
+            case 'number':
+            case 'boolean':
+            case 'string':
+                parent.appendChild(document.createElement(String(child)));
+                break;
+
+            default:
+                parent.appendChild(child);
+                break;
+        }
+    });
 }

@@ -45,6 +45,7 @@ type SimpleTypesProperties<TElement extends Element> = Partial<
 
 type ManuallySpecifiedProperties = {
     style?: Record<string, string>;
+    children?: JSX.Element;
 };
 
 interface IntrinsicTypeMap {

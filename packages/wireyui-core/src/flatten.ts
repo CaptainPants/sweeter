@@ -1,4 +1,9 @@
-import { Signal, isSignal } from './signals/index.js';
+import { isSignal } from './signals/index.js';
+
+export type FlattenedElement = Exclude<
+    JSX.Element,
+    JSX.Element[] | null | undefined
+>;
 
 /**
  * Flattens nested arrays and calls .value on signals. Removes null and undefined
@@ -9,10 +14,7 @@ import { Signal, isSignal } from './signals/index.js';
 export function flatten(
     children: JSX.Element,
     callback: (
-        item: Exclude<
-            JSX.Element,
-            JSX.Element[] | Signal<JSX.Element> | null | undefined
-        >,
+        item: FlattenedElement,
     ) => void,
 ): void {
     if (children === null || children === undefined) {
@@ -23,9 +25,12 @@ export function flatten(
         children.forEach((inner) => {
             flatten(inner, callback);
         });
+        
     } else if (isSignal(children)) {
         flatten(children.value, callback);
+
     } else {
         callback(children);
+        
     }
 }

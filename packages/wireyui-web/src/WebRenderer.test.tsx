@@ -1,10 +1,11 @@
+import { JSXElement } from '@captainpants/wireyui-core';
 import { WebRenderer } from './WebRenderer.js';
 
-function Component() {
+function Component(): JSXElement {
     return <div id="test" draggable />;
 }
 
-function SvgComponent() {
+function SvgComponent(): JSXElement {
     return (
         <svg:svg
             id="test"

@@ -3,6 +3,7 @@ import {
     JSXElement,
     PropsWithIntrinsicAttributesFor,
     flatten,
+    FlattenedElement,
     isSignal,
 } from '@captainpants/wireyui-core';
 
@@ -28,6 +29,11 @@ export function jsx<ComponentType extends string | Component<unknown>>(
     }
 }
 
+const mappedProperties: Record<string, string> = {
+    'class': 'className',
+    'for': 'htmlFor'
+};
+
 function renderDOMElement<TElementType extends string>(
     type: TElementType,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
@@ -37,17 +43,19 @@ function renderDOMElement<TElementType extends string>(
     // Assign attributes and set up signals
 
     for (const key of Object.getOwnPropertyNames(props)) {
-        if (key !== 'children') {
-            const value = (props as Record<string, unknown>)[key];
+        const mappedKey = Object.hasOwn(mappedProperties, key) ? mappedProperties[key]! : key;
 
-            if (key.startsWith('on')) {
-                const eventName = key.substring(2);
+        if (mappedKey !== 'children') {
+            const value = (props as Record<string, unknown>)[mappedKey];
+
+            if (mappedKey.startsWith('on')) {
+                const eventName = mappedKey.substring(2);
 
                 ele.addEventListener(eventName, (isSignal(value) ? value.value : value) as EventListener);
                 // TODO: cleanup / signal change
             }
             else {
-                (props as Record<string, unknown>)[key] = (isSignal(value) ? value.value : value);
+                (props as Record<string, unknown>)[mappedKey] = (isSignal(value) ? value.value : value);
                 // TODO: cleanup / signal change
             }
         }
@@ -79,7 +87,13 @@ function renderComponent<TComponentType extends Component<unknown>>(
 }
 
 export function appendJsxChildren(parent: Node, children: JSX.Element): void {
-    flatten(children, (child) => {
+    const callback = (child: FlattenedElement) => {
+        if (isSignal(child)) {
+            // TODO: 
+            flatten(child.value, callback);
+            return;
+        }
+        
         switch (typeof child) {
             case 'undefined':
                 break;
@@ -94,5 +108,7 @@ export function appendJsxChildren(parent: Node, children: JSX.Element): void {
                 parent.appendChild(child);
                 break;
         }
-    });
+    }
+
+    flatten(children, callback);
 }

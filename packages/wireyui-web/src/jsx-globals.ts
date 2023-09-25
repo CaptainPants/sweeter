@@ -1,5 +1,5 @@
 import {
-    KeysMatching,
+    KeysMatching as PropertyNamesWithValueMatching,
     OnlyWritableProperties,
 } from '@captainpants/wireyui-core';
 import { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
@@ -9,8 +9,11 @@ type PrefixedNames<
     TPrefix extends string,
 > = TNames extends `${TPrefix}${string}` ? TNames : never;
 
-type TypedEvent<TElement, TEvent> = Omit<TEvent, 'target'> & {
-    target: TElement;
+type Event<TElement, TEvent> = Omit<TEvent, 'target'> & {
+    /**
+     * Returns the object to which event is dispatched (its target).
+     */
+    readonly target: TElement | null;
 };
 
 type EventHandlerNames<TElement extends Element> = PrefixedNames<
@@ -19,26 +22,52 @@ type EventHandlerNames<TElement extends Element> = PrefixedNames<
 >;
 
 type FirstParam<T> = T extends (evt: infer TEvent) => unknown ? TEvent : never;
-type EventTypeParamHandler<TElement, PropertyName extends string> = FirstParam<
+type FirstParamForProperty<TElement, PropertyName extends string> = FirstParam<
     TElement[PropertyName & keyof TElement]
 >;
 
 type EventHandlerProperties<TElement extends Element> = {
     [Property in EventHandlerNames<TElement>]?: (
         this: TElement,
-        evt: TypedEvent<TElement, EventTypeParamHandler<TElement, Property>>,
+        evt: Event<TElement, FirstParamForProperty<TElement, Property>>,
     ) => void;
 };
 
-type ExcludedSimpleProperties = 'innerHTML' | 'innerText' | 'outerText';
+type ExcludedSimpleDOMProperties =
+    | 'innerHTML'
+    | 'outerHTML'
+    | 'innerText'
+    | 'outerText';
 
-type SimpleTypesProperties<TElement extends Element> = Partial<
-    OnlyWritableProperties<
-        Pick<
-            TElement,
-            Exclude<
-                KeysMatching<TElement, string | number | boolean>,
-                ExcludedSimpleProperties
+/**
+ * Some property names are weirdly represented in the DOM, this just puts them back to what they are in HTML.
+ */
+interface RemappedProperties {
+    className: 'class';
+    htmlFor: 'for';
+}
+
+/**
+ * Some property names are weirdly represented in the DOM, this just puts them back to what they are in HTML.
+ */
+type RemapPropertyNames<TObj> = {
+    [Key in keyof TObj as Key extends keyof RemappedProperties
+        ? RemappedProperties[Key]
+        : Key]: TObj[Key];
+};
+
+type SimpleDOMProperties<TElement extends Element> = Partial<
+    RemapPropertyNames<
+        OnlyWritableProperties<
+            Pick<
+                TElement,
+                Exclude<
+                    PropertyNamesWithValueMatching<
+                        TElement,
+                        string | number | boolean
+                    >,
+                    ExcludedSimpleDOMProperties
+                >
             >
         >
     >
@@ -49,25 +78,21 @@ type ManuallySpecifiedProperties = {
     children?: JSX.Element;
 };
 
+type ElementProperties<TElement extends Element> = EventHandlerProperties<TElement> & SimpleDOMProperties<TElement> & ManuallySpecifiedProperties;
+
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         interface IntrinsicElementParts {
-            'wireyui-web': keyof HTMLElementTagNameMap;
+            'wireyui-web': keyof IntrinsicElementTypeMap;
         }
 
         interface IntrinsicElementAttributeParts<TElementType extends string> {
             'wireyui-web': TElementType extends keyof IntrinsicElementTypeMap
-                ? EventHandlerProperties<
+                ? ElementProperties<
                       IntrinsicElementTypeMap[TElementType]
-                  > &
-                      SimpleTypesProperties<
-                          IntrinsicElementTypeMap[TElementType]
-                      > &
-                      ManuallySpecifiedProperties
-                : EventHandlerProperties<HTMLElement> &
-                      SimpleTypesProperties<HTMLElement> &
-                      ManuallySpecifiedProperties;
+                  > 
+                : ElementProperties<HTMLElement>;
         }
 
         /**
@@ -78,4 +103,3 @@ declare global {
         }
     }
 }
-document.createElement('div');

@@ -16,14 +16,12 @@ export function jsx<ComponentType extends string | Component<unknown>>(
                 // Component function
                 return renderComponent(type, props);
             }
-            break;
 
         case 'string':
             {
                 // intrinsic
                 return renderDOMElement(type, props);
             }
-            break;
 
         default:
             throw new TypeError(`Unexpected type ${type}`);
@@ -36,9 +34,26 @@ function renderDOMElement<TElementType extends string>(
 ): HTMLElement | SVGElement {
     const ele = document.createElement(type);
 
-    // assign attributes and set up signals
+    // Assign attributes and set up signals
 
-    addChildren(ele, props.children);
+    for (const key of Object.getOwnPropertyNames(props)) {
+        if (key !== 'children') {
+            const value = (props as Record<string, unknown>)[key];
+
+            if (key.startsWith('on')) {
+                const eventName = key.substring(2);
+
+                ele.addEventListener(eventName, (isSignal(value) ? value.value : value) as EventListener);
+                // TODO: cleanup / signal change
+            }
+            else {
+                (props as Record<string, unknown>)[key] = (isSignal(value) ? value.value : value);
+                // TODO: cleanup / signal change
+            }
+        }
+    }
+
+    appendJsxChildren(ele, props.children);
 
     return ele;
 }
@@ -52,15 +67,18 @@ function renderComponent<TComponentType extends Component<unknown>>(
     if (isSignal(res)) {
         // signal means the result can change and we need to handle that..
         return res.value;
+
     } else if (Array.isArray(res)) {
         // static element/list of element result
         return res.map((x) => (isSignal(x) ? x.value : x));
+
     } else {
         return res;
+        
     }
 }
 
-function addChildren(parent: Node, children: JSX.Element): void {
+export function appendJsxChildren(parent: Node, children: JSX.Element): void {
     flatten(children, (child) => {
         switch (typeof child) {
             case 'undefined':

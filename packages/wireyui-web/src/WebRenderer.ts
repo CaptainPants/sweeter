@@ -1,4 +1,5 @@
 import { JSXElement } from '@captainpants/wireyui-core';
+import { appendJsxChildren } from '@captainpants/wireyui-web/jsx-runtime';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -12,7 +13,7 @@ export class WebRenderer {
         this.#options = options ?? {};
     }
 
-    start(element: HTMLElement, rootComponent: JSXElement): void {
-        console.error('TODO');
+    start(element: HTMLElement, rootElements: JSXElement): void {
+        appendJsxChildren(element, rootElements);
     }
 }

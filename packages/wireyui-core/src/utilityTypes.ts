@@ -16,15 +16,6 @@ export type WritableKeys<T> = {
     >;
 }[keyof T];
 
-export type ReadonlyKeys<T> = {
-    [P in keyof T]-?: IfEquals<
-        { [Q in P]: T[P] },
-        { -readonly [Q in P]: T[P] },
-        never,
-        P
-    >;
-}[keyof T];
-
 export type OnlyWritableProperties<T> = Pick<T, WritableKeys<T>>;
 
 // === END ===

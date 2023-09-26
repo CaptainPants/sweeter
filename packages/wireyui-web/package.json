@@ -20,7 +20,7 @@
         }
     },
     "scripts": {
-        "trace": "pnpm typecheck --generateTrace .trace && pnpm exec analyze-trace .trace",
+        "trace": "pnpm exec tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",

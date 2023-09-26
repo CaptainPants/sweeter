@@ -76,16 +76,26 @@ function assignDOMElementProps<TElementType extends string>(
             if (mappedKey.startsWith('on')) {
                 const eventName = mappedKey.substring(2);
 
-                ele.addEventListener(
-                    eventName,
-                    (isSignal(value) ? value.value : value) as EventListener,
-                );
-                // TODO: cleanup / signal change
+                if (isSignal(value)) {
+                    // Indirect via anonymous callback
+                    ele.addEventListener(eventName, (evt) => {
+                        (value.value as EventListener)(evt);
+                    });
+                } else {
+                    // More direct path if not a signal
+                    ele.addEventListener(eventName, value as EventListener);
+                }
             } else {
-                (props as Record<string, unknown>)[mappedKey] = isSignal(value)
-                    ? value.value
-                    : value;
-                // TODO: cleanup / signal change
+                if (isSignal(value)) {
+                    (props as Record<string, unknown>)[mappedKey] =
+                        value.peek();
+                    value.listen((_, newValue) => {
+                        (props as Record<string, unknown>)[mappedKey] =
+                            newValue;
+                    });
+                } else {
+                    (props as Record<string, unknown>)[mappedKey] = value;
+                }
             }
         }
     }

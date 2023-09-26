@@ -13,9 +13,7 @@ export type FlattenedElement = Exclude<
  */
 export function flatten(
     children: JSX.Element,
-    callback: (
-        item: FlattenedElement,
-    ) => void,
+    callback: (item: FlattenedElement) => void,
 ): void {
     if (children === null || children === undefined) {
         return;
@@ -25,12 +23,9 @@ export function flatten(
         children.forEach((inner) => {
             flatten(inner, callback);
         });
-        
     } else if (isSignal(children)) {
         flatten(children.value, callback);
-
     } else {
         callback(children);
-        
     }
 }

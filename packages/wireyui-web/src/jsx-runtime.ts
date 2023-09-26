@@ -60,6 +60,8 @@ function renderComponent<TComponentType extends Component<unknown>>(
     return res;
 }
 
+type Untyped = Record<string, unknown>;
+
 function assignDOMElementProps<TElementType extends string>(
     ele: Node,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
@@ -71,7 +73,7 @@ function assignDOMElementProps<TElementType extends string>(
             : key;
 
         if (mappedKey !== 'children') {
-            const value = (props as Record<string, unknown>)[mappedKey];
+            const value = (props as Untyped)[mappedKey];
 
             if (mappedKey.startsWith('on')) {
                 const eventName = mappedKey.substring(2);
@@ -79,7 +81,7 @@ function assignDOMElementProps<TElementType extends string>(
                 if (isSignal(value)) {
                     // Indirect via anonymous callback
                     ele.addEventListener(eventName, (evt) => {
-                        (value.value as EventListener)(evt);
+                        (value.peek() as EventListener)(evt);
                     });
                 } else {
                     // More direct path if not a signal
@@ -87,14 +89,17 @@ function assignDOMElementProps<TElementType extends string>(
                 }
             } else {
                 if (isSignal(value)) {
-                    (props as Record<string, unknown>)[mappedKey] =
-                        value.peek();
-                    value.listen((_, newValue) => {
-                        (props as Record<string, unknown>)[mappedKey] =
-                            newValue;
-                    });
+                    (props as Untyped)[mappedKey] = value.peek();
+
+                    // TODO: this is only held by a weak reference -- we either need to allow a strong reference (and clean it
+                    //       up on removal from DOM - which is murky), or to associate the callback strongly with the DOM
+                    //       element directly (maybe a WeakMap)
+                    const _removeListener = value.listen((_, newValue) => {
+                        (props as Untyped)[mappedKey] = newValue;
+                    }, false);
+                    // _removeListener needs to be called when the DOM element is removed
                 } else {
-                    (props as Record<string, unknown>)[mappedKey] = value;
+                    (props as Untyped)[mappedKey] = value;
                 }
             }
         }

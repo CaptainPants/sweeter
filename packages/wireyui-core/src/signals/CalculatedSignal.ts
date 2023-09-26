@@ -53,14 +53,14 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #attach() {
         for (const dep of this.#dependencies) {
-            dep.listen(this.#dependencyListener);
+            dep.listen(this.#dependencyListener, false);
         }
     }
 
     #detachExcept(set: Set<Signal<unknown>>) {
         for (const dep of this.#dependencies) {
             if (!set.has(dep)) {
-                dep.unlisten(this.#dependencyListener);
+                dep.unlisten(this.#dependencyListener, false);
             }
         }
     }

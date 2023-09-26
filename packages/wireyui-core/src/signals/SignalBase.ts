@@ -42,15 +42,15 @@ export class SignalBase<T> implements Signal<T> {
         this.#listeners.announce(previous, next);
     }
 
-    public listen(listener: SignalListener<T>): () => void {
-        this.#listeners.add(listener);
+    public listen(listener: SignalListener<T>, strong = true): () => void {
+        this.#listeners.add(listener, strong);
 
         return () => {
-            this.unlisten(listener);
+            this.unlisten(listener, strong);
         };
     }
 
-    public unlisten(listener: SignalListener<T>): void {
-        this.#listeners.remove(listener);
+    public unlisten(listener: SignalListener<T>, strong = true): void {
+        this.#listeners.remove(listener, strong);
     }
 }

@@ -7,32 +7,42 @@ const weakRefCache = new WeakMap<object, WeakRef<object>>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class WeakListenerSet<Listener extends (...args: any[]) => void> {
-    #listenerRefs = new Set<WeakRef<Listener>>();
+    #listenerRefs = new Set<WeakRef<Listener> | Listener>();
 
-    public add(listener: Listener) {
-        let weakRef = weakRefCache.get(listener) as WeakRef<Listener>;
-        if (!weakRef) {
-            weakRef = new WeakRef(listener);
+    public add(listener: Listener, strong: boolean) {
+        if (strong) {
+            this.#listenerRefs.add(listener);
+        } else {
+            let weakRef = weakRefCache.get(listener) as WeakRef<Listener>;
+            if (!weakRef) {
+                weakRef = new WeakRef(listener);
+            }
+            weakRefCache.set(listener, weakRef);
+            this.#listenerRefs.add(weakRef);
         }
-        weakRefCache.set(listener, weakRef);
-        this.#listenerRefs.add(weakRef);
     }
 
     /**
-     * The number of live listeners attached to this
+     * The number of live listeners attached to this - only really useful for debugging held references
      * @returns
      */
     public getLiveCount() {
         return [...this.#listenerRefs].reduce(
-            (prev, weakRef) => prev + (weakRef.deref() ? 1 : 0),
+            (prev, weakRef) =>
+                prev +
+                (weakRef instanceof WeakRef ? (weakRef.deref() ? 1 : 0) : 1),
             0,
         );
     }
 
-    public remove(listener: Listener) {
-        const weakRef = weakRefCache.get(listener) as WeakRef<Listener>;
-        if (weakRef) {
-            this.#listenerRefs.delete(weakRef);
+    public remove(listener: Listener, strong: boolean) {
+        if (strong) {
+            this.#listenerRefs.delete(listener);
+        } else {
+            const weakRef = weakRefCache.get(listener) as WeakRef<Listener>;
+            if (weakRef) {
+                this.#listenerRefs.delete(weakRef);
+            }
         }
     }
 
@@ -43,7 +53,7 @@ export class WeakListenerSet<Listener extends (...args: any[]) => void> {
      */
     public announce(...args: Parameters<Listener>) {
         for (const ref of this.#listenerRefs) {
-            const listener = ref.deref();
+            const listener = ref instanceof WeakRef ? ref.deref() : ref;
 
             if (listener) {
                 try {

@@ -10,9 +10,19 @@ export interface Signal<T> {
 
     peek(): T;
 
-    listen(listener: SignalListener<T>): () => void;
+    /**
+     *
+     * @param listener
+     * @param strong default: true
+     */
+    listen(listener: SignalListener<T>, strong?: boolean): () => void;
 
-    unlisten(listener: SignalListener<T>): void;
+    /**
+     *
+     * @param listener
+     * @param strong default: true
+     */
+    unlisten(listener: SignalListener<T>, strong?: boolean): void;
 }
 
 export interface MutableSignal<T> extends Signal<T> {

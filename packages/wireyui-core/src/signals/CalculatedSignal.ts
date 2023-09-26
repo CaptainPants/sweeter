@@ -53,6 +53,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #attach() {
         for (const dep of this.#dependencies) {
+            // Holds a weak reference back to this signal
             dep.listen(this.#dependencyListener, false);
         }
     }
@@ -60,6 +61,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     #detachExcept(set: Set<Signal<unknown>>) {
         for (const dep of this.#dependencies) {
             if (!set.has(dep)) {
+                // Holds a weak reference back to this signal
                 dep.unlisten(this.#dependencyListener, false);
             }
         }

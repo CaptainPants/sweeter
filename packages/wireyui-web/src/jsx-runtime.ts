@@ -41,25 +41,7 @@ function renderDOMElement<TElementType extends string>(
     const ele = document.createElement(type);
 
     // Assign attributes and set up signals
-
-    for (const key of Object.getOwnPropertyNames(props)) {
-        const mappedKey = Object.hasOwn(mappedProperties, key) ? mappedProperties[key]! : key;
-
-        if (mappedKey !== 'children') {
-            const value = (props as Record<string, unknown>)[mappedKey];
-
-            if (mappedKey.startsWith('on')) {
-                const eventName = mappedKey.substring(2);
-
-                ele.addEventListener(eventName, (isSignal(value) ? value.value : value) as EventListener);
-                // TODO: cleanup / signal change
-            }
-            else {
-                (props as Record<string, unknown>)[mappedKey] = (isSignal(value) ? value.value : value);
-                // TODO: cleanup / signal change
-            }
-        }
-    }
+    assignProps(ele, props);
 
     appendJsxChildren(ele, props.children);
 
@@ -86,10 +68,35 @@ function renderComponent<TComponentType extends Component<unknown>>(
     }
 }
 
+function assignProps<TElementType extends string>(
+    ele: Node, 
+    props: PropsWithIntrinsicAttributesFor<TElementType>
+): void {
+    for (const key of Object.getOwnPropertyNames(props)) {
+        // Deal with class (className) and for (htmlFor) 
+        const mappedKey = Object.hasOwn(mappedProperties, key) ? mappedProperties[key]! : key;
+
+        if (mappedKey !== 'children') {
+            const value = (props as Record<string, unknown>)[mappedKey];
+
+            if (mappedKey.startsWith('on')) {
+                const eventName = mappedKey.substring(2);
+
+                ele.addEventListener(eventName, (isSignal(value) ? value.value : value) as EventListener);
+                // TODO: cleanup / signal change
+            }
+            else {
+                (props as Record<string, unknown>)[mappedKey] = (isSignal(value) ? value.value : value);
+                // TODO: cleanup / signal change
+            }
+        }
+    }
+}
+
 export function appendJsxChildren(parent: Node, children: JSX.Element): void {
     const callback = (child: FlattenedElement) => {
         if (isSignal(child)) {
-            // TODO: 
+            // TODO: cleanup / signal change
             flatten(child.value, callback);
             return;
         }

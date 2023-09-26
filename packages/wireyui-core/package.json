@@ -16,6 +16,7 @@
         }
     },
     "scripts": {
+        "trace": "pnpm typecheck --generateTrace .trace && pnpm exec analyze-trace .trace",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",

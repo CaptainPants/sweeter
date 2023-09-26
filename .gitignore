@@ -10,3 +10,4 @@ msbuild.binlog
 
 **/*.tsbuildinfo
 **/.rollup.cache
+**/.trace

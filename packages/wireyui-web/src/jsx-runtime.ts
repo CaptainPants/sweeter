@@ -21,7 +21,9 @@ export function jsx<ComponentType extends string | Component<unknown>>(
             // intrinsic
             return renderDOMElement(
                 type,
-                props as PropsWithIntrinsicAttributesFor<string>,
+                props as PropsWithIntrinsicAttributesFor<
+                    ComponentType & string
+                >,
             );
         }
 
@@ -42,7 +44,7 @@ function renderDOMElement<TElementType extends string>(
     const ele = document.createElement(type);
 
     // Assign attributes and set up signals
-    assignProps(ele, props);
+    assignDOMElementProps(ele, props);
 
     appendJsxChildren(ele, props.children);
 
@@ -55,18 +57,10 @@ function renderComponent<TComponentType extends Component<unknown>>(
 ): JSXElement {
     const res = Component(props, {});
 
-    if (isSignal(res)) {
-        // signal means the result can change and we need to handle that..
-        return res.value;
-    } else if (Array.isArray(res)) {
-        // static element/list of element result
-        return res.map((x) => (isSignal(x) ? x.value : x));
-    } else {
-        return res;
-    }
+    return res;
 }
 
-function assignProps<TElementType extends string>(
+function assignDOMElementProps<TElementType extends string>(
     ele: Node,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
 ): void {

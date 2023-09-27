@@ -25,3 +25,23 @@ it('Nested elements appear in output', () => {
         { nodeName: 'SPAN', children: [{ nodeType: Node.TEXT_NODE, textContent: '2' }] }
     ] });
 });
+
+function BasicComponent({ text = '' }) {
+    return <span>{text}</span>;
+}
+
+it('Basic components produce output', () => {
+    const res = <div title="test">
+        <BasicComponent text="1" />
+        <BasicComponent text="2" />
+    </div>;
+
+    if (!(res instanceof Node)) {
+        fail('Should be a node');
+    }
+
+    expectDOMMatching(res, { title: 'test', nodeName: 'DIV', children: [
+        { nodeName: 'SPAN', children: [{ nodeType: Node.TEXT_NODE, textContent: '1' }] },
+        { nodeName: 'SPAN', children: [{ nodeType: Node.TEXT_NODE, textContent: '2' }] }
+    ] });
+});

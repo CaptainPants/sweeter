@@ -1,6 +1,6 @@
 import { SignalState } from './SignalState.js';
 import { announceSignalUsage } from './ambient.js';
-import { WeakListenerSet } from './internal/WeakListenerSet.js';
+import { ListenerSet } from './internal/ListenerSet.js';
 import { Signal, SignalListener } from './types.js';
 
 export class SignalBase<T> implements Signal<T> {
@@ -9,7 +9,7 @@ export class SignalBase<T> implements Signal<T> {
     }
 
     #state: SignalState<T>;
-    #listeners = new WeakListenerSet<SignalListener<T>>();
+    #listeners = new ListenerSet<SignalListener<T>>();
 
     public get value(): T {
         announceSignalUsage(this);

@@ -6,7 +6,7 @@
 const weakRefCache = new WeakMap<object, WeakRef<object>>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class WeakListenerSet<Listener extends (...args: any[]) => void> {
+export class ListenerSet<Listener extends (...args: any[]) => void> {
     #listenerRefs = new Set<WeakRef<Listener> | Listener>();
 
     public add(listener: Listener, strong: boolean) {
@@ -62,6 +62,7 @@ export class WeakListenerSet<Listener extends (...args: any[]) => void> {
                     console.error(
                         'Error swallowed while invoking listener',
                         listener,
+                        ex
                     );
                 }
             } else {

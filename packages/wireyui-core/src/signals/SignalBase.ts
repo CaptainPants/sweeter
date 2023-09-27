@@ -1,4 +1,4 @@
-import { SignalState } from './SignalState.js';
+import { SignalState, isEqualSignalState } from './SignalState.js';
 import { announceSignalUsage } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
 import { Signal, SignalListener } from './types.js';
@@ -30,7 +30,7 @@ export class SignalBase<T> implements Signal<T> {
     protected _set(state: SignalState<T>) {
         const previous = this.#state;
 
-        if (Object.is(previous, state)) {
+        if (isEqualSignalState(previous, state)) {
             return; // Don't announce the change if the values were equal
         }
 

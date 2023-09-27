@@ -66,6 +66,7 @@ export class ListenerSet<Listener extends (...args: any[]) => void> {
                     );
                 }
             } else {
+                // Delete any references to collected objects
                 this.#listenerRefs.delete(ref);
             }
         }

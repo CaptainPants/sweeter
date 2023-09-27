@@ -23,13 +23,20 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
         super(initialValue);
 
-        this.#calculation = wrapped;
+        this.#wrappedCalculation = wrapped;
         this.#dependencies = dependencies;
 
         this.#attach();
     }
 
-    #calculation: () => SignalState<T>;
+    #wrappedCalculation: () => SignalState<T>;
+
+    /**
+     * Strong references to any signal we depend upon.
+     *
+     * We rely on weak references in the other direction (Signal<T>.#listeners) to allow
+     * cleanup of signals that are dependencies of Signals that have been garbage collected.
+     */
     #dependencies: Set<Signal<unknown>>;
 
     /**
@@ -41,7 +48,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #recalculate() {
         const { result, dependencies: nextDependencies } =
-            callAndReturnDependencies(this.#calculation, true);
+            callAndReturnDependencies(this.#wrappedCalculation, true);
 
         this.#detachExcept(nextDependencies);
         this.#attach();
@@ -54,7 +61,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     #attach() {
         for (const dep of this.#dependencies) {
             // Holds a weak reference back to this signal
-            dep.listen(this.#dependencyListener, false);
+            dep.listen(this.#dependencyListener, false /* strong: false */);
         }
     }
 
@@ -62,7 +69,10 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         for (const dep of this.#dependencies) {
             if (!set.has(dep)) {
                 // Holds a weak reference back to this signal
-                dep.unlisten(this.#dependencyListener, false);
+                dep.unlisten(
+                    this.#dependencyListener,
+                    false /* strong: false */,
+                );
             }
         }
     }

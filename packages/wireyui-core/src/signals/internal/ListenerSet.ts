@@ -62,7 +62,7 @@ export class ListenerSet<Listener extends (...args: any[]) => void> {
                     console.error(
                         'Error swallowed while invoking listener',
                         listener,
-                        ex
+                        ex,
                     );
                 }
             } else {

@@ -53,4 +53,8 @@ export class SignalBase<T> implements Signal<T> {
     public unlisten(listener: SignalListener<T>, strong = true): void {
         this.#listeners.remove(listener, strong);
     }
+
+    public clearListeners(): void {
+        this.#listeners.clear();
+    }
 }

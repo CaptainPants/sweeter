@@ -1,33 +1,34 @@
+type ElementPartial<TElement> = Partial<TElement> & {
+    children?: ElementPartial<TElement>[];
+};
 
-type ElementPartial<TElement> = Partial<TElement> & { children?: ElementPartial<TElement>[] };
-
-export function expectDOMMatching<TElement extends HTMLElement | SVGElement | Text>(
-    node: TElement,
-    target: ElementPartial<TElement>,
-): string | null {
+export function expectDOMMatching<
+    TElement extends HTMLElement | SVGElement | Text,
+>(node: TElement, target: ElementPartial<TElement>): string | null {
     for (const key of Object.getOwnPropertyNames(target)) {
         if (key === 'children') {
             continue;
         }
 
-        expect((node as unknown as Record<string, unknown>)[key]).toStrictEqual((target as Record<string, unknown>)[key])
+        expect((node as unknown as Record<string, unknown>)[key]).toStrictEqual(
+            (target as Record<string, unknown>)[key],
+        );
     }
 
-    if (target.children) { 
-        
+    if (target.children) {
         const childPartials = target.children;
         const childNodes = node.childNodes;
-        
+
         expect(childNodes.length).toStrictEqual(childPartials.length);
 
-        childPartials.forEach(
-            (childPartial, index) => {
-                const childNode = childNodes[index]!
-                expectDOMMatching(childNode as HTMLElement | SVGElement | Text, childPartial);
-            }
-        )
-    }
-    else {
+        childPartials.forEach((childPartial, index) => {
+            const childNode = childNodes[index]!;
+            expectDOMMatching(
+                childNode as HTMLElement | SVGElement | Text,
+                childPartial,
+            );
+        });
+    } else {
         expect(node.childNodes.length).toStrictEqual(0);
     }
 

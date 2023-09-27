@@ -62,8 +62,35 @@ function renderComponent<TComponentType extends Component<unknown>>(
 
 type Untyped = Record<string, unknown>;
 
+const cleanupMap = new WeakMap<Node, (() => void)[]>();
+function addCleanupCallback(node: Node, callback: () => void): void {
+    const found = cleanupMap.get(node);
+    if (found) {
+        found.push(callback);
+    } else {
+        const toAdd = [callback];
+        cleanupMap.set(node, toAdd);
+    }
+}
+function cleanup(node: Node) {
+    const callbacks = cleanupMap.get(node);
+    if (!callbacks || callbacks.length == 0) return;
+
+    for (const item of callbacks) {
+        try {
+            item();
+        } catch (ex) {
+            console.error(
+                'Error swallowed while cleaning up DOM element',
+                ex,
+                node,
+            );
+        }
+    }
+}
+
 function assignDOMElementProps<TElementType extends string>(
-    ele: Node,
+    node: Node,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
 ): void {
     for (const key of Object.getOwnPropertyNames(props)) {
@@ -78,26 +105,28 @@ function assignDOMElementProps<TElementType extends string>(
             if (mappedKey.startsWith('on')) {
                 const eventName = mappedKey.substring(2);
 
+                // We don't need to subscribe, we can just use the current value of 
+                // the signal.
                 if (isSignal(value)) {
                     // Indirect via anonymous callback
-                    ele.addEventListener(eventName, (evt) => {
+                    node.addEventListener(eventName, (evt) => {
                         (value.peek() as EventListener)(evt);
                     });
                 } else {
                     // More direct path if not a signal
-                    ele.addEventListener(eventName, value as EventListener);
+                    node.addEventListener(eventName, value as EventListener);
                 }
             } else {
                 if (isSignal(value)) {
                     (props as Untyped)[mappedKey] = value.peek();
 
-                    // TODO: this is only held by a weak reference -- we either need to allow a strong reference (and clean it
-                    //       up on removal from DOM - which is murky), or to associate the callback strongly with the DOM
-                    //       element directly (maybe a WeakMap)
-                    const _removeListener = value.listen((_, newValue) => {
+                    const removeListener = value.listen((_, newValue) => {
                         (props as Untyped)[mappedKey] = newValue;
-                    }, false);
-                    // _removeListener needs to be called when the DOM element is removed
+                    }, true);
+                    // When the DOM element is removed, we stop listening for changes
+                    // this in turn will eventually release dependencies for which
+                    // there are no further strong references held.
+                    addCleanupCallback(node, removeListener);
                 } else {
                     (props as Untyped)[mappedKey] = value;
                 }
@@ -109,8 +138,24 @@ function assignDOMElementProps<TElementType extends string>(
 export function appendJsxChildren(parent: Node, children: JSX.Element): void {
     const callback = (child: FlattenedElement) => {
         if (isSignal(child)) {
-            // TODO: cleanup / signal change
+            let lastValue = child.value;
+
             flatten(child.value, callback);
+
+            const removeListener = child.listen((newValue) => {
+                // TODO: cleanup / signal change
+                console.log('lastValue: ', lastValue);
+                console.log('cleanup: ', cleanup);
+
+                const thisValue = child.value;
+
+                flatten(thisValue, callback);
+
+                lastValue = thisValue;
+            });
+
+            addCleanupCallback(parent, removeListener);
+
             return;
         }
 

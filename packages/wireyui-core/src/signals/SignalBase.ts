@@ -1,5 +1,5 @@
 import { SignalState, isEqualSignalState } from './SignalState.js';
-import { announceSignalUsage } from './ambient.js';
+import { announceSignalUsage, untrack } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
 import { Signal, SignalListener } from './types.js';
 
@@ -39,7 +39,10 @@ export class SignalBase<T> implements Signal<T> {
     }
 
     #announceChange(previous: SignalState<T>, next: SignalState<T>) {
-        this.#listeners.announce(previous, next);
+        // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
+        untrack(() => {
+            this.#listeners.announce(previous, next);
+        });
     }
 
     public listen(listener: SignalListener<T>, strong = true): () => void {

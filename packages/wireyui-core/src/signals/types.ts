@@ -12,7 +12,7 @@ export interface Signal<T> {
     readonly value: T;
 
     /**
-     * Get the current value of the signal without subscribing for updates. 
+     * Get the current value of the signal without subscribing for updates.
      */
     peek(): T;
 

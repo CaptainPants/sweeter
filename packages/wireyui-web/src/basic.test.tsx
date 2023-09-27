@@ -26,14 +26,14 @@ it('Nested elements appear in output', () => {
     ] });
 });
 
-function BasicComponent({ text = '' }) {
-    return <span>{text}</span>;
+function BasicComponent({ children = '' }) {
+    return <span title={children}>{children}</span>;
 }
 
 it('Basic components produce output', () => {
     const res = <div title="test">
-        <BasicComponent text="1" />
-        <BasicComponent text="2" />
+        <BasicComponent>1</BasicComponent>
+        <BasicComponent>2</BasicComponent>
     </div>;
 
     if (!(res instanceof Node)) {
@@ -41,7 +41,7 @@ it('Basic components produce output', () => {
     }
 
     expectDOMMatching(res, { title: 'test', nodeName: 'DIV', children: [
-        { nodeName: 'SPAN', children: [{ nodeType: Node.TEXT_NODE, textContent: '1' }] },
-        { nodeName: 'SPAN', children: [{ nodeType: Node.TEXT_NODE, textContent: '2' }] }
+        { nodeName: 'SPAN', title: '1', children: [{ nodeType: Node.TEXT_NODE, textContent: '1' }] },
+        { nodeName: 'SPAN', title: '2', children: [{ nodeType: Node.TEXT_NODE, textContent: '2' }] }
     ] });
 });

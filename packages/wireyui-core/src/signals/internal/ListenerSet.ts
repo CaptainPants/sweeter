@@ -70,4 +70,8 @@ export class ListenerSet<Listener extends (...args: any[]) => void> {
             }
         }
     }
+
+    public clear() {
+        this.#listenerRefs.clear();
+    }
 }

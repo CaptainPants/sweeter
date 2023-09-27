@@ -5,9 +5,10 @@ import {
     flatten,
     FlattenedElement,
     isSignal,
+    Signal,
 } from '@captainpants/wireyui-core';
 
-export function jsx<ComponentType extends string | Component<unknown>>(
+function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,
     props: PropsWithIntrinsicAttributesFor<ComponentType>,
 ): JSXElement {
@@ -46,7 +47,7 @@ function renderDOMElement<TElementType extends string>(
     // Assign attributes and set up signals
     assignDOMElementProps(ele, props);
 
-    appendJsxChildren(ele, props.children);
+    appendJsxChildren(ele, null, props.children);
 
     return ele;
 }
@@ -72,9 +73,22 @@ function addCleanupCallback(node: Node, callback: () => void): void {
         cleanupMap.set(node, toAdd);
     }
 }
-function cleanup(node: Node) {
+
+/**
+ * TODO: we could use a [] stack here to avoid the recursion.
+ * @param node
+ * @returns
+ */
+function cleanupRecursive(node: Node) {
     const callbacks = cleanupMap.get(node);
+
     if (!callbacks || callbacks.length == 0) return;
+
+    cleanupMap.delete(node);
+
+    for (const child of node.childNodes) {
+        cleanupRecursive(child);
+    }
 
     for (const item of callbacks) {
         try {
@@ -105,7 +119,7 @@ function assignDOMElementProps<TElementType extends string>(
             if (mappedKey.startsWith('on')) {
                 const eventName = mappedKey.substring(2);
 
-                // We don't need to subscribe, we can just use the current value of 
+                // We don't need to subscribe, we can just use the current value of
                 // the signal.
                 if (isSignal(value)) {
                     // Indirect via anonymous callback
@@ -118,44 +132,74 @@ function assignDOMElementProps<TElementType extends string>(
                 }
             } else {
                 if (isSignal(value)) {
-                    (props as Untyped)[mappedKey] = value.peek();
+                    (node as unknown as Untyped)[mappedKey] = value.peek();
 
                     const removeListener = value.listen((_, newValue) => {
-                        (props as Untyped)[mappedKey] = newValue;
+                        (node as unknown as Untyped)[mappedKey] = newValue;
                     }, true);
                     // When the DOM element is removed, we stop listening for changes
                     // this in turn will eventually release dependencies for which
                     // there are no further strong references held.
                     addCleanupCallback(node, removeListener);
                 } else {
-                    (props as Untyped)[mappedKey] = value;
+                    (node as unknown as Untyped)[mappedKey] = value;
                 }
             }
         }
     }
 }
 
-export function appendJsxChildren(parent: Node, children: JSX.Element): void {
+function append(parent: Node, after: Node | null, child: Node) {
+    if (after) {
+        parent.insertBefore(child, after.nextSibling);
+    } else {
+        parent.appendChild(child);
+    }
+}
+
+function addDynamicJsxChild(
+    parent: Node,
+    after: Node | null,
+    children: Signal<JSX.Element>,
+): void {
+    let lastValue = children.value;
+
+    const startMarker = document.createTextNode('');
+    const endMarker = document.createTextNode('');
+
+    append(parent, after, startMarker);
+    appendJsxChildren(parent, after, lastValue);
+    append(parent, after, endMarker);
+
+    const removeListener = children.listen((newValue) => {
+        const thisValue = children.value;
+
+        let current = startMarker.nextSibling;
+        while (current && current != endMarker) {
+            const next = current.nextSibling;
+
+            cleanupRecursive(current);
+            parent.removeChild(current);
+
+            current = next;
+        }
+
+        appendJsxChildren(parent, endMarker, lastValue);
+
+        lastValue = thisValue;
+    });
+
+    addCleanupCallback(parent, removeListener);
+}
+
+function appendJsxChildren(
+    parent: Node,
+    after: Node | null,
+    children: JSX.Element,
+): void {
     const callback = (child: FlattenedElement) => {
         if (isSignal(child)) {
-            let lastValue = child.value;
-
-            flatten(child.value, callback);
-
-            const removeListener = child.listen((newValue) => {
-                // TODO: cleanup / signal change
-                console.log('lastValue: ', lastValue);
-                console.log('cleanup: ', cleanup);
-
-                const thisValue = child.value;
-
-                flatten(thisValue, callback);
-
-                lastValue = thisValue;
-            });
-
-            addCleanupCallback(parent, removeListener);
-
+            addDynamicJsxChild(parent, after, child);
             return;
         }
 
@@ -166,14 +210,18 @@ export function appendJsxChildren(parent: Node, children: JSX.Element): void {
             case 'number':
             case 'boolean':
             case 'string':
-                parent.appendChild(document.createElement(String(child)));
+                append(parent, after, document.createTextNode(String(child)));
                 break;
 
             default:
-                parent.appendChild(child);
+                append(parent, after, child);
                 break;
         }
     };
 
     flatten(children, callback);
 }
+
+// The only documentation I can find on jsxs is https://github.com/reactjs/rfcs/blob/createlement-rfc/text/0000-create-element-changes.md#always-pass-children-as-props
+// which says "The jsxs function indicates that the top array was created by React.".
+export { jsx, jsx as jsxs, appendJsxChildren };

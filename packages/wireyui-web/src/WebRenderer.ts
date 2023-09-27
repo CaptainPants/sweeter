@@ -14,6 +14,6 @@ export class WebRenderer {
     }
 
     start(element: HTMLElement, rootElements: JSXElement): void {
-        appendJsxChildren(element, rootElements);
+        appendJsxChildren(element, null, rootElements);
     }
 }

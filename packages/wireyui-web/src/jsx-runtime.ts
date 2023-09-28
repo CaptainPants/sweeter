@@ -143,7 +143,7 @@ function addDynamicJsxChild(
     appendJsxChildren(parent, after, lastValue);
     append(parent, after, endMarker);
 
-    const removeListener = children.listen((newValue) => {
+    const removeListener = children.listen(() => {
         const thisValue = children.value;
 
         let current = startMarker.nextSibling;

@@ -35,6 +35,14 @@ export class ListenerSet<Listener extends (...args: any[]) => void> {
         );
     }
 
+    public get summarize(): string {
+        const strongRefs = [...this.#listenerRefs.values()].filter(x => !(x instanceof WeakRef)).length;
+        const weakRefs = [...this.#listenerRefs.values()].filter(x => x instanceof WeakRef).length;
+        const weakRefsAlive = [...this.#listenerRefs.values()].filter(x => x instanceof WeakRef && x.deref()).length;
+
+        return `ListenerSet(strong: ${strongRefs}, weak: ${weakRefs} / alive: ${weakRefsAlive})`;
+    }
+
     public remove(listener: Listener, strong: boolean) {
         if (strong) {
             this.#listenerRefs.delete(listener);

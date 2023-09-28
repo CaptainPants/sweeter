@@ -132,9 +132,9 @@ function append(parent: Node, after: Node | null, child: Node) {
 function addDynamicJsxChild(
     parent: Node,
     after: Node | null,
-    children: Signal<JSX.Element>,
+    childSignal: Signal<JSX.Element>,
 ): void {
-    let lastValue = children.value;
+    let lastValue = childSignal.value;
 
     const startMarker = document.createTextNode('');
     const endMarker = document.createTextNode('');
@@ -143,8 +143,8 @@ function addDynamicJsxChild(
     appendJsxChildren(parent, after, lastValue);
     append(parent, after, endMarker);
 
-    const removeListener = children.listen(() => {
-        const thisValue = children.value;
+    const dynamicJsxChildCleanup = () => {
+        const thisValue = childSignal.value;
 
         let current = startMarker.nextSibling;
         while (current && current != endMarker) {
@@ -158,9 +158,10 @@ function addDynamicJsxChild(
         appendJsxChildren(parent, endMarker, lastValue);
 
         lastValue = thisValue;
-    });
+    };
+    childSignal.listen(dynamicJsxChildCleanup);
 
-    addStrongReference(parent, removeListener);
+    addStrongReference(parent, childSignal);
 }
 
 function appendJsxChildren(

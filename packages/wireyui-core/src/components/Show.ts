@@ -1,5 +1,5 @@
 import { calc } from '../index.js';
-import { Signal } from "../signals/types.js";
+import { Signal } from '../signals/types.js';
 
 export interface ShowProps {
     if: Signal<boolean>;
@@ -7,12 +7,12 @@ export interface ShowProps {
 }
 
 export function Show(props: ShowProps): JSX.Element {
-    return calc<JSX.Element>(
-        () => {
-            if (props.if.value) {
-                return props.children();
-            }
-            return undefined;
+    const showCalculation = (): JSX.Element => {
+        if (props.if.value) {
+            return props.children();
         }
-    );
+        return undefined;
+    };
+
+    return calc(showCalculation);
 }

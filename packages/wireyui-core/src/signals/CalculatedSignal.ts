@@ -4,7 +4,7 @@ import { callAndReturnDependencies } from './ambient.js';
 import { Signal } from './types.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
-    return () => {
+    const result = (): SignalState<T> => {
         try {
             const result = callback();
             return { mode: 'SUCCESS', value: result };
@@ -12,6 +12,10 @@ function wrap<T>(callback: () => T): () => SignalState<T> {
             return { mode: 'ERROR', error: ex };
         }
     };
+    Object.defineProperty(result, 'name', {
+        value: `wrapped(${callback.name})`,
+    });
+    return result;
 }
 
 export class CalculatedSignal<T> extends SignalBase<T> {
@@ -22,6 +26,12 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             callAndReturnDependencies(wrapped, true);
 
         super(initialValue);
+
+        // Giving the function a name for debugging purposes
+        const calculatedSignalListener = () => {
+            this.#recalculate();
+        };
+        this.#dependencyListener = calculatedSignalListener;
 
         this.#wrappedCalculation = wrapped;
         this.#dependencies = dependencies;
@@ -42,9 +52,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     /**
      * Bound as its used as its passed to .listen calls.
      */
-    #dependencyListener = () => {
-        this.#recalculate();
-    };
+    #dependencyListener: () => void;
 
     #recalculate() {
         const { result, dependencies: nextDependencies } =

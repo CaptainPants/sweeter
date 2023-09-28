@@ -4,9 +4,10 @@ type ElementPartial<TElement> = Partial<TElement> & {
 
 type NodeTypes = HTMLElement | SVGElement | Text;
 
-export function expectDOMMatching<
-    TElement extends NodeTypes,
->(node: TElement, target: ElementPartial<NodeTypes>): string | null {
+export function expectDOMMatching<TElement extends NodeTypes>(
+    node: TElement,
+    target: ElementPartial<NodeTypes>,
+): string | null {
     for (const key of Object.getOwnPropertyNames(target)) {
         if (key === 'children') {
             continue;

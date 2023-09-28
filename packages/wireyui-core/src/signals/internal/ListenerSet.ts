@@ -36,11 +36,18 @@ export class ListenerSet<Listener extends (...args: any[]) => void> {
     }
 
     public get summarize(): string {
-        const strongRefs = [...this.#listenerRefs.values()].filter(x => !(x instanceof WeakRef)).length;
-        const weakRefs = [...this.#listenerRefs.values()].filter(x => x instanceof WeakRef).length;
-        const weakRefsAlive = [...this.#listenerRefs.values()].filter(x => x instanceof WeakRef && x.deref()).length;
+        const strongRefs = [...this.#listenerRefs.values()]
+            .map((x) => (x instanceof WeakRef ? undefined : x))
+            .filter((x) => x);
+        const weakRefsAlive = [...this.#listenerRefs.values()]
+            .map((x) => (x instanceof WeakRef ? x.deref() : undefined))
+            .filter((x) => x);
 
-        return `ListenerSet(strong: ${strongRefs}, weak: ${weakRefs} / alive: ${weakRefsAlive})`;
+        return `ListenerSet(strong: ${strongRefs.length} {${strongRefs
+            .map((x) => x?.name ?? '?')
+            .join(', ')}}, weak: ${weakRefsAlive.length} {${weakRefsAlive
+            .map((x) => x?.name ?? '?')
+            .join(', ')}})`;
     }
 
     public remove(listener: Listener, strong: boolean) {

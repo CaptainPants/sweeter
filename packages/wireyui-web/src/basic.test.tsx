@@ -1,4 +1,4 @@
-import { expectDOMMatching } from './test/domDiffer.js';
+import { expectDOMMatching } from './test/expectDOMMatching.js';
 
 it('Simple div has text content and title attribute', () => {
     const res = <div title="test">Something</div>;

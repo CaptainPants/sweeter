@@ -63,43 +63,14 @@ function renderComponent<TComponentType extends Component<unknown>>(
 
 type Untyped = Record<string, unknown>;
 
-const cleanupMap = new WeakMap<Node, (() => void)[]>();
-function addCleanupCallback(node: Node, callback: () => void): void {
-    const found = cleanupMap.get(node);
+const strongReferences = new WeakMap<Node, unknown[]>();
+function addStrongReference(node: Node, ref: unknown): void {
+    const found = strongReferences.get(node);
     if (found) {
-        found.push(callback);
+        found.push(ref);
     } else {
-        const toAdd = [callback];
-        cleanupMap.set(node, toAdd);
-    }
-}
-
-/**
- * TODO: we could use a [] stack here to avoid the recursion.
- * @param node
- * @returns
- */
-function cleanupRecursive(node: Node) {
-    const callbacks = cleanupMap.get(node);
-
-    if (!callbacks || callbacks.length == 0) return;
-
-    cleanupMap.delete(node);
-
-    for (const child of node.childNodes) {
-        cleanupRecursive(child);
-    }
-
-    for (const item of callbacks) {
-        try {
-            item();
-        } catch (ex) {
-            console.error(
-                'Error swallowed while cleaning up DOM element',
-                ex,
-                node,
-            );
-        }
+        const toAdd = [ref];
+        strongReferences.set(node, toAdd);
     }
 }
 
@@ -134,13 +105,14 @@ function assignDOMElementProps<TElementType extends string>(
                 if (isSignal(value)) {
                     (node as unknown as Untyped)[mappedKey] = value.peek();
 
-                    const removeListener = value.listen((_, newValue) => {
+                    // Add a weak listener (so that it will be cleaned up when no references held)
+                    // we will add a strong reference to the DOM element (via WeakMap) to prevent
+                    // cleanup until the DOM element is no longer reachable
+                    value.listen((_, newValue) => {
                         (node as unknown as Untyped)[mappedKey] = newValue;
-                    }, true);
-                    // When the DOM element is removed, we stop listening for changes
-                    // this in turn will eventually release dependencies for which
-                    // there are no further strong references held.
-                    addCleanupCallback(node, removeListener);
+                    }, false);
+
+                    addStrongReference(node, value);
                 } else {
                     (node as unknown as Untyped)[mappedKey] = value;
                 }
@@ -178,7 +150,6 @@ function addDynamicJsxChild(
         while (current && current != endMarker) {
             const next = current.nextSibling;
 
-            cleanupRecursive(current);
             parent.removeChild(current);
 
             current = next;
@@ -189,7 +160,7 @@ function addDynamicJsxChild(
         lastValue = thisValue;
     });
 
-    addCleanupCallback(parent, removeListener);
+    addStrongReference(parent, removeListener);
 }
 
 function appendJsxChildren(

@@ -121,19 +121,20 @@ function assignDOMElementProps<TElementType extends string>(
     }
 }
 
-function append(parent: Node, after: Node | null, child: Node) {
+function append(parent: Node, after: Node | null, child: Node): Node {
     if (after) {
         parent.insertBefore(child, after.nextSibling);
     } else {
         parent.appendChild(child);
     }
+    return child;
 }
 
 function addSignalJsxChild(
     parent: Node,
     after: Node | null,
     childSignal: Signal<JSX.Element>,
-): void {
+): Node {
     let lastValue = childSignal.value;
 
     // JSX.Element signals use a Comment as the start/end
@@ -142,8 +143,8 @@ function addSignalJsxChild(
     const endMarker = document.createComment('}');
 
     append(parent, after, startMarker);
-    appendJsxChildren(parent, after, lastValue);
-    append(parent, after, endMarker);
+    const afterChildren = appendJsxChildren(parent, startMarker, lastValue);
+    append(parent, afterChildren, endMarker);
 
     // TODO: dynamic text is currently getting removed and re-added,
     // and thats not great for performance. We need to do some kind of
@@ -173,16 +174,20 @@ function addSignalJsxChild(
     // dynamicJsxChildCleanupAndReplace so the extra reference
     // isn't necessary
     addStrongReference(parent, childSignal);
+
+    return endMarker;
 }
 
 function appendJsxChildren(
     parent: Node,
     after: Node | null,
     children: JSX.Element,
-): void {
+): Node | null {
+    let last: Node | null = null;
+
     const callback = (child: FlattenedElement) => {
         if (isSignal(child)) {
-            addSignalJsxChild(parent, after, child);
+            last = addSignalJsxChild(parent, after, child);
             return;
         }
 
@@ -193,16 +198,22 @@ function appendJsxChildren(
             case 'number':
             case 'boolean':
             case 'string':
-                append(parent, after, document.createTextNode(String(child)));
-                break;
+                last = append(
+                    parent,
+                    after,
+                    document.createTextNode(String(child)),
+                );
+                return;
 
             default:
-                append(parent, after, child);
-                break;
+                last = append(parent, after, child);
+                return;
         }
     };
 
     flatten(children, callback);
+
+    return last;
 }
 
 // The only documentation I can find on jsxs is https://github.com/reactjs/rfcs/blob/createlement-rfc/text/0000-create-element-changes.md#always-pass-children-as-props

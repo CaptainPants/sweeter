@@ -7,6 +7,6 @@ import { Signal, isSignal } from './index.js';
  * @param value
  * @returns
  */
-export function value<T>(value: T | Signal<T>): T {
+export function valueOf<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.value : value;
 }

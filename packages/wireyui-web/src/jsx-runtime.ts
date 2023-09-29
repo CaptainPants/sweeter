@@ -145,6 +145,10 @@ function addSignalJsxChild(
     appendJsxChildren(parent, after, lastValue);
     append(parent, after, endMarker);
 
+    // TODO: dynamic text is currently getting removed and re-added,
+    // and thats not great for performance. We need to do some kind of
+    // reconciliation to take that into account.
+
     const dynamicJsxChildCleanupAndReplace = () => {
         const thisValue = childSignal.value;
 
@@ -152,14 +156,12 @@ function addSignalJsxChild(
         let current = startMarker.nextSibling;
 
         while (current && current != endMarker) {
-            const next = current.nextSibling;
-
             parent.removeChild(current);
 
-            current = next;
+            current = startMarker.nextSibling;
         }
 
-        appendJsxChildren(parent, endMarker, thisValue);
+        appendJsxChildren(parent, startMarker, thisValue);
 
         lastValue = thisValue;
     };

@@ -41,18 +41,11 @@ export type ChildrenTypeFor<
     ? Children
     : never;
 
-// Square brackets to prevent distribution behaviour (Specifically across boolean)
-/**
- * For a given T type, make T | Signal<T> -- unless T is already a signal then return unchanged.
- */
-export type SignalOrValue<T> = [T] extends [Signal<infer S>]
-    ? Signal<S>
-    : T | Signal<T>;
 export type SignalValueType<T> = [T] extends [Signal<infer S>] ? S : never;
 
 /**
  * Take a props interface and make each property optionally a Signal.
  */
 export type Props<TProps> = {
-    [Key in keyof TProps]: SignalOrValue<TProps[Key]>;
+    [Key in keyof TProps]: Signal<TProps[Key]> | TProps[Key];
 };

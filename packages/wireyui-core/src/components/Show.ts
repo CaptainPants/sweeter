@@ -1,5 +1,5 @@
 import { Props, calc } from '../index.js';
-import { value } from '../signals/value.js';
+import { valueOf } from '../signals/valueOf.js';
 
 export interface ShowProps {
     if: boolean;
@@ -13,8 +13,8 @@ export interface ShowProps {
  */
 export function Show(props: Props<ShowProps>): JSX.Element {
     const showCalculation = (): JSX.Element => {
-        if (value(props.if)) {
-            return value(props.children)();
+        if (valueOf(props.if)) {
+            return valueOf(props.children)();
         }
         return undefined;
     };

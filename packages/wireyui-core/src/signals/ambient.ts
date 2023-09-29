@@ -1,7 +1,5 @@
 import { Signal } from './index.js';
 
-import '../internal/polyfill.js';
-
 type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 
 let _ambientUsageListener: AmbientSignalUsageListener | undefined;

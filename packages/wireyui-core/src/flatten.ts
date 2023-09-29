@@ -1,5 +1,3 @@
-import { isSignal } from './signals/index.js';
-
 export type FlattenedElement = Exclude<
     JSX.Element,
     JSX.Element[] | null | undefined
@@ -23,8 +21,6 @@ export function flatten(
         children.forEach((inner) => {
             flatten(inner, callback);
         });
-    } else if (isSignal(children)) {
-        flatten(children.value, callback);
     } else {
         callback(children);
     }

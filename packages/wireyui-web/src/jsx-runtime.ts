@@ -129,15 +129,17 @@ function append(parent: Node, after: Node | null, child: Node) {
     }
 }
 
-function addDynamicJsxChild(
+function addSignalJsxChild(
     parent: Node,
     after: Node | null,
     childSignal: Signal<JSX.Element>,
 ): void {
     let lastValue = childSignal.value;
 
-    const startMarker = document.createTextNode('');
-    const endMarker = document.createTextNode('');
+    // JSX.Element signals use a Comment as the start/end 
+    // marker as they do not participate in layout.
+    const startMarker = document.createComment('{');
+    const endMarker = document.createComment('}');
 
     append(parent, after, startMarker);
     appendJsxChildren(parent, after, lastValue);
@@ -146,7 +148,9 @@ function addDynamicJsxChild(
     const dynamicJsxChildCleanupAndReplace = () => {
         const thisValue = childSignal.value;
 
+        // From 'startMarker', delete all nextSiblings until 'endMarker'
         let current = startMarker.nextSibling;
+
         while (current && current != endMarker) {
             const next = current.nextSibling;
 
@@ -155,12 +159,17 @@ function addDynamicJsxChild(
             current = next;
         }
 
-        appendJsxChildren(parent, endMarker, lastValue);
+        appendJsxChildren(parent, endMarker, thisValue);
 
         lastValue = thisValue;
     };
-    childSignal.listen(dynamicJsxChildCleanupAndReplace);
+    // Holds a strong reference to this callback
+    childSignal.listen(dynamicJsxChildCleanupAndReplace, true);
 
+    // Keep the signal and the handler alive
+    // technically childSignal will hold a reference to 
+    // dynamicJsxChildCleanupAndReplace so the extra reference
+    // isn't necessary
     addStrongReference(parent, childSignal);
 }
 
@@ -171,7 +180,7 @@ function appendJsxChildren(
 ): void {
     const callback = (child: FlattenedElement) => {
         if (isSignal(child)) {
-            addDynamicJsxChild(parent, after, child);
+            addSignalJsxChild(parent, after, child);
             return;
         }
 

@@ -2,7 +2,7 @@ type ElementPartial<TElement> = Partial<TElement> & {
     children?: ElementPartial<TElement>[];
 };
 
-type NodeTypes = HTMLElement | SVGElement | Text;
+type NodeTypes = HTMLElement | SVGElement | Text | Comment;
 
 export function expectDOMMatching<TElement extends NodeTypes>(
     node: TElement,

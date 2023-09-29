@@ -13,7 +13,13 @@ it('', () => {
         <Show if={cond}>{() => <div>CONDITION TRUE</div>}</Show>,
     );
 
-    expectDOMMatching(root.childNodes[0] as HTMLElement, {
+    expect(root.childNodes.length).toBe(3);
+    // JSX.Element signals use a Comment as the start/end marker as they do
+    // not participate in layout.
+    expectDOMMatching(root.childNodes[0] as Comment, {
+        nodeType: Node.COMMENT_NODE
+    });
+    expectDOMMatching(root.childNodes[1] as HTMLElement, {
         nodeName: 'DIV',
         children: [
             {
@@ -22,11 +28,18 @@ it('', () => {
             },
         ],
     });
+    expectDOMMatching(root.childNodes[2] as Comment, {
+        nodeType: Node.COMMENT_NODE
+    });
 
     cond.value = false;
 
-    expectDOMMatching(root.childNodes[0] as HTMLElement, {
-        nodeName: 'DIV',
-        children: [],
+    // Start and end marker
+    expect(root.childNodes.length).toBe(2);
+    expectDOMMatching(root.childNodes[0] as Comment, {
+        nodeType: Node.COMMENT_NODE
+    });
+    expectDOMMatching(root.childNodes[1] as Comment, {
+        nodeType: Node.COMMENT_NODE
     });
 });

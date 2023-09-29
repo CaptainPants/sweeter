@@ -136,7 +136,7 @@ function addSignalJsxChild(
 ): void {
     let lastValue = childSignal.value;
 
-    // JSX.Element signals use a Comment as the start/end 
+    // JSX.Element signals use a Comment as the start/end
     // marker as they do not participate in layout.
     const startMarker = document.createComment('{');
     const endMarker = document.createComment('}');
@@ -167,7 +167,7 @@ function addSignalJsxChild(
     childSignal.listen(dynamicJsxChildCleanupAndReplace, true);
 
     // Keep the signal and the handler alive
-    // technically childSignal will hold a reference to 
+    // technically childSignal will hold a reference to
     // dynamicJsxChildCleanupAndReplace so the extra reference
     // isn't necessary
     addStrongReference(parent, childSignal);

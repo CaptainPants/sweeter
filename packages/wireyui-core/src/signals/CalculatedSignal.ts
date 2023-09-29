@@ -57,7 +57,9 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #recalculate() {
         if (this.#recalculating) {
-            throw new TypeError('Signal already recalculating - indicating a signal that depends on itself.');
+            throw new TypeError(
+                'Signal already recalculating - indicating a signal that depends on itself.',
+            );
         }
         this.#recalculating = true;
         try {
@@ -70,8 +72,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             this.#dependencies = nextDependencies;
 
             this._set(result);
-        }
-        finally {
+        } finally {
             this.#recalculating = false;
         }
     }

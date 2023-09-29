@@ -3,3 +3,4 @@ export * from './isSignal.js';
 export * from './CalculatedSignal.js';
 export * from './MutableValueSignal.js';
 export * from './MutableCalculatedSignal.js';
+export * from './value.js';

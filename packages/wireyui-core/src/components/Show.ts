@@ -8,8 +8,8 @@ export interface ShowProps {
 
 /**
  * Dynamic component - display children when condition is true.
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 export function Show(props: Props<ShowProps>): JSX.Element {
     const showCalculation = (): JSX.Element => {

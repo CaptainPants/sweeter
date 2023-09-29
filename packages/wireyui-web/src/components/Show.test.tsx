@@ -17,7 +17,7 @@ it('', () => {
     // JSX.Element signals use a Comment as the start/end marker as they do
     // not participate in layout.
     expectDOMMatching(root.childNodes[0] as Comment, {
-        nodeType: Node.COMMENT_NODE
+        nodeType: Node.COMMENT_NODE,
     });
     expectDOMMatching(root.childNodes[1] as HTMLElement, {
         nodeName: 'DIV',
@@ -29,7 +29,7 @@ it('', () => {
         ],
     });
     expectDOMMatching(root.childNodes[2] as Comment, {
-        nodeType: Node.COMMENT_NODE
+        nodeType: Node.COMMENT_NODE,
     });
 
     cond.value = false;
@@ -37,9 +37,9 @@ it('', () => {
     // Start and end marker
     expect(root.childNodes.length).toBe(2);
     expectDOMMatching(root.childNodes[0] as Comment, {
-        nodeType: Node.COMMENT_NODE
+        nodeType: Node.COMMENT_NODE,
     });
     expectDOMMatching(root.childNodes[1] as Comment, {
-        nodeType: Node.COMMENT_NODE
+        nodeType: Node.COMMENT_NODE,
     });
 });

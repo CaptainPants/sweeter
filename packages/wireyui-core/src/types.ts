@@ -1,3 +1,5 @@
+import { Signal } from './signals/types.js';
+
 export interface FactoryContext {}
 
 export type JSXKey = string | number;
@@ -38,3 +40,12 @@ export type ChildrenTypeFor<
 }
     ? Children
     : never;
+
+/**
+ * Take a props interface and make each property optionally a Signal.
+ */
+export type Props<TProps> = {
+    [Key in keyof TProps]: TProps[Key] extends Signal<infer S>
+        ? Signal<S>
+        : TProps[Key] | Signal<TProps[Key]>;
+};

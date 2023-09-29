@@ -40,6 +40,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     }
 
     #wrappedCalculation: () => SignalState<T>;
+    #recalculating: boolean = false;
 
     /**
      * Strong references to any signal we depend upon.
@@ -55,15 +56,24 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     #dependencyListener: () => void;
 
     #recalculate() {
-        const { result, dependencies: nextDependencies } =
-            callAndReturnDependencies(this.#wrappedCalculation, true);
+        if (this.#recalculating) {
+            throw new TypeError('Signal already recalculating - indicating a signal that depends on itself.');
+        }
+        this.#recalculating = true;
+        try {
+            const { result, dependencies: nextDependencies } =
+                callAndReturnDependencies(this.#wrappedCalculation, true);
 
-        this.#detachExcept(nextDependencies);
-        this.#attach();
+            this.#detachExcept(nextDependencies);
+            this.#attach();
 
-        this.#dependencies = nextDependencies;
+            this.#dependencies = nextDependencies;
 
-        this._set(result);
+            this._set(result);
+        }
+        finally {
+            this.#recalculating = false;
+        }
     }
 
     #attach() {

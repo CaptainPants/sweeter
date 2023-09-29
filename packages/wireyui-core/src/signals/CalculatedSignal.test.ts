@@ -26,6 +26,6 @@ it('CalculatedSignal listeners invoked with correct value after dependency updat
         mode: 'SUCCESS',
         value: 3,
     } satisfies SignalState<number>);
-    
+
     expect(calculatedSignal.value).toEqual(3);
 });

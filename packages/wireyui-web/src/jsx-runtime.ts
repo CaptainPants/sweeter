@@ -91,9 +91,10 @@ function assignDOMElementProps<TElementType extends string>(
                 const eventName = mappedKey.substring(2);
 
                 // We don't need to subscribe, we can just use the current value of
-                // the signal.
+                // the signal when an event is triggered.
                 if (isSignal(value)) {
                     // Indirect via anonymous callback
+                    // This closure captures 'value'
                     node.addEventListener(eventName, (evt) => {
                         (value.peek() as EventListener)(evt);
                     });
@@ -105,14 +106,16 @@ function assignDOMElementProps<TElementType extends string>(
                 if (isSignal(value)) {
                     (node as unknown as Untyped)[mappedKey] = value.peek();
 
+                    const changeCallback = () => {
+                        (node as unknown as Untyped)[mappedKey] = value.peek();
+                    };
+
                     // Add a weak listener (so that it will be cleaned up when no references held)
                     // we will add a strong reference to the DOM element (via WeakMap) to prevent
                     // cleanup until the DOM element is no longer reachable
-                    value.listen((_, newValue) => {
-                        (node as unknown as Untyped)[mappedKey] = newValue;
-                    }, false);
+                    value.listen(changeCallback, false);
 
-                    addStrongReference(node, value);
+                    addStrongReference(node, changeCallback);
                 } else {
                     (node as unknown as Untyped)[mappedKey] = value;
                 }
@@ -150,6 +153,10 @@ function addSignalJsxChild(
     // and thats not great for performance. We need to do some kind of
     // reconciliation to take that into account.
 
+    // I think that flatten probably needs to return an array/callback
+    // (which is then in turn returned by appendJsxChildren) that can
+    // be used to reconcile between runs.
+
     const dynamicJsxChildCleanupAndReplace = () => {
         const thisValue = childSignal.value;
 
@@ -166,14 +173,14 @@ function addSignalJsxChild(
 
         lastValue = thisValue;
     };
-    // Holds a strong reference to this callback
-    childSignal.listen(dynamicJsxChildCleanupAndReplace, true);
 
-    // Keep the signal and the handler alive
-    // technically childSignal will hold a reference to
-    // dynamicJsxChildCleanupAndReplace so the extra reference
-    // isn't necessary
-    addStrongReference(parent, childSignal);
+    // Signal could be used in more than one place, so we want
+    // to allow this listener to be collected (hence weak)
+    childSignal.listen(dynamicJsxChildCleanupAndReplace, false);
+
+    // But add a strong reference to the handler on the DOM
+    // element so it will be cleaned up when possible
+    addStrongReference(parent, dynamicJsxChildCleanupAndReplace);
 
     return endMarker;
 }
@@ -183,11 +190,11 @@ function appendJsxChildren(
     after: Node | null,
     children: JSX.Element,
 ): Node | null {
-    let last: Node | null = null;
+    let last: Node | null = after;
 
     const callback = (child: FlattenedElement) => {
         if (isSignal(child)) {
-            last = addSignalJsxChild(parent, after, child);
+            last = addSignalJsxChild(parent, last, child);
             return;
         }
 
@@ -200,13 +207,13 @@ function appendJsxChildren(
             case 'string':
                 last = append(
                     parent,
-                    after,
+                    last,
                     document.createTextNode(String(child)),
                 );
                 return;
 
             default:
-                last = append(parent, after, child);
+                last = append(parent, last, child);
                 return;
         }
     };

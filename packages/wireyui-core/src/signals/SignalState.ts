@@ -12,3 +12,16 @@ export function isEqualSignalState<T>(
         return b.mode === 'ERROR' && Object.is(a.error, b.error);
     }
 }
+
+/**
+ * Extract value or rethrow error from state.
+ * @param state
+ * @returns
+ */
+export function getSignalValueFromState<T>(state: SignalState<T>): T {
+    if (state.mode === 'SUCCESS') {
+        return state.value;
+    } else {
+        throw state.error;
+    }
+}

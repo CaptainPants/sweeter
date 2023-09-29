@@ -1,4 +1,8 @@
-import { SignalState, isEqualSignalState } from './SignalState.js';
+import {
+    SignalState,
+    getSignalValueFromState,
+    isEqualSignalState,
+} from './SignalState.js';
 import { announceSignalUsage, untrack } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
 import { Signal, SignalListener } from './types.js';
@@ -17,10 +21,7 @@ export class SignalBase<T> implements Signal<T> {
     }
 
     public peek(): T {
-        if (this.#state.mode === 'ERROR') {
-            throw this.#state.error;
-        }
-        return this.#state.value;
+        return getSignalValueFromState(this.#state);
     }
 
     /**

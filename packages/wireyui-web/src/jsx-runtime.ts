@@ -143,7 +143,7 @@ function addDynamicJsxChild(
     appendJsxChildren(parent, after, lastValue);
     append(parent, after, endMarker);
 
-    const dynamicJsxChildCleanup = () => {
+    const dynamicJsxChildCleanupAndReplace = () => {
         const thisValue = childSignal.value;
 
         let current = startMarker.nextSibling;
@@ -159,7 +159,7 @@ function addDynamicJsxChild(
 
         lastValue = thisValue;
     };
-    childSignal.listen(dynamicJsxChildCleanup);
+    childSignal.listen(dynamicJsxChildCleanupAndReplace);
 
     addStrongReference(parent, childSignal);
 }

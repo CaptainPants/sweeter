@@ -6,6 +6,7 @@ import {
     FlattenedElement,
     isSignal,
     Signal,
+    SetupFunction,
 } from '@captainpants/wireyui-core';
 
 function jsx<ComponentType extends string | Component<unknown>>(
@@ -56,7 +57,11 @@ function renderComponent<TComponentType extends Component<unknown>>(
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
 ): JSXElement {
-    const res = Component(props, {});
+    const setup: SetupFunction = (hook, ...args) => {
+        return hook(setup, ...args);
+    };
+
+    const res = Component(props, setup);
 
     return res;
 }

@@ -1,4 +1,4 @@
-import { Props, calc } from '../index.js';
+import { Component, Props, calc } from '../index.js';
 import { valueOf } from '../signals/valueOf.js';
 
 export interface ShowProps {
@@ -11,7 +11,7 @@ export interface ShowProps {
  * @param props
  * @returns
  */
-export function Show(props: Props<ShowProps>): JSX.Element {
+export const Show: Component<ShowProps> = (props: Props<ShowProps>) => {
     const showCalculation = (): JSX.Element => {
         if (valueOf(props.if)) {
             return valueOf(props.children)();
@@ -20,4 +20,4 @@ export function Show(props: Props<ShowProps>): JSX.Element {
     };
 
     return calc(showCalculation);
-}
+};

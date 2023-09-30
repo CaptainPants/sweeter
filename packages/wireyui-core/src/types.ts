@@ -1,15 +1,26 @@
 import { Signal } from './signals/types.js';
 
-export interface FactoryContext {}
+export type HookFunction<TArgs extends readonly unknown[], TResult> = (
+    setup: Setup,
+    ...args: TArgs
+) => TResult;
+
+export type SetupFunction = <TArgs extends readonly unknown[], TResult>(
+    hook: HookFunction<TArgs, TResult>,
+    ...args: TArgs
+) => TResult;
+
+// There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
+export type Setup = SetupFunction;
 
 export type JSXKey = string | number;
 
 export type JSXElement = JSX.Element;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type Component<Props = {}> = (
-    props: Props,
-    factoryContext: FactoryContext,
+export type Component<TProps = {}> = (
+    props: Props<TProps>,
+    setup: Setup,
 ) => JSXElement;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

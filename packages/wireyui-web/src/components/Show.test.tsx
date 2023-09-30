@@ -8,10 +8,9 @@ it('', () => {
     const renderer = new WebRenderer();
 
     const root = document.createElement('div');
-    renderer.start(
-        root,
-        <Show if={cond}>{() => <div>CONDITION TRUE</div>}</Show>,
-    );
+    renderer.start(root, () => (
+        <Show if={cond}>{() => <div>CONDITION TRUE</div>}</Show>
+    ));
 
     expect(root.childNodes.length).toBe(3);
     // JSX.Element signals use a Comment as the start/end marker as they do

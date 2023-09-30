@@ -13,7 +13,9 @@ export class WebRenderer {
         this.#options = options ?? {};
     }
 
-    start(element: HTMLElement, rootElements: JSXElement): void {
-        appendJsxChildren(element, null, rootElements);
+    start(element: HTMLElement, render: () => JSXElement): void {
+        // TODO: ambient context wrap around this
+        const content = render();
+        appendJsxChildren(element, null, content);
     }
 }

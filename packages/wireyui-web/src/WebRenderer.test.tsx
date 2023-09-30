@@ -19,11 +19,11 @@ function SvgComponent(): JSXElement {
 it('Root', () => {
     const root = new WebRenderer();
 
-    root.start(document.createElement('div'), <Component />);
+    root.start(document.createElement('div'), () => <Component />);
 });
 
 it('SVG Root', () => {
     const root = new WebRenderer();
 
-    root.start(document.createElement('div'), <SvgComponent />);
+    root.start(document.createElement('div'), () => <SvgComponent />);
 });

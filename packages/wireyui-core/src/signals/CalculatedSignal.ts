@@ -1,4 +1,7 @@
-import { type SavedContext, saveAllContext } from '../index.js';
+import {
+    type SavedContext,
+    saveAllContext,
+} from '../context/saveAllContext.js';
 import { SignalBase } from './SignalBase.js';
 import { type SignalState } from './SignalState.js';
 import { callAndReturnDependencies } from './ambient.js';

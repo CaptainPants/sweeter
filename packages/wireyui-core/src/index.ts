@@ -1,4 +1,4 @@
-import './internal/polyfill.js';
+import './polyfills/dispose-missing-symbols.js';
 import './jsx-globals.js';
 
 export * from './components/index.js';

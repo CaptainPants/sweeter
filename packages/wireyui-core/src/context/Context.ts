@@ -1,6 +1,9 @@
 import { allContexts } from './internal/allContexts.js';
 import { saveAllContext } from './saveAllContext.js';
 
+// Simplest way to get the tests working as the symbols aren't yet common
+import '../polyfills/dispose-missing-symbols.js';
+
 export class Context<T> implements Disposable {
     constructor(name: string, current: T) {
         this.name = name;

@@ -1,5 +1,7 @@
 import { allContexts } from './internal/allContexts.js';
 
+import '../polyfills/dispose-missing-symbols.js';
+
 type SavedSingleContext = () => Disposable;
 export type SavedContext = {
     restore: () => Disposable;

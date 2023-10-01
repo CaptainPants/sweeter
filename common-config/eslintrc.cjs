@@ -22,6 +22,11 @@ module.exports = {
         "varsIgnorePattern": '^_',
         "args": "none"
     }],
+    "@typescript-eslint/consistent-type-imports": [
+        'error', {
+            'prefer': 'type-imports'
+        }
+    ]
   },
   settings: {
     "import/resolver": {

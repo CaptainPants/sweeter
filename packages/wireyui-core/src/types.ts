@@ -1,4 +1,4 @@
-import { Signal } from './signals/types.js';
+import type { Signal } from './signals/types.js';
 
 export type HookFunction<TArgs extends readonly unknown[], TResult> = (
     setup: Setup,

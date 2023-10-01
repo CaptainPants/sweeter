@@ -1,5 +1,5 @@
-import { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
-import { ElementProperties } from './IntrinsicProperties.js';
+import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
+import type { ElementProperties } from './IntrinsicProperties.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace

@@ -1,5 +1,5 @@
-import { Signal } from './index.js';
-import * as types from './types.js';
+import type { Signal } from './signals/types.js';
+import type * as types from './types.js';
 
 /**
  * Borrowed from https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type

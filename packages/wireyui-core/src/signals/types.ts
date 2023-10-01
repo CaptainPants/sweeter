@@ -1,4 +1,4 @@
-import { SignalState } from './SignalState.js';
+import type { SignalState } from './SignalState.js';
 
 export type SignalListener<T> = (
     previous: SignalState<T>,

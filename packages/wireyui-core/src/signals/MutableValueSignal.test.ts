@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals';
 
 import { mutable } from './MutableValueSignal.js';
-import { SignalState } from './SignalState.js';
+import type { SignalState } from './SignalState.js';
 
 it('MutableValueSignal has initial value', () => {
     const signal = mutable(23);

@@ -1,4 +1,4 @@
-import { JSXElement } from '@captainpants/wireyui-core';
+import type { JSXElement } from '@captainpants/wireyui-core';
 import { appendJsxChildren } from '@captainpants/wireyui-web/jsx-runtime';
 
 /**
@@ -13,9 +13,13 @@ export class WebRenderer {
         this.#options = options ?? {};
     }
 
-    start(element: HTMLElement, render: () => JSXElement): void {
+    start(element: HTMLElement, render: () => JSXElement): () => void {
         // TODO: ambient context wrap around this
         const content = render();
         appendJsxChildren(element, null, content);
+
+        return () => {
+            // TODO: cleanup here
+        };
     }
 }

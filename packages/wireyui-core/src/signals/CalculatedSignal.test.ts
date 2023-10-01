@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals';
 
-import { SignalState } from './SignalState.js';
+import type { SignalState } from './SignalState.js';
 import { mutable } from './MutableValueSignal.js';
 import { calc } from './CalculatedSignal.js';
 

@@ -1,11 +1,8 @@
-import {
-    SignalState,
-    getSignalValueFromState,
-    isEqualSignalState,
-} from './SignalState.js';
+import type { SignalState } from './SignalState.js';
+import { getSignalValueFromState, isEqualSignalState } from './SignalState.js';
 import { announceSignalUsage, untrack } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
-import { Signal, SignalListener } from './types.js';
+import type { Signal, SignalListener } from './types.js';
 
 export class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {

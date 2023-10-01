@@ -1,13 +1,12 @@
-import {
+import type {
     Component,
     JSXElement,
     PropsWithIntrinsicAttributesFor,
-    flatten,
     FlattenedElement,
-    isSignal,
     Signal,
     SetupFunction,
 } from '@captainpants/wireyui-core';
+import { flatten, isSignal } from '@captainpants/wireyui-core';
 
 function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,

@@ -1,5 +1,6 @@
-import { Props, calc } from '../index.js';
+import { calc } from '../signals/CalculatedSignal.js';
 import { valueOf } from '../signals/valueOf.js';
+import type { Props } from '../types.js';
 
 export interface DynamicProps<T> {
     value: T;

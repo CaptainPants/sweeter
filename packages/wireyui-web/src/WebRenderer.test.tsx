@@ -1,4 +1,4 @@
-import { JSXElement } from '@captainpants/wireyui-core';
+import type { JSXElement } from '@captainpants/wireyui-core';
 import { WebRenderer } from './WebRenderer.js';
 
 function Component(): JSXElement {

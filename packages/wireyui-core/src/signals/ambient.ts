@@ -1,4 +1,4 @@
-import { Signal } from './index.js';
+import type { Signal } from './types.js';
 
 type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 

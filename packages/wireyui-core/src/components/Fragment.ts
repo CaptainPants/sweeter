@@ -1,4 +1,4 @@
-import { Component } from '../types.js';
+import type { Component } from '../types.js';
 
 export interface FragmentProps {
     children?: JSX.Element;

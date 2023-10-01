@@ -1,5 +1,5 @@
 import { findProperty } from '../internal/findProperty.js';
-import { MutableSignal, Signal } from './types.js';
+import type { MutableSignal, Signal } from './types.js';
 
 export function isSignal(value: unknown): value is Signal<unknown> {
     return typeof value === 'object' && value !== null && 'value' in value;

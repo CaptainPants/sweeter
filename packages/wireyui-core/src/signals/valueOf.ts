@@ -1,4 +1,5 @@
-import { Signal, isSignal } from './index.js';
+import type { Signal } from './types.js';
+import { isSignal } from './isSignal.js';
 
 /**
  * If the parameter is a signal, call .value, otherwise return the parameter.

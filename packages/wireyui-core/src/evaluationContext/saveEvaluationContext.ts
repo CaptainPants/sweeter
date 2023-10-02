@@ -5,11 +5,11 @@ export type SavedEvaluationContext = {
     restore: () => () => void;
 };
 
-function disposeAll(disposables: (() => void)[]) {
+function invokeAll(callbacks: (() => void)[]) {
     for (
-        let disposable = disposables.pop();
+        let disposable = callbacks.pop();
         disposable;
-        disposable = disposables.pop()
+        disposable = callbacks.pop()
     ) {
         disposable();
     }
@@ -23,21 +23,27 @@ export function saveEvaluationContext(): SavedEvaluationContext {
         restoreList.push(() => item.replace(saved));
     }
 
-    return {
-        restore: () => {
-            const cleanup: (() => void)[] = [];
+    function restoreAll() {
+        const cleanup: (() => void)[] = [];
 
-            try {
-                for (const restore of restoreList) {
-                    cleanup.push(restore());
-                }
-            } catch (ex) {
-                disposeAll(cleanup);
-                throw ex;
+        try {
+            for (const restore of restoreList) {
+                cleanup.push(restore());
             }
+        } catch (ex) {
+            invokeAll(cleanup);
+            throw ex;
+        }
+
+        return cleanup;
+    }
+
+    return {
+        restore() {
+            const cleanup = restoreAll();
 
             return () => {
-                disposeAll(cleanup);
+                invokeAll(cleanup);
             };
         },
     };

@@ -1,5 +1,4 @@
 import { allEvaluationContextVariables } from './internal/allEvaluationContextVariables.js';
-import { saveEvaluationContext } from './saveEvaluationContext.js';
 
 export class EvaluationContextVariable<T> {
     constructor(name: string, current: T) {
@@ -33,20 +32,6 @@ export class EvaluationContextVariable<T> {
         } finally {
             restore();
         }
-    }
-
-    /**
-     * Intended to use with pattern resume.from(await promise); this will store all current context
-     * when .resume is accessed, and restore it when the from method.
-     */
-    static get resume() {
-        const saved = saveEvaluationContext();
-        return {
-            with<T>(result: T): T {
-                saved.restore();
-                return result;
-            },
-        };
     }
 
     dispose(): void {

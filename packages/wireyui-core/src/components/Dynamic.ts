@@ -12,10 +12,13 @@ export interface DynamicProps<T> {
  * @param props
  * @returns
  */
-export function Dynamic<T>(props: Props<DynamicProps<T>>): JSX.Element {
+export function Dynamic<T>(props: Props<DynamicProps<T>>): JSX.Element;
+export function Dynamic<T>({
+    children,
+    value,
+}: Props<DynamicProps<T>>): JSX.Element {
     const showCalculation = (): JSX.Element => {
-        const value = valueOf(props.value);
-        return valueOf(props.children)(value);
+        return valueOf(children)(valueOf(value));
     };
 
     return calc(showCalculation);

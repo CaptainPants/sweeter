@@ -1,9 +1,9 @@
-import { allEvaluationContextVariables } from './internal/allEvaluationContextVariables.js';
+import { allExecutionContextVariables } from './internal/allExecutionContextVariables.js';
 
 type RevertCallback = () => void;
-type SavedEvaluationContextVariable = () => RevertCallback;
+type SavedExecutionContextVariable = () => RevertCallback;
 
-export interface SavedEvaluationContext {
+export interface SavedExecutionContext {
     restore(): RevertCallback;
 }
 
@@ -17,10 +17,10 @@ function invokeAll(callbacks: (() => void)[]) {
     }
 }
 
-export function saveEvaluationContext(): SavedEvaluationContext {
-    const restoreList: SavedEvaluationContextVariable[] = [];
+export function saveExecutionContext(): SavedExecutionContext {
+    const restoreList: SavedExecutionContextVariable[] = [];
 
-    for (const item of allEvaluationContextVariables) {
+    for (const item of allExecutionContextVariables) {
         const saved = item.current;
         restoreList.push(() => item.replace(saved));
     }

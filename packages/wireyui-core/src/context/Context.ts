@@ -1,4 +1,4 @@
-import { EvaluationContextVariable } from '../evaluationContext/EvaluationContextVariable.js';
+import { ExecutionContextVariable } from '../execuationContext/ExecutionContextVariable.js';
 
 interface ContextNode {
     id: symbol;
@@ -6,7 +6,7 @@ interface ContextNode {
     parent: ContextNode | undefined;
 }
 
-const stack = new EvaluationContextVariable<ContextNode | undefined>(
+const stack = new ExecutionContextVariable<ContextNode | undefined>(
     'Context:Stack',
     undefined,
 );

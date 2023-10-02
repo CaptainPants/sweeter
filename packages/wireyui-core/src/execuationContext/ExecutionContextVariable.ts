@@ -1,12 +1,12 @@
-import { allEvaluationContextVariables } from './internal/allEvaluationContextVariables.js';
+import { allExecutionContextVariables } from './internal/allExecutionContextVariables.js';
 
-export class EvaluationContextVariable<T> {
+export class ExecutionContextVariable<T> {
     constructor(name: string, current: T) {
         this.name = name;
         this.id = Symbol(name);
         this.current = current;
 
-        allEvaluationContextVariables.add(this);
+        allExecutionContextVariables.add(this);
     }
 
     readonly name: string;
@@ -35,6 +35,6 @@ export class EvaluationContextVariable<T> {
     }
 
     dispose(): void {
-        allEvaluationContextVariables.delete(this);
+        allExecutionContextVariables.delete(this);
     }
 }

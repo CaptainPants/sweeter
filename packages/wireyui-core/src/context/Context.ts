@@ -1,10 +1,7 @@
 import { allContexts } from './internal/allContexts.js';
 import { saveAllContext } from './saveAllContext.js';
 
-// Simplest way to get the tests working as the symbols aren't yet common
-import '../polyfills/dispose-missing-symbols.js';
-
-export class Context<T> implements Disposable {
+export class Context<T> {
     constructor(name: string, current: T) {
         this.name = name;
         this.id = Symbol(name);
@@ -19,22 +16,23 @@ export class Context<T> implements Disposable {
 
     current: T;
 
-    replace(value: T): Disposable {
+    replace(value: T): () => void {
         const saved = this.current;
 
         this.current = value;
 
-        return {
-            [Symbol.dispose]: () => {
-                this.current = saved;
-            },
+        return () => {
+            this.current = saved;
         };
     }
 
     invoke(value: T, callback: () => void): void {
-        using _ = this.replace(value);
-
-        callback();
+        const restore = this.replace(value);
+        try {
+            callback();
+        } finally {
+            restore();
+        }
     }
 
     /**
@@ -51,7 +49,7 @@ export class Context<T> implements Disposable {
         };
     }
 
-    [Symbol.dispose](): void {
+    dispose(): void {
         allContexts.delete(this);
     }
 }

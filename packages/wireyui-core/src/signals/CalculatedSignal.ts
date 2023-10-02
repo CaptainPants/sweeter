@@ -72,17 +72,20 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         }
         this.#recalculating = true;
         try {
-            using _ = this.#capturedContext.restore();
+            const restore = this.#capturedContext.restore();
+            try {
+                const { result, dependencies: nextDependencies } =
+                    callAndReturnDependencies(this.#wrappedCalculation, true);
 
-            const { result, dependencies: nextDependencies } =
-                callAndReturnDependencies(this.#wrappedCalculation, true);
+                this.#detachExcept(nextDependencies);
+                this.#attach();
 
-            this.#detachExcept(nextDependencies);
-            this.#attach();
+                this.#dependencies = nextDependencies;
 
-            this.#dependencies = nextDependencies;
-
-            this._set(result);
+                this._set(result);
+            } finally {
+                restore();
+            }
         } finally {
             this.#recalculating = false;
         }

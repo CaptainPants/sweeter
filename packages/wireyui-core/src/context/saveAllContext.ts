@@ -1,15 +1,17 @@
 import { allContexts } from './internal/allContexts.js';
 
-import '../polyfills/dispose-missing-symbols.js';
-
-type SavedSingleContext = () => Disposable;
+type SavedSingleContext = () => () => void;
 export type SavedContext = {
-    restore: () => Disposable;
+    restore: () => () => void;
 };
 
-function disposeAll(disposables: Disposable[]) {
-    for (let item = disposables.pop(); item; item = disposables.pop()) {
-        item[Symbol.dispose]();
+function disposeAll(disposables: (() => void)[]) {
+    for (
+        let disposable = disposables.pop();
+        disposable;
+        disposable = disposables.pop()
+    ) {
+        disposable();
     }
 }
 
@@ -23,7 +25,7 @@ export function saveAllContext(): SavedContext {
 
     return {
         restore: () => {
-            const cleanup: Disposable[] = [];
+            const cleanup: (() => void)[] = [];
 
             try {
                 for (const restore of restoreList) {
@@ -34,10 +36,8 @@ export function saveAllContext(): SavedContext {
                 throw ex;
             }
 
-            return {
-                [Symbol.dispose]() {
-                    disposeAll(cleanup);
-                },
+            return () => {
+                disposeAll(cleanup);
             };
         },
     };

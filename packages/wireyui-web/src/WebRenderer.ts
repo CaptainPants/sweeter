@@ -1,5 +1,6 @@
 import type { JSXElement } from '@captainpants/wireyui-core';
 import { appendJsxChildren } from '@captainpants/wireyui-web/jsx-runtime';
+import { mounted, unmounted } from './internal/mounting.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -14,12 +15,25 @@ export class WebRenderer {
     }
 
     start(element: HTMLElement, render: () => JSXElement): () => void {
-        // TODO: ambient context wrap around this
+        const mutationObserver = new MutationObserver((list, obs) => {
+            for (const mutation of list) {
+                if (mutation.addedNodes.length > 0) {
+                    mounted(mutation.addedNodes);
+                }
+                if (mutation.removedNodes.length > 0) {
+                    unmounted(mutation.removedNodes);
+                }
+            }
+        });
+
         const content = render();
+
+        mutationObserver.observe(element, { subtree: true, childList: true });
+
         appendJsxChildren(element, null, content);
 
         return () => {
-            // TODO: cleanup here
+            mutationObserver.disconnect();
         };
     }
 }

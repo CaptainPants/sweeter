@@ -74,7 +74,7 @@ export class ListenerSet<Listener extends (...args: any[]) => void> {
                 try {
                     listener(...args);
                 } catch (ex) {
-                    console.error(
+                    console.warn(
                         'Error swallowed while invoking listener',
                         listener,
                         ex,

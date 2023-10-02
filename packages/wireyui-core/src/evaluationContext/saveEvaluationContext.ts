@@ -1,9 +1,11 @@
 import { allEvaluationContextVariables } from './internal/allEvaluationContextVariables.js';
 
-type SavedEvaluationContextVariable = () => () => void;
-export type SavedEvaluationContext = {
-    restore: () => () => void;
-};
+type RevertCallback = () => void;
+type SavedEvaluationContextVariable = () => RevertCallback;
+
+export interface SavedEvaluationContext {
+    restore(): RevertCallback;
+}
 
 function invokeAll(callbacks: (() => void)[]) {
     for (
@@ -24,26 +26,26 @@ export function saveEvaluationContext(): SavedEvaluationContext {
     }
 
     function restoreAll() {
-        const cleanup: (() => void)[] = [];
+        const revertList: RevertCallback[] = [];
 
         try {
             for (const restore of restoreList) {
-                cleanup.push(restore());
+                revertList.push(restore());
             }
         } catch (ex) {
-            invokeAll(cleanup);
+            invokeAll(revertList);
             throw ex;
         }
 
-        return cleanup;
+        return revertList;
     }
 
     return {
         restore() {
-            const cleanup = restoreAll();
+            const revertList = restoreAll();
 
             return () => {
-                invokeAll(cleanup);
+                invokeAll(revertList);
             };
         },
     };

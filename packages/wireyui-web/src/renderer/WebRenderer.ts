@@ -1,6 +1,6 @@
 import type { JSXElement } from '@captainpants/wireyui-core';
 import { appendJsxChildren } from '@captainpants/wireyui-web/jsx-runtime';
-import { mounted, unmounted } from './internal/mounting.js';
+import { mounted, unMounted } from '../internal/mounting.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -21,7 +21,7 @@ export class WebRenderer {
                     mounted(mutation.addedNodes);
                 }
                 if (mutation.removedNodes.length > 0) {
-                    unmounted(mutation.removedNodes);
+                    unMounted(mutation.removedNodes);
                 }
             }
         });

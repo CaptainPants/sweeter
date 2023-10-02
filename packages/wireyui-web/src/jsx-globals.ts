@@ -18,7 +18,7 @@ declare global {
          * Extends off the same from wireyui-core to populate JSX.Element
          */
         interface ElementPossibilityParts {
-            'wireyui-web': HTMLElement | SVGElement | Text;
+            'wireyui-web': HTMLElement | SVGElement | Text | Comment;
         }
     }
 }

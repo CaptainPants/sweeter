@@ -1,17 +1,22 @@
+import type { Context } from './index.js';
 import type { Signal } from './signals/types.js';
 
 export type HookFunction<TArgs extends readonly unknown[], TResult> = (
-    setup: Setup,
+    setup: ComponentInit,
     ...args: TArgs
 ) => TResult;
 
-export type SetupFunction = <TArgs extends readonly unknown[], TResult>(
+export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
     hook: HookFunction<TArgs, TResult>,
     ...args: TArgs
 ) => TResult;
 
 // There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
-export type Setup = SetupFunction;
+export type ComponentInit = ComponentInitFunction & {
+    onMount: (callback: () => void) => void;
+    onUnMount: (callback: () => void) => void;
+    getContext: <T>(context: Context<T>) => T;
+};
 
 export type JSXKey = string | number;
 
@@ -20,7 +25,7 @@ export type JSXElement = JSX.Element;
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Component<TProps = {}> = (
     props: Props<TProps>,
-    setup: Setup,
+    init: ComponentInit,
 ) => JSXElement;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

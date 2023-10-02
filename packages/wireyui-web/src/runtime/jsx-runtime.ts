@@ -1,12 +1,17 @@
+import {
+    addStrongReference,
+    flatten,
+    isSignal,
+} from '@captainpants/wireyui-core';
 import type {
     Component,
     JSXElement,
     PropsWithIntrinsicAttributesFor,
     FlattenedElement,
     Signal,
-    SetupFunction,
 } from '@captainpants/wireyui-core';
-import { flatten, isSignal } from '@captainpants/wireyui-core';
+import { renderComponent } from './renderComponent.js';
+import { assignDOMElementProps } from './assignDOMElementProps.js';
 
 function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,
@@ -33,10 +38,14 @@ function jsx<ComponentType extends string | Component<unknown>>(
     }
 }
 
-const mappedProperties: Record<string, string> = {
-    class: 'className',
-    for: 'htmlFor',
-};
+function append(parent: Node, after: Node | null, child: Node): Node {
+    if (after) {
+        parent.insertBefore(child, after.nextSibling);
+    } else {
+        parent.appendChild(child);
+    }
+    return child;
+}
 
 function renderDOMElement<TElementType extends string>(
     type: TElementType,
@@ -50,91 +59,6 @@ function renderDOMElement<TElementType extends string>(
     appendJsxChildren(ele, null, props.children);
 
     return ele;
-}
-
-function renderComponent<TComponentType extends Component<unknown>>(
-    Component: TComponentType,
-    props: PropsWithIntrinsicAttributesFor<TComponentType>,
-): JSXElement {
-    const setup: SetupFunction = (hook, ...args) => {
-        return hook(setup, ...args);
-    };
-
-    const res = Component(props, setup);
-
-    return res;
-}
-
-type Untyped = Record<string, unknown>;
-
-const strongReferences = new WeakMap<Node, unknown[]>();
-function addStrongReference(node: Node, ref: unknown): void {
-    const found = strongReferences.get(node);
-    if (found) {
-        found.push(ref);
-    } else {
-        const toAdd = [ref];
-        strongReferences.set(node, toAdd);
-    }
-}
-
-function assignDOMElementProps<TElementType extends string>(
-    node: Node,
-    props: PropsWithIntrinsicAttributesFor<TElementType>,
-): void {
-    for (const key of Object.getOwnPropertyNames(props)) {
-        // Deal with class (className) and for (htmlFor)
-        const mappedKey = Object.hasOwn(mappedProperties, key)
-            ? mappedProperties[key]!
-            : key;
-
-        if (mappedKey !== 'children') {
-            const value = (props as Untyped)[mappedKey];
-
-            if (mappedKey.startsWith('on')) {
-                const eventName = mappedKey.substring(2);
-
-                // We don't need to subscribe, we can just use the current value of
-                // the signal when an event is triggered.
-                if (isSignal(value)) {
-                    // Indirect via anonymous callback
-                    // This closure captures 'value'
-                    node.addEventListener(eventName, (evt) => {
-                        (value.peek() as EventListener)(evt);
-                    });
-                } else {
-                    // More direct path if not a signal
-                    node.addEventListener(eventName, value as EventListener);
-                }
-            } else {
-                if (isSignal(value)) {
-                    (node as unknown as Untyped)[mappedKey] = value.peek();
-
-                    const changeCallback = () => {
-                        (node as unknown as Untyped)[mappedKey] = value.peek();
-                    };
-
-                    // Add a weak listener (so that it will be cleaned up when no references held)
-                    // we will add a strong reference to the DOM element (via WeakMap) to prevent
-                    // cleanup until the DOM element is no longer reachable
-                    value.listen(changeCallback, false);
-
-                    addStrongReference(node, changeCallback);
-                } else {
-                    (node as unknown as Untyped)[mappedKey] = value;
-                }
-            }
-        }
-    }
-}
-
-function append(parent: Node, after: Node | null, child: Node): Node {
-    if (after) {
-        parent.insertBefore(child, after.nextSibling);
-    } else {
-        parent.appendChild(child);
-    }
-    return child;
 }
 
 function addSignalJsxChild(

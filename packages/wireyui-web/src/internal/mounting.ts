@@ -1,44 +1,59 @@
-const mountedCallbacks = new WeakMap<Node, () => void>();
-const unMountedCallbacks = new WeakMap<Node, () => void>();
+function callbacks<T extends object>(name: string) {
+    const map = new WeakMap<T, (() => void)[]>();
 
-export function setMountedCallback(node: Node, callback: () => void) {
-    mountedCallbacks.set(node, callback);
+    return {
+        name,
+        add: (obj: T, callback: () => void): void => {
+            const found = map.get(obj);
+            if (found) {
+                found.push(callback);
+            } else {
+                map.set(obj, [callback]);
+            }
+        },
+        execute: (obj: T): void => {
+            const callbacks = map.get(obj);
+            if (callbacks) {
+                for (const callback of callbacks) {
+                    try {
+                        callback();
+                    } catch (ex) {
+                        console.warn(
+                            'Error swallowed while invoking callback',
+                            callback,
+                            ex,
+                        );
+                    }
+                }
+                map.delete(obj);
+            }
+        },
+    } as const;
 }
 
-export function setUnMountedCallback(node: Node, callback: () => void) {
-    unMountedCallbacks.set(node, callback);
+const mountedCallbacks = callbacks<Node>('mounted');
+const unmountedCallbacks = callbacks<Node>('unmounted');
+
+export function addMounted(node: Node, callback: () => void) {
+    mountedCallbacks.add(node, callback);
+}
+export function addUnMounted(node: Node, callback: () => void) {
+    unmountedCallbacks.add(node, callback);
 }
 
+// TODO: we can make this stack-based to avoid recursion
 export function mounted(nodeList: NodeList): void {
     for (const node of nodeList) {
-        const callback = mountedCallbacks.get(node);
-        if (callback) {
-            try {
-                callback();
-            } catch (ex) {
-                console.warn(
-                    'Error swallowed while invoking handler',
-                    callback,
-                    ex,
-                );
-            }
-        }
+        mountedCallbacks.execute(node);
+
+        mounted(node.childNodes);
     }
 }
 
-export function unmounted(nodeList: NodeList): void {
+export function unMounted(nodeList: NodeList): void {
     for (const node of nodeList) {
-        const callback = unMountedCallbacks.get(node);
-        if (callback) {
-            try {
-                callback();
-            } catch (ex) {
-                console.warn(
-                    'Error swallowed while invoking handler',
-                    callback,
-                    ex,
-                );
-            }
-        }
+        unMounted(node.childNodes);
+
+        unmountedCallbacks.execute(node);
     }
 }

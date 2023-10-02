@@ -4,10 +4,17 @@ type ElementPartial<TElement> = Partial<TElement> & {
 
 type NodeTypes = HTMLElement | SVGElement | Text | Comment;
 
-export function expectDOMMatching<TElement extends NodeTypes>(
-    node: TElement,
+export function expectDOMMatching(
+    node: unknown,
     target: ElementPartial<NodeTypes>,
 ): string | null {
+    expect(node).toBeInstanceOf(Node);
+
+    if (!(node instanceof Node)) {
+        // This should never hit, we're just forcing node to be a Node for later usage.
+        fail('Expected node to be instanceOf Node');
+    }
+
     for (const key of Object.getOwnPropertyNames(target)) {
         if (key === 'children') {
             continue;

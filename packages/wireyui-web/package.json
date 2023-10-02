@@ -15,8 +15,8 @@
             "require": "./build/cjs/index.js"
         },
         "./jsx-runtime": {
-            "import": "./build/runtime/jsx-runtime.js",
-            "require": "./build/runtime/cjs/jsx-runtime.js"
+            "import": "./build/jsx-runtime.js",
+            "require": "./build/cjs/jsx-runtime.js"
         }
     },
     "scripts": {

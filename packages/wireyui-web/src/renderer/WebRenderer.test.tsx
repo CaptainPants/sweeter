@@ -16,13 +16,13 @@ function SvgComponent(): JSXElement {
     );
 }
 
-it('Root', () => {
+it('WebRenderer with an HTML component doesn\'t throw', () => {
     const root = new WebRenderer();
 
     root.start(document.createElement('div'), () => <Component />);
 });
 
-it('SVG Root', () => {
+it('WebRenderer with an SVG component doesn\'t throw', () => {
     const root = new WebRenderer();
 
     root.start(document.createElement('div'), () => <SvgComponent />);

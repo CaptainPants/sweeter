@@ -1,6 +1,6 @@
 import type { JSXElement } from '@captainpants/wireyui-core';
-import { appendJsxChildren } from '@captainpants/wireyui-web/jsx-runtime';
 import { mounted, unMounted } from '../internal/mounting.js';
+import { appendJsxChildren } from '../runtime/internal/appendJsxChildren.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.

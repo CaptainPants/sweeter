@@ -1,6 +1,6 @@
 import { Show, mutable } from '@captainpants/wireyui-core';
 import { expectDOMMatching } from '../test/expectDOMMatching.js';
-import { WebRenderer } from '../WebRenderer.js';
+import { WebRenderer } from '../renderer/WebRenderer.js';
 
 it('', () => {
     const cond = mutable(true);

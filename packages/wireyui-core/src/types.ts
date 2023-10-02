@@ -1,6 +1,10 @@
 import type { Context } from './index.js';
 import type { Signal } from './signals/types.js';
 
+export type JSXKey = string | number;
+
+export type JSXElement = JSX.Element;
+
 export type HookFunction<TArgs extends readonly unknown[], TResult> = (
     setup: ComponentInit,
     ...args: TArgs
@@ -11,22 +15,40 @@ export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
     ...args: TArgs
 ) => TResult;
 
-// There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
-export type ComponentInit = ComponentInitFunction & {
-    onMount: (callback: () => void) => void;
-    onUnMount: (callback: () => void) => void;
+export type AsyncInitializerInit = {
     getContext: <T>(context: Context<T>) => T;
 };
 
-export type JSXKey = string | number;
+// eslint-disable-next-line @typescript-eslint/ban-types
+type IfSpecified<T, TData> = [T] extends [never] ? {} : TData;
 
-export type JSXElement = JSX.Element;
+// There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
+export type ComponentInit<TAsyncInitializationResult = never> =
+    ComponentInitFunction & {
+        onMount: (callback: () => void) => void;
+        onUnMount: (callback: () => void) => void;
+        getContext: <T>(context: Context<T>) => T;
+    } & IfSpecified<
+            TAsyncInitializationResult,
+            {
+                asyncInitializerResult: TAsyncInitializationResult;
+            }
+        >;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type Component<TProps = {}> = (
+export type Component<TProps = {}, TAsyncInitializationResult = never> = ((
     props: Props<TProps>,
-    init: ComponentInit,
-) => JSXElement;
+    init: ComponentInit<TAsyncInitializationResult>,
+) => JSX.Element) &
+    IfSpecified<
+        TAsyncInitializationResult,
+        {
+            asyncInitializer: (
+                props: Props<TProps>,
+                init: AsyncInitializerInit,
+            ) => TAsyncInitializationResult;
+        }
+    >;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ComponentOrIntrinsicElementTypeConstraint = Component<any> | string;
@@ -56,8 +78,6 @@ export type ChildrenTypeFor<
 }
     ? Children
     : never;
-
-export type SignalValueType<T> = [T] extends [Signal<infer S>] ? S : never;
 
 /**
  * Take a props interface and make each property optionally a Signal.

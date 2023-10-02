@@ -41,10 +41,10 @@ export class Context<T> implements Disposable {
      * Intended to use with pattern resume.from(await promise); this will store all current context
      * when .resume is accessed, and restore it when the from method.
      */
-    get resume() {
+    static get resume() {
         const saved = saveAllContext();
         return {
-            from<T>(result: T): T {
+            with<T>(result: T): T {
                 saved.restore();
                 return result;
             },

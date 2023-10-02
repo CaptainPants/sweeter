@@ -1,7 +1,7 @@
-import { allContexts } from './internal/allContexts.js';
+import { allEvaluationContextVariables } from './internal/allEvaluationContextVariables.js';
 
-type SavedSingleContext = () => () => void;
-export type SavedContext = {
+type SavedEvaluationContextVariable = () => () => void;
+export type SavedEvaluationContext = {
     restore: () => () => void;
 };
 
@@ -15,10 +15,10 @@ function disposeAll(disposables: (() => void)[]) {
     }
 }
 
-export function saveAllContext(): SavedContext {
-    const restoreList: SavedSingleContext[] = [];
+export function saveEvaluationContext(): SavedEvaluationContext {
+    const restoreList: SavedEvaluationContextVariable[] = [];
 
-    for (const item of allContexts) {
+    for (const item of allEvaluationContextVariables) {
         const saved = item.current;
         restoreList.push(() => item.replace(saved));
     }

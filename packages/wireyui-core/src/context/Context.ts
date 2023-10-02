@@ -1,55 +1,55 @@
-import { allContexts } from './internal/allContexts.js';
-import { saveAllContext } from './saveAllContext.js';
+import { EvaluationContextVariable } from '../evaluationContext/EvaluationContextVariable.js';
+
+interface ContextNode {
+    id: symbol;
+    value: unknown;
+    parent: ContextNode | undefined;
+}
+
+const stack = new EvaluationContextVariable<ContextNode | undefined>(
+    'Context:Stack',
+    undefined,
+);
 
 export class Context<T> {
-    constructor(name: string, current: T) {
+    constructor(name: string, defaultValue: T) {
         this.name = name;
         this.id = Symbol(name);
-        this.current = current;
-
-        allContexts.add(this);
+        this.defaultValue = defaultValue;
     }
 
     readonly name: string;
 
     readonly id: symbol;
 
-    current: T;
+    readonly defaultValue: T;
 
     replace(value: T): () => void {
-        const saved = this.current;
-
-        this.current = value;
-
-        return () => {
-            this.current = saved;
-        };
+        return stack.replace({
+            id: this.id,
+            value: value,
+            parent: stack.current,
+        });
     }
 
     invoke(value: T, callback: () => void): void {
-        const restore = this.replace(value);
-        try {
-            callback();
-        } finally {
-            restore();
-        }
-    }
-
-    /**
-     * Intended to use with pattern resume.from(await promise); this will store all current context
-     * when .resume is accessed, and restore it when the from method.
-     */
-    static get resume() {
-        const saved = saveAllContext();
-        return {
-            with<T>(result: T): T {
-                saved.restore();
-                return result;
+        return stack.invoke(
+            {
+                id: this.id,
+                value: value,
+                parent: stack.current,
             },
-        };
+            callback,
+        );
     }
 
-    dispose(): void {
-        allContexts.delete(this);
+    getCurrent(): T {
+        const current = stack.current;
+        while (current) {
+            if (current.id === this.id) {
+                return current.value as T;
+            }
+        }
+        return this.defaultValue;
     }
 }

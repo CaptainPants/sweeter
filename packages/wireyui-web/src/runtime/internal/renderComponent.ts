@@ -19,7 +19,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     ): TResult => {
         return hook(init, ...args);
     };
-    
+
     // do onMount as a suffix, so that child onMounts call first
     init.onMount = (callback: () => void) => {
         suffix ??= document.createComment(`onMount(${Component.name})`);
@@ -36,7 +36,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     // but it does indicate that you should capture the context values you need during init
     // and not later when the context stack is gone
     init.getContext = <T>(context: Context<T>): T => {
-        return context.current;
+        return context.getCurrent();
     };
 
     const res = Component(props, init);

@@ -1,7 +1,5 @@
-import {
-    type SavedContext,
-    saveAllContext,
-} from '../context/saveAllContext.js';
+import type { SavedEvaluationContext } from '../evaluationContext/saveEvaluationContext.js';
+import { saveEvaluationContext } from '../evaluationContext/saveEvaluationContext.js';
 import { SignalBase } from './SignalBase.js';
 import { type SignalState } from './SignalState.js';
 import { callAndReturnDependencies } from './ambient.js';
@@ -24,7 +22,7 @@ function wrap<T>(callback: () => T): () => SignalState<T> {
 
 export class CalculatedSignal<T> extends SignalBase<T> {
     constructor(calculation: () => T) {
-        const savedContext = saveAllContext();
+        const savedContext = saveEvaluationContext();
 
         const wrapped = wrap(calculation);
 
@@ -47,7 +45,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         this.#attach();
     }
 
-    #capturedContext: SavedContext;
+    #capturedContext: SavedEvaluationContext;
     #wrappedCalculation: () => SignalState<T>;
     #recalculating: boolean = false;
 

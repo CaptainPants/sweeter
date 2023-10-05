@@ -6,7 +6,7 @@ interface ContextNode {
     parent: ContextNode | undefined;
 }
 
-const stack = new ExecutionContextVariable<ContextNode | undefined>(
+const contextStack = new ExecutionContextVariable<ContextNode | undefined>(
     'Context:Stack',
     undefined,
 );
@@ -25,26 +25,29 @@ export class Context<T> {
     readonly defaultValue: T;
 
     replace(value: T): () => void {
-        return stack.replace({
+        return contextStack.replace({
             id: this.id,
             value: value,
-            parent: stack.current,
+            parent: contextStack.current,
         });
     }
 
-    invoke(value: T, callback: () => void): void {
-        return stack.invoke(
+    invoke<TCallbackResult>(
+        value: T,
+        callback: () => TCallbackResult,
+    ): TCallbackResult {
+        return contextStack.invoke(
             {
                 id: this.id,
                 value: value,
-                parent: stack.current,
+                parent: contextStack.current,
             },
             callback,
         );
     }
 
     getCurrent(): T {
-        const current = stack.current;
+        const current = contextStack.current;
         while (current) {
             if (current.id === this.id) {
                 return current.value as T;

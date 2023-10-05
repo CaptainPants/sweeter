@@ -1,35 +1,30 @@
+import { testRender } from './index.js';
 import { expectDOMMatching } from './test/expectDOMMatching.js';
 
 // TODO: these aren't running through a renderer, which might break in future iterations.
 // consider a test rendering function that wraps around the JSX calls `testRender(() => <jsx />)`
 
 it('Simple div has text content and title attribute', () => {
-    const res = <div title="test">Something</div>;
+    const res = testRender(() => <div title="test">Something</div>);
 
-    if (!(res instanceof Node)) {
-        fail('Should be a node');
-    }
-
-    expectDOMMatching(res, {
+    expectDOMMatching(res.nodes[0], {
         title: 'test',
         nodeName: 'DIV',
         children: [{ nodeType: Node.TEXT_NODE, textContent: 'Something' }],
     });
+
+    res.dispose();
 });
 
 it('Nested elements appear in output', () => {
-    const res = (
+    const res = testRender(() => (
         <div title="test">
             <span>1</span>
             <span>2</span>
         </div>
-    );
+    ));
 
-    if (!(res instanceof Node)) {
-        fail('Should be a node');
-    }
-
-    expectDOMMatching(res, {
+    expectDOMMatching(res.nodes[0], {
         title: 'test',
         nodeName: 'DIV',
         children: [
@@ -43,6 +38,8 @@ it('Nested elements appear in output', () => {
             },
         ],
     });
+
+    res.dispose();
 });
 
 function BasicComponent({ children }: { children: JSX.Element }) {
@@ -50,18 +47,14 @@ function BasicComponent({ children }: { children: JSX.Element }) {
 }
 
 it('Basic components produce output', () => {
-    const res = (
+    const res = testRender(() => (
         <div title="test">
             <BasicComponent>1</BasicComponent>
             <BasicComponent>2</BasicComponent>
         </div>
-    );
+    ));
 
-    if (!(res instanceof Node)) {
-        fail('Should be a node');
-    }
-
-    expectDOMMatching(res, {
+    expectDOMMatching(res.nodes[0], {
         title: 'test',
         nodeName: 'DIV',
         children: [
@@ -75,20 +68,18 @@ it('Basic components produce output', () => {
             },
         ],
     });
+
+    res.dispose();
 });
 
 it('Basic component with single children produces correct output', () => {
-    const res = (
+    const res = testRender(() => (
         <BasicComponent>
             <span>1</span>
         </BasicComponent>
-    );
+    ));
 
-    if (!(res instanceof Node)) {
-        fail('Should be a node');
-    }
-
-    expectDOMMatching(res, {
+    expectDOMMatching(res.nodes[0], {
         nodeName: 'DIV',
         children: [
             {
@@ -97,21 +88,19 @@ it('Basic component with single children produces correct output', () => {
             },
         ],
     });
+
+    res.dispose();
 });
 
 it('Basic component with multiple children produces correct output', () => {
-    const res = (
+    const res = testRender(() => (
         <BasicComponent>
             <span>1</span>
             <span>2</span>
         </BasicComponent>
-    );
+    ));
 
-    if (!(res instanceof Node)) {
-        fail('Should be a node');
-    }
-
-    expectDOMMatching(res, {
+    expectDOMMatching(res.nodes[0], {
         nodeName: 'DIV',
         children: [
             {
@@ -124,4 +113,6 @@ it('Basic component with multiple children produces correct output', () => {
             },
         ],
     });
+
+    res.dispose();
 });

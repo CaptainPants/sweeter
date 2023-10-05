@@ -25,10 +25,13 @@ export class ExecutionContextVariable<T> {
         };
     }
 
-    invoke(value: T, callback: () => void): void {
+    invoke<TCallbackResult>(
+        value: T,
+        callback: () => TCallbackResult,
+    ): TCallbackResult {
         const restore = this.replace(value);
         try {
-            callback();
+            return callback();
         } finally {
             restore();
         }

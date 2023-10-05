@@ -6,8 +6,10 @@ import type {
 } from '@captainpants/wireyui-core';
 import { addMounted, addUnMounted } from '../../internal/mounting.js';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type MightHaveAsyncInitializer = Partial<Pick<Component<{}, unknown>, 'asyncInitializer'>>;
+type MightHaveAsyncInitializer = Partial<
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    Pick<Component<{}, unknown>, 'asyncInitializer'>
+>;
 
 export function renderComponent<TComponentType extends Component<unknown>>(
     Component: TComponentType,

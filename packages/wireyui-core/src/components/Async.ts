@@ -1,13 +1,12 @@
 import type { ComponentInit, Props } from '../index.js';
 import { calc, mutable, valueOf } from '../index.js';
 import { subscribe } from '../signals/subscribe.js';
+import { SuspenseContext } from './internal/SuspenseContext.js';
 
 export interface AsyncProps<T> {
     callback: (abort: AbortSignal) => Promise<T>;
     children: (data: T) => JSX.Element;
 }
-
-// TODO: Suspense
 
 export function Async<T>(
     props: Props<AsyncProps<T>>,
@@ -17,39 +16,70 @@ export function Async<T>(
     { callback, children }: Props<AsyncProps<T>>,
     init: ComponentInit,
 ): JSX.Element {
-    const data = mutable<{ resolved: true; result: T } | { resolved: false }>({
-        resolved: false,
+    const suspenseContext = SuspenseContext.getCurrent();
+
+    const data = mutable<
+        | { resolution: 'INITIAL' }
+        | { resolution: 'SUCCESS'; result: T }
+        | { resolution: 'ERROR'; error: unknown }
+    >({
+        resolution: 'INITIAL',
     });
 
-    async function load() {
-        const result = await valueOf(callback)(abortController.signal);
+    let abortController: AbortController | undefined;
 
-        if (abortController.signal.aborted) {
-            return; // don't store result if aborted
+    async function reload() {
+        // kill previous run
+        abortController?.abort();
+
+        abortController = new AbortController();
+        const revertSuspenseBlock = suspenseContext.startBlocking();
+        abortController.signal.addEventListener('abort', () => {
+            revertSuspenseBlock();
+        });
+
+        try {
+            const result = await valueOf(callback)(abortController.signal);
+
+            if (abortController.signal.aborted) {
+                return; // don't store result if aborted
+            }
+
+            data.value = { resolution: 'SUCCESS', result };
+        } catch (ex) {
+            if (abortController.signal.aborted) {
+                return; // don't store result if aborted
+            }
+
+            data.value = { resolution: 'ERROR', error: ex };
+        } finally {
+            revertSuspenseBlock();
         }
-
-        data.value = { resolved: true, result };
     }
 
-    let abortController = new AbortController();
-    load();
+    reload();
 
     const cleanupSubscriptionToProps = subscribe([callback, children], () => {
-        abortController.abort();
-        abortController = new AbortController();
-        load();
+        reload();
     });
 
     init.onUnMount(() => {
         cleanupSubscriptionToProps?.();
-        abortController.abort();
+        abortController?.abort();
     });
 
     return calc(() => {
-        if (data.value.resolved) {
-            return valueOf(children)(data.value.result);
+        if (data.value.resolution === 'INITIAL') {
+            // Suspense should be showing
+            return undefined;
         } else {
-            throw new Error('TODO: implement suspense');
+            if (data.value.resolution === 'SUCCESS') {
+                return valueOf(children)(data.value.result);
+            } else if (data.value.resolution === 'ERROR') {
+                throw data.value.error;
+            } else {
+                throw new Error('Unexpected resolution');
+            }
         }
     });
 }

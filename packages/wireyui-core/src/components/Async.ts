@@ -19,11 +19,11 @@ export function Async<T>(
     const suspenseContext = SuspenseContext.getCurrent();
 
     const data = mutable<
-        | { resolution: 'INITIAL' }
+        | { resolution: 'LOADING' }
         | { resolution: 'SUCCESS'; result: T }
         | { resolution: 'ERROR'; error: unknown }
     >({
-        resolution: 'INITIAL',
+        resolution: 'LOADING',
     });
 
     let abortController: AbortController | undefined;
@@ -31,6 +31,11 @@ export function Async<T>(
     async function reload() {
         // kill previous run
         abortController?.abort();
+
+        // Consider this step might need to be optional
+        if (data.value.resolution !== 'LOADING') {
+            data.value = { resolution: 'LOADING' };
+        }
 
         abortController = new AbortController();
         const revertSuspenseBlock = suspenseContext.startBlocking();
@@ -69,7 +74,7 @@ export function Async<T>(
     });
 
     return calc(() => {
-        if (data.value.resolution === 'INITIAL') {
+        if (data.value.resolution === 'LOADING') {
             // Suspense should be showing
             return undefined;
         } else {

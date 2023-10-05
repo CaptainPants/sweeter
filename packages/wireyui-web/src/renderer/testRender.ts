@@ -2,6 +2,7 @@ import { WebRenderer } from './WebRenderer.js';
 
 export interface TestRenderResult {
     readonly nodes: NodeListOf<ChildNode>;
+    readonly getHTML: () => string;
     readonly dispose: () => void;
 }
 
@@ -19,6 +20,7 @@ export function testRender(callback: () => JSX.Element): TestRenderResult {
 
     return {
         nodes: root.childNodes,
+        getHTML: () => root.innerHTML,
         dispose,
     };
 }

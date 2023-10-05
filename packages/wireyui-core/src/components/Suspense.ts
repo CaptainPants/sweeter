@@ -3,8 +3,8 @@ import type { Props } from '../types.js';
 import { SuspenseContext } from './internal/SuspenseContext.js';
 
 export interface SuspenseProps {
-    fallback: JSX.Element;
-    children: JSX.Element;
+    fallback: () => JSX.Element;
+    children: () => JSX.Element;
 }
 
 export function Suspense(props: Props<SuspenseProps>): JSX.Element;
@@ -15,11 +15,15 @@ export function Suspense({
     const counter = mutable(0);
 
     const suspenseCalculation = (): JSX.Element => {
+        // Important to always call the children callback
+        // as it will control the visibility of the fallback
+        const childrenResult = valueOf(children)();
+
         if (counter.value > 0) {
-            return valueOf(fallback);
+            return valueOf(fallback)();
         }
 
-        return valueOf(children);
+        return childrenResult;
     };
 
     return SuspenseContext.invoke(
@@ -35,6 +39,9 @@ export function Suspense({
                     }
                 };
             },
+            get count () {
+                return counter.peek();
+            }
         },
         () => {
             // calc captures the ambient executionContext

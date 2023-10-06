@@ -17,6 +17,8 @@ export function Suspense({
     const suspenseCalculation = (): JSX.Element => {
         // Important to always call the children callback
         // as it will control the visibility of the fallback
+        // must be a callback (called within a calc that 
+        // captures the SuspenseContext)
         const childrenResult = valueOf(children)();
 
         if (counter.value > 0) {

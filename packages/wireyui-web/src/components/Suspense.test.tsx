@@ -9,4 +9,6 @@ it('Suspense displays children', () => {
     );
 
     expect(res.getHTML()).toMatchSnapshot();
+
+    res.dispose();
 })

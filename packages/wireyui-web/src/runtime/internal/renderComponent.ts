@@ -1,8 +1,9 @@
-import type {
-    Component,
-    Context,
-    HookFunction,
-    PropsWithIntrinsicAttributesFor,
+import {
+    untrack,
+    type Component,
+    type Context,
+    type HookFunction,
+    type PropsWithIntrinsicAttributesFor
 } from '@captainpants/wireyui-core';
 import { addMounted, addUnMounted } from '../../internal/mounting.js';
 
@@ -50,7 +51,10 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         return context.getCurrent();
     };
 
-    const res = Component(props, init);
+    // Its reasonably certain that people will trigger side effects when wiring up a component
+    // and that these might update signals. We also don't want to accidentally subscribe to these
+    // signals -- hence untrack the actual render
+    const res = untrack(() => Component(props, init));
 
     if (!prefix && !suffix) {
         return res;

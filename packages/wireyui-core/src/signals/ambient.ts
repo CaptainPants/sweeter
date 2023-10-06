@@ -9,8 +9,8 @@ export function announceSignalUsage(signal: Signal<unknown>): void {
     _ambientUsageListener?.(signal);
 }
 
-export function untrack(callback: () => void): void {
-    callAndInvokeListenerForEachDependency(callback, () => {}, false);
+export function untrack<T>(callback: () => T): T {
+    return callAndInvokeListenerForEachDependency(callback, () => {}, false);
 }
 
 export function announceMutatingSignal(signal: Signal<unknown>) {

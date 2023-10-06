@@ -12,21 +12,8 @@ export function Suspense({
     fallback,
     children,
 }: Props<SuspenseProps>): JSX.Element {
+    // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = mutable(0);
-
-    const suspenseCalculation = (): JSX.Element => {
-        // Important to always call the children callback
-        // as it will control the visibility of the fallback
-        // must be a callback (called within a calc that 
-        // captures the SuspenseContext)
-        const childrenResult = valueOf(children)();
-
-        if (counter.value > 0) {
-            return valueOf(fallback)();
-        }
-
-        return childrenResult;
-    };
 
     return SuspenseContext.invoke(
         {
@@ -46,6 +33,25 @@ export function Suspense({
             }
         },
         () => {
+            const resolvedChildren = calc(
+                () => {
+                    return valueOf(children)();
+                }
+            );
+
+            const suspenseCalculation = (): JSX.Element => {
+                // Important to always call the children callback
+                // as it will control the visibility of the fallback
+                // must be a callback (called within a calc that 
+                // captures the SuspenseContext)
+
+                if (counter.value > 0) {
+                    return valueOf(fallback)();
+                }
+
+                return resolvedChildren.value;
+            };
+            
             // calc captures the ambient executionContext
             return calc(suspenseCalculation);
         },

@@ -1,5 +1,9 @@
 import type { Signal } from '@captainpants/wireyui-core';
-import { ErrorBoundaryContext, addStrongReference , saveExecutionContext } from '@captainpants/wireyui-core';
+import {
+    ErrorBoundaryContext,
+    addStrongReference,
+    saveExecutionContext,
+} from '@captainpants/wireyui-core';
 import { append } from './append.js';
 import { appendJsxChildren } from './appendJsxChildren.js';
 
@@ -30,30 +34,27 @@ export function addSignalJsxChild(
     const context = saveExecutionContext();
 
     const dynamicJsxChildCleanupAndReplace = () => {
-        context.invoke(
-            () => {
-                try {
-                    const thisValue = childSignal.value;
-            
-                    // From 'startMarker', delete all nextSiblings until 'endMarker'
-                    let current = startMarker.nextSibling;
-            
-                    while (current && current != endMarker) {
-                        parent.removeChild(current);
-            
-                        current = startMarker.nextSibling;
-                    }
-            
-                    appendJsxChildren(parent, startMarker, thisValue);
-            
-                    lastValue = thisValue;
+        context.invoke(() => {
+            try {
+                const thisValue = childSignal.value;
+
+                // From 'startMarker', delete all nextSiblings until 'endMarker'
+                let current = startMarker.nextSibling;
+
+                while (current && current != endMarker) {
+                    parent.removeChild(current);
+
+                    current = startMarker.nextSibling;
                 }
-                catch (ex) {
-                    ErrorBoundaryContext.getCurrent().error(ex);
-                    throw ex; // this is swallowed anyway
-                }
+
+                appendJsxChildren(parent, startMarker, thisValue);
+
+                lastValue = thisValue;
+            } catch (ex) {
+                ErrorBoundaryContext.getCurrent().error(ex);
+                throw ex; // this is swallowed anyway
             }
-        );
+        });
     };
 
     // Signal could be used in more than one place, so we want

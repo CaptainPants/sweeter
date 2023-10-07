@@ -2,7 +2,7 @@ import {
     type Component,
     type Context,
     type HookFunction,
-    type PropsWithIntrinsicAttributesFor
+    type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/wireyui-core';
 import { addMounted, addUnMounted } from '../../internal/mounting.js';
 

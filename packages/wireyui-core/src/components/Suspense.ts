@@ -28,21 +28,19 @@ export function Suspense({
                     }
                 };
             },
-            get count () {
+            get count() {
                 return counter.peek();
-            }
+            },
         },
         () => {
-            const evaluatedChildren = calc(
-                () => {
-                    return valueOf(children)();
-                }
-            );
+            const evaluatedChildren = calc(() => {
+                return valueOf(children)();
+            });
 
             const suspenseCalculation = (): JSX.Element => {
                 // Important to always call the children callback
                 // as it will control the visibility of the fallback
-                // must be a callback (called within a calc that 
+                // must be a callback (called within a calc that
                 // captures the SuspenseContext)
 
                 if (counter.value > 0) {

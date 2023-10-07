@@ -19,7 +19,7 @@ function jsx<ComponentType extends string | Component<unknown>>(
                     // Component function
                     return renderComponent(type, props);
                 }
-        
+
                 case 'string': {
                     // intrinsic
                     return renderDOMElement(
@@ -29,12 +29,11 @@ function jsx<ComponentType extends string | Component<unknown>>(
                         >,
                     );
                 }
-        
+
                 default:
                     throw new TypeError(`Unexpected type ${type}`);
             }
-        }
-        catch (ex) {
+        } catch (ex) {
             ErrorBoundaryContext.getCurrent().error(ex);
             return 'Error processing...';
         }

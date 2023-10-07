@@ -17,6 +17,6 @@ export const SuspenseContext = new Context<SuspenseContextType>(
             throw new Error(
                 'No SuspenseContext set, please wrap your element in a Suspense',
             );
-        }
+        },
     },
 );

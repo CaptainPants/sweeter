@@ -44,10 +44,9 @@ export function saveExecutionContext(): SavedExecutionContext {
             const revertList = restoreAll();
             try {
                 return callback();
-            }
-            finally {
+            } finally {
                 popAndCall(revertList);
             }
-        }
+        },
     };
 }

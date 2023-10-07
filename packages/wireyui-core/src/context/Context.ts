@@ -1,4 +1,4 @@
-import { ExecutionContextVariable } from '../execuationContext/ExecutionContextVariable.js';
+import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
 
 interface ContextNode {
     id: symbol;

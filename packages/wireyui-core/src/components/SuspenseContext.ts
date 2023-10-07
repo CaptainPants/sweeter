@@ -1,4 +1,4 @@
-import { Context } from '../../context/Context.js';
+import { Context } from '../context/Context.js';
 
 export interface SuspenseContextType {
     startBlocking(): () => void;

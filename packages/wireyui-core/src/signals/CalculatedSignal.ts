@@ -1,5 +1,5 @@
-import type { SavedExecutionContext } from '../execuationContext/saveExecutionContext.js';
-import { saveExecutionContext } from '../execuationContext/saveExecutionContext.js';
+import type { SavedExecutionContext } from '../executionContext/saveExecutionContext.js';
+import { saveExecutionContext } from '../executionContext/saveExecutionContext.js';
 import { SignalBase } from './SignalBase.js';
 import { type SignalState } from './SignalState.js';
 import { callAndReturnDependencies } from './ambient.js';

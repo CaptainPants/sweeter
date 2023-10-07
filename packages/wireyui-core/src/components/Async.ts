@@ -1,7 +1,7 @@
 import type { ComponentInit, Props } from '../index.js';
 import { calc, mutable, valueOf } from '../index.js';
 import { subscribe } from '../signals/subscribe.js';
-import { SuspenseContext } from './internal/SuspenseContext.js';
+import { SuspenseContext } from './SuspenseContext.js';
 
 export interface AsyncProps<T> {
     callback: (abort: AbortSignal) => Promise<T>;

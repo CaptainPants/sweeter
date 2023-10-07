@@ -1,6 +1,6 @@
 import { calc, mutable, valueOf } from '../index.js';
 import type { Props } from '../types.js';
-import { SuspenseContext } from './internal/SuspenseContext.js';
+import { SuspenseContext } from './SuspenseContext.js';
 
 export interface SuspenseProps {
     fallback: () => JSX.Element;
@@ -33,7 +33,7 @@ export function Suspense({
             }
         },
         () => {
-            const resolvedChildren = calc(
+            const evaluatedChildren = calc(
                 () => {
                     return valueOf(children)();
                 }
@@ -49,9 +49,9 @@ export function Suspense({
                     return valueOf(fallback)();
                 }
 
-                return resolvedChildren.value;
+                return evaluatedChildren.value;
             };
-            
+
             // calc captures the ambient executionContext
             return calc(suspenseCalculation);
         },

@@ -19,9 +19,9 @@ export function addSignalJsxChild(
     const startMarker = document.createComment('{');
     const endMarker = document.createComment('}');
 
-    append(parent, after, startMarker);
-    const afterChildren = appendJsxChildren(parent, startMarker, lastValue);
-    append(parent, afterChildren, endMarker);
+    after = append(parent, after, startMarker);
+    after = appendJsxChildren(parent, after, lastValue);
+    append(parent, after, endMarker);
 
     // TODO: dynamic text is currently getting removed and re-added,
     // and thats not great for performance. We need to do some kind of

@@ -6,4 +6,4 @@ export * from './context/index.js';
 export * from './executionContext/index.js';
 export * from './types.js';
 export * from './signals/index.js';
-export * from './flatten.js';
+export * from './utility/index.js';

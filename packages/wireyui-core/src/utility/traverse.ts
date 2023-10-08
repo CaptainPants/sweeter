@@ -9,7 +9,7 @@ export type FlattenedElement = Exclude<
  * @param callback
  * @returns
  */
-export function flatten(
+export function traverse(
     children: JSX.Element,
     callback: (item: FlattenedElement) => void,
 ): void {
@@ -19,7 +19,7 @@ export function flatten(
 
     if (Array.isArray(children)) {
         children.forEach((inner) => {
-            flatten(inner, callback);
+            traverse(inner, callback);
         });
     } else {
         callback(children);

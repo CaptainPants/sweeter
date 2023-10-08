@@ -1,5 +1,6 @@
 import { calc, mutable, valueOf } from '../index.js';
 import type { ComponentInit, Props } from '../types.js';
+import type { ErrorBoundaryContextType } from './ErrorBoundaryContext.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
 export interface ErrorBoundaryProps {

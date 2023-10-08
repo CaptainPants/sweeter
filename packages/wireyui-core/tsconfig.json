@@ -7,7 +7,7 @@
     "compilerOptions": {
         "rootDir": "src",
         "lib": [
-            "ES2020", // No DOM here
+            "ES2022", // No DOM here
         ],
         "outDir": "./build",
         "paths":{

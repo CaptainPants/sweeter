@@ -1,4 +1,4 @@
-import type { Context } from './index.js';
+import type { Context, ErrorBoundaryContextType, SavedExecutionContext } from './index.js';
 import type { Signal } from './signals/types.js';
 
 export type JSXKey = string | number;
@@ -85,3 +85,4 @@ export type ChildrenTypeFor<
 export type Props<TProps> = {
     [Key in keyof TProps]: Signal<TProps[Key]> | TProps[Key];
 };
+

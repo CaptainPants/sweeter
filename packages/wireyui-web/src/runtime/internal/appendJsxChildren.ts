@@ -1,5 +1,5 @@
 import type { FlattenedElement } from '@captainpants/wireyui-core';
-import { flatten, isSignal } from '@captainpants/wireyui-core';
+import { traverse, isSignal } from '@captainpants/wireyui-core';
 import { addSignalJsxChild } from './addSignalJsxChild.js';
 import { append } from './append.js';
 
@@ -36,7 +36,7 @@ export function appendJsxChildren(
         }
     };
 
-    flatten(children, callback);
+    traverse(children, callback);
 
     return last;
 }

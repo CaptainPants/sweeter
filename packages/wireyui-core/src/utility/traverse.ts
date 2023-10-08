@@ -1,4 +1,4 @@
-export type FlattenedElement = Exclude<
+export type TraversedElement = Exclude<
     JSX.Element,
     JSX.Element[] | null | undefined
 >;
@@ -11,7 +11,7 @@ export type FlattenedElement = Exclude<
  */
 export function traverse(
     children: JSX.Element,
-    callback: (item: FlattenedElement) => void,
+    callback: (item: TraversedElement) => void,
 ): void {
     if (children === null || children === undefined) {
         return;

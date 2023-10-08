@@ -4,7 +4,7 @@ import {
     type HookFunction,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/wireyui-core';
-import { addMounted, addUnMounted } from '../../internal/mounting.js';
+import { addMounted, addUnMounted } from './mounting.js';
 
 type MightHaveAsyncInitializer = Partial<
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -56,6 +56,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     const res = Component(props, init);
 
     if (!prefix && !suffix) {
+        // shortcut if we don't need to add in markers for mount callbacks.
         return res;
     }
 

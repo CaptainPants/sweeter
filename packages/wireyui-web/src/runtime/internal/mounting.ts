@@ -42,18 +42,18 @@ export function addUnMounted(node: Node, callback: () => void) {
 }
 
 // TODO: we can make this stack-based to avoid recursion
-export function mounted(nodeList: NodeList): void {
-    for (const node of nodeList) {
-        mountedCallbacks.execute(node);
-
-        mounted(node.childNodes);
+export function mounted(node: Node): void {
+    for (const child of node.childNodes) {
+        mounted(child);
     }
+
+    mountedCallbacks.execute(node);
 }
 
-export function unMounted(nodeList: NodeList): void {
-    for (const node of nodeList) {
-        unMounted(node.childNodes);
+export function unMounted(node: Node): void {
+    unmountedCallbacks.execute(node);
 
-        unmountedCallbacks.execute(node);
+    for (const child of node.childNodes) {
+        unMounted(child);
     }
 }

@@ -2,35 +2,65 @@ import {
     addStrongReference,
     flattenElements,
 } from '@captainpants/wireyui-core';
+import { mounted, unMounted } from './mounting.js';
 
 export function addJsxChildren(parent: Node, children: JSX.Element): void {
     const flattened = flattenElements(children);
     const original = flattened.peek();
+
+    const mountedNodes: Node[] = [];
 
     for (let child of original) {
         if (isText(child)) {
             child = document.createTextNode(String(child));
         }
 
-        parent.insertBefore(child, null);
+        parent.appendChild(child);
+        mountedNodes.push(child);
+    }
+
+    // Go through added nodes in reverse order and call any mount callbacks
+    for (
+        let current = mountedNodes.pop();
+        current;
+        current = mountedNodes.pop()
+    ) {
+        mounted(current);
     }
 
     const onChange = () => {
         const updated = flattened.peek();
         const sentinel = parent.firstChild;
 
+        const newlyMountedNodes: Node[] = [];
+
         for (let child of updated) {
             if (isText(child)) {
                 child = document.createTextNode(String(child));
             }
 
+            // Nodes might have already been children of the parent, so we only include those that
+            // don't have a parent
+            if (!child.parentNode) {
+                newlyMountedNodes.push(child);
+            }
+
             parent.insertBefore(child, sentinel);
+        }
+
+        // Go through added nodes in reverse order and call any mount callbacks
+        for (
+            let current = newlyMountedNodes.pop();
+            current;
+            current = newlyMountedNodes.pop()
+        ) {
+            mounted(current);
         }
 
         // This items are being removed
         removeSelfAndLaterSiblings(sentinel, (removed) => {
             // This should do onUnMount recursively
-            console.log('Removed', removed);
+            unMounted(removed);
         });
     };
 

@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mount is called in order 1`] = `
+NodeList [
+  <!--onUnmount(TestingComponent)-->,
+  <div>
+    <em>
+      1
+    </em>
+    <div>
+      <!--onUnmount(TestingComponent)-->
+      <div>
+        <em>
+          2
+        </em>
+        <div>
+          <!--onUnmount(TestingComponent)-->
+          <div>
+            <em>
+              3
+            </em>
+            <div />
+          </div>
+          <!--onMount(TestingComponent)-->
+        </div>
+      </div>
+      <!--onMount(TestingComponent)-->
+      <!--onUnmount(TestingComponent)-->
+      <div>
+        <em>
+          4
+        </em>
+        <div />
+      </div>
+      <!--onMount(TestingComponent)-->
+    </div>
+  </div>,
+  <!--onMount(TestingComponent)-->,
+]
+`;

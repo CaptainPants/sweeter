@@ -4,7 +4,10 @@ import {
 } from '@captainpants/wireyui-core';
 import { mounted, unMounted } from './mounting.js';
 
-export function addJsxChildren(parent: Node, children: JSX.Element): void {
+export function addJsxChildren(
+    parent: Node,
+    children: JSX.Element,
+): () => void {
     const flattened = flattenElements(children);
     const original = flattened.peek();
 
@@ -68,6 +71,17 @@ export function addJsxChildren(parent: Node, children: JSX.Element): void {
 
     // Callback lifetime linked to the parent Node
     addStrongReference(parent, onChange);
+
+    return () => {
+        for (
+            let current = parent.lastChild;
+            current;
+            current = parent.lastChild
+        ) {
+            current.remove();
+            unMounted(current);
+        }
+    };
 }
 
 function isText(value: unknown): value is string | number | boolean {
@@ -75,9 +89,15 @@ function isText(value: unknown): value is string | number | boolean {
     return type === 'string' || type === 'number' || type === 'boolean';
 }
 
+/**
+ *
+ * @param child
+ * @param afterRemoveCallback called immediately prior to removing a Node
+ * @returns
+ */
 function removeSelfAndLaterSiblings(
     child: ChildNode | null,
-    callback: (node: ChildNode) => void,
+    afterRemoveCallback: (node: ChildNode) => void,
 ) {
     if (!child) return;
 
@@ -87,8 +107,12 @@ function removeSelfAndLaterSiblings(
     // this might be null
     const lastChildAfterRemovals = child.previousSibling;
 
-    while (parent.lastChild && parent.lastChild !== lastChildAfterRemovals) {
-        callback(parent.lastChild);
-        parent.lastChild.remove();
+    for (
+        let current = parent.lastChild;
+        current && current !== lastChildAfterRemovals;
+        current = parent.lastChild
+    ) {
+        current.remove();
+        afterRemoveCallback(current);
     }
 }

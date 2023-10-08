@@ -7,15 +7,15 @@
     "private": false,
     "type": "module",
     "packageManager": "pnpm@8.6.7",
-    "main": "./build/index.js",
-    "types": "./build/index.d.ts",
+    "main": "./build/esm/index.js",
+    "types": "./build/esm/index.d.ts",
     "exports": {
         ".": {
-            "import": "./build/index.js",
+            "import": "./build/esm/index.js",
             "require": "./build/cjs/index.js"
         },
         "./jsx-runtime": {
-            "import": "./build/jsx-runtime.js",
+            "import": "./build/esm/jsx-runtime.js",
             "require": "./build/cjs/jsx-runtime.js"
         }
     },

@@ -50,8 +50,9 @@ export type Component<TProps = {}, TAsyncInitializationResult = never> = ((
         }
     >;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ComponentOrIntrinsicElementTypeConstraint = Component<any> | string;
+export type ComponentOrIntrinsicElementTypeConstraint =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Component<any> | string | undefined;
 
 export type IntrinsicElementProps<TElementType extends string> =
     JSX.IntrinsicElementAttributes<TElementType>;

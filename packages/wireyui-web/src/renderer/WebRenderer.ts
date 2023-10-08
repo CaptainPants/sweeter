@@ -16,8 +16,10 @@ export class WebRenderer {
     start(element: HTMLElement, render: () => JSXElement): () => void {
         const content = render();
 
-        addJsxChildren(element, content);
+        const unmount = addJsxChildren(element, content);
 
-        return () => {};
+        return () => {
+            unmount();
+        };
     }
 }

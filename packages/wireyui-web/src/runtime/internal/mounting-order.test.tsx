@@ -1,12 +1,12 @@
+/* @jsxImportSource ../.. */
+
 import type { ComponentInit, Props } from '@captainpants/wireyui-core';
 import { valueOf } from '@captainpants/wireyui-core';
 import { testRender } from '../../index.js';
 
 interface TestingComponentProps {
-    number: number;
-    children?: JSX.Element;
-    onMount: (num: number) => void;
-    onUnMount: (num: number) => void;
+    onMount: () => void;
+    onUnMount: () => void;
 }
 
 function TestingComponent(
@@ -14,10 +14,57 @@ function TestingComponent(
     init: ComponentInit,
 ): JSX.Element {
     init.onMount(() => {
+        valueOf(props.onMount)();
+    });
+    init.onUnMount(() => {
+        valueOf(props.onUnMount)();
+    });
+
+    return <></>;
+}
+
+it('Mount and unmount are called', () => {
+    let mounted: boolean = false,
+        unmounted = false;
+
+    const onMount = () => {
+        mounted = true;
+    };
+    const onUnMount = () => {
+        unmounted = true;
+    };
+
+    const res = testRender(() => {
+        const rendered = (
+            <TestingComponent onMount={onMount} onUnMount={onUnMount} />
+        );
+        return rendered;
+    });
+
+    expect(mounted).toBe(true);
+    expect(unmounted).toBe(false);
+
+    res.dispose();
+
+    expect(unmounted).toBe(true);
+});
+
+interface TestingComponentWithChildrenProps {
+    number: number;
+    children?: JSX.Element;
+    onMount: (num: number) => void;
+    onUnMount: (num: number) => void;
+}
+
+function TestingComponentWithChildren(
+    props: Props<TestingComponentWithChildrenProps>,
+    init: ComponentInit,
+): JSX.Element {
+    init.onMount(() => {
         valueOf(props.onMount)(valueOf(props.number));
     });
     init.onUnMount(() => {
-        valueOf(props.onMount)(valueOf(props.number));
+        valueOf(props.onUnMount)(valueOf(props.number));
     });
 
     return (
@@ -40,30 +87,32 @@ it('Mount is called in order', () => {
     };
 
     const res = testRender(() => (
-        <TestingComponent number={1} onMount={onMount} onUnMount={onUnMount}>
-            <TestingComponent
+        <TestingComponentWithChildren
+            number={1}
+            onMount={onMount}
+            onUnMount={onUnMount}
+        >
+            <TestingComponentWithChildren
                 number={2}
                 onMount={onMount}
                 onUnMount={onUnMount}
             >
-                <TestingComponent
-                    number={3}
-                    onMount={onMount}
-                    onUnMount={onUnMount}
-                />
-            </TestingComponent>
-            <TestingComponent
+            </TestingComponentWithChildren>
+            <TestingComponentWithChildren
                 number={4}
                 onMount={onMount}
                 onUnMount={onUnMount}
             />
-        </TestingComponent>
+        </TestingComponentWithChildren>
     ));
 
     expect(res.nodes).toMatchSnapshot();
 
     // Depth first order (child before parent)
-    //expect(mountOrder).toStrictEqual([3, 2, 4, 1]);
+    expect(mountOrder).toStrictEqual([3, 2, 4, 1]);
+
+    res.dispose();
+
     // Depth first order (parent before child)
     expect(unMountOrder).toStrictEqual([1, 2, 3, 4]);
 });

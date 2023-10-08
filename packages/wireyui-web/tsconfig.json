@@ -2,12 +2,15 @@
     "extends": "../../common-config/tsconfig.json",
     "include": [
         "src/**/*.ts",
-        "src/**/*.tsx"
+        "src/**/*.tsx",
     ],
     "compilerOptions": {
         "rootDir": "src",
-        "jsxImportSource": "@captainpants/wireyui-web",
+        "jsxImportSource": "-specify-inline-in-each-file-",
         "jsx": "react-jsx",
-        "outDir": "./build"
+        "outDir": "./build/esm",
+        "paths": {
+			"@jsx-test/jsx-runtime": ["./jsx-runtime.js"]
+		}
     }
 }

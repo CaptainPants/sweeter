@@ -1,3 +1,5 @@
+/* @jsxImportSource ../. */
+
 import type { JSXElement } from '@captainpants/wireyui-core';
 import { WebRenderer } from './WebRenderer.js';
 

@@ -2,39 +2,39 @@
 
 exports[`Mount is called in order 1`] = `
 NodeList [
-  <!--onUnmount(TestingComponent)-->,
+  <!--onUnmount(TestingComponentWithChildren)-->,
   <div>
     <em>
       1
     </em>
     <div>
-      <!--onUnmount(TestingComponent)-->
+      <!--onUnmount(TestingComponentWithChildren)-->
       <div>
         <em>
           2
         </em>
         <div>
-          <!--onUnmount(TestingComponent)-->
+          <!--onUnmount(TestingComponentWithChildren)-->
           <div>
             <em>
               3
             </em>
             <div />
           </div>
-          <!--onMount(TestingComponent)-->
+          <!--onMount(TestingComponentWithChildren)-->
         </div>
       </div>
-      <!--onMount(TestingComponent)-->
-      <!--onUnmount(TestingComponent)-->
+      <!--onMount(TestingComponentWithChildren)-->
+      <!--onUnmount(TestingComponentWithChildren)-->
       <div>
         <em>
           4
         </em>
         <div />
       </div>
-      <!--onMount(TestingComponent)-->
+      <!--onMount(TestingComponentWithChildren)-->
     </div>
   </div>,
-  <!--onMount(TestingComponent)-->,
+  <!--onMount(TestingComponentWithChildren)-->,
 ]
 `;

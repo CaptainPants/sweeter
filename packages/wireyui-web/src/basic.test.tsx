@@ -1,3 +1,5 @@
+/* @jsxImportSource . */
+
 import { testRender } from './index.js';
 import { expectDOMMatching } from './test/expectDOMMatching.js';
 

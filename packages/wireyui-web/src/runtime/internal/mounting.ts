@@ -28,6 +28,7 @@ function callbacks<T extends object>(name: string) {
                 map.delete(obj);
             }
         },
+        __map: map,
     } as const;
 }
 
@@ -53,7 +54,12 @@ export function mounted(node: Node): void {
 export function unMounted(node: Node): void {
     unmountedCallbacks.execute(node);
 
-    for (const child of node.childNodes) {
-        unMounted(child);
+    // reverse order
+    for (
+        let current = node.lastChild;
+        current;
+        current = current.previousSibling
+    ) {
+        unMounted(current);
     }
 }

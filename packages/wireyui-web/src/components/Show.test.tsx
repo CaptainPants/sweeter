@@ -1,8 +1,10 @@
+/* @jsxImportSource .. */
+
 import { Show, mutable } from '@captainpants/wireyui-core';
 import { expectDOMMatching } from '../test/expectDOMMatching.js';
 import { WebRenderer } from '../renderer/WebRenderer.js';
 
-it('', () => {
+it('Show initially displays and then hides content when signal updated', () => {
     const cond = mutable(true);
 
     const renderer = new WebRenderer();

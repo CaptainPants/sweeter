@@ -4,6 +4,7 @@ import {
     type JSXElement,
     type PropsWithIntrinsicAttributesFor,
     ErrorBoundaryContext,
+    Fragment,
 } from '@captainpants/wireyui-core';
 import { renderComponent } from './internal/renderComponent.js';
 import { renderDOMElement } from './internal/renderDOMElement.js';
@@ -14,6 +15,10 @@ function jsx<ComponentType extends string | Component<unknown>>(
 ): JSXElement {
     return untrack(() => {
         try {
+            if (type === undefined) {
+                return jsx(Fragment, props);
+            }
+
             switch (typeof type) {
                 case 'function': {
                     // Component function

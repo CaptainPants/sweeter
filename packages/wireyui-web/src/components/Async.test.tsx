@@ -1,3 +1,5 @@
+/* @jsxImportSource .. */
+
 import { Async, Suspense } from '@captainpants/wireyui-core';
 import { testRender } from '../renderer/testRender.js';
 

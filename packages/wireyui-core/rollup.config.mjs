@@ -1,6 +1,6 @@
 export default {
     input: [
-        './build/index.js',
+        './build/esm/index.js',
     ],
     output: {
         format: 'commonjs',

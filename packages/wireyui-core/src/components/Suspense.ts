@@ -1,5 +1,5 @@
 import { calc, mutable, valueOf } from '../index.js';
-import type { Props } from '../types.js';
+import type { ComponentInit, Props } from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
 export interface SuspenseProps {
@@ -7,11 +7,14 @@ export interface SuspenseProps {
     children: () => JSX.Element;
 }
 
-export function Suspense(props: Props<SuspenseProps>): JSX.Element;
-export function Suspense({
-    fallback,
-    children,
-}: Props<SuspenseProps>): JSX.Element {
+export function Suspense(
+    props: Props<SuspenseProps>,
+    init: ComponentInit,
+): JSX.Element;
+export function Suspense(
+    { fallback, children }: Props<SuspenseProps>,
+    init: ComponentInit,
+): JSX.Element {
     // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = mutable(0);
 

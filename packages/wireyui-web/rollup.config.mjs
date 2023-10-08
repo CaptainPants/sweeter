@@ -1,10 +1,11 @@
 export default {
     input: [
-        './build/index.js',
-        './build/jsx-runtime.js',
+        './build/esm/index.js',
+        './build/esm/jsx-runtime.js',
     ],
     output: {
         format: 'commonjs',
         dir: './build/cjs'
     },
+    external: ['@captainpants/wireyui-core']
   };

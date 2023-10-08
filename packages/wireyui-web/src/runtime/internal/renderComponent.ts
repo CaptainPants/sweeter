@@ -36,7 +36,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         addMounted(suffix, callback);
     };
 
-    // do onMount as a prefix, so that child onUnMount are called last
+    // do onUnMount as a prefix, so that child onUnMount are called last
     init.onUnMount = (callback: () => void) => {
         // TODO: this should trigger ErrorBoundary if an exception is thrown
         prefix ??= document.createComment(`onUnmount(${Component.name})`);

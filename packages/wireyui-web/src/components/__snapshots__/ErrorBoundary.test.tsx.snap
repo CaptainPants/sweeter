@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ErrorBoundary displays content when no error 1`] = `"<!--{--><div>Nothing to see here</div><!--}-->"`;
+exports[`ErrorBoundary displays content when no error 1`] = `"<div>Nothing to see here</div>"`;
 
-exports[`ErrorBoundary displays error when error thrown during render (signal) 1`] = `"<!--{--><div>Failed to render</div><!--}-->"`;
+exports[`ErrorBoundary displays error when error thrown during render (signal) 1`] = `"<div>Failed to render</div>"`;
 
-exports[`ErrorBoundary displays error when error thrown during render 1`] = `"<!--{--><div>Failed to render</div><!--}-->"`;
+exports[`ErrorBoundary displays error when error thrown during render 1`] = `"<div>Failed to render</div>"`;

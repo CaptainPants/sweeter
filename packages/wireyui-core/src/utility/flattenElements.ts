@@ -1,4 +1,4 @@
-import { type Signal, isSignal } from '../index.js';
+import { type Signal, isSignal, calc } from '../index.js';
 
 export type FlattenedElement = Exclude<
     JSX.Element,
@@ -10,10 +10,14 @@ export type FlattenedElement = Exclude<
  * @param children
  * @returns
  */
-export function flatten(children: JSX.Element) {
-    const res: FlattenedElement[] = [];
-    flattenImplementation(children, res);
-    return res;
+export function flattenElements(
+    children: JSX.Element,
+): Signal<FlattenedElement[]> {
+    return calc(() => {
+        const res: FlattenedElement[] = [];
+        flattenImplementation(children, res);
+        return res;
+    });
 }
 
 function flattenImplementation(

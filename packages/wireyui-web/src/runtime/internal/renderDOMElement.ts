@@ -1,6 +1,6 @@
 import type { PropsWithIntrinsicAttributesFor } from '@captainpants/wireyui-core';
 import { assignDOMElementProps } from './assignDOMElementProps.js';
-import { appendJsxChildren } from './appendJsxChildren.js';
+import { addJsxChildren } from './addJsxChildren.js';
 
 export function renderDOMElement<TElementType extends string>(
     type: TElementType,
@@ -11,7 +11,7 @@ export function renderDOMElement<TElementType extends string>(
     // Assign attributes and set up signals
     assignDOMElementProps(ele, props);
 
-    appendJsxChildren(ele, null, props.children);
+    addJsxChildren(ele, props.children);
 
     return ele;
 }

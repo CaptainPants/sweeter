@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Suspense displays children 1`] = `"<!--{--><div>COMPLETE</div><!--}-->"`;
+exports[`Suspense displays children 1`] = `"<div>COMPLETE</div>"`;

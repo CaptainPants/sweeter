@@ -1,6 +1,6 @@
 import type { JSXElement } from '@captainpants/wireyui-core';
 import { mounted, unMounted } from '../internal/mounting.js';
-import { appendJsxChildren } from '../runtime/internal/appendJsxChildren.js';
+import { addJsxChildren } from '../runtime/internal/addJsxChildren.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -30,7 +30,7 @@ export class WebRenderer {
 
         mutationObserver.observe(element, { subtree: true, childList: true });
 
-        appendJsxChildren(element, null, content);
+        addJsxChildren(element, content);
 
         return () => {
             mutationObserver.disconnect();

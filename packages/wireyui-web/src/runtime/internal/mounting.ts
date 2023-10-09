@@ -33,33 +33,33 @@ function callbacks<T extends object>(name: string) {
 }
 
 const mountedCallbacks = callbacks<Node>('mounted');
-const unmountedCallbacks = callbacks<Node>('unmounted');
+const unMountedCallbacks = callbacks<Node>('unmounted');
 
 export function addMounted(node: Node, callback: () => void) {
     mountedCallbacks.add(node, callback);
 }
 export function addUnMounted(node: Node, callback: () => void) {
-    unmountedCallbacks.add(node, callback);
+    unMountedCallbacks.add(node, callback);
 }
 
 // TODO: we can make this stack-based to avoid recursion
 export function mounted(node: Node): void {
-    for (const child of node.childNodes) {
-        mounted(child);
-    }
-
-    mountedCallbacks.execute(node);
-}
-
-export function unMounted(node: Node): void {
-    unmountedCallbacks.execute(node);
-
     // reverse order
     for (
         let current = node.lastChild;
         current;
         current = current.previousSibling
     ) {
-        unMounted(current);
+        mounted(current);
+    }
+
+    mountedCallbacks.execute(node);
+}
+
+export function unMounted(node: Node): void {
+    unMountedCallbacks.execute(node);
+
+    for (const child of node.childNodes) {
+        unMounted(child);
     }
 }

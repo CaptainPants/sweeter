@@ -1,5 +1,6 @@
 import type { JSXElement } from '@captainpants/wireyui-core';
 import { addJsxChildren } from '../runtime/internal/addJsxChildren.js';
+import { mounted } from '../runtime/internal/mounting.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -17,6 +18,10 @@ export class WebRenderer {
         const content = render();
 
         const unmount = addJsxChildren(element, content);
+
+        for (let current = element.lastChild; current; current = current.previousSibling) {
+            mounted(current);
+        }
 
         return () => {
             unmount();

@@ -4,6 +4,15 @@ import {
 } from '@captainpants/wireyui-core';
 import { mounted, unMounted } from './mounting.js';
 
+function inserted(node: Node, targetDocument: Document): boolean {
+    for (let current: Node | null = node; current; current = current.parentNode) {
+        if (current == targetDocument) {
+            return true;
+        }
+    }
+    return false; 
+}
+
 export function addJsxChildren(
     parent: Node,
     children: JSX.Element,
@@ -11,24 +20,12 @@ export function addJsxChildren(
     const flattened = flattenElements(children);
     const original = flattened.peek();
 
-    const mountedNodes: Node[] = [];
-
     for (let child of original) {
         if (isText(child)) {
             child = document.createTextNode(String(child));
         }
 
         parent.appendChild(child);
-        mountedNodes.push(child);
-    }
-
-    // Go through added nodes in reverse order and call any mount callbacks
-    for (
-        let current = mountedNodes.pop();
-        current;
-        current = mountedNodes.pop()
-    ) {
-        mounted(current);
     }
 
     const onChange = () => {
@@ -57,7 +54,9 @@ export function addJsxChildren(
             current;
             current = newlyMountedNodes.pop()
         ) {
-            mounted(current);
+            if (current.ownerDocument && inserted(current, current.ownerDocument)) {
+                mounted(current);
+            }
         }
 
         // This items are being removed
@@ -74,9 +73,9 @@ export function addJsxChildren(
 
     return () => {
         for (
-            let current = parent.lastChild;
+            let current = parent.firstChild;
             current;
-            current = parent.lastChild
+            current = parent.firstChild
         ) {
             current.remove();
             unMounted(current);

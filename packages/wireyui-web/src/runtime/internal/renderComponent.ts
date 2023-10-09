@@ -19,7 +19,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         // TODO: if asyncInitializer is specified, we wrap the component in an Async
     }
 
-    let prefix: Comment | undefined;
+    let hooks: Comment | undefined;
     let suffix: Comment | undefined;
 
     const init = <TArgs extends readonly unknown[], TResult>(
@@ -29,18 +29,26 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         return hook(init, ...args);
     };
 
+    function createHooks(reason: string) {
+        if (hooks) {
+            hooks.textContent += `, ${reason}`;
+        }
+        else {
+            hooks = document.createComment(`Hooks(${Component.name}): ${reason}`);
+        }
+        return hooks;
+    }
+
     // do onMount as a suffix, so that child onMounts call first
     init.onMount = (callback: () => void) => {
         // TODO: this should trigger ErrorBoundary if an exception is thrown
-        suffix ??= document.createComment(`onMount(${Component.name})`);
-        addMounted(suffix, callback);
+        addMounted(createHooks('Mount'), callback);
     };
 
     // do onUnMount as a prefix, so that child onUnMount are called last
     init.onUnMount = (callback: () => void) => {
         // TODO: this should trigger ErrorBoundary if an exception is thrown
-        prefix ??= document.createComment(`onUnmount(${Component.name})`);
-        addUnMounted(prefix, callback);
+        addUnMounted(createHooks('UnMount'), callback);
     };
 
     // Not sure if this is really a valuable component in init as you can call Context.current
@@ -55,10 +63,10 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     // signals -- hence untrack the actual render
     const res = Component(props, init);
 
-    if (!prefix && !suffix) {
+    if (!hooks && !suffix) {
         // shortcut if we don't need to add in markers for mount callbacks.
         return res;
     }
 
-    return [prefix, res, suffix];
+    return [hooks, suffix, res];
 }

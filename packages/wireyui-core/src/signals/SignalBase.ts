@@ -6,12 +6,9 @@ import type { Signal, SignalListener } from './types.js';
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
-        this.#dirty = false;
         this.#state = state;
     }
 
-    /** If an update is triggered during a batch we defer it until .value is called OR the batch */
-    #dirty: boolean;
     #state: SignalState<T>;
     #listeners = new ListenerSet<SignalListener<T>>();
 
@@ -22,9 +19,8 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     public peek(): T {
         // If the signal was invalidated during a batch we don't recalculate it right away
-        if (this.#dirty) {
+        if (this._isDirty()) {
             this._recalculate();
-            this.#dirty = false;
         }
         return getSignalValueFromState(this.#state);
     }
@@ -43,6 +39,9 @@ export abstract class SignalBase<T> implements Signal<T> {
         this.#state = state;
         this.#announceChange(previous, state);
     }
+
+    /** If an update is triggered during a batch we defer it until .value is called OR the batch */
+    protected _isDirty(): boolean { return false; }
 
     protected _recalculate(): void {
         // If its a calculated signal that has been marked as dirty, this will be called at the end of the current batch

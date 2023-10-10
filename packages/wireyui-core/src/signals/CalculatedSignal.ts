@@ -53,6 +53,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #capturedContext: SavedExecutionContext;
     #wrappedCalculation: () => SignalState<T>;
+    #dirty: boolean = false;
     #recalculating: boolean = false;
 
     /**
@@ -68,6 +69,10 @@ export class CalculatedSignal<T> extends SignalBase<T> {
      */
     #dependencyListener: () => void;
 
+    protected override _isDirty(): boolean {
+        return this.#dirty;
+    }
+
     protected override _recalculate() {
         if (this.#recalculating) {
             throw new TypeError(
@@ -76,7 +81,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         }
         this.#recalculating = true;
         try {
-            const restore = this.#capturedContext.restore();
+            const revert = this.#capturedContext.restore();
             try {
                 const { result, dependencies: nextDependencies } =
                     callAndReturnDependencies(this.#wrappedCalculation, true);
@@ -86,9 +91,10 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
                 this.#dependencies = nextDependencies;
 
+                this.#dirty = false;
                 this._updateAndAnnounce(result);
             } finally {
-                restore();
+                revert();
             }
         } finally {
             this.#recalculating = false;

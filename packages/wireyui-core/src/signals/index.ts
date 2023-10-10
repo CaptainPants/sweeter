@@ -1,4 +1,5 @@
 export * from './ambient.js';
+export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';
 export * from './CalculatedSignal.js';

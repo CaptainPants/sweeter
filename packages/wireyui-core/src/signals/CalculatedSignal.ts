@@ -3,6 +3,7 @@ import { saveExecutionContext } from '../executionContext/saveExecutionContext.j
 import { SignalBase } from './SignalBase.js';
 import { type SignalState } from './SignalState.js';
 import { callAndReturnDependencies } from './ambient.js';
+import { deferForBatch, isBatching } from './batching.js';
 import { type Signal } from './types.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
@@ -39,6 +40,12 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
         // Giving the function a name for debugging purposes
         const calculatedSignalListener = () => {
+            if (isBatching()) {
+                this.#dirty = true;
+                deferForBatch(this);
+                return;
+            }
+
             // TODO: if running inside a batch we just mark it as dirty and register 
             // for updating at the end of the batch, not actually recalculate
             this._recalculate();
@@ -98,6 +105,13 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             }
         } finally {
             this.#recalculating = false;
+        }
+    }
+
+    public batchComplete() {
+        if (this.#dirty) {
+            this._recalculate();
+            this.#dirty = false;
         }
     }
 

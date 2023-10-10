@@ -19,7 +19,7 @@ export class MutableValueSignal<T>
 
     override set value(value: T) {
         announceMutatingSignal(this);
-        super._set({ mode: 'SUCCESS', value: value });
+        super._updateAndAnnounce({ mode: 'SUCCESS', value: value });
     }
 }
 

@@ -14,9 +14,13 @@ function wrap<T>(callback: () => T): () => SignalState<T> {
             return { mode: 'ERROR', error: ex };
         }
     };
+
+    // Note: this doesn't actually help in stack traces, but can be useful in inspecting
+    // the related signal to track it back to its source.
     Object.defineProperty(result, 'name', {
         value: `wrapped(${callback.name})`,
     });
+    
     return result;
 }
 
@@ -35,7 +39,9 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
         // Giving the function a name for debugging purposes
         const calculatedSignalListener = () => {
-            this.#recalculate();
+            // TODO: if running inside a batch we just mark it as dirty and register 
+            // for updating at the end of the batch, not actually recalculate
+            this._recalculate();
         };
         this.#dependencyListener = calculatedSignalListener;
 
@@ -62,7 +68,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
      */
     #dependencyListener: () => void;
 
-    #recalculate() {
+    protected override _recalculate() {
         if (this.#recalculating) {
             throw new TypeError(
                 'Signal already recalculating - indicating a signal that depends on itself.',
@@ -80,7 +86,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
                 this.#dependencies = nextDependencies;
 
-                this._set(result);
+                this._updateAndAnnounce(result);
             } finally {
                 restore();
             }
@@ -92,7 +98,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     #attach() {
         for (const dep of this.#dependencies) {
             // Holds a weak reference back to this signal
-            dep.listen(this.#dependencyListener, false /* strong: false */);
+            dep.listen(this.#dependencyListener, /* strong: */ false);
         }
     }
 

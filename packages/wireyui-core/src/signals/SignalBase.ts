@@ -4,11 +4,14 @@ import { announceSignalUsage, untrack } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
 import type { Signal, SignalListener } from './types.js';
 
-export class SignalBase<T> implements Signal<T> {
+export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
+        this.#dirty = false;
         this.#state = state;
     }
 
+    /** If an update is triggered during a batch we defer it until .value is called OR the batch */
+    #dirty: boolean;
     #state: SignalState<T>;
     #listeners = new ListenerSet<SignalListener<T>>();
 
@@ -18,6 +21,11 @@ export class SignalBase<T> implements Signal<T> {
     }
 
     public peek(): T {
+        // If the signal was invalidated during a batch we don't recalculate it right away
+        if (this.#dirty) {
+            this._recalculate();
+            this.#dirty = false;
+        }
         return getSignalValueFromState(this.#state);
     }
 
@@ -25,7 +33,7 @@ export class SignalBase<T> implements Signal<T> {
      * Should never throw.
      * @param state
      */
-    protected _set(state: SignalState<T>) {
+    protected _updateAndAnnounce(state: SignalState<T>) {
         const previous = this.#state;
 
         if (isEqualSignalState(previous, state)) {
@@ -34,6 +42,10 @@ export class SignalBase<T> implements Signal<T> {
 
         this.#state = state;
         this.#announceChange(previous, state);
+    }
+
+    protected _recalculate(): void {
+        // If its a calculated signal that has been marked as dirty, this will be called at the end of the current batch
     }
 
     #announceChange(previous: SignalState<T>, next: SignalState<T>) {

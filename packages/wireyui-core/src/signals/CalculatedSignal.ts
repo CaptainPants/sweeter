@@ -46,9 +46,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
                 return;
             }
 
-            // TODO: if running inside a batch we just mark it as dirty and register 
-            // for updating at the end of the batch, not actually recalculate
-            this._recalculate();
+            this.#recalculate();
         };
         this.#dependencyListener = calculatedSignalListener;
 
@@ -76,11 +74,13 @@ export class CalculatedSignal<T> extends SignalBase<T> {
      */
     #dependencyListener: () => void;
 
-    protected override _isDirty(): boolean {
-        return this.#dirty;
+    protected override _peeking(): void {
+        if (this.#dirty) {
+            this.#recalculate();
+        }
     }
 
-    protected override _recalculate() {
+    #recalculate() {
         if (this.#recalculating) {
             throw new TypeError(
                 'Signal already recalculating - indicating a signal that depends on itself.',
@@ -110,7 +110,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     public batchComplete() {
         if (this.#dirty) {
-            this._recalculate();
+            this.#recalculate();
             this.#dirty = false;
         }
     }

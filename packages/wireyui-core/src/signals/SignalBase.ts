@@ -18,11 +18,12 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     public peek(): T {
-        // If the signal was invalidated during a batch we don't recalculate it right away
-        if (this._isDirty()) {
-            this._recalculate();
-        }
-        return getSignalValueFromState(this.#state);
+        return getSignalValueFromState(this.peekState());
+    }
+
+    public peekState(): SignalState<T> {
+        this._peeking();
+        return this.#state;
     }
 
     /**
@@ -40,10 +41,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         this.#announceChange(previous, state);
     }
 
-    /** If an update is triggered during a batch we defer it until .value is called OR the batch */
-    protected _isDirty(): boolean { return false; }
-
-    protected _recalculate(): void {
+    protected _peeking(): void {
         // If its a calculated signal that has been marked as dirty, this will be called at the end of the current batch
     }
 

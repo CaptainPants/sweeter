@@ -1,4 +1,4 @@
-import { calc, mutable, valueOf } from '../index.js';
+import { calc, mutable, valueOf } from '../signals/index.js';
 import type { ComponentInit, Props } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 

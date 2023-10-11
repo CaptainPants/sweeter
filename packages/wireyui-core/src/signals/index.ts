@@ -7,3 +7,4 @@ export * from './MutableValueSignal.js';
 export * from './MutableCalculatedSignal.js';
 export * from './SignalState.js';
 export * from './valueOf.js';
+export * from './subscribe.js';

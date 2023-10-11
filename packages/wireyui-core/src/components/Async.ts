@@ -1,6 +1,5 @@
-import type { ComponentInit, Props } from '../index.js';
-import { calc, mutable, valueOf } from '../index.js';
-import { subscribe } from '../signals/subscribe.js';
+import type { ComponentInit, Props } from '../types.js';
+import { calc, mutable, subscribe, valueOf } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
 export interface AsyncProps<T> {

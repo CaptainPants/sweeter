@@ -1,5 +1,5 @@
 import type { ComponentInit, Props } from '../types.js';
-import { calc, mutable, subscribe, valueOf } from '../signals/index.js';
+import { $calc, $mutable, subscribe, valueOf } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
 export interface AsyncProps<T> {
@@ -17,7 +17,7 @@ export function Async<T>(
 ): JSX.Element {
     const suspenseContext = SuspenseContext.getCurrent();
 
-    const data = mutable<
+    const data = $mutable<
         | { resolution: 'LOADING' }
         | { resolution: 'SUCCESS'; result: T }
         | { resolution: 'ERROR'; error: unknown }
@@ -72,7 +72,7 @@ export function Async<T>(
         abortController?.abort();
     });
 
-    return calc(() => {
+    return $calc(() => {
         if (data.value.resolution === 'LOADING') {
             // Suspense should be showing
             return undefined;

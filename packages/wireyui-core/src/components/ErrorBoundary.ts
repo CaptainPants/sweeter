@@ -1,4 +1,4 @@
-import { calc, mutable, valueOf } from '../signals/index.js';
+import { $calc, $mutable, valueOf } from '../signals/index.js';
 import type { ComponentInit, Props } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
@@ -17,7 +17,7 @@ export function ErrorBoundary(
     { renderError, children }: Props<ErrorBoundaryProps>,
     init: ComponentInit,
 ): JSX.Element {
-    const error = mutable<undefined | { error: unknown }>(undefined);
+    const error = $mutable<undefined | { error: unknown }>(undefined);
 
     return ErrorBoundaryContext.invoke(
         {
@@ -50,7 +50,7 @@ export function ErrorBoundary(
                 }
             };
 
-            return calc(errorBoundaryCalculation);
+            return $calc(errorBoundaryCalculation);
         },
     );
 }

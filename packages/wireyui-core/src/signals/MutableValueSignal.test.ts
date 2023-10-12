@@ -1,10 +1,10 @@
 import { expect } from '@jest/globals';
 
-import { mutable } from './MutableValueSignal.js';
+import { $mutable } from './MutableValueSignal.js';
 import type { SignalState } from './SignalState.js';
 
 it('MutableValueSignal has initial value', () => {
-    const signal = mutable(23);
+    const signal = $mutable(23);
 
     const value = signal.value;
 
@@ -12,7 +12,7 @@ it('MutableValueSignal has initial value', () => {
 });
 
 it('MutableValueSignal listeners invoked with correct value after update', () => {
-    const signal = mutable(1);
+    const signal = $mutable(1);
 
     let prevStored: SignalState<number> | undefined;
     let nextStored: SignalState<number> | undefined;

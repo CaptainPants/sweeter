@@ -27,7 +27,7 @@ export class MutableCalculatedSignal<T>
     }
 }
 
-export function mutableCalc<T>(
+export function $mutableCalc<T>(
     calculation: () => T,
     mutate: (value: T) => void,
 ): MutableCalculatedSignal<T> {

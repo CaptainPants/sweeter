@@ -1,12 +1,12 @@
 import { expect } from '@jest/globals';
 
 import type { SignalState } from './SignalState.js';
-import { mutable } from './MutableValueSignal.js';
-import { calc } from './CalculatedSignal.js';
+import { $mutable } from './MutableValueSignal.js';
+import { $calc } from './CalculatedSignal.js';
 
 it('CalculatedSignal listeners invoked with correct value after dependency updated', () => {
-    const mutableSignal = mutable(1);
-    const calculatedSignal = calc(() => mutableSignal.value + 1);
+    const mutableSignal = $mutable(1);
+    const calculatedSignal = $calc(() => mutableSignal.value + 1);
 
     let prevStored: SignalState<number> | undefined;
     let nextStored: SignalState<number> | undefined;

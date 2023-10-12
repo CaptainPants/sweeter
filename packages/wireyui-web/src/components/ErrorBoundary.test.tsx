@@ -1,6 +1,6 @@
 /* @jsxImportSource .. */
 
-import { ErrorBoundary, calc } from '@captainpants/wireyui-core';
+import { ErrorBoundary, $calc } from '@captainpants/wireyui-core';
 import { testRender } from '../renderer/testRender.js';
 
 it('ErrorBoundary displays content when no error', () => {
@@ -36,11 +36,9 @@ it('ErrorBoundary displays error when error thrown during render (signal)', () =
         <ErrorBoundary
             renderError={(err) => <div>{(err as Error).message}</div>}
         >
-            {() => {
-                return calc(() => {
-                    throw new Error('Failed to render');
-                });
-            }}
+            {() => $calc(() => {
+                throw new Error('Failed to render');
+            })}
         </ErrorBoundary>
     ));
 

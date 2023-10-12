@@ -23,6 +23,6 @@ export class MutableValueSignal<T>
     }
 }
 
-export function mutable<T>(initialValue: T): MutableValueSignal<T> {
+export function $mutable<T>(initialValue: T): MutableValueSignal<T> {
     return new MutableValueSignal<T>(initialValue);
 }

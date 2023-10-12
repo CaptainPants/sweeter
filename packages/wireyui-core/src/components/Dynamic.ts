@@ -1,4 +1,4 @@
-import { calc } from '../signals/CalculatedSignal.js';
+import { $calc } from '../signals/CalculatedSignal.js';
 import { valueOf } from '../signals/valueOf.js';
 import type { Props } from '../types.js';
 
@@ -21,5 +21,5 @@ export function Dynamic<T>({
         return valueOf(children)(valueOf(value));
     };
 
-    return calc(showCalculation);
+    return $calc(showCalculation);
 }

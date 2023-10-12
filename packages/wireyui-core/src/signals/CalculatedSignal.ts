@@ -135,6 +135,6 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     }
 }
 
-export function calc<T>(calculation: () => T): CalculatedSignal<T> {
+export function $calc<T>(calculation: () => T): CalculatedSignal<T> {
     return new CalculatedSignal(calculation);
 }

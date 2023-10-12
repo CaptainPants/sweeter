@@ -2,11 +2,14 @@ import { SignalBase } from './SignalBase.js';
 import { deferForBatch, isBatching } from './batching.js';
 import { type Signal } from './types.js';
 
+export type Later = (callback: () => void) => void;
+
 export class DeferredSignal<T> extends SignalBase<T> {
-    constructor(inner: Signal<T>) {
+    constructor(inner: Signal<T>, later: Later = queueMicrotask) {
         super(inner.peekState());
 
         this.#inner = inner;
+        this.#later = later;
 
         // Giving the function a name for debugging purposes
         const deferredSignalListener = () => {
@@ -29,6 +32,7 @@ export class DeferredSignal<T> extends SignalBase<T> {
      * Strong reference to the signal we depend on..
      */
     #inner: Signal<T>;
+    #later: Later;
 
     /**
      * Bound as its used as its passed to .listen calls.
@@ -39,8 +43,8 @@ export class DeferredSignal<T> extends SignalBase<T> {
         const captured = this.#inner.peekState();
 
         this.#dirty = false;
-
-        queueMicrotask(() => {
+        
+        this.#later(() => {
             this._updateAndAnnounce(captured);
         });
     }
@@ -53,6 +57,6 @@ export class DeferredSignal<T> extends SignalBase<T> {
     }
 }
 
-export function deferred<T>(inner: Signal<T>): DeferredSignal<T> {
-    return new DeferredSignal(inner);
+export function $deferred<T>(inner: Signal<T>, later?: Later): DeferredSignal<T> {
+    return new DeferredSignal(inner, later);
 }

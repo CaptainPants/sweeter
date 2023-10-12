@@ -1,4 +1,4 @@
-import { calc, mutable, valueOf } from '../signals/index.js';
+import { $calc, $mutable, valueOf } from '../signals/index.js';
 import type { ComponentInit, Props } from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
@@ -16,7 +16,7 @@ export function Suspense(
     init: ComponentInit,
 ): JSX.Element {
     // Component renders are specifically untracked, so this doesn't subscribe yay.
-    const counter = mutable(0);
+    const counter = $mutable(0);
 
     return SuspenseContext.invoke(
         {
@@ -36,7 +36,7 @@ export function Suspense(
             },
         },
         () => {
-            const evaluatedChildren = calc(() => {
+            const evaluatedChildren = $calc(() => {
                 return valueOf(children)();
             });
 
@@ -54,7 +54,7 @@ export function Suspense(
             };
 
             // calc captures the ambient executionContext
-            return calc(suspenseCalculation);
+            return $calc(suspenseCalculation);
         },
     );
 }

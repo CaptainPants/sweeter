@@ -19,7 +19,11 @@ export class WebRenderer {
 
         const unmount = addJsxChildren(element, content);
 
-        for (let current = element.lastChild; current; current = current.previousSibling) {
+        for (
+            let current = element.lastChild;
+            current;
+            current = current.previousSibling
+        ) {
             mounted(current);
         }
 

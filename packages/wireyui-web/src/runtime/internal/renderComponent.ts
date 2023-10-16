@@ -32,9 +32,10 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     function createHooks(reason: string) {
         if (hooks) {
             hooks.textContent += `, ${reason}`;
-        }
-        else {
-            hooks = document.createComment(`Hooks(${Component.name}): ${reason}`);
+        } else {
+            hooks = document.createComment(
+                `Hooks(${Component.name}): ${reason}`,
+            );
         }
         return hooks;
     }

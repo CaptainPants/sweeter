@@ -43,7 +43,7 @@ export class DeferredSignal<T> extends SignalBase<T> {
         const captured = this.#inner.peekState();
 
         this.#dirty = false;
-        
+
         this.#later(() => {
             this._updateAndAnnounce(captured);
         });
@@ -57,6 +57,9 @@ export class DeferredSignal<T> extends SignalBase<T> {
     }
 }
 
-export function $deferred<T>(inner: Signal<T>, later?: Later): DeferredSignal<T> {
+export function $deferred<T>(
+    inner: Signal<T>,
+    later?: Later,
+): DeferredSignal<T> {
     return new DeferredSignal(inner, later);
 }

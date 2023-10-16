@@ -36,9 +36,11 @@ it('ErrorBoundary displays error when error thrown during render (signal)', () =
         <ErrorBoundary
             renderError={(err) => <div>{(err as Error).message}</div>}
         >
-            {() => $calc(() => {
-                throw new Error('Failed to render');
-            })}
+            {() =>
+                $calc(() => {
+                    throw new Error('Failed to render');
+                })
+            }
         </ErrorBoundary>
     ));
 

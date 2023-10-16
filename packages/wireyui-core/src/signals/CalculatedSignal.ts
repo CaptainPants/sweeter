@@ -21,7 +21,7 @@ function wrap<T>(callback: () => T): () => SignalState<T> {
     Object.defineProperty(result, 'name', {
         value: `wrapped(${callback.name})`,
     });
-    
+
     return result;
 }
 

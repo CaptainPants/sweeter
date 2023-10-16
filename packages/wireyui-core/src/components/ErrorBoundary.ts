@@ -1,5 +1,5 @@
 import { $calc, $mutable, valueOf } from '../signals/index.js';
-import type { ComponentInit, Props } from '../types.js';
+import type { Component } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
 export interface ErrorBoundaryProps {
@@ -9,14 +9,10 @@ export interface ErrorBoundaryProps {
 
 // TODO: how to clear the error boundary??
 
-export function ErrorBoundary(
-    props: Props<ErrorBoundaryProps>,
-    init: ComponentInit,
-): JSX.Element;
-export function ErrorBoundary(
-    { renderError, children }: Props<ErrorBoundaryProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
+    renderError,
+    children,
+}) => {
     const error = $mutable<undefined | { error: unknown }>(undefined);
 
     return ErrorBoundaryContext.invoke(
@@ -53,4 +49,4 @@ export function ErrorBoundary(
             return $calc(errorBoundaryCalculation);
         },
     );
-}
+};

@@ -5,12 +5,16 @@ import {
 import { mounted, unMounted } from './mounting.js';
 
 function inserted(node: Node, targetDocument: Document): boolean {
-    for (let current: Node | null = node; current; current = current.parentNode) {
+    for (
+        let current: Node | null = node;
+        current;
+        current = current.parentNode
+    ) {
         if (current == targetDocument) {
             return true;
         }
     }
-    return false; 
+    return false;
 }
 
 export function addJsxChildren(
@@ -54,7 +58,10 @@ export function addJsxChildren(
             current;
             current = newlyMountedNodes.pop()
         ) {
-            if (current.ownerDocument && inserted(current, current.ownerDocument)) {
+            if (
+                current.ownerDocument &&
+                inserted(current, current.ownerDocument)
+            ) {
                 mounted(current);
             }
         }

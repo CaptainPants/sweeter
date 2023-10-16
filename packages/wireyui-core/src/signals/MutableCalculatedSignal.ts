@@ -34,7 +34,7 @@ export function $mutableCalc<T>(
     return new MutableCalculatedSignal<T>(calculation, mutate);
 }
 
-export function derived<TSource, TKey extends keyof TSource>(
+export function $derived<TSource, TKey extends keyof TSource>(
     source: MutableSignal<TSource>,
     key: TKey,
 ): MutableCalculatedSignal<TSource[TKey]> {

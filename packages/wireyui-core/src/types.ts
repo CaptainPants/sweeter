@@ -80,9 +80,13 @@ export type ChildrenTypeFor<
     ? Children
     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MakeSignal<T> = [T] extends [Signal<any>] ? T : Signal<T>;
+
 /**
  * Take a props interface and make each property optionally a Signal.
+ * You should ensure that the values aren't signals already.
  */
 export type Props<TProps> = {
-    [Key in keyof TProps]: Signal<TProps[Key]> | TProps[Key];
+    [Key in keyof TProps]: MakeSignal<TProps[Key]> | TProps[Key];
 };

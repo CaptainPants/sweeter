@@ -1,5 +1,5 @@
-import { $mutable } from "./MutableValueSignal.js";
-import { $deferred } from "./DeferredSignal.js";
+import { $mutable } from './MutableValueSignal.js';
+import { $deferred } from './DeferredSignal.js';
 
 it('DeferredSignal updated after microtask (default deferral mechanism)', async () => {
     const mutable = $mutable(1);
@@ -11,7 +11,7 @@ it('DeferredSignal updated after microtask (default deferral mechanism)', async 
 
     expect(deferred.value).toBe(1);
 
-    await new Promise<void>(resolve => queueMicrotask(() => resolve()))
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
 
     expect(deferred.value).toBe(2);
 });
@@ -28,7 +28,7 @@ it('DeferredSignal updated later (alternate deferral callback)', () => {
 
     expect(deferred.value).toBe(1);
 
-    queue.forEach(x => x());
+    queue.forEach((x) => x());
 
     expect(deferred.value).toBe(2);
 });

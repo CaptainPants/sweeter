@@ -1,7 +1,7 @@
 /* @jsxImportSource .. */
 
 import { ErrorBoundary, $calc } from '@captainpants/wireyui-core';
-import { testRender } from '../renderer/testRender.js';
+import { testRender } from '../test/testRender.js';
 
 it('ErrorBoundary displays content when no error', () => {
     const res = testRender(() => (

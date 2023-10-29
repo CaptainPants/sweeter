@@ -2,52 +2,7 @@
 
 import type { ComponentInit, Props } from '@captainpants/wireyui-core';
 import { valueOf } from '@captainpants/wireyui-core';
-import { testRender } from '../../index.js';
-
-// interface TestingComponentProps {
-//     onMount: () => void;
-//     onUnMount: () => void;
-// }
-
-// function TestingComponent(
-//     props: Props<TestingComponentProps>,
-//     init: ComponentInit,
-// ): JSX.Element {
-//     init.onMount(() => {
-//         valueOf(props.onMount)();
-//     });
-//     init.onUnMount(() => {
-//         valueOf(props.onUnMount)();
-//     });
-
-//     return <></>;
-// }
-
-// it('Mount and unmount are called', () => {
-//     let mounted: boolean = false,
-//         unmounted = false;
-
-//     const onMount = () => {
-//         mounted = true;
-//     };
-//     const onUnMount = () => {
-//         unmounted = true;
-//     };
-
-//     const res = testRender(() => {
-//         const rendered = (
-//             <TestingComponent onMount={onMount} onUnMount={onUnMount} />
-//         );
-//         return rendered;
-//     });
-
-//     expect(mounted).toBe(true);
-//     expect(unmounted).toBe(false);
-
-//     res.dispose();
-
-//     expect(unmounted).toBe(true);
-// });
+import { testRender } from '../../test/testRender.js';
 
 interface TestingComponentWithChildrenProps {
     number: number;

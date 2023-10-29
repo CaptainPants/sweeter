@@ -1,7 +1,7 @@
 /* @jsxImportSource . */
 
-import { testRender } from './index.js';
 import { expectDOMMatching } from './test/expectDOMMatching.js';
+import { testRender } from './test/testRender.js';
 
 // TODO: these aren't running through a renderer, which might break in future iterations.
 // consider a test rendering function that wraps around the JSX calls `testRender(() => <jsx />)`

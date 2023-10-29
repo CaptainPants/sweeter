@@ -1,7 +1,7 @@
 /* @jsxImportSource .. */
 
 import { Suspense } from '@captainpants/wireyui-core';
-import { testRender } from '../renderer/testRender.js';
+import { testRender } from '../test/testRender.js';
 
 it('Suspense displays children', () => {
     const res = testRender(() => (

@@ -18,16 +18,16 @@ export class WebRenderer {
         target: JSX.RendererHostElement,
         render: () => JSX.Element,
     ): () => void {
-        return RendererContext.invoke(
-            {
-                start: (target, render) => {
-                    return this.#start(target, render);
-                },
-            },
-            () => {
+        const cleanup = RendererContext.replace({
+            start: (target, render) => {
                 return this.#start(target, render);
             },
-        );
+        });
+        try {
+            return this.#start(target, render);
+        } finally {
+            cleanup();
+        }
     }
 
     #start(

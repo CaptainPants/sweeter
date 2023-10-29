@@ -1,7 +1,7 @@
 /* @jsxImportSource .. */
 
 import { Async, Suspense } from '@captainpants/wireyui-core';
-import { testRender } from '../renderer/testRender.js';
+import { testRender } from '../test/testRender.js';
 
 it('Fallback is shown', () => {
     function neverFinishes(signal: AbortSignal) {

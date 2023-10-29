@@ -1,4 +1,4 @@
-import { WebRenderer } from './WebRenderer.js';
+import { WebRenderer } from '../renderer/WebRenderer.js';
 
 export interface TestRenderResult {
     readonly nodes: NodeListOf<ChildNode>;

@@ -58,7 +58,6 @@ export function assignDOMElementProps<TElementType extends string>(
                 value.listen(changeCallback, false);
 
                 addStrongReference(node, changeCallback);
-
             } else if (mappedKey.startsWith('on')) {
                 const eventName = mappedKey.substring(2);
 
@@ -74,7 +73,6 @@ export function assignDOMElementProps<TElementType extends string>(
                     // More direct path if not a signal
                     node.addEventListener(eventName, value as EventListener);
                 }
-                
             } else {
                 if (isSignal(value)) {
                     (node as unknown as Untyped)[mappedKey] = value.peek();

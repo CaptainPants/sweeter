@@ -62,7 +62,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     // Its reasonably certain that people will trigger side effects when wiring up a component
     // and that these might update signals. We also don't want to accidentally subscribe to these
     // signals -- hence untrack the actual render
-    const res = Component(props, init);
+    const res = Component(props, init, undefined);
 
     if (!hooks && !suffix) {
         // shortcut if we don't need to add in markers for mount callbacks.

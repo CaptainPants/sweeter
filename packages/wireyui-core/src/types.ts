@@ -20,25 +20,20 @@ export type AsyncInitializerInit = {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type IfSpecified<T, TData> = [T] extends [never] ? {} : TData;
+type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
 
 // There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
-export type ComponentInit<TAsyncInitializationResult = never> =
-    ComponentInitFunction & {
-        onMount: (callback: () => void) => void;
-        onUnMount: (callback: () => void) => void;
-        getContext: <T>(context: Context<T>) => T;
-    } & IfSpecified<
-            TAsyncInitializationResult,
-            {
-                asyncInitializerResult: TAsyncInitializationResult;
-            }
-        >;
+export type ComponentInit = ComponentInitFunction & {
+    onMount: (callback: () => void) => void;
+    onUnMount: (callback: () => void) => void;
+    getContext: <T>(context: Context<T>) => T;
+};
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type Component<TProps = {}, TAsyncInitializationResult = never> = ((
+export type Component<TProps = {}, TAsyncInitializationResult = undefined> = ((
     props: Props<TProps>,
-    init: ComponentInit<TAsyncInitializationResult>,
+    init: ComponentInit,
+    asyncInitializerResult: TAsyncInitializationResult,
 ) => JSX.Element) &
     IfSpecified<
         TAsyncInitializationResult,

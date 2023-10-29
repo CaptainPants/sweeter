@@ -7,7 +7,7 @@ import { popAndCall } from '../internal/popAndCall.js';
  * @param callback
  * @returns
  */
-export function subscribe(
+export function subscribeToChanges(
     dependencies: readonly unknown[],
     callback: () => void,
 ): () => void {

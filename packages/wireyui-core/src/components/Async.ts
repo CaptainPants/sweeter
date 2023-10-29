@@ -1,5 +1,5 @@
 import type { ComponentInit, Props } from '../types.js';
-import { $calc, $mutable, subscribe, valueOf } from '../signals/index.js';
+import { $calc, $mutable, valueOf } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
 export interface AsyncProps<T> {
@@ -63,12 +63,11 @@ export function Async<T>(
 
     reload();
 
-    const cleanupSubscriptionToProps = subscribe([callback, children], () => {
+    init.subscribeToChanges([callback, children], () => {
         reload();
     });
 
     init.onUnMount(() => {
-        cleanupSubscriptionToProps?.();
         abortController?.abort();
     });
 

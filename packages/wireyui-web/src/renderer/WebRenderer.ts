@@ -1,4 +1,4 @@
-import { PortalContext } from '@captainpants/wireyui-core';
+import { RendererContext } from '@captainpants/wireyui-core';
 import { addJsxChildren } from '../runtime/internal/addJsxChildren.js';
 import { mounted } from '../runtime/internal/mounting.js';
 
@@ -14,10 +14,13 @@ export class WebRenderer {
         this.#options = options ?? {};
     }
 
-    start(target: HTMLElement, render: () => JSX.Element): () => void {
-        return PortalContext.invoke(
+    start(
+        target: JSX.RendererHostElement,
+        render: () => JSX.Element,
+    ): () => void {
+        return RendererContext.invoke(
             {
-                render: (target, render) => {
+                start: (target, render) => {
                     return this.#start(target, render);
                 },
             },
@@ -28,7 +31,7 @@ export class WebRenderer {
     }
 
     #start(
-        target: JSX.PortalHostElement,
+        target: JSX.RendererHostElement,
         render: () => JSX.Element,
     ): () => void {
         const content = render();
@@ -43,8 +46,14 @@ export class WebRenderer {
             mounted(current);
         }
 
+        // Allow callers to be lazy and call the returned callback multiple times
+        let unmounted = false;
+
         return () => {
-            unmount();
+            if (!unmounted) {
+                unmounted = true;
+                unmount();
+            }
         };
     }
 }

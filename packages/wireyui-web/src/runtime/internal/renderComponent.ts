@@ -1,4 +1,6 @@
 import {
+    subscribeToChanges,
+    type ComponentInit,
     type Component,
     type Context,
     type HookFunction,
@@ -39,32 +41,38 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         return hooks;
     }
 
-    // do onMount as a suffix, so that child onMounts call first
-    init.onMount = (callback: () => void) => {
+    init.onMount = (callback: () => (() => void) | void) => {
+        const hooks = createHooks('Mount');
+
         // TODO: this should trigger ErrorBoundary if an exception is thrown
-        addMounted(createHooks('Mount'), callback);
+        addMounted(hooks, () => {
+            const unmounted = callback();
+
+            if (typeof unmounted === 'function') {
+                const innerUnMounted = () => {
+                    removeUnMounted(hooks, innerUnMounted);
+
+                    unmounted();
+                };
+
+                addUnMounted(hooks, innerUnMounted);
+            }
+        });
     };
 
-    // do onUnMount as a prefix, so that child onUnMount are called last
     init.onUnMount = (callback: () => void) => {
         // TODO: this should trigger ErrorBoundary if an exception is thrown
         addUnMounted(createHooks('UnMount'), callback);
     };
 
-    init.onLifeCycle = (callback: () => () => void) => {
-        const hooks = createHooks('LifeCycle');
-        addMounted(hooks, () => {
-            const unmounted = callback();
-
-            const innerUnMounted = () => {
-                removeUnMounted(hooks, innerUnMounted);
-
-                unmounted();
-            };
-
-            addUnMounted(hooks, innerUnMounted);
+    init.subscribeToChanges = ((
+        dependencies: readonly unknown[],
+        callback: () => void,
+    ) => {
+        init.onMount(() => {
+            return subscribeToChanges(dependencies, callback);
         });
-    };
+    }) satisfies ComponentInit['subscribeToChanges'];
 
     // Not sure if this is really a valuable component in init as you can call Context.current
     // but it does indicate that you should capture the context values you need during init

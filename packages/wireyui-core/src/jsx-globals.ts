@@ -50,10 +50,10 @@ declare global {
         /**
          * Use this to add to the Element union.
          */
-        interface PortalHostElementParts {}
+        interface RendererHostElementParts {}
 
-        type PortalHostElement =
-            PortalHostElementParts[keyof PortalHostElementParts];
+        type RendererHostElement =
+            RendererHostElementParts[keyof RendererHostElementParts];
 
         /**
          * Expected to be { 'string': '\<union>' | '\<of>' | '\<allowed>' | '\<elements>' }

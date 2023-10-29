@@ -1,34 +1,29 @@
-import { isSignal, subscribe, valueOf } from '../index.js';
+import { valueOf } from '../index.js';
 import { type Component } from '../types.js';
-import { PortalContext } from './PortalContext.js';
+import { RendererContext } from '../renderer/RendererContext.js';
 
 export interface PortalProps {
-    target: JSX.PortalHostElement;
+    target: JSX.RendererHostElement;
     children: () => JSX.Element;
 }
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
-    const portalContext = PortalContext.getCurrent();
+    const portalContext = RendererContext.getCurrent();
 
-    init.onLifeCycle(() => {
-        let renderCleanup = portalContext.render(
-            valueOf(target),
-            valueOf(children),
-        );
+    let renderCleanup: (() => void) | undefined;
 
-        if (isSignal(children) || isSignal(target)) {
-            subscribe([target, children], () => {
-                renderCleanup?.();
-                renderCleanup = portalContext.render(
-                    valueOf(target),
-                    valueOf(children),
-                );
-            });
-        }
+    init.onMount(() => {
+        renderCleanup = portalContext.start(valueOf(target), valueOf(children));
 
         return () => {
             renderCleanup?.();
+            renderCleanup = undefined;
         };
+    });
+
+    init.subscribeToChanges([], () => {
+        renderCleanup?.();
+        renderCleanup = portalContext.start(valueOf(target), valueOf(children));
     });
 
     // Doesn't render anything

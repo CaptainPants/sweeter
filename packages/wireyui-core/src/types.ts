@@ -24,9 +24,12 @@ type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
 
 // There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
 export type ComponentInit = ComponentInitFunction & {
-    onMount: (callback: () => void) => void;
+    onMount: (callback: () => (() => void) | void) => void;
     onUnMount: (callback: () => void) => void;
-    onLifeCycle: (callback: () => () => void) => void;
+    subscribeToChanges: (
+        dependencies: readonly unknown[],
+        callback: () => void,
+    ) => void;
     getContext: <T>(context: Context<T>) => T;
 };
 

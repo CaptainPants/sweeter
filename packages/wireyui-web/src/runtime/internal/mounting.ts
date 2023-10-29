@@ -11,6 +11,17 @@ function callbacks<T extends object>(name: string) {
                 map.set(obj, [callback]);
             }
         },
+        remove: (obj: T, callback: () => void): boolean => {
+            const found = map.get(obj);
+            if (found) {
+                const index = found.indexOf(callback);
+                if (index >= 0) {
+                    found.splice(index, 1);
+                    return true;
+                }
+            }
+            return false;
+        },
         execute: (obj: T): void => {
             const callbacks = map.get(obj);
             if (callbacks) {
@@ -40,6 +51,12 @@ export function addMounted(node: Node, callback: () => void) {
 }
 export function addUnMounted(node: Node, callback: () => void) {
     unMountedCallbacks.add(node, callback);
+}
+export function removeMounted(node: Node, callback: () => void) {
+    mountedCallbacks.remove(node, callback);
+}
+export function removeUnMounted(node: Node, callback: () => void) {
+    unMountedCallbacks.remove(node, callback);
 }
 
 // TODO: we can make this stack-based to avoid recursion

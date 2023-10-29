@@ -20,5 +20,9 @@ declare global {
         interface ElementPossibilityParts {
             'wireyui-web': HTMLElement | SVGElement | Text | Comment;
         }
+
+        interface PortalHostElementParts {
+            'wireui-web': HTMLElement | SVGElement;
+        }
     }
 }

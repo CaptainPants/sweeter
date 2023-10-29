@@ -1,6 +1,9 @@
 import { Context } from '../context/Context.js';
 
 export interface SuspenseContextType {
+    /**
+     * Start displaying loaded fallback. Returns a cancellation function. Cancelling multiple times is safe.
+     */
     startBlocking(): () => void;
     readonly count: number;
 }

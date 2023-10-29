@@ -1,4 +1,4 @@
-import type { JSXElement } from '@captainpants/wireyui-core';
+import { PortalContext } from '@captainpants/wireyui-core';
 import { addJsxChildren } from '../runtime/internal/addJsxChildren.js';
 import { mounted } from '../runtime/internal/mounting.js';
 
@@ -14,13 +14,29 @@ export class WebRenderer {
         this.#options = options ?? {};
     }
 
-    start(element: HTMLElement, render: () => JSXElement): () => void {
+    start(target: HTMLElement, render: () => JSX.Element): () => void {
+        return PortalContext.invoke(
+            {
+                render: (target, render) => {
+                    return this.#start(target, render);
+                },
+            },
+            () => {
+                return this.#start(target, render);
+            },
+        );
+    }
+
+    #start(
+        target: JSX.PortalHostElement,
+        render: () => JSX.Element,
+    ): () => void {
         const content = render();
 
-        const unmount = addJsxChildren(element, content);
+        const unmount = addJsxChildren(target, content);
 
         for (
-            let current = element.lastChild;
+            let current = target.lastChild;
             current;
             current = current.previousSibling
         ) {

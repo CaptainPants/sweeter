@@ -48,6 +48,14 @@ declare global {
         }
 
         /**
+         * Use this to add to the Element union.
+         */
+        interface PortalHostElementParts {}
+
+        type PortalHostElement =
+            PortalHostElementParts[keyof PortalHostElementParts];
+
+        /**
          * Expected to be { 'string': '\<union>' | '\<of>' | '\<allowed>' | '\<elements>' }
          * The key is ignored, and will generally be named for the assembly.
          */
@@ -55,16 +63,21 @@ declare global {
 
         /**
          * Extended by declaration merging into IntrinsicElementParts.
+         * (Standard)
          */
         type IntrinsicElements = {
             [Key in IntrinsicElementParts[keyof IntrinsicElementParts] &
                 string]: IntrinsicElementAttributes<Key>;
         };
 
+        /**
+         * Extended by interface merging of ElementPossibilityParts.
+         * (Non-standard)
+         */
+        type IntrinsicElement =
+            ElementPossibilityParts[keyof ElementPossibilityParts];
+
         /** JSX Element */
-        type Element =
-            | ElementPossibilityParts[keyof ElementPossibilityParts]
-            | Signal<Element>
-            | Element[];
+        type Element = IntrinsicElement | Signal<Element> | Element[];
     }
 }

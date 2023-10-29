@@ -4,7 +4,7 @@ import {
     type HookFunction,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/wireyui-core';
-import { addMounted, addUnMounted } from './mounting.js';
+import { addMounted, addUnMounted, removeUnMounted } from './mounting.js';
 
 type MightHaveAsyncInitializer = Partial<
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -20,7 +20,6 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     }
 
     let hooks: Comment | undefined;
-    let suffix: Comment | undefined;
 
     const init = <TArgs extends readonly unknown[], TResult>(
         hook: HookFunction<TArgs, TResult>,
@@ -52,6 +51,21 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         addUnMounted(createHooks('UnMount'), callback);
     };
 
+    init.onLifeCycle = (callback: () => () => void) => {
+        const hooks = createHooks('LifeCycle');
+        addMounted(hooks, () => {
+            const unmounted = callback();
+
+            const innerUnMounted = () => {
+                removeUnMounted(hooks, innerUnMounted);
+
+                unmounted();
+            };
+
+            addUnMounted(hooks, innerUnMounted);
+        });
+    };
+
     // Not sure if this is really a valuable component in init as you can call Context.current
     // but it does indicate that you should capture the context values you need during init
     // and not later when the context stack is gone
@@ -64,10 +78,10 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     // signals -- hence untrack the actual render
     const res = Component(props, init, undefined);
 
-    if (!hooks && !suffix) {
+    if (!hooks) {
         // shortcut if we don't need to add in markers for mount callbacks.
         return res;
     }
 
-    return [hooks, suffix, res];
+    return [hooks, res];
 }

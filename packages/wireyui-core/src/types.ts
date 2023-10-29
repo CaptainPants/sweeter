@@ -26,6 +26,7 @@ type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
 export type ComponentInit = ComponentInitFunction & {
     onMount: (callback: () => void) => void;
     onUnMount: (callback: () => void) => void;
+    onLifeCycle: (callback: () => () => void) => void;
     getContext: <T>(context: Context<T>) => T;
 };
 

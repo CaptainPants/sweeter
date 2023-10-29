@@ -1,5 +1,6 @@
 import { SignalBase } from './SignalBase.js';
 import { announceMutatingSignal, announceSignalUsage } from './ambient.js';
+import { mutableSignalMarker } from './internal/markers.js';
 import { type MutableSignal } from './types.js';
 
 export class MutableValueSignal<T>
@@ -21,6 +22,8 @@ export class MutableValueSignal<T>
         announceMutatingSignal(this);
         super._updateAndAnnounce({ mode: 'SUCCESS', value: value });
     }
+
+    readonly [mutableSignalMarker] = true;
 }
 
 export function $mutable<T>(initialValue: T): MutableValueSignal<T> {

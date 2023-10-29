@@ -1,5 +1,6 @@
 import { CalculatedSignal } from './CalculatedSignal.js';
 import { announceMutatingSignal, announceSignalUsage } from './ambient.js';
+import { mutableSignalMarker } from './internal/markers.js';
 import type { MutableSignal } from './types.js';
 
 export class MutableCalculatedSignal<T>
@@ -25,6 +26,8 @@ export class MutableCalculatedSignal<T>
         announceMutatingSignal(this);
         this.#mutate(value);
     }
+
+    readonly [mutableSignalMarker] = true;
 }
 
 export function $mutableCalc<T>(

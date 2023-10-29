@@ -1,4 +1,4 @@
-import type { Signal } from '../index.js';
+import { type Signal } from '../index.js';
 import { $calc } from '../signals/CalculatedSignal.js';
 import { valueOf } from '../signals/valueOf.js';
 import type { Props } from '../types.js';
@@ -19,7 +19,8 @@ export function Dynamic<T>({
     value,
 }: Props<DynamicProps<T>>): JSX.Element {
     const showCalculation = (): JSX.Element => {
-        return valueOf(children)(valueOf(value as Signal<T> | T));
+        const actualValue = valueOf(value as Signal<T> | T);
+        return valueOf(children)(actualValue);
     };
 
     return $calc(showCalculation);

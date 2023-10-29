@@ -1,4 +1,5 @@
 import type { SignalState } from './SignalState.js';
+import type { mutableSignalMarker, signalMarker } from './internal/markers.js';
 
 export type SignalListener<T> = (
     previous: SignalState<T>,
@@ -36,8 +37,12 @@ export interface Signal<T> {
      * Remove all listeners.
      */
     clearListeners(): void;
+
+    readonly [signalMarker]: true;
 }
 
 export interface MutableSignal<T> extends Signal<T> {
     value: T;
+
+    readonly [mutableSignalMarker]: true;
 }

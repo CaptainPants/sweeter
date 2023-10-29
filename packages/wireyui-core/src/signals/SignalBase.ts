@@ -2,15 +2,19 @@ import type { SignalState } from './SignalState.js';
 import { getSignalValueFromState, isEqualSignalState } from './SignalState.js';
 import { announceSignalUsage, untrack } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
+import { signalMarker } from './internal/markers.js';
 import type { Signal, SignalListener } from './types.js';
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
+        this[signalMarker] = true;
         this.#state = state;
     }
 
     #state: SignalState<T>;
     #listeners = new ListenerSet<SignalListener<T>>();
+
+    public [signalMarker]: true;
 
     public get value(): T {
         announceSignalUsage(this);

@@ -176,3 +176,5 @@ export interface IntrinsicElementTypeMap {
     'svg:use': SVGUseElement;
     'svg:view': SVGViewElement;
 }
+
+export type IntrinsicElementTypes = keyof IntrinsicElementTypeMap;

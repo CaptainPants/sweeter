@@ -8,12 +8,22 @@ import {
 } from '@captainpants/wireyui-core';
 import { renderComponent } from './internal/renderComponent.js';
 import { renderDOMElement } from './internal/renderDOMElement.js';
+import { type IntrinsicElementTypeMap } from '../IntrinsicElementTypeMap.js';
+
+type HasRef = {
+    ref?: (ele: HTMLElement | SVGElement) => void;
+};
+
+type JSXResult<ComponentType extends string | Component<unknown>> =
+    ComponentType extends keyof IntrinsicElementTypeMap
+        ? IntrinsicElementTypeMap[ComponentType]
+        : JSXElement;
 
 function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,
     props: PropsWithIntrinsicAttributesFor<ComponentType>,
-): JSXElement {
-    return untrack(() => {
+): JSXResult<ComponentType> {
+    const result = untrack(() => {
         try {
             if (type === undefined) {
                 return jsx(Fragment, props);
@@ -27,12 +37,18 @@ function jsx<ComponentType extends string | Component<unknown>>(
 
                 case 'string': {
                     // intrinsic
-                    return renderDOMElement(
+                    const res = renderDOMElement(
                         type,
                         props as PropsWithIntrinsicAttributesFor<
                             ComponentType & string
                         >,
                     );
+                    const ref = (props as HasRef).ref;
+                    if (ref) {
+                        ref(res);
+                    }
+
+                    return res;
                 }
 
                 default:
@@ -43,6 +59,8 @@ function jsx<ComponentType extends string | Component<unknown>>(
             return 'Error processing...';
         }
     });
+
+    return result as JSXResult<ComponentType>;
 }
 
 // The only documentation I can find on jsxs is https://github.com/reactjs/rfcs/blob/createlement-rfc/text/0000-create-element-changes.md#always-pass-children-as-props

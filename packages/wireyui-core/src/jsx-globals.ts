@@ -30,7 +30,9 @@ declare global {
             TElementTypeString extends string,
         > {}
 
-        interface IntrinsicElementDoNotSignalifyAttributesParts {}
+        interface IntrinsicElementDoNotSignalifyAttributesParts {
+            'wireui-core': never
+        }
 
         type IntrinsicElementDoNotSignalifyAttributes =
             IntrinsicElementDoNotSignalifyAttributesParts[keyof IntrinsicElementDoNotSignalifyAttributesParts];

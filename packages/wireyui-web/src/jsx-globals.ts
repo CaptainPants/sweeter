@@ -28,7 +28,7 @@ declare global {
         }
 
         interface IntrinsicElementDoNotSignalifyAttributesParts {
-            'wireui-web': never;
+            'wireui-web': 'ref';
         }
     }
 }

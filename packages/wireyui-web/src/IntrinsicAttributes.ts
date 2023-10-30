@@ -29,12 +29,14 @@ type EventHandlerProperties<TElement extends Element> = {
     ) => void;
 };
 
-type AllElementAttributes = {
+type AllElementAttributes<TElement> = {
     id?: string;
     title?: string;
 
     style?: Record<string, string>;
     children?: JSX.Element;
+
+    ref?: (value: TElement) => void;
 };
 
 type ElementSpecificOverrideAttributes<TElement> =
@@ -42,6 +44,7 @@ type ElementSpecificOverrideAttributes<TElement> =
 
 type TextInputAttributes = {
     placeholder?: string;
+    type?: string;
     value?: MutableSignal<string> | string | undefined;
 };
 
@@ -70,7 +73,7 @@ type FormElementAttributes<TElement> = TElement extends HTMLInputElement
 export type ElementAttributes<TElement extends Element> =
     EventHandlerProperties<TElement> &
         ElementSpecificOverrideAttributes<TElement> &
-        AllElementAttributes &
+        AllElementAttributes<TElement> &
         (TElement extends FormElement
             ? FormElementAttributes<TElement>
             : unknown);

@@ -31,7 +31,7 @@ declare global {
         > {}
 
         interface IntrinsicElementDoNotSignalifyAttributesParts {
-            'wireui-core': never
+            'wireui-core': never;
         }
 
         type IntrinsicElementDoNotSignalifyAttributes =
@@ -43,7 +43,7 @@ declare global {
         type IntrinsicElementAttributes<TElementTypeString extends string> =
             UnionToIntersection<
                 IntrinsicElementAttributeParts<TElementTypeString>[keyof IntrinsicElementAttributeParts<TElementTypeString>]
-            >
+            >;
 
         interface ElementChildrenAttribute {
             // eslint-disable-next-line @typescript-eslint/ban-types
@@ -77,8 +77,10 @@ declare global {
          */
         type IntrinsicElements = {
             [Key in IntrinsicElementParts[keyof IntrinsicElementParts] &
-                string]:
-                | types.Props<IntrinsicElementAttributes<Key>, IntrinsicElementDoNotSignalifyAttributes>;
+                string]: types.Props<
+                IntrinsicElementAttributes<Key>,
+                IntrinsicElementDoNotSignalifyAttributes
+            >;
         };
 
         /**

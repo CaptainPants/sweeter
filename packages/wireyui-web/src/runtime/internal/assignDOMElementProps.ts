@@ -45,10 +45,8 @@ export function assignDOMElementProps<TElementType extends string>(
 
             node.addEventListener(eventName, (evt) => {
                 const updatedValue = (
-                    evt as Event & {
-                        currentTarget: Record<string, unknown>;
-                    }
-                ).currentTarget[domProperty];
+                    evt.currentTarget as unknown as Record<string, unknown>
+                )[domProperty];
                 value.value = updatedValue;
             });
             const changeCallback = () => {

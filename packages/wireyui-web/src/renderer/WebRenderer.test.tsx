@@ -1,10 +1,17 @@
 /* @jsxImportSource ../. */
 
-import type { JSXElement } from '@captainpants/wireyui-core';
+import { type JSXElement } from '@captainpants/wireyui-core';
 import { WebRenderer } from './WebRenderer.js';
 
 function Component(): JSXElement {
-    return <div id="test" />;
+    return (
+        <input
+            onclick={(evt) => {
+                evt.preventDefault();
+            }}
+            id="id"
+        />
+    );
 }
 
 function SvgComponent(): JSXElement {

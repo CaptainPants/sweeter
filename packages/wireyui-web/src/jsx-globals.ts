@@ -1,5 +1,5 @@
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
-import type { ElementProperties } from './IntrinsicProperties.js';
+import type { ElementAttributes } from './IntrinsicAttributes.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -8,10 +8,12 @@ declare global {
             'wireyui-web': keyof IntrinsicElementTypeMap;
         }
 
-        interface IntrinsicElementAttributeParts<TElementType extends string> {
-            'wireyui-web': TElementType extends keyof IntrinsicElementTypeMap
-                ? ElementProperties<IntrinsicElementTypeMap[TElementType]>
-                : ElementProperties<HTMLElement>;
+        interface IntrinsicElementAttributeParts<
+            TElementTypeString extends string,
+        > {
+            'wireyui-web': TElementTypeString extends keyof IntrinsicElementTypeMap
+                ? ElementAttributes<IntrinsicElementTypeMap[TElementTypeString]>
+                : ElementAttributes<HTMLElement>;
         }
 
         /**
@@ -23,6 +25,10 @@ declare global {
 
         interface RendererHostElementParts {
             'wireui-web': HTMLElement | SVGElement;
+        }
+
+        interface IntrinsicElementDoNotSignalifyAttributesParts {
+            'wireui-web': never;
         }
     }
 }

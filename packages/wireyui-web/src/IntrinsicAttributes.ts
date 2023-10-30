@@ -1,3 +1,5 @@
+import { type MutableSignal, type Props } from '@captainpants/wireyui-core';
+
 type PrefixedNames<
     TNames extends string,
     TPrefix extends string,
@@ -27,7 +29,7 @@ type EventHandlerProperties<TElement extends Element> = {
     ) => void;
 };
 
-type AllElementProps = {
+type AllElementAttributes = {
     id?: string;
     title?: string;
 
@@ -35,43 +37,45 @@ type AllElementProps = {
     children?: JSX.Element;
 };
 
-type OverrideProps<TElement> = TElement extends HTMLInputElement
-    ? { value?: string }
-    : TElement extends HTMLLabelElement
-    ? { for?: string }
-    : unknown;
+type ElementSpecificOverrideAttributes<TElement> =
+    TElement extends HTMLLabelElement ? { for?: string } : unknown;
 
-type TextInputProps = {
+type TextInputAttributes = {
     placeholder?: string;
-    value?: string;
+    value?: MutableSignal<string> | string | undefined;
 };
 
-type NamedProps = {
+type NamedElementAttributes = {
     name?: string;
 };
 
-type HasReadOnlyProps = {
+type HasReadOnlyAttributes = {
     readonly?: boolean;
 };
 
-type HasDisabledProps = {
+type HasDisabledAttributes = {
     disabled?: boolean;
 };
 
-type FormElement = HTMLInputElement & HTMLTextAreaElement & HTMLSelectElement;
+type FormElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
-type FormElementProps<TElement> = TElement extends HTMLInputElement
-    ? TextInputProps & HasReadOnlyProps & NamedProps
+type FormElementAttributes<TElement> = TElement extends HTMLInputElement
+    ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
     : TElement extends HTMLTextAreaElement
-    ? TextInputProps & HasReadOnlyProps & NamedProps
+    ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
     : TElement extends HTMLSelectElement
-    ? HasDisabledProps & NamedProps
-    : NamedProps;
+    ? HasDisabledAttributes & NamedElementAttributes
+    : NamedElementAttributes;
 
-export type ElementProperties<TElement extends Element> =
+export type ElementAttributes<TElement extends Element> =
     EventHandlerProperties<TElement> &
-        OverrideProps<TElement> &
-        AllElementProps &
+        ElementSpecificOverrideAttributes<TElement> &
+        AllElementAttributes &
         (TElement extends FormElement
-            ? FormElementProps<FormElement>
+            ? FormElementAttributes<TElement>
             : unknown);
+
+export type ElementProps<TElement extends Element> = Props<
+    ElementAttributes<TElement>,
+    JSX.IntrinsicElementDoNotSignalifyAttributes
+>;

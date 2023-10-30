@@ -24,16 +24,24 @@ declare global {
         /**
          * Use this to extend IntrinsicElementAttributes.
          */
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        interface IntrinsicElementAttributeParts<TElementType extends string> {}
+
+        interface IntrinsicElementAttributeParts<
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            TElementTypeString extends string,
+        > {}
+
+        interface IntrinsicElementDoNotSignalifyAttributesParts {}
+
+        type IntrinsicElementDoNotSignalifyAttributes =
+            IntrinsicElementDoNotSignalifyAttributesParts[keyof IntrinsicElementDoNotSignalifyAttributesParts];
 
         /**
          * Extended by declaration merging into IntrinsicElementAttributeParts.
          */
-        type IntrinsicElementAttributes<TElementType extends string> =
+        type IntrinsicElementAttributes<TElementTypeString extends string> =
             UnionToIntersection<
-                IntrinsicElementAttributeParts<TElementType>[keyof IntrinsicElementAttributeParts<TElementType>]
-            >;
+                IntrinsicElementAttributeParts<TElementTypeString>[keyof IntrinsicElementAttributeParts<TElementTypeString>]
+            >
 
         interface ElementChildrenAttribute {
             // eslint-disable-next-line @typescript-eslint/ban-types
@@ -67,7 +75,8 @@ declare global {
          */
         type IntrinsicElements = {
             [Key in IntrinsicElementParts[keyof IntrinsicElementParts] &
-                string]: IntrinsicElementAttributes<Key>;
+                string]:
+                | types.Props<IntrinsicElementAttributes<Key>, IntrinsicElementDoNotSignalifyAttributes>;
         };
 
         /**

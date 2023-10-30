@@ -53,39 +53,41 @@ export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any> | string | undefined;
 
-export type IntrinsicElementProps<TElementType extends string> =
-    JSX.IntrinsicElementAttributes<TElementType>;
+export type IntrinsicElementProps<TElementTypeString extends string> =
+    JSX.IntrinsicElementAttributes<TElementTypeString>;
 
 export type PropsFor<
-    ComponentOrIntrinsicElementType extends
+    ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = ComponentOrIntrinsicElementType extends Component<infer Props>
+> = ComponentOrIntrinsicElementTypeString extends Component<infer Props>
     ? Props
-    : ComponentOrIntrinsicElementType extends string
-    ? IntrinsicElementProps<ComponentOrIntrinsicElementType>
+    : ComponentOrIntrinsicElementTypeString extends string
+    ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
     : never;
 
 export type PropsWithIntrinsicAttributesFor<
-    ComponentOrIntrinsicElementType extends
+    ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = PropsFor<ComponentOrIntrinsicElementType> & JSX.IntrinsicAttributes;
+> = PropsFor<ComponentOrIntrinsicElementTypeString> & JSX.IntrinsicAttributes;
 
 export type ChildrenTypeFor<
-    ComponentOrIntrinsicElementType extends
+    ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = PropsFor<ComponentOrIntrinsicElementType> extends {
+> = PropsFor<ComponentOrIntrinsicElementTypeString> extends {
     children: infer Children;
 }
     ? Children
     : never;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MakeSignal<T> = [T] extends [Signal<any>] ? T : Signal<T>;
+type Signalify<T> = [T] extends [Signal<any>] ? T : Signal<T>;
 
 /**
  * Take a props interface and make each property optionally a Signal.
  * You should ensure that the values aren't signals already.
  */
-export type Props<TProps> = {
-    [Key in keyof TProps]: MakeSignal<TProps[Key]> | TProps[Key];
+export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
+    [Key in keyof TProps]: Key extends TDoNotSignalifyProperties
+        ? TProps[Key]
+        : Signalify<TProps[Key]> | TProps[Key];
 };

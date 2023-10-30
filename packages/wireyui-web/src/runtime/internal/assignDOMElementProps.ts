@@ -22,9 +22,9 @@ const mutableMap = new Map<string, MutableMapping>([
     ['checked', { eventName: 'change', domProperty: 'checked' }],
 ]);
 
-export function assignDOMElementProps<TElementType extends string>(
+export function assignDOMElementProps<TElementTypeString extends string>(
     node: Node,
-    props: PropsWithIntrinsicAttributesFor<TElementType>,
+    props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
 ): void {
     for (const key of Object.getOwnPropertyNames(props)) {
         // Deal with class (className) and for (htmlFor)

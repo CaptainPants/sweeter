@@ -2,9 +2,9 @@ import type { PropsWithIntrinsicAttributesFor } from '@captainpants/wireyui-core
 import { assignDOMElementProps } from './assignDOMElementProps.js';
 import { addJsxChildren } from './addJsxChildren.js';
 
-export function renderDOMElement<TElementType extends string>(
-    type: TElementType,
-    props: PropsWithIntrinsicAttributesFor<TElementType>,
+export function renderDOMElement<TElementTypeString extends string>(
+    type: TElementTypeString,
+    props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
 ): HTMLElement | SVGElement {
     const ele = document.createElement(type);
 

@@ -2,7 +2,7 @@ import { Context } from '../context/Context.js';
 
 export interface RendererContextType {
     start(
-        target: JSX.RendererHostElement,
+        target: JSXExt.RendererHostElement,
         render: () => JSX.Element,
     ): () => void;
 }

@@ -3,7 +3,7 @@ import { type Component } from '../types.js';
 import { RendererContext } from '../renderer/RendererContext.js';
 
 export interface PortalProps {
-    target: JSX.RendererHostElement;
+    target: JSXExt.RendererHostElement;
     children: () => JSX.Element;
 }
 

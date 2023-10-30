@@ -22,33 +22,49 @@ declare global {
         }
 
         /**
+         * Extended by declaration merging into IntrinsicElementAttributeParts.
+         */
+        type IntrinsicElementAttributes<TElementTypeString extends string> =
+            UnionToIntersection<
+                JSXExt.IntrinsicElementAttributeParts<TElementTypeString>[keyof JSXExt.IntrinsicElementAttributeParts<TElementTypeString>]
+            >;
+
+        /**
+         * This tells typescript what property to use for children.
+         */
+        interface ElementChildrenAttribute {
+            // eslint-disable-next-line @typescript-eslint/ban-types
+            children: {}; // specify children name to use
+        }
+        /**
+         * Extended by declaration merging into IntrinsicElementParts.
+         */
+        type IntrinsicElements = {
+            [Key in JSXExt.IntrinsicElementParts[keyof JSXExt.IntrinsicElementParts] &
+                string]: types.Props<
+                IntrinsicElementAttributes<Key>,
+                JSXExt.IntrinsicElementDoNotSignalifyAttributes
+            >;
+        };
+
+        /** JSX Element */
+        type Element = JSXExt.IntrinsicElement | Signal<Element> | Element[];
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace JSXExt {
+        /**
          * Use this to extend IntrinsicElementAttributes.
          */
-
         interface IntrinsicElementAttributeParts<
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TElementTypeString extends string,
         > {}
 
-        interface IntrinsicElementDoNotSignalifyAttributesParts {
-            'wireui-core': never;
-        }
+        interface IntrinsicElementDoNotSignalifyAttributesParts {}
 
         type IntrinsicElementDoNotSignalifyAttributes =
             IntrinsicElementDoNotSignalifyAttributesParts[keyof IntrinsicElementDoNotSignalifyAttributesParts];
-
-        /**
-         * Extended by declaration merging into IntrinsicElementAttributeParts.
-         */
-        type IntrinsicElementAttributes<TElementTypeString extends string> =
-            UnionToIntersection<
-                IntrinsicElementAttributeParts<TElementTypeString>[keyof IntrinsicElementAttributeParts<TElementTypeString>]
-            >;
-
-        interface ElementChildrenAttribute {
-            // eslint-disable-next-line @typescript-eslint/ban-types
-            children: {}; // specify children name to use
-        }
 
         /**
          * Use this to add to the Element union.
@@ -72,25 +88,9 @@ declare global {
         interface IntrinsicElementParts {}
 
         /**
-         * Extended by declaration merging into IntrinsicElementParts.
-         * (Standard)
-         */
-        type IntrinsicElements = {
-            [Key in IntrinsicElementParts[keyof IntrinsicElementParts] &
-                string]: types.Props<
-                IntrinsicElementAttributes<Key>,
-                IntrinsicElementDoNotSignalifyAttributes
-            >;
-        };
-
-        /**
          * Extended by interface merging of ElementPossibilityParts.
-         * (Non-standard)
          */
         type IntrinsicElement =
-            ElementPossibilityParts[keyof ElementPossibilityParts];
-
-        /** JSX Element */
-        type Element = IntrinsicElement | Signal<Element> | Element[];
+            JSXExt.ElementPossibilityParts[keyof JSXExt.ElementPossibilityParts];
     }
 }

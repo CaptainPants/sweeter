@@ -3,7 +3,7 @@ import type { ElementAttributes } from './IntrinsicAttributes.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace JSX {
+    namespace JSXExt {
         interface IntrinsicElementParts {
             'wireyui-web': keyof IntrinsicElementTypeMap;
         }

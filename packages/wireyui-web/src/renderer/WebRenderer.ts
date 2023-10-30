@@ -1,4 +1,7 @@
-import { RendererContext } from '@captainpants/wireyui-core';
+import {
+    RendererContext,
+    type RendererHostElement,
+} from '@captainpants/wireyui-core';
 import { addJsxChildren } from '../runtime/internal/addJsxChildren.js';
 import { mounted } from '../runtime/internal/mounting.js';
 
@@ -14,10 +17,7 @@ export class WebRenderer {
         this.#options = options ?? {};
     }
 
-    start(
-        target: JSX.RendererHostElement,
-        render: () => JSX.Element,
-    ): () => void {
+    start(target: RendererHostElement, render: () => JSX.Element): () => void {
         const cleanup = RendererContext.replace({
             start: (target, render) => {
                 return this.#start(target, render);
@@ -30,10 +30,7 @@ export class WebRenderer {
         }
     }
 
-    #start(
-        target: JSX.RendererHostElement,
-        render: () => JSX.Element,
-    ): () => void {
+    #start(target: RendererHostElement, render: () => JSX.Element): () => void {
         const content = render();
 
         const unmount = addJsxChildren(target, content);

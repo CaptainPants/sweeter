@@ -84,5 +84,5 @@ export type ElementAttributes<TElement extends Element> =
 
 export type ElementProps<TElement extends Element> = Props<
     ElementAttributes<TElement>,
-    JSXExt.IntrinsicElementDoNotSignalifyAttributes
+    JSXInternal.IntrinsicElementDoNotSignalifyAttributes
 >;

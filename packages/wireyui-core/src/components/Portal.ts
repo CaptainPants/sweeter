@@ -1,9 +1,9 @@
 import { valueOf } from '../index.js';
-import { type Component } from '../types.js';
+import { type RendererHostElement, type Component } from '../types.js';
 import { RendererContext } from '../renderer/RendererContext.js';
 
 export interface PortalProps {
-    target: JSXExt.RendererHostElement;
+    target: RendererHostElement;
     children: () => JSX.Element;
 }
 

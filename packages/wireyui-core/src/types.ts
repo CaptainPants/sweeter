@@ -89,4 +89,4 @@ export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
         : Signal<TProps[Key]> | TProps[Key];
 };
 
-export type RendererHostElement = JSXExt.RendererHostElement;
+export type RendererHostElement = JSXInternal.RendererHostElement;

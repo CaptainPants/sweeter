@@ -43,12 +43,27 @@ declare global {
             [Key in JSXExt.IntrinsicElementParts[keyof JSXExt.IntrinsicElementParts] &
                 string]: types.Props<
                 IntrinsicElementAttributes<Key>,
-                JSXExt.IntrinsicElementDoNotSignalifyAttributes
+                JSXInternal.IntrinsicElementDoNotSignalifyAttributes
             >;
         };
 
         /** JSX Element */
-        type Element = JSXExt.IntrinsicElement | Signal<Element> | Element[];
+        type Element =
+            | JSXInternal.IntrinsicElement
+            | Signal<Element>
+            | Element[];
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace JSXInternal {
+        type IntrinsicElementDoNotSignalifyAttributes =
+            JSXExt.IntrinsicElementDoNotSignalifyAttributesParts[keyof JSXExt.IntrinsicElementDoNotSignalifyAttributesParts];
+
+        type RendererHostElement =
+            JSXExt.RendererHostElementParts[keyof JSXExt.RendererHostElementParts];
+
+        type IntrinsicElement =
+            JSXExt.ElementPossibilityParts[keyof JSXExt.ElementPossibilityParts];
     }
 
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -63,9 +78,6 @@ declare global {
 
         interface IntrinsicElementDoNotSignalifyAttributesParts {}
 
-        type IntrinsicElementDoNotSignalifyAttributes =
-            IntrinsicElementDoNotSignalifyAttributesParts[keyof IntrinsicElementDoNotSignalifyAttributesParts];
-
         /**
          * Use this to add to the Element union.
          */
@@ -78,19 +90,10 @@ declare global {
          */
         interface RendererHostElementParts {}
 
-        type RendererHostElement =
-            RendererHostElementParts[keyof RendererHostElementParts];
-
         /**
          * Expected to be { 'string': '\<union>' | '\<of>' | '\<allowed>' | '\<elements>' }
          * The key is ignored, and will generally be named for the assembly.
          */
         interface IntrinsicElementParts {}
-
-        /**
-         * Extended by interface merging of ElementPossibilityParts.
-         */
-        type IntrinsicElement =
-            JSXExt.ElementPossibilityParts[keyof JSXExt.ElementPossibilityParts];
     }
 }

@@ -1,5 +1,5 @@
 import { $calc, $derived, $mutable, $mutableCalc } from './index.js';
-import { isMutableSignal, isSignal } from './isSignal.js';
+import { isReadWriteSignal, isSignal } from './isSignal.js';
 
 it('isSignal for all signal types return true', () => {
     const a = $mutable(0);
@@ -19,7 +19,7 @@ it('isSignal for all signal types return true', () => {
     expect(isSignal(e)).toBe(true);
 });
 
-it('isMutableSignal for mutable signal types return true', () => {
+it('isReadWriteSignal for mutable signal types return true', () => {
     const a = $mutable(0);
 
     const c = $mutable({ prop: 1 });
@@ -29,14 +29,14 @@ it('isMutableSignal for mutable signal types return true', () => {
     );
     const e = $derived(c, 'prop');
 
-    expect(isMutableSignal(a)).toBe(true);
-    expect(isMutableSignal(c)).toBe(true);
-    expect(isMutableSignal(d)).toBe(true);
-    expect(isMutableSignal(e)).toBe(true);
+    expect(isReadWriteSignal(a)).toBe(true);
+    expect(isReadWriteSignal(c)).toBe(true);
+    expect(isReadWriteSignal(d)).toBe(true);
+    expect(isReadWriteSignal(e)).toBe(true);
 });
 
-it('isMutableSignal for CalculatedSignal returns false', () => {
+it('isReadWriteSignal for CalculatedSignal returns false', () => {
     const a = $calc(() => 1);
 
-    expect(isMutableSignal(a)).toBe(false);
+    expect(isReadWriteSignal(a)).toBe(false);
 });

@@ -5,7 +5,7 @@ import {
     type PropsWithIntrinsicAttributesFor,
     ErrorBoundaryContext,
     Fragment,
-    type MutableSignal,
+    type WritableSignal,
 } from '@captainpants/wireyui-core';
 import { renderComponent } from './internal/renderComponent.js';
 import { renderDOMElement } from './internal/renderDOMElement.js';
@@ -14,7 +14,7 @@ import { type IntrinsicElementTypeMap } from '../IntrinsicElementTypeMap.js';
 type HasRef = {
     ref?:
         | ((ele: HTMLElement | SVGElement) => void)
-        | MutableSignal<HTMLElement | SVGElement>;
+        | WritableSignal<HTMLElement | SVGElement>;
 };
 
 type JSXResult<ComponentType extends string | Component<unknown>> =
@@ -51,7 +51,7 @@ function jsx<ComponentType extends string | Component<unknown>>(
                         if (typeof ref === 'function') {
                             ref(element);
                         } else {
-                            ref.value = element;
+                            ref.update(element);
                         }
                     }
 

@@ -1,7 +1,7 @@
 import type { PropsWithIntrinsicAttributesFor } from '@captainpants/wireyui-core';
 import {
     addStrongReference,
-    isMutableSignal,
+    isReadWriteSignal,
     isSignal,
 } from '@captainpants/wireyui-core';
 
@@ -40,14 +40,25 @@ export function assignDOMElementProps<TElementType extends string>(
 
         const mutableMapEntry = mutableMap.get(mappedKey);
 
-        if (mutableMapEntry && isMutableSignal(value)) {
+        if (mutableMapEntry && isSignal(value)) {
+            // ==== MUTABLE SIGNAL SPECIAL CASE BINDING (e.g. input.value) ====
             const { eventName, domProperty } = mutableMapEntry;
 
             node.addEventListener(eventName, (evt) => {
-                const updatedValue = (
-                    evt.currentTarget as unknown as Record<string, unknown>
-                )[domProperty];
-                value.value = updatedValue;
+                // It might be a readonly signal, in which case we can't update it.
+                // we should actually ignore attempts to write it in this case..
+                if (isReadWriteSignal(value)) {
+                    const updatedValue = (
+                        evt.currentTarget as unknown as Record<string, unknown>
+                    )[domProperty];
+
+                    value.value = updatedValue;
+                } else {
+                    // Reset
+                    (evt.currentTarget as unknown as Record<string, unknown>)[
+                        domProperty
+                    ] = value.value;
+                }
             });
             const changeCallback = () => {
                 (node as unknown as Untyped)[mappedKey] = value.peek();
@@ -60,6 +71,8 @@ export function assignDOMElementProps<TElementType extends string>(
 
             addStrongReference(node, changeCallback);
         } else if (mappedKey.startsWith('on')) {
+            // ==== EVENT HANDLER BINDING ====
+
             const eventName = mappedKey.substring(2);
 
             // We don't need to subscribe, we can just use the current value of
@@ -75,6 +88,7 @@ export function assignDOMElementProps<TElementType extends string>(
                 node.addEventListener(eventName, value as EventListener);
             }
         } else {
+            // ==== NORMAL SIGNAL BINDING ====
             if (isSignal(value)) {
                 (node as unknown as Untyped)[mappedKey] = value.peek();
 

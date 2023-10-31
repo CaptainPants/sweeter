@@ -1,11 +1,11 @@
 import { CalculatedSignal } from './CalculatedSignal.js';
 import { announceMutatingSignal, announceSignalUsage } from './ambient.js';
-import { mutableSignalMarker } from './internal/markers.js';
-import type { MutableSignal } from './types.js';
+import { writableSignalMarker } from './internal/markers.js';
+import type { ReadWriteSignal } from './types.js';
 
 export class MutableCalculatedSignal<T>
     extends CalculatedSignal<T>
-    implements MutableSignal<T>
+    implements ReadWriteSignal<T>
 {
     constructor(calculation: () => T, mutate: (value: T) => void) {
         super(calculation);
@@ -27,7 +27,11 @@ export class MutableCalculatedSignal<T>
         this.#mutate(value);
     }
 
-    readonly [mutableSignalMarker] = true;
+    update(value: T): void {
+        this.value = value;
+    }
+
+    readonly [writableSignalMarker] = true;
 }
 
 export function $mutableCalc<T>(
@@ -38,7 +42,7 @@ export function $mutableCalc<T>(
 }
 
 export function $derived<TSource, TKey extends keyof TSource>(
-    source: MutableSignal<TSource>,
+    source: ReadWriteSignal<TSource>,
     key: TKey,
 ): MutableCalculatedSignal<TSource[TKey]> {
     return new MutableCalculatedSignal<TSource[TKey]>(

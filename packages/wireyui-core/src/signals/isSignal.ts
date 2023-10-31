@@ -1,12 +1,22 @@
-import { mutableSignalMarker, signalMarker } from './internal/markers.js';
-import type { MutableSignal, Signal } from './types.js';
+import { writableSignalMarker, signalMarker } from './internal/markers.js';
+import type { ReadWriteSignal, Signal, WritableSignal } from './types.js';
 
 export function isSignal(value: unknown): value is Signal<unknown> {
     return !!value && Object.hasOwn(value, signalMarker);
 }
 
-export function isMutableSignal(
+export function isWritableSignal(
     value: unknown,
-): value is MutableSignal<unknown> {
-    return !!value && Object.hasOwn(value, mutableSignalMarker);
+): value is WritableSignal<unknown> {
+    return !!value && Object.hasOwn(value, writableSignalMarker);
+}
+
+export function isReadWriteSignal(
+    value: unknown,
+): value is ReadWriteSignal<unknown> {
+    return (
+        !!value &&
+        Object.hasOwn(value, signalMarker) &&
+        Object.hasOwn(value, writableSignalMarker)
+    );
 }

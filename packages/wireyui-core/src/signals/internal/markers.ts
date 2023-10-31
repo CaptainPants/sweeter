@@ -1,2 +1,2 @@
 export const signalMarker = 'SIGNAL';
-export const mutableSignalMarker = 'MUTABLE_SIGNAL';
+export const writableSignalMarker = 'WRITABLE_SIGNAL';

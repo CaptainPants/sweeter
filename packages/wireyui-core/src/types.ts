@@ -79,9 +79,6 @@ export type ChildrenTypeFor<
     ? Children
     : never;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Signalify<T> = [T] extends [Signal<any>] ? T : Signal<T>;
-
 /**
  * Take a props interface and make each property optionally a Signal.
  * You should ensure that the values aren't signals already.
@@ -89,7 +86,7 @@ type Signalify<T> = [T] extends [Signal<any>] ? T : Signal<T>;
 export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
     [Key in keyof TProps]: Key extends TDoNotSignalifyProperties
         ? TProps[Key]
-        : Signalify<TProps[Key]> | TProps[Key];
+        : Signal<TProps[Key]> | TProps[Key];
 };
 
 export type RendererHostElement = JSXExt.RendererHostElement;

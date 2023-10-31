@@ -1,4 +1,8 @@
-import { type MutableSignal, type Props } from '@captainpants/wireyui-core';
+import type {
+    WritableSignal,
+    Props,
+    ReadWriteSignal,
+} from '@captainpants/wireyui-core';
 
 type PrefixedNames<
     TNames extends string,
@@ -36,7 +40,7 @@ type AllElementAttributes<TElement> = {
     style?: Record<string, string>;
     children?: JSX.Element;
 
-    ref?: (value: TElement) => void;
+    ref?: ((value: TElement) => void) | WritableSignal<TElement>;
 };
 
 type ElementSpecificOverrideAttributes<TElement> =
@@ -45,7 +49,7 @@ type ElementSpecificOverrideAttributes<TElement> =
 type TextInputAttributes = {
     placeholder?: string;
     type?: string;
-    value?: MutableSignal<string> | string | undefined;
+    value?: ReadWriteSignal<string> | string | undefined;
 };
 
 type NamedElementAttributes = {

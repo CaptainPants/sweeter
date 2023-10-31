@@ -1,5 +1,5 @@
 import type { SignalState } from './SignalState.js';
-import type { mutableSignalMarker, signalMarker } from './internal/markers.js';
+import type { signalMarker, writableSignalMarker } from './internal/markers.js';
 
 export type SignalListener<T> = (
     previous: SignalState<T>,
@@ -41,8 +41,13 @@ export interface Signal<T> {
     readonly [signalMarker]: true;
 }
 
-export interface MutableSignal<T> extends Signal<T> {
-    value: T;
+export interface WritableSignal<T> {
+    update(value: T): void; // You can't have a write only property so using a method
 
-    readonly [mutableSignalMarker]: true;
+    readonly [writableSignalMarker]: true;
+}
+
+export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {
+    // Non-readonly version of .value for convenience
+    value: T;
 }

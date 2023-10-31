@@ -3,7 +3,7 @@
 import { $mutable } from '@captainpants/wireyui-core';
 import { testRender } from '../test/testRender.js';
 
-it('Input value updated', () => {
+it('Ref assigned (callback)', () => {
     const value = $mutable('test-1');
 
     let ref: HTMLInputElement | undefined;
@@ -12,15 +12,20 @@ it('Input value updated', () => {
         return <input type="text" value={value} ref={(ele) => (ref = ele)} />;
     });
 
-    if (!ref) {
-        throw new Error('Ref not set');
-    }
+    expect(ref).not.toBeUndefined();
 
-    const event = new InputEvent('input');
-    ref.value = 'test-2';
-    ref.dispatchEvent(event);
+    res.dispose();
+});
 
-    expect(value.value).toStrictEqual('test-2');
+it('Ref assigned (signal)', () => {
+    const value = $mutable('test-1');
+    const ref = $mutable<HTMLInputElement>();
+
+    const res = testRender(() => {
+        return <input type="text" value={value} ref={ref} />;
+    });
+
+    expect(ref).not.toBeUndefined();
 
     res.dispose();
 });

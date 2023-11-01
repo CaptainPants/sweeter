@@ -1,4 +1,5 @@
 import type { Context } from './index.js';
+import type { UnionToIntersection } from './internal/UnionToIntersection.js';
 import type { Signal } from './signals/types.js';
 
 export type JSXKey = string | number;
@@ -54,7 +55,7 @@ export type ComponentOrIntrinsicElementTypeConstraint =
     Component<any> | string | undefined;
 
 export type IntrinsicElementProps<TElementTypeString extends string> =
-    JSX.IntrinsicElementAttributes<TElementTypeString>;
+    IntrinsicElementAttributes<TElementTypeString>;
 
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
@@ -88,6 +89,14 @@ export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
         ? TProps[Key]
         : Signal<TProps[Key]> | TProps[Key];
 };
+
+/**
+ * Extended by declaration merging into IntrinsicElementAttributeParts.
+ */
+export type IntrinsicElementAttributes<TElementTypeString extends string> =
+    UnionToIntersection<
+        WireyExtensionPoints.IntrinsicElementAttributeParts<TElementTypeString>[keyof WireyExtensionPoints.IntrinsicElementAttributeParts<TElementTypeString>]
+    >;
 
 export type IntrinsicElementDoNotSignalifyAttributes =
     WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts[keyof WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts];

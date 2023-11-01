@@ -4,6 +4,7 @@ import type {
     ReadWriteSignal,
     IntrinsicElementDoNotSignalifyAttributes,
 } from '@captainpants/wireyui-core';
+import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 type PrefixedNames<
     TNames extends string,
@@ -75,6 +76,11 @@ type FormElementAttributes<TElement> = TElement extends HTMLInputElement
     ? HasDisabledAttributes & NamedElementAttributes
     : NamedElementAttributes;
 
+export type ElementAttributesByName<TElementTypeString extends string> =
+    TElementTypeString extends keyof IntrinsicElementTypeMap
+        ? ElementAttributes<IntrinsicElementTypeMap[TElementTypeString]>
+        : NonSpecificElementAttributes;
+
 export type ElementAttributes<TElement extends Element> =
     EventHandlerProperties<TElement> &
         ElementSpecificOverrideAttributes<TElement> &
@@ -83,7 +89,9 @@ export type ElementAttributes<TElement extends Element> =
             ? FormElementAttributes<TElement>
             : unknown);
 
-export type ElementProps<TElement extends Element> = Props<
-    ElementAttributes<TElement>,
+export type NonSpecificElementAttributes = ElementAttributes<HTMLElement>;
+
+export type ElementProps<TElementTypeString extends string> = Props<
+    ElementAttributesByName<TElementTypeString>,
     IntrinsicElementDoNotSignalifyAttributes
 >;

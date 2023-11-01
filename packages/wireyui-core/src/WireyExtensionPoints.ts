@@ -5,7 +5,7 @@ declare global {
     namespace WireyExtensionPoints {
         /**
          * Use this to extend IntrinsicElementAttributes.
-         * 
+         *
          * Merge into this interface with:
          * '<unique-name>': ComponentProps
          */
@@ -16,7 +16,7 @@ declare global {
 
         /**
          * Use this to extend IntrinsicElementDoNotSignalifyAttributes.
-         * 
+         *
          * Merge into this interface with:
          * '<unique-name>': 'attribute-1' | 'attribute-2'
          */
@@ -24,7 +24,7 @@ declare global {
 
         /**
          * Use this to add to the Element union.
-         * 
+         *
          * Merge into this interface with:
          * '<unique-name>': BackendSpecificJSXElement1 | BackendSpecificJSXElement2;
          */
@@ -33,18 +33,18 @@ declare global {
         }
 
         /**
-         * Use this to add to the RendererHostElement union, primarily for use with Portals 
+         * Use this to add to the RendererHostElement union, primarily for use with Portals
          * and RendererContext.
-         * 
+         *
          * Merge into this interface with:
          * '<unique-name>': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
          */
         interface RendererHostElementParts {}
 
         /**
-         * Use this to provide a list of valid intrinsic element names, for use in 
+         * Use this to provide a list of valid intrinsic element names, for use in
          * populating IntrinsicElements.
-         * 
+         *
          * Merge into this interface with:
          * '<unique-name>': 'div' | 'span';
          */

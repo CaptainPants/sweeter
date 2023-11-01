@@ -1,5 +1,5 @@
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
-import type { ElementAttributes } from './IntrinsicAttributes.js';
+import type { ElementAttributesByName } from './IntrinsicAttributes.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -11,9 +11,7 @@ declare global {
         interface IntrinsicElementAttributeParts<
             TElementTypeString extends string,
         > {
-            'wireyui-web': TElementTypeString extends keyof IntrinsicElementTypeMap
-                ? ElementAttributes<IntrinsicElementTypeMap[TElementTypeString]>
-                : ElementAttributes<HTMLElement>;
+            'wireyui-web': ElementAttributesByName<TElementTypeString>;
         }
 
         /**

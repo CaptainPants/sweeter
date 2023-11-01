@@ -9,10 +9,19 @@ declare global {
          * Merge into this interface with:
          * '<unique-name>': ComponentProps
          */
-        interface IntrinsicElementAttributeParts<
+        interface IntrinsicElementAttributesParts<
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TElementTypeString extends string,
         > {}
+
+        /**
+         * Use this to provide a list of valid intrinsic element names, for use in
+         * populating IntrinsicElements.
+         *
+         * Merge into this interface with:
+         * '<unique-name>': 'div' | 'span';
+         */
+        interface IntrinsicElementNamesParts {}
 
         /**
          * Use this to extend IntrinsicElementDoNotSignalifyAttributes.
@@ -23,7 +32,7 @@ declare global {
         interface IntrinsicElementDoNotSignalifyAttributesParts {}
 
         /**
-         * Use this to add to the Element union.
+         * Use this to add to the IntrinsicElements union.
          *
          * Merge into this interface with:
          * '<unique-name>': BackendSpecificJSXElement1 | BackendSpecificJSXElement2;
@@ -40,14 +49,5 @@ declare global {
          * '<unique-name>': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
          */
         interface RendererHostElementParts {}
-
-        /**
-         * Use this to provide a list of valid intrinsic element names, for use in
-         * populating IntrinsicElements.
-         *
-         * Merge into this interface with:
-         * '<unique-name>': 'div' | 'span';
-         */
-        interface IntrinsicElementNamesParts {}
     }
 }

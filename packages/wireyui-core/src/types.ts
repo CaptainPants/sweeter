@@ -91,18 +91,27 @@ export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
 };
 
 /**
- * Extended by declaration merging into IntrinsicElementAttributeParts.
+ * Extended by declaration merging into IntrinsicElementNamesParts and IntrinsicElementAttributeParts.
  */
 export type IntrinsicElementAttributes<TElementTypeString extends string> =
     UnionToIntersection<
-        WireyExtensionPoints.IntrinsicElementAttributeParts<TElementTypeString>[keyof WireyExtensionPoints.IntrinsicElementAttributeParts<TElementTypeString>]
+        WireyExtensionPoints.IntrinsicElementAttributesParts<TElementTypeString>[keyof WireyExtensionPoints.IntrinsicElementAttributesParts<TElementTypeString>]
     >;
 
+/**
+ * Extended by declaration merging into RendererHostElementParts.
+ */
 export type IntrinsicElementDoNotSignalifyAttributes =
     WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts[keyof WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts];
 
+/**
+ * Extended by declaration merging into RendererHostElementParts.
+ */
 export type RendererHostElement =
     WireyExtensionPoints.RendererHostElementParts[keyof WireyExtensionPoints.RendererHostElementParts];
 
+/**
+ * Extended by declaration merging into IntrinsicElementPossibilityParts.
+ */
 export type IntrinsicElement =
     WireyExtensionPoints.IntrinsicElementPossibilityParts[keyof WireyExtensionPoints.IntrinsicElementPossibilityParts];

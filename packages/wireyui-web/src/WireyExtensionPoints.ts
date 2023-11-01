@@ -4,7 +4,7 @@ import type { ElementAttributes } from './IntrinsicAttributes.js';
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace WireyExtensionPoints {
-        interface IntrinsicElementParts {
+        interface IntrinsicElementNamesParts {
             'wireyui-web': keyof IntrinsicElementTypeMap;
         }
 
@@ -19,7 +19,7 @@ declare global {
         /**
          * Extends off the same from wireyui-core to populate JSX.Element
          */
-        interface ElementPossibilityParts {
+        interface IntrinsicElementPossibilityParts {
             'wireyui-web': HTMLElement | SVGElement | Text | Comment;
         }
 

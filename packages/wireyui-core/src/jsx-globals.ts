@@ -27,11 +27,12 @@ declare global {
             // eslint-disable-next-line @typescript-eslint/ban-types
             children: {}; // specify children name to use
         }
+        
         /**
-         * Extended by declaration merging into IntrinsicElementParts.
+         * Extended by declaration merging into IntrinsicElementNamesParts.
          */
         type IntrinsicElements = {
-            [Key in WireyExtensionPoints.IntrinsicElementParts[keyof WireyExtensionPoints.IntrinsicElementParts] &
+            [Key in WireyExtensionPoints.IntrinsicElementNamesParts[keyof WireyExtensionPoints.IntrinsicElementNamesParts] &
                 string]: types.Props<
                 IntrinsicElementAttributes<Key>,
                 types.IntrinsicElementDoNotSignalifyAttributes

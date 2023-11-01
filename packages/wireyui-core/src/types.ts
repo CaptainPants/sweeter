@@ -96,4 +96,4 @@ export type RendererHostElement =
     WireyExtensionPoints.RendererHostElementParts[keyof WireyExtensionPoints.RendererHostElementParts];
 
 export type IntrinsicElement =
-    WireyExtensionPoints.ElementPossibilityParts[keyof WireyExtensionPoints.ElementPossibilityParts];
+    WireyExtensionPoints.IntrinsicElementPossibilityParts[keyof WireyExtensionPoints.IntrinsicElementPossibilityParts];

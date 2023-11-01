@@ -2,6 +2,7 @@ import type {
     WritableSignal,
     Props,
     ReadWriteSignal,
+    IntrinsicElementDoNotSignalifyAttributes,
 } from '@captainpants/wireyui-core';
 
 type PrefixedNames<
@@ -84,5 +85,5 @@ export type ElementAttributes<TElement extends Element> =
 
 export type ElementProps<TElement extends Element> = Props<
     ElementAttributes<TElement>,
-    JSXInternal.IntrinsicElementDoNotSignalifyAttributes
+    IntrinsicElementDoNotSignalifyAttributes
 >;

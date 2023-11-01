@@ -89,4 +89,11 @@ export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
         : Signal<TProps[Key]> | TProps[Key];
 };
 
-export type RendererHostElement = JSXInternal.RendererHostElement;
+export type IntrinsicElementDoNotSignalifyAttributes =
+    WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts[keyof WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts];
+
+export type RendererHostElement =
+    WireyExtensionPoints.RendererHostElementParts[keyof WireyExtensionPoints.RendererHostElementParts];
+
+export type IntrinsicElement =
+    WireyExtensionPoints.ElementPossibilityParts[keyof WireyExtensionPoints.ElementPossibilityParts];

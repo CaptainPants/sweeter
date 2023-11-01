@@ -4,11 +4,11 @@ import type { ElementAttributesByName } from './IntrinsicAttributes.js';
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace WireyExtensionPoints {
-        interface IntrinsicElementNamesParts {
+        interface IntrinsicElementNames {
             'wireyui-web': keyof IntrinsicElementTypeMap;
         }
 
-        interface IntrinsicElementAttributesParts<
+        interface IntrinsicElementAttributeByElementNameString<
             TElementTypeString extends string,
         > {
             'wireyui-web': ElementAttributesByName<TElementTypeString>;
@@ -17,16 +17,24 @@ declare global {
         /**
          * Extends off the same from wireyui-core to populate JSX.Element
          */
-        interface IntrinsicElementPossibilityParts {
+        interface IntrinsicElementTypes {
             'wireyui-web': HTMLElement | SVGElement | Text | Comment;
         }
 
-        interface RendererHostElementParts {
+        interface RendererHostElementTypes {
             'wireui-web': HTMLElement | SVGElement;
         }
 
-        interface IntrinsicElementDoNotSignalifyAttributesParts {
-            'wireui-web': 'ref' | 'value';
+        interface SkipSignalifyingIntrinsicElementAttributes<
+            TElementTypeString extends string,
+        > {
+            'wireui-web/all': 'ref';
+            'wireui-web/input': TElementTypeString extends
+                | 'input'
+                | 'textarea'
+                | 'select'
+                ? 'value'
+                : never;
         }
     }
 }

@@ -1,8 +1,6 @@
 import type {
     WritableSignal,
-    Props,
     ReadWriteSignal,
-    IntrinsicElementDoNotSignalifyAttributes,
 } from '@captainpants/wireyui-core';
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
@@ -90,8 +88,3 @@ export type ElementAttributes<TElement extends Element> =
             : unknown);
 
 export type NonSpecificElementAttributes = ElementAttributes<HTMLElement>;
-
-export type ElementProps<TElementTypeString extends string> = Props<
-    ElementAttributesByName<TElementTypeString>,
-    IntrinsicElementDoNotSignalifyAttributes
->;

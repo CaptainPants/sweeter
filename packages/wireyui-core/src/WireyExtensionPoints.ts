@@ -9,7 +9,7 @@ declare global {
          * Merge into this interface with:
          * '<unique-name>': ComponentProps
          */
-        interface IntrinsicElementAttributesParts<
+        interface IntrinsicElementAttributeByElementNameString<
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TElementTypeString extends string,
         > {}
@@ -21,7 +21,7 @@ declare global {
          * Merge into this interface with:
          * '<unique-name>': 'div' | 'span';
          */
-        interface IntrinsicElementNamesParts {}
+        interface IntrinsicElementNames {}
 
         /**
          * Use this to extend IntrinsicElementDoNotSignalifyAttributes.
@@ -29,7 +29,11 @@ declare global {
          * Merge into this interface with:
          * '<unique-name>': 'attribute-1' | 'attribute-2'
          */
-        interface IntrinsicElementDoNotSignalifyAttributesParts {}
+
+        interface SkipSignalifyingIntrinsicElementAttributes<
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            TElementTypeString extends string,
+        > {}
 
         /**
          * Use this to add to the IntrinsicElements union.
@@ -37,7 +41,7 @@ declare global {
          * Merge into this interface with:
          * '<unique-name>': BackendSpecificJSXElement1 | BackendSpecificJSXElement2;
          */
-        interface IntrinsicElementPossibilityParts {
+        interface IntrinsicElementTypes {
             'wireyui-core': number | string | boolean | null | undefined;
         }
 
@@ -48,6 +52,6 @@ declare global {
          * Merge into this interface with:
          * '<unique-name>': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
          */
-        interface RendererHostElementParts {}
+        interface RendererHostElementTypes {}
     }
 }

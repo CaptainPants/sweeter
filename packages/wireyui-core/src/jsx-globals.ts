@@ -20,10 +20,10 @@ declare global {
         }
 
         /**
-         * Extended by declaration merging into IntrinsicElementNamesParts.
+         * Extended by declaration merging into IntrinsicElementNames.
          */
         type IntrinsicElements = {
-            [Key in WireyExtensionPoints.IntrinsicElementNamesParts[keyof WireyExtensionPoints.IntrinsicElementNamesParts] &
+            [Key in WireyExtensionPoints.IntrinsicElementNames[keyof WireyExtensionPoints.IntrinsicElementNames] &
                 string]: types.IntrinsicElementProps<Key>;
         };
 

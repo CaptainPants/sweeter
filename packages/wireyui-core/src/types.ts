@@ -54,9 +54,6 @@ export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any> | string | undefined;
 
-export type IntrinsicElementProps<TElementTypeString extends string> =
-    IntrinsicElementAttributes<TElementTypeString>;
-
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
@@ -91,27 +88,37 @@ export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
 };
 
 /**
- * Extended by declaration merging into IntrinsicElementNamesParts and IntrinsicElementAttributeParts.
+ * Extended by declaration merging into IntrinsicElementNames and IntrinsicElementAttributeParts.
  */
 export type IntrinsicElementAttributes<TElementTypeString extends string> =
     UnionToIntersection<
-        WireyExtensionPoints.IntrinsicElementAttributesParts<TElementTypeString>[keyof WireyExtensionPoints.IntrinsicElementAttributesParts<TElementTypeString>]
+        WireyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof WireyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
     >;
 
 /**
- * Extended by declaration merging into RendererHostElementParts.
+ * Extended by declaration merging into RendererHostElementTypes.
  */
-export type IntrinsicElementDoNotSignalifyAttributes =
-    WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts[keyof WireyExtensionPoints.IntrinsicElementDoNotSignalifyAttributesParts];
+export type IntrinsicElementDoNotSignalifyAttributes<
+    TElementTypeString extends string,
+> =
+    WireyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>[keyof WireyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>];
 
 /**
- * Extended by declaration merging into RendererHostElementParts.
+ * Props for intrinsic elements, based on the type string.
+ */
+export type IntrinsicElementProps<TElementTypeString extends string> = Props<
+    IntrinsicElementAttributes<TElementTypeString>,
+    IntrinsicElementDoNotSignalifyAttributes<TElementTypeString>
+>;
+
+/**
+ * Extended by declaration merging into RendererHostElementTypes.
  */
 export type RendererHostElement =
-    WireyExtensionPoints.RendererHostElementParts[keyof WireyExtensionPoints.RendererHostElementParts];
+    WireyExtensionPoints.RendererHostElementTypes[keyof WireyExtensionPoints.RendererHostElementTypes];
 
 /**
- * Extended by declaration merging into IntrinsicElementPossibilityParts.
+ * Extended by declaration merging into IntrinsicElementTypes.
  */
 export type IntrinsicElement =
-    WireyExtensionPoints.IntrinsicElementPossibilityParts[keyof WireyExtensionPoints.IntrinsicElementPossibilityParts];
+    WireyExtensionPoints.IntrinsicElementTypes[keyof WireyExtensionPoints.IntrinsicElementTypes];

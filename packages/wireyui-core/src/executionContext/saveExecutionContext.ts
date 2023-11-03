@@ -6,7 +6,7 @@ type SavedExecutionContextVariable = () => RevertCallback;
 
 export interface SavedExecutionContext {
     restore(): RevertCallback;
-    invoke<T>(callback: () => T): T;
+    invokeWith<T>(callback: () => T): T;
 }
 
 export function saveExecutionContext(): SavedExecutionContext {
@@ -40,7 +40,7 @@ export function saveExecutionContext(): SavedExecutionContext {
                 popAndCall(revertList);
             };
         },
-        invoke(callback) {
+        invokeWith(callback) {
             const revertList = restoreAll();
             try {
                 return callback();

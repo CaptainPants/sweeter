@@ -3,5 +3,5 @@ export interface ExecutionContextLocal<T> {
 
     replace(value: T): () => void;
 
-    invoke(value: T, callback: () => void): void;
+    invokeWith(value: T, callback: () => void): void;
 }

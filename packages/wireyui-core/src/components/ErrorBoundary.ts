@@ -15,7 +15,7 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
 }) => {
     const error = $mutable<undefined | { error: unknown }>(undefined);
 
-    return ErrorBoundaryContext.invoke(
+    return ErrorBoundaryContext.invokeWith(
         {
             error(err) {
                 error.value = { error: err };

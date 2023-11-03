@@ -25,7 +25,7 @@ export class ExecutionContextVariable<T> {
         };
     }
 
-    invoke<TCallbackResult>(
+    invokeWith<TCallbackResult>(
         value: T,
         callback: () => TCallbackResult,
     ): TCallbackResult {

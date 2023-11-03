@@ -1,8 +1,10 @@
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
+import { stringifyForDiagnostics } from '../index.js';
 
 interface ContextNode {
     id: symbol;
     value: unknown;
+    type: Context<unknown>;
     parent: ContextNode | undefined;
 }
 
@@ -18,8 +20,14 @@ export class Context<T> {
         this.defaultValue = defaultValue;
     }
 
+    /**
+     * Non-unique name.
+     */
     readonly name: string;
 
+    /**
+     * Unique symbol representing the context type, based on name.
+     */
     readonly id: symbol;
 
     readonly defaultValue: T;
@@ -28,18 +36,20 @@ export class Context<T> {
         return contextStack.replace({
             id: this.id,
             value: value,
+            type: this,
             parent: contextStack.current,
         });
     }
 
-    invoke<TCallbackResult>(
+    invokeWith<TCallbackResult>(
         value: T,
         callback: () => TCallbackResult,
     ): TCallbackResult {
-        return contextStack.invoke(
+        return contextStack.invokeWith(
             {
                 id: this.id,
                 value: value,
+                type: this,
                 parent: contextStack.current,
             },
             callback,
@@ -49,10 +59,49 @@ export class Context<T> {
     getCurrent(): T {
         const current = contextStack.current;
         while (current) {
+            // We could alternatively use the 'type' but whatever
             if (current.id === this.id) {
                 return current.value as T;
             }
         }
         return this.defaultValue;
     }
+}
+
+export interface ContextSummary {
+    readonly name: string;
+    readonly value: unknown;
+    readonly type: Context<unknown>;
+}
+
+export function getContexts(): ContextSummary[] {
+    const res: ContextSummary[] = [];
+
+    let current = contextStack.current;
+    while (current) {
+        res.push({
+            name: current.type.name,
+            type: current.type,
+            value: current.value,
+        });
+
+        current = current.parent;
+    }
+
+    return res;
+}
+
+export function getContextSummary(): string {
+    const res: string[] = [];
+
+    let current = contextStack.current;
+    while (current) {
+        res.push(
+            `${String(current.id)}: ${stringifyForDiagnostics(current.value)}`,
+        );
+
+        current = current.parent;
+    }
+
+    return res.join('\r\n');
 }

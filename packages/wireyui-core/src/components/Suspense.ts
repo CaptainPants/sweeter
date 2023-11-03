@@ -18,7 +18,7 @@ export function Suspense(
     // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = $mutable(0);
 
-    return SuspenseContext.invoke(
+    return SuspenseContext.invokeWith(
         {
             startBlocking: () => {
                 let reverterCalled = false;

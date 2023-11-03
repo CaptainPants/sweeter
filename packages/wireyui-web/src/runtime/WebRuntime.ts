@@ -1,36 +1,42 @@
 import {
-    RendererContext,
-    type RendererHostElement,
+    RuntimeContext,
+    type RuntimeRootHostElement,
 } from '@captainpants/wireyui-core';
-import { addJsxChildren } from '../runtime/internal/addJsxChildren.js';
-import { mounted } from '../runtime/internal/mounting.js';
+import { addJsxChildren } from './internal/addJsxChildren.js';
+import { mounted } from './internal/mounting.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
  */
-export interface WebRendererOptions {}
+export interface WebRuntimeOptions {}
 
-export class WebRenderer {
-    #options: WebRendererOptions;
+export class WebRuntime {
+    #options: WebRuntimeOptions;
 
-    constructor(options?: WebRendererOptions) {
+    constructor(options?: WebRuntimeOptions) {
         this.#options = options ?? {};
     }
 
-    start(target: RendererHostElement, render: () => JSX.Element): () => void {
-        const cleanup = RendererContext.replace({
+    createRoot(
+        target: RuntimeRootHostElement,
+        render: () => JSX.Element,
+    ): () => void {
+        const cleanup = RuntimeContext.replace({
             start: (target, render) => {
-                return this.#start(target, render);
+                return this.#createRoot(target, render);
             },
         });
         try {
-            return this.#start(target, render);
+            return this.#createRoot(target, render);
         } finally {
             cleanup();
         }
     }
 
-    #start(target: RendererHostElement, render: () => JSX.Element): () => void {
+    #createRoot(
+        target: RuntimeRootHostElement,
+        render: () => JSX.Element,
+    ): () => void {
         const content = render();
 
         const unmount = addJsxChildren(target, content);

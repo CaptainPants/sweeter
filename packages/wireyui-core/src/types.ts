@@ -38,7 +38,7 @@ export type ComponentInit = ComponentInitFunction & {
 export type Component<TProps = {}, TAsyncInitializationResult = undefined> = ((
     props: Props<TProps>,
     init: ComponentInit,
-    asyncInitializerResult: TAsyncInitializationResult,
+    initializerResult: TAsyncInitializationResult,
 ) => JSX.Element) &
     IfSpecified<
         TAsyncInitializationResult,
@@ -96,7 +96,7 @@ export type IntrinsicElementAttributes<TElementTypeString extends string> =
     >;
 
 /**
- * Extended by declaration merging into RendererHostElementTypes.
+ * Extended by declaration merging into RuntimeRootHostElementTypes.
  */
 export type IntrinsicElementDoNotSignalifyAttributes<
     TElementTypeString extends string,
@@ -112,10 +112,10 @@ export type IntrinsicElementProps<TElementTypeString extends string> = Props<
 >;
 
 /**
- * Extended by declaration merging into RendererHostElementTypes.
+ * Extended by declaration merging into RuntimeRootHostElementTypes.
  */
-export type RendererHostElement =
-    WireyExtensionPoints.RendererHostElementTypes[keyof WireyExtensionPoints.RendererHostElementTypes];
+export type RuntimeRootHostElement =
+    WireyExtensionPoints.RuntimeRootHostElementTypes[keyof WireyExtensionPoints.RuntimeRootHostElementTypes];
 
 /**
  * Extended by declaration merging into IntrinsicElementTypes.

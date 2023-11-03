@@ -2,15 +2,15 @@
 
 import { Show, $mutable } from '@captainpants/wireyui-core';
 import { expectDOMMatching } from '../test/expectDOMMatching.js';
-import { WebRenderer } from '../renderer/WebRenderer.js';
+import { WebRuntime } from '../runtime/WebRuntime.js';
 
 it('Show initially displays and then hides content when signal updated', () => {
     const cond = $mutable(true);
 
-    const renderer = new WebRenderer();
+    const runtime = new WebRuntime();
 
     const root = document.createElement('div');
-    renderer.start(root, () => (
+    runtime.createRoot(root, () => (
         <Show if={cond}>{() => <div>CONDITION TRUE</div>}</Show>
     ));
 

@@ -1,7 +1,7 @@
 /* @jsxImportSource ../. */
 
 import { type JSXElement } from '@captainpants/wireyui-core';
-import { WebRenderer } from './WebRenderer.js';
+import { WebRuntime } from './WebRuntime.js';
 
 function Component(): JSXElement {
     return (
@@ -26,13 +26,13 @@ function SvgComponent(): JSXElement {
 }
 
 it("WebRenderer with an HTML component doesn't throw", () => {
-    const root = new WebRenderer();
+    const root = new WebRuntime();
 
-    root.start(document.createElement('div'), () => <Component />);
+    root.createRoot(document.createElement('div'), () => <Component />);
 });
 
 it("WebRenderer with an SVG component doesn't throw", () => {
-    const root = new WebRenderer();
+    const root = new WebRuntime();
 
-    root.start(document.createElement('div'), () => <SvgComponent />);
+    root.createRoot(document.createElement('div'), () => <SvgComponent />);
 });

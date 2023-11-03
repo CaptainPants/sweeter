@@ -21,7 +21,7 @@ declare global {
             'wireyui-web': HTMLElement | SVGElement | Text | Comment;
         }
 
-        interface RendererHostElementTypes {
+        interface RuntimeRootHostElementTypes {
             'wireui-web': HTMLElement | SVGElement;
         }
 

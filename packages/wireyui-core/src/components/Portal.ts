@@ -1,14 +1,14 @@
 import { valueOf } from '../index.js';
-import { type RendererHostElement, type Component } from '../types.js';
-import { RendererContext } from '../renderer/RendererContext.js';
+import { type RuntimeRootHostElement, type Component } from '../types.js';
+import { RuntimeContext } from '../runtime/RuntimeContext.js';
 
 export interface PortalProps {
-    target: RendererHostElement;
+    target: RuntimeRootHostElement;
     children: () => JSX.Element;
 }
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
-    const portalContext = RendererContext.getCurrent();
+    const portalContext = RuntimeContext.getCurrent();
 
     let renderCleanup: (() => void) | undefined;
 

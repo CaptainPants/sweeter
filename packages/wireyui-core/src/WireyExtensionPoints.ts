@@ -46,12 +46,12 @@ declare global {
         }
 
         /**
-         * Use this to add to the RendererHostElement union, primarily for use with Portals
+         * Use this to add to the RuntimeRootHostElement union, primarily for use with Portals
          * and RendererContext.
          *
          * Merge into this interface with:
          * '<unique-name>': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
          */
-        interface RendererHostElementTypes {}
+        interface RuntimeRootHostElementTypes {}
     }
 }

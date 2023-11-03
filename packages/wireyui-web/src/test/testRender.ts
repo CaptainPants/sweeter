@@ -1,4 +1,4 @@
-import { WebRenderer } from '../renderer/WebRenderer.js';
+import { WebRuntime } from '../runtime/WebRuntime.js';
 
 export interface TestRenderResult {
     readonly nodes: NodeListOf<ChildNode>;
@@ -12,11 +12,11 @@ export interface TestRenderResult {
  * @returns
  */
 export function testRender(callback: () => JSX.Element): TestRenderResult {
-    const renderer = new WebRenderer();
+    const renderer = new WebRuntime();
 
     const root = document.createElement('div');
 
-    const dispose = renderer.start(root, callback);
+    const dispose = renderer.createRoot(root, callback);
 
     return {
         nodes: root.childNodes,

@@ -1,9 +1,17 @@
 import {
+    Context,
     RuntimeContext,
     type RuntimeRootHostElement,
 } from '@captainpants/wireyui-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { mounted } from './internal/mounting.js';
+
+export interface WebRuntimeContextType {}
+
+export const WebRuntimeContext = new Context<WebRuntimeContextType>(
+    'WebRuntime',
+    {},
+);
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -21,16 +29,18 @@ export class WebRuntime {
         target: RuntimeRootHostElement,
         render: () => JSX.Element,
     ): () => void {
-        const cleanup = RuntimeContext.replace({
-            start: (target, render) => {
-                return this.#createRoot(target, render);
+        return RuntimeContext.invokeWith(
+            {
+                start: (target, render) => {
+                    return this.#createRoot(target, render);
+                },
             },
-        });
-        try {
-            return this.#createRoot(target, render);
-        } finally {
-            cleanup();
-        }
+            () => {
+                return WebRuntimeContext.invokeWith({}, () => {
+                    return this.#createRoot(target, render);
+                });
+            },
+        );
     }
 
     #createRoot(

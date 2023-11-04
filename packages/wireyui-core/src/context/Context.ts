@@ -57,12 +57,14 @@ export class Context<T> {
     }
 
     getCurrent(): T {
-        const current = contextStack.current;
+        let current: ContextNode | undefined = contextStack.current;
         while (current) {
             // We could alternatively use the 'type' but whatever
             if (current.id === this.id) {
                 return current.value as T;
             }
+
+            current = current.parent;
         }
         return this.defaultValue;
     }

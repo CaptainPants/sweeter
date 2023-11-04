@@ -4,6 +4,10 @@ import type {
 } from '@captainpants/wireyui-core';
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
+import { type StandardPropertiesHyphen } from 'csstype';
+
+// ==== EVENTS
+
 type PrefixedNames<
     TNames extends string,
     TPrefix extends string,
@@ -33,11 +37,18 @@ type EventHandlerProperties<TElement extends Element> = {
     ) => void;
 };
 
+// ==== CSS
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type Styles = StandardPropertiesHyphen<number | (string & {})>;
+
+// ==== OTHER
+
 type AllElementAttributes<TElement> = {
     id?: string;
     title?: string;
 
-    style?: Record<string, string>;
+    style?: Styles;
     children?: JSX.Element;
 
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;

@@ -38,7 +38,8 @@
         "pnpm": "8.6.7"
     },
     "dependencies": {
-        "@captainpants/wireyui-core": "workspace:^"
+        "@captainpants/wireyui-core": "workspace:^",
+        "csstype": "^3.1.2"
     },
     "devDependencies": {
         "jest-environment-jsdom": "^29.6.4"

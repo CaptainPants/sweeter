@@ -4,6 +4,8 @@ import {
     isReadWriteSignal,
     isSignal,
 } from '@captainpants/wireyui-core';
+import { bindStyle } from './bindStyle.js';
+import { type Styles } from '../../IntrinsicAttributes.js';
 
 type Untyped = Record<string, unknown>;
 
@@ -70,10 +72,13 @@ export function assignDOMElementProps<TElementType extends string>(
             value.listen(changeCallback, false);
 
             addStrongReference(node, changeCallback);
-        } else if (mappedKey === 'style') {
+        } else if (
+            mappedKey === 'style' &&
+            (node instanceof HTMLElement || node instanceof SVGElement)
+        ) {
             // ==== STYLES BINDING ====
             // TODO: magic for styles
-            
+            bindStyle(node, value as Styles);
         } else if (mappedKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====
 

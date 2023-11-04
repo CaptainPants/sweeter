@@ -26,6 +26,9 @@ function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,
     props: PropsWithIntrinsicAttributesFor<ComponentType>,
 ): JSXResult<ComponentType> {
+    // Its reasonably certain that people will trigger side effects when wiring up a component
+    // and that these might update signals. We also don't want to accidentally subscribe to these
+    // signals -- hence untrack the actual render
     const result = untrack(() => {
         try {
             if (type === undefined) {

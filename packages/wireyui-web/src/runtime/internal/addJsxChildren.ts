@@ -3,19 +3,9 @@ import {
     flattenElements,
 } from '@captainpants/wireyui-core';
 import { mounted, unMounted } from './mounting.js';
-
-function inserted(node: Node, targetDocument: Document): boolean {
-    for (
-        let current: Node | null = node;
-        current;
-        current = current.parentNode
-    ) {
-        if (current == targetDocument) {
-            return true;
-        }
-    }
-    return false;
-}
+import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
+import { isText } from './utility/isText.js';
+import { isInDocument } from './utility/isInDocument.js';
 
 export function addJsxChildren(
     parent: Node,
@@ -60,7 +50,7 @@ export function addJsxChildren(
         ) {
             if (
                 current.ownerDocument &&
-                inserted(current, current.ownerDocument)
+                isInDocument(current, current.ownerDocument)
             ) {
                 mounted(current);
             }
@@ -88,37 +78,4 @@ export function addJsxChildren(
             unMounted(current);
         }
     };
-}
-
-function isText(value: unknown): value is string | number | boolean {
-    const type = typeof value;
-    return type === 'string' || type === 'number' || type === 'boolean';
-}
-
-/**
- *
- * @param child
- * @param afterRemoveCallback called immediately prior to removing a Node
- * @returns
- */
-function removeSelfAndLaterSiblings(
-    child: ChildNode | null,
-    afterRemoveCallback: (node: ChildNode) => void,
-) {
-    if (!child) return;
-
-    const parent = child.parentNode;
-    if (!parent) return;
-
-    // this might be null
-    const lastChildAfterRemovals = child.previousSibling;
-
-    for (
-        let current = parent.lastChild;
-        current && current !== lastChildAfterRemovals;
-        current = parent.lastChild
-    ) {
-        current.remove();
-        afterRemoveCallback(current);
-    }
 }

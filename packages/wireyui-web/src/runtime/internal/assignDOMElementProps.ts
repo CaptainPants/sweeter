@@ -70,6 +70,10 @@ export function assignDOMElementProps<TElementType extends string>(
             value.listen(changeCallback, false);
 
             addStrongReference(node, changeCallback);
+        } else if (mappedKey === 'style') {
+            // ==== STYLES BINDING ====
+            // TODO: magic for styles
+            
         } else if (mappedKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====
 

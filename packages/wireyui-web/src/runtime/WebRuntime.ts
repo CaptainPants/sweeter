@@ -5,12 +5,19 @@ import {
 } from '@captainpants/wireyui-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { mounted } from './internal/mounting.js';
+import type { GlobalStyleSheet } from '../styles/types.js';
 
-export interface WebRuntimeContextType {}
+export interface WebRuntimeContextType {
+    addStyleSheet(stylesheet: GlobalStyleSheet): () => void;
+}
 
 export const WebRuntimeContext = new Context<WebRuntimeContextType>(
     'WebRuntime',
-    {},
+    {
+        addStyleSheet() {
+            throw new TypeError('Not implemented');
+        },
+    },
 );
 
 /**
@@ -32,18 +39,25 @@ export class WebRuntime {
         return RuntimeContext.invokeWith(
             {
                 start: (target, render) => {
-                    return this.#createRoot(target, render);
+                    return this.#createRootImplementation(target, render);
                 },
             },
             () => {
-                return WebRuntimeContext.invokeWith({}, () => {
-                    return this.#createRoot(target, render);
-                });
+                return WebRuntimeContext.invokeWith(
+                    {
+                        addStyleSheet() {
+                            throw new TypeError('Not implemented');
+                        },
+                    },
+                    () => {
+                        return this.#createRootImplementation(target, render);
+                    },
+                );
             },
         );
     }
 
-    #createRoot(
+    #createRootImplementation(
         target: RuntimeRootHostElement,
         render: () => JSX.Element,
     ): () => void {

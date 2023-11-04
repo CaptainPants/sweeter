@@ -1,6 +1,6 @@
 import type { Context } from './index.js';
 import type { UnionToIntersection } from './internal/UnionToIntersection.js';
-import type { Signal } from './signals/types.js';
+import type { Signal, UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;
 
@@ -27,9 +27,10 @@ type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
 export type ComponentInit = ComponentInitFunction & {
     onMount: (callback: () => (() => void) | void) => void;
     onUnMount: (callback: () => void) => void;
-    subscribeToChanges: (
-        dependencies: readonly unknown[],
-        callback: () => void,
+    subscribeToChanges: <TArgs extends readonly unknown[]>(
+        dependencies: TArgs,
+        callback: (values: UnsignalAll<TArgs>) => void | (() => void),
+        invokeImmediately?: boolean,
     ) => void;
     getContext: <T>(context: Context<T>) => T;
 };

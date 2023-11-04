@@ -1,5 +1,6 @@
 import {
     subscribeToChanges,
+    type UnsignalAll,
     type ComponentInit,
     type Component,
     type Context,
@@ -65,9 +66,9 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         addUnMounted(createHooks('UnMount'), callback);
     };
 
-    init.subscribeToChanges = ((
-        dependencies: readonly unknown[],
-        callback: () => void,
+    init.subscribeToChanges = (<TArgs extends readonly unknown[]>(
+        dependencies: TArgs,
+        callback: (args: UnsignalAll<TArgs>) => void | (() => void),
     ) => {
         init.onMount(() => {
             return subscribeToChanges(dependencies, callback);

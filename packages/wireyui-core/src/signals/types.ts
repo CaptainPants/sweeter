@@ -51,3 +51,8 @@ export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {
     // Non-readonly version of .value for convenience
     value: T;
 }
+
+export type Unsignal<T> = T extends Signal<infer S> ? S : T;
+export type UnsignalAll<T extends readonly unknown[]> = {
+    [Key in keyof T]: Unsignal<T[Key]>;
+};

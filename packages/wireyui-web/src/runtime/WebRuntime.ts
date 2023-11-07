@@ -4,9 +4,7 @@ import {
     type RuntimeRootHostElement,
 } from '@captainpants/wireyui-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
-import {
-    announceMountedRecursive,
-} from './internal/mounting.js';
+import { announceMountedRecursive } from './internal/mounting.js';
 import type { GlobalStyleSheet } from '../styles/types.js';
 import { jsx } from './jsx.js';
 

@@ -27,6 +27,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     }
 
     let hooks: Comment | undefined;
+    let initCompleted = false;
 
     const init = <TArgs extends readonly unknown[], TResult>(
         hook: HookFunction<TArgs, TResult>,
@@ -47,6 +48,9 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     }
 
     init.onMount = (callback: () => (() => void) | void) => {
+        if (initCompleted)
+            throw new Error('onMount must only be called during init phase.');
+
         const hooks = createHooks('Mount');
 
         // TODO: this should trigger ErrorBoundary if an exception is thrown
@@ -66,6 +70,9 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     };
 
     init.onUnMount = (callback: () => void) => {
+        if (initCompleted)
+            throw new Error('onUnMount must only be called during init phase.');
+
         // TODO: this should trigger ErrorBoundary if an exception is thrown
         addUnMountedCallback(createHooks('UnMount'), callback);
     };
@@ -75,6 +82,11 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         callback: (args: UnsignalAll<TArgs>) => void | (() => void),
         invokeImmediate = true,
     ) => {
+        if (initCompleted)
+            throw new Error(
+                'subscribeToChanges must only be called during init phase.',
+            );
+
         init.onMount(() => {
             return subscribeToChanges(dependencies, callback, invokeImmediate);
         });
@@ -84,10 +96,18 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     // but it does indicate that you should capture the context values you need during init
     // and not later when the context stack is gone
     init.getContext = <T>(context: Context<T>): T => {
+        if (initCompleted)
+            throw new Error(
+                'getContext must only be called during init phase.',
+            );
+
         return context.getCurrent();
     };
 
     const res = Component(props, init, undefined);
+
+    // Makes all init calls throw from now on
+    initCompleted = true;
 
     if (!hooks) {
         // shortcut if we don't need to add in markers for mount callbacks.

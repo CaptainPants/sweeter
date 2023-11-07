@@ -1,3 +1,4 @@
+import { RuntimeContext } from '../index.js';
 import { $calc, $mutable, valueOf } from '../signals/index.js';
 import type { ComponentInit, Props } from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
@@ -17,6 +18,8 @@ export function Suspense(
 ): JSX.Element {
     // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = $mutable(0);
+
+    const runtime = RuntimeContext.getCurrent();
 
     return SuspenseContext.invokeWith(
         {
@@ -47,7 +50,10 @@ export function Suspense(
                 // captures the SuspenseContext)
 
                 if (counter.value > 0) {
-                    return valueOf(fallback)();
+                    return [
+                        valueOf(fallback)(),
+                        runtime.renderOffscreen(evaluatedChildren.value),
+                    ];
                 }
 
                 return evaluatedChildren.value;

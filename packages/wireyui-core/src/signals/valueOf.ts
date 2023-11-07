@@ -1,4 +1,4 @@
-import type { Signal } from './types.js';
+import type { Signal, UnsignalAll } from './types.js';
 import { isSignal } from './isSignal.js';
 
 /**
@@ -10,4 +10,10 @@ import { isSignal } from './isSignal.js';
  */
 export function valueOf<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.value : value;
+}
+
+export function valueOfAll<TArgs extends readonly unknown[]>(
+    values: [...TArgs],
+): UnsignalAll<[...TArgs]> {
+    return values.map((x) => valueOf(x)) as UnsignalAll<[...TArgs]>;
 }

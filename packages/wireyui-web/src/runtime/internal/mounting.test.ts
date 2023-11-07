@@ -1,4 +1,9 @@
-import { addMounted, addUnMounted, mounted, unMounted } from './mounting.js';
+import {
+    addMountedCallback,
+    addUnMountedCallback,
+    announceMountedRecursive,
+    announceUnMountedRecursive,
+} from './mounting.js';
 
 it('Mount callbacks fired', () => {
     const obj = document.createComment('Mounted');
@@ -9,9 +14,9 @@ it('Mount callbacks fired', () => {
         fired = true;
     };
 
-    addMounted(obj, callback);
+    addMountedCallback(obj, callback);
 
-    mounted(obj);
+    announceMountedRecursive(obj);
 
     expect(fired).toStrictEqual(true);
 });
@@ -25,9 +30,12 @@ it('Un-mount callbacks fired', () => {
         fired = true;
     };
 
-    addUnMounted(obj, callback);
+    // We have to make sure the mounted flag is set
+    announceMountedRecursive(obj);
 
-    unMounted(obj);
+    addUnMountedCallback(obj, callback);
+
+    announceUnMountedRecursive(obj);
 
     expect(fired).toStrictEqual(true);
 });

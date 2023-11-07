@@ -4,8 +4,11 @@ import {
     type RuntimeRootHostElement,
 } from '@captainpants/wireyui-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
-import { mounted } from './internal/mounting.js';
+import {
+    announceMountedRecursive,
+} from './internal/mounting.js';
 import type { GlobalStyleSheet } from '../styles/types.js';
+import { jsx } from './jsx.js';
 
 export interface WebRuntimeContextType {
     addStyleSheet(stylesheet: GlobalStyleSheet): () => void;
@@ -41,6 +44,12 @@ export class WebRuntime {
                 start: (target, render) => {
                     return this.#createRootImplementation(target, render);
                 },
+                renderOffscreen: (content) => {
+                    return jsx('div', {
+                        style: { display: 'none' },
+                        children: content,
+                    });
+                },
             },
             () => {
                 return WebRuntimeContext.invokeWith(
@@ -70,7 +79,7 @@ export class WebRuntime {
             current;
             current = current.previousSibling
         ) {
-            mounted(current);
+            announceMountedRecursive(current);
         }
 
         // Allow callers to be lazy and call the returned callback multiple times

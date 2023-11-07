@@ -2,7 +2,11 @@ import {
     addStrongReference,
     flattenElements,
 } from '@captainpants/wireyui-core';
-import { mounted, unMounted } from './mounting.js';
+import {
+    announceChildrenMountedRecursive,
+    announceMountedRecursive,
+    announceUnMountedRecursive,
+} from './mounting.js';
 import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 import { isText } from './utility/isText.js';
 import { isInDocument } from './utility/isInDocument.js';
@@ -11,22 +15,27 @@ export function addJsxChildren(
     parent: Node,
     children: JSX.Element,
 ): () => void {
-    const flattened = flattenElements(children);
-    const original = flattened.peek();
+    const parentInDocument = isInDocument(parent);
+    const flattenedChildrenSignal = flattenElements(children);
+    const original = flattenedChildrenSignal.peek();
+
+    let newlyMountedNodes: Node[] = [];
 
     for (let child of original) {
         if (isText(child)) {
             child = document.createTextNode(String(child));
         }
 
+        newlyMountedNodes.push(child);
         parent.appendChild(child);
     }
 
     const onChange = () => {
-        const updated = flattened.peek();
+        const parentInDocument = isInDocument(parent);
+        const updated = flattenedChildrenSignal.peek();
         const sentinel = parent.firstChild;
 
-        const newlyMountedNodes: Node[] = [];
+        newlyMountedNodes = [];
 
         for (let child of updated) {
             if (isText(child)) {
@@ -48,25 +57,33 @@ export function addJsxChildren(
             current;
             current = newlyMountedNodes.pop()
         ) {
-            if (
-                current.ownerDocument &&
-                isInDocument(current, current.ownerDocument)
-            ) {
-                mounted(current);
+            if (current.ownerDocument && isInDocument(current)) {
+                announceMountedRecursive(current);
             }
         }
 
         // This items are being removed
+        // Note that descendents are handled by the call to addJsxChildren that added them to their parent
         removeSelfAndLaterSiblings(sentinel, (removed) => {
             // This should do onUnMount recursively
-            unMounted(removed);
+            if (!isInDocument(removed)) {
+                announceUnMountedRecursive(removed);
+            }
         });
+
+        if (parentInDocument) {
+            announceChildrenMountedRecursive(parent);
+        }
     };
 
-    flattened.listen(onChange, false);
+    flattenedChildrenSignal.listen(onChange, false);
 
     // Callback lifetime linked to the parent Node
     addStrongReference(parent, onChange);
+
+    if (parentInDocument) {
+        announceChildrenMountedRecursive(parent);
+    }
 
     return () => {
         for (
@@ -75,7 +92,7 @@ export function addJsxChildren(
             current = parent.firstChild
         ) {
             current.remove();
-            unMounted(current);
+            announceUnMountedRecursive(current);
         }
     };
 }

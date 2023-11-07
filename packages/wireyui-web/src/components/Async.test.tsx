@@ -32,7 +32,9 @@ it('Fallback is shown and then content once loaded', async () => {
 
     function load(signal: AbortSignal) {
         return new Promise<number>((resolve, reject) => {
-            release.signal.addEventListener('abort', () => resolve(27));
+            release.signal.addEventListener('abort', () => {
+                resolve(27);
+            });
         });
     }
 
@@ -53,7 +55,11 @@ it('Fallback is shown and then content once loaded', async () => {
     release.abort();
 
     // Promise.then / await promise runs as a microtask, so lets await on a new microtask for it to have updated
-    await new Promise((resolve) => queueMicrotask(() => resolve(23)));
+    await new Promise((resolve) => {
+        queueMicrotask(() => {
+            resolve(void 0);
+        });
+    });
 
     expect(res.getHTML()).toMatchSnapshot();
 

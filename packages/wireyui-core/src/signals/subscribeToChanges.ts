@@ -1,6 +1,6 @@
 import { isSignal } from './isSignal.js';
 import { popAndCall } from '../internal/popAndCall.js';
-import { valueOf } from './valueOf.js';
+import { valueOfAll } from './valueOf.js';
 import type { UnsignalAll } from './types.js';
 
 /**
@@ -10,7 +10,8 @@ import type { UnsignalAll } from './types.js';
  * @returns
  */
 export function subscribeToChanges<TArgs extends readonly unknown[]>(
-    dependencies: TArgs,
+    // the [...TArgs] causes inference as a tuple more often (although not for literal types)
+    dependencies: [...TArgs],
     callback: (values: UnsignalAll<TArgs>) => void | (() => void),
     invokeImmediate = false,
 ): () => void {
@@ -22,9 +23,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
         }
 
         // callback can return a cleanup method to be called next change.
-        lastCleanup = callback(
-            dependencies.map((x) => valueOf(x)) as UnsignalAll<TArgs>,
-        );
+        lastCleanup = callback(valueOfAll(dependencies));
     };
 
     const cleanupList: (() => void)[] = [];

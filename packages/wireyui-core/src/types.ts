@@ -28,7 +28,8 @@ export type ComponentInit = ComponentInitFunction & {
     onMount: (callback: () => (() => void) | void) => void;
     onUnMount: (callback: () => void) => void;
     subscribeToChanges: <TArgs extends readonly unknown[]>(
-        dependencies: TArgs,
+        // the [...TArgs] causes inference as a tuple more often (although not for literal types)
+        dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void | (() => void),
         invokeImmediately?: boolean,
     ) => void;

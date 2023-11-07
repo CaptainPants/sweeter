@@ -27,9 +27,11 @@ export function Async<T>(
 
     let abortController: AbortController | undefined;
 
-    async function reload() {
-        // kill previous run
-        abortController?.abort();
+    async function reload(callback: (abort: AbortSignal) => Promise<T>) {
+        if (abortController) {
+            // kill previous run
+            abortController?.abort();
+        }
 
         // Consider this step might need to be optional
         if (data.value.resolution !== 'LOADING') {
@@ -61,11 +63,13 @@ export function Async<T>(
         }
     }
 
-    reload();
-
-    init.subscribeToChanges([callback, children], () => {
-        reload();
-    });
+    init.subscribeToChanges(
+        [callback],
+        ([callback]) => {
+            reload(callback);
+        },
+        true,
+    );
 
     init.onUnMount(() => {
         abortController?.abort();

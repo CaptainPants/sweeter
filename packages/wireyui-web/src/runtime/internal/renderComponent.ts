@@ -7,7 +7,11 @@ import {
     type HookFunction,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/wireyui-core';
-import { addMounted, addUnMounted, removeUnMounted } from './mounting.js';
+import {
+    addMountedCallback,
+    addUnMountedCallback,
+    removeUnMountedCallback,
+} from './mounting.js';
 
 type MightHaveAsyncInitializer = Partial<
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -46,32 +50,33 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         const hooks = createHooks('Mount');
 
         // TODO: this should trigger ErrorBoundary if an exception is thrown
-        addMounted(hooks, () => {
+        addMountedCallback(hooks, () => {
             const unmounted = callback();
 
             if (typeof unmounted === 'function') {
                 const innerUnMounted = () => {
-                    removeUnMounted(hooks, innerUnMounted);
+                    removeUnMountedCallback(hooks, innerUnMounted);
 
                     unmounted();
                 };
 
-                addUnMounted(hooks, innerUnMounted);
+                addUnMountedCallback(hooks, innerUnMounted);
             }
         });
     };
 
     init.onUnMount = (callback: () => void) => {
         // TODO: this should trigger ErrorBoundary if an exception is thrown
-        addUnMounted(createHooks('UnMount'), callback);
+        addUnMountedCallback(createHooks('UnMount'), callback);
     };
 
     init.subscribeToChanges = (<TArgs extends readonly unknown[]>(
-        dependencies: TArgs,
+        dependencies: [...TArgs],
         callback: (args: UnsignalAll<TArgs>) => void | (() => void),
+        invokeImmediate = true,
     ) => {
         init.onMount(() => {
-            return subscribeToChanges(dependencies, callback);
+            return subscribeToChanges(dependencies, callback, invokeImmediate);
         });
     }) satisfies ComponentInit['subscribeToChanges'];
 

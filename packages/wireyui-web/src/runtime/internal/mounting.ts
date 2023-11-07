@@ -45,38 +45,56 @@ function callbacks<T extends object>(name: string) {
 
 const mountedCallbacks = callbacks<Node>('mounted');
 const unMountedCallbacks = callbacks<Node>('unmounted');
+const isMounted = new WeakSet<Node>();
 
-export function addMounted(node: Node, callback: () => void) {
+export function addMountedCallback(node: Node, callback: () => void) {
     mountedCallbacks.add(node, callback);
 }
-export function addUnMounted(node: Node, callback: () => void) {
+export function addUnMountedCallback(node: Node, callback: () => void) {
     unMountedCallbacks.add(node, callback);
 }
-export function removeMounted(node: Node, callback: () => void) {
+export function removeMountedCallback(node: Node, callback: () => void) {
     mountedCallbacks.remove(node, callback);
 }
-export function removeUnMounted(node: Node, callback: () => void) {
+export function removeUnMountedCallback(node: Node, callback: () => void) {
     unMountedCallbacks.remove(node, callback);
 }
 
-// TODO: we can make this stack-based to avoid recursion
-export function mounted(node: Node): void {
+/**
+ * Note that this is safe to call on elements that might already have mounted,
+ * as each has a flag to detect remounts.
+ * @param node
+ */
+export function announceChildrenMountedRecursive(node: Node) {
     // reverse order
     for (
         let current = node.lastChild;
         current;
         current = current.previousSibling
     ) {
-        mounted(current);
+        announceMountedRecursive(current);
     }
-
-    mountedCallbacks.execute(node);
 }
 
-export function unMounted(node: Node): void {
-    unMountedCallbacks.execute(node);
+// TODO: we can make this stack-based to avoid recursion
+export function announceMountedRecursive(node: Node): void {
+    // reverse order
+    announceChildrenMountedRecursive(node);
+
+    // Call callbacks on current
+    if (!isMounted.has(node)) {
+        mountedCallbacks.execute(node);
+        isMounted.add(node);
+    }
+}
+
+export function announceUnMountedRecursive(node: Node): void {
+    if (isMounted.has(node)) {
+        unMountedCallbacks.execute(node);
+        isMounted.delete(node);
+    }
 
     for (const child of node.childNodes) {
-        unMounted(child);
+        announceUnMountedRecursive(child);
     }
 }

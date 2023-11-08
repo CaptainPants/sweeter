@@ -1,11 +1,13 @@
 import type { GlobalStyleSheet } from './types.js';
 
 export class GlobalCss implements GlobalStyleSheet {
-    public content: string;
-    public id: symbol;
+    public readonly content: string;
+    public readonly id: string;
+    public readonly symbol: symbol;
 
-    constructor(options: { content: string }) {
+    constructor(options: { id: string, content: string }) {
         this.content = options.content;
-        this.id = Symbol('GlobalCss');
+        this.id = options.id;
+        this.symbol = Symbol('GlobalCss-' + options.id);
     }
 }

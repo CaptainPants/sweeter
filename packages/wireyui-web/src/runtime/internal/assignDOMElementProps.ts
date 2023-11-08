@@ -38,7 +38,7 @@ export function assignDOMElementProps<TElementType extends string>(
             continue;
         }
 
-        const value = (props as Untyped)[mappedKey];
+        const value = (props as Untyped)[key];
 
         const mutableMapEntry = mutableMap.get(mappedKey);
 

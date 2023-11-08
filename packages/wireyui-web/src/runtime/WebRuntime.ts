@@ -8,8 +8,13 @@ import { announceMountedRecursive } from './internal/mounting.js';
 import type { GlobalStyleSheet } from '../styles/types.js';
 import { jsx } from './jsx.js';
 
+export interface DocumentStyleSheetHandle {
+    remove(): void;
+    update(stylesheet: GlobalStyleSheet): void;
+}
+
 export interface WebRuntimeContextType {
-    addStyleSheet(stylesheet: GlobalStyleSheet): () => void;
+    addStyleSheet(stylesheet: GlobalStyleSheet): DocumentStyleSheetHandle;
 }
 
 export const WebRuntimeContext = new Context<WebRuntimeContextType>(
@@ -52,8 +57,18 @@ export class WebRuntime {
             () => {
                 return WebRuntimeContext.invokeWith(
                     {
-                        addStyleSheet() {
-                            throw new TypeError('Not implemented');
+                        addStyleSheet(stylesheet) {
+                            const element = document.createElement('style');
+                            element.textContent = stylesheet.content;
+                            element.setAttribute('data-id', stylesheet.id);
+                            target.ownerDocument.head.appendChild(element);
+
+                            return {
+                                remove() { element.remove() },
+                                update(stylesheet) {
+                                    element.textContent = stylesheet.content;
+                                }
+                            }
                         },
                     },
                     () => {

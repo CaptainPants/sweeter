@@ -5,7 +5,7 @@ export const styles = {
     class: function (id: string, content: string) {
         return new GlobalCssClass({ id, content });
     },
-    global: function (content: string) {
-        return new GlobalCss({ content });
+    global: function (id: string, content: string) {
+        return new GlobalCss({ id, content });
     },
 };

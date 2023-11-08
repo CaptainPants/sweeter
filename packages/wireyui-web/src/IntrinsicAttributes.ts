@@ -48,6 +48,7 @@ type AllElementAttributes<TElement> = {
     id?: string;
     title?: string;
 
+    class?: string;
     style?: Styles;
     children?: JSX.Element;
 

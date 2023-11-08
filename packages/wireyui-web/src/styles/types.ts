@@ -1,4 +1,5 @@
 export interface GlobalStyleSheet {
-    readonly id: symbol;
+    readonly symbol: symbol;
+    readonly id: string;
     readonly content: string;
 }

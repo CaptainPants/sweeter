@@ -6,13 +6,13 @@ export type JSXKey = string | number;
 
 export type JSXElement = JSX.Element;
 
-export type HookFunction<TArgs extends readonly unknown[], TResult> = (
+export type HookConstructor<TArgs extends readonly unknown[], TResult> = new (
     setup: ComponentInit,
     ...args: TArgs
 ) => TResult;
 
 export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
-    hook: HookFunction<TArgs, TResult>,
+    hook: HookConstructor<TArgs, TResult>,
     ...args: TArgs
 ) => TResult;
 

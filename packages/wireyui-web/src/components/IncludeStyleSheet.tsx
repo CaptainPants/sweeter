@@ -2,7 +2,7 @@
 
 import type { Component } from '@captainpants/wireyui-core';
 import type { GlobalStyleSheet } from '../styles/index.js';
-import type { DocumentStyleSheetHandle} from '../runtime/WebRuntime.js';
+import type { DocumentStyleSheetHandle } from '../runtime/WebRuntime.js';
 import { WebRuntimeContext } from '../runtime/WebRuntime.js';
 
 export interface IncludeStyleSheetProps {
@@ -23,12 +23,10 @@ export const IncludeStyleSheet: Component<IncludeStyleSheetProps> = (
             if (handle) {
                 if (stylesheet) {
                     handle.update(stylesheet);
-                }
-                else {
+                } else {
                     handle.remove();
                 }
-            }
-            else {
+            } else {
                 if (stylesheet) {
                     handle = runtime.addStyleSheet(stylesheet);
                 }
@@ -38,11 +36,9 @@ export const IncludeStyleSheet: Component<IncludeStyleSheetProps> = (
         true,
     );
 
-    init.onUnMount(
-        () => {
-            handle?.remove();
-        }
-    );
+    init.onUnMount(() => {
+        handle?.remove();
+    });
 
     return <></>;
 };

@@ -64,11 +64,13 @@ export class WebRuntime {
                             target.ownerDocument.head.appendChild(element);
 
                             return {
-                                remove() { element.remove() },
+                                remove() {
+                                    element.remove();
+                                },
                                 update(stylesheet) {
                                     element.textContent = stylesheet.content;
-                                }
-                            }
+                                },
+                            };
                         },
                     },
                     () => {

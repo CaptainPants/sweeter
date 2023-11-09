@@ -1,10 +1,10 @@
 import {
     subscribeToChanges,
+    type HookConstructor,
     type UnsignalAll,
     type ComponentInit,
     type Component,
     type Context,
-    type HookFunction,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/wireyui-core';
 import {
@@ -30,10 +30,10 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     let initCompleted = false;
 
     const init = <TArgs extends readonly unknown[], TResult>(
-        hook: HookFunction<TArgs, TResult>,
+        Hook: HookConstructor<TArgs, TResult>,
         ...args: TArgs
     ): TResult => {
-        return hook(init, ...args);
+        return new Hook(init, ...args);
     };
 
     function createHooks(reason: string) {

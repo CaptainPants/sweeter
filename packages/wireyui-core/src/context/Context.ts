@@ -76,6 +76,8 @@ export interface ContextSummary {
     readonly type: Context<unknown>;
 }
 
+export type ContextType<T> = T extends Context<infer S> ? S : never;
+
 export function getContexts(): ContextSummary[] {
     const res: ContextSummary[] = [];
 

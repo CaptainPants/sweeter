@@ -6,15 +6,12 @@ export interface DocumentStylesheetHandle {
     update(stylesheet: GlobalStylesheet): void;
 }
 
-export interface WebRuntimeContextType {
+export interface WebRuntimeContext {
     addStylesheet(stylesheet: GlobalStylesheet): DocumentStylesheetHandle;
 }
 
-export const WebRuntimeContext = new Context<WebRuntimeContextType>(
-    'WebRuntime',
-    {
-        addStylesheet() {
-            throw new TypeError('Not implemented');
-        },
+export const WebRuntimeContext = new Context<WebRuntimeContext>('WebRuntime', {
+    addStylesheet() {
+        throw new TypeError('Not implemented');
     },
-);
+});

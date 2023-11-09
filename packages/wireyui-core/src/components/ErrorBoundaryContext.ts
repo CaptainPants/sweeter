@@ -1,10 +1,10 @@
 import { Context } from '../context/Context.js';
 
-export interface ErrorBoundaryContextType {
+export interface ErrorBoundaryContext {
     error(err: unknown): void;
 }
 
-export const ErrorBoundaryContext = new Context<ErrorBoundaryContextType>(
+export const ErrorBoundaryContext = new Context<ErrorBoundaryContext>(
     'ErrorBoundaryContext',
     {
         error(err) {

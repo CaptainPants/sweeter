@@ -1,6 +1,6 @@
 import { Context } from '../context/Context.js';
 
-export interface SuspenseContextType {
+export interface SuspenseContext {
     /**
      * Start displaying loaded fallback. Returns a cancellation function. Cancelling multiple times is safe.
      */
@@ -8,18 +8,15 @@ export interface SuspenseContextType {
     readonly count: number;
 }
 
-export const SuspenseContext = new Context<SuspenseContextType>(
-    'SuspenseContext',
-    {
-        startBlocking: () => {
-            throw new Error(
-                'No SuspenseContext set, please wrap your element in a Suspense',
-            );
-        },
-        get count(): number {
-            throw new Error(
-                'No SuspenseContext set, please wrap your element in a Suspense',
-            );
-        },
+export const SuspenseContext = new Context<SuspenseContext>('SuspenseContext', {
+    startBlocking: () => {
+        throw new Error(
+            'No SuspenseContext set, please wrap your element in a Suspense',
+        );
     },
-);
+    get count(): number {
+        throw new Error(
+            'No SuspenseContext set, please wrap your element in a Suspense',
+        );
+    },
+});

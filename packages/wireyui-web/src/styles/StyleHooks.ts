@@ -1,9 +1,9 @@
 import type { ComponentInit } from '@captainpants/wireyui-core';
+import { type GlobalCssClass } from './GlobalCssClass.js';
 import {
     WebRuntimeContext,
     type WebRuntimeContextType,
-} from '../runtime/index.js';
-import { type GlobalCssClass } from './GlobalCssClass.js';
+} from '../runtime/WebRuntimeContext.js';
 
 export class StyleHooks {
     constructor(init: ComponentInit) {

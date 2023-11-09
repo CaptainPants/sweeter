@@ -1,30 +1,11 @@
 import {
-    Context,
     RuntimeContext,
     type RuntimeRootHostElement,
 } from '@captainpants/wireyui-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { announceMountedRecursive } from './internal/mounting.js';
-import type { GlobalStylesheet } from '../styles/types.js';
 import { jsx } from './jsx.js';
-
-export interface DocumentStylesheetHandle {
-    remove(): void;
-    update(stylesheet: GlobalStylesheet): void;
-}
-
-export interface WebRuntimeContextType {
-    addStylesheet(stylesheet: GlobalStylesheet): DocumentStylesheetHandle;
-}
-
-export const WebRuntimeContext = new Context<WebRuntimeContextType>(
-    'WebRuntime',
-    {
-        addStylesheet() {
-            throw new TypeError('Not implemented');
-        },
-    },
-);
+import { WebRuntimeContext } from './WebRuntimeContext.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.

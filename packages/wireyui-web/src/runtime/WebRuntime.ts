@@ -5,22 +5,22 @@ import {
 } from '@captainpants/wireyui-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { announceMountedRecursive } from './internal/mounting.js';
-import type { GlobalStyleSheet } from '../styles/types.js';
+import type { GlobalStylesheet } from '../styles/types.js';
 import { jsx } from './jsx.js';
 
-export interface DocumentStyleSheetHandle {
+export interface DocumentStylesheetHandle {
     remove(): void;
-    update(stylesheet: GlobalStyleSheet): void;
+    update(stylesheet: GlobalStylesheet): void;
 }
 
 export interface WebRuntimeContextType {
-    addStyleSheet(stylesheet: GlobalStyleSheet): DocumentStyleSheetHandle;
+    addStylesheet(stylesheet: GlobalStylesheet): DocumentStylesheetHandle;
 }
 
 export const WebRuntimeContext = new Context<WebRuntimeContextType>(
     'WebRuntime',
     {
-        addStyleSheet() {
+        addStylesheet() {
             throw new TypeError('Not implemented');
         },
     },
@@ -57,7 +57,7 @@ export class WebRuntime {
             () => {
                 return WebRuntimeContext.invokeWith(
                     {
-                        addStyleSheet(stylesheet) {
+                        addStylesheet(stylesheet) {
                             const element = document.createElement('style');
                             element.textContent = stylesheet.content;
                             element.setAttribute('data-id', stylesheet.id);

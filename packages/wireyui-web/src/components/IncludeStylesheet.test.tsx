@@ -3,7 +3,7 @@
 import type { Component } from '@captainpants/wireyui-core';
 import { GlobalCss, GlobalCssClass, StyleHooks } from '../styles/index.js';
 import { testRender } from '../test/testRender.js';
-import { IncludeStyleSheet } from './IncludeStyleSheet.js';
+import { IncludeStylesheet } from './IncludeStylesheet.js';
 
 const example = new GlobalCss({
     id: 'Something',
@@ -14,7 +14,7 @@ const example = new GlobalCss({
 
 it('Global stylesheet added', () => {
     const res = testRender(() => {
-        return <IncludeStyleSheet stylesheet={example} />;
+        return <IncludeStylesheet stylesheet={example} />;
     });
 
     expect(document.head.innerHTML).toMatchSnapshot();
@@ -34,7 +34,7 @@ const Component1: Component = (props, init) => {
 
     return (
         <>
-            <IncludeStyleSheet stylesheet={componentStylesheet} />
+            <IncludeStylesheet stylesheet={componentStylesheet} />
             <div class={styleHooks.getClassName(componentStylesheet)}>
                 This is an example
             </div>

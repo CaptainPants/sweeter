@@ -1,21 +1,21 @@
 /* @jsxImportSource .. */
 
 import type { Component } from '@captainpants/wireyui-core';
-import type { GlobalStyleSheet } from '../styles/index.js';
-import type { DocumentStyleSheetHandle } from '../runtime/WebRuntime.js';
+import type { GlobalStylesheet } from '../styles/index.js';
+import type { DocumentStylesheetHandle } from '../runtime/WebRuntime.js';
 import { WebRuntimeContext } from '../runtime/WebRuntime.js';
 
-export interface IncludeStyleSheetProps {
-    stylesheet: GlobalStyleSheet;
+export interface IncludeStylesheetProps {
+    stylesheet: GlobalStylesheet;
 }
 
-export const IncludeStyleSheet: Component<IncludeStyleSheetProps> = (
+export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
     { stylesheet },
     init,
 ) => {
     const runtime = init.getContext(WebRuntimeContext);
 
-    let handle: DocumentStyleSheetHandle | undefined;
+    let handle: DocumentStylesheetHandle | undefined;
 
     init.subscribeToChanges(
         [stylesheet],
@@ -28,7 +28,7 @@ export const IncludeStyleSheet: Component<IncludeStyleSheetProps> = (
                 }
             } else {
                 if (stylesheet) {
-                    handle = runtime.addStyleSheet(stylesheet);
+                    handle = runtime.addStylesheet(stylesheet);
                 }
             }
             return;

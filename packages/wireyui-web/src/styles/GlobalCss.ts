@@ -1,6 +1,6 @@
-import type { GlobalStyleSheet } from './types.js';
+import type { GlobalStylesheet } from './types.js';
 
-export class GlobalCss implements GlobalStyleSheet {
+export class GlobalCss implements GlobalStylesheet {
     public readonly content: string;
     public readonly id: string;
     public readonly symbol: symbol;

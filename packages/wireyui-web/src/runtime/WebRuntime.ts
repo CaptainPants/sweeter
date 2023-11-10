@@ -26,76 +26,88 @@ export class WebRuntime {
         target: RuntimeRootHostElement,
         render: () => JSX.Element,
     ): () => void {
-        const runtimeContext = this.#createWebRuntimeContext(target, this);
+        const runtimeContext = new WebRuntimeContextImplementation(
+            target,
+            this,
+        );
 
         return RuntimeContext.invokeWith(runtimeContext, () => {
             return WebRuntimeContext.invokeWith(runtimeContext, () => {
-                return this.#createRootImplementation(target, render);
+                return createNestedRoot(target, render);
             });
         });
     }
+}
 
-    #createRootImplementation(
+class WebRuntimeContextImplementation
+    implements WebRuntimeContext, RuntimeContext
+{
+    #target: RuntimeRootHostElement;
+    #runtime: WebRuntime;
+
+    constructor(target: RuntimeRootHostElement, runtime: WebRuntime) {
+        this.#target = target;
+        this.#runtime = runtime;
+    }
+
+    addStylesheet(stylesheet: GlobalStylesheet): DocumentStylesheetHandle {
+        const element = document.createElement('style');
+        element.textContent = stylesheet.content;
+        element.setAttribute('data-id', stylesheet.id);
+        this.#target.ownerDocument.head.appendChild(element);
+
+        return {
+            remove() {
+                element.remove();
+            },
+            update(stylesheet) {
+                element.textContent = stylesheet.content;
+            },
+        };
+    }
+
+    getClassName(cssClass: GlobalCssClass): string {
+        return cssClass.className;
+    }
+
+    createNestedRoot(
         target: RuntimeRootHostElement,
         render: () => JSX.Element,
-    ): () => void {
-        const content = render();
+    ) {
+        return createNestedRoot(target, render);
+    }
 
-        const unmount = addJsxChildren(target, content);
+    renderOffscreen(content: JSX.Element): JSX.Element {
+        return jsx('div', {
+            style: { display: 'none' },
+            children: content,
+        });
+    }
+}
 
-        for (
-            let current = target.lastChild;
-            current;
-            current = current.previousSibling
-        ) {
-            announceMountedRecursive(current);
+function createNestedRoot(
+    target: RuntimeRootHostElement,
+    render: () => JSX.Element,
+) {
+    const content = render();
+
+    const unmount = addJsxChildren(target, content);
+
+    for (
+        let current = target.lastChild;
+        current;
+        current = current.previousSibling
+    ) {
+        announceMountedRecursive(current);
+    }
+
+    // Allow callers to be lazy and call the returned callback multiple times
+    let unmounted = false;
+
+    return () => {
+        if (!unmounted) {
+            unmounted = true;
+            unmount();
         }
-
-        // Allow callers to be lazy and call the returned callback multiple times
-        let unmounted = false;
-
-        return () => {
-            if (!unmounted) {
-                unmounted = true;
-                unmount();
-            }
-        };
-    }
-
-    #createWebRuntimeContext(
-        target: RuntimeRootHostElement,
-        runtime: WebRuntime,
-    ): WebRuntimeContext & RuntimeContext {
-        return {
-            addStylesheet(
-                stylesheet: GlobalStylesheet,
-            ): DocumentStylesheetHandle {
-                const element = document.createElement('style');
-                element.textContent = stylesheet.content;
-                element.setAttribute('data-id', stylesheet.id);
-                target.ownerDocument.head.appendChild(element);
-
-                return {
-                    remove() {
-                        element.remove();
-                    },
-                    update(stylesheet) {
-                        element.textContent = stylesheet.content;
-                    },
-                };
-            },
-            getClassName(cssClass: GlobalCssClass): string {
-                return cssClass.className;
-            },
-            start: (target, render) => {
-                return runtime.#createRootImplementation(target, render);
-            },
-            renderOffscreen: (content) => {
-                return jsx('div', {
-                    style: { display: 'none' },
-                    children: content,
-                });
-            },
-        };
-    }
+    };
 }

@@ -3,7 +3,7 @@ import { type RuntimeRootHostElement } from '../types.js';
 
 export interface RuntimeContext {
     renderOffscreen(content: JSX.Element): JSX.Element;
-    start(
+    createNestedRoot(
         target: RuntimeRootHostElement,
         render: () => JSX.Element,
     ): () => void;
@@ -14,6 +14,6 @@ const noImplementation = () => {
 };
 
 export const RuntimeContext = new Context<RuntimeContext>('Runtime', {
-    start: noImplementation,
+    createNestedRoot: noImplementation,
     renderOffscreen: noImplementation,
 });

@@ -8,12 +8,15 @@ export interface PortalProps {
 }
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
-    const portalContext = RuntimeContext.getCurrent();
+    const runtimeContext = RuntimeContext.getCurrent();
 
     let renderCleanup: (() => void) | undefined;
 
     init.onMount(() => {
-        renderCleanup = portalContext.start(valueOf(target), valueOf(children));
+        renderCleanup = runtimeContext.createNestedRoot(
+            valueOf(target),
+            valueOf(children),
+        );
 
         return () => {
             renderCleanup?.();
@@ -23,7 +26,10 @@ export const Portal: Component<PortalProps> = ({ target, children }, init) => {
 
     init.subscribeToChanges([], () => {
         renderCleanup?.();
-        renderCleanup = portalContext.start(valueOf(target), valueOf(children));
+        renderCleanup = runtimeContext.createNestedRoot(
+            valueOf(target),
+            valueOf(children),
+        );
     });
 
     // Doesn't render anything

@@ -1,7 +1,7 @@
 /* @jsxImportSource .. */
 
 import type { Component } from '@captainpants/wireyui-core';
-import { GlobalCss, GlobalCssClass, StyleHooks } from '../styles/index.js';
+import { GlobalCss, GlobalCssClass } from '../styles/index.js';
 import { testRender } from '../test/testRender.js';
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
@@ -30,14 +30,10 @@ const componentStylesheet = new GlobalCssClass({
 });
 
 const Component1: Component = (props, init) => {
-    const styleHooks = init(StyleHooks);
-
     return (
         <>
             <IncludeStylesheet stylesheet={componentStylesheet} />
-            <div class={styleHooks.getClassName(componentStylesheet)}>
-                This is an example
-            </div>
+            <div class={componentStylesheet}>This is an example</div>
         </>
     );
 };

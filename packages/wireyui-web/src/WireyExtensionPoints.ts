@@ -28,7 +28,7 @@ declare global {
         interface SkipSignalifyingIntrinsicElementAttributes<
             TElementTypeString extends string,
         > {
-            'wireui-web/all': 'ref';
+            'wireui-web/all': 'ref' | 'class';
             'wireui-web/input': TElementTypeString extends
                 | 'input'
                 | 'textarea'

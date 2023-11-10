@@ -6,6 +6,9 @@ import {
 } from '@captainpants/wireyui-core';
 import { bindStyle } from './bindStyle.js';
 import { type Styles } from '../../IntrinsicAttributes.js';
+import { flattenCssClasses } from '../../styles/flattenCssClasses.js';
+import type { ElementCssClasses } from '../../styles/index.js';
+import { WebRuntimeContext } from '../WebRuntimeContext.js';
 
 type Untyped = Record<string, unknown>;
 
@@ -38,38 +41,50 @@ export function assignDOMElementProps<TElementType extends string>(
             continue;
         }
 
-        const value = (props as Untyped)[key];
+        let mutableValue = (props as Untyped)[key];
+
+        if (key === 'class') {
+            // Special handling of cssClass
+            const context = WebRuntimeContext.getCurrent();
+            mutableValue = flattenCssClasses(
+                mutableValue as ElementCssClasses,
+                context.getClassName,
+            );
+        }
+
+        // just makes a lot of later stuff easier if the value is a constant (callbacks can see the narrowed value)
+        const constantValue = mutableValue;
 
         const mutableMapEntry = mutableMap.get(mappedKey);
 
-        if (mutableMapEntry && isSignal(value)) {
+        if (mutableMapEntry && isSignal(constantValue)) {
             // ==== MUTABLE SIGNAL SPECIAL CASE BINDING (e.g. input.value) ====
             const { eventName, domProperty } = mutableMapEntry;
 
             node.addEventListener(eventName, (evt) => {
                 // It might be a readonly signal, in which case we can't update it.
                 // we should actually ignore attempts to write it in this case..
-                if (isReadWriteSignal(value)) {
+                if (isReadWriteSignal(constantValue)) {
                     const updatedValue = (
                         evt.currentTarget as unknown as Record<string, unknown>
                     )[domProperty];
 
-                    value.value = updatedValue;
+                    constantValue.value = updatedValue;
                 } else {
                     // Reset
                     (evt.currentTarget as unknown as Record<string, unknown>)[
                         domProperty
-                    ] = value.value;
+                    ] = constantValue.value;
                 }
             });
             const changeCallback = () => {
-                (node as unknown as Untyped)[mappedKey] = value.peek();
+                (node as unknown as Untyped)[mappedKey] = constantValue.peek();
             };
 
             // Add a weak listener (so that it will be cleaned up when no references held)
             // we will add a strong reference to the DOM element (via WeakMap) to prevent
             // cleanup until the DOM element is no longer reachable
-            value.listen(changeCallback, false);
+            constantValue.listen(changeCallback, false);
 
             addStrongReference(node, changeCallback);
         } else if (
@@ -78,7 +93,7 @@ export function assignDOMElementProps<TElementType extends string>(
         ) {
             // ==== STYLES BINDING ====
             // TODO: magic for styles
-            bindStyle(node, value as Styles);
+            bindStyle(node, constantValue as Styles);
         } else if (mappedKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====
 
@@ -86,33 +101,37 @@ export function assignDOMElementProps<TElementType extends string>(
 
             // We don't need to subscribe, we can just use the current value of
             // the signal when an event is triggered.
-            if (isSignal(value)) {
+            if (isSignal(constantValue)) {
                 // Indirect via anonymous callback
                 // This closure captures 'value'
                 node.addEventListener(eventName, (evt) => {
-                    (value.peek() as EventListener)(evt);
+                    (constantValue.peek() as EventListener)(evt);
                 });
             } else {
                 // More direct path if not a signal
-                node.addEventListener(eventName, value as EventListener);
+                node.addEventListener(
+                    eventName,
+                    constantValue as EventListener,
+                );
             }
         } else {
             // ==== NORMAL SIGNAL BINDING ====
-            if (isSignal(value)) {
-                (node as unknown as Untyped)[mappedKey] = value.peek();
+            if (isSignal(constantValue)) {
+                (node as unknown as Untyped)[mappedKey] = constantValue.peek();
 
                 const changeCallback = () => {
-                    (node as unknown as Untyped)[mappedKey] = value.peek();
+                    (node as unknown as Untyped)[mappedKey] =
+                        constantValue.peek();
                 };
 
                 // Add a weak listener (so that it will be cleaned up when no references held)
                 // we will add a strong reference to the DOM element (via WeakMap) to prevent
                 // cleanup until the DOM element is no longer reachable
-                value.listen(changeCallback, false);
+                constantValue.listen(changeCallback, false);
 
                 addStrongReference(node, changeCallback);
             } else {
-                (node as unknown as Untyped)[mappedKey] = value;
+                (node as unknown as Untyped)[mappedKey] = constantValue;
             }
         }
     }

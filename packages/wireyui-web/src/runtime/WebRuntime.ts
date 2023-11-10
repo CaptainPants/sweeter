@@ -5,7 +5,10 @@ import {
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { announceMountedRecursive } from './internal/mounting.js';
 import { jsx } from './jsx.js';
+import type { DocumentStylesheetHandle } from './WebRuntimeContext.js';
 import { WebRuntimeContext } from './WebRuntimeContext.js';
+import type { GlobalStylesheet } from '../styles/types.js';
+import type { GlobalCssClass } from '../styles/GlobalCssClass.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -23,43 +26,13 @@ export class WebRuntime {
         target: RuntimeRootHostElement,
         render: () => JSX.Element,
     ): () => void {
-        return RuntimeContext.invokeWith(
-            {
-                start: (target, render) => {
-                    return this.#createRootImplementation(target, render);
-                },
-                renderOffscreen: (content) => {
-                    return jsx('div', {
-                        style: { display: 'none' },
-                        children: content,
-                    });
-                },
-            },
-            () => {
-                return WebRuntimeContext.invokeWith(
-                    {
-                        addStylesheet(stylesheet) {
-                            const element = document.createElement('style');
-                            element.textContent = stylesheet.content;
-                            element.setAttribute('data-id', stylesheet.id);
-                            target.ownerDocument.head.appendChild(element);
+        const runtimeContext = this.#createWebRuntimeContext(target, this);
 
-                            return {
-                                remove() {
-                                    element.remove();
-                                },
-                                update(stylesheet) {
-                                    element.textContent = stylesheet.content;
-                                },
-                            };
-                        },
-                    },
-                    () => {
-                        return this.#createRootImplementation(target, render);
-                    },
-                );
-            },
-        );
+        return RuntimeContext.invokeWith(runtimeContext, () => {
+            return WebRuntimeContext.invokeWith(runtimeContext, () => {
+                return this.#createRootImplementation(target, render);
+            });
+        });
     }
 
     #createRootImplementation(
@@ -86,6 +59,43 @@ export class WebRuntime {
                 unmounted = true;
                 unmount();
             }
+        };
+    }
+
+    #createWebRuntimeContext(
+        target: RuntimeRootHostElement,
+        runtime: WebRuntime,
+    ): WebRuntimeContext & RuntimeContext {
+        return {
+            addStylesheet(
+                stylesheet: GlobalStylesheet,
+            ): DocumentStylesheetHandle {
+                const element = document.createElement('style');
+                element.textContent = stylesheet.content;
+                element.setAttribute('data-id', stylesheet.id);
+                target.ownerDocument.head.appendChild(element);
+
+                return {
+                    remove() {
+                        element.remove();
+                    },
+                    update(stylesheet) {
+                        element.textContent = stylesheet.content;
+                    },
+                };
+            },
+            getClassName(cssClass: GlobalCssClass): string {
+                return cssClass.className;
+            },
+            start: (target, render) => {
+                return runtime.#createRootImplementation(target, render);
+            },
+            renderOffscreen: (content) => {
+                return jsx('div', {
+                    style: { display: 'none' },
+                    children: content,
+                });
+            },
         };
     }
 }

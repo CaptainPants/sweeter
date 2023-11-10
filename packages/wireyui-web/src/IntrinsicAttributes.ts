@@ -5,6 +5,7 @@ import type {
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 import { type StandardPropertiesHyphen } from 'csstype';
+import type { ElementCssClasses } from './styles/index.js';
 
 // ==== EVENTS
 
@@ -48,7 +49,7 @@ type AllElementAttributes<TElement> = {
     id?: string;
     title?: string;
 
-    class?: string;
+    class?: ElementCssClasses;
     style?: Styles;
     children?: JSX.Element;
 

@@ -1,7 +1,7 @@
 import './jsx-globals.js';
 import './WireyExtensionPoints.js';
 
-export * from './addStrongReference.js';
+export * from './addExplicitStrongReference.js';
 export * from './components/index.js';
 export * from './context/index.js';
 export * from './executionContext/index.js';

@@ -1,4 +1,5 @@
-import { type Component, RuntimeContext } from '../index.js';
+import { RuntimeContext } from '../runtime/RuntimeContext.js';
+import { type Component } from '../types.js';
 
 export interface OffscreenProps {
     children?: JSX.Element;

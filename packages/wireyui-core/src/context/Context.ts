@@ -1,5 +1,5 @@
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
-import { stringifyForDiagnostics } from '../index.js';
+import { stringifyForDiagnostics } from '../utility/stringifyForDiagnostics.js';
 
 interface ContextNode {
     id: symbol;

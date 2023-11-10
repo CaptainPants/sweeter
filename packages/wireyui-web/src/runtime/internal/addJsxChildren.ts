@@ -1,5 +1,5 @@
 import {
-    addStrongReference,
+    addExplicitStrongReference,
     flattenElements,
 } from '@captainpants/wireyui-core';
 import {
@@ -79,7 +79,7 @@ export function addJsxChildren(
     flattenedChildrenSignal.listen(onChange, false);
 
     // Callback lifetime linked to the parent Node
-    addStrongReference(parent, onChange);
+    addExplicitStrongReference(parent, onChange);
 
     if (parentInDocument) {
         announceChildrenMountedRecursive(parent);

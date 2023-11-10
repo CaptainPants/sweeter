@@ -1,6 +1,6 @@
 import type { PropsWithIntrinsicAttributesFor } from '@captainpants/wireyui-core';
 import {
-    addStrongReference,
+    addExplicitStrongReference,
     isReadWriteSignal,
     isSignal,
 } from '@captainpants/wireyui-core';
@@ -86,7 +86,7 @@ export function assignDOMElementProps<TElementType extends string>(
             // cleanup until the DOM element is no longer reachable
             constantValue.listen(changeCallback, false);
 
-            addStrongReference(node, changeCallback);
+            addExplicitStrongReference(node, changeCallback);
         } else if (
             mappedKey === 'style' &&
             (node instanceof HTMLElement || node instanceof SVGElement)
@@ -129,7 +129,7 @@ export function assignDOMElementProps<TElementType extends string>(
                 // cleanup until the DOM element is no longer reachable
                 constantValue.listen(changeCallback, false);
 
-                addStrongReference(node, changeCallback);
+                addExplicitStrongReference(node, changeCallback);
             } else {
                 (node as unknown as Untyped)[mappedKey] = constantValue;
             }

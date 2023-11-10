@@ -1,7 +1,7 @@
 import { isSignal } from './isSignal.js';
-import { popAndCall } from '../internal/popAndCall.js';
 import { valueOfAll } from './valueOf.js';
 import type { UnsignalAll } from './types.js';
+import { popAndCallAll } from '../internal/popAndCallAll.js';
 
 /**
  * Subscribe to multiple signals, with a callback to remove that subscription.
@@ -26,16 +26,16 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
         lastCleanup = callback(valueOfAll(dependencies));
     };
 
-    const cleanupList: (() => void)[] = [];
+    const unlisten: (() => void)[] = [];
 
     try {
         for (const item of dependencies) {
             if (isSignal(item)) {
-                cleanupList.push(item.listen(innerCallback));
+                unlisten.push(item.listen(innerCallback, true));
             }
         }
     } catch (ex) {
-        popAndCall(cleanupList);
+        popAndCallAll(unlisten);
         throw ex;
     }
 
@@ -44,6 +44,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
     }
 
     return () => {
-        popAndCall(cleanupList);
+        popAndCallAll(unlisten);
+        lastCleanup?.();
     };
 }

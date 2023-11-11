@@ -1,12 +1,12 @@
 /* @jsxImportSource .. */
 
 import type { Component } from '@captainpants/wireyui-core';
-import type { GlobalStylesheet } from '../styles/index.js';
+import type { AbstractGlobalCssStylesheet } from '../styles/index.js';
 import type { DocumentStylesheetHandle } from '../runtime/WebRuntimeContext.js';
 import { WebRuntimeContext } from '../runtime/WebRuntimeContext.js';
 
 export interface IncludeStylesheetProps {
-    stylesheet: GlobalStylesheet;
+    stylesheet: AbstractGlobalCssStylesheet;
 }
 
 export const IncludeStylesheet: Component<IncludeStylesheetProps> = (

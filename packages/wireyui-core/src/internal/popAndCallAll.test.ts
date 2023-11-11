@@ -1,4 +1,4 @@
-import { popAndCallAll } from "./popAndCallAll";
+import { popAndCallAll } from './popAndCallAll.js';
 
 it('popAndCallAll', () => {
     const results: number[] = [];
@@ -13,4 +13,4 @@ it('popAndCallAll', () => {
     popAndCallAll(list);
 
     expect(results).toStrictEqual([4, 3, 2, 1]);
-})
+});

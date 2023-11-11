@@ -7,7 +7,7 @@ import { announceMountedRecursive } from './internal/mounting.js';
 import { jsx } from './jsx.js';
 import type { DocumentStylesheetHandle } from './WebRuntimeContext.js';
 import { WebRuntimeContext } from './WebRuntimeContext.js';
-import type { GlobalStylesheet } from '../styles/types.js';
+import type { AbstractGlobalCssStylesheet } from '../styles/types.js';
 import type { GlobalCssClass } from '../styles/GlobalCssClass.js';
 
 /**
@@ -45,14 +45,18 @@ class WebRuntimeContextImplementation
     #target: RuntimeRootHostElement;
     #runtime: WebRuntime;
 
+    #cssCounter: number = 0;
+    #cssClassNameMap: WeakMap<GlobalCssClass, string> = new WeakMap();
     constructor(target: RuntimeRootHostElement, runtime: WebRuntime) {
         this.#target = target;
         this.#runtime = runtime;
     }
 
-    addStylesheet(stylesheet: GlobalStylesheet): DocumentStylesheetHandle {
+    addStylesheet(
+        stylesheet: AbstractGlobalCssStylesheet,
+    ): DocumentStylesheetHandle {
         const element = document.createElement('style');
-        element.textContent = stylesheet.content;
+        element.textContent = stylesheet.getContent(this);
         element.setAttribute('data-id', stylesheet.id);
         this.#target.ownerDocument.head.appendChild(element);
 
@@ -60,14 +64,20 @@ class WebRuntimeContextImplementation
             remove() {
                 element.remove();
             },
-            update(stylesheet) {
-                element.textContent = stylesheet.content;
+            update: (stylesheet) => {
+                element.textContent = stylesheet.getContent(this);
             },
         };
     }
 
     getClassName(cssClass: GlobalCssClass): string {
-        return cssClass.className;
+        let name = this.#cssClassNameMap.get(cssClass);
+        if (!name) {
+            name = '_glbl' + this.#cssCounter + '_' + cssClass.nameBasis;
+            this.#cssClassNameMap.set(cssClass, name);
+            ++this.#cssCounter;
+        }
+        return name;
     }
 
     createNestedRoot(

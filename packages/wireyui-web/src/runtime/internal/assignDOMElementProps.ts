@@ -48,7 +48,7 @@ export function assignDOMElementProps<TElementType extends string>(
             const context = WebRuntimeContext.getCurrent();
             mutableValue = flattenCssClasses(
                 mutableValue as ElementCssClasses,
-                context.getClassName,
+                context,
             );
         }
 

@@ -1,15 +1,16 @@
-import { $mutable, subscribeToChanges } from './index.js'
+import { $mutable, subscribeToChanges } from './index.js';
 
 it('subscribeToChanges', () => {
     const signal = $mutable(1);
 
-    let calls = 0, cleanups = 0;
+    let calls = 0,
+        cleanups = 0;
 
     const cleanup = subscribeToChanges([signal], ([value]) => {
         calls += 1;
         return () => {
             cleanups += 1;
-        }
+        };
     });
 
     expect(calls).toStrictEqual(0);
@@ -24,4 +25,4 @@ it('subscribeToChanges', () => {
 
     expect(calls).toStrictEqual(1);
     expect(cleanups).toStrictEqual(1);
-})
+});

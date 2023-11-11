@@ -1,16 +1,16 @@
 /* @jsxImportSource .. */
 
 import type { Component } from '@captainpants/wireyui-core';
-import { GlobalCss, GlobalCssClass } from '../styles/index.js';
+import { GlobalCssClass, styles } from '../styles/index.js';
 import { testRender } from '../test/testRender.js';
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
-const example = new GlobalCss({
-    id: 'Something',
-    content: `
+const example = styles.class(
+    'Something',
+    `
         body { background-color: red; }
     `,
-});
+);
 
 it('Global stylesheet added', () => {
     const res = testRender(() => {
@@ -23,7 +23,7 @@ it('Global stylesheet added', () => {
 });
 
 const componentStylesheet = new GlobalCssClass({
-    id: 'Component1',
+    nameBasis: 'Component1',
     content: `
         color: blue;
     `,

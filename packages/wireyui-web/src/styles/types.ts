@@ -1,10 +1,15 @@
 import type { Signal } from '@captainpants/wireyui-core';
 import type { GlobalCssClass } from './index.js';
 
-export interface GlobalStylesheet {
+export interface AbstractGlobalCssStylesheet {
     readonly symbol: symbol;
     readonly id: string;
-    readonly content: string;
+
+    getContent(context: GlobalStyleSheetContentGeneratorContext): string;
+}
+
+export interface GlobalStyleSheetContentGeneratorContext {
+    getClassName(cssClass: GlobalCssClass): string;
 }
 
 export type ElementCssClasses =

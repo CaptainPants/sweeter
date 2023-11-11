@@ -1,4 +1,3 @@
-
 import { popAndCallAll } from '../internal/popAndCallAll.js';
 import { allExecutionContextVariables } from './internal/allExecutionContextVariables.js';
 

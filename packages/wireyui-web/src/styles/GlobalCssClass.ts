@@ -1,19 +1,23 @@
-import type { GlobalStylesheet } from './types.js';
+import type {
+    GlobalStyleSheetContentGeneratorContext,
+    AbstractGlobalCssStylesheet,
+} from './types.js';
 
-let counter = 0;
-
-export class GlobalCssClass implements GlobalStylesheet {
-    public readonly className: string;
-    public readonly content: string;
+export class GlobalCssClass implements AbstractGlobalCssStylesheet {
+    public readonly nameBasis: string;
     public readonly id: string;
     public readonly symbol: symbol;
+    public readonly content: string;
 
-    constructor(options: { id: string; content: string }) {
-        this.className = '_glbl' + counter + '_' + options.id;
-        ++counter;
+    constructor(options: { nameBasis: string; content: string }) {
+        this.nameBasis = options.nameBasis;
+        this.id = options.nameBasis;
+        this.symbol = Symbol('GlobalCssClass-' + options.nameBasis);
+        this.content = options.content;
+    }
 
-        this.content = `.${this.className} {\r\n${options.content}\r\n}`;
-        this.id = options.id;
-        this.symbol = Symbol('GlobalCssClass-' + options.id);
+    getContent(context: GlobalStyleSheetContentGeneratorContext): string {
+        const name = context.getClassName(this);
+        return `.${name}\r\n{\r\n${this.content}\r\n}`;
     }
 }

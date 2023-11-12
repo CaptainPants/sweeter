@@ -21,11 +21,7 @@ export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
         [stylesheet],
         ([stylesheet]) => {
             if (handle) {
-                if (stylesheet) {
-                    handle.update(stylesheet);
-                } else {
-                    handle.remove();
-                }
+                handle.update(stylesheet);
             } else {
                 if (stylesheet) {
                     handle = runtime.addStylesheet(stylesheet);

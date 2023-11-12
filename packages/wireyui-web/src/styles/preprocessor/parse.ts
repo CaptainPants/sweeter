@@ -15,9 +15,9 @@ export function parseClassContent(css: string): RuleOrAtRule[] {
     return parser.parse();
 }
 
-const blockStart = ['{'];
-const semiOrBlockStart = ['{', ';'];
-const semiOrBlockStartOrBlockEnd = ['{', ';'];
+const blockStart = ['{'] as const;
+const semiOrBlockStart = ['{', ';'] as const;
+const semiOrBlockStartOrBlockEnd = ['{', ';'] as const;
 const identifier = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
 
 class Parser {
@@ -202,7 +202,7 @@ class Parser {
      * @param oneOf 
      * @returns 
      */
-    #findOneOf(oneOf: string[]): number | undefined {
+    #findOneOf(oneOf: readonly string[]): number | undefined {
         for (let index = this.#index; index < this.#input.length; ++index) {
             const current = this.#input[index]!;
             const foundIndex = oneOf.indexOf(current);

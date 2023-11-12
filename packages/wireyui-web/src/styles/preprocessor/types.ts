@@ -3,21 +3,25 @@
  */
 export interface PropertyAstNode {
     $type: 'property';
-    content: string;
+    text: string;
 }
 
 export interface AtRuleAstNode {
     $type: 'at';
-    name: string;
-    parameters?: string; // E.g. (media) or "utf-8"
+    text: string; // E.g. @media (xxxxx) or @charset "utf-8"
     body?: RuleOrAtRule[];
 }
 
 export interface RuleAstNode {
     $type: 'rule';
-    selectors: string[];
-    body: NestedRuleOrProperty[];
+    selector: string;
+    nestedRules: RuleAstNode[];
+    properties: PropertyAstNode[];
+}
+
+export interface RuleBodyParts {
+    nestedRules: RuleAstNode[];
+    properties: PropertyAstNode[];
 }
 
 export type RuleOrAtRule = AtRuleAstNode | RuleAstNode;
-export type NestedRuleOrProperty = PropertyAstNode | RuleAstNode;

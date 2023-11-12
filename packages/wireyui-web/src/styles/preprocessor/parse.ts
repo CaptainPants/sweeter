@@ -1,15 +1,15 @@
-import { splitByUnparenthesizedCommas } from './internal/splitByUnparenthesizedCommas.js';
 import type {
     AtRuleAstNode,
-    NestedRuleOrProperty,
+    PropertyAstNode,
     RuleAstNode,
+    RuleBodyParts,
     RuleOrAtRule,
 } from './types.js';
 
 /**
  * Parse CSS content of a file
- * @param css 
- * @returns 
+ * @param css
+ * @returns
  */
 export function parse(css: string): RuleOrAtRule[] {
     const parser = new Parser(css);
@@ -18,19 +18,17 @@ export function parse(css: string): RuleOrAtRule[] {
 
 /**
  * Parse CSS content of a class.
- * @param css 
- * @returns 
+ * @param css
+ * @returns
  */
-export function parseClassContent(css: string): NestedRuleOrProperty[] {
+export function parseClassContent(css: string): RuleBodyParts {
     const parser = new Parser(css);
     return parser.parseRuleBodyContent();
 }
 
-const blockStart = ['{'] as const;
+const brace = ['{'] as const;
 const semiOrBrace = ['{', ';'] as const;
 const semiOrBraceOrCloseBrace = ['{', ';', '}'] as const;
-
-const identifier = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
 
 class Parser {
     constructor(input: string) {
@@ -67,7 +65,7 @@ class Parser {
             } else {
                 result.push(this.#parseRule());
             }
-            
+
             this.#skipWhiteSpace();
         }
 
@@ -75,45 +73,41 @@ class Parser {
     }
 
     #parseRule(): RuleAstNode {
-        // TODO: split rule selectors into a top level 'OR' based on commas (noting that selectors can have parenthesised sub-selectors e.g. :not())
-        const startOfBody = this.#findOneOf(blockStart);
-        if (!startOfBody) throw new Error(this.#errorMessage('No block body found'));
+        const startOfBody = this.#findOneOf(brace);
+        if (!startOfBody)
+            throw new Error(this.#errorMessage('No block body found'));
 
-        const selectors = splitByUnparenthesizedCommas(this.#input.substring(this.#index, startOfBody));
+        const selector = this.#input.substring(this.#index, startOfBody);
 
         this.#index = startOfBody + 1;
-        const body = this.parseRuleBodyContent();
+        const { nestedRules, properties } = this.parseRuleBodyContent();
         this.#index += 1;
 
         return {
             $type: 'rule',
-            selectors: selectors,
-            body: body
-        }
+            selector,
+            nestedRules,
+            properties,
+        };
     }
 
     /**
      * Positions the #index at the next index on completion
-     * @returns 
+     * @returns
      */
     #parseAtRule(): AtRuleAstNode {
         ++this.#index; // move past @
-        const ident = this.#tryReadIdent();
-        if (ident === undefined) {
-            throw new Error(this.#errorMessage('Expected an identifier'));
-        }
 
         this.#skipWhiteSpace();
 
         // The opening line must end with a ; or a {
         const foundIndex = this.#findOneOf(semiOrBrace);
         if (foundIndex === undefined)
-            throw new Error(this.#errorMessage('Could not find end of @ rule preamble as.'));
+            throw new Error(
+                this.#errorMessage('Could not find end of @ rule preamble as.'),
+            );
 
-        const parameters = this.#input.substring(
-            this.#index,
-            foundIndex,
-        );
+        const text = this.#input.substring(this.#index, foundIndex);
 
         const whatDidWeFind = this.#input[foundIndex]!;
 
@@ -121,7 +115,7 @@ class Parser {
         this.#index = foundIndex + 1;
 
         if (whatDidWeFind === ';') {
-            return { $type: 'at', name: ident, parameters: parameters };
+            return { $type: 'at', text: text };
         } else {
             // position at start of block
             this.#index = foundIndex;
@@ -129,30 +123,19 @@ class Parser {
 
             return {
                 $type: 'at',
-                name: ident,
-                parameters: parameters,
+                text: text,
                 body: block,
             };
         }
     }
 
-    #tryReadIdent(): string | undefined {
-        const remaining = this.#input.substring(this.#index);
-        const match = remaining.match(identifier);
-        if (match) {
-            const len = match[0].length;
-            this.#index += len;
-            return match[0];
-        }
-        return undefined;
-    }
-
     /**
-     * Expects #index to be pointing to the firat character in the block (after the {) 
+     * Expects #index to be pointing to the firat character in the block (after the {)
      * Positions the #index at the closing brace (or end of file) on completion
      */
-    parseRuleBodyContent(): NestedRuleOrProperty[] {
-        const result: NestedRuleOrProperty[] = [];
+    parseRuleBodyContent(): RuleBodyParts {
+        const nestedRules: RuleAstNode[] = [];
+        const properties: PropertyAstNode[] = [];
 
         while (this.#index < this.#input.length) {
             this.#skipWhiteSpace();
@@ -161,17 +144,21 @@ class Parser {
                 break;
             }
 
-            const foundSemiOrBlockStartOrBlockEndIndex =
-                this.#findOneOf(semiOrBraceOrCloseBrace);
+            const foundSemiOrBlockStartOrBlockEndIndex = this.#findOneOf(
+                semiOrBraceOrCloseBrace,
+            );
 
             if (foundSemiOrBlockStartOrBlockEndIndex === undefined) {
                 // I think this is really if the file ends during a rule
                 const wholeProperty = this.#input.substring(this.#index);
-                result.push({
-                    $type: 'property',
-                    content: wholeProperty,
-                });
-                this.#index = this.#input.length; // end of file
+
+                if (wholeProperty.trim().length > 0) {
+                    properties.push({
+                        $type: 'property',
+                        text: wholeProperty,
+                    });
+                    this.#index = this.#input.length; // end of file
+                }
                 break;
             }
 
@@ -180,21 +167,21 @@ class Parser {
             // nested rule
             if (which === '{') {
                 const nestedRule = this.#parseRule(); // positions #index at the next character
-                result.push(nestedRule);
+                nestedRules.push(nestedRule);
             } else {
                 const wholeProperty = this.#input.substring(
                     this.#index,
                     foundSemiOrBlockStartOrBlockEndIndex,
                 );
-                result.push({
+                properties.push({
                     $type: 'property',
-                    content: wholeProperty,
+                    text: wholeProperty,
                 });
                 this.#index = foundSemiOrBlockStartOrBlockEndIndex + 1;
             }
         }
-        
-        return result;
+
+        return { nestedRules, properties };
     }
 
     /**
@@ -211,8 +198,8 @@ class Parser {
 
     /**
      * From #index find the first character in the provided array
-     * @param oneOf 
-     * @returns 
+     * @param oneOf
+     * @returns
      */
     #findOneOf(oneOf: readonly string[]): number | undefined {
         for (let index = this.#index; index < this.#input.length; ++index) {
@@ -228,8 +215,8 @@ class Parser {
 
     /**
      * Create an error object with useful positional information from #index
-     * @param message 
-     * @returns 
+     * @param message
+     * @returns
      */
     #errorMessage(message: string): string {
         const upToIndex = this.#input.substring(0, this.#index);
@@ -239,7 +226,10 @@ class Parser {
         let columnIndex = 0;
 
         for (
-            let countBackwardsIndex = Math.min(this.#index, this.#input.length - 1);
+            let countBackwardsIndex = Math.min(
+                this.#index,
+                this.#input.length - 1,
+            );
             countBackwardsIndex >= 0;
             --countBackwardsIndex
         ) {
@@ -250,9 +240,9 @@ class Parser {
             ++columnIndex;
         }
 
-        return `At index ${
-                this.#index
-            } (line: ${lineNumber + 1}, column: ${columnIndex + 1}) [${this.getIndexContextString()}]: ${message}`;
+        return `At index ${this.#index} (line: ${lineNumber + 1}, column: ${
+            columnIndex + 1
+        }) [${this.getIndexContextString()}]: ${message}`;
     }
 
     toString() {
@@ -277,7 +267,11 @@ class Parser {
             atEnd = true;
         }
 
-        const result =  `${this.#input.substring(from, this.#index)} <|${this.#input[this.#index]}|> ${this.#input.substring(this.#index + 1, to)}${(atEnd ? ' EOF' : '')}`;
+        const result = `${this.#input.substring(from, this.#index)} <|${
+            this.#input[this.#index]
+        }|> ${this.#input.substring(this.#index + 1, to)}${
+            atEnd ? ' EOF' : ''
+        }`;
 
         return result;
     }

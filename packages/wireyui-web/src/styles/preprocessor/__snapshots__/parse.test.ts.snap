@@ -4,10 +4,56 @@ exports[`empty single rule 1`] = `
 [
   {
     "$type": "rule",
-    "body": [],
-    "selectors": [
-      ".banana ",
+    "nestedRules": [],
+    "properties": [],
+    "selector": ".banana ",
+  },
+]
+`;
+
+exports[`media query 1`] = `
+[
+  {
+    "$type": "at",
+    "body": [
+      {
+        "$type": "rule",
+        "nestedRules": [
+          {
+            "$type": "rule",
+            "nestedRules": [],
+            "properties": [],
+            "selector": ".banana ",
+          },
+        ],
+        "properties": [],
+        "selector": "",
+      },
     ],
+    "text": "media screen and (max-width: 992px) ",
+  },
+]
+`;
+
+exports[`single rule with no property and nested rule with one property 1`] = `
+[
+  {
+    "$type": "rule",
+    "nestedRules": [
+      {
+        "$type": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$type": "property",
+            "text": "color: green",
+          },
+        ],
+        "selector": ".nested ",
+      },
+    ],
+    "properties": [],
+    "selector": ".banana ",
   },
 ]
 `;
@@ -16,15 +62,14 @@ exports[`single rule with one property 1`] = `
 [
   {
     "$type": "rule",
-    "body": [
+    "nestedRules": [],
+    "properties": [
       {
         "$type": "property",
-        "content": "color: red",
+        "text": "color: red",
       },
     ],
-    "selectors": [
-      ".banana ",
-    ],
+    "selector": ".banana ",
   },
 ]
 `;
@@ -33,27 +78,26 @@ exports[`single rule with one property and nested rule 1`] = `
 [
   {
     "$type": "rule",
-    "body": [
-      {
-        "$type": "property",
-        "content": "color: red",
-      },
+    "nestedRules": [
       {
         "$type": "rule",
-        "body": [
+        "nestedRules": [],
+        "properties": [
           {
             "$type": "property",
-            "content": "color: green",
+            "text": "color: green",
           },
         ],
-        "selectors": [
-          ".nested ",
-        ],
+        "selector": ".nested ",
       },
     ],
-    "selectors": [
-      ".banana ",
+    "properties": [
+      {
+        "$type": "property",
+        "text": "color: red",
+      },
     ],
+    "selector": ".banana ",
   },
 ]
 `;

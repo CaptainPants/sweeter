@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test2 1`] = `
+[
+  {
+    "$type": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$type": "property",
+        "text": "color: red",
+      },
+    ],
+    "selector": ".outer1 .inner1",
+  },
+  {
+    "$type": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$type": "property",
+        "text": "color: red",
+      },
+    ],
+    "selector": ".outer1  .inner2 ",
+  },
+  {
+    "$type": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$type": "property",
+        "text": "color: red",
+      },
+    ],
+    "selector": " .outer2  .inner1",
+  },
+  {
+    "$type": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$type": "property",
+        "text": "color: red",
+      },
+    ],
+    "selector": " .outer2   .inner2 ",
+  },
+]
+`;

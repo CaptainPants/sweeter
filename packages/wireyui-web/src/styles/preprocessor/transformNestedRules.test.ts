@@ -1,23 +1,23 @@
 import { parse } from './parse.js';
 import { transformNestedRules } from './transformNestedRules.js';
 
-// it('test1', () => {
-//     const input = `
-//         .outer1 {
-//             .inner1 {
-//                 color: red;
-//             }
-//         }
-//     `;
+it('test1', () => {
+    const input = `
+        .outer1 {
+            .inner1 {
+                color: red;
+            }
+        }
+    `;
 
-//     const parsed = parse(input);
+    const parsed = parse(input);
 
-//     expect(parsed).toMatchSnapshot();
+    expect(parsed).toMatchSnapshot();
 
-//     const transformed = transformNestedRules(parsed);
+    const transformed = transformNestedRules(parsed);
 
-//     expect(transformed).toMatchSnapshot();
-// });
+    expect(transformed).toMatchSnapshot();
+});
 
 it('test2', () => {
     const input = `
@@ -29,6 +29,28 @@ it('test2', () => {
     `;
 
     const parsed = parse(input);
+
+    expect(parsed).toMatchSnapshot();
+
+    const transformed = transformNestedRules(parsed);
+
+    expect(transformed).toMatchSnapshot();
+});
+
+it('test3', () => {
+    const input = `
+        .outer1, .outer2 {
+            color: blue;
+
+            .inner1, .inner2 {
+                color: red;
+            }
+        }
+    `;
+
+    const parsed = parse(input);
+
+    expect(parsed).toMatchSnapshot();
 
     const transformed = transformNestedRules(parsed);
 

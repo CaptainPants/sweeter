@@ -5,14 +5,14 @@ export function transformNestedRules(ast: RuleOrAtRule[]): RuleOrAtRule[] {
     const result: RuleOrAtRule[] = [];
 
     for (const item of ast) {
-        transform(undefined, item, result);
+        transform([], item, result);
     }
 
     return result;
 }
 
 export function transform(
-    selector: string | undefined,
+    selectors: string[],
     item: RuleOrAtRule,
     roots: RuleOrAtRule[],
 ): void {
@@ -26,7 +26,7 @@ export function transform(
         if (item.body && item.body.length > 0) {
             const body: RuleOrAtRule[] = [];
             for (const childItem of item.body) {
-                transform(undefined, childItem, body);
+                transform([], childItem, body);
             }
             item.body = body;
         }
@@ -35,38 +35,47 @@ export function transform(
         return;
     }
 
-    const selectorParts = splitByUnparenthesizedCommas(item.selector);
+    const newSelectors = [...selectors, item.selector];
 
     // Add a node to contain the properties in this (possibly nested) node
     if (item.properties.length > 0) {
-        if (!selector) {
-            throw new Error('This is probably a bug');
-        }
-
-        for (const part of selectorParts) {
-            roots.push({
-                $type: 'rule',
-                selector: combineSelector(selector, part),
-                nestedRules: [],
-                properties: item.properties,
-            });
-        }
+        roots.push({
+            $type: 'rule',
+            selector: permutations(newSelectors),
+            nestedRules: [],
+            properties: item.properties,
+        });
     }
 
     if (item.nestedRules) {
-        for (const part of selectorParts) {
-            for (const nestedRule of item.nestedRules) {
-                // E.g. .class1, .class2, :not(.class3) will have 3 elements
-                transform(combineSelector(selector, part), nestedRule, roots);
-            }
+        for (const nestedRule of item.nestedRules) {
+            transform(newSelectors, nestedRule, roots);
         }
     }
 }
 
-function combineSelector(
-    parentSelector: string | undefined,
-    selector: string,
-): string {
-    if (parentSelector) return `${parentSelector} ${selector}`;
-    return selector;
+function permutations(parts: string[]): string {
+    const results = [...generatePermutations(parts)];
+    return results.join(', ');
+}
+
+function* generatePermutations(parts: string[]): Generator<string> {
+    if (parts.length === 0) {
+        return;
+    }
+
+    const firstPart = parts[0]!;
+
+    const split = splitByUnparenthesizedCommas(firstPart);
+    if (parts.length === 1) {
+        for (const current of split) {
+            yield current;
+        }
+    }
+
+    for (const current of split) {
+        for (const next of generatePermutations(parts.slice(1))) {
+            yield current + ' ' + next;
+        }
+    }
 }

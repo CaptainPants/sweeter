@@ -5,7 +5,7 @@ import { GlobalCssClass, styles } from '../styles/index.js';
 import { testRender } from '../test/testRender.js';
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
-const example = styles.class(
+const example = styles.global(
     'Something',
     `
         body { background-color: red; }

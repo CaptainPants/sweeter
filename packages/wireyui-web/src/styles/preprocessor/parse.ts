@@ -1,3 +1,4 @@
+import { splitByUnparenthesizedCommas } from './internal/splitByUnparenthesizedCommas.js';
 import type {
     AtRuleAstNode,
     NestedRuleOrProperty,
@@ -5,19 +6,30 @@ import type {
     RuleOrAtRule,
 } from './types.js';
 
+/**
+ * Parse CSS content of a file
+ * @param css 
+ * @returns 
+ */
 export function parse(css: string): RuleOrAtRule[] {
     const parser = new Parser(css);
     return parser.parse();
 }
 
-export function parseClassContent(css: string): RuleOrAtRule[] {
+/**
+ * Parse CSS content of a class.
+ * @param css 
+ * @returns 
+ */
+export function parseClassContent(css: string): NestedRuleOrProperty[] {
     const parser = new Parser(css);
-    return parser.parse();
+    return parser.parseRuleBodyContent();
 }
 
 const blockStart = ['{'] as const;
-const semiOrBlockStart = ['{', ';'] as const;
-const semiOrBlockStartOrBlockEnd = ['{', ';'] as const;
+const semiOrBrace = ['{', ';'] as const;
+const semiOrBraceOrCloseBrace = ['{', ';', '}'] as const;
+
 const identifier = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
 
 class Parser {
@@ -67,15 +79,15 @@ class Parser {
         const startOfBody = this.#findOneOf(blockStart);
         if (!startOfBody) throw new Error(this.#errorMessage('No block body found'));
 
-        const selector = this.#input.substring(this.#index, startOfBody);
+        const selectors = splitByUnparenthesizedCommas(this.#input.substring(this.#index, startOfBody));
 
         this.#index = startOfBody + 1;
-        const body = this.#parseRuleBodyContent();
+        const body = this.parseRuleBodyContent();
         this.#index += 1;
 
         return {
             $type: 'rule',
-            selector: selector,
+            selectors: selectors,
             body: body
         }
     }
@@ -94,7 +106,7 @@ class Parser {
         this.#skipWhiteSpace();
 
         // The opening line must end with a ; or a {
-        const foundIndex = this.#findOneOf(semiOrBlockStart);
+        const foundIndex = this.#findOneOf(semiOrBrace);
         if (foundIndex === undefined)
             throw new Error(this.#errorMessage('Could not find end of @ rule preamble as.'));
 
@@ -139,7 +151,7 @@ class Parser {
      * Expects #index to be pointing to the firat character in the block (after the {) 
      * Positions the #index at the closing brace (or end of file) on completion
      */
-    #parseRuleBodyContent(): NestedRuleOrProperty[] {
+    parseRuleBodyContent(): NestedRuleOrProperty[] {
         const result: NestedRuleOrProperty[] = [];
 
         while (this.#index < this.#input.length) {
@@ -150,7 +162,7 @@ class Parser {
             }
 
             const foundSemiOrBlockStartOrBlockEndIndex =
-                this.#findOneOf(semiOrBlockStartOrBlockEnd);
+                this.#findOneOf(semiOrBraceOrCloseBrace);
 
             if (foundSemiOrBlockStartOrBlockEndIndex === undefined) {
                 // I think this is really if the file ends during a rule
@@ -270,12 +282,3 @@ class Parser {
         return result;
     }
 }
-
-/**
- * Algorithm:
- * - find next
- * - starts with @ - read at rule
- *   - recursive
- * - otherwise treat as regular rule
- *   - read to ; or { -- if { then read as a nested rule, otherwise as property
- */

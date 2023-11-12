@@ -5,7 +5,9 @@ exports[`empty single rule 1`] = `
   {
     "$type": "rule",
     "body": [],
-    "selector": ".banana ",
+    "selectors": [
+      ".banana ",
+    ],
   },
 ]
 `;
@@ -20,7 +22,9 @@ exports[`single rule with one property 1`] = `
         "content": "color: red",
       },
     ],
-    "selector": ".banana ",
+    "selectors": [
+      ".banana ",
+    ],
   },
 ]
 `;
@@ -42,10 +46,14 @@ exports[`single rule with one property and nested rule 1`] = `
             "content": "color: green",
           },
         ],
-        "selector": ".nested ",
+        "selectors": [
+          ".nested ",
+        ],
       },
     ],
-    "selector": ".banana ",
+    "selectors": [
+      ".banana ",
+    ],
   },
 ]
 `;

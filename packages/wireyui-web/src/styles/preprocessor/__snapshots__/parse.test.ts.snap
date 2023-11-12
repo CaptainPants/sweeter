@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`empty single rule 1`] = `
+[
+  {
+    "$type": "rule",
+    "body": [],
+    "selector": ".banana ",
+  },
+]
+`;
+
+exports[`single rule with one property 1`] = `
+[
+  {
+    "$type": "rule",
+    "body": [
+      {
+        "$type": "property",
+        "content": "color: red",
+      },
+    ],
+    "selector": ".banana ",
+  },
+]
+`;
+
+exports[`single rule with one property and nested rule 1`] = `
+[
+  {
+    "$type": "rule",
+    "body": [
+      {
+        "$type": "property",
+        "content": "color: red",
+      },
+      {
+        "$type": "rule",
+        "body": [
+          {
+            "$type": "property",
+            "content": "color: green",
+          },
+        ],
+        "selector": ".nested ",
+      },
+    ],
+    "selector": ".banana ",
+  },
+]
+`;

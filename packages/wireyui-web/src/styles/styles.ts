@@ -6,6 +6,6 @@ export const styles = {
         return new GlobalCssClass({ nameBasis: namebasis, content });
     },
     global: function (id: string, content: string) {
-        return new GlobalCssStylesheet({ id, content });
+        return new GlobalCssStylesheet({ id: id, content });
     },
 };

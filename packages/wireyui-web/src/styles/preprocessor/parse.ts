@@ -34,6 +34,7 @@ const semiOrBraceOrCloseBrace = [
     ';'.charCodeAt(0),
     '}'.charCodeAt(0),
 ] as const;
+const identifier = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
 
 class Parser {
     constructor(input: string) {
@@ -89,7 +90,7 @@ class Parser {
         this.#index += 1;
 
         return {
-            $type: 'rule',
+            $nodeType: 'rule',
             selector,
             nestedRules,
             properties,
@@ -102,6 +103,10 @@ class Parser {
      */
     #parseAtRule(): AtRuleAstNode {
         ++this.#index; // move past @
+        const type = this.#tryReadIdent();
+        if (type === undefined) {
+            throw new Error(this.#errorMessage('Expected an identifier'));
+        }
 
         this.#skipWhiteSpace();
 
@@ -112,7 +117,12 @@ class Parser {
                 this.#errorMessage('Could not find end of @ rule preamble as.'),
             );
 
-        const text = this.#input.substring(this.#index, foundIndex);
+        let parameters: string | undefined = this.#input
+            .substring(this.#index, foundIndex)
+            .trim();
+        if (!parameters) {
+            parameters = undefined;
+        }
 
         const whatDidWeFind = this.#input[foundIndex]!;
 
@@ -120,18 +130,30 @@ class Parser {
         this.#index = foundIndex + 1;
 
         if (whatDidWeFind === ';') {
-            return { $type: 'at', text: text };
+            return { $nodeType: 'at', type: type, parameters: parameters };
         } else {
             // position at start of block
             this.#index = foundIndex;
-            const block = this.#parseRuleOrAtRule(true);
+            const body = this.#parseRuleOrAtRule(true);
 
             return {
-                $type: 'at',
-                text: text,
-                body: block,
+                $nodeType: 'at',
+                type,
+                parameters,
+                body,
             };
         }
+    }
+
+    #tryReadIdent(): string | undefined {
+        const remaining = this.#input.substring(this.#index);
+        const match = remaining.match(identifier);
+        if (match) {
+            const len = match[0].length;
+            this.#index += len;
+            return match[0];
+        }
+        return undefined;
     }
 
     /**
@@ -161,7 +183,7 @@ class Parser {
 
                 if (wholeProperty.trim().length > 0) {
                     properties.push({
-                        $type: 'property',
+                        $nodeType: 'property',
                         text: wholeProperty,
                     });
                     this.#index = this.#input.length; // end of file
@@ -181,7 +203,7 @@ class Parser {
                     foundSemiOrBlockStartOrBlockEndIndex,
                 );
                 properties.push({
-                    $type: 'property',
+                    $nodeType: 'property',
                     text: wholeProperty,
                 });
                 this.#index = foundSemiOrBlockStartOrBlockEndIndex + 1;

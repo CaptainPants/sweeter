@@ -2,18 +2,19 @@
  * Doesn't give access to the broken apart contents as we don't care
  */
 export interface PropertyAstNode {
-    $type: 'property';
+    $nodeType: 'property';
     text: string;
 }
 
 export interface AtRuleAstNode {
-    $type: 'at';
-    text: string; // E.g. @media (xxxxx) or @charset "utf-8"
-    body?: RuleOrAtRule[];
+    $nodeType: 'at';
+    type: string;
+    parameters?: string | undefined; // E.g. @media (xxxxx) or @charset "utf-8"
+    body?: RuleOrAtRule[] | undefined;
 }
 
 export interface RuleAstNode {
-    $type: 'rule';
+    $nodeType: 'rule';
     selector: string;
     nestedRules: RuleAstNode[];
     properties: PropertyAstNode[];
@@ -25,3 +26,4 @@ export interface RuleBodyParts {
 }
 
 export type RuleOrAtRule = AtRuleAstNode | RuleAstNode;
+export type AstNode = AtRuleAstNode | RuleAstNode | PropertyAstNode;

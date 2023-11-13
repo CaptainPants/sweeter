@@ -3,14 +3,14 @@
 exports[`complex selectors 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [
       {
-        "$type": "rule",
+        "$nodeType": "rule",
         "nestedRules": [],
         "properties": [
           {
-            "$type": "property",
+            "$nodeType": "property",
             "text": "color: red",
           },
         ],
@@ -19,7 +19,7 @@ exports[`complex selectors 1`] = `
     ],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: blue",
       },
     ],
@@ -31,22 +31,22 @@ exports[`complex selectors 1`] = `
 exports[`complex selectors 2`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: blue",
       },
     ],
     "selector": ".outer1, .outer2",
   },
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: red",
       },
     ],
@@ -55,17 +55,27 @@ exports[`complex selectors 2`] = `
 ]
 `;
 
+exports[`complex selectors 3`] = `
+".outer1, .outer2 {
+    color: blue;
+}
+.outer1 .inner1, .outer1 .inner2, .outer2 .inner1, .outer2 .inner2 {
+    color: red;
+}
+"
+`;
+
 exports[`test1 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [
       {
-        "$type": "rule",
+        "$nodeType": "rule",
         "nestedRules": [],
         "properties": [
           {
-            "$type": "property",
+            "$nodeType": "property",
             "text": "color: red",
           },
         ],
@@ -81,11 +91,11 @@ exports[`test1 1`] = `
 exports[`test1 2`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: red",
       },
     ],
@@ -97,14 +107,14 @@ exports[`test1 2`] = `
 exports[`test2 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [
       {
-        "$type": "rule",
+        "$nodeType": "rule",
         "nestedRules": [],
         "properties": [
           {
-            "$type": "property",
+            "$nodeType": "property",
             "text": "color: red",
           },
         ],
@@ -120,11 +130,11 @@ exports[`test2 1`] = `
 exports[`test2 2`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: red",
       },
     ],
@@ -136,14 +146,14 @@ exports[`test2 2`] = `
 exports[`test3 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [
       {
-        "$type": "rule",
+        "$nodeType": "rule",
         "nestedRules": [],
         "properties": [
           {
-            "$type": "property",
+            "$nodeType": "property",
             "text": "color: red",
           },
         ],
@@ -152,7 +162,7 @@ exports[`test3 1`] = `
     ],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: blue",
       },
     ],
@@ -164,26 +174,36 @@ exports[`test3 1`] = `
 exports[`test3 2`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: blue",
       },
     ],
     "selector": ".outer1, .outer2",
   },
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: red",
       },
     ],
     "selector": ".outer1 .inner1, .outer1 .inner2, .outer2 .inner1, .outer2 .inner2",
   },
 ]
+`;
+
+exports[`test3 3`] = `
+".outer1, .outer2 {
+    color: blue;
+}
+.outer1 .inner1, .outer1 .inner2, .outer2 .inner1, .outer2 .inner2 {
+    color: red;
+}
+"
 `;

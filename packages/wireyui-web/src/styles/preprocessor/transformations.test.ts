@@ -1,4 +1,5 @@
 import { parse } from './parse.js';
+import { stringify } from './stringify.js';
 import { transformNestedRules } from './transformNestedRules.js';
 
 it('test1', () => {
@@ -55,6 +56,10 @@ it('test3', () => {
     const transformed = transformNestedRules(parsed);
 
     expect(transformed).toMatchSnapshot();
+
+    const stringified = stringify(transformed);
+
+    expect(stringified).toMatchSnapshot();
 });
 
 it('complex selectors', () => {
@@ -75,4 +80,8 @@ it('complex selectors', () => {
     const transformed = transformNestedRules(parsed);
 
     expect(transformed).toMatchSnapshot();
+
+    const stringified = stringify(transformed);
+
+    expect(stringified).toMatchSnapshot();
 });

@@ -17,10 +17,11 @@ export function transform(
     roots: RuleOrAtRule[],
 ): void {
     // Note that this should only happen at the root
-    if (item.$type === 'at') {
+    if (item.$nodeType === 'at') {
         const newNode: AtRuleAstNode = {
-            $type: 'at',
-            text: item.text,
+            $nodeType: 'at',
+            type: item.type,
+            parameters: item.parameters,
         };
 
         if (item.body && item.body.length > 0) {
@@ -40,7 +41,7 @@ export function transform(
     // Add a node to contain the properties in this (possibly nested) node
     if (item.properties.length > 0) {
         roots.push({
-            $type: 'rule',
+            $nodeType: 'rule',
             selector: permutations(newSelectors),
             nestedRules: [],
             properties: item.properties,

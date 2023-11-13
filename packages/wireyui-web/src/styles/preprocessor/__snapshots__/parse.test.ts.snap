@@ -3,7 +3,7 @@
 exports[`empty single rule 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [],
     "selector": ".banana ",
@@ -14,13 +14,13 @@ exports[`empty single rule 1`] = `
 exports[`media query 1`] = `
 [
   {
-    "$type": "at",
+    "$nodeType": "at",
     "body": [
       {
-        "$type": "rule",
+        "$nodeType": "rule",
         "nestedRules": [
           {
-            "$type": "rule",
+            "$nodeType": "rule",
             "nestedRules": [],
             "properties": [],
             "selector": ".banana ",
@@ -30,7 +30,8 @@ exports[`media query 1`] = `
         "selector": "",
       },
     ],
-    "text": "media screen and (max-width: 992px) ",
+    "parameters": "screen and (max-width: 992px)",
+    "type": "media",
   },
 ]
 `;
@@ -38,14 +39,14 @@ exports[`media query 1`] = `
 exports[`single rule with no property and nested rule with one property 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [
       {
-        "$type": "rule",
+        "$nodeType": "rule",
         "nestedRules": [],
         "properties": [
           {
-            "$type": "property",
+            "$nodeType": "property",
             "text": "color: green",
           },
         ],
@@ -61,11 +62,11 @@ exports[`single rule with no property and nested rule with one property 1`] = `
 exports[`single rule with one property 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: red",
       },
     ],
@@ -77,14 +78,14 @@ exports[`single rule with one property 1`] = `
 exports[`single rule with one property and nested rule 1`] = `
 [
   {
-    "$type": "rule",
+    "$nodeType": "rule",
     "nestedRules": [
       {
-        "$type": "rule",
+        "$nodeType": "rule",
         "nestedRules": [],
         "properties": [
           {
-            "$type": "property",
+            "$nodeType": "property",
             "text": "color: green",
           },
         ],
@@ -93,7 +94,7 @@ exports[`single rule with one property and nested rule 1`] = `
     ],
     "properties": [
       {
-        "$type": "property",
+        "$nodeType": "property",
         "text": "color: red",
       },
     ],

@@ -76,7 +76,9 @@ function* generatePermutations(parts: string[]): Generator<string> {
 
     for (const current of split) {
         for (const next of generatePermutations(parts.slice(1))) {
-            yield current + ' ' + next;
+            yield next.includes('&')
+                ? next.replace('&', current)
+                : current + ' ' + next;
         }
     }
 }

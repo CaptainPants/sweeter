@@ -85,3 +85,27 @@ it('complex selectors', () => {
 
     expect(stringified).toMatchSnapshot();
 });
+
+it('ampersand', () => {
+    const input = `
+        .outer1, .outer2 {
+            color: blue;
+
+            &.inner1 {
+                color: red;
+            }
+        }
+    `;
+
+    const parsed = parse(input);
+
+    expect(parsed).toMatchSnapshot();
+
+    const transformed = transformNestedRules(parsed);
+
+    expect(transformed).toMatchSnapshot();
+
+    const stringified = stringify(transformed);
+
+    expect(stringified).toMatchSnapshot();
+});

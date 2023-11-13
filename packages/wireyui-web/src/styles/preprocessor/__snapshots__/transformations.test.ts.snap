@@ -1,5 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ampersand 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "text": "color: red",
+          },
+        ],
+        "selector": "&.inner1",
+      },
+    ],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "text": "color: blue",
+      },
+    ],
+    "selector": ".outer1, .outer2",
+  },
+]
+`;
+
+exports[`ampersand 2`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "text": "color: blue",
+      },
+    ],
+    "selector": ".outer1, .outer2",
+  },
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "text": "color: red",
+      },
+    ],
+    "selector": ".outer1.inner1, .outer2.inner1",
+  },
+]
+`;
+
+exports[`ampersand 3`] = `
+".outer1, .outer2 {
+    color: blue;
+}
+.outer1.inner1, .outer2.inner1 {
+    color: red;
+}
+"
+`;
+
 exports[`complex selectors 1`] = `
 [
   {
@@ -14,7 +79,7 @@ exports[`complex selectors 1`] = `
             "text": "color: red",
           },
         ],
-        "selector": ".inner1, .inner2 ",
+        "selector": ".inner1, .inner2",
       },
     ],
     "properties": [
@@ -23,7 +88,7 @@ exports[`complex selectors 1`] = `
         "text": "color: blue",
       },
     ],
-    "selector": ".outer1, .outer2 ",
+    "selector": ".outer1, .outer2",
   },
 ]
 `;
@@ -79,11 +144,11 @@ exports[`test1 1`] = `
             "text": "color: red",
           },
         ],
-        "selector": ".inner1 ",
+        "selector": ".inner1",
       },
     ],
     "properties": [],
-    "selector": ".outer1 ",
+    "selector": ".outer1",
   },
 ]
 `;
@@ -118,11 +183,11 @@ exports[`test2 1`] = `
             "text": "color: red",
           },
         ],
-        "selector": ".inner1, .inner2 ",
+        "selector": ".inner1, .inner2",
       },
     ],
     "properties": [],
-    "selector": ".outer1, .outer2 ",
+    "selector": ".outer1, .outer2",
   },
 ]
 `;
@@ -157,7 +222,7 @@ exports[`test3 1`] = `
             "text": "color: red",
           },
         ],
-        "selector": ".inner1, .inner2 ",
+        "selector": ".inner1, .inner2",
       },
     ],
     "properties": [
@@ -166,7 +231,7 @@ exports[`test3 1`] = `
         "text": "color: blue",
       },
     ],
-    "selector": ".outer1, .outer2 ",
+    "selector": ".outer1, .outer2",
   },
 ]
 `;

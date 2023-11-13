@@ -83,7 +83,7 @@ class Parser {
         if (!startOfBody)
             throw new Error(this.#errorMessage('No block body found'));
 
-        const selector = this.#input.substring(this.#index, startOfBody);
+        const selector = this.#input.substring(this.#index, startOfBody).trim();
 
         this.#index = startOfBody + 1;
         const { nestedRules, properties } = this.parseRuleBodyContent();

@@ -1,5 +1,7 @@
-const commaOrParens = [',', '('] as const;
-const parensOrCloseParens = ['(', ')'] as const;
+import { indexOfAny } from './indexOfAny.js';
+
+const commaOrParens = [','.charCodeAt(0), '('.charCodeAt(0)] as const;
+const parensOrCloseParens = ['('.charCodeAt(0), ')'.charCodeAt(0)] as const;
 
 export function splitByUnparenthesizedCommas(content: string): string[] {
     const result: string[] = [];
@@ -10,7 +12,7 @@ export function splitByUnparenthesizedCommas(content: string): string[] {
 
     for (;;) {
         // might already be off the end, but thats ok
-        const matchOffset = findOneOf(
+        const matchOffset = indexOfAny(
             nestingCount > 0 ? parensOrCloseParens : commaOrParens,
             content,
             offset,
@@ -18,7 +20,7 @@ export function splitByUnparenthesizedCommas(content: string): string[] {
 
         if (matchOffset === undefined) {
             current.push(content.substring(offset));
-            result.push(current.join(''));
+            result.push(current.join('').trim());
             return result;
         }
 
@@ -34,7 +36,7 @@ export function splitByUnparenthesizedCommas(content: string): string[] {
             --nestingCount;
         } else if (match === ',') {
             current.push(content.substring(offset, matchOffset)); // store everything up to the comma
-            result.push(current.join(''));
+            result.push(current.join('').trim());
 
             current = []; // reset 'current'
         } else {
@@ -42,20 +44,4 @@ export function splitByUnparenthesizedCommas(content: string): string[] {
         }
         offset = matchOffset + 1;
     }
-}
-
-function findOneOf(
-    oneOf: readonly string[],
-    within: string,
-    offset: number,
-): number | undefined {
-    for (let index = offset; index < within.length; ++index) {
-        const current = within[index]!;
-        const foundIndex = oneOf.indexOf(current);
-
-        if (foundIndex >= 0) {
-            return index;
-        }
-    }
-    return undefined;
 }

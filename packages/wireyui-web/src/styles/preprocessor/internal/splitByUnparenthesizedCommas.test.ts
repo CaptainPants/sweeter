@@ -18,5 +18,17 @@ it('not 1', () => {
 it('not 2', () => {
     expect(
         splitByUnparenthesizedCommas('a,:not(b,:not(d)), :not(e)'),
-    ).toStrictEqual(['a', ':not(b,:not(d))', ' :not(e)']);
+    ).toStrictEqual(['a', ':not(b,:not(d))', ':not(e)']);
+});
+
+it('multipart', () => {
+    expect(
+        splitByUnparenthesizedCommas(
+            'a#banana > b.class, c d, a b > c:not(a.test, b#also)',
+        ),
+    ).toStrictEqual([
+        'a#banana > b.class',
+        'c d',
+        'a b > c:not(a.test, b#also)',
+    ]);
 });

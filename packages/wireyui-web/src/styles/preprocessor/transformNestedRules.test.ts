@@ -56,3 +56,23 @@ it('test3', () => {
 
     expect(transformed).toMatchSnapshot();
 });
+
+it('complex selectors', () => {
+    const input = `
+        .outer1, .outer2 {
+            color: blue;
+
+            .inner1, .inner2 {
+                color: red;
+            }
+        }
+    `;
+
+    const parsed = parse(input);
+
+    expect(parsed).toMatchSnapshot();
+
+    const transformed = transformNestedRules(parsed);
+
+    expect(transformed).toMatchSnapshot();
+});

@@ -1,3 +1,4 @@
+import { indexOfAny } from './internal/indexOfAny.js';
 import type {
     AtRuleAstNode,
     PropertyAstNode,
@@ -26,9 +27,13 @@ export function parseClassContent(css: string): RuleBodyParts {
     return parser.parseRuleBodyContent();
 }
 
-const brace = ['{'] as const;
-const semiOrBrace = ['{', ';'] as const;
-const semiOrBraceOrCloseBrace = ['{', ';', '}'] as const;
+const brace = ['{'.charCodeAt(0)] as const;
+const semiOrBrace = ['{'.charCodeAt(0), ';'.charCodeAt(0)] as const;
+const semiOrBraceOrCloseBrace = [
+    '{'.charCodeAt(0),
+    ';'.charCodeAt(0),
+    '}'.charCodeAt(0),
+] as const;
 
 class Parser {
     constructor(input: string) {
@@ -73,7 +78,7 @@ class Parser {
     }
 
     #parseRule(): RuleAstNode {
-        const startOfBody = this.#findOneOf(brace);
+        const startOfBody = indexOfAny(brace, this.#input, this.#index);
         if (!startOfBody)
             throw new Error(this.#errorMessage('No block body found'));
 
@@ -101,7 +106,7 @@ class Parser {
         this.#skipWhiteSpace();
 
         // The opening line must end with a ; or a {
-        const foundIndex = this.#findOneOf(semiOrBrace);
+        const foundIndex = indexOfAny(semiOrBrace, this.#input, this.#index);
         if (foundIndex === undefined)
             throw new Error(
                 this.#errorMessage('Could not find end of @ rule preamble as.'),
@@ -144,8 +149,10 @@ class Parser {
                 break;
             }
 
-            const foundSemiOrBlockStartOrBlockEndIndex = this.#findOneOf(
+            const foundSemiOrBlockStartOrBlockEndIndex = indexOfAny(
                 semiOrBraceOrCloseBrace,
+                this.#input,
+                this.#index,
             );
 
             if (foundSemiOrBlockStartOrBlockEndIndex === undefined) {
@@ -194,23 +201,6 @@ class Parser {
         ) {
             ++this.#index;
         }
-    }
-
-    /**
-     * From #index find the first character in the provided array
-     * @param oneOf
-     * @returns
-     */
-    #findOneOf(oneOf: readonly string[]): number | undefined {
-        for (let index = this.#index; index < this.#input.length; ++index) {
-            const current = this.#input[index]!;
-            const foundIndex = oneOf.indexOf(current);
-
-            if (foundIndex >= 0) {
-                return index;
-            }
-        }
-        return undefined;
     }
 
     /**

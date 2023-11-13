@@ -1,3 +1,4 @@
+import { assertNeverNullish } from '@captainpants/wireyui-core';
 import { splitByUnparenthesizedCommas } from './internal/splitByUnparenthesizedCommas.js';
 import { type AtRuleAstNode, type RuleOrAtRule } from './types.js';
 
@@ -56,29 +57,33 @@ export function transform(
 }
 
 function permutations(parts: string[]): string {
-    const results = [...generatePermutations(parts)];
+    const results = [...generatePermutations(undefined, parts, 0)];
     return results.join(', ');
 }
 
-function* generatePermutations(parts: string[]): Generator<string> {
-    if (parts.length === 0) {
+function* generatePermutations(
+    compiledParentSelector: string | undefined,
+    parts: string[],
+    offset: number,
+): Generator<string> {
+    if (offset >= parts.length) {
+        assertNeverNullish(compiledParentSelector);
+        yield compiledParentSelector;
         return;
     }
 
-    const firstPart = parts[0]!;
-
+    const firstPart = parts[offset]!;
     const split = splitByUnparenthesizedCommas(firstPart);
-    if (parts.length === 1) {
-        for (const current of split) {
-            yield current;
-        }
-    }
 
     for (const current of split) {
-        for (const next of generatePermutations(parts.slice(1))) {
-            yield next.includes('&')
-                ? next.replace('&', current)
-                : current + ' ' + next;
+        const selector = compiledParentSelector
+            ? current.includes('&')
+                ? current.replace('&', compiledParentSelector)
+                : compiledParentSelector + ' ' + current
+            : current;
+
+        for (const next of generatePermutations(selector, parts, offset + 1)) {
+            yield next;
         }
     }
 }

@@ -6,7 +6,7 @@ exports[`empty single rule 1`] = `
     "$nodeType": "rule",
     "nestedRules": [],
     "properties": [],
-    "selector": ".banana ",
+    "selector": ".banana",
   },
 ]
 `;
@@ -23,7 +23,7 @@ exports[`media query 1`] = `
             "$nodeType": "rule",
             "nestedRules": [],
             "properties": [],
-            "selector": ".banana ",
+            "selector": ".banana",
           },
         ],
         "properties": [],
@@ -50,11 +50,11 @@ exports[`single rule with no property and nested rule with one property 1`] = `
             "text": "color: green",
           },
         ],
-        "selector": ".nested ",
+        "selector": ".nested",
       },
     ],
     "properties": [],
-    "selector": ".banana ",
+    "selector": ".banana",
   },
 ]
 `;
@@ -70,7 +70,7 @@ exports[`single rule with one property 1`] = `
         "text": "color: red",
       },
     ],
-    "selector": ".banana ",
+    "selector": ".banana",
   },
 ]
 `;
@@ -89,7 +89,7 @@ exports[`single rule with one property and nested rule 1`] = `
             "text": "color: green",
           },
         ],
-        "selector": ".nested ",
+        "selector": ".nested",
       },
     ],
     "properties": [
@@ -98,7 +98,7 @@ exports[`single rule with one property and nested rule 1`] = `
         "text": "color: red",
       },
     ],
-    "selector": ".banana ",
+    "selector": ".banana",
   },
 ]
 `;

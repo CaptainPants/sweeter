@@ -11,7 +11,7 @@ import { renderComponent } from './internal/renderComponent.js';
 import { renderDOMElement } from './internal/renderDOMElement.js';
 import { type IntrinsicElementTypeMap } from '../IntrinsicElementTypeMap.js';
 
-type HasRef = {
+type MayHaveRef = {
     ref?:
         | ((ele: HTMLElement | SVGElement) => void)
         | WritableSignal<HTMLElement | SVGElement>;
@@ -49,7 +49,7 @@ function jsx<ComponentType extends string | Component<unknown>>(
                             ComponentType & string
                         >,
                     );
-                    const ref = (props as HasRef).ref;
+                    const ref = (props as MayHaveRef).ref;
                     if (ref) {
                         if (typeof ref === 'function') {
                             ref(element);

@@ -3,7 +3,7 @@ import {
     type RuntimeRootHostElement,
 } from '@captainpants/wireyui-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
-import { announceMountedRecursive } from './internal/mounting.js';
+import { announceChildrenMountedRecursive } from './internal/mounting.js';
 import { jsx } from './jsx.js';
 import type { DocumentStylesheetHandle } from './WebRuntimeContext.js';
 import { WebRuntimeContext } from './WebRuntimeContext.js';
@@ -47,6 +47,7 @@ class WebRuntimeContextImplementation
 
     #cssCounter: number = 0;
     #cssClassNameMap: WeakMap<GlobalCssClass, string> = new WeakMap();
+
     constructor(target: RuntimeRootHostElement, runtime: WebRuntime) {
         this.#target = target;
         this.#runtime = runtime;
@@ -57,7 +58,7 @@ class WebRuntimeContextImplementation
     ): DocumentStylesheetHandle {
         const element = document.createElement('style');
         element.textContent = stylesheet.getContent(this);
-        element.setAttribute('data-id', stylesheet.id);
+        element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
         this.#target.ownerDocument.head.appendChild(element);
 
         return {
@@ -103,13 +104,7 @@ function createNestedRoot(
 
     const unmount = addJsxChildren(target, content);
 
-    for (
-        let current = target.lastChild;
-        current;
-        current = current.previousSibling
-    ) {
-        announceMountedRecursive(current);
-    }
+    announceChildrenMountedRecursive(target);
 
     // Allow callers to be lazy and call the returned callback multiple times
     let unmounted = false;

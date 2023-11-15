@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`styles 1`] = `"<div class="alpha beta gamma"></div>"`;
+
+exports[`styles 2`] = `"<div class="alpha delta gamma"></div>"`;

@@ -22,7 +22,7 @@ it('Global stylesheet added', () => {
     res.dispose();
 });
 
-const componentStylesheet = new GlobalCssClass({
+const component1Stylesheet = new GlobalCssClass({
     nameBasis: 'Component1',
     content: `
         color: blue;
@@ -32,8 +32,8 @@ const componentStylesheet = new GlobalCssClass({
 const Component1: Component = (props, init) => {
     return (
         <>
-            <IncludeStylesheet stylesheet={componentStylesheet} />
-            <div class={componentStylesheet}>This is an example</div>
+            <IncludeStylesheet stylesheet={component1Stylesheet} />
+            <div class={component1Stylesheet}>This is an example</div>
         </>
     );
 };
@@ -41,6 +41,41 @@ const Component1: Component = (props, init) => {
 it('Global style for component', () => {
     const res = testRender(() => {
         return <Component1 />;
+    });
+
+    expect(document.head.innerHTML).toMatchSnapshot();
+
+    expect(res.getHTML()).toMatchSnapshot();
+
+    res.dispose();
+});
+
+const component2Stylesheet = new GlobalCssClass({
+    nameBasis: 'Component2',
+    content: `
+        color: blue;
+
+        .inner {
+            background-color: green;
+        }
+    `,
+});
+
+const Component2: Component = (props, init) => {
+    return (
+        <>
+            <IncludeStylesheet stylesheet={component2Stylesheet} />
+            <div class={component2Stylesheet}>
+                This is an example
+                <div class="inner" />
+            </div>
+        </>
+    );
+};
+
+it('Global style for component with nested', () => {
+    const res = testRender(() => {
+        return <Component2 />;
     });
 
     expect(document.head.innerHTML).toMatchSnapshot();

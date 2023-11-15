@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`stringify 1 1`] = `
+".test {
+    color: green;
+}
+"
+`;
+
+exports[`stringify 1 2`] = `
+"@media (screen) {
+     {
+    }
+
+}
+"
+`;

@@ -1,18 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Global style for component 1`] = `
-"<style data-id="Component1">._glbl0_Component1
-{
-
-        color: blue;
-    
-}</style>"
+"<style data-id="Component1">
+._glbl0_Component1 {
+    color: blue;
+}
+</style>"
 `;
 
 exports[`Global style for component 2`] = `"<!--Hooks(IncludeStylesheet): Mount, UnMount--><div class="_glbl0_Component1">This is an example</div>"`;
 
 exports[`Global stylesheet added 1`] = `
 "<style data-id="Something">
-        body { background-color: red; }
-    </style>"
+body {
+    background-color: red;
+}
+</style>"
 `;

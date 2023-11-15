@@ -1,5 +1,5 @@
 import { parse } from './parse.js';
-import { stringify } from './stringify.js';
+import { stringifyCss } from './stringifyCss.js';
 import { transformNestedRules } from './transformNestedRules.js';
 
 it('test1', () => {
@@ -57,7 +57,7 @@ it('test3', () => {
 
     expect(transformed).toMatchSnapshot();
 
-    const stringified = stringify(transformed);
+    const stringified = stringifyCss(transformed);
 
     expect(stringified).toMatchSnapshot();
 });
@@ -81,7 +81,7 @@ it('complex selectors', () => {
 
     expect(transformed).toMatchSnapshot();
 
-    const stringified = stringify(transformed);
+    const stringified = stringifyCss(transformed);
 
     expect(stringified).toMatchSnapshot();
 });
@@ -105,7 +105,7 @@ it('ampersand', () => {
 
     expect(transformed).toMatchSnapshot();
 
-    const stringified = stringify(transformed);
+    const stringified = stringifyCss(transformed);
 
     expect(stringified).toMatchSnapshot();
 });

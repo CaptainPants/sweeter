@@ -1,6 +1,6 @@
 import type { AstNode } from './types.js';
 
-export function stringify(ast: AstNode[]) {
+export function stringifyCss(ast: AstNode[]) {
     const result: string[] = [];
     stringifyImpl(ast, result, '');
     return result.join('');

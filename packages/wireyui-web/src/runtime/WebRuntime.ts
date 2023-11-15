@@ -57,7 +57,7 @@ class WebRuntimeContextImplementation
         stylesheet: AbstractGlobalCssStylesheet,
     ): DocumentStylesheetHandle {
         const element = document.createElement('style');
-        element.textContent = stylesheet.getContent(this);
+        element.textContent = '\n' + stylesheet.getContent(this);
         element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
         this.#target.ownerDocument.head.appendChild(element);
 
@@ -66,7 +66,7 @@ class WebRuntimeContextImplementation
                 element.remove();
             },
             update: (stylesheet) => {
-                element.textContent = stylesheet.getContent(this);
+                element.textContent = '\n' + stylesheet.getContent(this);
             },
         };
     }

@@ -1,6 +1,7 @@
 import type {
     WritableSignal,
     ReadWriteSignal,
+    Signal,
 } from '@captainpants/wireyui-core';
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
@@ -41,7 +42,13 @@ type EventHandlerProperties<TElement extends Element> = {
 // ==== CSS
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type Styles = StandardPropertiesHyphen<number | (string & {})>;
+type StyleProperties = StandardPropertiesHyphen<number | (string & {})>;
+
+export type Styles = {
+    [Key in keyof StyleProperties]:
+        | StyleProperties[Key]
+        | Signal<StyleProperties[Key]>;
+};
 
 // ==== OTHER
 

@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`bindStyle 1`] = `"<div style="color: red;"></div>"`;
+
+exports[`bindStyle 2`] = `"<div style="color: green;"></div>"`;

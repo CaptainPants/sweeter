@@ -4,7 +4,6 @@ import {
     type JSXElement,
     type PropsWithIntrinsicAttributesFor,
     ErrorBoundaryContext,
-    Fragment,
     type WritableSignal,
 } from '@captainpants/wireyui-core';
 import { renderComponent } from './internal/renderComponent.js';
@@ -22,7 +21,7 @@ type JSXResult<ComponentType extends string | Component<unknown>> =
         ? IntrinsicElementTypeMap[ComponentType]
         : JSXElement;
 
-function jsx<ComponentType extends string | Component<unknown>>(
+export function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,
     props: PropsWithIntrinsicAttributesFor<ComponentType>,
 ): JSXResult<ComponentType> {
@@ -31,10 +30,6 @@ function jsx<ComponentType extends string | Component<unknown>>(
     // signals -- hence untrack the actual render
     const result = untrack(() => {
         try {
-            if (type === undefined) {
-                return jsx(Fragment, props);
-            }
-
             switch (typeof type) {
                 case 'function': {
                     // Component function
@@ -72,7 +67,3 @@ function jsx<ComponentType extends string | Component<unknown>>(
 
     return result as JSXResult<ComponentType>;
 }
-
-// The only documentation I can find on jsxs is https://github.com/reactjs/rfcs/blob/createlement-rfc/text/0000-create-element-changes.md#always-pass-children-as-props
-// which says "The jsxs function indicates that the top array was created by React.".
-export { jsx, jsx as jsxs };

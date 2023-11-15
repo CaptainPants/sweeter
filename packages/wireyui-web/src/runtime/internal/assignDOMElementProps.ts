@@ -92,7 +92,6 @@ export function assignDOMElementProps<TElementType extends string>(
             (node instanceof HTMLElement || node instanceof SVGElement)
         ) {
             // ==== STYLES BINDING ====
-            // TODO: magic for styles
             bindStyle(node, constantValue as Styles);
         } else if (mappedKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====

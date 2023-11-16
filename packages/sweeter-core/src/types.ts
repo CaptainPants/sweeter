@@ -38,7 +38,7 @@ type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Component<TProps = {}, TAsyncInitializationResult = undefined> = ((
-    props: Props<TProps>,
+    props: TProps,
     init: ComponentInit,
     initializerResult: TAsyncInitializationResult,
 ) => JSX.Element) &
@@ -46,7 +46,7 @@ export type Component<TProps = {}, TAsyncInitializationResult = undefined> = ((
         TAsyncInitializationResult,
         {
             asyncInitializer: (
-                props: Props<TProps>,
+                props: TProps,
                 init: AsyncInitializerInit,
             ) => TAsyncInitializationResult;
         }
@@ -83,10 +83,8 @@ export type ChildrenTypeFor<
  * Take a props interface and make each property optionally a Signal.
  * You should ensure that the values aren't signals already.
  */
-export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
-    [Key in keyof TProps]: Key extends TDoNotSignalifyProperties
-        ? TProps[Key]
-        : Signal<TProps[Key]> | TProps[Key];
+export type SignalifyProps<TProps> = {
+    [Key in keyof TProps]: Signal<TProps[Key]> | TProps[Key];
 };
 
 /**
@@ -108,10 +106,17 @@ export type IntrinsicElementDoNotSignalifyAttributes<
 /**
  * Props for intrinsic elements, based on the type string.
  */
-export type IntrinsicElementProps<TElementTypeString extends string> = Props<
-    IntrinsicElementAttributes<TElementTypeString>,
-    IntrinsicElementDoNotSignalifyAttributes<TElementTypeString>
->;
+export type IntrinsicElementProps<TElementTypeString extends string> =
+    SignalifyProps<
+        Omit<
+            IntrinsicElementAttributes<TElementTypeString>,
+            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString>
+        >
+    > &
+        Pick<
+            IntrinsicElementAttributes<TElementTypeString>,
+            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString>
+        >;
 
 /**
  * Extended by declaration merging into RuntimeRootHostElementTypes.

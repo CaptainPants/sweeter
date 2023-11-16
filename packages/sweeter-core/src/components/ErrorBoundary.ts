@@ -1,11 +1,11 @@
 import { $calc, $mutable, valueOf } from '../signals/index.js';
-import type { Component } from '../types.js';
+import type { Component, SignalifyProps } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
-export interface ErrorBoundaryProps {
+export type ErrorBoundaryProps = SignalifyProps<{
     children: () => JSX.Element;
     renderError: (error: unknown) => JSX.Element;
-}
+}>;
 
 // TODO: how to clear the error boundary??
 

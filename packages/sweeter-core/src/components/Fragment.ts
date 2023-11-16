@@ -1,9 +1,9 @@
-import type { Component } from '../types.js';
+import type { Component, SignalifyProps } from '../types.js';
 
-export interface FragmentProps {
+export type FragmentProps = SignalifyProps<{
     children?: JSX.Element;
-}
+}>;
 
-export const Fragment: Component<FragmentProps> = (props) => {
-    return props.children;
+export const Fragment: Component<FragmentProps> = ({ children }) => {
+    return children;
 };

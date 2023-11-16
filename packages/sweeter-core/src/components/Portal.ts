@@ -1,10 +1,14 @@
-import { type RuntimeRootHostElement, type Component } from '../types.js';
+import {
+    type SignalifyProps,
+    type RuntimeRootHostElement,
+    type Component,
+} from '../types.js';
 import { RuntimeContext } from '../runtime/RuntimeContext.js';
 
-export interface PortalProps {
+export type PortalProps = SignalifyProps<{
     target: RuntimeRootHostElement;
     children: () => JSX.Element;
-}
+}>;
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
     const runtimeContext = RuntimeContext.getCurrent();

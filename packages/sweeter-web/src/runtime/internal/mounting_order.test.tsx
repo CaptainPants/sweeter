@@ -1,18 +1,18 @@
 /* @jsxImportSource ../.. */
 
-import type { ComponentInit, Props } from '@captainpants/sweeter-core';
+import type { ComponentInit, SignalifyProps } from '@captainpants/sweeter-core';
 import { valueOf } from '@captainpants/sweeter-core';
 import { testRender } from '../../test/testRender.js';
 
-interface TestingComponentWithChildrenProps {
+type TestingComponentWithChildrenProps = SignalifyProps<{
     number: number;
     children?: JSX.Element;
     onMount: (num: number) => void;
     onUnMount: (num: number) => void;
-}
+}>;
 
 function TestingComponentWithChildren(
-    props: Props<TestingComponentWithChildrenProps>,
+    props: TestingComponentWithChildrenProps,
     init: ComponentInit,
 ): JSX.Element {
     init.onMount(() => {

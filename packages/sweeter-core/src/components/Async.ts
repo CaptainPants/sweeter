@@ -1,18 +1,18 @@
-import type { ComponentInit, Props } from '../types.js';
+import type { ComponentInit, SignalifyProps } from '../types.js';
 import { $calc, $mutable, valueOf } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
-export interface AsyncProps<T> {
+export type AsyncProps<T> = SignalifyProps<{
     callback: (abort: AbortSignal) => Promise<T>;
     children: (data: T) => JSX.Element;
-}
+}>;
 
 export function Async<T>(
-    props: Props<AsyncProps<T>>,
+    props: AsyncProps<T>,
     init: ComponentInit,
 ): JSX.Element;
 export function Async<T>(
-    { callback, children }: Props<AsyncProps<T>>,
+    { callback, children }: AsyncProps<T>,
     init: ComponentInit,
 ): JSX.Element {
     const suspenseContext = SuspenseContext.getCurrent();

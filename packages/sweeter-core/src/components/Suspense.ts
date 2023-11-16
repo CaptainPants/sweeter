@@ -1,21 +1,17 @@
 import { RuntimeContext } from '../index.js';
 import { $calc, $mutable, valueOf } from '../signals/index.js';
-import type { ComponentInit, Props } from '../types.js';
+import type { Component, ComponentInit, SignalifyProps } from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
-export interface SuspenseProps {
+export type SuspenseProps = SignalifyProps<{
     fallback: () => JSX.Element;
     children: () => JSX.Element;
-}
+}>;
 
-export function Suspense(
-    props: Props<SuspenseProps>,
+export const Suspense: Component<SuspenseProps> = (
+    { fallback, children }: SuspenseProps,
     init: ComponentInit,
-): JSX.Element;
-export function Suspense(
-    { fallback, children }: Props<SuspenseProps>,
-    init: ComponentInit,
-): JSX.Element {
+): JSX.Element => {
     // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = $mutable(0);
 
@@ -63,4 +59,4 @@ export function Suspense(
             return $calc(suspenseCalculation);
         },
     );
-}
+};

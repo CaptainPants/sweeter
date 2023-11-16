@@ -9,7 +9,7 @@
     "verify": "lerna run verify",
     "format": "lerna run format",
     "test": "lerna run test",
-    "watch-libs": "lerna run --stream --concurrency= watch --scope @captainpants/wireyui-core --scope @captainpants/wireyui-web",
+    "watch-libs": "lerna run --stream --concurrency= watch --scope @captainpants/sweeter-core --scope @captainpants/sweeter-web",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
     "set-versions": "pnpm -r exec npm version"

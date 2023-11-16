@@ -91,13 +91,13 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
-  packages/wireyui-core: {}
+  packages/sweeter-core: {}
 
-  packages/wireyui-web:
+  packages/sweeter-web:
     dependencies:
-      '@captainpants/wireyui-core':
+      '@captainpants/sweeter-core':
         specifier: workspace:^
-        version: link:../wireyui-core
+        version: link:../sweeter-core
       csstype:
         specifier: ^3.1.2
         version: 3.1.2

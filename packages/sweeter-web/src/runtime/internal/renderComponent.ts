@@ -3,8 +3,7 @@ import {
     type HookConstructor,
     type UnsignalAll,
     type ComponentInit,
-    type Component,
-    type Context,
+    type Component, Context,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/sweeter-core';
 import {
@@ -22,6 +21,9 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
 ): JSX.Element {
+    // TODO: use this to get the error context within callbacks
+    const _contextSnapshot = Context.snapshot();
+
     if ((Component as MightHaveAsyncInitializer).asyncInitializer) {
         // TODO: if asyncInitializer is specified, we wrap the component in an Async
     }

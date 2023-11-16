@@ -57,16 +57,31 @@ export class Context<T> {
     }
 
     getCurrent(): T {
-        let current: ContextNode | undefined = contextStack.current;
+        return Context.#find(contextStack.current, this);
+    }
+
+    static #find<T>(snapshot: ContextNode | undefined, context: Context<T>): T {
+        let current: ContextNode | undefined = snapshot;
         while (current) {
             // We could alternatively use the 'type' but whatever
-            if (current.id === this.id) {
+            if (current.id === context.id) {
                 return current.value as T;
             }
 
             current = current.parent;
         }
-        return this.defaultValue;
+        return context.defaultValue;
+    }
+
+    /**
+     * Store the top of the Context stack for later searches. This is intentionally cheap to call.
+     * @returns 
+     */
+    static snapshot(): <T>(context: Context<T>) => T {
+        const snapshot = contextStack.current;
+        return (context) => {
+            return Context.#find(snapshot, context);
+        };
     }
 }
 

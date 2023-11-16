@@ -23,7 +23,7 @@ declare global {
          * Extended by declaration merging into IntrinsicElementNames.
          */
         type IntrinsicElements = {
-            [Key in WireyExtensionPoints.IntrinsicElementNames[keyof WireyExtensionPoints.IntrinsicElementNames] &
+            [Key in SweeterExtensionPoints.IntrinsicElementNames[keyof SweeterExtensionPoints.IntrinsicElementNames] &
                 string]: types.IntrinsicElementProps<Key>;
         };
 

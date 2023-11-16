@@ -1,4 +1,5 @@
-import { $mutable, subscribeToChanges } from './index.js';
+import { subscribeToChanges } from './subscribeToChanges.js';
+import { $mutable } from './MutableValueSignal.js';
 
 it('subscribeToChanges', () => {
     const signal = $mutable(1);

@@ -6,8 +6,8 @@
         "type": "pickString",
         "description": "Which project?",
         "options": [
-          {"value": "packages/wireyui-core"},
-          {"value": "packages/wireyui-web"},
+          {"value": "packages/sweeter-core"},
+          {"value": "packages/sweeter-web"},
         ]
       }
     ],

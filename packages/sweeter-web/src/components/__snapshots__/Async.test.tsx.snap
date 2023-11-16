@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Fallback is shown 1`] = `"<div>FALLBACK</div><div style="display: none;"><!--Hooks(Async): Mount, UnMount--></div>"`;
+exports[`Fallback is shown 1`] = `"<div>FALLBACK</div><div style="display: none;"><!--Hooks(Async): Mount--></div>"`;
 
-exports[`Fallback is shown and then content once loaded 1`] = `"<div>FALLBACK</div><div style="display: none;"><!--Hooks(Async): Mount, UnMount--></div>"`;
+exports[`Fallback is shown and then content once loaded 1`] = `"<div>FALLBACK</div><div style="display: none;"><!--Hooks(Async): Mount--></div>"`;
 
 exports[`Fallback is shown and then content once loaded 2`] = `"27"`;

@@ -3,7 +3,7 @@ import type { ElementAttributesByName } from './IntrinsicAttributes.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace WireyExtensionPoints {
+    namespace SweeterExtensionPoints {
         interface IntrinsicElementNames {
             'wireyui-web': keyof IntrinsicElementTypeMap;
         }

@@ -2,7 +2,7 @@ export {};
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace WireyExtensionPoints {
+    namespace SweeterExtensionPoints {
         /**
          * Use this to extend IntrinsicElementAttributes.
          *

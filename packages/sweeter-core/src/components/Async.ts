@@ -25,35 +25,30 @@ export function Async<T>(
         resolution: 'LOADING',
     });
 
-    let abortController: AbortController | undefined;
-
-    async function reload(callback: (abort: AbortSignal) => Promise<T>) {
-        if (abortController) {
-            // kill previous run
-            abortController?.abort();
-        }
-
+    async function reload(
+        callback: (abort: AbortSignal) => Promise<T>,
+        signal: AbortSignal,
+    ) {
         // Consider this step might need to be optional
         if (data.value.resolution !== 'LOADING') {
             data.value = { resolution: 'LOADING' };
         }
 
-        abortController = new AbortController();
         const revertSuspenseBlock = suspenseContext.startBlocking();
-        abortController.signal.addEventListener('abort', () => {
+        signal.addEventListener('abort', () => {
             revertSuspenseBlock();
         });
 
         try {
-            const result = await valueOf(callback)(abortController.signal);
+            const result = await valueOf(callback)(signal);
 
-            if (abortController.signal.aborted) {
+            if (signal.aborted) {
                 return; // don't store result if aborted
             }
 
             data.value = { resolution: 'SUCCESS', result };
         } catch (ex) {
-            if (abortController.signal.aborted) {
+            if (signal.aborted) {
                 return; // don't store result if aborted
             }
 
@@ -66,14 +61,15 @@ export function Async<T>(
     init.subscribeToChanges(
         [callback],
         ([callback]) => {
-            reload(callback);
+            const abortController = new AbortController();
+            reload(callback, abortController.signal);
+
+            return () => {
+                abortController.abort();
+            };
         },
         true,
     );
-
-    init.onUnMount(() => {
-        abortController?.abort();
-    });
 
     return $calc(() => {
         if (data.value.resolution === 'LOADING') {

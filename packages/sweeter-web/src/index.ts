@@ -1,4 +1,4 @@
-import './WireyExtensionPoints.js';
+import './SweeterExtensionPoints.js';
 
 export * from './IntrinsicElementTypeMap.js';
 export * from './IntrinsicAttributes.js';

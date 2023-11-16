@@ -1,5 +1,5 @@
 import './jsx-globals.js';
-import './WireyExtensionPoints.js';
+import './SweeterExtensionPoints.js';
 
 export * from './addExplicitStrongReference.js';
 export * from './components/index.js';
@@ -8,5 +8,5 @@ export * from './executionContext/index.js';
 export * from './runtime/index.js';
 export * from './signals/index.js';
 export * from './types.js';
-export * from './TypeMatchAsset.js';
+export * from './test/index.js';
 export * from './utility/index.js';

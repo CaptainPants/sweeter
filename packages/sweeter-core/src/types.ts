@@ -20,9 +20,6 @@ export type AsyncInitializerInit = {
     getContext: <T>(context: Context<T>) => T;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
-
 // There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
 export type ComponentInit = ComponentInitFunction & {
     onMount: (callback: () => (() => void) | void) => void;
@@ -35,6 +32,9 @@ export type ComponentInit = ComponentInitFunction & {
     ) => void;
     getContext: <T>(context: Context<T>) => T;
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Component<TProps = {}, TAsyncInitializationResult = undefined> = ((
@@ -94,7 +94,7 @@ export type Props<TProps, TDoNotSignalifyProperties extends string = never> = {
  */
 export type IntrinsicElementAttributes<TElementTypeString extends string> =
     UnionToIntersection<
-        WireyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof WireyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
+        SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
     >;
 
 /**
@@ -103,7 +103,7 @@ export type IntrinsicElementAttributes<TElementTypeString extends string> =
 export type IntrinsicElementDoNotSignalifyAttributes<
     TElementTypeString extends string,
 > =
-    WireyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>[keyof WireyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>];
+    SweeterExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>[keyof SweeterExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>];
 
 /**
  * Props for intrinsic elements, based on the type string.
@@ -117,10 +117,10 @@ export type IntrinsicElementProps<TElementTypeString extends string> = Props<
  * Extended by declaration merging into RuntimeRootHostElementTypes.
  */
 export type RuntimeRootHostElement =
-    WireyExtensionPoints.RuntimeRootHostElementTypes[keyof WireyExtensionPoints.RuntimeRootHostElementTypes];
+    SweeterExtensionPoints.RuntimeRootHostElementTypes[keyof SweeterExtensionPoints.RuntimeRootHostElementTypes];
 
 /**
  * Extended by declaration merging into IntrinsicElementTypes.
  */
 export type IntrinsicElement =
-    WireyExtensionPoints.IntrinsicElementTypes[keyof WireyExtensionPoints.IntrinsicElementTypes];
+    SweeterExtensionPoints.IntrinsicElementTypes[keyof SweeterExtensionPoints.IntrinsicElementTypes];

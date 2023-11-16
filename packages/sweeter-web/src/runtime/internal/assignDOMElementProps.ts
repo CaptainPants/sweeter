@@ -69,7 +69,7 @@ export function assignDOMElementProps<TElementType extends string>(
                         evt.currentTarget as unknown as Record<string, unknown>
                     )[domProperty];
 
-                    constantValue.value = updatedValue;
+                    constantValue.update(updatedValue);
                 } else {
                     // Reset
                     (evt.currentTarget as unknown as Record<string, unknown>)[

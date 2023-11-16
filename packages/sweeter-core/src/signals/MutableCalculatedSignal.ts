@@ -58,14 +58,14 @@ export function $derived<TSource, TKey extends keyof TSource>(
 
                 const copy = [...sourceObjectOriginal] as TSource;
                 copy[key as TKey] = value;
-                source.value = copy;
+                source.update(copy);
             } else if (
                 typeof sourceObjectOriginal === 'object' &&
                 sourceObjectOriginal !== null
             ) {
                 const copy = { ...sourceObjectOriginal } as TSource;
                 copy[key] = value;
-                source.value = copy;
+                source.update(copy);
             } else {
                 throw new TypeError(
                     `Unexpected type ${typeof sourceObjectOriginal}`,

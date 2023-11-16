@@ -47,10 +47,7 @@ export interface WritableSignal<T> {
     readonly [writableSignalMarker]: true;
 }
 
-export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {
-    // Non-readonly version of .value for convenience
-    value: T;
-}
+export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {}
 
 export type Unsignal<T> = T extends Signal<infer S> ? S : T;
 export type UnsignalAll<T extends readonly unknown[]> = {

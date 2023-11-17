@@ -75,7 +75,7 @@ export class Context<T> {
 
     /**
      * Store the top of the Context stack for later searches. This is intentionally cheap to call.
-     * @returns 
+     * @returns
      */
     static snapshot(): <T>(context: Context<T>) => T {
         const snapshot = contextStack.current;

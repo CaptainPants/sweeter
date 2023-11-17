@@ -3,8 +3,10 @@ import {
     type HookConstructor,
     type UnsignalAll,
     type ComponentInit,
-    type Component, Context,
+    type Component,
+    Context,
     type PropsWithIntrinsicAttributesFor,
+    ErrorBoundaryContext,
 } from '@captainpants/sweeter-core';
 import {
     addMountedCallback,
@@ -22,7 +24,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
 ): JSX.Element {
     // TODO: use this to get the error context within callbacks
-    const _contextSnapshot = Context.snapshot();
+    const getContext = Context.snapshot();
 
     if ((Component as MightHaveAsyncInitializer).asyncInitializer) {
         // TODO: if asyncInitializer is specified, we wrap the component in an Async
@@ -38,7 +40,7 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         return new Hook(init, ...args);
     };
 
-    function createHooks(reason: string) {
+    function createOrGetMagicComment(reason: string) {
         if (hooks) {
             hooks.textContent += `, ${reason}`;
         } else {
@@ -49,21 +51,31 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         return hooks;
     }
 
-    init.onMount = (callback: () => (() => void) | void) => {
-        if (initCompleted)
-            throw new Error('onMount must only be called during init phase.');
+    function callAgainstErrorBoundary<T>(callback: () => T, fallback: T): T {
+        try {
+            return callback();
+        } catch (ex) {
+            getContext(ErrorBoundaryContext).error(ex);
+            return fallback;
+        }
+    }
 
-        const hooks = createHooks('Mount');
+    init.onMount = (callback: () => (() => void) | void) => {
+        if (initCompleted) {
+            throw new Error('onMount must only be called during init phase.');
+        }
+
+        const hooks = createOrGetMagicComment('Mount');
 
         // TODO: this should trigger ErrorBoundary if an exception is thrown
         addMountedCallback(hooks, () => {
-            const unmounted = callback();
+            const unmounted = callAgainstErrorBoundary(callback, void 0);
 
             if (typeof unmounted === 'function') {
                 const innerUnMounted = () => {
                     removeUnMountedCallback(hooks, innerUnMounted);
 
-                    unmounted();
+                    callAgainstErrorBoundary(unmounted, void 0);
                 };
 
                 addUnMountedCallback(hooks, innerUnMounted);
@@ -72,11 +84,14 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     };
 
     init.onUnMount = (callback: () => void) => {
-        if (initCompleted)
+        if (initCompleted) {
             throw new Error('onUnMount must only be called during init phase.');
+        }
 
         // TODO: this should trigger ErrorBoundary if an exception is thrown
-        addUnMountedCallback(createHooks('UnMount'), callback);
+        addUnMountedCallback(createOrGetMagicComment('UnMount'), () => {
+            callAgainstErrorBoundary(callback, void 0);
+        });
     };
 
     init.subscribeToChanges = (<TArgs extends readonly unknown[]>(
@@ -84,10 +99,11 @@ export function renderComponent<TComponentType extends Component<unknown>>(
         callback: (args: UnsignalAll<TArgs>) => void | (() => void),
         invokeImmediate = true,
     ) => {
-        if (initCompleted)
+        if (initCompleted) {
             throw new Error(
                 'subscribeToChanges must only be called during init phase.',
             );
+        }
 
         init.onMount(() => {
             return subscribeToChanges(dependencies, callback, invokeImmediate);
@@ -98,10 +114,11 @@ export function renderComponent<TComponentType extends Component<unknown>>(
     // but it does indicate that you should capture the context values you need during init
     // and not later when the context stack is gone
     init.getContext = <T>(context: Context<T>): T => {
-        if (initCompleted)
+        if (initCompleted) {
             throw new Error(
                 'getContext must only be called during init phase.',
             );
+        }
 
         return context.getCurrent();
     };

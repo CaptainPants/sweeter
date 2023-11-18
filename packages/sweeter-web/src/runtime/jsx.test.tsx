@@ -1,13 +1,30 @@
 /* @jsxImportSource ../. */
 
-import type { TypeMatchAssert } from '@captainpants/sweeter-core';
+import {
+    assertNeverNullish,
+    type TypeMatchAssert,
+} from '@captainpants/sweeter-core';
 import { jsx } from './jsx.js';
+import { testRender } from '../test/testRender.js';
 
 it('basic div creates with props (function syntax)', () => {
-    const div = jsx('div', { children: ['test', 'content'], class: 'test' });
+    let div: HTMLDivElement | undefined;
 
-    // Confirm the result is a div, its nice to make sure that jsx() gives strongly typed results.
-    const _typeAssert1: TypeMatchAssert<HTMLDivElement, typeof div> = true;
+    const res = testRender(() => {
+        const inner = jsx('div', {
+            children: ['test', 'content'],
+            class: 'test',
+            ref: (ele) => (div = ele),
+        });
+
+        // Confirm the result is a div, its nice to make sure that jsx() gives strongly typed results.
+        const _typeAssert1: TypeMatchAssert<HTMLDivElement, typeof inner> =
+            true;
+
+        return inner;
+    });
+
+    assertNeverNullish(div);
 
     expect(div).toBeInstanceOf(HTMLDivElement);
 
@@ -20,18 +37,26 @@ it('basic div creates with props (function syntax)', () => {
 
     expect(div.childNodes[1]).toBeInstanceOf(Text);
     expect((div.childNodes[1] as Text).textContent).toStrictEqual('content');
+
+    res.dispose();
 });
 
 it('basic div creates with props (using jsx syntax)', () => {
-    const div = (
-        <div class={'test'}>
-            {'test'}
-            {'content'}
-        </div>
-    );
+    let div: HTMLDivElement | undefined;
 
-    // jsx always returns the opaque JSX.Element type
-    const _typeAssert1: TypeMatchAssert<JSX.Element, typeof div> = true;
+    const res = testRender(() => {
+        const inner = (
+            <div class={'test'} ref={(ele) => (div = ele)}>
+                {'test'}
+                {'content'}
+            </div>
+        );
+
+        // jsx always returns the opaque JSX.Element type
+        const _typeAssert1: TypeMatchAssert<JSX.Element, typeof inner> = true;
+
+        return inner;
+    });
 
     expect(div).toBeInstanceOf(HTMLDivElement);
 
@@ -48,4 +73,6 @@ it('basic div creates with props (using jsx syntax)', () => {
 
     expect(div.childNodes[1]).toBeInstanceOf(Text);
     expect((div.childNodes[1] as Text).textContent).toStrictEqual('content');
+
+    res.dispose();
 });

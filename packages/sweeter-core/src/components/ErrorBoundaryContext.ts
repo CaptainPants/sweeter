@@ -9,7 +9,9 @@ export const ErrorBoundaryContext = new Context<ErrorBoundaryContext>(
     {
         error(err) {
             throw new Error(
-                'No ErrorBoundaryContext set, please wrap your element in an ErrorBoundary',
+                `No ErrorBoundaryContext set, please wrap your element in an ErrorBoundary. Original: ${String(
+                    err,
+                )}`,
             );
         },
     },

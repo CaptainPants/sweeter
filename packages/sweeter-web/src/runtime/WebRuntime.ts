@@ -1,6 +1,8 @@
-import {
-    RuntimeContext,
-    type RuntimeRootHostElement,
+import { RuntimeContext } from '@captainpants/sweeter-core';
+import type {
+    Component,
+    PropsWithIntrinsicAttributesFor,
+    RuntimeRootHostElement,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { announceChildrenMountedRecursive } from './internal/mounting.js';
@@ -9,6 +11,8 @@ import type { DocumentStylesheetHandle } from './WebRuntimeContext.js';
 import { WebRuntimeContext } from './WebRuntimeContext.js';
 import type { AbstractGlobalCssStylesheet } from '../styles/types.js';
 import type { GlobalCssClass } from '../styles/GlobalCssClass.js';
+import { renderDOMElement } from './internal/renderDOMElement.js';
+import { renderComponent } from './internal/renderComponent.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -93,6 +97,20 @@ class WebRuntimeContextImplementation
             style: { display: 'none' },
             children: content,
         });
+    }
+
+    createDOMElement<TElementTypeString extends string>(
+        type: TElementTypeString,
+        props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
+    ): HTMLElement | SVGElement {
+        return renderDOMElement(type, props, this);
+    }
+
+    createComponent<TComponentType extends Component<unknown>>(
+        Component: TComponentType,
+        props: PropsWithIntrinsicAttributesFor<TComponentType>,
+    ): JSX.Element {
+        return renderComponent(Component, props, this);
     }
 }
 

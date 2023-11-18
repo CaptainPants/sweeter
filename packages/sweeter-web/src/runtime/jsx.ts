@@ -9,6 +9,7 @@ import {
 import { renderComponent } from './internal/renderComponent.js';
 import { renderDOMElement } from './internal/renderDOMElement.js';
 import { type IntrinsicElementTypeMap } from '../IntrinsicElementTypeMap.js';
+import { WebRuntimeContext } from './WebRuntimeContext.js';
 
 type MayHaveRef = {
     ref?:
@@ -37,12 +38,20 @@ export function jsx<ComponentType extends string | Component<unknown>>(
                 }
 
                 case 'string': {
+                    // TODO: this is doing a Context search which might be
+                    // expensive, maybe WebRuntimeContext should go into its
+                    // own ExecutionContextVariable which trades search cost
+                    // for snapshot cost... Alternatively we can look into
+                    // some kind of caching mechanism at the ContextNode?
+                    const webRuntimeContext = WebRuntimeContext.getCurrent();
+
                     // intrinsic
                     const element = renderDOMElement(
                         type,
                         props as PropsWithIntrinsicAttributesFor<
                             ComponentType & string
                         >,
+                        webRuntimeContext,
                     );
                     const ref = (props as MayHaveRef).ref;
                     if (ref) {

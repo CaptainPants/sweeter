@@ -8,7 +8,7 @@ import { bindStyle } from './bindStyle.js';
 import { type Styles } from '../../IntrinsicAttributes.js';
 import { flattenCssClasses } from '../../styles/flattenCssClasses.js';
 import type { ElementCssClasses } from '../../styles/index.js';
-import { WebRuntimeContext } from '../WebRuntimeContext.js';
+import type { WebRuntimeContext } from '../WebRuntimeContext.js';
 
 type Untyped = Record<string, unknown>;
 
@@ -30,6 +30,7 @@ const mutableMap = new Map<string, MutableMapping>([
 export function assignDOMElementProps<TElementType extends string>(
     node: Node,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
+    runtimeContext: WebRuntimeContext,
 ): void {
     for (const key of Object.getOwnPropertyNames(props)) {
         // Deal with class (className) and for (htmlFor)
@@ -45,10 +46,9 @@ export function assignDOMElementProps<TElementType extends string>(
 
         if (key === 'class') {
             // Special handling of cssClass
-            const context = WebRuntimeContext.getCurrent();
             mutableValue = flattenCssClasses(
                 mutableValue as ElementCssClasses,
-                context,
+                runtimeContext,
             );
         }
 

@@ -48,7 +48,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         return new Hook(init, ...args);
     };
 
-    function createOrGetMagicComment(reason: string) {
+    function getOrCreateMagicComment(reason: string) {
         if (hooks) {
             hooks.textContent += `, ${reason}`;
         } else {
@@ -73,7 +73,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
             throw new Error('onMount must only be called during init phase.');
         }
 
-        const hooks = createOrGetMagicComment('Mount');
+        const hooks = getOrCreateMagicComment('Mount');
 
         // TODO: this should trigger ErrorBoundary if an exception is thrown
         addMountedCallback(hooks, () => {
@@ -97,7 +97,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         }
 
         // TODO: this should trigger ErrorBoundary if an exception is thrown
-        addUnMountedCallback(createOrGetMagicComment('UnMount'), () => {
+        addUnMountedCallback(getOrCreateMagicComment('UnMount'), () => {
             callAgainstErrorBoundary(callback, void 0);
         });
     };

@@ -75,7 +75,6 @@ export function createComponent<TComponentType extends Component<unknown>>(
 
         const hooks = getOrCreateMagicComment('Mount');
 
-        // TODO: this should trigger ErrorBoundary if an exception is thrown
         addMountedCallback(hooks, () => {
             const unmounted = callAgainstErrorBoundary(callback, void 0);
 
@@ -96,7 +95,6 @@ export function createComponent<TComponentType extends Component<unknown>>(
             throw new Error('onUnMount must only be called during init phase.');
         }
 
-        // TODO: this should trigger ErrorBoundary if an exception is thrown
         addUnMountedCallback(getOrCreateMagicComment('UnMount'), () => {
             callAgainstErrorBoundary(callback, void 0);
         });

@@ -13,17 +13,17 @@ import {
     addUnMountedCallback,
     removeUnMountedCallback,
 } from './mounting.js';
-import { type WebRuntimeContext } from '../WebRuntimeContext.js';
+import { type WebRuntime } from '../WebRuntime.js';
 
 type MightHaveAsyncInitializer = Partial<
     // eslint-disable-next-line @typescript-eslint/ban-types
     Pick<Component<{}, unknown>, 'asyncInitializer'>
 >;
 
-export function renderComponent<TComponentType extends Component<unknown>>(
+export function createComponent<TComponentType extends Component<unknown>>(
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
-    webRuntimeContext: WebRuntimeContext,
+    webRuntime: WebRuntime,
 ): JSX.Element {
     // TODO: use this to get the error context within callbacks
     const getContext = Context.snapshot();

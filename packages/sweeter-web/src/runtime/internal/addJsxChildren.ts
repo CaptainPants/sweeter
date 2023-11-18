@@ -10,10 +10,12 @@ import {
 import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 import { isText } from './utility/isText.js';
 import { isInDocument } from './utility/isInDocument.js';
+import { type WebRuntime } from '../WebRuntime.js';
 
 export function addJsxChildren(
     parent: Node,
     children: JSX.Element,
+    webRuntime: WebRuntime,
 ): () => void {
     const parentInDocument = isInDocument(parent);
     const flattenedChildrenSignal = flattenElements(children);

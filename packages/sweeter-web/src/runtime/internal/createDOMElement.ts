@@ -1,19 +1,19 @@
 import type { PropsWithIntrinsicAttributesFor } from '@captainpants/sweeter-core';
 import { assignDOMElementProps } from './assignDOMElementProps.js';
 import { addJsxChildren } from './addJsxChildren.js';
-import { type WebRuntimeContext } from '../WebRuntimeContext.js';
+import { type WebRuntime } from '../WebRuntime.js';
 
-export function renderDOMElement<TElementTypeString extends string>(
+export function createDOMElement<TElementTypeString extends string>(
     type: TElementTypeString,
     props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
-    webRuntimeContext: WebRuntimeContext,
+    webRuntime: WebRuntime,
 ): HTMLElement | SVGElement {
     const ele = document.createElement(type);
 
     // Assign attributes and set up signals
-    assignDOMElementProps(ele, props, webRuntimeContext);
+    assignDOMElementProps(ele, props, webRuntime);
 
-    addJsxChildren(ele, props.children);
+    addJsxChildren(ele, props.children, webRuntime);
 
     return ele;
 }

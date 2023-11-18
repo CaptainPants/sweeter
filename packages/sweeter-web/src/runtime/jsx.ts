@@ -7,7 +7,7 @@ import {
     type WritableSignal,
 } from '@captainpants/sweeter-core';
 import { type IntrinsicElementTypeMap } from '../IntrinsicElementTypeMap.js';
-import { WebRuntimeContext } from './WebRuntimeContext.js';
+import { getWebRuntime } from './WebRuntime.js';
 
 type MayHaveRef = {
     ref?:
@@ -24,12 +24,7 @@ export function jsx<ComponentType extends string | Component<unknown>>(
     type: ComponentType,
     props: PropsWithIntrinsicAttributesFor<ComponentType>,
 ): JSXResult<ComponentType> {
-    // TODO: this is doing a Context search which might be
-    // expensive, maybe WebRuntimeContext should go into its
-    // own ExecutionContextVariable which trades search cost
-    // for snapshot cost... Alternatively we can look into
-    // some kind of caching mechanism at the ContextNode?
-    const webRuntimeContext = WebRuntimeContext.getCurrent();
+    const webRuntime = getWebRuntime();
 
     // Its reasonably certain that people will trigger side effects when wiring up a component
     // and that these might update signals. We also don't want to accidentally subscribe to these
@@ -39,12 +34,12 @@ export function jsx<ComponentType extends string | Component<unknown>>(
             switch (typeof type) {
                 case 'function': {
                     // Component function
-                    return webRuntimeContext.createComponent(type, props);
+                    return webRuntime.createComponent(type, props);
                 }
 
                 case 'string': {
                     // intrinsic
-                    const element = webRuntimeContext.createDOMElement(
+                    const element = webRuntime.createDOMElement(
                         type,
                         props as PropsWithIntrinsicAttributesFor<
                             ComponentType & string

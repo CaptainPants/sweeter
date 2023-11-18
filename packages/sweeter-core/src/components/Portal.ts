@@ -3,7 +3,7 @@ import {
     type RuntimeRootHostElement,
     type Component,
 } from '../types.js';
-import { RuntimeContext } from '../runtime/RuntimeContext.js';
+import { getRuntime } from '../runtime/Runtime.js';
 
 export type PortalProps = SignalifyProps<{
     target: RuntimeRootHostElement;
@@ -11,7 +11,7 @@ export type PortalProps = SignalifyProps<{
 }>;
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
-    const runtimeContext = RuntimeContext.getCurrent();
+    const runtimeContext = getRuntime();
 
     init.subscribeToChanges(
         [target, children],

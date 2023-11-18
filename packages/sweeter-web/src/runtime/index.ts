@@ -1,3 +1,3 @@
 export * from './jsx.js';
-export * from './WebRuntimeContext.js';
+export * from './createWebRuntime.js';
 export * from './WebRuntime.js';

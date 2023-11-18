@@ -2,8 +2,10 @@
 
 import type { Component } from '@captainpants/sweeter-core';
 import type { AbstractGlobalCssStylesheet } from '../styles/index.js';
-import type { DocumentStylesheetHandle } from '../runtime/WebRuntimeContext.js';
-import { WebRuntimeContext } from '../runtime/WebRuntimeContext.js';
+import {
+    getWebRuntime,
+    type DocumentStylesheetHandle,
+} from '../runtime/WebRuntime.js';
 
 export interface IncludeStylesheetProps {
     stylesheet: AbstractGlobalCssStylesheet;
@@ -13,7 +15,7 @@ export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
     { stylesheet },
     init,
 ) => {
-    const runtime = init.getContext(WebRuntimeContext);
+    const runtime = getWebRuntime();
 
     let handle: DocumentStylesheetHandle | undefined;
 

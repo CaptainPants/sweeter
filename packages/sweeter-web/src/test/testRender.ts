@@ -1,4 +1,4 @@
-import { WebRuntime } from '../runtime/WebRuntime.js';
+import { createWebRuntime } from '../runtime/index.js';
 
 export interface TestRenderResult {
     readonly nodes: NodeListOf<ChildNode>;
@@ -8,19 +8,17 @@ export interface TestRenderResult {
 
 /**
  * Convenience function for rendering isolated JSX chunks for unit tests
- * @param callback
+ * @param render
  * @returns
  */
-export function testRender(callback: () => JSX.Element): TestRenderResult {
-    const renderer = new WebRuntime();
-
+export function testRender(render: () => JSX.Element): TestRenderResult {
     const root = document.createElement('div');
 
-    const dispose = renderer.createRoot(root, callback);
+    const runtime = createWebRuntime({ root: root, render: render });
 
     return {
         nodes: root.childNodes,
         getHTML: () => root.innerHTML,
-        dispose,
+        dispose: () => runtime.dispose(),
     };
 }

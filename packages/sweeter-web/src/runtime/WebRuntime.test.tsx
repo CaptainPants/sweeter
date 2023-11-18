@@ -1,7 +1,7 @@
 /* @jsxImportSource ../. */
 
 import { type JSXElement } from '@captainpants/sweeter-core';
-import { WebRuntime } from './WebRuntime.js';
+import { createWebRuntime } from './index.js';
 
 function Component(): JSXElement {
     return (
@@ -26,13 +26,19 @@ function SvgComponent(): JSXElement {
 }
 
 it("WebRenderer with an HTML component doesn't throw", () => {
-    const root = new WebRuntime();
+    const root = createWebRuntime({
+        root: document.createElement('div'),
+        render: () => <Component />,
+    });
 
-    root.createRoot(document.createElement('div'), () => <Component />);
+    root.dispose();
 });
 
 it("WebRenderer with an SVG component doesn't throw", () => {
-    const root = new WebRuntime();
+    const root = createWebRuntime({
+        root: document.createElement('div'),
+        render: () => <SvgComponent />,
+    });
 
-    root.createRoot(document.createElement('div'), () => <SvgComponent />);
+    root.dispose();
 });

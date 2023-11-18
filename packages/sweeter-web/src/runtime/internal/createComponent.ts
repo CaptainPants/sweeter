@@ -15,10 +15,14 @@ import {
 } from './mounting.js';
 import { type WebRuntime } from '../WebRuntime.js';
 
-type MightHaveAsyncInitializer = Partial<
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    Pick<Component<{}, unknown>, 'asyncInitializer'>
->;
+type UnknownComponent = {
+    (
+        props: unknown,
+        init: ComponentInit,
+        asyncInitializerResult: unknown,
+    ): JSX.Element;
+    asyncInitializer?: (props: unknown, init: ComponentInit) => unknown;
+};
 
 export function createComponent<TComponentType extends Component<unknown>>(
     Component: TComponentType,
@@ -26,9 +30,11 @@ export function createComponent<TComponentType extends Component<unknown>>(
     webRuntime: WebRuntime,
 ): JSX.Element {
     // Use this to get the error context within callbacks
-    const getContext = Context.createSnapshot();
+    const getContextFromSnapshot = Context.createSnapshot();
 
-    if ((Component as MightHaveAsyncInitializer).asyncInitializer) {
+    const ComponentUnTyped = Component as unknown as UnknownComponent;
+
+    if (ComponentUnTyped.asyncInitializer) {
         // TODO: if asyncInitializer is specified, we wrap the component in an Async
     }
 
@@ -57,7 +63,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         try {
             return callback();
         } catch (ex) {
-            getContext(ErrorBoundaryContext).error(ex);
+            getContextFromSnapshot(ErrorBoundaryContext).error(ex);
             return fallback;
         }
     }
@@ -96,7 +102,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         });
     };
 
-    init.subscribeToChanges = (<TArgs extends readonly unknown[]>(
+    init.subscribeToChanges = <TArgs extends readonly unknown[]>(
         dependencies: [...TArgs],
         callback: (args: UnsignalAll<TArgs>) => void | (() => void),
         invokeImmediate = true,
@@ -110,7 +116,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         init.onMount(() => {
             return subscribeToChanges(dependencies, callback, invokeImmediate);
         });
-    }) satisfies ComponentInit['subscribeToChanges'];
+    };
 
     init.runtime = webRuntime;
 
@@ -127,7 +133,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         return context.getCurrent();
     };
 
-    const res = Component(props, init, undefined);
+    const res = ComponentUnTyped(props, init, undefined);
 
     // Makes all init calls throw from now on
     initCompleted = true;

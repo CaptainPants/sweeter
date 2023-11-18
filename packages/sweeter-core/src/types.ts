@@ -35,27 +35,27 @@ export type ComponentInit = ComponentInitFunction & {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type IfSpecified<T, TData> = [T] extends [undefined] ? {} : TData;
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type Component<TProps = {}, TAsyncInitializationResult = undefined> = ((
+export type Component<TProps = {}, TAsyncInitializationResult = undefined> = (
     props: TProps,
     init: ComponentInit,
     initializerResult: TAsyncInitializationResult,
-) => JSX.Element) &
-    IfSpecified<
-        TAsyncInitializationResult,
-        {
-            asyncInitializer: (
-                props: TProps,
-                init: AsyncInitializerInit,
-            ) => TAsyncInitializationResult;
-        }
-    >;
+) => JSX.Element;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type AsyncComponent<TAsyncInitializationResult, TProps = {}> = ((
+    props: TProps,
+    init: ComponentInit,
+    initializerResult: TAsyncInitializationResult,
+) => JSX.Element) & {
+    asyncInitializer: (
+        props: TProps,
+        init: AsyncInitializerInit,
+    ) => TAsyncInitializationResult;
+};
 
 export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Component<any> | string | undefined;
+    Component<any> | AsyncComponent<any, any> | string | undefined;
 
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends

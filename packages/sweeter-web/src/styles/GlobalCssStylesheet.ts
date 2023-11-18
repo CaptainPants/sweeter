@@ -16,6 +16,7 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
     public readonly symbol: symbol;
     public readonly preprocess: boolean;
 
+    constructor(options: GlobalCssStylesheetOptions);
     constructor({
         id,
         content,

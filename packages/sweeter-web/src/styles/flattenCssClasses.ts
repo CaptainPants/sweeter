@@ -29,7 +29,7 @@ function flatten(
             flatten(item, context, output);
         }
     } else if (value instanceof GlobalCssClass) {
-        output.push(context.getClassName(value));
+        output.push(context.getPrefixedClassName(value));
     } else if (isSignal(value)) {
         flatten(valueOf(value), context, output);
     } else if (value) {

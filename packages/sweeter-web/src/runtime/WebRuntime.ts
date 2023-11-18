@@ -71,7 +71,7 @@ class WebRuntimeContextImplementation
         };
     }
 
-    getClassName(cssClass: GlobalCssClass): string {
+    getPrefixedClassName(cssClass: GlobalCssClass): string {
         let name = this.#cssClassNameMap.get(cssClass);
         if (!name) {
             name = '_glbl' + this.#cssCounter + '_' + cssClass.nameBasis;

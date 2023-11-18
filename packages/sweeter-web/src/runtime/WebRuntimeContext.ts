@@ -20,7 +20,7 @@ export const WebRuntimeContext = new Context<WebRuntimeContext>('WebRuntime', {
     addStylesheet() {
         throw new TypeError('Not implemented');
     },
-    getClassName(cssClass) {
+    getPrefixedClassName(cssClass) {
         throw new TypeError('Not implemented');
     },
 });

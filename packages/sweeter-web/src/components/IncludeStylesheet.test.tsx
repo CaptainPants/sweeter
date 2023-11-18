@@ -1,16 +1,16 @@
 /* @jsxImportSource .. */
 
 import type { Component } from '@captainpants/sweeter-core';
-import { GlobalCssClass, styles } from '../styles/index.js';
+import { GlobalCssClass } from '../styles/index.js';
 import { testRender } from '../test/testRender.js';
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
-const example = styles.global(
-    'Something',
-    `
+const example = new GlobalCssClass({
+    className: 'Something',
+    content: `
         body { background-color: red; }
     `,
-);
+});
 
 it('Global stylesheet added', () => {
     const res = testRender(() => {
@@ -23,7 +23,7 @@ it('Global stylesheet added', () => {
 });
 
 const component1Stylesheet = new GlobalCssClass({
-    nameBasis: 'Component1',
+    className: 'Component1',
     content: `
         color: blue;
     `,
@@ -51,7 +51,7 @@ it('Global style for component', () => {
 });
 
 const component2Stylesheet = new GlobalCssClass({
-    nameBasis: 'Component2',
+    className: 'Component2',
     content: `
         color: blue;
 

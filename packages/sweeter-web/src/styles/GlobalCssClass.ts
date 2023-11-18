@@ -5,7 +5,7 @@ import type {
 } from './types.js';
 
 export interface GlobalCssClassOptions {
-    nameBasis: string;
+    className: string;
     content: string;
     preprocess?: boolean;
 }
@@ -17,20 +17,21 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
     public readonly content: string;
     public readonly preprocess: boolean;
 
+    constructor(options: GlobalCssClassOptions);
     constructor({
-        nameBasis,
+        className,
         content,
         preprocess = true,
     }: GlobalCssClassOptions) {
-        this.nameBasis = nameBasis;
-        this.id = nameBasis;
-        this.symbol = Symbol('GlobalCssClass-' + nameBasis);
+        this.nameBasis = className;
+        this.id = className;
+        this.symbol = Symbol('GlobalCssClass-' + className);
         this.content = content;
         this.preprocess = preprocess;
     }
 
     getContent(context: GlobalStyleSheetContentGeneratorContext): string {
-        const name = context.getClassName(this);
+        const name = context.getPrefixedClassName(this);
         const content = this.preprocess
             ? preprocessClassContent(name, this.content)
             : `.${name}\r\n{\r\n${this.content}\r\n}`;

@@ -25,7 +25,7 @@ exports[`Global style for component with nested 2`] = `"<!--Hooks(IncludeStylesh
 
 exports[`Global stylesheet added 1`] = `
 "<style data-id="Something">
-body {
+._glbl0_Something body {
     background-color: red;
 }
 </style>"

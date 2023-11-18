@@ -93,6 +93,19 @@ importers:
 
   packages/sweeter-core: {}
 
+  packages/sweeter-gummybear:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../sweeter-core
+      '@captainpants/sweeter-web':
+        specifier: workspace:^
+        version: link:../sweeter-web
+    devDependencies:
+      jest-environment-jsdom:
+        specifier: ^29.6.4
+        version: 29.6.4
+
   packages/sweeter-web:
     dependencies:
       '@captainpants/sweeter-core':

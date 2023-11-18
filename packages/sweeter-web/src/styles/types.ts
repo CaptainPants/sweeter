@@ -9,7 +9,7 @@ export interface AbstractGlobalCssStylesheet {
 }
 
 export interface GlobalStyleSheetContentGeneratorContext {
-    getClassName(cssClass: GlobalCssClass): string;
+    getPrefixedClassName(cssClass: GlobalCssClass): string;
 }
 
 export type ElementCssClasses =

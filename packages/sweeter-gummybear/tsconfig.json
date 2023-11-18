@@ -1,0 +1,16 @@
+{
+    "extends": "../../common-config/tsconfig.json",
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+    ],
+    "compilerOptions": {
+        "rootDir": "src",
+        "jsxImportSource": "-specify-inline-in-each-file-",
+        "jsx": "react-jsx",
+        "outDir": "./build/esm",
+        "paths": {
+			"@jsx-test/jsx-runtime": ["./jsx-runtime.js"]
+		}
+    }
+}

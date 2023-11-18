@@ -1,4 +1,3 @@
-import { getRuntime } from '../runtime/Runtime.js';
 import { $calc, $mutable, valueOf } from '../signals/index.js';
 import type { Component, ComponentInit, SignalifyProps } from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
@@ -15,7 +14,7 @@ export const Suspense: Component<SuspenseProps> = (
     // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = $mutable(0);
 
-    const runtime = getRuntime();
+    const runtime = init.runtime;
 
     return SuspenseContext.invokeWith(
         {

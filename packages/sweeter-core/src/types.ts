@@ -1,4 +1,4 @@
-import type { Context } from './index.js';
+import type { Context, Runtime } from './index.js';
 import type { UnionToIntersection } from './internal/UnionToIntersection.js';
 import type { Signal, UnsignalAll } from './signals/types.js';
 
@@ -31,6 +31,7 @@ export type ComponentInit = ComponentInitFunction & {
         invokeImmediately?: boolean,
     ) => void;
     getContext: <T>(context: Context<T>) => T;
+    runtime: Runtime;
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types

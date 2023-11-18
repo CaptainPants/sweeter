@@ -3,7 +3,6 @@ import {
     type RuntimeRootHostElement,
     type Component,
 } from '../types.js';
-import { getRuntime } from '../runtime/Runtime.js';
 
 export type PortalProps = SignalifyProps<{
     target: RuntimeRootHostElement;
@@ -11,12 +10,12 @@ export type PortalProps = SignalifyProps<{
 }>;
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
-    const runtimeContext = getRuntime();
+    const runtime = init.runtime;
 
     init.subscribeToChanges(
         [target, children],
         ([target, children]) => {
-            return runtimeContext.createNestedRoot(target, children);
+            return runtime.createNestedRoot(target, children);
         },
         true,
     );

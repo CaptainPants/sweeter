@@ -25,8 +25,8 @@ export function createComponent<TComponentType extends Component<unknown>>(
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
 ): JSX.Element {
-    // TODO: use this to get the error context within callbacks
-    const getContext = Context.snapshot();
+    // Use this to get the error context within callbacks
+    const getContext = Context.createSnapshot();
 
     if ((Component as MightHaveAsyncInitializer).asyncInitializer) {
         // TODO: if asyncInitializer is specified, we wrap the component in an Async
@@ -111,6 +111,8 @@ export function createComponent<TComponentType extends Component<unknown>>(
             return subscribeToChanges(dependencies, callback, invokeImmediate);
         });
     }) satisfies ComponentInit['subscribeToChanges'];
+
+    init.runtime = webRuntime;
 
     // Not sure if this is really a valuable component in init as you can call Context.current
     // but it does indicate that you should capture the context values you need during init

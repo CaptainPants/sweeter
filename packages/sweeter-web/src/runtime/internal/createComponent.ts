@@ -103,7 +103,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
     init.subscribeToChanges = <TArgs extends readonly unknown[]>(
         dependencies: [...TArgs],
         callback: (args: UnsignalAll<TArgs>) => void | (() => void),
-        invokeImmediate = true,
+        invokeOnSubscribe = true,
     ) => {
         if (initCompleted) {
             throw new Error(
@@ -112,7 +112,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         }
 
         init.onMount(() => {
-            return subscribeToChanges(dependencies, callback, invokeImmediate);
+            return subscribeToChanges(dependencies, callback, invokeOnSubscribe);
         });
     };
 

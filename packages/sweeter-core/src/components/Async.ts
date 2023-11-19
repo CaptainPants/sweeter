@@ -1,9 +1,10 @@
 import type { ComponentInit, SignalifyProps } from '../types.js';
 import { $calc, $mutable, valueOf } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
+import { getRuntime } from '../index.js';
 
 export type AsyncProps<T> = SignalifyProps<{
-    callback: (abort: AbortSignal) => Promise<T>;
+    loadData: (abort: AbortSignal) => Promise<T>;
     children: (data: T) => JSX.Element;
 }>;
 
@@ -12,7 +13,7 @@ export function Async<T>(
     init: ComponentInit,
 ): JSX.Element;
 export function Async<T>(
-    { callback, children }: AsyncProps<T>,
+    { loadData: callback, children }: AsyncProps<T>,
     init: ComponentInit,
 ): JSX.Element {
     const suspenseContext = SuspenseContext.getCurrent();
@@ -85,4 +86,11 @@ export function Async<T>(
             }
         }
     });
+}
+
+export function $async<T>(
+    loadData: (abort: AbortSignal) => Promise<T>,
+    render: (data: T) => JSX.Element,
+) {
+    return getRuntime().jsx(Async<T>, { loadData, children: render });
 }

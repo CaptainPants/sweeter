@@ -1,7 +1,9 @@
+import { getRuntime } from '../index.js';
 import {
     type SignalifyProps,
     type RuntimeRootHostElement,
     type Component,
+    type MightBeSignal,
 } from '../types.js';
 
 export type PortalProps = SignalifyProps<{
@@ -23,3 +25,10 @@ export const Portal: Component<PortalProps> = ({ target, children }, init) => {
     // Doesn't render anything
     return undefined;
 };
+
+export function $portal(
+    target: MightBeSignal<RuntimeRootHostElement>,
+    children: MightBeSignal<() => JSX.Element>,
+) {
+    getRuntime().jsx(Portal, { target, children });
+}

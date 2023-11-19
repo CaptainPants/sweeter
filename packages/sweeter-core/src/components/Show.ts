@@ -1,7 +1,7 @@
 import { getRuntime } from '../index.js';
 import { $calc } from '../signals/CalculatedSignal.js';
 import { valueOf } from '../signals/valueOf.js';
-import type { Component, Signalify, SignalifyProps } from '../types.js';
+import type { Component, MightBeSignal, SignalifyProps } from '../types.js';
 
 export type ShowProps = SignalifyProps<{
     if: boolean;
@@ -14,12 +14,15 @@ export type ShowProps = SignalifyProps<{
  * @param props
  * @returns
  */
-export const Show: Component<ShowProps> = ({ if: if_, children, otherwise }: ShowProps) => {
+export const Show: Component<ShowProps> = ({
+    if: if_,
+    children,
+    otherwise,
+}: ShowProps) => {
     const showCalculation = (): JSX.Element => {
         if (valueOf(if_)) {
             return valueOf(children)();
-        }
-        else {
+        } else {
             return valueOf(otherwise)?.();
         }
     };
@@ -28,9 +31,13 @@ export const Show: Component<ShowProps> = ({ if: if_, children, otherwise }: Sho
 };
 
 export function $if(
-    condition: Signalify<boolean>,
-    ifTrue: Signalify<() => JSX.Element>,
-    otherwise: Signalify<() => JSX.Element>,
+    condition: MightBeSignal<boolean>,
+    ifTrue: MightBeSignal<() => JSX.Element>,
+    otherwise: MightBeSignal<() => JSX.Element>,
 ): JSX.Element {
-    return getRuntime().jsx(Show, { if: condition, children: ifTrue, otherwise });
+    return getRuntime().jsx(Show, {
+        if: condition,
+        children: ifTrue,
+        otherwise,
+    });
 }

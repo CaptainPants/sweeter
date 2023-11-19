@@ -21,3 +21,5 @@ export function Dynamic<T>({ children, value }: DynamicProps<T>): JSX.Element {
 
     return $calc(showCalculation);
 }
+
+// No shortcut here as you can just use $calc directly

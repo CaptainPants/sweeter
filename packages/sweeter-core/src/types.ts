@@ -28,7 +28,7 @@ export type ComponentInit = ComponentInitFunction & {
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void | (() => void),
-        invokeImmediately?: boolean,
+        invokeOnSubscribe?: boolean,
     ) => void;
     getContext: <T>(context: Context<T>) => T;
     runtime: Runtime;
@@ -86,7 +86,7 @@ export type ChildrenTypeFor<
     ? Children
     : never;
 
-export type Signalify<T> = T | Signal<T>;
+export type MightBeSignal<T> = T | Signal<T>;
 
 /**
  * Take a props interface and make each property optionally a Signal.

@@ -13,7 +13,7 @@ it('Fallback is shown', () => {
     const res = testRender(() => (
         <Suspense fallback={() => <div>FALLBACK</div>}>
             {() => (
-                <Async<number> callback={neverFinishes}>
+                <Async<number> loadData={neverFinishes}>
                     {(result) => {
                         return result;
                     }}
@@ -41,7 +41,7 @@ it('Fallback is shown and then content once loaded', async () => {
     const res = testRender(() => (
         <Suspense fallback={() => <div>FALLBACK</div>}>
             {() => (
-                <Async<number> callback={load}>
+                <Async<number> loadData={load}>
                     {(result) => {
                         return result;
                     }}

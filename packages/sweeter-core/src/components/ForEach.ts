@@ -1,6 +1,10 @@
 import { getRuntime } from '../index.js';
 import { type Signal } from '../signals/types.js';
-import { type Signalify, type ComponentInit, type SignalifyProps } from '../types.js';
+import {
+    type MightBeSignal,
+    type ComponentInit,
+    type SignalifyProps,
+} from '../types.js';
 
 export type ForEachProps<T> = SignalifyProps<{
     items: readonly T[];
@@ -19,8 +23,8 @@ export function ForEach<T>(
 }
 
 export function $foreach<T>(
-    items: Signalify<readonly T[]>,
-    renderItem: Signalify<(item: Signal<T>, index: number) => JSX.Element>,
+    items: MightBeSignal<readonly T[]>,
+    renderItem: MightBeSignal<(item: Signal<T>, index: number) => JSX.Element>,
 ): JSX.Element {
     return getRuntime().jsx(ForEach<T>, { items, renderItem });
 }

@@ -35,7 +35,8 @@ export function addJsxChildren(
     const onChange = () => {
         const parentInDocument = isInDocument(parent);
         const updated = flattenedChildrenSignal.peek();
-        const sentinel = parent.firstChild;
+
+        let before = parent.firstChild;
 
         newlyMountedNodes = [];
 
@@ -50,7 +51,8 @@ export function addJsxChildren(
                 newlyMountedNodes.push(child);
             }
 
-            parent.insertBefore(child, sentinel);
+            parent.insertBefore(child, before);
+            before = child.nextSibling;
         }
 
         // Go through added nodes in reverse order and call any mount callbacks
@@ -66,7 +68,7 @@ export function addJsxChildren(
 
         // This items are being removed
         // Note that descendents are handled by the call to addJsxChildren that added them to their parent
-        removeSelfAndLaterSiblings(sentinel, (removed) => {
+        removeSelfAndLaterSiblings(before, (removed) => {
             // This should do onUnMount recursively
             if (!isInDocument(removed)) {
                 announceUnMountedRecursive(removed);

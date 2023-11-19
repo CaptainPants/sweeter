@@ -1,8 +1,8 @@
 import { $calc, $mutable, $val } from '../signals/index.js';
-import type { Component, SignalifyProps } from '../types.js';
+import type { Component, PropertiesMightBeSignals } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
-export type ErrorBoundaryProps = SignalifyProps<{
+export type ErrorBoundaryProps = PropertiesMightBeSignals<{
     children: () => JSX.Element;
     renderError: (error: unknown) => JSX.Element;
 }>;

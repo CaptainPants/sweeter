@@ -3,10 +3,10 @@ import { type Signal } from '../signals/types.js';
 import {
     type MightBeSignal,
     type ComponentInit,
-    type SignalifyProps,
+    type PropertiesMightBeSignals,
 } from '../types.js';
 
-export type ForEachProps<T> = SignalifyProps<{
+export type ForEachProps<T> = PropertiesMightBeSignals<{
     items: readonly T[];
     renderItem: (item: Signal<T>, index: number) => JSX.Element;
 }>;

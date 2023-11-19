@@ -1,8 +1,8 @@
 import { $calc } from '../signals/$calc.js';
 import { $val } from '../signals/$val.js';
-import type { SignalifyProps } from '../types.js';
+import type { PropertiesMightBeSignals } from '../types.js';
 
-export type DynamicProps<T> = SignalifyProps<{
+export type DynamicProps<T> = PropertiesMightBeSignals<{
     value: T;
     children: (value: T) => JSX.Element;
 }>;

@@ -1,8 +1,12 @@
 import { $calc, $mutable, $val } from '../signals/index.js';
-import type { Component, ComponentInit, SignalifyProps } from '../types.js';
+import type {
+    Component,
+    ComponentInit,
+    PropertiesMightBeSignals,
+} from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
-export type SuspenseProps = SignalifyProps<{
+export type SuspenseProps = PropertiesMightBeSignals<{
     fallback: () => JSX.Element;
     children: () => JSX.Element;
 }>;

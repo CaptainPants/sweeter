@@ -92,7 +92,7 @@ export type MightBeSignal<T> = T | Signal<T>;
  * Take a props interface and make each property optionally a Signal.
  * You should ensure that the values aren't signals already.
  */
-export type SignalifyProps<TProps> = {
+export type PropertiesMightBeSignals<TProps> = {
     [Key in keyof TProps]: Signal<TProps[Key]> | TProps[Key];
 };
 
@@ -116,7 +116,7 @@ export type IntrinsicElementDoNotSignalifyAttributes<
  * Props for intrinsic elements, based on the type string.
  */
 export type IntrinsicElementProps<TElementTypeString extends string> =
-    SignalifyProps<
+    PropertiesMightBeSignals<
         Omit<
             IntrinsicElementAttributes<TElementTypeString>,
             IntrinsicElementDoNotSignalifyAttributes<TElementTypeString>

@@ -1,10 +1,13 @@
 /* @jsxImportSource ../.. */
 
-import type { ComponentInit, SignalifyProps } from '@captainpants/sweeter-core';
+import type {
+    ComponentInit,
+    PropertiesMightBeSignals,
+} from '@captainpants/sweeter-core';
 import { $val } from '@captainpants/sweeter-core';
 import { testRender } from '../../test/testRender.js';
 
-type TestingComponentWithChildrenProps = SignalifyProps<{
+type TestingComponentWithChildrenProps = PropertiesMightBeSignals<{
     number: number;
     children?: JSX.Element;
     onMount: (num: number) => void;

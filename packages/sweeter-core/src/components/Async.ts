@@ -1,9 +1,9 @@
-import type { ComponentInit, SignalifyProps } from '../types.js';
+import type { ComponentInit, PropertiesMightBeSignals } from '../types.js';
 import { $calc, $mutable, $val } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 import { getRuntime } from '../index.js';
 
-export type AsyncProps<T> = SignalifyProps<{
+export type AsyncProps<T> = PropertiesMightBeSignals<{
     loadData: (abort: AbortSignal) => Promise<T>;
     children: (data: T) => JSX.Element;
 }>;

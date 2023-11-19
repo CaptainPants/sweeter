@@ -1,6 +1,6 @@
-import type { Component, SignalifyProps } from '../types.js';
+import type { Component, PropertiesMightBeSignals } from '../types.js';
 
-export type FragmentProps = SignalifyProps<{
+export type FragmentProps = PropertiesMightBeSignals<{
     children?: JSX.Element;
 }>;
 

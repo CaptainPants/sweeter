@@ -1,12 +1,12 @@
 import { getRuntime } from '../index.js';
 import {
-    type SignalifyProps,
+    type PropertiesMightBeSignals,
     type RuntimeRootHostElement,
     type Component,
     type MightBeSignal,
 } from '../types.js';
 
-export type PortalProps = SignalifyProps<{
+export type PortalProps = PropertiesMightBeSignals<{
     target: RuntimeRootHostElement;
     children: () => JSX.Element;
 }>;

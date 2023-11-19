@@ -1,11 +1,11 @@
 import { getRuntime } from '../index.js';
 import {
-    type SignalifyProps,
+    type PropertiesMightBeSignals,
     type Component,
     type MightBeSignal,
 } from '../types.js';
 
-export type OffscreenProps = SignalifyProps<{
+export type OffscreenProps = PropertiesMightBeSignals<{
     children?: JSX.Element;
 }>;
 

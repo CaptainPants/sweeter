@@ -1,9 +1,13 @@
 import { getRuntime } from '../index.js';
 import { $calc } from '../signals/$calc.js';
 import { $val } from '../signals/$val.js';
-import type { Component, MightBeSignal, SignalifyProps } from '../types.js';
+import type {
+    Component,
+    MightBeSignal,
+    PropertiesMightBeSignals,
+} from '../types.js';
 
-export type ShowProps = SignalifyProps<{
+export type ShowProps = PropertiesMightBeSignals<{
     if: boolean;
     children: () => JSX.Element;
     otherwise?: () => JSX.Element;

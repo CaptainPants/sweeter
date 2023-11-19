@@ -1,4 +1,4 @@
-import { $calc, $mutable, valueOf } from '../signals/index.js';
+import { $calc, $mutable, $val } from '../signals/index.js';
 import type { Component, SignalifyProps } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
@@ -27,22 +27,22 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
                 // but having a side effect from calling renderError
                 // would also be gross
                 if (error.value) {
-                    return valueOf(renderError)(error.value.error);
+                    return $val(renderError)(error.value.error);
                 }
 
                 try {
-                    const res = valueOf(children)();
+                    const res = $val(children)();
                     // If the result is a signal we need to subscribe
                     // and get its value - so that any errors stored
                     // in a calculated signal are caught by this try/
                     // catch.
-                    return valueOf(res);
+                    return $val(res);
                 } catch (ex) {
                     // This would only happen if the method itself
                     // throws, as the rendering functions should be
                     // invoking the boundary directory using
                     // ErrorBoundaryContext
-                    return valueOf(renderError)(ex);
+                    return $val(renderError)(ex);
                 }
             };
 

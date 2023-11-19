@@ -1,5 +1,5 @@
 import { $calc } from '../signals/$calc.js';
-import { valueOf } from '../signals/valueOf.js';
+import { $val } from '../signals/$val.js';
 import type { SignalifyProps } from '../types.js';
 
 export type DynamicProps<T> = SignalifyProps<{
@@ -15,8 +15,8 @@ export type DynamicProps<T> = SignalifyProps<{
 export function Dynamic<T>(props: DynamicProps<T>): JSX.Element;
 export function Dynamic<T>({ children, value }: DynamicProps<T>): JSX.Element {
     const showCalculation = (): JSX.Element => {
-        const actualValue = valueOf(value);
-        return valueOf(children)(actualValue);
+        const actualValue = $val(value);
+        return $val(children)(actualValue);
     };
 
     return $calc(showCalculation);

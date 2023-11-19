@@ -1,5 +1,5 @@
 import { isSignal } from './isSignal.js';
-import { valueOfAll } from './valueOf.js';
+import { $valEach } from './$val.js';
 import type { UnsignalAll } from './types.js';
 import { popAndCallAll } from '../internal/popAndCallAll.js';
 
@@ -23,7 +23,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
         }
 
         // callback can return a cleanup method to be called next change.
-        lastCleanup = callback(valueOfAll(dependencies));
+        lastCleanup = callback($valEach(dependencies));
     };
 
     const unlisten: (() => void)[] = [];

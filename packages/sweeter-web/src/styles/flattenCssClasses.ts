@@ -1,5 +1,5 @@
 import type { Signal } from '@captainpants/sweeter-core';
-import { $calc, isSignal, valueOf } from '@captainpants/sweeter-core';
+import { $calc, isSignal, $val } from '@captainpants/sweeter-core';
 import type {
     ElementCssClasses,
     GlobalStyleSheetContentGeneratorContext,
@@ -22,7 +22,7 @@ function flatten(
     context: GlobalStyleSheetContentGeneratorContext,
     output: string[],
 ) {
-    const value = valueOf(classes);
+    const value = $val(classes);
 
     if (Array.isArray(value)) {
         for (const item of value) {
@@ -31,7 +31,7 @@ function flatten(
     } else if (value instanceof GlobalCssClass) {
         output.push(context.getPrefixedClassName(value));
     } else if (isSignal(value)) {
-        flatten(valueOf(value), context, output);
+        flatten($val(value), context, output);
     } else if (value) {
         output.push(value);
     }

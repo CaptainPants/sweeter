@@ -8,12 +8,12 @@ import { isSignal } from './isSignal.js';
  * @param value
  * @returns
  */
-export function valueOf<T>(value: T | Signal<T>): T {
+export function $val<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.value : value;
 }
 
-export function valueOfAll<TArgs extends readonly unknown[]>(
+export function $valEach<TArgs extends readonly unknown[]>(
     values: [...TArgs],
 ): UnsignalAll<[...TArgs]> {
-    return values.map((x) => valueOf(x)) as UnsignalAll<[...TArgs]>;
+    return values.map((x) => $val(x)) as UnsignalAll<[...TArgs]>;
 }

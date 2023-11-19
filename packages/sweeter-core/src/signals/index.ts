@@ -9,5 +9,5 @@ export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';
 export * from './SignalState.js';
-export * from './valueOf.js';
+export * from './$val.js';
 export * from './subscribeToChanges.js';

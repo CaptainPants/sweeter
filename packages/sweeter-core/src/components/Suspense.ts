@@ -1,4 +1,4 @@
-import { $calc, $mutable, valueOf } from '../signals/index.js';
+import { $calc, $mutable, $val } from '../signals/index.js';
 import type { Component, ComponentInit, SignalifyProps } from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
 
@@ -35,7 +35,7 @@ export const Suspense: Component<SuspenseProps> = (
         },
         () => {
             const evaluatedChildren = $calc(() => {
-                return valueOf(children)();
+                return $val(children)();
             });
 
             const suspenseCalculation = (): JSX.Element => {
@@ -46,7 +46,7 @@ export const Suspense: Component<SuspenseProps> = (
 
                 if (counter.value > 0) {
                     return [
-                        valueOf(fallback)(),
+                        $val(fallback)(),
                         runtime.renderOffscreen(evaluatedChildren.value),
                     ];
                 }

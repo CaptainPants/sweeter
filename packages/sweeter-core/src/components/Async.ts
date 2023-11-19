@@ -1,5 +1,5 @@
 import type { ComponentInit, SignalifyProps } from '../types.js';
-import { $calc, $mutable, valueOf } from '../signals/index.js';
+import { $calc, $mutable, $val } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 import { getRuntime } from '../index.js';
 
@@ -41,7 +41,7 @@ export function Async<T>(
         });
 
         try {
-            const result = await valueOf(callback)(signal);
+            const result = await $val(callback)(signal);
 
             if (signal.aborted) {
                 return; // don't store result if aborted
@@ -78,7 +78,7 @@ export function Async<T>(
             return undefined;
         } else {
             if (data.value.resolution === 'SUCCESS') {
-                return valueOf(children)(data.value.result);
+                return $val(children)(data.value.result);
             } else if (data.value.resolution === 'ERROR') {
                 throw data.value.error;
             } else {

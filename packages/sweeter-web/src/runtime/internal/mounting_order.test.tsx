@@ -1,7 +1,7 @@
 /* @jsxImportSource ../.. */
 
 import type { ComponentInit, SignalifyProps } from '@captainpants/sweeter-core';
-import { valueOf } from '@captainpants/sweeter-core';
+import { $val } from '@captainpants/sweeter-core';
 import { testRender } from '../../test/testRender.js';
 
 type TestingComponentWithChildrenProps = SignalifyProps<{
@@ -16,10 +16,10 @@ function TestingComponentWithChildren(
     init: ComponentInit,
 ): JSX.Element {
     init.onMount(() => {
-        valueOf(props.onMount)(valueOf(props.number));
+        $val(props.onMount)($val(props.number));
     });
     init.onUnMount(() => {
-        valueOf(props.onUnMount)(valueOf(props.number));
+        $val(props.onUnMount)($val(props.number));
     });
 
     return (

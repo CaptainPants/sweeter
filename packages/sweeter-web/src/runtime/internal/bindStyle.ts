@@ -2,7 +2,7 @@ import type { Signal } from '@captainpants/sweeter-core';
 import {
     $calc,
     addExplicitStrongReference,
-    valueOf,
+    $val,
 } from '@captainpants/sweeter-core';
 import { type Styles } from '../../IntrinsicAttributes.js';
 
@@ -15,7 +15,7 @@ export function bindStyle(node: HTMLElement | SVGElement, styles: Styles) {
                 | string
                 | Signal<string>;
 
-            result.push(key, ': ', valueOf(value), ';');
+            result.push(key, ': ', $val(value), ';');
         }
 
         return result.join('');

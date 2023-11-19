@@ -1,6 +1,6 @@
 import { getRuntime } from '../index.js';
 import { $calc } from '../signals/$calc.js';
-import { valueOf } from '../signals/valueOf.js';
+import { $val } from '../signals/$val.js';
 import type { Component, MightBeSignal, SignalifyProps } from '../types.js';
 
 export type ShowProps = SignalifyProps<{
@@ -20,10 +20,10 @@ export const Show: Component<ShowProps> = ({
     otherwise,
 }: ShowProps) => {
     const showCalculation = (): JSX.Element => {
-        if (valueOf(if_)) {
-            return valueOf(children)();
+        if ($val(if_)) {
+            return $val(children)();
         } else {
-            return valueOf(otherwise)?.();
+            return $val(otherwise)?.();
         }
     };
 

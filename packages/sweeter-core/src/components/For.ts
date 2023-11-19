@@ -1,5 +1,5 @@
 import { $calc, $mutable, $val, getRuntime, isSignal } from '../index.js';
-import { type ReadWriteSignal, type Signal } from '../signals/types.js';
+import { type Signal } from '../signals/types.js';
 import {
     type MightBeSignal,
     type ComponentInit,
@@ -24,12 +24,15 @@ export function For<T>(
     }
 
     // This seems fairly abusive of the dependency tracking system - but ... eh
-    const existingElements: { ele: JSX.Element; value: ReadWriteSignal<T> }[] =
-        [];
+    const elementCache: {
+        element: JSX.Element;
+        signal: Signal<T>;
+        orphaned: { value: boolean };
+    }[] = [];
 
     // Clear the cache if the render function changes
     init.subscribeToChanges([renderItem], () => {
-        existingElements.length = 0;
+        elementCache.length = 0;
     });
 
     // items is a signal, we need to keep track of a signal for every item
@@ -38,30 +41,43 @@ export function For<T>(
 
     return $calc(() => {
         const itemsResolved = $val(items);
-        if (existingElements.length > itemsResolved.length) {
+        if (elementCache.length > itemsResolved.length) {
             // we are basically just orphaning the old signals - we don't want them to
             // throw or anything as there is potentially UI hooked up to them that would
             // throw to an ErrorBoundary or something
-            existingElements.length = itemsResolved.length;
-        } else {
-            // For all the items where there was an existingElement entry,
-            // update the related signal.
-            for (let i = 0; i < existingElements.length; ++i) {
-                existingElements[i]!.value.update(itemsResolved[i]!);
-            }
-            // For the rest, add a new signal and render an item
-            while (existingElements.length < itemsResolved.length) {
-                const index = existingElements.length;
-                const elementSignal = $mutable<T>(itemsResolved[index]!);
 
-                existingElements.push({
-                    ele: $val(renderItem)(elementSignal, index),
-                    value: elementSignal,
+            for (let i = itemsResolved.length; i < elementCache.length; ++i) {
+                elementCache[i]!.orphaned.value = true;
+            }
+
+            elementCache.length = itemsResolved.length;
+        } else {
+            // For the rest, add a new signal and render an item
+            while (elementCache.length < itemsResolved.length) {
+                const index = elementCache.length;
+
+                // This basically exists so that an orphaned signal won't cause exceptions
+                // if a signal is orphaned we just keep returning its
+                let mostRecentResult: T = itemsResolved[index]!;
+                const orphaned = { value: false };
+
+                const elementSignal = $calc<T>(() => {
+                    if (!orphaned.value) {
+                        mostRecentResult = itemsResolved[index]!;
+                    }
+
+                    return mostRecentResult;
+                });
+
+                elementCache.push({
+                    element: $val(renderItem)(elementSignal, index),
+                    signal: elementSignal,
+                    orphaned: orphaned,
                 });
             }
         }
 
-        return existingElements.map((x) => x.ele);
+        return elementCache.map((x) => x.element);
     });
 }
 

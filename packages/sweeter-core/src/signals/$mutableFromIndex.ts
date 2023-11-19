@@ -1,7 +1,13 @@
 import { MutableCalculatedSignal } from './internal/MutableCalculatedSignal.js';
 import { type ReadWriteSignal } from './types.js';
 
-export function $derived<TSource, TKey extends keyof TSource>(
+/**
+ * Create a new ReadWriteSignal signal derived from an existing ReadWriteSignal, by following an index (e.g. array index or object key). Changes will be propogated back by shallow cloning.
+ * @param source
+ * @param key
+ * @returns
+ */
+export function $mutableFromIndex<TSource, TKey extends keyof TSource>(
     source: ReadWriteSignal<TSource>,
     key: TKey,
 ): ReadWriteSignal<TSource[TKey]> & { value: TSource[TKey] } {

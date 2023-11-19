@@ -26,7 +26,6 @@ export function For<T>(
     // This seems fairly abusive of the dependency tracking system - but ... eh
     const elementCache: {
         element: JSX.Element;
-        signal: Signal<T>;
         orphaned: { value: boolean };
     }[] = [];
 
@@ -71,7 +70,6 @@ export function For<T>(
 
                 elementCache.push({
                     element: $val(renderItem)(elementSignal, index),
-                    signal: elementSignal,
                     orphaned: orphaned,
                 });
             }

@@ -1,8 +1,6 @@
-import { SignalBase } from './SignalBase.js';
-import { deferForBatch, isBatching } from './batching.js';
-import { type Signal } from './types.js';
-
-export type Later = (callback: () => void) => void;
+import { SignalBase } from '../SignalBase.js';
+import { deferForBatch, isBatching } from '../batching.js';
+import { type Later, type Signal } from '../types.js';
 
 export class DeferredSignal<T> extends SignalBase<T> {
     constructor(inner: Signal<T>, later: Later = queueMicrotask) {
@@ -55,11 +53,4 @@ export class DeferredSignal<T> extends SignalBase<T> {
             this.#dirty = false;
         }
     }
-}
-
-export function $deferred<T>(
-    inner: Signal<T>,
-    later?: Later,
-): DeferredSignal<T> {
-    return new DeferredSignal(inner, later);
 }

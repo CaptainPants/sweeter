@@ -53,3 +53,5 @@ export type Unsignal<T> = T extends Signal<infer S> ? S : T;
 export type UnsignalAll<T extends readonly unknown[]> = {
     [Key in keyof T]: Unsignal<T[Key]>;
 };
+
+export type Later = (callback: () => void) => void;

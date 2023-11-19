@@ -1,10 +1,10 @@
-import type { SavedExecutionContext } from '../executionContext/saveExecutionContext.js';
-import { saveExecutionContext } from '../executionContext/saveExecutionContext.js';
-import { SignalBase } from './SignalBase.js';
-import { type SignalState } from './SignalState.js';
-import { callAndReturnDependencies } from './ambient.js';
-import { deferForBatch, isBatching } from './batching.js';
-import { type Signal } from './types.js';
+import type { SavedExecutionContext } from '../../executionContext/saveExecutionContext.js';
+import { saveExecutionContext } from '../../executionContext/saveExecutionContext.js';
+import { SignalBase } from '../SignalBase.js';
+import { type SignalState } from '../SignalState.js';
+import { callAndReturnDependencies } from '../ambient.js';
+import { deferForBatch, isBatching } from '../batching.js';
+import { type Signal } from '../types.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
     const result = (): SignalState<T> => {
@@ -133,8 +133,4 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             }
         }
     }
-}
-
-export function $calc<T>(calculation: () => T): CalculatedSignal<T> {
-    return new CalculatedSignal(calculation);
 }

@@ -1,5 +1,5 @@
 import { getRuntime } from '../index.js';
-import { $calc } from '../signals/CalculatedSignal.js';
+import { $calc } from '../signals/$calc.js';
 import { valueOf } from '../signals/valueOf.js';
 import type { Component, MightBeSignal, SignalifyProps } from '../types.js';
 

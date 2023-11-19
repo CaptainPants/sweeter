@@ -1,4 +1,4 @@
-import { $calc } from '../signals/CalculatedSignal.js';
+import { $calc } from '../signals/$calc.js';
 import { valueOf } from '../signals/valueOf.js';
 import type { SignalifyProps } from '../types.js';
 

@@ -1,7 +1,7 @@
-import { SignalBase } from './SignalBase.js';
-import { announceMutatingSignal, announceSignalUsage } from './ambient.js';
-import { writableSignalMarker } from './internal/markers.js';
-import { type ReadWriteSignal } from './types.js';
+import { SignalBase } from '../SignalBase.js';
+import { announceMutatingSignal, announceSignalUsage } from '../ambient.js';
+import { writableSignalMarker } from '../internal/markers.js';
+import { type ReadWriteSignal } from '../types.js';
 
 export class MutableValueSignal<T>
     extends SignalBase<T>
@@ -28,13 +28,4 @@ export class MutableValueSignal<T>
     }
 
     readonly [writableSignalMarker] = true;
-}
-
-export function $mutable<T>(initialValue: T): MutableValueSignal<T>;
-export function $mutable<TOrUndefined>(): MutableValueSignal<
-    TOrUndefined | undefined
->;
-
-export function $mutable<T>(initialValue?: T): MutableValueSignal<T> {
-    return new MutableValueSignal<T>(initialValue as T);
 }

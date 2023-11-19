@@ -112,7 +112,11 @@ export function createComponent<TComponentType extends Component<unknown>>(
         }
 
         init.onMount(() => {
-            return subscribeToChanges(dependencies, callback, invokeOnSubscribe);
+            return subscribeToChanges(
+                dependencies,
+                callback,
+                invokeOnSubscribe,
+            );
         });
     };
 

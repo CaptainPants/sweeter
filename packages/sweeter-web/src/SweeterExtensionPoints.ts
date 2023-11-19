@@ -8,6 +8,13 @@ declare global {
             'wireyui-web': keyof IntrinsicElementTypeMap;
         }
 
+        interface IntrinsicElementNameToType<
+            TElementTypeString extends string,
+        > {
+            'wireyui-web': IntrinsicElementTypeMap[TElementTypeString &
+                keyof IntrinsicElementTypeMap];
+        }
+
         interface IntrinsicElementAttributeByElementNameString<
             TElementTypeString extends string,
         > {

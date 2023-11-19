@@ -1,9 +1,12 @@
 import {
-    type Component,
     type PropsWithIntrinsicAttributesFor,
     type RuntimeRootHostElement,
     type Runtime,
     callWithRuntime,
+    type ComponentOrIntrinsicElementTypeConstraint,
+    type JSXResultForComponentType,
+    untrack,
+    ErrorBoundaryContext,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { announceChildrenMountedRecursive } from './internal/mounting.js';
@@ -104,18 +107,44 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         });
     }
 
-    createDOMElement<TElementTypeString extends string>(
-        type: TElementTypeString,
-        props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
-    ): HTMLElement | SVGElement {
-        return createDOMElement(type, props, this);
-    }
-
-    createComponent<TComponentType extends Component<unknown>>(
-        Component: TComponentType,
+    jsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
+        type: TComponentType,
         props: PropsWithIntrinsicAttributesFor<TComponentType>,
-    ): JSX.Element {
-        return createComponent(Component, props, this);
+    ): JSXResultForComponentType<TComponentType> {
+        // Its reasonably certain that people will trigger side effects when wiring up a component
+        // and that these might update signals. We also don't want to accidentally subscribe to these
+        // signals -- hence untrack the actual render
+        const result = untrack(() => {
+            try {
+                switch (typeof type) {
+                    case 'function': {
+                        // Component function
+                        return createComponent(type, props, this);
+                    }
+
+                    case 'string': {
+                        // intrinsic
+                        const element = createDOMElement(
+                            type,
+                            props as PropsWithIntrinsicAttributesFor<
+                                TComponentType & string
+                            >,
+                            this,
+                        );
+
+                        return element;
+                    }
+
+                    default:
+                        throw new TypeError(`Unexpected type ${type}`);
+                }
+            } catch (ex) {
+                ErrorBoundaryContext.getCurrent().error(ex);
+                return 'Error processing...';
+            }
+        });
+
+        return result as JSXResultForComponentType<TComponentType>;
     }
 
     get type(): symbol {

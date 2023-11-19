@@ -1,9 +1,4 @@
-import {
-    getRuntime,
-    type Component,
-    type PropsWithIntrinsicAttributesFor,
-    type Runtime,
-} from '@captainpants/sweeter-core';
+import { getRuntime, type Runtime } from '@captainpants/sweeter-core';
 import type {
     AbstractGlobalCssStylesheet,
     GlobalStyleSheetContentGeneratorContext,
@@ -21,14 +16,6 @@ export interface WebRuntime
     addStylesheet(
         stylesheet: AbstractGlobalCssStylesheet,
     ): DocumentStylesheetHandle;
-    createDOMElement<TElementTypeString extends string>(
-        type: TElementTypeString,
-        props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
-    ): HTMLElement | SVGElement;
-    createComponent<TComponentType extends Component<unknown>>(
-        Component: TComponentType,
-        props: PropsWithIntrinsicAttributesFor<TComponentType>,
-    ): JSX.Element;
 }
 
 export function getWebRuntime(): WebRuntime {

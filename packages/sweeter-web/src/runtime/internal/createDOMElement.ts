@@ -1,7 +1,16 @@
-import type { PropsWithIntrinsicAttributesFor } from '@captainpants/sweeter-core';
+import type {
+    PropsWithIntrinsicAttributesFor,
+    WritableSignal,
+} from '@captainpants/sweeter-core';
 import { assignDOMElementProps } from './assignDOMElementProps.js';
 import { addJsxChildren } from './addJsxChildren.js';
 import { type WebRuntime } from '../WebRuntime.js';
+
+type MayHaveRef = {
+    ref?:
+        | ((ele: HTMLElement | SVGElement) => void)
+        | WritableSignal<HTMLElement | SVGElement>;
+};
 
 export function createDOMElement<TElementTypeString extends string>(
     type: TElementTypeString,
@@ -14,6 +23,15 @@ export function createDOMElement<TElementTypeString extends string>(
     assignDOMElementProps(ele, props, webRuntime);
 
     addJsxChildren(ele, props.children, webRuntime);
+
+    const ref = (props as MayHaveRef).ref;
+    if (ref) {
+        if (typeof ref === 'function') {
+            ref(ele);
+        } else {
+            ref.update(ele);
+        }
+    }
 
     return ele;
 }

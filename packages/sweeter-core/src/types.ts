@@ -57,6 +57,12 @@ export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any> | AsyncComponent<any, any> | string | undefined;
 
+export type JSXResultForComponentType<
+    ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
+> = ComponentType extends string
+    ? SweeterExtensionPoints.IntrinsicElementNameToType<ComponentType>[keyof SweeterExtensionPoints.IntrinsicElementNameToType<ComponentType>]
+    : JSXElement;
+
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
@@ -79,6 +85,8 @@ export type ChildrenTypeFor<
 }
     ? Children
     : never;
+
+export type Signalify<T> = T | Signal<T>;
 
 /**
  * Take a props interface and make each property optionally a Signal.

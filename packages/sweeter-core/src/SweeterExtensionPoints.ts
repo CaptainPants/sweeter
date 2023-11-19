@@ -7,9 +7,20 @@ declare global {
          * Use this to extend IntrinsicElementAttributes.
          *
          * Merge into this interface with:
-         * '<unique-name>': ComponentProps
+         * '<library-name>': ComponentProps
          */
         interface IntrinsicElementAttributeByElementNameString<
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            TElementTypeString extends string,
+        > {}
+
+        /**
+         * Defines the return type for Runtime.jsx / JSXResultForComponentType<TComponentType>.
+         *
+         * Merge into this interface with:
+         * '<library-name>': ResultType
+         */
+        interface IntrinsicElementNameToType<
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TElementTypeString extends string,
         > {}
@@ -19,7 +30,7 @@ declare global {
          * populating IntrinsicElements.
          *
          * Merge into this interface with:
-         * '<unique-name>': 'div' | 'span';
+         * '<library-name>': 'div' | 'span';
          */
         interface IntrinsicElementNames {}
 
@@ -27,7 +38,7 @@ declare global {
          * Use this to extend IntrinsicElementDoNotSignalifyAttributes.
          *
          * Merge into this interface with:
-         * '<unique-name>': 'attribute-1' | 'attribute-2'
+         * '<library-name>': 'attribute-1' | 'attribute-2'
          */
 
         interface SkipSignalifyingIntrinsicElementAttributes<
@@ -39,7 +50,7 @@ declare global {
          * Use this to add to the IntrinsicElements union.
          *
          * Merge into this interface with:
-         * '<unique-name>': BackendSpecificJSXElement1 | BackendSpecificJSXElement2;
+         * '<library-name>': BackendSpecificJSXElement1 | BackendSpecificJSXElement2;
          */
         interface IntrinsicElementTypes {
             'wireyui-core': number | string | boolean | null | undefined;
@@ -50,7 +61,7 @@ declare global {
          * and RendererContext.
          *
          * Merge into this interface with:
-         * '<unique-name>': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
+         * '<library-name>': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
          */
         interface RuntimeRootHostElementTypes {}
     }

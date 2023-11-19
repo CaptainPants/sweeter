@@ -1,5 +1,10 @@
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
-import { type RuntimeRootHostElement } from '../types.js';
+import {
+    type JSXResultForComponentType,
+    type ComponentOrIntrinsicElementTypeConstraint,
+    type RuntimeRootHostElement,
+    type PropsWithIntrinsicAttributesFor,
+} from '../types.js';
 
 export interface Runtime {
     renderOffscreen(content: JSX.Element): JSX.Element;
@@ -7,6 +12,10 @@ export interface Runtime {
         target: RuntimeRootHostElement,
         render: () => JSX.Element,
     ): () => void;
+    jsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
+        type: TComponentType,
+        props: PropsWithIntrinsicAttributesFor<TComponentType>,
+    ): JSXResultForComponentType<TComponentType>;
     dispose(): void;
     readonly type: symbol;
 }

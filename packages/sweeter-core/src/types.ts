@@ -50,6 +50,7 @@ export type AsyncComponent<TAsyncInitializationResult, TProps = {}> = ((
     asyncInitializer: (
         props: TProps,
         init: AsyncInitializerInit,
+        signal: AbortSignal,
     ) => TAsyncInitializationResult;
 };
 

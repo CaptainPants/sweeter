@@ -7,6 +7,7 @@ import {
     Context,
     type PropsWithIntrinsicAttributesFor,
     ErrorBoundaryContext,
+    Async,
 } from '@captainpants/sweeter-core';
 import {
     addMountedCallback,
@@ -21,21 +22,44 @@ type UnknownComponent = {
         init: ComponentInit,
         asyncInitializerResult: unknown,
     ): JSX.Element;
-    asyncInitializer?: (props: unknown, init: ComponentInit) => unknown;
+    asyncInitializer?: (
+        props: unknown,
+        init: ComponentInit,
+        signal: AbortSignal,
+    ) => Promise<unknown>;
 };
 
 export function createComponent<TComponentType extends Component<unknown>>(
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
+    initializerComplete: boolean = false,
+    initializerResult: unknown = undefined,
 ): JSX.Element {
     // Use this to get the error context within callbacks
     const getContextFromSnapshot = Context.createSnapshot();
 
     const ComponentUnTyped = Component as unknown as UnknownComponent;
 
-    if (ComponentUnTyped.asyncInitializer) {
-        // TODO: if asyncInitializer is specified, we wrap the component in an Async
+    // Special case for asyncInitializer
+    if (!initializerComplete && ComponentUnTyped.asyncInitializer) {
+        const initializer = ComponentUnTyped.asyncInitializer;
+        
+        // TODO: this should just be createComponent, but having a type issue
+        return webRuntime.jsx(Async<unknown>, {
+            loadData: (abort) => {
+                return initializer(props, init, abort);
+            },
+            children: (result) => {
+                return createComponent(
+                    Component,
+                    props,
+                    webRuntime,
+                    true,
+                    result,
+                );
+            },
+        });
     }
 
     let hooks: Comment | undefined;
@@ -135,7 +159,7 @@ export function createComponent<TComponentType extends Component<unknown>>(
         return context.getCurrent();
     };
 
-    const res = ComponentUnTyped(props, init, undefined);
+    const res = ComponentUnTyped(props, init, initializerResult);
 
     // Makes all init calls throw from now on
     initCompleted = true;

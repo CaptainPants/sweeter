@@ -163,7 +163,7 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
 
                     init.getContext = getContext;
 
-					// TODO: once we solve the issues here, remove async/await and just return the promise
+                    // TODO: once we solve the issues here, remove async/await and just return the promise
                     const result = await initializer(props, init, signal);
 
                     return result;

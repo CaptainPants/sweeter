@@ -6,9 +6,10 @@ import {
 } from '@captainpants/sweeter-core';
 import {
     type ComponentTypeConstraint,
-    type HookConstructor,
+    type AsyncComponent,
     type UnsignalAll,
     type ComponentInit,
+    type AsyncInitializerInit,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/sweeter-core';
 import {
@@ -24,64 +25,35 @@ type UnknownComponent = {
         init: ComponentInit,
         asyncInitializerResult: unknown,
     ): JSX.Element;
-    asyncInitializer?: (
-        props: unknown,
-        init: ComponentInit,
-        signal: AbortSignal,
-    ) => Promise<unknown>;
+    asyncInitializer?: AsyncComponent<unknown, unknown>['asyncInitializer'];
 };
 
-export function createComponent<TComponentType extends ComponentTypeConstraint>(
+const hookInitSymbol = Symbol('hook');
+
+type ExtendedComponentInit = ComponentInit & {
+    [hookInitSymbol]: Comment | undefined;
+};
+
+function createComponentInit<TComponentType extends ComponentTypeConstraint>(
     Component: TComponentType,
-    props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
-    initializerComplete: boolean = false,
-    initializerResult: unknown = undefined,
-): JSX.Element {
+): ExtendedComponentInit {
     // Use this to get the error context within callbacks
     const getContextFromSnapshot = Context.createSnapshot();
 
-    const ComponentUnTyped = Component as unknown as UnknownComponent;
+    const init: ExtendedComponentInit = (Hook, ...args) =>
+        new Hook(init, ...args);
 
-    // Special case for asyncInitializer
-    if (!initializerComplete && ComponentUnTyped.asyncInitializer) {
-        const initializer = ComponentUnTyped.asyncInitializer;
-
-        return createComponent(
-            Async<unknown>,
-            {
-                loadData: (signal) => {
-                    return initializer(props, init, signal);
-                },
-                children: (result) => {
-                    return createComponent(
-                        Component,
-                        props,
-                        webRuntime,
-                        true,
-                        result,
-                    );
-                },
-            },
-            webRuntime,
-        );
-    }
-
-    let hooks: Comment | undefined;
-    let initCompleted = false;
-
-    const init = <TArgs extends readonly unknown[], TResult>(
-        Hook: HookConstructor<TArgs, TResult>,
-        ...args: TArgs
-    ): TResult => {
-        return new Hook(init, ...args);
-    };
+    init.isValid = true;
+    init[hookInitSymbol] = undefined;
 
     function getOrCreateMagicComment(reason: string) {
+        let hooks = init[hookInitSymbol];
+
         if (hooks) {
             hooks.textContent += `, ${reason}`;
         } else {
-            hooks = document.createComment(
+            hooks = init[hookInitSymbol] = document.createComment(
                 `Hooks(${Component.name}): ${reason}`,
             );
         }
@@ -98,7 +70,7 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
     }
 
     init.onMount = (callback: () => (() => void) | void) => {
-        if (initCompleted) {
+        if (!init.isValid) {
             throw new Error('onMount must only be called during init phase.');
         }
 
@@ -120,7 +92,7 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
     };
 
     init.onUnMount = (callback: () => void) => {
-        if (initCompleted) {
+        if (!init.isValid) {
             throw new Error('onUnMount must only be called during init phase.');
         }
 
@@ -134,7 +106,7 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
         callback: (args: UnsignalAll<TArgs>) => void | (() => void),
         invokeOnSubscribe = true,
     ) => {
-        if (initCompleted) {
+        if (!init.isValid) {
             throw new Error(
                 'subscribeToChanges must only be called during init phase.',
             );
@@ -155,7 +127,7 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
     // but it does indicate that you should capture the context values you need during init
     // and not later when the context stack is gone
     init.getContext = <T>(context: Context<T>): T => {
-        if (initCompleted) {
+        if (init.isValid) {
             throw new Error(
                 'getContext must only be called during init phase.',
             );
@@ -164,15 +136,63 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
         return context.getCurrent();
     };
 
+    return init;
+}
+
+export function createComponent<TComponentType extends ComponentTypeConstraint>(
+    Component: TComponentType,
+    props: PropsWithIntrinsicAttributesFor<TComponentType>,
+    webRuntime: WebRuntime,
+    initializerComplete: boolean = false,
+    initializerResult: unknown = undefined,
+): JSX.Element {
+    const ComponentUnTyped = Component as unknown as UnknownComponent;
+
+    // Special case for asyncInitializer
+    if (!initializerComplete && ComponentUnTyped.asyncInitializer) {
+        const initializer = ComponentUnTyped.asyncInitializer;
+
+        const getContext = Context.createSnapshot();
+
+        return createComponent(
+            Async<unknown>,
+            {
+                loadData: (signal) => {
+                    const init: AsyncInitializerInit = (Hook, ...args) =>
+                        new Hook(init, ...args);
+
+                    init.getContext = getContext;
+
+                    // not awaiting, just passing through
+                    return initializer(props, init, signal);
+                },
+                children: (result) => {
+                    return createComponent(
+                        Component,
+                        props,
+                        webRuntime,
+                        true,
+                        result,
+                    );
+                },
+            },
+            webRuntime,
+        );
+    }
+
+    const init = createComponentInit(Component, webRuntime);
+
     const res = ComponentUnTyped(props, init, initializerResult);
 
     // Makes all init calls throw from now on
-    initCompleted = true;
+    init.isValid = false;
 
-    if (!hooks) {
+    const hookElement = init[hookInitSymbol];
+
+    if (!hookElement) {
         // shortcut if we don't need to add in markers for mount callbacks.
         return res;
     }
 
-    return [hooks, res];
+    return [hookElement, res];
 }

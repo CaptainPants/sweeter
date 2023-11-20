@@ -16,10 +16,6 @@ export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
     ...args: TArgs
 ) => TResult;
 
-export type AsyncInitializerInit = {
-    getContext: <T>(context: Context<T>) => T;
-};
-
 // There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
 export type ComponentInit = ComponentInitFunction & {
     onMount: (callback: () => (() => void) | void) => void;
@@ -32,6 +28,25 @@ export type ComponentInit = ComponentInitFunction & {
     ) => void;
     getContext: <T>(context: Context<T>) => T;
     runtime: Runtime;
+
+    isValid: boolean;
+};
+
+export type AsyncInitializerHookConstructor<
+    TArgs extends readonly unknown[],
+    TResult,
+> = new (setup: AsyncInitializerInit, ...args: TArgs) => TResult;
+
+export type AsyncInitializerInitFunction = <
+    TArgs extends readonly unknown[],
+    TResult,
+>(
+    hook: AsyncInitializerHookConstructor<TArgs, TResult>,
+    ...args: TArgs
+) => TResult;
+
+export type AsyncInitializerInit = AsyncInitializerInitFunction & {
+    getContext: <T>(context: Context<T>) => T;
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -50,7 +65,7 @@ export type AsyncComponent<TAsyncInitializationResult, TProps = {}> = ((
         props: TProps,
         init: AsyncInitializerInit,
         signal: AbortSignal,
-    ) => TAsyncInitializationResult;
+    ) => Promise<TAsyncInitializationResult>;
 };
 
 export type ComponentOrIntrinsicElementTypeConstraint =

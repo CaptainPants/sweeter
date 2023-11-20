@@ -39,7 +39,9 @@ export function For<T>(
     // point to a valid index, and add new signals when necessary.
 
     return $calc(() => {
+        // subscibes to items
         const itemsResolved = $val(items);
+
         if (elementCache.length > itemsResolved.length) {
             // we are basically just orphaning the old signals - we don't want them to
             // throw or anything as there is potentially UI hooked up to them that would
@@ -49,6 +51,7 @@ export function For<T>(
                 elementCache[i]!.orphaned.value = true;
             }
 
+            // reduce the array length
             elementCache.length = itemsResolved.length;
         } else {
             // For the rest, add a new signal and render an item
@@ -62,7 +65,8 @@ export function For<T>(
 
                 const elementSignal = $calc<T>(() => {
                     if (!orphaned.value) {
-                        mostRecentResult = itemsResolved[index]!;
+                        // $val here subscribes for changes to items
+                        mostRecentResult = $val(items)[index]!;
                     }
 
                     return mostRecentResult;

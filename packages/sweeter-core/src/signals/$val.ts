@@ -11,6 +11,9 @@ import { isSignal } from './isSignal.js';
 export function $val<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.value : value;
 }
+export function $peek<T>(value: T | Signal<T>): T {
+    return isSignal(value) ? value.peek() : value;
+}
 
 export function $valEach<TArgs extends readonly unknown[]>(
     values: [...TArgs],

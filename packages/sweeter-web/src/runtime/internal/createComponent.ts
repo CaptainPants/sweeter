@@ -1,13 +1,15 @@
 import {
     subscribeToChanges,
+    Context,
+    ErrorBoundaryContext,
+    Async,
+} from '@captainpants/sweeter-core';
+import {
+    type ComponentTypeConstraint,
     type HookConstructor,
     type UnsignalAll,
     type ComponentInit,
-    type Component,
-    Context,
     type PropsWithIntrinsicAttributesFor,
-    ErrorBoundaryContext,
-    Async,
 } from '@captainpants/sweeter-core';
 import {
     addMountedCallback,
@@ -29,7 +31,7 @@ type UnknownComponent = {
     ) => Promise<unknown>;
 };
 
-export function createComponent<TComponentType extends Component<unknown>>(
+export function createComponent<TComponentType extends ComponentTypeConstraint>(
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
@@ -44,22 +46,25 @@ export function createComponent<TComponentType extends Component<unknown>>(
     // Special case for asyncInitializer
     if (!initializerComplete && ComponentUnTyped.asyncInitializer) {
         const initializer = ComponentUnTyped.asyncInitializer;
-        
-        // TODO: this should just be createComponent, but having a type issue
-        return webRuntime.jsx(Async<unknown>, {
-            loadData: (abort) => {
-                return initializer(props, init, abort);
+
+        return createComponent(
+            Async<unknown>,
+            {
+                loadData: (signal) => {
+                    return initializer(props, init, signal);
+                },
+                children: (result) => {
+                    return createComponent(
+                        Component,
+                        props,
+                        webRuntime,
+                        true,
+                        result,
+                    );
+                },
             },
-            children: (result) => {
-                return createComponent(
-                    Component,
-                    props,
-                    webRuntime,
-                    true,
-                    result,
-                );
-            },
-        });
+            webRuntime,
+        );
     }
 
     let hooks: Comment | undefined;

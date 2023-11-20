@@ -1,4 +1,8 @@
-import type { ComponentInit, PropertiesMightBeSignals } from '../types.js';
+import type {
+    ComponentInit,
+    MightBeSignal,
+    PropertiesMightBeSignals,
+} from '../types.js';
 import { $calc, $mutable, $val } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 import { getRuntime } from '../index.js';
@@ -89,8 +93,8 @@ export function Async<T>(
 }
 
 export function $async<T>(
-    loadData: (abort: AbortSignal) => Promise<T>,
-    render: (data: T) => JSX.Element,
+    loadData: MightBeSignal<(abort: AbortSignal) => Promise<T>>,
+    render: MightBeSignal<(data: T) => JSX.Element>,
 ) {
     return getRuntime().jsx(Async<T>, { loadData, children: render });
 }

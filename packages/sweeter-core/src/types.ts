@@ -35,10 +35,9 @@ export type ComponentInit = ComponentInitFunction & {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type Component<TProps = {}, TAsyncInitializationResult = undefined> = (
+export type Component<TProps = {}> = (
     props: TProps,
     init: ComponentInit,
-    initializerResult: TAsyncInitializationResult,
 ) => JSX.Element;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -57,6 +56,9 @@ export type AsyncComponent<TAsyncInitializationResult, TProps = {}> = ((
 export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any> | AsyncComponent<any, any> | string | undefined;
+export type ComponentTypeConstraint =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Component<any> | AsyncComponent<any, any>;
 
 export type JSXResultForComponentType<
     ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
@@ -68,6 +70,9 @@ export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > = ComponentOrIntrinsicElementTypeString extends Component<infer Props>
+    ? Props
+    : // I don't think its possible to have a Component that doesn't implement AsyncComponent but just in case
+    ComponentOrIntrinsicElementTypeString extends AsyncComponent<infer Props>
     ? Props
     : ComponentOrIntrinsicElementTypeString extends string
     ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>

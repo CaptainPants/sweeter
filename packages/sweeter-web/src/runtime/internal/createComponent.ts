@@ -157,14 +157,16 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
         return createComponent(
             Async<unknown>,
             {
-                loadData: (signal) => {
+                loadData: async (signal) => {
                     const init: AsyncInitializerInit = (Hook, ...args) =>
                         new Hook(init, ...args);
 
                     init.getContext = getContext;
 
-                    // not awaiting, just passing through
-                    return initializer(props, init, signal);
+					// TODO: once we solve the issues here, remove async/await and just return the promise
+                    const result = await initializer(props, init, signal);
+
+                    return result;
                 },
                 children: (result) => {
                     return createComponent(

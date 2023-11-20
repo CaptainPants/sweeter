@@ -157,16 +157,14 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
         return createComponent(
             Async<unknown>,
             {
-                loadData: async (signal) => {
+                loadData: (signal) => {
                     const init: AsyncInitializerInit = (Hook, ...args) =>
                         new Hook(init, ...args);
 
                     init.getContext = getContext;
 
-                    // TODO: once we solve the issues here, remove async/await and just return the promise
-                    const result = await initializer(props, init, signal);
-
-                    return result;
+                    // Not awaiting: mainly so we don't cause it to wait another tick
+                    return initializer(props, init, signal);
                 },
                 children: (result) => {
                     return createComponent(

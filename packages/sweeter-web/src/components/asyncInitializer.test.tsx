@@ -4,7 +4,8 @@ import { Suspense, type AsyncComponent } from '@captainpants/sweeter-core';
 import { testRender } from '../test/testRender.js';
 
 interface Component1Props {
-    signal1: AbortSignal;
+    dataLoadComplete: AbortSignal;
+    rendered: AbortController;
 }
 
 const Component1: AsyncComponent<Component1Props, string> = (
@@ -12,12 +13,13 @@ const Component1: AsyncComponent<Component1Props, string> = (
     init,
     asyncInitializerResult,
 ) => {
+    props.rendered.abort();
     return <div>RESULT: {asyncInitializerResult}</div>;
 };
 
 Component1.asyncInitializer = async (props) => {
     return new Promise((resolve) => {
-        props.signal1.addEventListener('abort', () => {
+        props.dataLoadComplete.addEventListener('abort', () => {
             resolve('RESOLVED!');
         });
     });
@@ -25,10 +27,16 @@ Component1.asyncInitializer = async (props) => {
 
 it('example 1', async () => {
     const release = new AbortController();
+    const rendered = new AbortController();
 
     const res = testRender(() => (
         <Suspense fallback={() => <div>LOADING...</div>}>
-            {() => <Component1 signal1={release.signal} />}
+            {() => (
+                <Component1
+                    dataLoadComplete={release.signal}
+                    rendered={rendered}
+                />
+            )}
         </Suspense>
     ));
 
@@ -37,11 +45,11 @@ it('example 1', async () => {
     release.abort();
 
     await new Promise((resolve) => {
-        queueMicrotask(() => {
+        rendered.signal.addEventListener('abort', () => {
             resolve(void 0);
         });
     });
-
+    
     expect(res.getHTML()).toMatchSnapshot();
 
     res.dispose();

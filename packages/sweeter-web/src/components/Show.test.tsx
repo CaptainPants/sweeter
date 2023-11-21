@@ -1,7 +1,7 @@
 /* @jsxImportSource .. */
 
 import { Show, $mutable } from '@captainpants/sweeter-core';
-import { expectDOMMatching } from '../test/expectDOMMatching.js';
+import { expectDOMMatching } from '../test/internal/expectDOMMatching.js';
 import { createWebRuntime } from '../runtime/createWebRuntime.js';
 
 it('Show initially displays and then hides content when signal updated', () => {

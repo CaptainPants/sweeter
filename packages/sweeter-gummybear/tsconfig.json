@@ -6,7 +6,7 @@
     ],
     "compilerOptions": {
         "rootDir": "src",
-        "jsxImportSource": "-specify-inline-in-each-file-",
+        "jsxImportSource": "@captainpants/sweeter-web",
         "jsx": "react-jsx",
         "outDir": "./build/esm",
         "paths": {

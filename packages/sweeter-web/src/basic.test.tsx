@@ -1,6 +1,6 @@
 /* @jsxImportSource . */
 
-import { expectDOMMatching } from './test/expectDOMMatching.js';
+import { expectDOMMatching } from './test/internal/expectDOMMatching.js';
 import { testRender } from './test/testRender.js';
 
 // TODO: these aren't running through a renderer, which might break in future iterations.

@@ -1,14 +1,24 @@
 import { type ComponentOrIntrinsicElementTypeConstraint } from '../types.js';
 
+export type JSXMiddleUnknownProps = Record<string, unknown>;
+
 export type JSXMiddlewareCallback = (
     type: ComponentOrIntrinsicElementTypeConstraint,
-    props: Readonly<Record<string, unknown>>,
+    /**
+     * Note that middleware is allowed to modify the props object, the
+     * caller needs to make a defensive copy if they are reusing it.
+     */
+    props: JSXMiddleUnknownProps,
 ) => JSX.Element;
 
 export interface JSXMiddleware {
     invoke(
         type: ComponentOrIntrinsicElementTypeConstraint,
-        props: Readonly<Record<string, unknown>>,
+        /**
+         * Note that middleware is allowed to modify the props object, the
+         * caller needs to make a defensive copy if they are reusing it.
+         */
+        props: JSXMiddleUnknownProps,
         next: JSXMiddlewareCallback,
     ): JSX.Element;
 }

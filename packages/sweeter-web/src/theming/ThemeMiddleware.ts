@@ -2,6 +2,7 @@ import {
     type JSXMiddlewareCallback,
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXMiddleware,
+    type JSXMiddleUnknownProps,
 } from '@captainpants/sweeter-core';
 
 interface ThemableProps {
@@ -13,7 +14,7 @@ export class ThemeMiddleware implements JSXMiddleware {
 
     invoke(
         type: ComponentOrIntrinsicElementTypeConstraint,
-        props: Readonly<Record<string, unknown>>,
+        props: JSXMiddleUnknownProps,
         next: JSXMiddlewareCallback,
     ): JSX.Element {
         if (typeof type === 'string') {
@@ -22,9 +23,7 @@ export class ThemeMiddleware implements JSXMiddleware {
             if (themableProps.themed !== false) {
                 return next(
                     type,
-                    this.applyThemeToProps(props) as Readonly<
-                        Record<string, unknown>
-                    >,
+                    this.applyThemeToProps(props) as JSXMiddleUnknownProps,
                 );
             }
         }

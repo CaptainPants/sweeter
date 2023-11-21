@@ -14,6 +14,10 @@ export interface Runtime {
     ): () => void;
     jsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
         type: TComponentType,
+        /**
+         * Note that middleware is allowed to modify the props object, the
+         * caller needs to make a defensive copy if they are reusing it.
+         */
         props: PropsWithIntrinsicAttributesFor<TComponentType>,
     ): JSXResultForComponentOrElementType<TComponentType>;
     dispose(): void;

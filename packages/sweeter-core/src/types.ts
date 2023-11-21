@@ -74,7 +74,7 @@ export type ComponentTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any> | AsyncComponent<any, any>;
 
-export type JSXResultForComponentType<
+export type JSXResultForComponentOrElementType<
     ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
 > = ComponentType extends string
     ? SweeterExtensionPoints.IntrinsicElementNameToType<ComponentType>[keyof SweeterExtensionPoints.IntrinsicElementNameToType<ComponentType>]

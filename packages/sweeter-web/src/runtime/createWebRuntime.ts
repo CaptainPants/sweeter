@@ -4,9 +4,12 @@ import {
     type Runtime,
     callWithRuntime,
     type ComponentOrIntrinsicElementTypeConstraint,
-    type JSXResultForComponentType,
+    type JSXResultForComponentOrElementType,
     untrack,
     ErrorBoundaryContext,
+    type JSXMiddleware,
+    createMiddlewarePipeline,
+    type JSXMiddlewareCallback,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { announceChildrenMountedRecursive } from './internal/mounting.js';
@@ -24,15 +27,12 @@ import { type DocumentStylesheetHandle, type WebRuntime } from './types.js';
 export interface WebRuntimeOptions {
     root: RuntimeRootHostElement;
     render: () => JSX.Element;
+    middleware?: JSXMiddleware[] | undefined;
 }
 
-export function createWebRuntime(options: WebRuntimeOptions): WebRuntime;
-export function createWebRuntime({
-    root,
-    render,
-}: WebRuntimeOptions): WebRuntime {
-    const runtime = new WebRuntimeImplementation(root);
-    runtime.createRoot(root, render);
+export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
+    const runtime = new WebRuntimeImplementation(options);
+    runtime.createRoot(options.root, options.render);
     return runtime;
 }
 
@@ -44,9 +44,15 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
     #disposeList: (() => void)[];
 
-    constructor(target: RuntimeRootHostElement) {
-        this.#target = target;
+    #jsxWithMiddleware: JSXMiddlewareCallback;
+
+    constructor(options: WebRuntimeOptions) {
+        this.#target = options.root;
         this.#disposeList = [];
+        this.#jsxWithMiddleware = createMiddlewarePipeline(
+            options.middleware ?? [],
+            this.#endJsx.bind(this),
+        );
     }
 
     createRoot(
@@ -110,7 +116,17 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     jsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
         type: TComponentType,
         props: PropsWithIntrinsicAttributesFor<TComponentType>,
-    ): JSXResultForComponentType<TComponentType> {
+    ): JSXResultForComponentOrElementType<TComponentType> {
+        return this.#jsxWithMiddleware(
+            type,
+            props,
+        ) as JSXResultForComponentOrElementType<TComponentType>;
+    }
+
+    #endJsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
+        type: TComponentType,
+        props: PropsWithIntrinsicAttributesFor<TComponentType>,
+    ): JSXResultForComponentOrElementType<TComponentType> {
         // Its reasonably certain that people will trigger side effects when wiring up a component
         // and that these might update signals. We also don't want to accidentally subscribe to these
         // signals -- hence untrack the actual render
@@ -144,7 +160,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             }
         });
 
-        return result as JSXResultForComponentType<TComponentType>;
+        return result as JSXResultForComponentOrElementType<TComponentType>;
     }
 
     get type(): symbol {

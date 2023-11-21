@@ -1,7 +1,7 @@
 import {
     type PropsWithIntrinsicAttributesFor,
     type ComponentOrIntrinsicElementTypeConstraint,
-    type JSXResultForComponentType,
+    type JSXResultForComponentOrElementType,
 } from '@captainpants/sweeter-core';
 import { getWebRuntime } from './getWebRuntime.js';
 
@@ -10,7 +10,7 @@ export function jsx<
 >(
     type: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
-): JSXResultForComponentType<TComponentType> {
+): JSXResultForComponentOrElementType<TComponentType> {
     const webRuntime = getWebRuntime();
     return webRuntime.jsx<TComponentType>(type, props);
 }

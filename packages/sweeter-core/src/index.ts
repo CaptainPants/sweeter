@@ -10,3 +10,4 @@ export * from './signals/index.js';
 export * from './types.js';
 export * from './test/index.js';
 export * from './utility/index.js';
+export * from './middleware/index.js';

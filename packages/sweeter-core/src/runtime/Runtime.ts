@@ -1,6 +1,6 @@
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
 import {
-    type JSXResultForComponentType,
+    type JSXResultForComponentOrElementType,
     type ComponentOrIntrinsicElementTypeConstraint,
     type RuntimeRootHostElement,
     type PropsWithIntrinsicAttributesFor,
@@ -15,7 +15,7 @@ export interface Runtime {
     jsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
         type: TComponentType,
         props: PropsWithIntrinsicAttributesFor<TComponentType>,
-    ): JSXResultForComponentType<TComponentType>;
+    ): JSXResultForComponentOrElementType<TComponentType>;
     dispose(): void;
     readonly type: symbol;
 }

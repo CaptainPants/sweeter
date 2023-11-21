@@ -45,7 +45,7 @@ export function Async<T>(
         });
 
         try {
-            const result = await $val(callback)(signal);
+            const result = await callback(signal);
 
             if (signal.aborted) {
                 return; // don't store result if aborted

@@ -8,7 +8,7 @@ import { bindStyle } from './bindStyle.js';
 import { type Styles } from '../../IntrinsicAttributes.js';
 import { flattenCssClasses } from '../../styles/flattenCssClasses.js';
 import type { ElementCssClasses } from '../../styles/index.js';
-import { type WebRuntime } from '../WebRuntime.js';
+import { type WebRuntime } from '../types.js';
 
 type Untyped = Record<string, unknown>;
 

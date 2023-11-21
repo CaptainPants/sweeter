@@ -1,9 +1,8 @@
-import { getRuntime, type Runtime } from '@captainpants/sweeter-core';
+import type { Runtime } from '@captainpants/sweeter-core';
 import type {
     AbstractGlobalCssStylesheet,
     GlobalStyleSheetContentGeneratorContext,
-} from '../styles/index.js';
-import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
+} from '../index.js';
 
 export interface DocumentStylesheetHandle {
     remove(): void;
@@ -16,12 +15,4 @@ export interface WebRuntime
     addStylesheet(
         stylesheet: AbstractGlobalCssStylesheet,
     ): DocumentStylesheetHandle;
-}
-
-export function getWebRuntime(): WebRuntime {
-    const runtime = getRuntime();
-    if (runtime.type !== webRuntimeSymbol) {
-        throw new TypeError('No WebRuntime set.');
-    }
-    return runtime as WebRuntime;
 }

@@ -10,7 +10,7 @@ import {
 import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 import { isText } from './utility/isText.js';
 import { isInDocument } from './utility/isInDocument.js';
-import { type WebRuntime } from '../WebRuntime.js';
+import { type WebRuntime } from '../types.js';
 
 export function addJsxChildren(
     parent: Node,
@@ -25,6 +25,7 @@ export function addJsxChildren(
 
     for (let child of original) {
         if (isText(child)) {
+            // TODO: reuse text nodes here
             child = document.createTextNode(String(child));
         }
 

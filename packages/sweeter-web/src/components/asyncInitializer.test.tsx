@@ -49,7 +49,7 @@ it('example 1', async () => {
             resolve(void 0);
         });
     });
-    
+
     expect(res.getHTML()).toMatchSnapshot();
 
     res.dispose();

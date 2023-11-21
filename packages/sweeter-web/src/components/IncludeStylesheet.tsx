@@ -2,10 +2,8 @@
 
 import type { Component } from '@captainpants/sweeter-core';
 import type { AbstractGlobalCssStylesheet } from '../styles/index.js';
-import {
-    getWebRuntime,
-    type DocumentStylesheetHandle,
-} from '../runtime/WebRuntime.js';
+import { type DocumentStylesheetHandle } from '../runtime/types.js';
+import { getWebRuntime } from '../runtime/getWebRuntime.js';
 
 export interface IncludeStylesheetProps {
     stylesheet: AbstractGlobalCssStylesheet;

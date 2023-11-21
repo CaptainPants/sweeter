@@ -4,7 +4,7 @@ import type {
 } from '@captainpants/sweeter-core';
 import { assignDOMElementProps } from './assignDOMElementProps.js';
 import { addJsxChildren } from './addJsxChildren.js';
-import { type WebRuntime } from '../WebRuntime.js';
+import { type WebRuntime } from '../types.js';
 
 type MayHaveRef = {
     ref?:

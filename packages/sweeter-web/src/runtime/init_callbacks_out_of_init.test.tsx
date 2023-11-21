@@ -23,7 +23,7 @@ const Caller: Component<CallerProps> = ({ callback, handleError }, init) => {
 
 function defer<T>() {
     const abort = new AbortController();
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve) => {
         abort.signal.addEventListener('abort', () => {
             resolve(abort.signal.reason);
         });

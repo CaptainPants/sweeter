@@ -17,7 +17,7 @@ import {
     addUnMountedCallback,
     removeUnMountedCallback,
 } from './mounting.js';
-import { type WebRuntime } from '../WebRuntime.js';
+import { type WebRuntime } from '../types.js';
 
 type UnknownComponent = {
     (

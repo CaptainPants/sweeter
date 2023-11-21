@@ -3,7 +3,7 @@ import {
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXResultForComponentType,
 } from '@captainpants/sweeter-core';
-import { getWebRuntime } from './WebRuntime.js';
+import { getWebRuntime } from './getWebRuntime.js';
 
 export function jsx<
     TComponentType extends ComponentOrIntrinsicElementTypeConstraint,

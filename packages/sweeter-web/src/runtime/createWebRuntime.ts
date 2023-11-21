@@ -11,12 +11,12 @@ import {
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { announceChildrenMountedRecursive } from './internal/mounting.js';
 import { jsx } from './jsx.js';
-import type { DocumentStylesheetHandle, WebRuntime } from './WebRuntime.js';
 import type { AbstractGlobalCssStylesheet } from '../styles/types.js';
 import type { GlobalCssClass } from '../styles/GlobalCssClass.js';
 import { createDOMElement } from './internal/createDOMElement.js';
 import { createComponent } from './internal/createComponent.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
+import { type DocumentStylesheetHandle, type WebRuntime } from './types.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.

@@ -20,6 +20,9 @@ it('Global stylesheet added', () => {
     expect(document.head.innerHTML).toMatchSnapshot();
 
     res.dispose();
+
+    // Make sure it was removed again
+    expect(document.head.innerHTML).toStrictEqual('');
 });
 
 const component1Stylesheet = new GlobalCssClass({

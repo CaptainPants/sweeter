@@ -46,7 +46,12 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     #disposeList: (() => void)[];
 
     #jsxWithMiddleware: JSXMiddlewareCallback;
+
     #addedSingletonStylesheets: WeakSet<AbstractGlobalCssStylesheet>;
+    #includedSingletonStylesheetCounts: WeakMap<
+        GlobalCssStylesheet,
+        { count: number; element: HTMLStyleElement }
+    >;
 
     constructor(options: WebRuntimeOptions) {
         this.#target = options.root;
@@ -56,6 +61,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             this.#endJsx.bind(this),
         );
         this.#addedSingletonStylesheets = new WeakSet();
+        this.#includedSingletonStylesheetCounts = new WeakMap();
     }
 
     createRoot(
@@ -101,13 +107,41 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     }
 
     addStylesheet(stylesheet: GlobalCssStylesheet): () => void {
-        const element = document.createElement('style');
-        element.textContent = '\n' + stylesheet.getContent(this);
-        element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
-        this.#target.ownerDocument.head.appendChild(element);
+        let entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
+        if (!entry) {
+            const element = document.createElement('style');
+            element.textContent = '\n' + stylesheet.getContent(this);
+            element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
+            this.#target.ownerDocument.head.appendChild(element);
+
+            entry = {
+                count: 1,
+                element: element,
+            };
+
+            this.#includedSingletonStylesheetCounts.set(stylesheet, entry);
+        }
+
+        let removed = false;
 
         return () => {
-            element.remove();
+            if (removed) {
+                return;
+            }
+
+            removed = true; // don't do this again;
+
+            const entry =
+                this.#includedSingletonStylesheetCounts.get(stylesheet);
+            if (!entry) {
+                return;
+            }
+
+            --entry.count;
+            if (entry.count === 0) {
+                entry.element.remove();
+                this.#includedSingletonStylesheetCounts.delete(stylesheet);
+            }
         };
     }
 

@@ -1,3 +1,3 @@
-import { button } from './button.js';
+import * as parts from './parts.js';
 
-export default { button };
+export default parts;

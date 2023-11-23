@@ -1,12 +1,11 @@
 /* @jsxImportSource .. */
 
 import type { Component } from '@captainpants/sweeter-core';
-import type { AbstractGlobalCssStylesheet } from '../styles/index.js';
-import { type DocumentStylesheetHandle } from '../runtime/types.js';
+import type { GlobalCssStylesheet } from '../styles/index.js';
 import { getWebRuntime } from '../runtime/getWebRuntime.js';
 
 export interface IncludeStylesheetProps {
-    stylesheet: AbstractGlobalCssStylesheet;
+    stylesheet: GlobalCssStylesheet;
 }
 
 export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
@@ -15,26 +14,19 @@ export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
 ) => {
     const runtime = getWebRuntime();
 
-    let handle: DocumentStylesheetHandle | undefined;
-
     init.subscribeToChanges(
         [stylesheet],
         ([stylesheet]) => {
-            if (handle) {
-                handle.update(stylesheet);
-            } else {
-                if (stylesheet) {
-                    handle = runtime.addStylesheet(stylesheet);
-                }
+            if (stylesheet) {
+                const remove = runtime.addStylesheet(stylesheet);
+
+                return remove;
             }
-            return;
+
+            return undefined;
         },
         true,
     );
-
-    init.onUnMount(() => {
-        handle?.remove();
-    });
 
     return <></>;
 };

@@ -1,5 +1,5 @@
 import type { Signal } from '@captainpants/sweeter-core';
-import type { GlobalCssClass } from './index.js';
+import type { GlobalCssClass, GlobalCssStylesheet } from './index.js';
 
 export interface AbstractGlobalCssStylesheet {
     readonly symbol: symbol;
@@ -10,6 +10,10 @@ export interface AbstractGlobalCssStylesheet {
 
 export interface GlobalStyleSheetContentGeneratorContext {
     getPrefixedClassName(cssClass: GlobalCssClass): string;
+
+    ensureCssClassAdded(cssClass: GlobalCssClass): void;
+
+    addStylesheet(stylesheet: GlobalCssStylesheet): () => void;
 }
 
 export type ElementCssClasses =

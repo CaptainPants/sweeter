@@ -29,6 +29,7 @@ function flatten(
             flatten(item, context, output);
         }
     } else if (value instanceof GlobalCssClass) {
+        context.ensureCssClassAdded(value);
         output.push(context.getPrefixedClassName(value));
     } else if (isSignal(value)) {
         flatten($val(value), context, output);

@@ -19,7 +19,8 @@ import type { GlobalCssClass } from '../styles/GlobalCssClass.js';
 import { createDOMElement } from './internal/createDOMElement.js';
 import { createComponent } from './internal/createComponent.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
-import { type DocumentStylesheetHandle, type WebRuntime } from './types.js';
+import { type WebRuntime } from './types.js';
+import type { GlobalCssStylesheet } from '../index.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -45,6 +46,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     #disposeList: (() => void)[];
 
     #jsxWithMiddleware: JSXMiddlewareCallback;
+    #addedSingletonStylesheets: WeakSet<AbstractGlobalCssStylesheet>;
 
     constructor(options: WebRuntimeOptions) {
         this.#target = options.root;
@@ -53,6 +55,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             options.middleware ?? [],
             this.#endJsx.bind(this),
         );
+        this.#addedSingletonStylesheets = new WeakSet();
     }
 
     createRoot(
@@ -71,24 +74,6 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         }
     }
 
-    addStylesheet(
-        stylesheet: AbstractGlobalCssStylesheet,
-    ): DocumentStylesheetHandle {
-        const element = document.createElement('style');
-        element.textContent = '\n' + stylesheet.getContent(this);
-        element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
-        this.#target.ownerDocument.head.appendChild(element);
-
-        return {
-            remove() {
-                element.remove();
-            },
-            update: (stylesheet) => {
-                element.textContent = '\n' + stylesheet.getContent(this);
-            },
-        };
-    }
-
     getPrefixedClassName(cssClass: GlobalCssClass): string {
         let name = this.#cssClassNameMap.get(cssClass);
         if (!name) {
@@ -97,6 +82,33 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             ++this.#cssCounter;
         }
         return name;
+    }
+
+    ensureCssClassAdded(cssClass: GlobalCssClass): void {
+        if (this.#addedSingletonStylesheets.has(cssClass)) {
+            return;
+        }
+
+        const element = document.createElement('style');
+        element.textContent = '\n' + cssClass.getContent(this);
+        element.setAttribute('data-id', cssClass.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
+        this.#target.ownerDocument.head.appendChild(element);
+        this.#addedSingletonStylesheets.add(cssClass);
+
+        this.#disposeList.push(() => {
+            element.remove();
+        });
+    }
+
+    addStylesheet(stylesheet: GlobalCssStylesheet): () => void {
+        const element = document.createElement('style');
+        element.textContent = '\n' + stylesheet.getContent(this);
+        element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
+        this.#target.ownerDocument.head.appendChild(element);
+
+        return () => {
+            element.remove();
+        };
     }
 
     createNestedRoot(

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`button style 1`] = `"<!--Hooks(IncludeStylesheet): Mount, UnMount--><button class="_glbl0_button">Test</button>"`;
+exports[`button style 1`] = `"<!--Hooks(IncludeStylesheet): Mount--><button class="_glbl0_button">Test</button>"`;
 
 exports[`button style 2`] = `
 "<style data-id="button">

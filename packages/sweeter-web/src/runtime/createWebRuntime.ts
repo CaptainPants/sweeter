@@ -20,7 +20,6 @@ import { createDOMElement } from './internal/createDOMElement.js';
 import { createComponent } from './internal/createComponent.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
 import { type WebRuntime } from './types.js';
-import type { GlobalCssStylesheet } from '../index.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -47,9 +46,8 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
     #jsxWithMiddleware: JSXMiddlewareCallback;
 
-    #addedSingletonStylesheets: WeakSet<AbstractGlobalCssStylesheet>;
     #includedSingletonStylesheetCounts: WeakMap<
-        GlobalCssStylesheet,
+        AbstractGlobalCssStylesheet,
         { count: number; element: HTMLStyleElement }
     >;
 
@@ -60,7 +58,6 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             options.middleware ?? [],
             this.#endJsx.bind(this),
         );
-        this.#addedSingletonStylesheets = new WeakSet();
         this.#includedSingletonStylesheetCounts = new WeakMap();
     }
 
@@ -90,23 +87,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         return name;
     }
 
-    ensureCssClassAdded(cssClass: GlobalCssClass): void {
-        if (this.#addedSingletonStylesheets.has(cssClass)) {
-            return;
-        }
-
-        const element = document.createElement('style');
-        element.textContent = '\n' + cssClass.getContent(this);
-        element.setAttribute('data-id', cssClass.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
-        this.#target.ownerDocument.head.appendChild(element);
-        this.#addedSingletonStylesheets.add(cssClass);
-
-        this.#disposeList.push(() => {
-            element.remove();
-        });
-    }
-
-    addStylesheet(stylesheet: GlobalCssStylesheet): () => void {
+    addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
         let entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
         if (!entry) {
             const element = document.createElement('style');

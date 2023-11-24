@@ -5,10 +5,6 @@ exports[`Global style for component 1`] = `
 ._glbl0_Component1 {
     color: blue;
 }
-</style><style data-id="Component1">
-._glbl0_Component1 {
-    color: blue;
-}
 </style>"
 `;
 
@@ -16,13 +12,6 @@ exports[`Global style for component 2`] = `"<!--Hooks(IncludeStylesheet): Mount-
 
 exports[`Global style for component with nested 1`] = `
 "<style data-id="Component2">
-._glbl0_Component2 {
-    color: blue;
-}
-._glbl0_Component2 .inner {
-    background-color: green;
-}
-</style><style data-id="Component2">
 ._glbl0_Component2 {
     color: blue;
 }

@@ -1,4 +1,4 @@
-import { testRender } from '@captainpants/sweeter-web';
+import { IncludeStylesheet, testRender } from '@captainpants/sweeter-web';
 
 import stylesheets from './stylesheets/index.js';
 
@@ -8,6 +8,7 @@ it('button style', () => {
     // TODO: GlobalCssClasses should be automatically added while they are referenced
     const res = testRender(() => (
         <>
+            <IncludeStylesheet stylesheet={stylesheets.button} />
             <button class={stylesheets.button}>Test</button>
         </>
     ));

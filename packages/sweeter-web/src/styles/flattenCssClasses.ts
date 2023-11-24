@@ -12,12 +12,12 @@ export function flattenCssClasses(
 ): Signal<string> {
     return $calc(() => {
         const result: string[] = [];
-        flatten(classes, context, result);
+        flattenCssClassesImplementation(classes, context, result);
         return result.join(' ');
     });
 }
 
-function flatten(
+function flattenCssClassesImplementation(
     classes: ElementCssClasses,
     context: GlobalStyleSheetContentGeneratorContext,
     output: string[],
@@ -26,13 +26,12 @@ function flatten(
 
     if (Array.isArray(value)) {
         for (const item of value) {
-            flatten(item, context, output);
+            flattenCssClassesImplementation(item, context, output);
         }
     } else if (value instanceof GlobalCssClass) {
-        context.ensureCssClassAdded(value);
         output.push(context.getPrefixedClassName(value));
     } else if (isSignal(value)) {
-        flatten($val(value), context, output);
+        flattenCssClassesImplementation($val(value), context, output);
     } else if (value) {
         output.push(value);
     }

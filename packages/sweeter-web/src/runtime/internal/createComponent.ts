@@ -1,9 +1,4 @@
-import {
-    subscribeToChanges,
-    Context,
-    ErrorBoundaryContext,
-    Async,
-} from '@captainpants/sweeter-core';
+import { subscribeToChanges, Context, Async } from '@captainpants/sweeter-core';
 import {
     type ComponentTypeConstraint,
     type AsyncComponent,
@@ -12,11 +7,7 @@ import {
     type AsyncInitializerInit,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/sweeter-core';
-import {
-    addMountedCallback,
-    addUnMountedCallback,
-    removeUnMountedCallback,
-} from './mounting.js';
+import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
 
 type UnknownComponent = {
@@ -39,7 +30,7 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
     webRuntime: WebRuntime,
 ): ExtendedComponentInit {
     // Use this to get the error context within callbacks
-    const getContextFromSnapshot = Context.createSnapshot();
+    const contextSnapshot = Context.createSnapshot();
 
     const init: ExtendedComponentInit = (Hook, ...args) =>
         new Hook(init, ...args);
@@ -60,15 +51,6 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
         return hooks;
     }
 
-    function callAgainstErrorBoundary<T>(callback: () => T, fallback: T): T {
-        try {
-            return callback();
-        } catch (ex) {
-            getContextFromSnapshot(ErrorBoundaryContext).error(ex);
-            return fallback;
-        }
-    }
-
     init.onMount = (callback: () => (() => void) | void) => {
         if (!init.isValid) {
             throw new Error('onMount must only be called during init phase.');
@@ -76,19 +58,8 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
 
         const hooks = getOrCreateMagicComment('Mount');
 
-        addMountedCallback(hooks, () => {
-            const unmounted = callAgainstErrorBoundary(callback, void 0);
-
-            if (typeof unmounted === 'function') {
-                const innerUnMounted = () => {
-                    removeUnMountedCallback(hooks, innerUnMounted);
-
-                    callAgainstErrorBoundary(unmounted, void 0);
-                };
-
-                addUnMountedCallback(hooks, innerUnMounted);
-            }
-        });
+        // This calls callAgainstErrorBoundary around callback and its resulting callback
+        addMountedCallback(contextSnapshot, hooks, callback);
     };
 
     init.onUnMount = (callback: () => void) => {
@@ -96,9 +67,11 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
             throw new Error('onUnMount must only be called during init phase.');
         }
 
-        addUnMountedCallback(getOrCreateMagicComment('UnMount'), () => {
-            callAgainstErrorBoundary(callback, void 0);
-        });
+        addUnMountedCallback(
+            contextSnapshot,
+            getOrCreateMagicComment('UnMount'),
+            callback,
+        );
     };
 
     init.subscribeToChanges = <TArgs extends readonly unknown[]>(

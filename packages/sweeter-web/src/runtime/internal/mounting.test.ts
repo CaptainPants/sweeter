@@ -14,7 +14,13 @@ it('Mount callbacks fired', () => {
         fired = true;
     };
 
-    addMountedCallback(obj, callback);
+    addMountedCallback(
+        () => {
+            throw new Error('Not implemented');
+        },
+        obj,
+        callback,
+    );
 
     announceMountedRecursive(obj);
 
@@ -33,7 +39,13 @@ it('Un-mount callbacks fired', () => {
     // We have to make sure the mounted flag is set
     announceMountedRecursive(obj);
 
-    addUnMountedCallback(obj, callback);
+    addUnMountedCallback(
+        () => {
+            throw new Error('Not implemented');
+        },
+        obj,
+        callback,
+    );
 
     announceUnMountedRecursive(obj);
 

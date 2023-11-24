@@ -1,3 +1,6 @@
+import type { ContextSnapshot } from '@captainpants/sweeter-core';
+import { callAgainstErrorBoundary } from './callAgainstErrorBoundary.js';
+
 function callbacks<T extends object>(name: string) {
     const map = new WeakMap<T, (() => void)[]>();
 
@@ -47,17 +50,52 @@ const mountedCallbacks = callbacks<Node>('mounted');
 const unMountedCallbacks = callbacks<Node>('unmounted');
 const isMounted = new WeakSet<Node>();
 
-export function addMountedCallback(node: Node, callback: () => void) {
-    mountedCallbacks.add(node, callback);
+/**
+ * Add a callback to be called when the node is added to the document.
+ *
+ * The returned function removes the callback. Note that this will not prevent any existing cleanup functions from firing.
+ * @param contextSnapshot
+ * @param node
+ * @param callback
+ */
+export function addMountedCallback(
+    contextSnapshot: ContextSnapshot,
+    node: Node,
+    callback: () => (() => void) | void,
+): () => void {
+    const inner = () => {
+        const cleanup = callAgainstErrorBoundary(
+            contextSnapshot,
+            callback,
+            undefined,
+        );
+
+        if (cleanup) {
+            // TODO: we could add these to a set and remove them if the mount callback has been called,
+            // but in practice we're not using the result of addMountedCallback anyway
+            addUnMountedCallback(contextSnapshot, node, cleanup);
+        }
+    };
+    mountedCallbacks.add(node, inner);
+    return () => mountedCallbacks.remove(node, inner);
 }
-export function addUnMountedCallback(node: Node, callback: () => void) {
-    unMountedCallbacks.add(node, callback);
-}
-export function removeMountedCallback(node: Node, callback: () => void) {
-    mountedCallbacks.remove(node, callback);
-}
-export function removeUnMountedCallback(node: Node, callback: () => void) {
-    unMountedCallbacks.remove(node, callback);
+/**
+ * Add a callback to be called when the node is removed from the document.
+ *
+ * The returned function removes the callback.
+ * @param contextSnapshot
+ * @param node
+ * @param callback
+ */
+export function addUnMountedCallback(
+    contextSnapshot: ContextSnapshot,
+    node: Node,
+    callback: () => void,
+): () => void {
+    const inner = () =>
+        callAgainstErrorBoundary(contextSnapshot, callback, undefined);
+    unMountedCallbacks.add(node, inner);
+    return () => unMountedCallbacks.remove(node, inner);
 }
 
 /**

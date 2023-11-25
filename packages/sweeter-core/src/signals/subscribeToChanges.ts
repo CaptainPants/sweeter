@@ -7,6 +7,7 @@ import { popAndCallAll } from '../internal/popAndCallAll.js';
  * Subscribe to multiple signals, with a callback to remove that subscription.
  * @param dependencies A list of signals, for which when any change the callback will be invoked. For convenience when using with props, values other than signals will be ignored.
  * @param callback
+ * @param invokeImmediate
  * @returns
  */
 export function subscribeToChanges<TArgs extends readonly unknown[]>(
@@ -31,6 +32,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
     try {
         for (const item of dependencies) {
             if (isSignal(item)) {
+                // Note that this is a strong reference, we need to be careful to unsubscribe later
                 unlisten.push(item.listen(innerCallback, true));
             }
         }

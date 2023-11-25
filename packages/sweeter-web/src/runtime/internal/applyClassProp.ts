@@ -55,6 +55,9 @@ export function applyClassProp(
                             : x,
                     )
                     .join(' ');
+                
+                // save (for change detection)
+                previousReferencedClasses = thisTimeReferencedClasses;
             },
             true,
         );

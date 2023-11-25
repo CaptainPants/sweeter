@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`added and removed 1`] = `
+"<head><style data-id="Test1">
+._glbl0_Test1 {
+    color: green;
+}
+._glbl0_Test1:hover {
+    color: red;
+}
+</style></head>"
+`;
+
+exports[`added and removed 2`] = `"<head></head>"`;

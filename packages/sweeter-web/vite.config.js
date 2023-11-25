@@ -11,8 +11,8 @@ export default defineConfig({
             name: 'sweeter-web',
             // the proper extensions will be added
             fileName: (format, entryName) => {
-                const ext = format === 'cjs' ? '.cjs' : '.js';
-                const fileName = entryName === 'jsx-runtime' ? 'jsx-runtime' : entryName === 'jsx-dev-runtime' ? 'jsx-dev-runtime' :'sweeter-web';
+                const ext = format === 'cjs' ? '.cjs' : '.js'
+                const fileName = entryName === 'jsx-runtime' ? 'jsx-runtime' : entryName === 'jsx-dev-runtime' ? 'jsx-dev-runtime' : 'index';
                 return fileName + ext;
             },
             formats: ['es', 'cjs'],
@@ -25,7 +25,7 @@ export default defineConfig({
             external: ['@captainpants/sweeter-core'],
         }
     },
-    plugins: [dts()],
+    plugins: [dts({ clearPureImport: false })],
     test: {
       environmentMatchGlobs: [
         ['**', 'jsdom'],

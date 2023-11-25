@@ -10,7 +10,7 @@ export default defineConfig({
             entry: resolve(__dirname, './src/index.ts'),
             name: 'sweeter-core',
             // the proper extensions will be added
-            fileName: 'sweeter-core',
+            fileName: 'index',
             formats: ['es', 'cjs'],
         },
         outDir: 'build',
@@ -21,5 +21,5 @@ export default defineConfig({
             external: [],
         },
     },
-    plugins: [dts()]
+    plugins: [dts({ clearPureImport: false })]
 });

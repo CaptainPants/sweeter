@@ -9,6 +9,7 @@ export default defineConfig({
             // eslint-disable-next-line no-undef
             entry: resolve(__dirname, './src/index.ts'),
             name: 'sweeter-gummybear',
+            filename: 'index',
             formats: ['es', 'cjs'],
         },
         outDir: 'build',

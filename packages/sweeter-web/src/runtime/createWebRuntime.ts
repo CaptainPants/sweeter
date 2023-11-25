@@ -207,8 +207,6 @@ function createNestedRoot(
 
     const unmount = addJsxChildren(target, content, webRuntime);
 
-    announceChildrenMountedRecursive(target);
-
     // Allow callers to be lazy and call the returned callback multiple times
     let unmounted = false;
 

@@ -28,6 +28,8 @@ function callbacks<T extends object>(name: string) {
         execute: (obj: T): void => {
             const callbacks = map.get(obj);
             if (callbacks) {
+                map.delete(obj); // delete first in case we inadvertantly trigger a reentrant call
+
                 for (const callback of callbacks) {
                     try {
                         callback();
@@ -39,7 +41,6 @@ function callbacks<T extends object>(name: string) {
                         );
                     }
                 }
-                map.delete(obj);
             }
         },
         __map: map,

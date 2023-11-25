@@ -40,7 +40,7 @@ export function Async<T>(
         }
 
         const revertSuspenseBlock = suspenseContext.startBlocking();
-        signal.addEventListener('abort', () => {
+        signal.addEventListener('abort', function abortCallback() {
             revertSuspenseBlock();
         });
 
@@ -65,7 +65,7 @@ export function Async<T>(
 
     init.subscribeToChanges(
         [callback],
-        ([callback]) => {
+        function Async_subscribeToChanges([callback]) {
             const abortController = new AbortController();
             reload(callback, abortController.signal);
 

@@ -23,6 +23,6 @@ export function testRender(render: () => JSX.Element): TestRenderResult {
         dispose: () => {
             runtime.dispose();
             root.remove();
-        }
+        },
     };
 }

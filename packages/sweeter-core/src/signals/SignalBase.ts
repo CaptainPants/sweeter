@@ -50,10 +50,12 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     #announceChange(previous: SignalState<T>, next: SignalState<T>) {
-        // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
-        untrack(() => {
+        const SignalBase_announceChange = () => {
             this.#listeners.announce(previous, next);
-        });
+        };
+
+        // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
+        untrack(SignalBase_announceChange);
     }
 
     public listen(listener: SignalListener<T>, strong = true): () => void {

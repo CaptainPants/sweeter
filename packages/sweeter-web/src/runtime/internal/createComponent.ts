@@ -88,7 +88,7 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
         addMountedCallback(
             contextSnapshot,
             getOrCreateMagicComment('subscribeToChanges'),
-            () => {
+            function subscribeChanges_onMount() {
                 return subscribeToChanges(
                     dependencies,
                     callback,
@@ -134,7 +134,7 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
         return createComponent(
             Async<unknown>,
             {
-                loadData: (signal) => {
+                loadData: function createComponent_Async_loadData(signal) {
                     const init: AsyncInitializerInit = (Hook, ...args) =>
                         new Hook(init, ...args);
 
@@ -143,7 +143,7 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
                     // Not awaiting: mainly so we don't cause it to wait another tick
                     return initializer(props, init, signal);
                 },
-                children: (result) => {
+                children: function createComponent_Async_children(result) {
                     return createComponent(
                         Component,
                         props,

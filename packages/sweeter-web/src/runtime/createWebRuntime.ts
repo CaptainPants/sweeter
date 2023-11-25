@@ -110,20 +110,23 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
                 return;
             }
 
+            this.removeStylesheet(stylesheet);
+
             removed = true; // don't do this again;
-
-            const entry =
-                this.#includedSingletonStylesheetCounts.get(stylesheet);
-            if (!entry) {
-                return;
-            }
-
-            --entry.count;
-            if (entry.count === 0) {
-                entry.element.remove();
-                this.#includedSingletonStylesheetCounts.delete(stylesheet);
-            }
         };
+    }
+
+    removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
+        const entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
+        if (!entry) {
+            return;
+        }
+
+        --entry.count;
+        if (entry.count === 0) {
+            entry.element.remove();
+            this.#includedSingletonStylesheetCounts.delete(stylesheet);
+        }
     }
 
     createNestedRoot(

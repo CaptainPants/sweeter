@@ -12,6 +12,8 @@ export interface GlobalStyleSheetContentGeneratorContext {
     getPrefixedClassName(cssClass: GlobalCssClass): string;
 
     addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void;
+
+    removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void;
 }
 
 export type ElementCssClasses =

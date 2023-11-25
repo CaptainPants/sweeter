@@ -5,7 +5,7 @@ it('single static', () => {
     const signal = createCssClassSignal('test');
 
     expect(signal.value).toStrictEqual(['test']);
-})
+});
 
 it('on/off simple', () => {
     const on = $mutable(false);
@@ -18,7 +18,6 @@ it('on/off simple', () => {
 
     expect(signal.value).toStrictEqual(['test', 'something']);
 });
-
 
 it('switch classname', () => {
     const className = $mutable('alpha');

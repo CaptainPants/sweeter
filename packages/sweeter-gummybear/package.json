@@ -34,8 +34,5 @@
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^"
-    },
-    "devDependencies": {
-        "jest-environment-jsdom": "^29.6.4"
     }
 }

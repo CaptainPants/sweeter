@@ -12,7 +12,7 @@ export function expectDOMMatching(
 
     if (!(node instanceof Node)) {
         // This should never hit, we're just forcing node to be a Node for later usage.
-        fail('Expected node to be instanceOf Node');
+        expect.fail('Expected node to be instanceOf Node');
     }
 
     for (const key of Object.getOwnPropertyNames(target)) {

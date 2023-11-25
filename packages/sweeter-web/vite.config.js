@@ -8,13 +8,6 @@ export default defineConfig({
             // Could also be a dictionary or array of multiple entry points
             // eslint-disable-next-line no-undef
             entry: [resolve(__dirname, './src/index.ts'), resolve(__dirname, './src/jsx-runtime.ts'), resolve(__dirname, './src/jsx-dev-runtime.ts')],
-            name: 'sweeter-web',
-            // the proper extensions will be added
-            fileName: (format, entryName) => {
-                const ext = format === 'cjs' ? '.cjs' : '.js'
-                const fileName = entryName === 'jsx-runtime' ? 'jsx-runtime' : entryName === 'jsx-dev-runtime' ? 'jsx-dev-runtime' : 'index';
-                return fileName + ext;
-            },
             formats: ['es', 'cjs'],
         },
         outDir: 'build',

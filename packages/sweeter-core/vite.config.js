@@ -8,9 +8,6 @@ export default defineConfig({
             // Could also be a dictionary or array of multiple entry points
             // eslint-disable-next-line no-undef
             entry: resolve(__dirname, './src/index.ts'),
-            name: 'sweeter-core',
-            // the proper extensions will be added
-            fileName: 'index',
             formats: ['es', 'cjs'],
         },
         outDir: 'build',

@@ -19,7 +19,7 @@
         "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
-        "format": "prettier --write src *.js *.mjs .*.mjs .*.cjs",
+        "format": "prettier --write src",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "test:watch": "vitest --globals",
         "test": "vitest --globals --watch=false",

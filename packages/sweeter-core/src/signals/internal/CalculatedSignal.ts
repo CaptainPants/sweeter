@@ -5,6 +5,7 @@ import { type SignalState } from '../SignalState.js';
 import { callAndReturnDependencies } from '../ambient.js';
 import { deferForBatch, isBatching } from '../batching.js';
 import { type Signal } from '../types.js';
+import { finishCalculation, startCalculation } from './calculationDeferral.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
     const result = (): SignalState<T> => {
@@ -87,6 +88,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             );
         }
         this.#recalculating = true;
+        startCalculation();
         try {
             const revert = this.#capturedContext.restore();
             try {
@@ -105,6 +107,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             }
         } finally {
             this.#recalculating = false;
+            finishCalculation();
         }
     }
 

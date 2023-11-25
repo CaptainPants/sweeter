@@ -9,8 +9,5 @@
         "jsxImportSource": "-specify-inline-in-each-file-",
         "jsx": "react-jsx",
         "noEmit": true,
-        "paths": {
-			"@jsx-test/jsx-runtime": ["./jsx-runtime.js"]
-		}
     }
 }

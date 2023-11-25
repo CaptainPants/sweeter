@@ -4,8 +4,6 @@ import {
     isReadWriteSignal,
     isSignal,
 } from '@captainpants/sweeter-core';
-import { bindStyle } from './bindStyle.js';
-import { type Styles } from '../../IntrinsicAttributes.js';
 import { type WebRuntime } from '../types.js';
 
 type Untyped = Record<string, unknown>;
@@ -25,20 +23,22 @@ const mutableMap = new Map<string, MutableMapping>([
     ['checked', { eventName: 'change', domProperty: 'checked' }],
 ]);
 
-export function assignDOMElementProps<TElementType extends string>(
+const specialHandlingProps = ['children', 'ref', 'class', 'style'];
+
+export function bindDOMMiscProps<TElementType extends string>(
     node: Node,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
     runtime: WebRuntime,
 ): void {
     for (const key of Object.getOwnPropertyNames(props)) {
+        if (specialHandlingProps.includes(key)) {
+            continue;
+        }
+
         // Deal with class (className) and for (htmlFor)
         const mappedKey = Object.hasOwn(mappedProperties, key)
             ? mappedProperties[key]!
             : key;
-
-        if (mappedKey === 'children' || mappedKey === 'ref') {
-            continue;
-        }
 
         const value = (props as Untyped)[key];
 
@@ -74,12 +74,6 @@ export function assignDOMElementProps<TElementType extends string>(
             value.listen(changeCallback, false);
 
             addExplicitStrongReference(node, changeCallback);
-        } else if (
-            mappedKey === 'style' &&
-            (node instanceof HTMLElement || node instanceof SVGElement)
-        ) {
-            // ==== STYLES BINDING ====
-            bindStyle(node, value as Styles);
         } else if (mappedKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====
 

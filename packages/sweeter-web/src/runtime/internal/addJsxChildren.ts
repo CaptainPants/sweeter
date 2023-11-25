@@ -34,7 +34,7 @@ export function addJsxChildren(
     }
 
     const onChange = () => {
-        const parentInDocument = isInDocument(parent);
+        const onChangeParentInDocument = isInDocument(parent);
         const updated = flattenedChildrenSignal.peek();
 
         let before = parent.firstChild;
@@ -62,7 +62,7 @@ export function addJsxChildren(
             current;
             current = newlyMountedNodes.pop()
         ) {
-            if (current.ownerDocument && isInDocument(current)) {
+            if (isInDocument(current)) {
                 announceMountedRecursive(current);
             }
         }
@@ -76,7 +76,7 @@ export function addJsxChildren(
             }
         });
 
-        if (parentInDocument) {
+        if (onChangeParentInDocument) {
             announceChildrenMountedRecursive(parent);
         }
     };

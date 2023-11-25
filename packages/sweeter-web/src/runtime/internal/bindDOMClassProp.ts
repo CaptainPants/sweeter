@@ -8,7 +8,7 @@ import { type WebRuntime } from '../types.js';
 import { addMountedCallback } from './mounting.js';
 import { GlobalCssClass } from '../../index.js';
 
-export function applyClassProp(
+export function bindDOMClassProp(
     contextSnapshot: ContextSnapshot,
     ele: HTMLElement,
     class_: ElementCssClasses,
@@ -55,7 +55,7 @@ export function applyClassProp(
                             : x,
                     )
                     .join(' ');
-                
+
                 // save (for change detection)
                 previousReferencedClasses = thisTimeReferencedClasses;
             },

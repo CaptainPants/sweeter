@@ -1,8 +1,7 @@
 /* @jsxImportSource ../.. */
 
-import { testRender } from "../../test/testRender.js";
-import { GlobalCssClass } from "../../styles/GlobalCssClass.js";
-
+import { testRender } from '../../test/testRender.js';
+import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
 
 const class_ = new GlobalCssClass({
     className: 'Test1',
@@ -12,7 +11,7 @@ const class_ = new GlobalCssClass({
         &:hover {
             color: red;
         }
-    `
+    `,
 });
 
 it('added and removed', () => {
@@ -25,4 +24,4 @@ it('added and removed', () => {
 
     // now it should have been removed
     expect(document.head.outerHTML).toMatchSnapshot();
-})
+});

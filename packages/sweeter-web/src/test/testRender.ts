@@ -13,12 +13,16 @@ export interface TestRenderResult {
  */
 export function testRender(render: () => JSX.Element): TestRenderResult {
     const root = document.createElement('div');
+    document.body.appendChild(root);
 
     const runtime = createWebRuntime({ root: root, render: render });
 
     return {
         nodes: root.childNodes,
         getHTML: () => root.innerHTML,
-        dispose: () => runtime.dispose(),
+        dispose: () => {
+            runtime.dispose();
+            root.remove();
+        }
     };
 }

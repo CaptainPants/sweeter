@@ -1,1 +1,1 @@
-export { afterCalculationComplete } from './internal/calculationDeferral.js';
+export { afterCalculationsComplete as afterCalculationComplete } from './internal/calculationDeferral.js';

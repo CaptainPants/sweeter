@@ -36,7 +36,7 @@ export function finishCalculation() {
  * @param callback
  * @returns
  */
-export function afterCalculationComplete(callback: () => void) {
+export function afterCalculationsComplete(callback: () => void) {
     if (isCalculationRunning()) {
         callbacks.push(callback);
         return;

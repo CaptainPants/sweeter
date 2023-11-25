@@ -12,7 +12,6 @@ import {
     type JSXMiddlewareCallback,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
-import { announceChildrenMountedRecursive } from './internal/mounting.js';
 import { jsx } from './jsx.js';
 import type { AbstractGlobalCssStylesheet } from '../styles/types.js';
 import type { GlobalCssClass } from '../styles/GlobalCssClass.js';

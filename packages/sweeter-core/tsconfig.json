@@ -9,9 +9,8 @@
         "lib": [
             "ES2022", // No DOM here
         ],
-        "outDir": "./build/esm",
+        "noEmit": true,
         "paths":{
-            "dep": ["./src/definitions.d.ts"]
         }
     }
 }

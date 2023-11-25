@@ -1,5 +1,5 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`example 1 1`] = `"<div>LOADING...</div><div style="display: none;"><!--Hooks(Async): subscribeToChanges--></div>"`;
+exports[`example 1 1`] = `"<div>LOADING...</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChanges--></div>"`;
 
 exports[`example 1 2`] = `"<!--Hooks(Async): subscribeToChanges--><div>RESULT: RESOLVED!</div>"`;

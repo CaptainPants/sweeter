@@ -1,5 +1,3 @@
-import { expect } from '@jest/globals';
-
 import type { SignalState } from './SignalState.js';
 import { $mutable } from './$mutable.js';
 import { $calc } from './$calc.js';

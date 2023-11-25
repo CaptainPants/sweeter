@@ -1,5 +1,5 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`onMount 1`] = `"<div class="error">Error: Error thrown on mount</div>"`;
+exports[`onMount 1`] = `"<div class=\\"error\\">Error: Error thrown on mount</div>"`;
 
-exports[`subscribeToChanges 1`] = `"<div class="error">Error: Error thrown on subscribeToChanges</div>"`;
+exports[`subscribeToChanges 1`] = `"<div class=\\"error\\">Error: Error thrown on subscribeToChanges</div>"`;

@@ -8,7 +8,7 @@
         "rootDir": "src",
         "jsxImportSource": "@captainpants/sweeter-web",
         "jsx": "react-jsx",
-        "outDir": "./build/esm",
+        "noEmit": true,
         "paths": {
 			"@jsx-test/jsx-runtime": ["./jsx-runtime.js"]
 		}

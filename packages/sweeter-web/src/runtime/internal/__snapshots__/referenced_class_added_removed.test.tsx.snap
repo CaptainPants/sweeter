@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`added and removed 1`] = `
-"<head><style data-id="Test1">
+"<head><style data-id=\\"Test1\\">
 ._glbl0_Test1 {
     color: green;
 }

@@ -1,9 +1,9 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`class array with signals 1`] = `"<div class="alpha beta gamma"></div>"`;
+exports[`class array with signals 1`] = `"<div class=\\"alpha beta gamma\\"></div>"`;
 
-exports[`class array with signals 2`] = `"<div class="alpha delta gamma"></div>"`;
+exports[`class array with signals 2`] = `"<div class=\\"alpha delta gamma\\"></div>"`;
 
-exports[`class object 1`] = `"<div class="beta"></div>"`;
+exports[`class object 1`] = `"<div class=\\"beta\\"></div>"`;
 
-exports[`class object 2`] = `"<div class="alpha beta"></div>"`;
+exports[`class object 2`] = `"<div class=\\"alpha beta\\"></div>"`;

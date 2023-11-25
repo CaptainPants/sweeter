@@ -11,23 +11,22 @@
     "types": "./build/esm/index.d.ts",
     "exports": {
         ".": {
-            "import": "./build/esm/index.js",
-            "require": "./build/cjs/index.js"
+            "import": "./build/sweeter-core.js",
+            "require": "./build/sweeter-core.cjs"
         }
     },
     "scripts": {
-        "trace": "pnpm exec tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
+        "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
-        "format": "prettier --write src",
+        "format": "prettier --write src *.js *.mjs .*.mjs .*.cjs",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "test": "jest --silent=false src",
+        "test:watch": "vitest --globals",
+        "test": "vitest --globals --watch=false",
         "verify:fix": "corepack pnpm run format && corepack pnpm run lint --fix && corepack pnpm run test && corepack pnpm run typecheck",
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
-        "watch": "tsc --project ./tsconfig.build.json --watch",
-        "build:esm": "tsc --project ./tsconfig.build.json",
-        "build:cjs": "rollup --config ./rollup.config.mjs",
-        "build": "pnpm run build:esm && pnpm run build:cjs"
+        "watch": "vite build --watch",
+        "build": "vite build"
     },
     "engines": {
         "pnpm": "8.6.7"

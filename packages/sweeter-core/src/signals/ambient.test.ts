@@ -1,5 +1,3 @@
-import { expect } from '@jest/globals';
-
 import { $mutable } from './$mutable.js';
 import { callAndReturnDependencies } from './ambient.js';
 

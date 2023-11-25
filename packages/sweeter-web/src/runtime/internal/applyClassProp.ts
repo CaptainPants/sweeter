@@ -2,10 +2,11 @@ import {
     type ContextSnapshot,
     subscribeToChanges,
 } from '@captainpants/sweeter-core';
-import { flattenCssClasses } from '../../styles/flattenCssClasses.js';
+import { createCssClassSignal } from '../../styles/createCssClassSignal.js';
 import { type ElementCssClasses } from '../../styles/types.js';
 import { type WebRuntime } from '../types.js';
 import { addMountedCallback } from './mounting.js';
+import { GlobalCssClass } from '../../index.js';
 
 export function applyClassProp(
     contextSnapshot: ContextSnapshot,
@@ -13,14 +14,20 @@ export function applyClassProp(
     class_: ElementCssClasses,
     webRuntime: WebRuntime,
 ) {
-    const classSignal = flattenCssClasses(class_, webRuntime);
+    const classSignal = createCssClassSignal(class_);
 
     // TODO: My goal is to automatically add / remove any referenced GlobalCssClasses to the page
     addMountedCallback(contextSnapshot, ele, () => {
         return subscribeToChanges(
             [classSignal],
-            ([classValue]) => {
-                ele.className = classValue;
+            ([thisTime]) => {
+                ele.className = thisTime
+                    .map((x) =>
+                        x instanceof GlobalCssClass
+                            ? webRuntime.getPrefixedClassName(x)
+                            : x,
+                    )
+                    .join(' ');
             },
             true,
         );

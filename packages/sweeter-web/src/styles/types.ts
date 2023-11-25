@@ -18,7 +18,7 @@ export type ElementCssClasses =
     | Signal<ElementCssClasses>
     | string
     | GlobalCssClass
-    | Record<string, Signal<boolean>>
+    | Record<string, Signal<boolean> | boolean>
     | undefined
     | null
     | ElementCssClasses[];

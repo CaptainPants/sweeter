@@ -31,9 +31,15 @@ function flattenCssClassesImplementation(
     } else if (value instanceof GlobalCssClass) {
         output.push(context.getPrefixedClassName(value));
     } else if (isSignal(value)) {
-        flattenCssClassesImplementation($val(value), context, output);
-    } else if (value) {
+        flattenCssClassesImplementation(value, context, output);
+    } else if (typeof value === 'string') {
         output.push(value);
+    } else if (value) {
+        for (const key of Object.getOwnPropertyNames(value)) {
+            if (value![key]!.value) {
+                output.push(key);
+            }
+        }
     }
     // might be null or undefined
 }

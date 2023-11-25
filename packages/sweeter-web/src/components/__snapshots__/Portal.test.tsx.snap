@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Portal element mounts 1`] = `"<!--Hooks(Portal): Mount-->"`;
+exports[`Portal element mounts 1`] = `"<!--Hooks(Portal): subscribeToChanges-->"`;
 
 exports[`Portal element mounts 2`] = `"<div><div>CONTENT</div></div>"`;
 

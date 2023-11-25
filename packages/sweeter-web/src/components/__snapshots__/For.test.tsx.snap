@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`$foreach basic 1 - shorthand 1`] = `"<!--Hooks(For): Mount-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
+exports[`$foreach basic 1 - shorthand 1`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
 
-exports[`ForEach append 1`] = `"<!--Hooks(For): Mount-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
+exports[`ForEach append 1`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
 
-exports[`ForEach append 2`] = `"<!--Hooks(For): Mount-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, Item delta at index 3, "`;
+exports[`ForEach append 2`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, Item delta at index 3, "`;
 
-exports[`ForEach basic 1 1`] = `"<!--Hooks(For): Mount-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
+exports[`ForEach basic 1 1`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;

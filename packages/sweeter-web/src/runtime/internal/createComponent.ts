@@ -56,7 +56,7 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
             throw new Error('onMount must only be called during init phase.');
         }
 
-        const hooks = getOrCreateMagicComment('Mount');
+        const hooks = getOrCreateMagicComment('onMount');
 
         // This calls callAgainstErrorBoundary around callback and its resulting callback
         addMountedCallback(contextSnapshot, hooks, callback);
@@ -69,7 +69,7 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
 
         addUnMountedCallback(
             contextSnapshot,
-            getOrCreateMagicComment('UnMount'),
+            getOrCreateMagicComment('onUnMount'),
             callback,
         );
     };
@@ -85,13 +85,17 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
             );
         }
 
-        init.onMount(() => {
-            return subscribeToChanges(
-                dependencies,
-                callback,
-                invokeOnSubscribe,
-            );
-        });
+        addMountedCallback(
+            contextSnapshot,
+            getOrCreateMagicComment('subscribeToChanges'),
+            () => {
+                return subscribeToChanges(
+                    dependencies,
+                    callback,
+                    invokeOnSubscribe,
+                );
+            },
+        );
     };
 
     init.runtime = webRuntime;

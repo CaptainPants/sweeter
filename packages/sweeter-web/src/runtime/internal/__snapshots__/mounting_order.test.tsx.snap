@@ -2,19 +2,19 @@
 
 exports[`Mount is called in order 1`] = `
 NodeList [
-  <!--Hooks(TestingComponentWithChildren): Mount, UnMount-->,
+  <!--Hooks(TestingComponentWithChildren): onMount, onUnMount-->,
   <div>
     <em>
       1
     </em>
     <div>
-      <!--Hooks(TestingComponentWithChildren): Mount, UnMount-->
+      <!--Hooks(TestingComponentWithChildren): onMount, onUnMount-->
       <div>
         <em>
           2
         </em>
         <div>
-          <!--Hooks(TestingComponentWithChildren): Mount, UnMount-->
+          <!--Hooks(TestingComponentWithChildren): onMount, onUnMount-->
           <div>
             <em>
               3
@@ -23,7 +23,7 @@ NodeList [
           </div>
         </div>
       </div>
-      <!--Hooks(TestingComponentWithChildren): Mount, UnMount-->
+      <!--Hooks(TestingComponentWithChildren): onMount, onUnMount-->
       <div>
         <em>
           4

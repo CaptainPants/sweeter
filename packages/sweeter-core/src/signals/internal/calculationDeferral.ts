@@ -31,6 +31,11 @@ export function finishCalculation() {
     }
 }
 
+/**
+ * Call the parameter callback after any running calculations are complete.
+ * @param callback
+ * @returns
+ */
 export function afterCalculationComplete(callback: () => void) {
     if (isCalculationRunning()) {
         callbacks.push(callback);

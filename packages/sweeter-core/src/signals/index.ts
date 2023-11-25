@@ -5,6 +5,7 @@ export * from './$mutableFromCallbacks.js';
 export * from './$mutableFromIndex.js';
 
 export * from './ambient.js';
+export * from './afterCalculationsComplete.js';
 export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';

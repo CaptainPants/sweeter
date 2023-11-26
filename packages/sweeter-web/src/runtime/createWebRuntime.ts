@@ -5,7 +5,7 @@ import {
     callWithRuntime,
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXResultForComponentOrElementType,
-    untrack,
+    trackingIsAnError,
     ErrorBoundaryContext,
     type JSXMiddleware,
     createMiddlewarePipeline,
@@ -159,7 +159,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         // Its reasonably certain that people will trigger side effects when wiring up a component
         // and that these might update signals. We also don't want to accidentally subscribe to these
         // signals -- hence untrack the actual render
-        const result = untrack(() => {
+        const result = trackingIsAnError(() => {
             try {
                 switch (typeof type) {
                     case 'function': {

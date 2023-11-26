@@ -13,6 +13,18 @@ export function untrack<T>(callback: () => T): T {
     return callAndInvokeListenerForEachDependency(callback, () => {}, false);
 }
 
+export function trackingIsAnError<T>(callback: () => T): T {
+    return callAndInvokeListenerForEachDependency(
+        callback,
+        (signal) => {
+            throw new Error(
+                `Tracking is blocked here, meaning you have probably inadvertantly used .value when you should use .peek().`,
+            );
+        },
+        false,
+    );
+}
+
 export function announceMutatingSignal(signal: Signal<unknown>) {
     if (_ambientListenerExpectsReadonly) {
         throw new TypeError(

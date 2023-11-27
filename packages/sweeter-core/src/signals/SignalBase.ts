@@ -1,6 +1,6 @@
 import type { SignalState } from './SignalState.js';
 import { getSignalValueFromState, isEqualSignalState } from './SignalState.js';
-import { afterCalculationComplete } from './afterCalculationsComplete.js';
+import { afterCalculationsComplete } from './afterCalculationsComplete.js';
 import { announceSignalUsage } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
 import { signalMarker } from './internal/markers.js';
@@ -56,7 +56,8 @@ export abstract class SignalBase<T> implements Signal<T> {
         };
 
         // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
-        afterCalculationComplete(SignalBase_announceChange);
+        // also prevents all kinds of cases that aren't allowed like updating a mutable signal within a recalculation
+        afterCalculationsComplete(SignalBase_announceChange);
     }
 
     public listen(listener: SignalListener<T>, strong = true): () => void {

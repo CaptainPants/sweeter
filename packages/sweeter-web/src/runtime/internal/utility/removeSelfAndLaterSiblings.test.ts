@@ -1,4 +1,4 @@
-import { removeSelfAndLaterSiblings } from "./removeSelfAndLaterSiblings.js";
+import { removeSelfAndLaterSiblings } from './removeSelfAndLaterSiblings.js';
 
 it('test', () => {
     const item1 = document.createElement('div');
@@ -13,13 +13,11 @@ it('test', () => {
     parent.appendChild(item2);
     parent.appendChild(item3);
 
-    removeSelfAndLaterSiblings(item2, () => {
-        
-    });
+    removeSelfAndLaterSiblings(item2, () => {});
 
-    expect(item1.parentNode).toStrictEqual(null);
-    expect(item2.parentNode).toStrictEqual(parent);
-    expect(item3.parentNode).toStrictEqual(parent);
+    expect(item1.parentNode).toStrictEqual(parent);
+    expect(item2.parentNode).toStrictEqual(null);
+    expect(item3.parentNode).toStrictEqual(null);
 
-    expect(item3.innerHTML).toStrictEqual('<div><div>item-1</div></div>');
-})
+    expect(parent.outerHTML).toStrictEqual('<div><div>item-1</div></div>');
+});

@@ -7,6 +7,7 @@ import { type ElementCssClasses } from '../../styles/types.js';
 import { type WebRuntime } from '../types.js';
 import { addMountedCallback } from './mounting.js';
 import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
+import { arrayExcept } from './utility/arrayExcept.js';
 
 export function bindDOMClassProp(
     contextSnapshot: ContextSnapshot,
@@ -28,11 +29,11 @@ export function bindDOMClassProp(
 
                 // If there was previous results we need to work out what items were added/removed
                 if (previousReferencedClasses) {
-                    const added = diffArray(
+                    const added = arrayExcept(
                         thisTimeReferencedClasses,
                         previousReferencedClasses,
                     );
-                    const removed = diffArray(
+                    const removed = arrayExcept(
                         previousReferencedClasses,
                         thisTimeReferencedClasses,
                     );
@@ -43,7 +44,7 @@ export function bindDOMClassProp(
                     for (const removedItem of removed) {
                         webRuntime.removeStylesheet(removedItem);
                     }
-                } 
+                }
                 // there was no previous result, so we add them all (and skip any diffing)
                 else {
                     for (const addedItem of thisTimeReferencedClasses) {

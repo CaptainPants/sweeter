@@ -5,11 +5,11 @@ import { GlobalCssClass } from './index.js';
 
 /**
  * Flatten the provided classes into a Signal of string | GlobalCssClass - that can be subscribed to in case of changes to any of the inputs.
- * 
+ *
  * The result will be cached based on the contents of the result array so that we can avoid unecessary updates to derived signals (Not sure that
  * this has any great benefit to this but oh well).
- * @param classes 
- * @returns 
+ * @param classes
+ * @returns
  */
 export function createCssClassSignal(
     classes: ElementCssClasses | Signal<ElementCssClasses>,

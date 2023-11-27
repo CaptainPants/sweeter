@@ -102,7 +102,7 @@ class LazyImplementation<T> implements Lazy<T> {
         }
 
         throw new TypeError(
-            'Promise has not yet resolved, you should check this value of .resolved or .outcome before calling getResult().',
+            'Promise has not yet resolved, you should check this value of .resolved or .outcome before calling getError().',
         );
     }
 }

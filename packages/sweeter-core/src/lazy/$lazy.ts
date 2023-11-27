@@ -34,13 +34,12 @@ class LazyImplementation<T> implements Lazy<T> {
     ensure(): void {
         this.#getOrCreatePromise();
     }
-    
-    #getOrCreatePromise(): Promise<T>
-    {
+
+    #getOrCreatePromise(): Promise<T> {
         if (!this.#promise) {
             this.#outcome = 'LOADING';
             const promise = this.#callback();
-            
+
             promise.then(
                 (res) => {
                     this.#result = res;
@@ -49,7 +48,7 @@ class LazyImplementation<T> implements Lazy<T> {
                 (err) => {
                     this.#error = err;
                     this.#outcome = 'ERROR';
-                }
+                },
             );
 
             this.#promise = promise;

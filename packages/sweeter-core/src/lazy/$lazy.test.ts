@@ -1,16 +1,16 @@
-import { $lazy } from "./$lazy.js";
+import { $lazy } from './$lazy.js';
 
 it('general', async () => {
     const release = new AbortController();
 
-    const lazy = $lazy(() => new Promise(resolve => {
-        release.signal.addEventListener(
-            'abort', 
-            () =>{
-                resolve(1);
-            }
-        )
-    }));
+    const lazy = $lazy(
+        () =>
+            new Promise((resolve) => {
+                release.signal.addEventListener('abort', () => {
+                    resolve(1);
+                });
+            }),
+    );
 
     expect(lazy.outcome).toStrictEqual('INITIAL');
 
@@ -18,10 +18,10 @@ it('general', async () => {
     lazy.ensure();
 
     expect(lazy.outcome).toStrictEqual('LOADING');
-    
+
     release.abort();
 
-    await new Promise(resolve => queueMicrotask(() => resolve(void 0)));
+    await new Promise((resolve) => queueMicrotask(() => resolve(void 0)));
 
     expect(lazy.outcome).toStrictEqual('SUCCESS');
 
@@ -33,14 +33,14 @@ it('general', async () => {
 it('error', async () => {
     const release = new AbortController();
 
-    const lazy = $lazy(() => new Promise((resolve, reject) => {
-        release.signal.addEventListener(
-            'abort', 
-            () =>{
-                reject(new Error('FAILED'));
-            }
-        )
-    }));
+    const lazy = $lazy(
+        () =>
+            new Promise((resolve, reject) => {
+                release.signal.addEventListener('abort', () => {
+                    reject(new Error('FAILED'));
+                });
+            }),
+    );
 
     expect(lazy.outcome).toStrictEqual('INITIAL');
 
@@ -48,11 +48,11 @@ it('error', async () => {
     lazy.ensure();
 
     expect(lazy.outcome).toStrictEqual('LOADING');
-    
+
     release.abort();
 
     // wait for .then to complete
-    await new Promise(resolve => setTimeout(() => resolve(void 0), 1000));
+    await new Promise((resolve) => setTimeout(() => resolve(void 0), 1000));
 
     expect(lazy.outcome).toStrictEqual('ERROR');
 

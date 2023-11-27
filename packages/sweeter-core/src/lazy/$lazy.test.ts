@@ -30,7 +30,6 @@ it('general', async () => {
     expect(lazy.promise).resolves.toStrictEqual(1);
 });
 
-// TODO: this causes vite to display an error 
 it('error', async () => {
     const release = new AbortController();
 
@@ -59,11 +58,5 @@ it('error', async () => {
 
     expect(lazy.getError()).toHaveProperty('message', 'FAILED');
 
-    try {
-        await lazy.promise;
-        expect.fail('Should throw.');
-    }
-    catch (err) {
-        expect(err).toHaveProperty('message', 'FAILED');
-    }
+    await expect(lazy.promise).rejects.toHaveProperty('message', 'FAILED');
 });

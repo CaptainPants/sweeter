@@ -40,14 +40,17 @@ class LazyImplementation<T> implements Lazy<T> {
         if (!this.#promise) {
             this.#outcome = 'LOADING';
             const promise = this.#callback();
-            promise.then((res) => {
-                this.#result = res;
-                this.#outcome = 'SUCCESS';
-            });
-            promise.catch((err) => {
-                this.#error = err;
-                this.#outcome = 'ERROR';
-            });
+            
+            promise.then(
+                (res) => {
+                    this.#result = res;
+                    this.#outcome = 'SUCCESS';
+                },
+                (err) => {
+                    this.#error = err;
+                    this.#outcome = 'ERROR';
+                }
+            );
 
             this.#promise = promise;
         }

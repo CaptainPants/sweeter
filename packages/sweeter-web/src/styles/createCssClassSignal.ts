@@ -3,9 +3,19 @@ import { $calc, isSignal, $val } from '@captainpants/sweeter-core';
 import type { ElementCssClasses } from './index.js';
 import { GlobalCssClass } from './index.js';
 
+/**
+ * Flatten the provided classes into a Signal of string | GlobalCssClass - that can be subscribed to in case of changes to any of the inputs.
+ * 
+ * The result will be cached based on the contents of the result array so that we can avoid unecessary updates to derived signals (Not sure that
+ * this has any great benefit to this but oh well).
+ * @param classes 
+ * @returns 
+ */
 export function createCssClassSignal(
     classes: ElementCssClasses | Signal<ElementCssClasses>,
 ): Signal<(string | GlobalCssClass)[]> {
+    // retain previous result so that we can preserve identity and prevent dependent signals from updating
+
     let previous: (string | GlobalCssClass)[] | undefined;
 
     return $calc(() => {

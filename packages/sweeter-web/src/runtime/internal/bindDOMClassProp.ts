@@ -26,6 +26,7 @@ export function bindDOMClassProp(
                     (x): x is GlobalCssClass => x instanceof GlobalCssClass,
                 );
 
+                // If there was previous results we need to work out what items were added/removed
                 if (previousReferencedClasses) {
                     const added = diffArray(
                         thisTimeReferencedClasses,
@@ -42,7 +43,9 @@ export function bindDOMClassProp(
                     for (const removedItem of removed) {
                         webRuntime.removeStylesheet(removedItem);
                     }
-                } else {
+                } 
+                // there was no previous result, so we add them all (and skip any diffing)
+                else {
                     for (const addedItem of thisTimeReferencedClasses) {
                         webRuntime.addStylesheet(addedItem);
                     }
@@ -72,19 +75,4 @@ export function bindDOMClassProp(
             }
         };
     });
-}
-
-/**
- * Return all items in a that are not in b;
- * @param a
- * @param b
- * @returns
- */
-function diffArray<T>(a: T[], b: T[]): T[] {
-    if (b.length > 10) {
-        const bSet = new Set(b);
-        return a.filter((x) => !bSet.has(x));
-    }
-
-    return a.filter((x) => !b.includes(x));
 }

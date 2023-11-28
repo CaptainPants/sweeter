@@ -24,3 +24,7 @@ export type ElementCssClasses =
     | undefined
     | null
     | ElementCssClasses[];
+
+export type StylesheetInclude =
+    | AbstractGlobalCssStylesheet
+    | AbstractGlobalCssStylesheet[];

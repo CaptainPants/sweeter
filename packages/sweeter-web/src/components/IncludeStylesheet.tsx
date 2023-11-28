@@ -1,32 +1,79 @@
 /* @jsxImportSource .. */
 
-import type { Component } from '@captainpants/sweeter-core';
-import type { GlobalCssStylesheet } from '../styles/index.js';
+import {
+    $val,
+    type Signal,
+    type Component,
+    type MightBeSignal,
+    type PropertiesMightBeSignals,
+    $calc,
+} from '@captainpants/sweeter-core';
+import type {
+    AbstractGlobalCssStylesheet,
+    StylesheetInclude,
+} from '../styles/index.js';
 import { getWebRuntime } from '../runtime/getWebRuntime.js';
+import { arrayExcept } from '../runtime/internal/utility/arrayExcept.js';
 
-export interface IncludeStylesheetProps {
-    stylesheet: GlobalCssStylesheet;
-}
+export type IncludeStylesheetProps = PropertiesMightBeSignals<{
+    stylesheet: StylesheetInclude;
+}>;
 
 export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
     { stylesheet },
     init,
 ) => {
-    const runtime = getWebRuntime();
+    const webRuntime = getWebRuntime();
+
+    let previousTime: AbstractGlobalCssStylesheet[] | undefined;
+
+    const flattened = flatten(stylesheet);
 
     init.subscribeToChanges(
-        [stylesheet],
-        ([stylesheet]) => {
-            if (stylesheet) {
-                const remove = runtime.addStylesheet(stylesheet);
+        [flattened],
+        ([thisTime]) => {
+            if (previousTime) {
+                const added = arrayExcept(thisTime, previousTime);
+                const removed = arrayExcept(previousTime, thisTime);
 
-                return remove;
+                for (const addedItem of added) {
+                    webRuntime.addStylesheet(addedItem);
+                }
+                for (const removedItem of removed) {
+                    webRuntime.removeStylesheet(removedItem);
+                }
+            } else {
+                for (const addedItem of thisTime) {
+                    webRuntime.addStylesheet(addedItem);
+                }
             }
 
-            return undefined;
+            previousTime = thisTime;
         },
         true,
     );
 
+    init.onUnMount(() => {
+        if (previousTime) {
+            for (const removedItem of previousTime) {
+                webRuntime.removeStylesheet(removedItem);
+            }
+        }
+    });
+
     return <></>;
 };
+
+function flatten(
+    value: MightBeSignal<StylesheetInclude>,
+): Signal<AbstractGlobalCssStylesheet[]> {
+    return $calc(() => {
+        value = $val(value);
+
+        if (Array.isArray(value)) {
+            return value;
+        } else {
+            return [value];
+        }
+    });
+}

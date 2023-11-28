@@ -4,15 +4,16 @@ import {
     $calc,
     $val,
     Async,
+    type PropertiesMightBeSignals,
     type Component,
     type Lazy,
 } from '@captainpants/sweeter-core';
-import type { GlobalCssStylesheet } from '../styles/index.js';
+import type { StylesheetInclude } from '../styles/index.js';
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
-export interface IncludeStylesheetAsyncProps {
-    stylesheet: Lazy<GlobalCssStylesheet>;
-}
+export type IncludeStylesheetAsyncProps = PropertiesMightBeSignals<{
+    stylesheet: Lazy<StylesheetInclude>;
+}>;
 
 export const IncludeStylesheetAsync: Component<IncludeStylesheetAsyncProps> = ({
     stylesheet,

@@ -8,7 +8,7 @@ exports[`Global style for component 1`] = `
 </style>"
 `;
 
-exports[`Global style for component 2`] = `"<!--Hooks(IncludeStylesheet): subscribeToChanges--><div class=\\"_glbl0_Component1\\">This is an example</div>"`;
+exports[`Global style for component 2`] = `"<!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--><div class=\\"_glbl0_Component1\\">This is an example</div>"`;
 
 exports[`Global style for component with nested 1`] = `
 "<style data-id=\\"Component2\\">
@@ -21,7 +21,7 @@ exports[`Global style for component with nested 1`] = `
 </style>"
 `;
 
-exports[`Global style for component with nested 2`] = `"<!--Hooks(IncludeStylesheet): subscribeToChanges--><div class=\\"_glbl0_Component2\\">This is an example<div class=\\"inner\\"></div></div>"`;
+exports[`Global style for component with nested 2`] = `"<!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--><div class=\\"_glbl0_Component2\\">This is an example<div class=\\"inner\\"></div></div>"`;
 
 exports[`Global stylesheet added 1`] = `
 "<style data-id=\\"Something\\">

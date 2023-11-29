@@ -3,13 +3,13 @@ import type {
     MightBeSignal,
     PropertiesMightBeSignals,
 } from '../types.js';
-import { $calc, $mutable, $val } from '../signals/index.js';
+import { $calc, $mutable, $val, type Signal } from '../signals/index.js';
 import { SuspenseContext } from './SuspenseContext.js';
 import { getRuntime } from '../index.js';
 
 export type AsyncProps<T> = PropertiesMightBeSignals<{
     loadData: (abort: AbortSignal) => Promise<T>;
-    children: (data: T) => JSX.Element;
+    children: (data: Signal<T>) => JSX.Element;
 }>;
 
 export function Async<T>(
@@ -28,6 +28,23 @@ export function Async<T>(
         | { resolution: 'ERROR'; error: unknown }
     >({
         resolution: 'LOADING',
+    });
+
+    const resolution = $calc(() => data.value.resolution); // So that our result $calc can subscribe to just the resolution type, not the value/error
+
+    const latestResult: Signal<T> = $calc<T>(() => {
+        if (data.value.resolution === 'SUCCESS') {
+            return data.value.result;
+        } else if (data.value.resolution === 'ERROR') {
+            throw data.value.error;
+        } else if (!latestResult.inited) {
+            throw new TypeError(
+                'Incorrectly using the value Signal in Async before it has a result.',
+            );
+        } else {
+            // Keep most recent value
+            return latestResult.peek();
+        }
     });
 
     async function reload(
@@ -77,24 +94,18 @@ export function Async<T>(
     );
 
     return $calc(() => {
-        if (data.value.resolution === 'LOADING') {
+        if (resolution.value === 'LOADING') {
             // Suspense should be showing
             return undefined;
         } else {
-            if (data.value.resolution === 'SUCCESS') {
-                return $val(children)(data.value.result);
-            } else if (data.value.resolution === 'ERROR') {
-                throw data.value.error;
-            } else {
-                throw new Error('Unexpected resolution');
-            }
+            return $val(children)(latestResult);
         }
     });
 }
 
 export function $async<T>(
     loadData: MightBeSignal<(abort: AbortSignal) => Promise<T>>,
-    render: MightBeSignal<(data: T) => JSX.Element>,
+    render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
 ) {
     return getRuntime().jsx(Async<T>, { loadData, children: render });
 }

@@ -81,7 +81,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     protected override _init(): void {
         this.#recalculate();
     }
-    
+
     #recalculate() {
         if (this.#recalculating) {
             throw new TypeError(

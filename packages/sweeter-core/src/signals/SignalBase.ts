@@ -50,7 +50,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         this.#state = state;
         this.#announceChange(previous, state);
     }
-    
+
     #ensureInited(): void {
         if (this.#state.mode === 'INITIALISING') {
             this._init();
@@ -58,7 +58,9 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     protected _init(): void {
-        throw new TypeError('_init not implemented, so the signal must be initialized at construction.')
+        throw new TypeError(
+            '_init not implemented, so the signal must be initialized at construction.',
+        );
     }
 
     protected _peeking(): void {
@@ -66,7 +68,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     #announceChange(previous: SignalState<T>, next: SignalState<T>) {
-        // It is reasonably common that there might not be any listeners yet, e.g. during 
+        // It is reasonably common that there might not be any listeners yet, e.g. during
         // delayed initialisation of a CalculatedSignal
         if (!this.#listeners.any()) {
             return;
@@ -83,7 +85,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     public listen(listener: SignalListener<T>, strong = true): () => void {
         this.#ensureInited();
-        
+
         this.#listeners.add(listener, strong);
 
         return () => {

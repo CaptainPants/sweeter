@@ -32,10 +32,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
         const wrapped = wrap(calculation);
 
-        const { result: initialValue, dependencies } =
-            callAndReturnDependencies(wrapped, true);
-
-        super(initialValue);
+        super({ mode: 'INITIALISING' });
 
         this.#capturedContext = savedContext;
 
@@ -52,7 +49,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         this.#dependencyListener = calculatedSignalListener;
 
         this.#wrappedCalculation = wrapped;
-        this.#dependencies = dependencies;
+        this.#dependencies = new Set();
 
         this.#attach();
     }
@@ -81,6 +78,10 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         }
     }
 
+    protected override _init(): void {
+        this.#recalculate();
+    }
+    
     #recalculate() {
         if (this.#recalculating) {
             throw new TypeError(
@@ -96,9 +97,10 @@ export class CalculatedSignal<T> extends SignalBase<T> {
                     callAndReturnDependencies(this.#wrappedCalculation, true);
 
                 this.#detachExcept(nextDependencies);
-                this.#attach();
 
+                // Call in this order
                 this.#dependencies = nextDependencies;
+                this.#attach();
 
                 this.#dirty = false;
                 this._updateAndAnnounce(result);

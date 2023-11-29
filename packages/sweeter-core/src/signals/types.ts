@@ -19,6 +19,8 @@ export interface Signal<T> {
 
     peekState(): SignalState<T>;
 
+    readonly inited: boolean;
+
     /**
      * Add a callback to be invoked when the signal changes. This can optionally be a weak reference.
      * @param listener

@@ -35,6 +35,10 @@ export class ListenerSet<Listener extends (...args: any[]) => void> {
         );
     }
 
+    any(): boolean {
+        return this.#listenerRefs.size > 0;
+    }
+
     public get summarize(): string {
         const strongRefs = [...this.#listenerRefs.values()]
             .map((x) => (x instanceof WeakRef ? undefined : x))

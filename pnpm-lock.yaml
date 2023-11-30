@@ -87,6 +87,8 @@ importers:
 
   packages/sweeter-core: {}
 
+  packages/sweeter-example: {}
+
   packages/sweeter-gummybear:
     dependencies:
       '@captainpants/sweeter-core':

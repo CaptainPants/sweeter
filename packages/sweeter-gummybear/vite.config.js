@@ -21,8 +21,14 @@ export default defineConfig({
     },
     plugins: [dts()],
     test: {
-      environmentMatchGlobs: [
-        ['**', 'jsdom'],
-      ]
+        environmentMatchGlobs: [
+            ['**', 'jsdom'],
+        ]
+    },
+    optimizeDeps: {
+        exclude: [
+            '@captainpants/sweeter-core',
+            '@captainpants/sweeter-web'
+        ]
     }
 });

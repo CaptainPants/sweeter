@@ -6,11 +6,21 @@ export default defineConfig({
         outDir: 'build',
         minify: false,
         rollupOptions: {
+        },
+        watch: {
+            include: []
         }
     },
     test: {
-      environmentMatchGlobs: [
-        ['**', 'jsdom'],
-      ]
+        environmentMatchGlobs: [
+            ['**', 'jsdom'],
+        ]
+    },
+    optimizeDeps: {
+        exclude: [
+            '@captainpants/sweeter-core',
+            '@captainpants/sweeter-web',
+            '@captainpants/sweeter-gummybear'
+        ]
     }
 });

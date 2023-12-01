@@ -8,19 +8,21 @@
     "type": "module",
     "packageManager": "pnpm@8.6.7",
     "main": "./build/index.js",
-    "types": "./build/index.d.ts",
     "exports": {
         ".": {
             "import": "./build/index.js",
-            "require": "./build/index.cjs"
+            "require": "./build/index.cjs",
+            "types": "./build/index.d.ts"
         },
         "./jsx-runtime": {
             "import": "./build/jsx-runtime.js",
-            "require": "./build/jsx-runtime.cjs"
+            "require": "./build/jsx-runtime.cjs",
+            "types": "./build/jsx-runtime.d.ts"
         },
         "./jsx-dev-runtime": {
             "import": "./build/jsx-dev-runtime.js",
-            "require": "./build/jsx-dev-runtime.cjs"
+            "require": "./build/jsx-dev-runtime.cjs",
+            "types": "./build/jsx-dev-runtime.d.ts"
         }
     },
     "scripts": {

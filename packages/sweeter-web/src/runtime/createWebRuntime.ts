@@ -27,11 +27,26 @@ export interface WebRuntimeOptions {
     root: RuntimeRootHostElement;
     render: () => JSX.Element;
     middleware?: JSXMiddleware[] | undefined;
+    topLevelError?: (err: unknown) => void;
 }
 
 export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
     const runtime = new WebRuntimeImplementation(options);
-    runtime.createRoot(options.root, options.render);
+    ErrorBoundaryContext.invokeWith(
+        {
+            error: err => {
+                if (options.topLevelError){ 
+                    options.topLevelError(err);
+                    return;
+                }
+                
+                console.error('Error reported with no ErrorBoundary', err);
+            }
+        },
+        () => {
+            runtime.createRoot(options.root, options.render);
+        }
+    )
     return runtime;
 }
 

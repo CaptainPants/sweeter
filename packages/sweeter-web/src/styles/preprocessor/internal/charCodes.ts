@@ -1,4 +1,3 @@
-
 export function charCodes(str: string): ReadonlyArray<number> {
     const res: number[] = [];
     for (let i = 0; i < str.length; ++i) {

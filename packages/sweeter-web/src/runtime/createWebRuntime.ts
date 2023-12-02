@@ -34,19 +34,19 @@ export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
     const runtime = new WebRuntimeImplementation(options);
     ErrorBoundaryContext.invokeWith(
         {
-            error: err => {
-                if (options.topLevelError){ 
+            error: (err) => {
+                if (options.topLevelError) {
                     options.topLevelError(err);
                     return;
                 }
-                
+
                 console.error('Error reported with no ErrorBoundary', err);
-            }
+            },
         },
         () => {
             runtime.createRoot(options.root, options.render);
-        }
-    )
+        },
+    );
     return runtime;
 }
 

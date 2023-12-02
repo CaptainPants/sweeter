@@ -1,5 +1,9 @@
 import { assertNeverNullish } from '@captainpants/sweeter-core';
-import { RuleAstNode, type AtRuleAstNode, type RuleOrAtRule } from './types.js';
+import {
+    type RuleAstNode,
+    type AtRuleAstNode,
+    type RuleOrAtRule,
+} from './types.js';
 
 export function transformNestedRules(ast: RuleOrAtRule[]): RuleOrAtRule[] {
     const result: RuleOrAtRule[] = [];
@@ -56,7 +60,9 @@ export function transform(
 }
 
 function expandSelectorsForPath(nodePath: RuleAstNode[]): string {
-    const results = [...expandSelectorsForPathImplementation(undefined, nodePath, 0)];
+    const results = [
+        ...expandSelectorsForPathImplementation(undefined, nodePath, 0),
+    ];
     return results.join(', ');
 }
 
@@ -80,7 +86,11 @@ function* expandSelectorsForPathImplementation(
                 : compiledParentSelector + ' ' + current
             : current;
 
-        for (const next of expandSelectorsForPathImplementation(selector, nodePath, nodePathIndex + 1)) {
+        for (const next of expandSelectorsForPathImplementation(
+            selector,
+            nodePath,
+            nodePathIndex + 1,
+        )) {
             yield next;
         }
     }

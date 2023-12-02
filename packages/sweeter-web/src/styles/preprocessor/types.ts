@@ -17,7 +17,7 @@ export interface AtRuleAstNode {
 export interface RuleAstNode {
     $nodeType: 'rule';
     selectors: string[];
-    
+
     nestedRules: RuleOrAtRule[];
     properties: PropertyAstNode[];
 }

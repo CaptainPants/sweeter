@@ -18,7 +18,7 @@ export function preprocessClassContent(className: string, css: string) {
         $nodeType: 'rule',
         nestedRules: parsed.nestedRules,
         properties: parsed.properties,
-        selector: '.' + className,
+        selectors: ['.' + className],
     };
 
     const transformed = transformNestedRules([cssClass]);

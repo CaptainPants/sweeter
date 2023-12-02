@@ -1,6 +1,5 @@
 import { assertNeverNullish } from '@captainpants/sweeter-core';
-import { splitByUnparenthesizedCommas } from './internal/splitByUnparenthesizedCommas.js';
-import { type AtRuleAstNode, type RuleOrAtRule } from './types.js';
+import { RuleAstNode, type AtRuleAstNode, type RuleOrAtRule } from './types.js';
 
 export function transformNestedRules(ast: RuleOrAtRule[]): RuleOrAtRule[] {
     const result: RuleOrAtRule[] = [];
@@ -13,7 +12,7 @@ export function transformNestedRules(ast: RuleOrAtRule[]): RuleOrAtRule[] {
 }
 
 export function transform(
-    selectors: string[],
+    path: RuleAstNode[],
     item: RuleOrAtRule,
     roots: RuleOrAtRule[],
 ): void {
@@ -37,13 +36,13 @@ export function transform(
         return;
     }
 
-    const newSelectors = [...selectors, item.selector];
+    const newSelectors = [...path, item];
 
     // Add a node to contain the properties in this (possibly nested) node
     if (item.properties.length > 0) {
         roots.push({
             $nodeType: 'rule',
-            selector: permutations(newSelectors),
+            selectors: [expandSelectorsForPath(newSelectors)],
             nestedRules: [],
             properties: item.properties,
         });
@@ -56,33 +55,32 @@ export function transform(
     }
 }
 
-function permutations(parts: string[]): string {
-    const results = [...generatePermutations(undefined, parts, 0)];
+function expandSelectorsForPath(nodePath: RuleAstNode[]): string {
+    const results = [...expandSelectorsForPathImplementation(undefined, nodePath, 0)];
     return results.join(', ');
 }
 
-function* generatePermutations(
+function* expandSelectorsForPathImplementation(
     compiledParentSelector: string | undefined,
-    parts: string[],
-    offset: number,
+    nodePath: RuleAstNode[],
+    nodePathIndex: number,
 ): Generator<string> {
-    if (offset >= parts.length) {
+    if (nodePathIndex >= nodePath.length) {
         assertNeverNullish(compiledParentSelector);
         yield compiledParentSelector;
         return;
     }
 
-    const firstPart = parts[offset]!;
-    const split = splitByUnparenthesizedCommas(firstPart);
+    const firstPart = nodePath[nodePathIndex]!;
 
-    for (const current of split) {
+    for (const current of firstPart.selectors) {
         const selector = compiledParentSelector
             ? current.includes('&')
                 ? current.replace('&', compiledParentSelector)
                 : compiledParentSelector + ' ' + current
             : current;
 
-        for (const next of generatePermutations(selector, parts, offset + 1)) {
+        for (const next of expandSelectorsForPathImplementation(selector, nodePath, nodePathIndex + 1)) {
             yield next;
         }
     }

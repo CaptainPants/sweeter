@@ -26,13 +26,20 @@ export function stringifyImpl(ast: AstNode[], result: string[], space: string) {
                 break;
 
             case 'rule':
-                result.push(space, item.selector, ' {\n');
+                result.push(space);
+                for (let i = 0; i < item.selectors.length; ++i) {
+                    if (i !== 0) {
+                        result.push(', ');
+                    }
+                    result.push(item.selectors[i]!);
+                }
+                result.push(' {\n');
                 stringifyImpl(item.properties, result, space + oneTab);
                 result.push(space, '}\n');
                 break;
 
             case 'property':
-                result.push(space, item.text, ';\n');
+                result.push(space, item.name, ': ', item.value, ';\n');
                 break;
         }
     }

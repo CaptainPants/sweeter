@@ -15,7 +15,7 @@ it('stringify 1', () => {
     expect(returned).toMatchSnapshot();
 });
 
-it('stringify 1', () => {
+it('stringify 2', () => {
     const css = `
         @media (screen) {
             .test { 

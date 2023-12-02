@@ -6,7 +6,9 @@ exports[`empty single rule 1`] = `
     "$nodeType": "rule",
     "nestedRules": [],
     "properties": [],
-    "selector": ".banana",
+    "selectors": [
+      ".banana",
+    ],
   },
 ]
 `;
@@ -18,20 +20,50 @@ exports[`media query 1`] = `
     "body": [
       {
         "$nodeType": "rule",
-        "nestedRules": [
+        "nestedRules": [],
+        "properties": [
           {
-            "$nodeType": "rule",
-            "nestedRules": [],
-            "properties": [],
-            "selector": ".banana",
+            "$nodeType": "property",
+            "name": "color",
+            "value": "green",
           },
         ],
-        "properties": [],
-        "selector": "",
+        "selectors": [
+          ".banana",
+        ],
       },
     ],
     "parameters": "screen and (max-width: 992px)",
     "type": "media",
+  },
+]
+`;
+
+exports[`nested media query 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [
+      {
+        "$nodeType": "at",
+        "body": [
+          {
+            "$nodeType": "rule",
+            "nestedRules": [],
+            "properties": [],
+            "selectors": [
+              ".banana",
+            ],
+          },
+        ],
+        "parameters": "screen and (max-width: 992px)",
+        "type": "media",
+      },
+    ],
+    "properties": [],
+    "selectors": [
+      "div",
+    ],
   },
 ]
 `;
@@ -47,14 +79,19 @@ exports[`single rule with no property and nested rule with one property 1`] = `
         "properties": [
           {
             "$nodeType": "property",
-            "text": "color: green",
+            "name": "color",
+            "value": "green",
           },
         ],
-        "selector": ".nested",
+        "selectors": [
+          ".nested",
+        ],
       },
     ],
     "properties": [],
-    "selector": ".banana",
+    "selectors": [
+      ".banana",
+    ],
   },
 ]
 `;
@@ -67,10 +104,13 @@ exports[`single rule with one property 1`] = `
     "properties": [
       {
         "$nodeType": "property",
-        "text": "color: red",
+        "name": "color",
+        "value": "red",
       },
     ],
-    "selector": ".banana",
+    "selectors": [
+      ".banana",
+    ],
   },
 ]
 `;
@@ -86,19 +126,25 @@ exports[`single rule with one property and nested rule 1`] = `
         "properties": [
           {
             "$nodeType": "property",
-            "text": "color: green",
+            "name": "color",
+            "value": "green",
           },
         ],
-        "selector": ".nested",
+        "selectors": [
+          ".nested",
+        ],
       },
     ],
     "properties": [
       {
         "$nodeType": "property",
-        "text": "color: red",
+        "name": "color",
+        "value": "red",
       },
     ],
-    "selector": ".banana",
+    "selectors": [
+      ".banana",
+    ],
   },
 ]
 `;

@@ -7,9 +7,16 @@ exports[`stringify 1 1`] = `
 "
 `;
 
-exports[`stringify 1 2`] = `
+exports[`stringify 2 1`] = `
 "@media (screen) {
-     {
+    .test {
+        color: green;
+    }
+    #some_id {
+        background-color: green;
+    }
+    body {
+        background-color: green;
     }
 
 }

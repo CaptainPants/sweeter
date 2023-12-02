@@ -57,6 +57,22 @@ it('media query', () => {
     const content = `
         @media screen and (max-width: 992px) {
             .banana {
+                color: green;
+            }
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});
+
+it('nested media query', () => {
+    const content = `
+        div {
+            @media screen and (max-width: 992px) {
+                .banana {
+                }
             }
         }
     `;

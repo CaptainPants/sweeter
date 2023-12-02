@@ -1,4 +1,6 @@
+import { braceCharCodeArray, semiOrBraceCharCodeArray, semiOrCloseBraceCharCodeArray, whitespaceCharCodeArray } from './internal/charCodes.js';
 import { indexOfAny } from './internal/indexOfAny.js';
+import { readSelectors } from './internal/readSelectors.js';
 import type {
     AtRuleAstNode,
     PropertyAstNode,
@@ -27,14 +29,8 @@ export function parseClassContent(css: string): RuleBodyParts {
     return parser.parseRuleBodyContent();
 }
 
-const brace = ['{'.charCodeAt(0)] as const;
-const semiOrBrace = ['{'.charCodeAt(0), ';'.charCodeAt(0)] as const;
-const semiOrBraceOrCloseBrace = [
-    '{'.charCodeAt(0),
-    ';'.charCodeAt(0),
-    '}'.charCodeAt(0),
-] as const;
-const identifier = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
+const identifierRegExp = /^-{0,2}[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
+const spaceRegExp = /^\s+/g;
 
 class Parser {
     constructor(input: string) {
@@ -46,44 +42,52 @@ class Parser {
     #index: number;
 
     public parse(): RuleOrAtRule[] {
-        return this.#parseRuleOrAtRule(false);
+        return this.#parseMultipleRuleOrAtRules(false);
     }
 
-    #parseRuleOrAtRule(inBlock: boolean): RuleOrAtRule[] {
+    #parseMultipleRuleOrAtRules(inBlock: boolean): RuleOrAtRule[] {
         const result: RuleOrAtRule[] = [];
 
-        this.#skipWhiteSpace();
-
-        while (this.#index < this.#input.length) {
-            // whitespace should already have been skipped
-
-            const next = this.#input[this.#index];
-            if (next === '}') {
-                if (inBlock) {
-                    // move #index past the block
-                    this.#index += 1;
-                    break;
-                } else {
-                    throw new Error(this.#errorMessage('Unexpected'));
-                }
-            } else if (next === '@') {
-                result.push(this.#parseAtRule());
-            } else {
-                result.push(this.#parseRule());
-            }
-
-            this.#skipWhiteSpace();
+        for (let current = this.#parseRuleOrAtRule(inBlock); current; current = this.#parseRuleOrAtRule(inBlock)) {
+            result.push(current);
         }
 
         return result;
     }
 
+    #parseRuleOrAtRule(inBlock: boolean): RuleOrAtRule | undefined {
+        this.#skipWhiteSpace();
+
+        const next = this.#input[this.#index];
+
+        if (this.#index >= this.#input.length){
+            return undefined;
+        }
+
+        // End of the containing block
+        if (next === '}') {
+            if (inBlock) {
+                // move #index past the block
+                this.#index += 1;
+                return undefined;
+            } else {
+                throw new Error(this.#errorMessage('Unexpected'));
+            }
+        // @rule
+        } else if (next === '@') {
+            return this.#parseAtRule();
+        // normal selector rule: a.x#banana[test=1], b { }
+        } else {
+            return this.#parseRule();
+        }
+    }
+
     #parseRule(): RuleAstNode {
-        const startOfBody = indexOfAny(brace, this.#input, this.#index);
+        const startOfBody = indexOfAny(braceCharCodeArray, this.#input, this.#index);
         if (!startOfBody)
             throw new Error(this.#errorMessage('No block body found'));
 
-        const selector = this.#input.substring(this.#index, startOfBody).trim();
+        const selectors = this.#readSelectors();
 
         this.#index = startOfBody + 1;
         const { nestedRules, properties } = this.parseRuleBodyContent();
@@ -91,10 +95,16 @@ class Parser {
 
         return {
             $nodeType: 'rule',
-            selector,
+            selectors,
             nestedRules,
             properties,
         };
+    }
+
+    #readSelectors(): string[] {
+        const { selectors, endOffset } = readSelectors(this.#input, this.#index);
+        this.#index = endOffset;
+        return selectors;
     }
 
     /**
@@ -111,7 +121,7 @@ class Parser {
         this.#skipWhiteSpace();
 
         // The opening line must end with a ; or a {
-        const foundIndex = indexOfAny(semiOrBrace, this.#input, this.#index);
+        const foundIndex = indexOfAny(semiOrBraceCharCodeArray, this.#input, this.#index);
         if (foundIndex === undefined)
             throw new Error(
                 this.#errorMessage('Could not find end of @ rule preamble as.'),
@@ -132,9 +142,9 @@ class Parser {
         if (whatDidWeFind === ';') {
             return { $nodeType: 'at', type: type, parameters: parameters };
         } else {
-            // position at start of block
-            this.#index = foundIndex;
-            const body = this.#parseRuleOrAtRule(true);
+            // position at start of block (after the brace)
+            this.#index = foundIndex + 1;
+            const body = this.#parseMultipleRuleOrAtRules(true);
 
             return {
                 $nodeType: 'at',
@@ -145,23 +155,12 @@ class Parser {
         }
     }
 
-    #tryReadIdent(): string | undefined {
-        const remaining = this.#input.substring(this.#index);
-        const match = remaining.match(identifier);
-        if (match) {
-            const len = match[0].length;
-            this.#index += len;
-            return match[0];
-        }
-        return undefined;
-    }
-
     /**
      * Expects #index to be pointing to the firat character in the block (after the {)
      * Positions the #index at the closing brace (or end of file) on completion
      */
     parseRuleBodyContent(): RuleBodyParts {
-        const nestedRules: RuleAstNode[] = [];
+        const nestedRules: RuleOrAtRule[] = [];
         const properties: PropertyAstNode[] = [];
 
         while (this.#index < this.#input.length) {
@@ -171,46 +170,96 @@ class Parser {
                 break;
             }
 
-            const foundSemiOrBlockStartOrBlockEndIndex = indexOfAny(
-                semiOrBraceOrCloseBrace,
-                this.#input,
-                this.#index,
-            );
+            const propertyName = this.#tryReadPropertyName();
 
-            if (foundSemiOrBlockStartOrBlockEndIndex === undefined) {
-                // I think this is really if the file ends during a rule
-                const wholeProperty = this.#input.substring(this.#index);
+            // property
+            if (propertyName) {
+                ++this.#index; // move past the colon
+                this.#skipWhiteSpace();
+                const propertyValue = this.#readPropertyValue();
+                ++this.#index;
 
-                if (wholeProperty.trim().length > 0) {
-                    properties.push({
-                        $nodeType: 'property',
-                        text: wholeProperty,
-                    });
-                    this.#index = this.#input.length; // end of file
-                }
-                break;
-            }
-
-            const which = this.#input[foundSemiOrBlockStartOrBlockEndIndex];
-
-            // nested rule
-            if (which === '{') {
-                const nestedRule = this.#parseRule(); // positions #index at the next character
-                nestedRules.push(nestedRule);
-            } else {
-                const wholeProperty = this.#input.substring(
-                    this.#index,
-                    foundSemiOrBlockStartOrBlockEndIndex,
-                );
                 properties.push({
                     $nodeType: 'property',
-                    text: wholeProperty,
+                    name: propertyName,
+                    value: propertyValue,
                 });
-                this.#index = foundSemiOrBlockStartOrBlockEndIndex + 1;
+            }
+            // nested rule / at-rule
+            else {
+                const nestedRule = this.#parseRuleOrAtRule(true); // positions #index at the next character
+                
+                if (nestedRule) {
+                    nestedRules.push(nestedRule);
+                }
             }
         }
 
         return { nestedRules, properties };
+    }
+
+    #tryReadPropertyName(): string | undefined {
+        const remaining = this.#input.substring(this.#index);
+        const match = remaining.match(identifierRegExp);
+
+        if (match) {
+            const len = match[0].length;
+
+            const startOfIdentifierIndex = this.#index;
+            const endOfIdentifierIndex = this.#index + len;
+            const afterWhitespaceIndex = this.#findNextNonSpace(endOfIdentifierIndex);
+
+            if (this.#input[afterWhitespaceIndex] === ':') {
+                this.#index = afterWhitespaceIndex; // move after colon
+                return this.#input.substring(startOfIdentifierIndex, afterWhitespaceIndex).trim();
+            }
+        }
+
+        return ;
+    }
+
+    /**
+     * TODO: a property value could have a quoted string containing ; or } so we will need similar 
+     * nesting logic to selectors (but simpler)
+     * 
+     * Assumes that #index has already skipped any whitespace
+     * @returns 
+     */
+    #readPropertyValue(): string {
+        const startIndex = this.#index;
+        const endIndex = indexOfAny(semiOrCloseBraceCharCodeArray, this.#input, startIndex);
+
+        if (endIndex !== undefined) {
+            this.#index = endIndex;
+        }
+
+        return this.#input.substring(startIndex, endIndex);
+    }
+
+    #tryReadIdent(): string | undefined {
+        const remaining = this.#input.substring(this.#index);
+        const match = remaining.match(identifierRegExp);
+
+        if (match) {
+            const len = match[0].length;
+            this.#index += len;
+            return match[0];
+        }
+        return undefined;
+    }
+
+    #findNextNonSpace(index: number) {
+        const theRest = this.#input.substring(this.#index);
+
+        for (let i = index; i < this.#input.length; ++i) {
+            const leadingWhitespaceMatch = theRest.match(spaceRegExp);
+
+            if (leadingWhitespaceMatch) {
+                return this.#index + leadingWhitespaceMatch[0].length;
+            }
+        }
+
+        return index;
     }
 
     /**
@@ -219,7 +268,7 @@ class Parser {
     #skipWhiteSpace(): void {
         while (
             this.#index < this.#input.length &&
-            ' \t\n\r\v'.indexOf(this.#input[this.#index]!) >= 0
+            whitespaceCharCodeArray.includes(this.#input.charCodeAt(this.#index))
         ) {
             ++this.#index;
         }

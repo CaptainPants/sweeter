@@ -3,7 +3,8 @@
  */
 export interface PropertyAstNode {
     $nodeType: 'property';
-    text: string;
+    name: string;
+    value: string;
 }
 
 export interface AtRuleAstNode {
@@ -15,13 +16,14 @@ export interface AtRuleAstNode {
 
 export interface RuleAstNode {
     $nodeType: 'rule';
-    selector: string;
-    nestedRules: RuleAstNode[];
+    selectors: string[];
+    
+    nestedRules: RuleOrAtRule[];
     properties: PropertyAstNode[];
 }
 
 export interface RuleBodyParts {
-    nestedRules: RuleAstNode[];
+    nestedRules: RuleOrAtRule[];
     properties: PropertyAstNode[];
 }
 

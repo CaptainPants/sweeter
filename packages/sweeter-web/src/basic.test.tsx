@@ -3,9 +3,6 @@
 import { expectDOMMatching } from './test/internal/expectDOMMatching.js';
 import { testRender } from './test/testRender.js';
 
-// TODO: these aren't running through a renderer, which might break in future iterations.
-// consider a test rendering function that wraps around the JSX calls `testRender(() => <jsx />)`
-
 it('Simple div has text content and title attribute', () => {
     const res = testRender(() => <div title="test">Something</div>);
 

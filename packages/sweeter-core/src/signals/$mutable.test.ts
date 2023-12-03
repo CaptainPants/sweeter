@@ -1,5 +1,5 @@
-import type { SignalState } from './SignalState.js';
 import { $mutable } from './$mutable.js';
+import { type SignalState } from './types.js';
 
 it('MutableValueSignal has initial value', () => {
     const signal = $mutable(23);

@@ -1,7 +1,4 @@
-export type SignalState<T> =
-    | { readonly mode: 'INITIALISING' }
-    | { readonly mode: 'SUCCESS'; readonly value: T }
-    | { readonly mode: 'ERROR'; readonly error: unknown };
+import { type SignalState } from './types.js';
 
 export function isEqualSignalState<T>(
     a: SignalState<T>,

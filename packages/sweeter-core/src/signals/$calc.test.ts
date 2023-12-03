@@ -1,6 +1,6 @@
-import type { SignalState } from './SignalState.js';
 import { $mutable } from './$mutable.js';
 import { $calc } from './$calc.js';
+import { type SignalState } from './types.js';
 
 it('CalculatedSignal listeners invoked with correct value after dependency updated', () => {
     const mutableSignal = $mutable(1);

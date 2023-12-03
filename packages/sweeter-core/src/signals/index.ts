@@ -9,6 +9,6 @@ export * from './afterCalculationsComplete.js';
 export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';
-export * from './SignalState.js';
+export * from './SignalState-support.js';
 export * from './$val.js';
 export * from './subscribeToChanges.js';

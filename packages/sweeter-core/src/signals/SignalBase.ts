@@ -1,10 +1,12 @@
-import type { SignalState } from './SignalState.js';
-import { getSignalValueFromState, isEqualSignalState } from './SignalState.js';
+import {
+    getSignalValueFromState,
+    isEqualSignalState,
+} from './SignalState-support.js';
 import { afterCalculationsComplete } from './afterCalculationsComplete.js';
 import { announceSignalUsage } from './ambient.js';
 import { ListenerSet } from './internal/ListenerSet.js';
 import { signalMarker } from './internal/markers.js';
-import type { Signal, SignalListener } from './types.js';
+import type { Signal, SignalListener, SignalState } from './types.js';
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
@@ -47,6 +49,8 @@ export abstract class SignalBase<T> implements Signal<T> {
             return; // Don't announce the change if the values were equal
         }
 
+        // Prevent accidental mutation of internal state by caller
+        Object.freeze(state);
         this.#state = state;
         this.#announceChange(previous, state);
     }

@@ -1,5 +1,9 @@
-import type { SignalState } from './SignalState.js';
 import type { signalMarker, writableSignalMarker } from './internal/markers.js';
+
+export type SignalState<T> =
+    | { readonly mode: 'INITIALISING' }
+    | { readonly mode: 'SUCCESS'; readonly value: T }
+    | { readonly mode: 'ERROR'; readonly error: unknown };
 
 export type SignalListener<T> = (
     previous: SignalState<T>,

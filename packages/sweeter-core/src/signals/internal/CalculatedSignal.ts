@@ -1,10 +1,9 @@
 import type { SavedExecutionContext } from '../../executionContext/saveExecutionContext.js';
 import { saveExecutionContext } from '../../executionContext/saveExecutionContext.js';
 import { SignalBase } from '../SignalBase.js';
-import { type SignalState } from '../SignalState.js';
 import { callAndReturnDependencies } from '../ambient.js';
 import { deferForBatch, isBatching } from '../batching.js';
-import { type Signal } from '../types.js';
+import { type SignalState, type Signal } from '../types.js';
 import { finishCalculation, startCalculation } from './calculationDeferral.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {

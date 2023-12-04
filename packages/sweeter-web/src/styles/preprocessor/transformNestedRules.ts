@@ -60,20 +60,20 @@ export function transform(
 }
 
 function expandSelectorsForPath(nodePath: RuleAstNode[]): string {
-    const results = [
-        ...expandSelectorsForPathImplementation(undefined, nodePath, 0),
-    ];
+    const results: string[] = [];
+    expandSelectorsForPathImplementation(undefined, nodePath, 0, results);
     return results.join(', ');
 }
 
-function* expandSelectorsForPathImplementation(
+function expandSelectorsForPathImplementation(
     compiledParentSelector: string | undefined,
     nodePath: RuleAstNode[],
     nodePathIndex: number,
-): Generator<string> {
+    output: string[],
+): void {
     if (nodePathIndex >= nodePath.length) {
         assertNeverNullish(compiledParentSelector);
-        yield compiledParentSelector;
+        output.push(compiledParentSelector);
         return;
     }
 
@@ -86,12 +86,11 @@ function* expandSelectorsForPathImplementation(
                 : compiledParentSelector + ' ' + current
             : current;
 
-        for (const next of expandSelectorsForPathImplementation(
+        expandSelectorsForPathImplementation(
             selector,
             nodePath,
             nodePathIndex + 1,
-        )) {
-            yield next;
-        }
+            output,
+        );
     }
 }

@@ -6,7 +6,13 @@ let batchDepth = 0;
 
 let deferredHandlers = new Set<BatchCompleteHandler>();
 
-export function deferForBatch(handler: BatchCompleteHandler): void {
+export function deferForBatchEnd(handler: BatchCompleteHandler): void {
+    if (batchDepth === 0) {
+        throw new Error(
+            'deferForBatchEnd should not be called outside a batcn.',
+        );
+    }
+
     deferredHandlers.add(handler);
 }
 

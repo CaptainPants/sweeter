@@ -1,5 +1,5 @@
 import { SignalBase } from '../SignalBase.js';
-import { deferForBatch, isBatching } from '../batching.js';
+import { deferForBatchEnd, isBatching } from '../batching.js';
 import { type Later, type Signal } from '../types.js';
 
 export class DeferredSignal<T> extends SignalBase<T> {
@@ -13,7 +13,7 @@ export class DeferredSignal<T> extends SignalBase<T> {
         const deferredSignalListener = () => {
             if (isBatching()) {
                 this.#dirty = true;
-                deferForBatch(this);
+                deferForBatchEnd(this);
                 return;
             }
 

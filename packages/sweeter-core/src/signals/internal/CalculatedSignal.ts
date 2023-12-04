@@ -2,7 +2,7 @@ import type { SavedExecutionContext } from '../../executionContext/saveExecution
 import { saveExecutionContext } from '../../executionContext/saveExecutionContext.js';
 import { SignalBase } from '../SignalBase.js';
 import { callAndReturnDependencies } from '../ambient.js';
-import { deferForBatch, isBatching } from '../batching.js';
+import { deferForBatchEnd, isBatching } from '../batching.js';
 import { type SignalState, type Signal } from '../types.js';
 import { finishCalculation, startCalculation } from './calculationDeferral.js';
 
@@ -39,7 +39,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         const calculatedSignalListener = () => {
             if (isBatching()) {
                 this.#dirty = true;
-                deferForBatch(this);
+                deferForBatchEnd(this);
                 return;
             }
 

@@ -27,3 +27,23 @@ it('CalculatedSignal listeners invoked with correct value after dependency updat
 
     expect(calculatedSignal.value).toEqual(3);
 });
+
+it('CalculatedSignal can be released', () => {
+    const releaseController = new AbortController();
+
+    const mutableSignal = $mutable(1);
+    const calculatedSignal = $calc(() => mutableSignal.value + 1, {
+        release: releaseController.signal,
+    });
+
+    // Update works while not aborted
+    mutableSignal.value = 2;
+
+    expect(calculatedSignal.value).toEqual(3);
+
+    releaseController.abort();
+
+    mutableSignal.value = 3;
+
+    expect(calculatedSignal.value).toEqual(3);
+});

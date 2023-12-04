@@ -61,3 +61,16 @@ export type UnsignalAll<T extends readonly unknown[]> = {
 };
 
 export type Later = (callback: () => void) => void;
+
+export interface CalculatedSignalOptions {
+    /**
+     * If this AbortSignal is aborted then the calculated signal 'release' - meaning that it stops being updated when
+     * its dependencies are updated. 
+     * 
+     * This is probably not that useful to regular users, but helpful when building infrastucture
+     * and you e.g. want to invalidate a signal that is no longer relevant, but don't want accidental breakages down the chain.
+     * 
+     * This was originally implemented for the For component.
+     */
+    release?: AbortSignal;
+}

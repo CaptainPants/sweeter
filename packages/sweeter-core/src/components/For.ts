@@ -26,7 +26,7 @@ export function For<T>(
     // This seems fairly abusive of the dependency tracking system - but ... eh
     const elementCache: {
         element: JSX.Element;
-        orphaned: { value: boolean };
+        orphan: AbortController;
     }[] = [];
 
     // Clear the cache if the render function changes
@@ -48,7 +48,9 @@ export function For<T>(
             // throw to an ErrorBoundary or something
 
             for (let i = itemsResolved.length; i < elementCache.length; ++i) {
-                elementCache[i]!.orphaned.value = true;
+                // Releases the calculated signal (preserving its last value so that 
+                // dependencies don't fail in unexpected ways before updating)
+                elementCache[i]!.orphan.abort();
             }
 
             // reduce the array length
@@ -57,24 +59,15 @@ export function For<T>(
             // For the rest, add a new signal and render an item
             while (elementCache.length < itemsResolved.length) {
                 const index = elementCache.length;
-
-                // This basically exists so that an orphaned signal won't cause exceptions
-                // if a signal is orphaned we just keep returning its
-                let mostRecentResult: T = itemsResolved[index]!;
-                const orphaned = { value: false };
+                const release = new AbortController();
 
                 const elementSignal = $calc<T>(() => {
-                    if (!orphaned.value) {
-                        // $val here subscribes for changes to items
-                        mostRecentResult = $val(items)[index]!;
-                    }
-
-                    return mostRecentResult;
-                });
+                    return $val(items)[index]!;
+                }, { release: release.signal });
 
                 elementCache.push({
                     element: $val(renderItem)(elementSignal, index),
-                    orphaned: orphaned,
+                    orphan: release,
                 });
             }
         }

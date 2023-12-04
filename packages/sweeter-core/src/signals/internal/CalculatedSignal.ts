@@ -3,7 +3,11 @@ import { saveExecutionContext } from '../../executionContext/saveExecutionContex
 import { SignalBase } from '../SignalBase.js';
 import { callAndReturnDependencies } from '../ambient.js';
 import { deferForBatchEnd, isBatching } from '../batching.js';
-import { type SignalState, type Signal } from '../types.js';
+import {
+    type SignalState,
+    type Signal,
+    type CalculatedSignalOptions,
+} from '../types.js';
 import { finishCalculation, startCalculation } from './calculationDeferral.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
@@ -26,7 +30,7 @@ function wrap<T>(callback: () => T): () => SignalState<T> {
 }
 
 export class CalculatedSignal<T> extends SignalBase<T> {
-    constructor(calculation: () => T) {
+    constructor(calculation: () => T, options?: CalculatedSignalOptions) {
         const savedContext = saveExecutionContext();
 
         const wrapped = wrap(calculation);
@@ -50,12 +54,24 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         this.#wrappedCalculation = wrapped;
         this.#dependencies = new Set();
 
+        options?.release?.addEventListener('abort', () => {
+            // Note that this might not be inited - but thats ok it will just do the calculation once
+            this.#released = true;
+            this.#dependencies = new Set();
+            this.#detachAll();
+        });
+
         this.#attach();
     }
 
     #capturedContext: SavedExecutionContext;
+
     #wrappedCalculation: () => SignalState<T>;
-    #dirty: boolean = false;
+
+    // Not included by default to represent 'false' so we don't need to add the actual property until we need to
+    #released?: boolean;
+    #dirty?: boolean;
+
     #recalculating: boolean = false;
 
     /**
@@ -82,6 +98,11 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     }
 
     #recalculate() {
+        // if already initialized and has been orphaned then end here.
+        if (this.inited && this.#released) {
+            return;
+        }
+
         if (this.#recalculating) {
             throw new TypeError(
                 'Signal already recalculating - indicating a signal that depends on itself.',
@@ -97,9 +118,11 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
                 this.#detachExcept(nextDependencies);
 
-                // Call in this order
-                this.#dependencies = nextDependencies;
-                this.#attach();
+                if (!this.#released) {
+                    // Call in this order
+                    this.#dependencies = nextDependencies;
+                    this.#attach();
+                }
 
                 this.#dirty = false;
                 this._updateAndAnnounce(result);
@@ -135,6 +158,13 @@ export class CalculatedSignal<T> extends SignalBase<T> {
                     false /* strong: false */,
                 );
             }
+        }
+    }
+
+    #detachAll() {
+        for (const dep of this.#dependencies) {
+            // Holds a weak reference back to this signal
+            dep.unlisten(this.#dependencyListener, false /* strong: false */);
         }
     }
 }

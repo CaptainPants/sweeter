@@ -5,7 +5,9 @@ export interface AbstractGlobalCssStylesheet {
     readonly symbol: symbol;
     readonly id: string;
 
-    getContent(context: GlobalStyleSheetContentGeneratorContext): string;
+    getContent(
+        context: GlobalStyleSheetContentGeneratorContext,
+    ): string | undefined;
 }
 
 export interface GlobalStyleSheetContentGeneratorContext {

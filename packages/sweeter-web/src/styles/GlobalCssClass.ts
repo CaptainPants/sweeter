@@ -4,17 +4,22 @@ import type {
     AbstractGlobalCssStylesheet,
 } from './types.js';
 
+type Content = ((className: string) => string) | string | undefined;
+
 export interface GlobalCssClassOptions {
+    /**
+     * Base the class name for this class on this value (it will be prefixed/suffixed or otherwise made unique).
+     */
     className: string;
-    content: string;
+    content?: Content;
     preprocess?: boolean;
 }
 
 export class GlobalCssClass implements AbstractGlobalCssStylesheet {
-    public readonly nameBasis: string;
+    public readonly className: string;
     public readonly id: string;
     public readonly symbol: symbol;
-    public readonly content: string;
+    public readonly content?: Content;
     public readonly preprocess: boolean;
 
     constructor(options: GlobalCssClassOptions);
@@ -23,18 +28,30 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
         content,
         preprocess = true,
     }: GlobalCssClassOptions) {
-        this.nameBasis = className;
+        this.className = className;
         this.id = className;
         this.symbol = Symbol('GlobalCssClass-' + className);
         this.content = content;
         this.preprocess = preprocess;
     }
 
-    getContent(context: GlobalStyleSheetContentGeneratorContext): string {
+    getContent(
+        context: GlobalStyleSheetContentGeneratorContext,
+    ): string | undefined {
         const name = context.getPrefixedClassName(this);
-        const content = this.preprocess
-            ? preprocessClassContent(name, this.content)
-            : `.${name}\r\n{\r\n${this.content}\r\n}`;
-        return content;
+
+        const content =
+            typeof this.content === 'string'
+                ? this.content
+                : this.content?.('.' + name);
+
+        if (!content) {
+            return undefined;
+        }
+
+        const transformed = this.preprocess
+            ? preprocessClassContent(name, content)
+            : `.${name}\r\n{\r\n${content}\r\n}`;
+        return transformed;
     }
 }

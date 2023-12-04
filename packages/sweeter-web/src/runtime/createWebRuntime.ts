@@ -94,7 +94,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     getPrefixedClassName(cssClass: GlobalCssClass): string {
         let name = this.#cssClassNameMap.get(cssClass);
         if (!name) {
-            name = '_glbl' + this.#cssCounter + '_' + cssClass.nameBasis;
+            name = '_glbl' + this.#cssCounter + '_' + cssClass.className;
             this.#cssClassNameMap.set(cssClass, name);
             ++this.#cssCounter;
         }

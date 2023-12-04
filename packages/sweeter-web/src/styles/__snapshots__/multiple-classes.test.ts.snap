@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Multiple classes produce sane output 1`] = `
+".ClassA {
+    color: red;
+}
+.ClassB {
+    color: green;
+}
+.ClassB:hover {
+    color: blue;
+}
+"
+`;

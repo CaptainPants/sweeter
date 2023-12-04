@@ -11,6 +11,15 @@ import { isSignal } from './isSignal.js';
 export function $val<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.value : value;
 }
+/**
+ * Explicitly track a signal, ignoring what its actual value is.
+ * @param value
+ */
+export function $track<T>(value: T | Signal<T>): void {
+    if (isSignal(value)) {
+        const _ = value.value;
+    }
+}
 export function $peek<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.peek() : value;
 }

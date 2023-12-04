@@ -1,4 +1,13 @@
-import { $calc, $mutable, $val, getRuntime, isSignal } from '../index.js';
+import {
+    $calc,
+    $mutable,
+    $peek,
+    $track,
+    $val,
+    getRuntime,
+    isSignal,
+    trackingIsAnError,
+} from '../index.js';
 import { type Signal } from '../signals/types.js';
 import {
     type MightBeSignal,
@@ -39,6 +48,9 @@ export function For<T>(
     // point to a valid index, and add new signals when necessary.
 
     return $calc(() => {
+        // subscribe to changes, but ignore the actual value for now
+        $track(renderItem);
+
         // subscibes to items
         const itemsResolved = $val(items);
 
@@ -48,7 +60,7 @@ export function For<T>(
             // throw to an ErrorBoundary or something
 
             for (let i = itemsResolved.length; i < elementCache.length; ++i) {
-                // Releases the calculated signal (preserving its last value so that 
+                // Releases the calculated signal (preserving its last value so that
                 // dependencies don't fail in unexpected ways before updating)
                 elementCache[i]!.orphan.abort();
             }
@@ -56,18 +68,26 @@ export function For<T>(
             // reduce the array length
             elementCache.length = itemsResolved.length;
         } else {
-            // For the rest, add a new signal and render an item
-            while (elementCache.length < itemsResolved.length) {
-                const index = elementCache.length;
-                const release = new AbortController();
+            if (elementCache.length < itemsResolved.length) {
+                trackingIsAnError(() => {
+                    // For the rest, add a new signal and render an item
+                    while (elementCache.length < itemsResolved.length) {
+                        const index = elementCache.length;
+                        const release = new AbortController();
 
-                const elementSignal = $calc<T>(() => {
-                    return $val(items)[index]!;
-                }, { release: release.signal });
+                        const elementSignal = $calc<T>(
+                            () => {
+                                return $val(items)[index]!;
+                            },
+                            { release: release.signal },
+                        );
 
-                elementCache.push({
-                    element: $val(renderItem)(elementSignal, index),
-                    orphan: release,
+                        elementCache.push({
+                            // We use init.subscribeToChanges([renderItem]) earlier, so $peek to avoid subscribing at multiple levels
+                            element: $peek(renderItem)(elementSignal, index),
+                            orphan: release,
+                        });
+                    }
                 });
             }
         }

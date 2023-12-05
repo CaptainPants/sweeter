@@ -1,6 +1,13 @@
 import type { Runtime } from '@captainpants/sweeter-core';
-import type { GlobalStyleSheetContentGeneratorContext } from '../index.js';
+import type {
+    AbstractGlobalCssStylesheet,
+    GlobalStyleSheetContentGeneratorContext,
+} from '../index.js';
 
 export interface WebRuntime
     extends Runtime,
-        GlobalStyleSheetContentGeneratorContext {}
+        GlobalStyleSheetContentGeneratorContext {
+    addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void;
+
+    removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void;
+}

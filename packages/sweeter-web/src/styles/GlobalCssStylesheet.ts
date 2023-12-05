@@ -3,11 +3,10 @@ import { preprocess } from './preprocessor/preprocess.js';
 import type {
     AbstractGlobalCssStylesheet,
     GlobalStyleSheetContentGeneratorContext,
+    StylesheetGenerator,
 } from './types.js';
 
-type Content =
-    | string
-    | ((context: GlobalStyleSheetContentGeneratorContext) => string);
+type Content = string | StylesheetGenerator;
 
 export interface GlobalCssStylesheetOptions {
     id: string;
@@ -50,24 +49,4 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
 
         return transformed;
     }
-}
-
-export function $stylesheet(
-    template: TemplateStringsArray,
-    ...params: GlobalCssClass[]
-): (context: GlobalStyleSheetContentGeneratorContext) => string {
-    return (context) => {
-        const res: string[] = [];
-        const last = template.length - 1;
-        for (let i = 0; i < template.length; ++i) {
-            res.push(template[i]!);
-
-            if (i !== last) {
-                const param = params[i]!;
-                res.push('.');
-                res.push(context.getPrefixedClassName(param));
-            }
-        }
-        return res.join('');
-    };
 }

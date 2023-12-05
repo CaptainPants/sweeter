@@ -12,10 +12,6 @@ export interface AbstractGlobalCssStylesheet {
 
 export interface GlobalStyleSheetContentGeneratorContext {
     getPrefixedClassName(cssClass: GlobalCssClass): string;
-
-    addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void;
-
-    removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void;
 }
 
 export type ElementCssClasses =
@@ -30,3 +26,7 @@ export type ElementCssClasses =
 export type StylesheetInclude =
     | AbstractGlobalCssStylesheet
     | AbstractGlobalCssStylesheet[];
+
+export type StylesheetGenerator = (
+    context: GlobalStyleSheetContentGeneratorContext,
+) => string;

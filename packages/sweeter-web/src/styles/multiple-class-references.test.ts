@@ -1,12 +1,12 @@
-import { $stylesheet, GlobalCssStylesheet } from './index.js';
+import { stylesheet, GlobalCssStylesheet } from './index.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 
-it('Multiple classes produce sane output', () => {
+it('Multiple class references produce sane output', () => {
     const classA = new GlobalCssClass({ className: 'ClassA' });
     const classB = new GlobalCssClass({ className: 'ClassB' });
 
     const sheet = new GlobalCssStylesheet({
-        content: $stylesheet`
+        content: stylesheet`
             ${classA} {
                 color: red;
             }
@@ -22,12 +22,6 @@ it('Multiple classes produce sane output', () => {
 
     const result = sheet.getContent({
         getPrefixedClassName: (classObject) => classObject.className,
-        addStylesheet: () => {
-            throw new Error('Not implemented');
-        },
-        removeStylesheet: () => {
-            throw new Error('Not implemented');
-        },
     });
 
     expect(result).toMatchSnapshot();

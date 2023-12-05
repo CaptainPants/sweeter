@@ -1,6 +1,6 @@
 import { testRender } from '@captainpants/sweeter-web';
 
-import stylesheets from './stylesheets/index.js';
+import { partStyles } from './stylesheets/index.js';
 
 it('button style', () => {
     // This test just stops jest from complaining until we add some unit tests
@@ -8,7 +8,7 @@ it('button style', () => {
     // TODO: GlobalCssClasses should be automatically added while they are referenced
     const res = testRender(() => (
         <>
-            <button class={stylesheets.button}>Test</button>
+            <button class={partStyles.button}>Test</button>
         </>
     ));
 

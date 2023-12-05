@@ -20,7 +20,8 @@ it('Common case produces sensible result', () => {
 it('Self referential', () => {
     const class_ = new GlobalCssClass({
         className: 'test',
-        content: (self) => stylesheet`.NestedOnce { ${self} { color: green; } }`,
+        content: (self) =>
+            stylesheet`.NestedOnce { ${self} { color: green; } }`,
     });
 
     expect(

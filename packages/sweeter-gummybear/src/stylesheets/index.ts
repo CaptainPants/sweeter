@@ -1,3 +1,3 @@
-import * as parts from './parts.js';
+import * as partStyles from './partStyles.js';
 
-export default parts;
+export { partStyles };

@@ -11,7 +11,7 @@ import { type GlobalCssClass } from './GlobalCssClass.js';
  */
 export function stylesheet(
     template: TemplateStringsArray,
-    ...params: GlobalCssClass[]
+    ...params: (GlobalCssClass | StylesheetGenerator | string)[]
 ): StylesheetGenerator {
     return (context) => {
         const res: string[] = [];
@@ -21,8 +21,15 @@ export function stylesheet(
 
             if (i !== last) {
                 const param = params[i]!;
-                res.push('.');
-                res.push(context.getPrefixedClassName(param));
+
+                if (typeof param === 'string') {
+                    res.push(param);
+                } else if (typeof param === 'function') {
+                    res.push(param(context))
+                } else {
+                    res.push('.');
+                    res.push(context.getPrefixedClassName(param));
+                }
             }
         }
         return res.join('');

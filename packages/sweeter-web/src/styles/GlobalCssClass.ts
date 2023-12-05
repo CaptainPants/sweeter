@@ -2,9 +2,13 @@ import { preprocessClassContent } from './preprocessor/preprocess.js';
 import type {
     GlobalStyleSheetContentGeneratorContext,
     AbstractGlobalCssStylesheet,
+    StylesheetGenerator,
 } from './types.js';
 
-type Content = ((className: string) => string) | string | undefined;
+type Content =
+    | ((self: GlobalCssClass) => string | StylesheetGenerator)
+    | string
+    | undefined;
 
 export interface GlobalCssClassOptions {
     /**
@@ -40,13 +44,17 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
     ): string | undefined {
         const name = context.getPrefixedClassName(this);
 
-        const content =
+        let content =
             typeof this.content === 'string'
                 ? this.content
-                : this.content?.('.' + name);
+                : this.content?.(this);
 
         if (!content) {
             return undefined;
+        }
+
+        if (typeof content === 'function') {
+            content = content(context);
         }
 
         const transformed = this.preprocess

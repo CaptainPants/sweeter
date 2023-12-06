@@ -47,7 +47,7 @@ export function bindDOMMiscProps<TElementType extends string>(
         if (mutableMapEntry && isSignal(value)) {
             // ==== MUTABLE SIGNAL SPECIAL CASE BINDING (e.g. input.value) ====
             const { eventName, domProperty } = mutableMapEntry;
-            
+
             (node as unknown as Untyped)[domProperty] = value.peek();
 
             node.addEventListener(eventName, (evt) => {

@@ -3,14 +3,14 @@ import { type ReadWriteSignal } from './types.js';
 
 /**
  * Create a new ReadWriteSignal signal with an initial value.
- * @param initialValue 
- * @returns 
+ * @param initialValue
+ * @returns
  */
 export function $mutable<T>(initialValue: T): ReadWriteSignal<T> & { value: T };
 /**
  * Create a new ReadWriteSignal signal with an undefined initial value.
- * @param initialValue 
- * @returns 
+ * @param initialValue
+ * @returns
  */
 export function $mutable<TOrUndefined>(): ReadWriteSignal<
     TOrUndefined | undefined

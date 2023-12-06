@@ -1,4 +1,7 @@
-import { GlobalCssStylesheet, IncludeStylesheet } from '@captainpants/sweeter-web';
+import {
+    GlobalCssStylesheet,
+    IncludeStylesheet,
+} from '@captainpants/sweeter-web';
 
 export const reset = new GlobalCssStylesheet({
     id: 'reset',
@@ -14,6 +17,6 @@ export const reset = new GlobalCssStylesheet({
 
 /**
  * Shorthand to include the reset stylesheet.
- * @returns 
+ * @returns
  */
 export const Reset = () => <IncludeStylesheet stylesheet={reset} />;

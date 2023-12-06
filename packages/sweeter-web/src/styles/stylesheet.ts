@@ -25,7 +25,7 @@ export function stylesheet(
                 if (typeof param === 'string') {
                     res.push(param);
                 } else if (typeof param === 'function') {
-                    res.push(param(context))
+                    res.push(param(context));
                 } else {
                     res.push('.');
                     res.push(context.getPrefixedClassName(param));

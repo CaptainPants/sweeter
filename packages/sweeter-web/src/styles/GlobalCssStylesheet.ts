@@ -14,11 +14,6 @@ export interface GlobalCssStylesheetOptions {
     preprocess?: boolean;
 }
 
-export type Builder = (
-    template: TemplateStringsArray,
-    ...params: GlobalCssClass[]
-) => string;
-
 export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
     public readonly content: Content;
     public readonly id: string;
@@ -48,5 +43,11 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
         const transformed = this.preprocess ? preprocess(content) : content;
 
         return transformed;
+    }
+
+    getReferencedClasses(): readonly GlobalCssClass[] | null {
+        return typeof this.content === 'function'
+            ? this.content.referencedClasses
+            : null;
     }
 }

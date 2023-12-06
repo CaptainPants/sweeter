@@ -10,6 +10,8 @@ type Content =
     | string
     | undefined;
 
+type ContentConstructed = StylesheetGenerator | string | undefined;
+
 export interface GlobalCssClassOptions {
     /**
      * Base the class name for this class on this value (it will be prefixed/suffixed or otherwise made unique).
@@ -23,7 +25,7 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
     public readonly className: string;
     public readonly id: string;
     public readonly symbol: symbol;
-    public readonly content?: Content;
+    public readonly content?: ContentConstructed;
     public readonly preprocess: boolean;
 
     constructor(options: GlobalCssClassOptions);
@@ -35,8 +37,9 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
         this.className = className;
         this.id = className;
         this.symbol = Symbol('GlobalCssClass-' + className);
-        this.content = content;
         this.preprocess = preprocess;
+
+        this.content = typeof content === 'function' ? content(this) : content;
     }
 
     getContent(
@@ -44,22 +47,24 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
     ): string | undefined {
         const name = context.getPrefixedClassName(this);
 
-        let content =
+        const content =
             typeof this.content === 'string'
                 ? this.content
-                : this.content?.(this);
+                : this.content?.(context);
 
         if (!content) {
             return undefined;
-        }
-
-        if (typeof content === 'function') {
-            content = content(context);
         }
 
         const transformed = this.preprocess
             ? preprocessClassContent(name, content)
             : `.${name}\r\n{\r\n${content}\r\n}`;
         return transformed;
+    }
+
+    getReferencedClasses(): readonly GlobalCssClass[] | null {
+        return typeof this.content === 'function'
+            ? this.content.referencedClasses
+            : null;
     }
 }

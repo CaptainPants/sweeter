@@ -1,5 +1,5 @@
 import { type StylesheetGenerator } from './types.js';
-import { type GlobalCssClass } from './GlobalCssClass.js';
+import { GlobalCssClass } from './GlobalCssClass.js';
 
 /**
  * Template string function.
@@ -13,7 +13,7 @@ export function stylesheet(
     template: TemplateStringsArray,
     ...params: (GlobalCssClass | StylesheetGenerator | string)[]
 ): StylesheetGenerator {
-    return (context) => {
+    const result: StylesheetGenerator = (context) => {
         const res: string[] = [];
         const last = template.length - 1;
         for (let i = 0; i < template.length; ++i) {
@@ -34,4 +34,14 @@ export function stylesheet(
         }
         return res.join('');
     };
+
+    const referencedClasses: GlobalCssClass[] = [];
+    for (const param of params) {
+        if (param instanceof GlobalCssClass) {
+            referencedClasses.push(param);
+        }
+    }
+    result.referencedClasses = referencedClasses;
+
+    return result;
 }

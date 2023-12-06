@@ -8,6 +8,8 @@ export interface AbstractGlobalCssStylesheet {
     getContent(
         context: GlobalStyleSheetContentGeneratorContext,
     ): string | undefined;
+
+    getReferencedClasses(): readonly GlobalCssClass[] | null;
 }
 
 export interface GlobalStyleSheetContentGeneratorContext {
@@ -27,6 +29,7 @@ export type StylesheetInclude =
     | AbstractGlobalCssStylesheet
     | AbstractGlobalCssStylesheet[];
 
-export type StylesheetGenerator = (
-    context: GlobalStyleSheetContentGeneratorContext,
-) => string;
+export type StylesheetGenerator = {
+    (context: GlobalStyleSheetContentGeneratorContext): string;
+    referencedClasses: readonly GlobalCssClass[];
+};

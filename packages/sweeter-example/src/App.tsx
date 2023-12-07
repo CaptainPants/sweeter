@@ -1,10 +1,17 @@
-import { Reset, partStyles } from "@captainpants/sweeter-gummybear";
+import {
+  Reset,
+  partStyles,
+  createTheme,
+} from "@captainpants/sweeter-gummybear";
 
 //import typescriptLogo from "./typescript.svg";
 
 //import viteLogo from "/vite.svg";
 
 import { $mutable } from "@captainpants/sweeter-core";
+import { IncludeStylesheet } from "@captainpants/sweeter-web";
+
+const theme = createTheme({});
 
 export function App(): JSX.Element {
   const value = $mutable("test");
@@ -12,6 +19,7 @@ export function App(): JSX.Element {
   return (
     <>
       <Reset />
+      <IncludeStylesheet stylesheet={theme} />
       <div>
         <h1>This is a test</h1>
         <div>

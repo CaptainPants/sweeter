@@ -1,4 +1,3 @@
-import { type GlobalCssClass } from './GlobalCssClass.js';
 import { preprocess } from './preprocessor/preprocess.js';
 import type {
     AbstractGlobalCssStylesheet,
@@ -45,7 +44,7 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
         return transformed;
     }
 
-    getReferencedClasses(): readonly GlobalCssClass[] | null {
+    getReferencedStylesheets(): readonly AbstractGlobalCssStylesheet[] | null {
         return typeof this.content === 'function'
             ? this.content.referencedClasses
             : null;

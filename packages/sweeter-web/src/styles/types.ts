@@ -9,7 +9,7 @@ export interface AbstractGlobalCssStylesheet {
         context: GlobalStyleSheetContentGeneratorContext,
     ): string | undefined;
 
-    getReferencedClasses(): readonly GlobalCssClass[] | null;
+    getReferencedStylesheets(): readonly AbstractGlobalCssStylesheet[] | null;
 }
 
 export interface GlobalStyleSheetContentGeneratorContext {

@@ -101,11 +101,50 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         return name;
     }
 
+    #sheetsFor(
+        stylesheet: AbstractGlobalCssStylesheet,
+    ): AbstractGlobalCssStylesheet[] {
+        const sheets: AbstractGlobalCssStylesheet[] = [stylesheet];
+        const references = stylesheet.getReferencedStylesheets();
+        if (references) {
+            sheets.push(...references);
+        }
+        return sheets;
+    }
+
     addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
+        const callbacks: (() => void)[] = [];
+
+        // Note reverse order so that the depended-on sheets are added first (not that it matters in all likelihood)
+        const sheets = this.#sheetsFor(stylesheet).reverse();
+        for (const sheet of sheets) {
+            callbacks.push(this.#addOneStylesheet(sheet));
+        }
+
+        return () => {
+            for (let i = callbacks.length - 1; i >= 0; --i) {
+                callbacks[i]!();
+            }
+        };
+    }
+    removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
+        const sheets = this.#sheetsFor(stylesheet);
+        for (const sheet of sheets) {
+            this.#removeOneStylesheet(sheet);
+        }
+    }
+
+    #addOneStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
         let entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
         if (!entry) {
+            const sheetContent = stylesheet.getContent(this);
+            if (!sheetContent) {
+                // Shortcut for empty stylesheets, so we don't waste time/ram with DOM elements for them
+                return () => {};
+            }
+
             const element = document.createElement('style');
-            element.textContent = '\n' + stylesheet.getContent(this);
+            element.textContent = '\n' + sheetContent;
             element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
             this.#target.ownerDocument.head.appendChild(element);
 
@@ -130,7 +169,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         };
     }
 
-    removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
+    #removeOneStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
         const entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
         if (!entry) {
             return;

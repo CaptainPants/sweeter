@@ -62,7 +62,7 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
         return transformed;
     }
 
-    getReferencedClasses(): readonly GlobalCssClass[] | null {
+    getReferencedStylesheets(): readonly AbstractGlobalCssStylesheet[] | null {
         return typeof this.content === 'function'
             ? this.content.referencedClasses
             : null;

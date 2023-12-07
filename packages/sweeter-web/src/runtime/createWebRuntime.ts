@@ -122,11 +122,13 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         }
 
         return () => {
+            // Reverse order
             for (let i = callbacks.length - 1; i >= 0; --i) {
                 callbacks[i]!();
             }
         };
     }
+
     removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
         const sheets = this.#sheetsFor(stylesheet);
         for (const sheet of sheets) {

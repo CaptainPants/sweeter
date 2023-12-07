@@ -1,8 +1,8 @@
-import { App } from "./App.js";
+import { App } from './App.js';
 
-import { createWebRuntime } from "@captainpants/sweeter-web";
+import { createWebRuntime } from '@captainpants/sweeter-web';
 
 createWebRuntime({
-    root: document.getElementById("app")!,
+    root: document.getElementById('app')!,
     render: () => <App />,
 });

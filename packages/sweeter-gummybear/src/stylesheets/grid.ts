@@ -8,18 +8,19 @@ export const row = new GlobalCssClass({
     content: `
         display: flex;
         flex-direction: row;
-        margin-left: var(0 - ${varNames.columnPadding});
-        margin-right: var(0 - ${varNames.columnPadding});
+        margin-left: calc(0 - var(${varNames.columnPadding}));
+        margin-right: calc(0 - var(${varNames.columnPadding}));
     `,
 });
 
 export const columns = createConstantMap(
     columnWidthNames,
-    (name) =>
+    (name, i) =>
         new GlobalCssClass({
             className: name,
             content: `
-            padding-left: ${varNames.columnPadding};
+            padding-left: var(${varNames.columnPadding});
+            width: ${(i + 1) * Math.floor(100 / 12)}%;
         `,
         }),
 );

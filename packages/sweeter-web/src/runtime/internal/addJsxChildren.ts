@@ -92,9 +92,9 @@ export function addJsxChildren(
 
     return () => {
         for (
-            let current = parent.firstChild;
+            let current = parent.lastChild;
             current;
-            current = parent.firstChild
+            current = parent.lastChild
         ) {
             current.remove();
             announceUnMountedRecursive(current);

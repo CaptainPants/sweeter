@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`$foreach basic 1 - shorthand 1`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
+exports[`$foreach basic 1 - shorthand 1`] = `"Item alpha at index 0, Item beta at index 1, Item gamma at index 2, <!--Hooks(For): subscribeToChanges-->"`;
 
-exports[`ForEach append 1`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
+exports[`ForEach append 1`] = `"Item alpha at index 0, Item beta at index 1, Item gamma at index 2, <!--Hooks(For): subscribeToChanges-->"`;
 
-exports[`ForEach append 2`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, Item delta at index 3, "`;
+exports[`ForEach append 2`] = `"Item alpha at index 0, Item beta at index 1, Item gamma at index 2, Item delta at index 3, <!--Hooks(For): subscribeToChanges-->"`;
 
-exports[`ForEach basic 1 1`] = `"<!--Hooks(For): subscribeToChanges-->Item alpha at index 0, Item beta at index 1, Item gamma at index 2, "`;
+exports[`ForEach basic 1 1`] = `"Item alpha at index 0, Item beta at index 1, Item gamma at index 2, <!--Hooks(For): subscribeToChanges-->"`;

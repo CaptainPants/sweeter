@@ -4,4 +4,4 @@ exports[`Fallback is shown 1`] = `"<div>FALLBACK</div><div style=\\"display: non
 
 exports[`Fallback is shown and then content once loaded 1`] = `"<div>FALLBACK</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChanges--></div>"`;
 
-exports[`Fallback is shown and then content once loaded 2`] = `"<!--Hooks(Async): subscribeToChanges-->27"`;
+exports[`Fallback is shown and then content once loaded 2`] = `"27<!--Hooks(Async): subscribeToChanges-->"`;

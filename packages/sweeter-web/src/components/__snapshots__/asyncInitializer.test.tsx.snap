@@ -2,4 +2,4 @@
 
 exports[`example 1 1`] = `"<div>LOADING...</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChanges--></div>"`;
 
-exports[`example 1 2`] = `"<!--Hooks(Async): subscribeToChanges--><div>RESULT: RESOLVED!</div>"`;
+exports[`example 1 2`] = `"<div>RESULT: RESOLVED!</div><!--Hooks(Async): subscribeToChanges-->"`;

@@ -105,13 +105,8 @@ export function addUnMountedCallback(
  * @param node
  */
 export function announceChildrenMountedRecursive(node: Node) {
-    // reverse order
-    for (
-        let current = node.lastChild;
-        current;
-        current = current.previousSibling
-    ) {
-        announceMountedRecursive(current);
+    for (const child of node.childNodes) {
+        announceMountedRecursive(child);
     }
 }
 
@@ -133,7 +128,12 @@ export function announceUnMountedRecursive(node: Node): void {
         isMounted.delete(node);
     }
 
-    for (const child of node.childNodes) {
-        announceUnMountedRecursive(child);
+    // reverse order
+    for (
+        let current = node.lastChild;
+        current;
+        current = current.previousSibling
+    ) {
+        announceUnMountedRecursive(current);
     }
 }

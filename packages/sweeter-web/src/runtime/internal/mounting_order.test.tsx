@@ -72,10 +72,10 @@ it('Mount is called in order', () => {
     expect(res.nodes).toMatchSnapshot();
 
     // Depth first order (child before parent)
-    expect(mountOrder).toStrictEqual([4, 3, 2, 1]);
+    expect(mountOrder).toStrictEqual([3, 2, 4, 1]);
 
     res.dispose();
 
     // Depth first order (parent before child)
-    expect(unMountOrder).toStrictEqual([1, 2, 3, 4]);
+    expect(unMountOrder).toStrictEqual([1, 4, 2, 3]);
 });

@@ -166,10 +166,9 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
 
     const hookElement = init[hookInitSymbol];
 
-    if (!hookElement) {
-        // shortcut if we don't need to add in markers for mount callbacks.
-        return res;
+    if (hookElement) {
+        return [res, hookElement];
     }
-
-    return [hookElement, res];
+    // shortcut if we don't need to add in markers for mount callbacks.
+    return res;
 }

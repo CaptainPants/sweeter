@@ -8,8 +8,8 @@ export const row = new GlobalCssClass({
     content: `
         display: flex;
         flex-direction: row;
-        margin-left: calc(0 - var(${varNames.columnPadding}));
-        margin-right: calc(0 - var(${varNames.columnPadding}));
+        margin-left: calc(0px - var(${varNames.columnPadding}));
+        margin-right: calc(0px - var(${varNames.columnPadding}));
     `,
 });
 

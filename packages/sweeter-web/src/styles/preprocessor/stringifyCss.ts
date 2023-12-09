@@ -12,14 +12,19 @@ export function stringifyImpl(ast: AstNode[], result: string[], space: string) {
     for (const item of ast) {
         switch (item.$nodeType) {
             case 'at':
-                result.push('@', item.type);
+                result.push(space, '@', item.type);
                 if (item.parameters) {
                     result.push(' ', item.parameters);
                 }
-                if (item.body) {
+                if (item.nestedRules || item.properties) {
                     result.push(' {\n');
-                    stringifyImpl(item.body, result, space + oneTab);
-                    result.push('\n', space, '}\n');
+                    if (item.nestedRules) {
+                        stringifyImpl(item.nestedRules, result, space + oneTab);
+                    }
+                    if (item.properties) {
+                        stringifyImpl(item.properties, result, space + oneTab);
+                    }
+                    result.push(space, '}\n');
                 } else {
                     result.push(';\n');
                 }

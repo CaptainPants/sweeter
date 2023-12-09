@@ -3,60 +3,67 @@ import {
     type RuleAstNode,
     type AtRuleAstNode,
     type RuleOrAtRule,
+    type PropertyAstNode,
 } from './types.js';
 
 export function transformNestedRules(ast: RuleOrAtRule[]): RuleOrAtRule[] {
     const result: RuleOrAtRule[] = [];
 
     for (const item of ast) {
-        transform([], item, result);
+        transform([], [], item, result);
     }
 
     return result;
 }
 
 export function transform(
-    path: RuleAstNode[],
+    atRulePath: AtRuleAstNode[],
+    rulePath: RuleAstNode[],
     item: RuleOrAtRule,
     roots: RuleOrAtRule[],
 ): void {
-    // Note that this should only happen at the root
-    if (item.$nodeType === 'at') {
-        const newNode: AtRuleAstNode = {
-            $nodeType: 'at',
-            type: item.type,
-            parameters: item.parameters,
-        };
-
-        if (item.body && item.body.length > 0) {
-            const body: RuleOrAtRule[] = [];
-            for (const childItem of item.body) {
-                transform([], childItem, body);
-            }
-            item.body = body;
-        }
-
-        roots.push(newNode);
-        return;
-    }
-
-    const newSelectors = [...path, item];
+    const newAtRulePath =
+        item.$nodeType == 'at' ? [...atRulePath, item] : atRulePath;
+    const newRulePath =
+        item.$nodeType == 'rule' ? [...rulePath, item] : rulePath;
 
     // Add a node to contain the properties in this (possibly nested) node
-    if (item.properties.length > 0) {
-        roots.push({
-            $nodeType: 'rule',
-            selectors: [expandSelectorsForPath(newSelectors)],
-            nestedRules: [],
-            properties: item.properties,
-        });
+    if (item.properties && item.properties.length > 0) {
+        roots.push(createRuleFor(newAtRulePath, newRulePath, item.properties));
     }
 
     if (item.nestedRules) {
         for (const nestedRule of item.nestedRules) {
-            transform(newSelectors, nestedRule, roots);
+            transform(newAtRulePath, newRulePath, nestedRule, roots);
         }
     }
+}
+
+function createRuleFor(
+    atRulePath: AtRuleAstNode[],
+    rulePath: RuleAstNode[],
+    properties: PropertyAstNode[] | undefined,
+): RuleOrAtRule {
+    let result: RuleOrAtRule = {
+        $nodeType: 'rule',
+        selectors: [expandSelectorsForPath(rulePath)],
+        nestedRules: [],
+        properties: properties ?? [],
+    };
+
+    // Wrap all @ rules around the rule
+    for (let i = atRulePath.length - 1; i >= 0; --i) {
+        const source = atRulePath[i]!;
+
+        result = {
+            $nodeType: 'at',
+            type: source.type,
+            parameters: source.parameters,
+            nestedRules: [result],
+        };
+    }
+
+    return result;
 }
 
 function expandSelectorsForPath(nodePath: RuleAstNode[]): string {

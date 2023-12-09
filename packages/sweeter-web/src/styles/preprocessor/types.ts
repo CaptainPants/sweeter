@@ -11,7 +11,9 @@ export interface AtRuleAstNode {
     $nodeType: 'at';
     type: string;
     parameters?: string | undefined; // E.g. @media (xxxxx) or @charset "utf-8"
-    body?: RuleOrAtRule[] | undefined;
+
+    nestedRules?: RuleOrAtRule[] | undefined;
+    properties?: PropertyAstNode[] | undefined;
 }
 
 export interface RuleAstNode {

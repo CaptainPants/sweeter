@@ -4,5 +4,5 @@ export { forms };
 import * as grid from './grid.js';
 export { grid };
 
-export * from './baseTheme.js';
+export * from './createTheme.js';
 export * from './vars.js';

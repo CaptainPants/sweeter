@@ -17,7 +17,7 @@ exports[`media query 1`] = `
 [
   {
     "$nodeType": "at",
-    "body": [
+    "nestedRules": [
       {
         "$nodeType": "rule",
         "nestedRules": [],
@@ -34,6 +34,7 @@ exports[`media query 1`] = `
       },
     ],
     "parameters": "screen and (max-width: 992px)",
+    "properties": [],
     "type": "media",
   },
 ]
@@ -46,7 +47,7 @@ exports[`nested media query 1`] = `
     "nestedRules": [
       {
         "$nodeType": "at",
-        "body": [
+        "nestedRules": [
           {
             "$nodeType": "rule",
             "nestedRules": [],
@@ -57,6 +58,7 @@ exports[`nested media query 1`] = `
           },
         ],
         "parameters": "screen and (max-width: 992px)",
+        "properties": [],
         "type": "media",
       },
     ],

@@ -30,3 +30,45 @@ it('Self referential', () => {
         }),
     ).toMatchSnapshot();
 });
+
+it('Nested media query', () => {
+    const class_ = new GlobalCssClass({
+        className: 'test',
+        content: (self) =>
+            stylesheet`
+                @media screen and (min-width: 200px) {
+                    padding-left: var(--property);
+                    width: 50%;
+                }
+            `,
+    });
+
+    const output = class_.getContent({
+        getPrefixedClassName: (class_) => class_.className,
+    });
+
+    expect(output).toMatchSnapshot();
+});
+
+it('Nested media query - complex', () => {
+    const class_ = new GlobalCssClass({
+        className: 'test',
+        content: (self) =>
+            stylesheet`
+                @media screen and (min-width: 200px) {
+                    div {
+                        @supports(& .banana) {
+                            padding-left: var(--property);
+                            width: 50%;
+                        }
+                    }
+                }
+            `,
+    });
+
+    const output = class_.getContent({
+        getPrefixedClassName: (class_) => class_.className,
+    });
+
+    expect(output).toMatchSnapshot();
+});

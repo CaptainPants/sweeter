@@ -11,7 +11,7 @@ import { GlobalCssClass } from './GlobalCssClass.js';
  */
 export function stylesheet(
     template: TemplateStringsArray,
-    ...params: (GlobalCssClass | StylesheetGenerator | string)[]
+    ...params: (GlobalCssClass | StylesheetGenerator | string | number)[]
 ): StylesheetGenerator {
     const result: StylesheetGenerator = (context) => {
         const res: string[] = [];
@@ -22,7 +22,9 @@ export function stylesheet(
             if (i !== last) {
                 const param = params[i]!;
 
-                if (typeof param === 'string') {
+                if (typeof param === 'number') {
+                    res.push(String(param));
+                } else if (typeof param === 'string') {
                     res.push(param);
                 } else if (typeof param === 'function') {
                     res.push(param(context));

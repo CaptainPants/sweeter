@@ -8,6 +8,28 @@ exports[`Common case produces sensible result 1`] = `
 "
 `;
 
+exports[`Nested media query - complex 1`] = `
+"@media screen and (min-width: 200px) {
+    @supports (& .banana) {
+        .test div {
+            padding-left: var(--property);
+            width: 50%;
+        }
+    }
+}
+"
+`;
+
+exports[`Nested media query 1`] = `
+"@media screen and (min-width: 200px) {
+    .test {
+        padding-left: var(--property);
+        width: 50%;
+    }
+}
+"
+`;
+
 exports[`Self referential 1`] = `
 ".test .NestedOnce .test {
     color: green;

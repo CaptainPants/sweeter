@@ -24,8 +24,8 @@ export function App(): JSX.Element {
             <div>
                 <h1>This is a test</h1>
                 <div class={grid.row}>
-                    <div class={grid.columns._3}>First:</div>
-                    <div class={grid.columns._9}>
+                    <div class={grid.columns.xs._3}>First:</div>
+                    <div class={grid.columns.xs._9}>
                         <input
                             type="text"
                             class={forms.textbox}
@@ -34,8 +34,10 @@ export function App(): JSX.Element {
                     </div>
                 </div>
                 <div class={grid.row}>
-                    <div class={grid.columns._3}>Second:</div>
-                    <div class={grid.columns._9}>
+                    <div class={[grid.columns.xs._3, grid.columns.sm._5]}>
+                        Second:
+                    </div>
+                    <div class={[grid.columns.xs._9, grid.columns.sm._5]}>
                         <input
                             type="text"
                             class={forms.textbox}

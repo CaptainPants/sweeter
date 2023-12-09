@@ -14,3 +14,6 @@ export const columnWidthNames = [
     '_11',
     '_12',
 ] as const;
+
+export const breakpointNames = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
+export const breakpointSizes = [undefined, 576, 720, 960, 1200] as const;

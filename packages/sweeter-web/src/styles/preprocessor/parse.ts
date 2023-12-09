@@ -31,7 +31,7 @@ export function parse(css: string): RuleOrAtRule[] {
  */
 export function parseClassContent(css: string): RuleBodyParts {
     const parser = new Parser(css);
-    return parser.parseRuleBodyContent();
+    return parser.parseRuleBodyContent(true);
 }
 
 const identifierRegExp = /^-{0,2}[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
@@ -47,21 +47,8 @@ class Parser {
     #index: number;
 
     public parse(): RuleOrAtRule[] {
-        return this.#parseMultipleRuleOrAtRules(false);
-    }
-
-    #parseMultipleRuleOrAtRules(inBlock: boolean): RuleOrAtRule[] {
-        const result: RuleOrAtRule[] = [];
-
-        for (
-            let current = this.#parseRuleOrAtRule(inBlock);
-            current;
-            current = this.#parseRuleOrAtRule(inBlock)
-        ) {
-            result.push(current);
-        }
-
-        return result;
+        const { nestedRules } = this.parseRuleBodyContent(false);
+        return nestedRules;
     }
 
     #parseRuleOrAtRule(inBlock: boolean): RuleOrAtRule | undefined {
@@ -103,7 +90,7 @@ class Parser {
         const selectors = this.#readSelectors();
 
         this.#index = startOfBody + 1;
-        const { nestedRules, properties } = this.parseRuleBodyContent();
+        const { nestedRules, properties } = this.parseRuleBodyContent(true);
         this.#index += 1;
 
         return {
@@ -160,17 +147,22 @@ class Parser {
         this.#index = foundIndex + 1;
 
         if (whatDidWeFind === ';') {
-            return { $nodeType: 'at', type: type, parameters: parameters };
+            return {
+                $nodeType: 'at',
+                type: type,
+                parameters,
+            };
         } else {
             // position at start of block (after the brace)
             this.#index = foundIndex + 1;
-            const body = this.#parseMultipleRuleOrAtRules(true);
+            const { properties, nestedRules } = this.parseRuleBodyContent(true);
 
             return {
                 $nodeType: 'at',
                 type,
                 parameters,
-                body,
+                properties,
+                nestedRules,
             };
         }
     }
@@ -179,7 +171,7 @@ class Parser {
      * Expects #index to be pointing to the firat character in the block (after the {)
      * Positions the #index at the closing brace (or end of file) on completion
      */
-    parseRuleBodyContent(): RuleBodyParts {
+    parseRuleBodyContent(allowProperties: boolean): RuleBodyParts {
         const nestedRules: RuleOrAtRule[] = [];
         const properties: PropertyAstNode[] = [];
 

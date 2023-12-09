@@ -5,7 +5,7 @@ export interface ThemeOptions {}
 
 export function createTheme(options: ThemeOptions) {
     return new GlobalCssStylesheet({
-        id: 'grid',
+        id: 'theme',
         content: `
             :root {
                 ${varNames.columnPadding}: 10px;

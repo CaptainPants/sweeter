@@ -91,7 +91,6 @@ class Parser {
 
         this.#index = startOfBody + 1;
         const { nestedRules, properties } = this.parseRuleBodyContent(true);
-        this.#index += 1;
 
         return {
             $nodeType: 'rule',
@@ -169,7 +168,7 @@ class Parser {
 
     /**
      * Expects #index to be pointing to the firat character in the block (after the {)
-     * Positions the #index at the closing brace (or end of file) on completion
+     * Positions the #index after the closing brace (or end of file) on completion
      */
     parseRuleBodyContent(allowProperties: boolean): RuleBodyParts {
         const nestedRules: RuleOrAtRule[] = [];
@@ -179,6 +178,7 @@ class Parser {
             this.#skipWhiteSpace();
 
             if (this.#input[this.#index] === '}') {
+                this.#index += 1;
                 break;
             }
 

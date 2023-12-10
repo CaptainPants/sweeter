@@ -8,6 +8,23 @@ exports[`Common case produces sensible result 1`] = `
 "
 `;
 
+exports[`Complex 1`] = `
+"@media screen and (min-width: 200px) {
+    @supports (& .banana) {
+        .test .banana .cheese .something1, .test .banana .cheese .something2.alternative:hover {
+            padding-left: var(--property);
+            width: 50%;
+        }
+    }
+}
+@media screen and (min-width: 200px) {
+    .test-also {
+        color: red;
+    }
+}
+"
+`;
+
 exports[`Nested media query - complex 1`] = `
 "@media screen and (min-width: 200px) {
     @supports (& .banana) {

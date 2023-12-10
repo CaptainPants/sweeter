@@ -72,3 +72,32 @@ it('Nested media query - complex', () => {
 
     expect(output).toMatchSnapshot();
 });
+
+it('Complex', () => {
+    const class_ = new GlobalCssClass({
+        className: 'test',
+        content: (self) =>
+            stylesheet`
+                @media screen and (min-width: 200px) {
+                    .banana .cheese {
+                        @supports(& .banana) {
+                            .something1, .something2.alternative:hover {
+                                padding-left: var(--property);
+                                width: 50%;
+                            }
+                        }
+                    }
+
+                    &-also {
+                        color: red;
+                    }
+                }
+            `,
+    });
+
+    const output = class_.getContent({
+        getPrefixedClassName: (class_) => class_.className,
+    });
+
+    expect(output).toMatchSnapshot();
+});

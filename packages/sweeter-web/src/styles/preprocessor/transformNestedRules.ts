@@ -22,6 +22,8 @@ export function transform(
     item: RuleOrAtRule,
     roots: RuleOrAtRule[],
 ): void {
+    // TODO: optimise for @ rule containing regular rules - currently there is a clone of the @ rule for each
+
     const newAtRulePath =
         item.$nodeType == 'at' ? [...atRulePath, item] : atRulePath;
     const newRulePath =

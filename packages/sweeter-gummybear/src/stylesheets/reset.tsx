@@ -10,6 +10,14 @@ export const reset = new GlobalCssStylesheet({
             font-family: inherit;
             font-size: inherit;
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
     `,
     // Pre-processor not required
     preprocess: false,

@@ -69,7 +69,7 @@ type ElementSpecificOverrideAttributes<TElement> =
 type TextInputAttributes = {
     placeholder?: string;
     type?: string;
-    value?: ReadWriteSignal<string> | string | undefined;
+    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
 };
 
 type NamedElementAttributes = {

@@ -7,6 +7,14 @@ import {
 } from './internal/constants.js';
 import { varNames } from './vars.js';
 
+export const container = new GlobalCssClass({
+    className: 'container',
+    content: `
+        max-width: 900px;
+        margin: 0 auto;
+    `,
+});
+
 export const row = new GlobalCssClass({
     className: 'row',
     content: `
@@ -29,9 +37,9 @@ export const columns = createConstantMap(
                     new GlobalCssClass({
                         className: columnSizeName + '-' + breakpointName,
                         content: `
-                        padding-left: var(${varNames.columnPadding});
-                        width: ${(i + 1) * Math.floor(100 / 12)}%;
-                    `,
+                            padding-left: var(${varNames.columnPadding});
+                            width: ${(i + 1) * Math.floor(100 / 12)}%;
+                        `,
                     }),
             );
         }
@@ -42,11 +50,11 @@ export const columns = createConstantMap(
                 new GlobalCssClass({
                     className: columnSizeName + '-' + breakpointName,
                     content: `
-                    @media (screen and min-width: ${breakpointSize}px) {
-                        padding-left: var(${varNames.columnPadding});
-                        width: ${(i + 1) * Math.floor(100 / 12)}%;
-                    }
-                `,
+                        @media screen and (min-width: ${breakpointSize}px) {
+                            padding-left: var(${varNames.columnPadding});
+                            width: ${(i + 1) * Math.floor(100 / 12)}%;
+                        }
+                    `,
                 }),
         );
     },

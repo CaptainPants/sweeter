@@ -2,10 +2,10 @@
 
 exports[`added and removed 1`] = `
 "<head><style data-id=\\"Test1\\">
-._glbl0_Test1 {
+.Test1 {
     color: green;
 }
-._glbl0_Test1:hover {
+.Test1:hover {
     color: red;
 }
 </style></head>"

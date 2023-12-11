@@ -1,22 +1,22 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`button style 1`] = `"<button class=\\"_glbl2_button\\">Test</button>"`;
+exports[`button style 1`] = `"<button class=\\"button\\">Test</button>"`;
 
 exports[`button style 2`] = `
 "<style data-id=\\"button\\">
-._glbl2_button {
+.button {
     background-color: white;
     border: solid #e0e0e0 2px;
     border-radius: 4px;
     padding: 4px;
 }
-._glbl2_button:hover {
+.button:hover {
     background-color: #e0e0e0;
 }
-._glbl2_button._glbl1_primary {
+.button.primary {
     background-color: blue;
 }
-._glbl2_button._glbl0_danger {
+.button.danger {
     background-color: red;
 }
 </style>"

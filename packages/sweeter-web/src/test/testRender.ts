@@ -15,8 +15,11 @@ export function testRender(render: () => JSX.Element): TestRenderResult {
     const root = document.createElement('div');
     document.body.appendChild(root);
 
-    // TODO: add classNameFormat: (_, className) => className and update snapshots
-    const runtime = createWebRuntime({ root: root, render: render });
+    const runtime = createWebRuntime({
+        root: root,
+        render: render,
+        classNameFormat: (_, className) => className,
+    });
 
     return {
         nodes: root.childNodes,

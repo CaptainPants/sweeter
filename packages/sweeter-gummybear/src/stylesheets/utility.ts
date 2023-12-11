@@ -1,7 +1,7 @@
 import { GlobalCssClass } from '@captainpants/sweeter-web';
 
-export const fill = new GlobalCssClass({
-    className: 'fill',
+export const fillWidth = new GlobalCssClass({
+    className: 'fillWidth',
     content: `
         width: 100%;
     `,

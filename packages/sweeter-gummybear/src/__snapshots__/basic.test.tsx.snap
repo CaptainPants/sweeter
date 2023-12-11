@@ -14,10 +14,10 @@ exports[`button style 2`] = `
     background-color: #e0e0e0;
 }
 .button.primary {
-    background-color: blue;
+    background-color: var(--variant-primary-color);
 }
 .button.danger {
-    background-color: red;
+    background-color: var(--variant-danger-color);
 }
 </style>"
 `;

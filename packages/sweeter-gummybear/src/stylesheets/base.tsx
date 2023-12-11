@@ -6,7 +6,7 @@ export const themeBase = new GlobalCssStylesheet({
     content: `
         body {
             background: var(${themeOptions.bodyBackground.cssVar});
-            color: var(${themeOptions.fontColor.cssVar});
+            color: var(${themeOptions.common.fontColor.cssVar});
         }
     `,
 });

@@ -20,8 +20,8 @@ export const row = new GlobalCssClass({
     content: `
         display: flex;
         flex-direction: row;
-        margin-left: calc(-1 * var(${themeOptions.columnPadding.cssVar}));
-        margin-right: calc(-1 * var(${themeOptions.columnPadding.cssVar}));
+        margin-left: calc(-1 * var(${themeOptions.grid.columnPadding.cssVar}));
+        margin-right: calc(-1 * var(${themeOptions.grid.columnPadding.cssVar}));
     `,
 });
 
@@ -38,7 +38,7 @@ export const columns = createConstantMap(
                         className: columnSizeName + '-' + breakpointName,
                         content: `
                             padding-left: var(${
-                                themeOptions.columnPadding.cssVar
+                                themeOptions.grid.columnPadding.cssVar
                             });
                             width: ${(i + 1) * Math.floor(100 / 12)}%;
                         `,
@@ -54,7 +54,7 @@ export const columns = createConstantMap(
                     content: `
                         @media screen and (min-width: ${breakpointSize}px) {
                             padding-left: var(${
-                                themeOptions.columnPadding.cssVar
+                                themeOptions.grid.columnPadding.cssVar
                             });
                             width: ${(i + 1) * Math.floor(100 / 12)}%;
                         }

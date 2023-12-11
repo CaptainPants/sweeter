@@ -1,5 +1,6 @@
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { tags } from './tags.js';
+import { variants } from './markers.js';
+import { themeOptions } from './themeOptions.js';
 
 export const button = new GlobalCssClass({
     className: 'button',
@@ -13,12 +14,12 @@ export const button = new GlobalCssClass({
             background-color: #e0e0e0;
         }
 
-        &.${tags.primary} {
-            background-color: blue;
+        &.${variants.primary} {
+            background-color: var(${themeOptions.variants.primary.color.cssVar});
         }
 
-        &.${tags.danger} {
-            background-color: red;
+        &.${variants.danger} {
+            background-color: var(${themeOptions.variants.danger.color.cssVar});
         }
     `,
 });

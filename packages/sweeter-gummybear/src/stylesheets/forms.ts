@@ -6,15 +6,15 @@ export const input = new GlobalCssClass({
     content: () => stylesheet`
         padding: .375rem .75rem;
         
-        border-color: var(${themeOptions.inputBorderColor.cssVar});
-        border-width: var(${themeOptions.inputBorderWidth.cssVar});
-        border-radius: var(${themeOptions.inputBorderRadius.cssVar});
+        border-color: var(${themeOptions.input.borderColor.cssVar});
+        border-width: var(${themeOptions.input.borderWidth.cssVar});
+        border-radius: var(${themeOptions.input.borderRadius.cssVar});
 
-        background-color: var(${themeOptions.inputBackgroundColor.cssVar});
+        background-color: var(${themeOptions.input.backgroundColor.cssVar});
 
         &:focus {
-            outline-color: var(${themeOptions.inputFocusOutlineColor.cssVar});
-            outline-width: var(${themeOptions.inputFocusOutlineWidth.cssVar});
+            outline-color: var(${themeOptions.input.focusOutlineColor.cssVar});
+            outline-width: var(${themeOptions.input.focusOutlineWidth.cssVar});
         }
     `,
 });

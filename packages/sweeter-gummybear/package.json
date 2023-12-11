@@ -33,6 +33,7 @@
     },
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",
-        "@captainpants/sweeter-web": "workspace:^"
+        "@captainpants/sweeter-web": "workspace:^",
+        "@popperjs/core": "^2.11.8"
     }
 }

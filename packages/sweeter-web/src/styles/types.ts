@@ -12,8 +12,13 @@ export interface AbstractGlobalCssStylesheet {
     getReferencedStylesheets(): readonly AbstractGlobalCssStylesheet[] | null;
 }
 
+export interface AbstractGlobalCssClass {
+    readonly symbol: symbol;
+    readonly className: string;
+}
+
 export interface GlobalStyleSheetContentGeneratorContext {
-    getPrefixedClassName(cssClass: GlobalCssClass): string;
+    getPrefixedClassName(cssClass: AbstractGlobalCssClass): string;
 }
 
 export type ElementCssClasses =

@@ -1,4 +1,7 @@
-import { type StylesheetGenerator } from './types.js';
+import {
+    type AbstractGlobalCssClass,
+    type StylesheetGenerator,
+} from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 
 /**
@@ -11,7 +14,12 @@ import { GlobalCssClass } from './GlobalCssClass.js';
  */
 export function stylesheet(
     template: TemplateStringsArray,
-    ...params: (GlobalCssClass | StylesheetGenerator | string | number)[]
+    ...params: (
+        | AbstractGlobalCssClass
+        | StylesheetGenerator
+        | string
+        | number
+    )[]
 ): StylesheetGenerator {
     const result: StylesheetGenerator = (context) => {
         const res: string[] = [];

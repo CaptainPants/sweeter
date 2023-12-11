@@ -3,29 +3,31 @@ import type {
     GlobalStyleSheetContentGeneratorContext,
     AbstractGlobalCssStylesheet,
     StylesheetGenerator,
+    AbstractGlobalCssClass,
 } from './types.js';
 
-type Content =
+type GlobalCssClassContent =
     | ((self: GlobalCssClass) => string | StylesheetGenerator)
-    | string
-    | undefined;
+    | string;
 
-type ContentConstructed = StylesheetGenerator | string | undefined;
+type ContentConstructed = StylesheetGenerator | string;
 
 export interface GlobalCssClassOptions {
     /**
      * Base the class name for this class on this value (it will be prefixed/suffixed or otherwise made unique).
      */
     className: string;
-    content?: Content;
+    content: GlobalCssClassContent;
     preprocess?: boolean;
 }
 
-export class GlobalCssClass implements AbstractGlobalCssStylesheet {
+export class GlobalCssClass
+    implements AbstractGlobalCssStylesheet, AbstractGlobalCssClass
+{
     public readonly className: string;
     public readonly id: string;
     public readonly symbol: symbol;
-    public readonly content?: ContentConstructed;
+    public readonly classContent: ContentConstructed;
     public readonly preprocess: boolean;
 
     constructor(options: GlobalCssClassOptions);
@@ -39,7 +41,8 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
         this.symbol = Symbol('GlobalCssClass-' + className);
         this.preprocess = preprocess;
 
-        this.content = typeof content === 'function' ? content(this) : content;
+        this.classContent =
+            typeof content === 'function' ? content(this) : content;
     }
 
     getContent(
@@ -48,9 +51,9 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
         const name = context.getPrefixedClassName(this);
 
         const content =
-            typeof this.content === 'string'
-                ? this.content
-                : this.content?.(context);
+            typeof this.classContent === 'string'
+                ? this.classContent
+                : this.classContent?.(context);
 
         if (!content) {
             return undefined;
@@ -63,8 +66,8 @@ export class GlobalCssClass implements AbstractGlobalCssStylesheet {
     }
 
     getReferencedStylesheets(): readonly AbstractGlobalCssStylesheet[] | null {
-        return typeof this.content === 'function'
-            ? this.content.referencedClasses
+        return typeof this.classContent === 'function'
+            ? this.classContent.referencedClasses
             : null;
     }
 }

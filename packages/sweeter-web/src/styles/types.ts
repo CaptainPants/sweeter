@@ -24,7 +24,7 @@ export interface GlobalStyleSheetContentGeneratorContext {
 export type ElementCssClasses =
     | Signal<ElementCssClasses>
     | string
-    | GlobalCssClass
+    | AbstractGlobalCssClass
     | Record<string, Signal<boolean> | boolean>
     | undefined
     | null

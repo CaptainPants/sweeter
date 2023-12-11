@@ -8,6 +8,7 @@ import { type WebRuntime } from '../types.js';
 import { addMountedCallback } from './mounting.js';
 import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
 import { arrayExcept } from './utility/arrayExcept.js';
+import { GlobalCssMarkerClass } from '../../index.js';
 
 export function bindDOMClassProp(
     contextSnapshot: ContextSnapshot,
@@ -54,7 +55,7 @@ export function bindDOMClassProp(
 
                 ele.className = thisTime
                     .map((x) =>
-                        x instanceof GlobalCssClass
+                        x instanceof GlobalCssClass || x instanceof GlobalCssMarkerClass
                             ? webRuntime.getPrefixedClassName(x)
                             : x,
                     )

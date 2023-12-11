@@ -16,10 +16,7 @@ export function createTheme(
             const typed = obj as ThemeOption;
             if (typed.defaultValue) {
                 propertiesCss.push(
-                    typed.cssVar,
-                    ':',
-                    String(typed.defaultValue),
-                    ';',
+                    typed.cssVar + ':' + String(typed.defaultValue) + ';\n',
                 );
             }
         } else {
@@ -34,7 +31,7 @@ export function createTheme(
         id: 'variables',
         content: `
             :root {
-                ${propertiesCss.join('\n')}
+                ${propertiesCss.join('                ')}
             }
         `,
     });

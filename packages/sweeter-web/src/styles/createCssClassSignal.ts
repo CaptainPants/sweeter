@@ -1,7 +1,7 @@
 import type { Signal } from '@captainpants/sweeter-core';
 import { $calc, isSignal, $val } from '@captainpants/sweeter-core';
-import type { ElementCssClasses } from './index.js';
-import { GlobalCssClass } from './index.js';
+import type { AbstractGlobalCssClass, ElementCssClasses } from './index.js';
+import { GlobalCssClass, GlobalCssMarkerClass } from './index.js';
 
 /**
  * Flatten the provided classes into a Signal of string | GlobalCssClass - that can be subscribed to in case of changes to any of the inputs.
@@ -13,7 +13,7 @@ import { GlobalCssClass } from './index.js';
  */
 export function createCssClassSignal(
     classes: ElementCssClasses | Signal<ElementCssClasses>,
-): Signal<(string | GlobalCssClass)[]> {
+): Signal<(string | AbstractGlobalCssClass)[]> {
     // retain previous result so that we can preserve identity and prevent dependent signals from updating
 
     let previous: (string | GlobalCssClass)[] | undefined;
@@ -41,7 +41,7 @@ export function createCssClassSignal(
 
 function createCssClassSignalImplementation(
     input: ElementCssClasses,
-    output: (string | GlobalCssClass)[],
+    output: (string | AbstractGlobalCssClass)[],
 ) {
     const value = $val(input);
 
@@ -49,7 +49,7 @@ function createCssClassSignalImplementation(
         for (const item of value) {
             createCssClassSignalImplementation(item, output);
         }
-    } else if (value instanceof GlobalCssClass || typeof value === 'string') {
+    } else if (isAbstractGlobalCssClass(value) || typeof value === 'string') {
         output.push(value);
     } else if (isSignal(value)) {
         createCssClassSignalImplementation(value, output);
@@ -62,4 +62,8 @@ function createCssClassSignalImplementation(
         }
     }
     // might be null or undefined
+}
+
+function isAbstractGlobalCssClass(val: unknown): val is AbstractGlobalCssClass {
+    return val instanceof GlobalCssClass || val instanceof GlobalCssMarkerClass;
 }

@@ -10,14 +10,141 @@ exports[`button style 2`] = `
     border-radius: 4px;
     padding: 4px;
 }
-.button:hover {
-    background-color: #e0e0e0;
-}
 .button.primary {
     background-color: var(--variant-primary-color);
+    border: solid var(--variant-primary-color) 1px;
+    color: var(--button-variant-primary-text-color);
+}
+.button.primary:hover {
+    background-color: var(--variant-primary-color);
+    border-color: var(--variant-primary-color);
+}
+.button.primary.disabled {
+    opacity: 0.8;
+}
+.button.primary.outline {
+    background-color: transparent;
+    color: var(--button-variant-primary-text-color);
+    border: solid var(--button-variant-primary-text-color) 1px;
+}
+.button.secondary {
+    background-color: var(--variant-secondary-color);
+    border: solid var(--variant-secondary-color) 1px;
+    color: var(--button-variant-primary-text-color);
+}
+.button.secondary:hover {
+    background-color: var(--variant-secondary-color);
+    border-color: var(--variant-secondary-color);
+}
+.button.secondary.disabled {
+    opacity: 0.8;
+}
+.button.secondary.outline {
+    background-color: transparent;
+    color: var(--button-variant-primary-text-color);
+    border: solid var(--button-variant-primary-text-color) 1px;
+}
+.button.success {
+    background-color: var(--variant-success-color);
+    border: solid var(--variant-success-color) 1px;
+    color: var(--button-variant-primary-text-color);
+}
+.button.success:hover {
+    background-color: var(--variant-success-color);
+    border-color: var(--variant-success-color);
+}
+.button.success.disabled {
+    opacity: 0.8;
+}
+.button.success.outline {
+    background-color: transparent;
+    color: var(--button-variant-primary-text-color);
+    border: solid var(--button-variant-primary-text-color) 1px;
 }
 .button.danger {
     background-color: var(--variant-danger-color);
+    border: solid var(--variant-danger-color) 1px;
+    color: var(--button-variant-danger-text-color);
+}
+.button.danger:hover {
+    background-color: var(--variant-danger-color);
+    border-color: var(--variant-danger-color);
+}
+.button.danger.disabled {
+    opacity: 0.8;
+}
+.button.danger.outline {
+    background-color: transparent;
+    color: var(--button-variant-danger-text-color);
+    border: solid var(--button-variant-danger-text-color) 1px;
+}
+.button.warning {
+    background-color: var(--variant-warning-color);
+    border: solid var(--variant-warning-color) 1px;
+    color: var(--button-variant-warning-text-color);
+}
+.button.warning:hover {
+    background-color: var(--variant-warning-color);
+    border-color: var(--variant-warning-color);
+}
+.button.warning.disabled {
+    opacity: 0.8;
+}
+.button.warning.outline {
+    background-color: transparent;
+    color: var(--button-variant-warning-text-color);
+    border: solid var(--button-variant-warning-text-color) 1px;
+}
+.button.info {
+    background-color: var(--variant-info-color);
+    border: solid var(--variant-info-color) 1px;
+    color: var(--button-variant-warning-text-color);
+}
+.button.info:hover {
+    background-color: var(--variant-info-color);
+    border-color: var(--variant-info-color);
+}
+.button.info.disabled {
+    opacity: 0.8;
+}
+.button.info.outline {
+    background-color: transparent;
+    color: var(--button-variant-warning-text-color);
+    border: solid var(--button-variant-warning-text-color) 1px;
+}
+.button.light {
+    background-color: var(--variant-light-color);
+    border: solid var(--variant-light-color) 1px;
+    color: var(--button-variant-warning-text-color);
+}
+.button.light:hover {
+    background-color: var(--variant-light-color);
+    border-color: var(--variant-light-color);
+}
+.button.light.disabled {
+    opacity: 0.8;
+}
+.button.light.outline {
+    background-color: transparent;
+    color: var(--button-variant-warning-text-color);
+    border: solid var(--button-variant-warning-text-color) 1px;
+}
+.button.dark {
+    background-color: var(--variant-dark-color);
+    border: solid var(--variant-dark-color) 1px;
+    color: var(--button-variant-warning-text-color);
+}
+.button.dark:hover {
+    background-color: var(--variant-dark-color);
+    border-color: var(--variant-dark-color);
+}
+.button.dark.disabled {
+    opacity: 0.8;
+}
+.button.dark.outline {
+    background-color: transparent;
+    color: var(--button-variant-warning-text-color);
+    border: solid var(--button-variant-warning-text-color) 1px;
 }
 </style>"
 `;

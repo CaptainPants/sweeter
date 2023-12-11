@@ -1,8 +1,17 @@
 import {
+    type GlobalStyleSheetContentGeneratorContext,
     type AbstractGlobalCssClass,
     type StylesheetGenerator,
 } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
+
+type ParamType =
+    | AbstractGlobalCssClass
+    | StylesheetGenerator
+    | string
+    | number
+    | string
+    | ParamType[];
 
 /**
  * Template string function.
@@ -14,12 +23,7 @@ import { GlobalCssClass } from './GlobalCssClass.js';
  */
 export function stylesheet(
     template: TemplateStringsArray,
-    ...params: (
-        | AbstractGlobalCssClass
-        | StylesheetGenerator
-        | string
-        | number
-    )[]
+    ...params: ParamType[]
 ): StylesheetGenerator {
     const result: StylesheetGenerator = (context) => {
         const res: string[] = [];
@@ -30,15 +34,7 @@ export function stylesheet(
             if (i !== last) {
                 const param = params[i]!;
 
-                if (typeof param === 'number') {
-                    res.push(String(param));
-                } else if (typeof param === 'string') {
-                    res.push(param);
-                } else if (typeof param === 'function') {
-                    res.push(param(context));
-                } else {
-                    res.push(context.getPrefixedClassName(param));
-                }
+                processParam(param, res, context);
             }
         }
         return res.join('');
@@ -55,4 +51,23 @@ export function stylesheet(
     result.referencedClasses = referencedClasses;
 
     return result;
+}
+function processParam(
+    param: ParamType,
+    res: string[],
+    context: GlobalStyleSheetContentGeneratorContext,
+): void {
+    if (Array.isArray(param)) {
+        for (const item of param) {
+            processParam(item, res, context);
+        }
+    } else if (typeof param === 'number') {
+        res.push(String(param));
+    } else if (typeof param === 'string') {
+        res.push(param);
+    } else if (typeof param === 'function') {
+        res.push(param(context));
+    } else {
+        res.push(context.getPrefixedClassName(param));
+    }
 }

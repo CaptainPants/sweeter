@@ -31,7 +31,7 @@ export function App(): JSX.Element {
                         <div class={grid.columns.xs._9}>
                             <input
                                 type="text"
-                                class={[forms.textbox, fill]}
+                                class={[forms.input, fill]}
                                 value={value}
                             />
                         </div>
@@ -43,7 +43,7 @@ export function App(): JSX.Element {
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
-                                class={[forms.textbox, fill]}
+                                class={[forms.input, fill]}
                                 value={value}
                             />
                         </div>
@@ -55,7 +55,7 @@ export function App(): JSX.Element {
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
-                                class={[forms.textbox, fill]}
+                                class={[forms.input, fill]}
                                 value={nonMutable}
                             />
                         </div>

@@ -1,43 +1,20 @@
-import { GlobalCssClass } from '@captainpants/sweeter-web';
+import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+import { themeOptions } from './themeOptions.js';
 
-export const button = new GlobalCssClass({
-    className: 'button',
-    content: `
-        background-color: white;
-        border: solid #e0e0e0 2px;
-        border-radius: 4px;
-        padding: 4px;
+export const input = new GlobalCssClass({
+    className: 'input',
+    content: () => stylesheet`
+        padding: .375rem .75rem;
         
-        &:hover {
-            background-color: #e0e0e0;
-        }
-    `,
-});
+        border-color: var(${themeOptions.inputBorderColor.cssVar});
+        border-width: var(${themeOptions.inputBorderWidth.cssVar});
+        border-radius: var(${themeOptions.inputBorderRadius.cssVar});
 
-export const textbox = new GlobalCssClass({
-    className: 'textbox',
-    content: `
-        background-color: white;
-        border: solid #e0e0e0 2px;
-        border-radius: 4px;
-        padding: 4px;
-        
-        &:hover {
-            background-color: #e0e0e0;
-        }
-    `,
-});
+        background-color: var(${themeOptions.inputBackgroundColor.cssVar});
 
-export const dropdown = new GlobalCssClass({
-    className: 'textbox',
-    content: `
-        background-color: white;
-        border: solid #e0e0e0 2px;
-        border-radius: 4px;
-        padding: 4px;
-        
-        &:hover {
-            background-color: #e0e0e0;
+        &:focus {
+            outline-color: var(${themeOptions.inputFocusOutlineColor.cssVar});
+            outline-width: var(${themeOptions.inputFocusOutlineWidth.cssVar});
         }
     `,
 });

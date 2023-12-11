@@ -5,7 +5,7 @@ import {
     breakpointSizes,
     columnWidthNames,
 } from './internal/constants.js';
-import { varNames } from './vars.js';
+import { themeOptions } from './themeOptions.js';
 
 export const container = new GlobalCssClass({
     className: 'container',
@@ -20,8 +20,8 @@ export const row = new GlobalCssClass({
     content: `
         display: flex;
         flex-direction: row;
-        margin-left: calc(-1 * var(${varNames.columnPadding}));
-        margin-right: calc(-1 * var(${varNames.columnPadding}));
+        margin-left: calc(-1 * var(${themeOptions.columnPadding.cssVar}));
+        margin-right: calc(-1 * var(${themeOptions.columnPadding.cssVar}));
     `,
 });
 
@@ -37,7 +37,9 @@ export const columns = createConstantMap(
                     new GlobalCssClass({
                         className: columnSizeName + '-' + breakpointName,
                         content: `
-                            padding-left: var(${varNames.columnPadding});
+                            padding-left: var(${
+                                themeOptions.columnPadding.cssVar
+                            });
                             width: ${(i + 1) * Math.floor(100 / 12)}%;
                         `,
                     }),
@@ -51,7 +53,9 @@ export const columns = createConstantMap(
                     className: columnSizeName + '-' + breakpointName,
                     content: `
                         @media screen and (min-width: ${breakpointSize}px) {
-                            padding-left: var(${varNames.columnPadding});
+                            padding-left: var(${
+                                themeOptions.columnPadding.cssVar
+                            });
                             width: ${(i + 1) * Math.floor(100 / 12)}%;
                         }
                     `,

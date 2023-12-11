@@ -28,6 +28,10 @@ export interface WebRuntimeOptions {
     render: () => JSX.Element;
     middleware?: JSXMiddleware[] | undefined;
     topLevelError?: (err: unknown) => void;
+
+    classNameFormat?:
+        | ((counter: number, className: string) => string)
+        | undefined;
 }
 
 export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
@@ -53,6 +57,7 @@ export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
 class WebRuntimeImplementation implements WebRuntime, Runtime {
     #target: RuntimeRootHostElement;
 
+    #classNameFormat: (counter: number, className: string) => string;
     #cssCounter: number = 0;
     #cssClassNameMap: WeakMap<GlobalCssClass, string> = new WeakMap();
 
@@ -72,6 +77,9 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             options.middleware ?? [],
             this.#endJsx.bind(this),
         );
+        this.#classNameFormat =
+            options.classNameFormat ??
+            ((counter, className) => `_glbl${counter}_${className}`);
         this.#includedSingletonStylesheetCounts = new WeakMap();
     }
 
@@ -94,7 +102,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     getPrefixedClassName(cssClass: GlobalCssClass): string {
         let name = this.#cssClassNameMap.get(cssClass);
         if (!name) {
-            name = '_glbl' + this.#cssCounter + '_' + cssClass.className;
+            name = this.#classNameFormat(this.#cssCounter, cssClass.className);
             this.#cssClassNameMap.set(cssClass, name);
             ++this.#cssCounter;
         }

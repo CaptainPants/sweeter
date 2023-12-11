@@ -9,6 +9,8 @@ export const reset = new GlobalCssStylesheet({
         select, option, input, textarea, tabel, thead, tbody, tr, td, th {
             font-family: inherit;
             font-size: inherit;
+            background: transparent;
+            color: inherit;
         }
 
         * {

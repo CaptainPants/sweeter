@@ -7,4 +7,4 @@ export { grid };
 export * from './createTheme.js';
 export * from './reset.js';
 export * from './utility.js';
-export * from './vars.js';
+export * from './themeOptions.js';

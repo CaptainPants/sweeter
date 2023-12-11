@@ -7,10 +7,10 @@ it('Multiple class references produce sane output', () => {
 
     const sheet = new GlobalCssStylesheet({
         content: stylesheet`
-            ${classA} {
+            .${classA} {
                 color: red;
             }
-            ${classB} {
+            .${classB} {
                 color: green;
 
                 &:hover {

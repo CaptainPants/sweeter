@@ -1,15 +1,24 @@
+import type { AbstractGlobalCssStylesheet } from '@captainpants/sweeter-web';
 import { GlobalCssStylesheet } from '@captainpants/sweeter-web';
-import { varNames } from './vars.js';
+import { themeOptions } from './themeOptions.js';
+import { themeBase } from './base.js';
+import { reset } from './reset.js';
 
 export interface ThemeOptions {}
 
-export function createTheme(options: ThemeOptions) {
-    return new GlobalCssStylesheet({
-        id: 'theme',
+export function createTheme(
+    options: ThemeOptions,
+): AbstractGlobalCssStylesheet[] {
+    const variables = new GlobalCssStylesheet({
+        id: 'variables',
         content: `
             :root {
-                ${varNames.columnPadding}: 10px;
+                ${Object.values(themeOptions)
+                    .map((val) => `${val.cssVar}: ${val.defaultValue};\n`)
+                    .join('')}
             }
         `,
     });
+
+    return [reset, variables, themeBase];
 }

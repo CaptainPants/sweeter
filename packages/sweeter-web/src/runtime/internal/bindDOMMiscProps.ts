@@ -60,7 +60,7 @@ export function bindDOMMiscProps<TElementType extends string>(
 
                     value.update(updatedValue);
                 } else {
-                    // Reset
+                    // Reset the DOM element value
                     (evt.currentTarget as unknown as Record<string, unknown>)[
                         domProperty
                     ] = value.value;

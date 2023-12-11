@@ -21,7 +21,7 @@ it('Self referential', () => {
     const class_ = new GlobalCssClass({
         className: 'test',
         content: (self) =>
-            stylesheet`.NestedOnce { ${self} { color: green; } }`,
+            stylesheet`.NestedOnce { .${self} { color: green; } }`,
     });
 
     expect(
@@ -34,7 +34,7 @@ it('Self referential', () => {
 it('Nested media query', () => {
     const class_ = new GlobalCssClass({
         className: 'test',
-        content: (self) =>
+        content: () =>
             stylesheet`
                 @media screen and (min-width: 200px) {
                     padding-left: var(--property);
@@ -53,7 +53,7 @@ it('Nested media query', () => {
 it('Nested media query - complex', () => {
     const class_ = new GlobalCssClass({
         className: 'test',
-        content: (self) =>
+        content: () =>
             stylesheet`
                 @media screen and (min-width: 200px) {
                     div {
@@ -76,7 +76,7 @@ it('Nested media query - complex', () => {
 it('Complex', () => {
     const class_ = new GlobalCssClass({
         className: 'test',
-        content: (self) =>
+        content: () =>
             stylesheet`
                 @media screen and (min-width: 200px) {
                     .banana .cheese {

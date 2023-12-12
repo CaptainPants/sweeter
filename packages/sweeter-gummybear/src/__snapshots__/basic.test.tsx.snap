@@ -6,145 +6,143 @@ exports[`button style 2`] = `
 "<style data-id=\\"button\\">
 .button {
     background-color: white;
+    padding: .375rem .75rem;
+    margin: 4px;
+    cursor: pointer;
     border: solid #e0e0e0 2px;
-    border-radius: 4px;
-    padding: 4px;
+    border-radius: 0.375rem;
+    transition: color .15s ease-in-out,
+            background-color .15s ease-in-out,
+            border-color .15s ease-in-out,
+            box-shadow .15s ease-in-out;
 }
 .button.primary {
     background-color: var(--variant-primary-color);
-    border: solid var(--variant-primary-color) 1px;
+    border-color: var(--variant-primary-color);
     color: var(--button-variant-primary-text-color);
 }
 .button.primary:hover {
-    background-color: var(--variant-primary-color);
-    border-color: var(--variant-primary-color);
+    background-color: var(--variant-primary-hover-color);
+    border-color: var(--variant-primary-hover-color);
 }
 .button.primary.disabled {
     opacity: 0.8;
 }
 .button.primary.outline {
     background-color: transparent;
-    color: var(--button-variant-primary-text-color);
-    border: solid var(--button-variant-primary-text-color) 1px;
+    color: inherit;
 }
 .button.secondary {
     background-color: var(--variant-secondary-color);
-    border: solid var(--variant-secondary-color) 1px;
-    color: var(--button-variant-primary-text-color);
+    border-color: var(--variant-secondary-color);
+    color: var(--button-variant-secondary-text-color);
 }
 .button.secondary:hover {
-    background-color: var(--variant-secondary-color);
-    border-color: var(--variant-secondary-color);
+    background-color: var(--variant-secondary-hover-color);
+    border-color: var(--variant-secondary-hover-color);
 }
 .button.secondary.disabled {
     opacity: 0.8;
 }
 .button.secondary.outline {
     background-color: transparent;
-    color: var(--button-variant-primary-text-color);
-    border: solid var(--button-variant-primary-text-color) 1px;
+    color: inherit;
 }
 .button.success {
     background-color: var(--variant-success-color);
-    border: solid var(--variant-success-color) 1px;
-    color: var(--button-variant-primary-text-color);
+    border-color: var(--variant-success-color);
+    color: var(--button-variant-success-text-color);
 }
 .button.success:hover {
-    background-color: var(--variant-success-color);
-    border-color: var(--variant-success-color);
+    background-color: var(--variant-success-hover-color);
+    border-color: var(--variant-success-hover-color);
 }
 .button.success.disabled {
     opacity: 0.8;
 }
 .button.success.outline {
     background-color: transparent;
-    color: var(--button-variant-primary-text-color);
-    border: solid var(--button-variant-primary-text-color) 1px;
+    color: inherit;
 }
 .button.danger {
     background-color: var(--variant-danger-color);
-    border: solid var(--variant-danger-color) 1px;
+    border-color: var(--variant-danger-color);
     color: var(--button-variant-danger-text-color);
 }
 .button.danger:hover {
-    background-color: var(--variant-danger-color);
-    border-color: var(--variant-danger-color);
+    background-color: var(--variant-danger-hover-color);
+    border-color: var(--variant-danger-hover-color);
 }
 .button.danger.disabled {
     opacity: 0.8;
 }
 .button.danger.outline {
     background-color: transparent;
-    color: var(--button-variant-danger-text-color);
-    border: solid var(--button-variant-danger-text-color) 1px;
+    color: inherit;
 }
 .button.warning {
     background-color: var(--variant-warning-color);
-    border: solid var(--variant-warning-color) 1px;
+    border-color: var(--variant-warning-color);
     color: var(--button-variant-warning-text-color);
 }
 .button.warning:hover {
-    background-color: var(--variant-warning-color);
-    border-color: var(--variant-warning-color);
+    background-color: var(--variant-warning-hover-color);
+    border-color: var(--variant-warning-hover-color);
 }
 .button.warning.disabled {
     opacity: 0.8;
 }
 .button.warning.outline {
     background-color: transparent;
-    color: var(--button-variant-warning-text-color);
-    border: solid var(--button-variant-warning-text-color) 1px;
+    color: inherit;
 }
 .button.info {
     background-color: var(--variant-info-color);
-    border: solid var(--variant-info-color) 1px;
-    color: var(--button-variant-warning-text-color);
+    border-color: var(--variant-info-color);
+    color: var(--button-variant-info-text-color);
 }
 .button.info:hover {
-    background-color: var(--variant-info-color);
-    border-color: var(--variant-info-color);
+    background-color: var(--variant-info-hover-color);
+    border-color: var(--variant-info-hover-color);
 }
 .button.info.disabled {
     opacity: 0.8;
 }
 .button.info.outline {
     background-color: transparent;
-    color: var(--button-variant-warning-text-color);
-    border: solid var(--button-variant-warning-text-color) 1px;
+    color: inherit;
 }
 .button.light {
     background-color: var(--variant-light-color);
-    border: solid var(--variant-light-color) 1px;
-    color: var(--button-variant-warning-text-color);
+    border-color: var(--variant-light-color);
+    color: var(--button-variant-light-text-color);
 }
 .button.light:hover {
-    background-color: var(--variant-light-color);
-    border-color: var(--variant-light-color);
+    background-color: var(--variant-light-hover-color);
+    border-color: var(--variant-light-hover-color);
 }
 .button.light.disabled {
     opacity: 0.8;
 }
 .button.light.outline {
     background-color: transparent;
-    color: var(--button-variant-warning-text-color);
-    border: solid var(--button-variant-warning-text-color) 1px;
+    color: inherit;
 }
 .button.dark {
     background-color: var(--variant-dark-color);
-    border: solid var(--variant-dark-color) 1px;
-    color: var(--button-variant-warning-text-color);
+    border-color: var(--variant-dark-color);
+    color: var(--button-variant-dark-text-color);
 }
 .button.dark:hover {
-    background-color: var(--variant-dark-color);
-    border-color: var(--variant-dark-color);
+    background-color: var(--variant-dark-hover-color);
+    border-color: var(--variant-dark-hover-color);
 }
 .button.dark.disabled {
     opacity: 0.8;
 }
 .button.dark.outline {
     background-color: transparent;
-    color: var(--button-variant-warning-text-color);
-    border: solid var(--button-variant-warning-text-color) 1px;
+    color: inherit;
 }
 </style>"
 `;

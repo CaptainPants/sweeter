@@ -9,5 +9,5 @@ export * from './button.js';
 export * from './createTheme.js';
 export * from './reset.js';
 export * from './utility.js';
-export * from './themeOptions.js';
+export * from './ThemeOptions.js';
 export * from './markers.js';

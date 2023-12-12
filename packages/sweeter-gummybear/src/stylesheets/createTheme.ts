@@ -1,19 +1,21 @@
 import type { AbstractGlobalCssStylesheet } from '@captainpants/sweeter-web';
 import { GlobalCssStylesheet } from '@captainpants/sweeter-web';
-import type { ThemeOption, ThemeOptionOrGroup } from './themeOptions.js';
-import { themeOptions } from './themeOptions.js';
+import type { ThemeOptions } from './ThemeOptions.js';
 import { themeBase } from './base.js';
 import { reset } from './reset.js';
-
-export interface ThemeOptions {}
+import {
+    themeDefinition,
+    type ThemeOptionDefinition,
+    type ThemeOptionOrGroupDefinition,
+} from './internal/themeOptionDefinitions.js';
 
 export function createTheme(
     options: ThemeOptions,
 ): AbstractGlobalCssStylesheet[] {
     const propertiesCss: string[] = [];
-    function process(obj: ThemeOptionOrGroup) {
-        if ((obj as ThemeOption).cssVar) {
-            const typed = obj as ThemeOption;
+    function process(obj: ThemeOptionOrGroupDefinition) {
+        if ((obj as ThemeOptionDefinition).cssVar) {
+            const typed = obj as ThemeOptionDefinition;
             if (typed.defaultValue) {
                 propertiesCss.push(
                     typed.cssVar + ':' + String(typed.defaultValue) + ';\n',
@@ -21,11 +23,11 @@ export function createTheme(
             }
         } else {
             for (const key of Object.getOwnPropertyNames(obj)) {
-                process((obj as Record<string, ThemeOption>)[key]!);
+                process((obj as Record<string, ThemeOptionDefinition>)[key]!);
             }
         }
     }
-    process(themeOptions);
+    process(themeDefinition);
 
     const variables = new GlobalCssStylesheet({
         id: 'variables',

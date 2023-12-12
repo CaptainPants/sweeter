@@ -1,7 +1,7 @@
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { themeOptions } from './themeOptions.js';
 import { assertNeverNullish } from '@captainpants/sweeter-core';
 import { tags, variants } from './markers.js';
+import { themeDefinition } from './internal/themeOptionDefinitions.js';
 
 export const button = new GlobalCssClass({
     className: 'button',
@@ -20,15 +20,16 @@ export const button = new GlobalCssClass({
             border-color .15s ease-in-out,
             box-shadow .15s ease-in-out;
         
-        ${Object.entries(themeOptions.buttonVariants).map(
+        ${Object.entries(themeDefinition.buttonVariants).map(
             ([key, buttonVariant]) => {
                 const variant =
-                    themeOptions.variants[
-                        key as keyof typeof themeOptions.variants
+                    themeDefinition.variants[
+                        key as keyof typeof themeDefinition.variants
                     ];
                 assertNeverNullish(variant);
 
-                const variantTag = variants[key as keyof typeof themeOptions.variants];
+                const variantTag =
+                    variants[key as keyof typeof themeDefinition.variants];
                 assertNeverNullish(variantTag);
 
                 return stylesheet`

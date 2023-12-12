@@ -55,7 +55,8 @@ export function bindDOMClassProp(
 
                 ele.className = thisTime
                     .map((x) =>
-                        x instanceof GlobalCssClass || x instanceof GlobalCssMarkerClass
+                        x instanceof GlobalCssClass ||
+                        x instanceof GlobalCssMarkerClass
                             ? webRuntime.getPrefixedClassName(x)
                             : x,
                     )

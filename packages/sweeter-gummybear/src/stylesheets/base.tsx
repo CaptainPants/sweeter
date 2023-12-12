@@ -1,12 +1,12 @@
 import { GlobalCssStylesheet } from '@captainpants/sweeter-web';
-import { themeOptions } from './themeOptions.js';
+import { themeDefinition } from './internal/themeOptionDefinitions.js';
 
 export const themeBase = new GlobalCssStylesheet({
     id: 'base',
     content: `
         body {
-            background: var(${themeOptions.bodyBackground.cssVar});
-            color: var(${themeOptions.common.fontColor.cssVar});
+            background: var(${themeDefinition.bodyBackground.cssVar});
+            color: var(${themeDefinition.common.fontColor.cssVar});
         }
     `,
 });

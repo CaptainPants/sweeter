@@ -1,0 +1,185 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`multi line comment at top level 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "color",
+        "value": "red",
+      },
+    ],
+    "selectors": [
+      "body",
+    ],
+  },
+]
+`;
+
+exports[`multi line comment inside @rule 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "red",
+          },
+        ],
+        "selectors": [
+          "body",
+        ],
+      },
+    ],
+    "parameters": "screen",
+    "properties": [],
+    "type": "media",
+  },
+]
+`;
+
+exports[`multi line comment inside rule 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "color",
+        "value": "red",
+      },
+    ],
+    "selectors": [
+      "body",
+    ],
+  },
+]
+`;
+
+exports[`multi line comment outside @rule 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "red",
+          },
+        ],
+        "selectors": [
+          "body",
+        ],
+      },
+    ],
+    "parameters": "screen",
+    "properties": [],
+    "type": "media",
+  },
+]
+`;
+
+exports[`single line comment at top level 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "color",
+        "value": "red",
+      },
+    ],
+    "selectors": [
+      "body",
+    ],
+  },
+]
+`;
+
+exports[`single line comment inside @rule 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "red",
+          },
+        ],
+        "selectors": [
+          "body",
+        ],
+      },
+    ],
+    "parameters": "screen",
+    "properties": [],
+    "type": "media",
+  },
+]
+`;
+
+exports[`single line comment inside rule 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "color",
+        "value": "red",
+      },
+    ],
+    "selectors": [
+      "body",
+    ],
+  },
+]
+`;
+
+exports[`single line comment outside @rule 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "red",
+          },
+        ],
+        "selectors": [
+          "body",
+        ],
+      },
+    ],
+    "parameters": "screen",
+    "properties": [],
+    "type": "media",
+  },
+]
+`;

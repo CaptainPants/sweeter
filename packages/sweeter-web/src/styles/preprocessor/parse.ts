@@ -1,7 +1,11 @@
 import {
-    braceCharCodeArray,
+    endMultilineComment,
+    endSinglelineComment,
+    forwardSlashCharCode,
+    openBraceCharCode,
     semiOrBraceCharCodeArray,
     semiOrCloseBraceCharCodeArray,
+    starCharCode,
     whitespaceCharCodeArray,
 } from './internal/charCodes.js';
 import { indexOfAny } from './internal/indexOfAny.js';
@@ -64,7 +68,7 @@ class Parser {
         if (next === '}') {
             if (inBlock) {
                 // move #index past the block
-                this.#index += 1;
+                this.#moveNext();
                 return undefined;
             } else {
                 throw new Error(this.#errorMessage('Unexpected'));
@@ -79,17 +83,11 @@ class Parser {
     }
 
     #parseRule(): RuleAstNode {
-        const startOfBody = indexOfAny(
-            braceCharCodeArray,
-            this.#input,
-            this.#index,
-        );
-        if (!startOfBody)
-            throw new Error(this.#errorMessage('No block body found'));
+        const selectors = this.#parseSelectors();
 
-        const selectors = this.#readSelectors();
+        // '{'
+        this.#expectAndMoveNext(openBraceCharCode);
 
-        this.#index = startOfBody + 1;
         const { nestedRules, properties } = this.parseRuleBodyContent(true);
 
         return {
@@ -100,7 +98,7 @@ class Parser {
         };
     }
 
-    #readSelectors(): string[] {
+    #parseSelectors(): string[] {
         const { selectors, endOffset } = readSelectors(
             this.#input,
             this.#index,
@@ -111,10 +109,12 @@ class Parser {
 
     /**
      * Positions the #index at the next index on completion
+     *
+     * TODO: doesn't handle comments.
      * @returns
      */
     #parseAtRule(): AtRuleAstNode {
-        ++this.#index; // move past @
+        this.#moveNext(); // move past @
         const type = this.#tryReadIdent();
         if (type === undefined) {
             throw new Error(this.#errorMessage('Expected an identifier'));
@@ -178,7 +178,7 @@ class Parser {
             this.#skipWhiteSpace();
 
             if (this.#input[this.#index] === '}') {
-                this.#index += 1;
+                this.#moveNext();
                 break;
             }
 
@@ -186,10 +186,14 @@ class Parser {
 
             // property
             if (propertyName) {
-                ++this.#index; // move past the colon
+                if (!allowProperties) {
+                    throw new Error('Found property when not allowed.');
+                }
+
+                this.#moveNext(); // move past the colon
                 this.#skipWhiteSpace();
                 const propertyValue = this.#readPropertyValue();
-                ++this.#index;
+                this.#moveNext();
 
                 properties.push({
                     $nodeType: 'property',
@@ -237,6 +241,8 @@ class Parser {
      * TODO: a property value could have a quoted string containing ; or } so we will need similar
      * nesting logic to selectors (but simpler)
      *
+     * TODO: doesn't handle comments.
+     *
      * Assumes that #index has already skipped any whitespace
      * @returns
      */
@@ -267,6 +273,12 @@ class Parser {
         return undefined;
     }
 
+    /**
+     * TODO: this doesn't ignore comments and it should (as its used to fast
+     * forward from property-name to the colon)
+     * @param index
+     * @returns
+     */
     #findNextNonSpace(index: number) {
         const theRest = this.#input.substring(this.#index);
 
@@ -279,20 +291,6 @@ class Parser {
         }
 
         return index;
-    }
-
-    /**
-     * Position #index at the next non-whitespace character
-     */
-    #skipWhiteSpace(): void {
-        while (
-            this.#index < this.#input.length &&
-            whitespaceCharCodeArray.includes(
-                this.#input.charCodeAt(this.#index),
-            )
-        ) {
-            ++this.#index;
-        }
     }
 
     /**
@@ -325,6 +323,127 @@ class Parser {
         return `At index ${this.#index} (line: ${lineNumber + 1}, column: ${
             columnIndex + 1
         }) [${this.getIndexContextString()}]: ${message}`;
+    }
+
+    /**
+     * Position #index at the next non-whitespace character,
+     * ignoring any comments on the way through.
+     */
+    #skipWhiteSpace(): void {
+        while (this.#index < this.#input.length) {
+            if (
+                whitespaceCharCodeArray.includes(
+                    this.#input.charCodeAt(this.#index),
+                )
+            ) {
+                ++this.#index;
+            } else {
+                if (!this.#skipComments()) {
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * Move to the next character, skipping any comments
+     */
+    #moveNext(): void {
+        this.#index += 1;
+        this.#skipComments();
+    }
+
+    /**
+     * Assert that the current character matches the provided code (skipping a comment
+     * if we are accidentally pointing at a comment).
+     *
+     * Then move to the next character, skipping any comments.
+     */
+    #expectAndMoveNext(code: number): void {
+        // TODO: not sure if this is needed
+        this.#skipComments();
+
+        if (this.#input.charCodeAt(this.#index) !== code) {
+            throw new Error(
+                this.#errorMessage(
+                    `Expected ${String.fromCharCode(code)} but instead found ${
+                        this.#input[this.#index]
+                    }.`,
+                ),
+            );
+        }
+
+        this.#index += 1;
+        this.#skipComments();
+    }
+
+    /**
+     * Skip any comments at the current this.#index.
+     * @returns
+     */
+    #skipComments(): boolean {
+        const skipOneComment = (): boolean => {
+            if (this.#input.charCodeAt(this.#index) !== forwardSlashCharCode) {
+                return false;
+            }
+
+            const next = this.#input.charCodeAt(this.#index + 1);
+            if (next === forwardSlashCharCode) {
+                // Single line comment
+                const end = this.#findSequence(
+                    this.#input,
+                    this.#index,
+                    endSinglelineComment,
+                );
+                if (end !== undefined) {
+                    this.#index = end + endSinglelineComment.length;
+                    return true;
+                }
+            } else if (next === starCharCode) {
+                // Multiline comment
+                const end = this.#findSequence(
+                    this.#input,
+                    this.#index,
+                    endMultilineComment,
+                );
+                if (end !== undefined) {
+                    this.#index = end + endMultilineComment.length;
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        let result = false;
+        while (skipOneComment()) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Find the next instance of a specified sequence of character codes in 
+     * the parameter 'str'. Used mostly for processing comments.
+     * @param str 
+     * @param offset 
+     * @param seq 
+     * @returns 
+     */
+    #findSequence(
+        str: string,
+        offset: number,
+        seq: readonly number[],
+    ): number | undefined {
+        outer: for (let i = offset; i < str.length; ++i) {
+            for (let seqOffset = 0; seqOffset < seq.length; ++seqOffset) {
+                if (str.charCodeAt(i + seqOffset) !== seq[seqOffset]) {
+                    continue outer; // not a match, continue with next offset
+                }
+            }
+            return i;
+        }
+        return undefined;
     }
 
     toString() {

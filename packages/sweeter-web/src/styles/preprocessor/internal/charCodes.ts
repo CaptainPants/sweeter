@@ -20,3 +20,11 @@ export const whitespaceCharCodeArray = charCodes(' \t\n\r\v');
 export const colonOrBraceOrCloseBraceCharCodeArray = charCodes(':{}');
 
 export const commaOrOpenParensOrOpenBracesCharCodeArray = charCodes(',({');
+
+export const openBraceCharCode = '{'.charCodeAt(0);
+
+export const forwardSlashCharCode = '/'.charCodeAt(0);
+export const starCharCode = '*'.charCodeAt(0);
+
+export const endMultilineComment = charCodes('*/');
+export const endSinglelineComment = charCodes('\n');

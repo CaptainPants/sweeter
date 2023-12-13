@@ -65,6 +65,46 @@ exports[`multi line comment inside rule 1`] = `
 ]
 `;
 
+exports[`multi line comment inside selector 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "color",
+        "value": "red",
+      },
+    ],
+    "selectors": [
+      "body
+        
+        div",
+    ],
+  },
+]
+`;
+
+exports[`multi line comment inside value 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "border",
+        "value": "solid  black 1px",
+      },
+    ],
+    "selectors": [
+      "body",
+    ],
+  },
+]
+`;
+
 exports[`multi line comment outside @rule 1`] = `
 [
   {
@@ -148,6 +188,46 @@ exports[`single line comment inside rule 1`] = `
         "$nodeType": "property",
         "name": "color",
         "value": "red",
+      },
+    ],
+    "selectors": [
+      "body",
+    ],
+  },
+]
+`;
+
+exports[`single line comment inside selector 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "color",
+        "value": "red",
+      },
+    ],
+    "selectors": [
+      "body
+                div",
+    ],
+  },
+]
+`;
+
+exports[`single line comment inside value 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "border",
+        "value": "solid
+                        black 1px",
       },
     ],
     "selectors": [

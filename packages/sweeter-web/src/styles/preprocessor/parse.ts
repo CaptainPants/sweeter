@@ -7,7 +7,6 @@ import {
     whitespaceCharCodeArray,
 } from './internal/charCodes.js';
 import { indexOfAny } from './internal/indexOfAny.js';
-import { readSelectors } from './internal/readSelectors.js';
 import type {
     AtRuleAstNode,
     PropertyAstNode,
@@ -55,14 +54,14 @@ class Parser {
     #parseRuleOrAtRule(inBlock: boolean): RuleOrAtRule | undefined {
         this.#consumeWhitespaceAndComments();
 
-        const next = this.#input[this.#index];
+        const next = this.#input.charCodeAt(this.#index);
 
         if (this.#index >= this.#input.length) {
             return undefined;
         }
 
         // End of the containing block
-        if (next === '}') {
+        if (next === charCodes.closeBrace) {
             if (inBlock) {
                 // move #index past the block
                 this.#moveNext();
@@ -71,7 +70,7 @@ class Parser {
                 throw new Error(this.#errorMessage('Unexpected'));
             }
             // @rule
-        } else if (next === '@') {
+        } else if (next === charCodes.at) {
             return this.#parseAtRule();
             // normal selector rule: a.x#banana[test=1], b { }
         } else {
@@ -114,7 +113,8 @@ class Parser {
             }
 
             if (current === charCodes.singleQuote || current === charCodes.doubleQuote) {
-                this.#readQuotedString(currentResult);
+                this.#readQuotedStringInto(currentResult);
+                continue;
             }
 
             if (bracketCount === 0 && current === charCodes.comma) {
@@ -152,7 +152,7 @@ class Parser {
      * treat whatever character is passed as the delimiter.
      * @param output 
      */
-    #readQuotedString(output: number[]): void {
+    #readQuotedStringInto(output: number[]): void {
         const quoteChar = this.#input.charCodeAt(this.#index);
 
         output.push(quoteChar);
@@ -180,6 +180,7 @@ class Parser {
      */
     #parseAtRule(): AtRuleAstNode {
         this.#moveNext(); // move past @
+        
         const type = this.#tryReadIdent();
         if (type === undefined) {
             throw new Error(this.#errorMessage('Expected an identifier'));
@@ -315,28 +316,39 @@ class Parser {
         return undefined;
     }
 
-    /**
-     * TODO: a property value could have a quoted string containing ; or } so we will need similar
-     * nesting logic to selectors (but simpler)
-     *
-     * TODO: doesn't handle comments.
-     *
-     * Assumes that #index has already skipped any whitespace
-     * @returns
-     */
-    #readPropertyValue(): string {
-        const startIndex = this.#index;
-        const endIndex = indexOfAny(
-            semiOrCloseBraceCharCodeArray,
-            this.#input,
-            startIndex,
-        );
+    #readPropertyValue(): string { 
+        this.#consumeWhitespaceAndComments();
 
-        if (endIndex !== undefined) {
-            this.#index = endIndex;
+        const result: number[] = [];
+
+        while (this.#index < this.#input.length) {
+            // We should NOT be seeing any comments here, as #consumeWhitespaceAndComments() 
+            // or #moveNext() have been called and they should exhaustively skip any comments.
+            
+            const current = this.#input.charCodeAt(this.#index);
+
+            // EXIT We have hit the ending ; for the property value
+            if (current === charCodes.semicolon) {
+                this.#moveNext(); // Remove the semicolon
+                break;
+            }
+
+            if (current === charCodes.singleQuote || current === charCodes.doubleQuote) {
+                this.#readQuotedStringInto(result);
+                continue;
+            }
+
+            // Normal case: treat the value as valid content
+            result.push(current);
+
+            this.#moveNext();
         }
 
-        return this.#input.substring(startIndex, endIndex);
+        if (result.length === 0) {
+            throw new Error(this.#errorMessage('No selectors found'));
+        }
+
+        return String.fromCharCode(...result);
     }
 
     #tryReadIdent(): string | undefined {

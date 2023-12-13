@@ -1,5 +1,53 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`complex 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "padding-left",
+        "value": "var(--property)",
+      },
+      {
+        "$nodeType": "property",
+        "name": "width",
+        "value": "50%",
+      },
+    ],
+    "selectors": [
+      ".a[test=\\",\\"]:hover > test banana",
+    ],
+  },
+]
+`;
+
+exports[`quoted comma 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "padding-left",
+        "value": "var(--property)",
+      },
+      {
+        "$nodeType": "property",
+        "name": "width",
+        "value": "50%",
+      },
+    ],
+    "selectors": [
+      ".a[test=\\",\\"]",
+    ],
+  },
+]
+`;
+
 exports[`with alternatives 1`] = `
 [
   {

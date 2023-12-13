@@ -22,10 +22,12 @@ export const endSinglelineComment = getCharCodes('\n');
 
 export const charCodes = {
     openBrace: '{'.charCodeAt(0),
+    closeBrace: '}'.charCodeAt(0),
+    at: '@'.charCodeAt(0),
     
     openBracket: '('.charCodeAt(0),
     closeBracket: ')'.charCodeAt(0),
-    
+
     comma: ','.charCodeAt(0),
     colon: ':'.charCodeAt(0),
     semicolon: ';'.charCodeAt(0),

@@ -26,3 +26,28 @@ it('with alternatives in a not', () => {
     expect(ast).toMatchSnapshot();
 });
 
+it('quoted comma', () => {
+    const content = `
+        .a[test=","] {
+            padding-left: var(--property);
+            width: 50%;
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});
+
+it('complex', () => {
+    const content = `
+        .a[test=","]:hover > test banana {
+            padding-left: var(--property);
+            width: 50%;
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});

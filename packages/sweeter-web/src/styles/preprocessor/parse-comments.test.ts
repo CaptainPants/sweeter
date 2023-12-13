@@ -119,3 +119,57 @@ it('multi line comment inside @rule', () => {
 
     expect(ast).toMatchSnapshot();
 });
+
+it('single line comment inside selector', () => {
+    const content = `
+        body
+        // comment
+        div {
+            color: red;
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});
+
+it('multi line comment inside selector', () => {
+    const content = `
+        body
+        /* this is pretty cool */
+        div {
+            color: red;
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});
+
+it('single line comment inside value', () => {
+    const content = `
+        body {
+            border: solid
+            // comment
+            black 1px;
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});
+
+it('multi line comment inside value', () => {
+    const content = `
+        body {
+            border: solid /* this is pretty cool */ black 1px;
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});

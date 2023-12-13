@@ -47,7 +47,7 @@ class Parser {
         return nestedRules;
     }
 
-    #parseRuleOrAtRule(inBlock: boolean): RuleOrAtRule | undefined {
+    #parseRuleOrAtRule(): RuleOrAtRule | undefined {
         this.#consumeWhitespaceAndComments();
 
         const next = this.#input.charCodeAt(this.#index);
@@ -58,13 +58,7 @@ class Parser {
 
         // End of the containing block
         if (next === charCodes.closeBrace) {
-            if (inBlock) {
-                // move #index past the block
-                this.#moveNext();
-                return undefined;
-            } else {
-                throw new Error(this.#errorMessage('Unexpected'));
-            }
+            throw new Error(this.#errorMessage('Unexpected'));
             // @rule
         } else if (next === charCodes.at) {
             return this.#parseAtRule();
@@ -242,7 +236,8 @@ class Parser {
         while (this.#index < this.#input.length) {
             this.#consumeWhitespaceAndComments();
 
-            if (this.#input[this.#index] === '}') {
+            // We've hit the end of the block
+            if (this.#input.charCodeAt(this.#index) === charCodes.closeBrace) {
                 this.#moveNext();
                 break;
             }
@@ -265,9 +260,10 @@ class Parser {
                     value: propertyValue,
                 });
             }
-            // nested rule / at-rule
+            // nested rule OR at-rule
             else {
-                const nestedRule = this.#parseRuleOrAtRule(true); // positions #index at the next character
+                const nestedRule = this.#parseRuleOrAtRule(); // positions #index at the next character
+                this.#moveNext
 
                 if (nestedRule) {
                     nestedRules.push(nestedRule);
@@ -447,10 +443,11 @@ class Parser {
 
     /**
      * Move to the next character, skipping any comments
+     * @returns true if there was skipped comments
      */
-    #moveNext(): void {
+    #moveNext(): boolean {
         this.#index += 1;
-        this.#skipComments();
+        return this.#skipComments();
     }
 
     /**

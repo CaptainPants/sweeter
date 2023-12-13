@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`with alternatives 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "padding-left",
+        "value": "var(--property)",
+      },
+      {
+        "$nodeType": "property",
+        "name": "width",
+        "value": "50%",
+      },
+    ],
+    "selectors": [
+      ".something1",
+      ".something2.alternative:hover",
+    ],
+  },
+]
+`;
+
+exports[`with alternatives in a not 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "padding-left",
+        "value": "var(--property)",
+      },
+      {
+        "$nodeType": "property",
+        "name": "width",
+        "value": "50%",
+      },
+    ],
+    "selectors": [
+      ".something1",
+      ".something2:not(a, b)",
+    ],
+  },
+]
+`;

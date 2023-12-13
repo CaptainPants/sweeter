@@ -1,12 +1,9 @@
 import {
-    colonCharCode,
+    charCodes,
     endMultilineComment,
     endSinglelineComment,
-    forwardSlashCharCode,
-    openBraceCharCode,
     semiOrBraceCharCodeArray,
     semiOrCloseBraceCharCodeArray,
-    starCharCode,
     whitespaceCharCodeArray,
 } from './internal/charCodes.js';
 import { indexOfAny } from './internal/indexOfAny.js';
@@ -86,7 +83,7 @@ class Parser {
         const selectors = this.#parseSelectors();
 
         // '{'
-        this.#expectAndMoveNext(openBraceCharCode);
+        this.#expectAndMoveNext(charCodes.openBrace);
 
         const { nestedRules, properties } = this.parseRuleBodyContent(true);
 
@@ -98,13 +95,81 @@ class Parser {
         };
     }
 
-    #parseSelectors(): string[] {
-        const { selectors, endOffset } = readSelectors(
-            this.#input,
-            this.#index,
-        );
-        this.#index = endOffset;
-        return selectors;
+    #parseSelectors(): string[] { 
+        this.#consumeWhitespaceAndComments();
+
+        let bracketCount = 0;
+        let currentResult: number[] = [];
+        const result: string[] = [];
+
+        while (this.#index < this.#input.length) {
+            // We should NOT be seeing any comments here, as #consumeWhitespaceAndComments() 
+            // or #moveNext() have been called and they should exhaustively skip any comments.
+            
+            const current = this.#input.charCodeAt(this.#index);
+
+            // EXIT We have hit the open brace for the properties in the current rule
+            if (current === charCodes.openBrace) {
+                break;
+            }
+
+            if (current === charCodes.singleQuote || current === charCodes.doubleQuote) {
+                this.#readQuotedString(currentResult);
+            }
+
+            if (bracketCount === 0 && current === charCodes.comma) {
+                result.push(String.fromCharCode(...currentResult).trim());
+                currentResult = [];
+                // this means we're onto the next selector
+            }
+            else {
+                // Normal case: treat the value as valid content
+                currentResult.push(current);
+
+                // Open brackets, means we handle commas differently
+                if (current === charCodes.openBracket) {
+                    ++bracketCount;
+                }
+                else if (current === charCodes.closeBracket) {
+                    --bracketCount;
+                }
+            }
+
+            this.#moveNext();
+        }
+
+        if (currentResult.length > 0) {
+            result.push(String.fromCharCode(...currentResult).trim());
+        }
+        if (result.length === 0) {
+            throw new Error(this.#errorMessage('No selectors found'));
+        }
+        return result;
+    }
+
+    /**
+     * Assumes (and does not check) that #index points to a " or a ', so really will 
+     * treat whatever character is passed as the delimiter.
+     * @param output 
+     */
+    #readQuotedString(output: number[]): void {
+        const quoteChar = this.#input.charCodeAt(this.#index);
+
+        output.push(quoteChar);
+
+        this.#moveNext();
+
+        while (this.#index < this.#input.length) {
+            const current = this.#input.charCodeAt(this.#index);
+
+            output.push(current);
+
+            this.#moveNext();
+
+            if (current === quoteChar) {
+                return; // Stop after the next quote char
+            }
+        }
     }
 
     /**
@@ -234,7 +299,7 @@ class Parser {
             this.#consumeWhitespaceAndComments();
 
             // If there is a following colon then this IS a property
-            if (this.#input.charCodeAt(this.#index) === colonCharCode) {
+            if (this.#input.charCodeAt(this.#index) === charCodes.colon) {
                 this.#moveNext();
 
                 return this.#input.substring(
@@ -376,12 +441,12 @@ class Parser {
      */
     #skipComments(): boolean {
         const skipOneComment = (): boolean => {
-            if (this.#input.charCodeAt(this.#index) !== forwardSlashCharCode) {
+            if (this.#input.charCodeAt(this.#index) !== charCodes.forwardSlash) {
                 return false;
             }
 
             const next = this.#input.charCodeAt(this.#index + 1);
-            if (next === forwardSlashCharCode) {
+            if (next === charCodes.forwardSlash) {
                 // Single line comment
                 const end = this.#findSequence(
                     this.#input,
@@ -392,7 +457,7 @@ class Parser {
                     this.#index = end + endSinglelineComment.length;
                     return true;
                 }
-            } else if (next === starCharCode) {
+            } else if (next === charCodes.star) {
                 // Multiline comment
                 const end = this.#findSequence(
                     this.#input,

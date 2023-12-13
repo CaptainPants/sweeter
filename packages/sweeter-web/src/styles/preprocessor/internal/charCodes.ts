@@ -1,4 +1,4 @@
-export function charCodes(str: string): ReadonlyArray<number> {
+export function getCharCodes(str: string): ReadonlyArray<number> {
     const res: number[] = [];
     for (let i = 0; i < str.length; ++i) {
         res.push(str.charCodeAt(i));
@@ -6,22 +6,33 @@ export function charCodes(str: string): ReadonlyArray<number> {
     return res;
 }
 
-export const parensOrCloseParensCharCodeArray = charCodes('()');
-export const doubleQuotesCharCodeArray = charCodes("'");
-export const singleQuotesCharCodeArray = charCodes('"');
+export const parensOrCloseParensCharCodeArray = getCharCodes('()');
+export const doubleQuotesCharCodeArray = getCharCodes("'");
+export const singleQuotesCharCodeArray = getCharCodes('"');
 
-export const semiOrBraceCharCodeArray = charCodes('{;');
-export const semiOrCloseBraceCharCodeArray = charCodes('};');
+export const semiOrBraceCharCodeArray = getCharCodes('{;');
+export const semiOrCloseBraceCharCodeArray = getCharCodes('};');
 
-export const whitespaceCharCodeArray = charCodes(' \t\n\r\v');
+export const whitespaceCharCodeArray = getCharCodes(' \t\n\r\v');
 
-export const commaOrOpenParensOrOpenBracesCharCodeArray = charCodes(',({');
+export const commaOrOpenParensOrOpenBracesCharCodeArray = getCharCodes(',({');
 
-export const openBraceCharCode = '{'.charCodeAt(0);
+export const endMultilineComment = getCharCodes('*/');
+export const endSinglelineComment = getCharCodes('\n');
 
-export const colonCharCode = ':'.charCodeAt(0);
-export const forwardSlashCharCode = '/'.charCodeAt(0);
-export const starCharCode = '*'.charCodeAt(0);
+export const charCodes = {
+    openBrace: '{'.charCodeAt(0),
+    
+    openBracket: '('.charCodeAt(0),
+    closeBracket: ')'.charCodeAt(0),
+    
+    comma: ','.charCodeAt(0),
+    colon: ':'.charCodeAt(0),
+    semicolon: ';'.charCodeAt(0),
+    
+    forwardSlash: '/'.charCodeAt(0),
+    star: '*'.charCodeAt(0),
 
-export const endMultilineComment = charCodes('*/');
-export const endSinglelineComment = charCodes('\n');
+    singleQuote: '\''.charCodeAt(0),
+    doubleQuote: '"'.charCodeAt(0),
+}

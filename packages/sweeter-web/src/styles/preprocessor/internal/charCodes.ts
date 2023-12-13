@@ -30,4 +30,6 @@ export const charCodes = {
 
     singleQuote: "'".charCodeAt(0),
     doubleQuote: '"'.charCodeAt(0),
+
+    space: ' '.charCodeAt(0),
 };

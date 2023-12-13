@@ -48,7 +48,7 @@ class Parser {
     }
 
     #parseRuleOrAtRule(): RuleOrAtRule | undefined {
-        this.#consumeWhitespaceAndComments();
+        this.#skipWhitespaceAndComments();
 
         const next = this.#input.charCodeAt(this.#index);
 
@@ -69,10 +69,10 @@ class Parser {
     }
 
     #parseRule(): RuleAstNode {
-        const selectors = this.#parseSelectors();
+        const selectors = this.#readSelectors();
 
         // '{'
-        this.#expectAndMoveNext(charCodes.openBrace);
+        this.#expectAndMoveNextSkippingWhitespaceAndComments(charCodes.openBrace);
 
         const { nestedRules, properties } = this.parseRuleBodyContent(true);
 
@@ -84,8 +84,8 @@ class Parser {
         };
     }
 
-    #parseSelectors(): string[] {
-        this.#consumeWhitespaceAndComments();
+    #readSelectors(): string[] {
+        this.#skipWhitespaceAndComments();
 
         let bracketCount = 0;
         let currentResult: number[] = [];
@@ -126,7 +126,10 @@ class Parser {
                 }
             }
 
-            this.#moveNext();
+            if (this.#moveNextSkippingWhitespaceAndComments()) {
+                // If we skipped a comment/space, add a space (so that a/* test */:not(b) has a space in between)
+                currentResult.push(charCodes.space)
+            }
         }
 
         if (currentResult.length > 0) {
@@ -142,21 +145,21 @@ class Parser {
      * @returns
      */
     #parseAtRule(): AtRuleAstNode {
-        this.#moveNext(); // move past @
+        this.#moveNextSkippingWhitespaceAndComments(); // move past @
 
         const type = this.#tryReadIdent();
         if (type === undefined) {
             throw new Error(this.#errorMessage('Expected an identifier'));
         }
 
-        this.#consumeWhitespaceAndComments();
+        this.#skipWhitespaceAndComments();
 
-        const parameters = this.#parseAtRuleParameters();
+        const parameters = this.#readAtRuleParameters();
 
         const openBraceOrSemiColon = this.#input.charCodeAt(this.#index);
 
         if (openBraceOrSemiColon === charCodes.semicolon) {
-            this.#moveNext(); // move pase the ;
+            this.#moveNextSkippingWhitespaceAndComments(); // move past the ;
 
             return {
                 $nodeType: 'at',
@@ -164,7 +167,7 @@ class Parser {
                 parameters,
             };
         } else if (openBraceOrSemiColon === charCodes.openBrace) {
-            this.#moveNext(); // move past the {
+            this.#moveNextSkippingWhitespaceAndComments(); // move past the {
 
             const { properties, nestedRules } = this.parseRuleBodyContent(true);
 
@@ -184,8 +187,8 @@ class Parser {
         }
     }
 
-    #parseAtRuleParameters(): string {
-        this.#consumeWhitespaceAndComments();
+    #readAtRuleParameters(): string {
+        this.#skipWhitespaceAndComments();
 
         const result: number[] = [];
 
@@ -215,7 +218,10 @@ class Parser {
             // Normal case: treat the value as valid content
             result.push(current);
 
-            this.#moveNext();
+            if (this.#moveNextSkippingWhitespaceAndComments()) {
+                // If we skipped a comment/space, add a space (so that a/* test */:not(b) has a space in between)
+                result.push(charCodes.space);
+            }
         }
 
         if (result.length === 0) {
@@ -234,15 +240,15 @@ class Parser {
         const properties: PropertyAstNode[] = [];
 
         while (this.#index < this.#input.length) {
-            this.#consumeWhitespaceAndComments();
+            this.#skipWhitespaceAndComments();
 
             // We've hit the end of the block
             if (this.#input.charCodeAt(this.#index) === charCodes.closeBrace) {
-                this.#moveNext();
+                this.#moveNextSkippingWhitespaceAndComments();
                 break;
             }
 
-            const propertyName = this.#tryParsePropertyNameAndColon();
+            const propertyName = this.#tryReadPropertyNameAndColon();
 
             // property
             if (propertyName) {
@@ -250,9 +256,9 @@ class Parser {
                     throw new Error('Found property when not allowed.');
                 }
 
-                this.#consumeWhitespaceAndComments();
+                this.#skipWhitespaceAndComments();
                 const propertyValue = this.#readPropertyValue();
-                this.#moveNext(); // move past semicolon
+                this.#moveNextSkippingWhitespaceAndComments(); // move past semicolon
 
                 properties.push({
                     $nodeType: 'property',
@@ -263,7 +269,7 @@ class Parser {
             // nested rule OR at-rule
             else {
                 const nestedRule = this.#parseRuleOrAtRule(); // positions #index at the next character
-                this.#moveNext
+                this.#moveNextSkippingWhitespaceAndComments
 
                 if (nestedRule) {
                     nestedRules.push(nestedRule);
@@ -278,7 +284,7 @@ class Parser {
      * Read a property name and the following colon, which may fail e.g. if its actually an at rule or a rule
      * @returns
      */
-    #tryParsePropertyNameAndColon(): string | undefined {
+    #tryReadPropertyNameAndColon(): string | undefined {
         const startOfIdentifierIndex = this.#index;
 
         const remaining = this.#input.substring(this.#index);
@@ -292,11 +298,11 @@ class Parser {
             this.#index = endOfPropertyName;
 
             // TODO: not sure if comments are allowed between property and colon, but they PROBABLY are?
-            this.#consumeWhitespaceAndComments();
+            this.#skipWhitespaceAndComments();
 
             // If there is a following colon then this IS a property
             if (this.#input.charCodeAt(this.#index) === charCodes.colon) {
-                this.#moveNext();
+                this.#moveNextSkippingWhitespaceAndComments();
 
                 return this.#input.substring(
                     startOfIdentifierIndex,
@@ -316,7 +322,7 @@ class Parser {
      * @returns
      */
     #readPropertyValue(): string {
-        this.#consumeWhitespaceAndComments();
+        this.#skipWhitespaceAndComments();
 
         const result: number[] = [];
 
@@ -342,7 +348,10 @@ class Parser {
             // Normal case: treat the value as valid content
             result.push(current);
 
-            this.#moveNext();
+            if (this.#moveNextSkippingWhitespaceAndComments()) {
+                // If we skipped a comment/space, add a space (so that a/* test */:not(b) has a space in between)
+                result.push(charCodes.space);
+            }
         }
 
         if (result.length === 0) {
@@ -362,14 +371,14 @@ class Parser {
 
         output.push(quoteChar);
 
-        this.#moveNext();
+        this.#moveNextSkippingWhitespaceAndComments();
 
         while (this.#index < this.#input.length) {
             const current = this.#input.charCodeAt(this.#index);
 
             output.push(current);
 
-            this.#moveNext();
+            this.#moveNextSkippingWhitespaceAndComments();
 
             if (current === quoteChar) {
                 return; // Stop after the next quote char
@@ -425,29 +434,22 @@ class Parser {
      * Position #index at the next non-whitespace character,
      * ignoring any comments on the way through.
      */
-    #consumeWhitespaceAndComments(): void {
-        while (this.#index < this.#input.length) {
-            if (
-                whitespaceCharCodes.includes(
-                    this.#input.charCodeAt(this.#index),
-                )
-            ) {
-                ++this.#index;
-            } else {
-                if (!this.#skipComments()) {
-                    return;
-                }
-            }
+    #skipWhitespaceAndComments(): boolean {
+        let skipped = false;
+        while (this.#skipWhitespace() || this.#skipComments()) {
+            // continuously call these two until one returns false.
+            skipped = true;
         }
+        return skipped;
     }
 
     /**
-     * Move to the next character, skipping any comments
-     * @returns true if there was skipped comments
+     * Move to the next character, skipping any comments or whitespace
+     * @returns true if there was skipped comments or whitespace
      */
-    #moveNext(): boolean {
+    #moveNextSkippingWhitespaceAndComments(): boolean {
         this.#index += 1;
-        return this.#skipComments();
+        return this.#skipWhitespaceAndComments();
     }
 
     /**
@@ -456,7 +458,7 @@ class Parser {
      *
      * Then move to the next character, skipping any comments.
      */
-    #expectAndMoveNext(code: number): void {
+    #expectAndMoveNextSkippingWhitespaceAndComments(code: number): void {
         // TODO: not sure if this is needed
         this.#skipComments();
 
@@ -472,6 +474,22 @@ class Parser {
 
         this.#index += 1;
         this.#skipComments();
+    }
+
+    /**
+     * Skip any comments at the current this.#index.
+     * @returns
+     */
+    #skipWhitespace(): boolean {
+        const savedIndex = this.#index;
+        while (
+            whitespaceCharCodes.includes(
+                this.#input.charCodeAt(this.#index),
+            )
+        ) {
+            ++this.#index;
+        }
+        return savedIndex !== this.#index; // we skipped something
     }
 
     /**

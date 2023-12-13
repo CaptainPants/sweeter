@@ -39,7 +39,7 @@ exports[`multi line comment inside @ rule 1`] = `
         ],
       },
     ],
-    "parameters": "screen and  (max-width: 100px)",
+    "parameters": "screen and (max-width: 100px)",
     "properties": [],
     "type": "media",
   },
@@ -105,9 +105,7 @@ exports[`multi line comment inside selector 1`] = `
       },
     ],
     "selectors": [
-      "body
-        
-        div",
+      "body div",
     ],
   },
 ]
@@ -122,7 +120,7 @@ exports[`multi line comment inside value 1`] = `
       {
         "$nodeType": "property",
         "name": "border",
-        "value": "solid  black 1px",
+        "value": "solid black 1px",
       },
     ],
     "selectors": [
@@ -198,7 +196,7 @@ exports[`single line comment inside @ rule 1`] = `
         ],
       },
     ],
-    "parameters": "screen and      (max-width: 100px)",
+    "parameters": "screen and (max-width: 100px)",
     "properties": [],
     "type": "media",
   },
@@ -264,8 +262,7 @@ exports[`single line comment inside selector 1`] = `
       },
     ],
     "selectors": [
-      "body
-                div",
+      "body div",
     ],
   },
 ]
@@ -280,8 +277,7 @@ exports[`single line comment inside value 1`] = `
       {
         "$nodeType": "property",
         "name": "border",
-        "value": "solid
-                        black 1px",
+        "value": "solid black 1px",
       },
     ],
     "selectors": [

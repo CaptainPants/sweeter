@@ -1,4 +1,5 @@
 import {
+    colonCharCode,
     endMultilineComment,
     endSinglelineComment,
     forwardSlashCharCode,
@@ -39,7 +40,6 @@ export function parseClassContent(css: string): RuleBodyParts {
 }
 
 const identifierRegExp = /^-{0,2}[_a-zA-Z]+[_a-zA-Z0-9-]*/g;
-const spaceRegExp = /^\s+/g;
 
 class Parser {
     constructor(input: string) {
@@ -56,7 +56,7 @@ class Parser {
     }
 
     #parseRuleOrAtRule(inBlock: boolean): RuleOrAtRule | undefined {
-        this.#skipWhiteSpace();
+        this.#consumeWhitespaceAndComments();
 
         const next = this.#input[this.#index];
 
@@ -120,7 +120,7 @@ class Parser {
             throw new Error(this.#errorMessage('Expected an identifier'));
         }
 
-        this.#skipWhiteSpace();
+        this.#consumeWhitespaceAndComments();
 
         // The opening line must end with a ; or a {
         const foundIndex = indexOfAny(
@@ -175,14 +175,14 @@ class Parser {
         const properties: PropertyAstNode[] = [];
 
         while (this.#index < this.#input.length) {
-            this.#skipWhiteSpace();
+            this.#consumeWhitespaceAndComments();
 
             if (this.#input[this.#index] === '}') {
                 this.#moveNext();
                 break;
             }
 
-            const propertyName = this.#tryReadPropertyName();
+            const propertyName = this.#tryParsePropertyNameAndColon();
 
             // property
             if (propertyName) {
@@ -190,8 +190,7 @@ class Parser {
                     throw new Error('Found property when not allowed.');
                 }
 
-                this.#moveNext(); // move past the colon
-                this.#skipWhiteSpace();
+                this.#consumeWhitespaceAndComments();
                 const propertyValue = this.#readPropertyValue();
                 this.#moveNext();
 
@@ -214,27 +213,41 @@ class Parser {
         return { nestedRules, properties };
     }
 
-    #tryReadPropertyName(): string | undefined {
+    /**
+     * Read a property name and the following colon.
+     * @returns
+     */
+    #tryParsePropertyNameAndColon(): string | undefined {
+        const startOfIdentifierIndex = this.#index;
+
         const remaining = this.#input.substring(this.#index);
         const match = remaining.match(identifierRegExp);
 
         if (match) {
             const len = match[0].length;
 
-            const startOfIdentifierIndex = this.#index;
-            const endOfIdentifierIndex = this.#index + len;
-            const afterWhitespaceIndex =
-                this.#findNextNonSpace(endOfIdentifierIndex);
+            // Skip to end of identifier match, store this for later
+            const endOfPropertyName = startOfIdentifierIndex + len;
+            this.#index = endOfPropertyName;
 
-            if (this.#input[afterWhitespaceIndex] === ':') {
-                this.#index = afterWhitespaceIndex; // move after colon
-                return this.#input
-                    .substring(startOfIdentifierIndex, afterWhitespaceIndex)
-                    .trim();
+            // TODO: not sure if comments are allowed between property and colon, but they PROBABLY are?
+            this.#consumeWhitespaceAndComments();
+
+            // If there is a following colon then this IS a property
+            if (this.#input.charCodeAt(this.#index) === colonCharCode) {
+                this.#moveNext();
+
+                return this.#input.substring(
+                    startOfIdentifierIndex,
+                    endOfPropertyName,
+                );
             }
+
+            // Reset
+            this.#index = startOfIdentifierIndex;
         }
 
-        return;
+        return undefined;
     }
 
     /**
@@ -274,26 +287,6 @@ class Parser {
     }
 
     /**
-     * TODO: this doesn't ignore comments and it should (as its used to fast
-     * forward from property-name to the colon)
-     * @param index
-     * @returns
-     */
-    #findNextNonSpace(index: number) {
-        const theRest = this.#input.substring(this.#index);
-
-        for (let i = index; i < this.#input.length; ++i) {
-            const leadingWhitespaceMatch = theRest.match(spaceRegExp);
-
-            if (leadingWhitespaceMatch) {
-                return this.#index + leadingWhitespaceMatch[0].length;
-            }
-        }
-
-        return index;
-    }
-
-    /**
      * Create an error object with useful positional information from #index
      * @param message
      * @returns
@@ -329,7 +322,7 @@ class Parser {
      * Position #index at the next non-whitespace character,
      * ignoring any comments on the way through.
      */
-    #skipWhiteSpace(): void {
+    #consumeWhitespaceAndComments(): void {
         while (this.#index < this.#input.length) {
             if (
                 whitespaceCharCodeArray.includes(
@@ -423,12 +416,12 @@ class Parser {
     }
 
     /**
-     * Find the next instance of a specified sequence of character codes in 
+     * Find the next instance of a specified sequence of character codes in
      * the parameter 'str'. Used mostly for processing comments.
-     * @param str 
-     * @param offset 
-     * @param seq 
-     * @returns 
+     * @param str
+     * @param offset
+     * @param seq
+     * @returns
      */
     #findSequence(
         str: string,

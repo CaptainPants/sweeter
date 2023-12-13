@@ -1,12 +1,8 @@
 import {
     charCodes,
-    endMultilineComment,
-    endSinglelineComment,
-    semiOrBraceCharCodeArray,
-    semiOrCloseBraceCharCodeArray,
-    whitespaceCharCodeArray,
+    charCodeSequences,
+    whitespaceCharCodes,
 } from './internal/charCodes.js';
-import { indexOfAny } from './internal/indexOfAny.js';
 import type {
     AtRuleAstNode,
     PropertyAstNode,
@@ -94,7 +90,7 @@ class Parser {
         };
     }
 
-    #parseSelectors(): string[] { 
+    #parseSelectors(): string[] {
         this.#consumeWhitespaceAndComments();
 
         let bracketCount = 0;
@@ -102,9 +98,9 @@ class Parser {
         const result: string[] = [];
 
         while (this.#index < this.#input.length) {
-            // We should NOT be seeing any comments here, as #consumeWhitespaceAndComments() 
+            // We should NOT be seeing any comments here, as #consumeWhitespaceAndComments()
             // or #moveNext() have been called and they should exhaustively skip any comments.
-            
+
             const current = this.#input.charCodeAt(this.#index);
 
             // EXIT We have hit the open brace for the properties in the current rule
@@ -112,7 +108,10 @@ class Parser {
                 break;
             }
 
-            if (current === charCodes.singleQuote || current === charCodes.doubleQuote) {
+            if (
+                current === charCodes.singleQuote ||
+                current === charCodes.doubleQuote
+            ) {
                 this.#readQuotedStringInto(currentResult);
                 continue;
             }
@@ -121,16 +120,14 @@ class Parser {
                 result.push(String.fromCharCode(...currentResult).trim());
                 currentResult = [];
                 // this means we're onto the next selector
-            }
-            else {
+            } else {
                 // Normal case: treat the value as valid content
                 currentResult.push(current);
 
                 // Open brackets, means we handle commas differently
                 if (current === charCodes.openBracket) {
                     ++bracketCount;
-                }
-                else if (current === charCodes.closeBracket) {
+                } else if (current === charCodes.closeBracket) {
                     --bracketCount;
                 }
             }
@@ -146,41 +143,13 @@ class Parser {
         }
         return result;
     }
-
-    /**
-     * Assumes (and does not check) that #index points to a " or a ', so really will 
-     * treat whatever character is passed as the delimiter.
-     * @param output 
-     */
-    #readQuotedStringInto(output: number[]): void {
-        const quoteChar = this.#input.charCodeAt(this.#index);
-
-        output.push(quoteChar);
-
-        this.#moveNext();
-
-        while (this.#index < this.#input.length) {
-            const current = this.#input.charCodeAt(this.#index);
-
-            output.push(current);
-
-            this.#moveNext();
-
-            if (current === quoteChar) {
-                return; // Stop after the next quote char
-            }
-        }
-    }
-
     /**
      * Positions the #index at the next index on completion
-     *
-     * TODO: doesn't handle comments.
      * @returns
      */
     #parseAtRule(): AtRuleAstNode {
         this.#moveNext(); // move past @
-        
+
         const type = this.#tryReadIdent();
         if (type === undefined) {
             throw new Error(this.#errorMessage('Expected an identifier'));
@@ -188,38 +157,21 @@ class Parser {
 
         this.#consumeWhitespaceAndComments();
 
-        // The opening line must end with a ; or a {
-        const foundIndex = indexOfAny(
-            semiOrBraceCharCodeArray,
-            this.#input,
-            this.#index,
-        );
-        if (foundIndex === undefined)
-            throw new Error(
-                this.#errorMessage('Could not find end of @ rule preamble as.'),
-            );
+        const parameters = this.#parseAtRuleParameters();
 
-        let parameters: string | undefined = this.#input
-            .substring(this.#index, foundIndex)
-            .trim();
-        if (!parameters) {
-            parameters = undefined;
-        }
+        const openBraceOrSemiColon = this.#input.charCodeAt(this.#index);
 
-        const whatDidWeFind = this.#input[foundIndex]!;
+        if (openBraceOrSemiColon === charCodes.semicolon) {
+            this.#moveNext(); // move pase the ;
 
-        // position after the ; or {
-        this.#index = foundIndex + 1;
-
-        if (whatDidWeFind === ';') {
             return {
                 $nodeType: 'at',
                 type: type,
                 parameters,
             };
-        } else {
-            // position at start of block (after the brace)
-            this.#index = foundIndex + 1;
+        } else if (openBraceOrSemiColon === charCodes.openBrace) {
+            this.#moveNext(); // move past the {
+
             const { properties, nestedRules } = this.parseRuleBodyContent(true);
 
             return {
@@ -229,7 +181,54 @@ class Parser {
                 properties,
                 nestedRules,
             };
+        } else {
+            throw new Error(
+                this.#errorMessage(
+                    `Unexpected ${String.fromCharCode(openBraceOrSemiColon)}`,
+                ),
+            );
         }
+    }
+
+    #parseAtRuleParameters(): string {
+        this.#consumeWhitespaceAndComments();
+
+        const result: number[] = [];
+
+        while (this.#index < this.#input.length) {
+            // We should NOT be seeing any comments here, as #consumeWhitespaceAndComments()
+            // or #moveNext() have been called and they should exhaustively skip any comments.
+
+            const current = this.#input.charCodeAt(this.#index);
+
+            // EXIT We have hit the ending ; for the property value
+            if (
+                current === charCodes.openBrace ||
+                current === charCodes.semicolon
+            ) {
+                // DO NOT MOVE OFF THE { or ; as we need to determine which it was in the caller
+                break;
+            }
+
+            if (
+                current === charCodes.singleQuote ||
+                current === charCodes.doubleQuote
+            ) {
+                this.#readQuotedStringInto(result);
+                continue;
+            }
+
+            // Normal case: treat the value as valid content
+            result.push(current);
+
+            this.#moveNext();
+        }
+
+        if (result.length === 0) {
+            throw new Error(this.#errorMessage('No selectors found'));
+        }
+
+        return String.fromCharCode(...result).trim();
     }
 
     /**
@@ -258,7 +257,7 @@ class Parser {
 
                 this.#consumeWhitespaceAndComments();
                 const propertyValue = this.#readPropertyValue();
-                this.#moveNext();
+                this.#moveNext(); // move past semicolon
 
                 properties.push({
                     $nodeType: 'property',
@@ -280,7 +279,7 @@ class Parser {
     }
 
     /**
-     * Read a property name and the following colon.
+     * Read a property name and the following colon, which may fail e.g. if its actually an at rule or a rule
      * @returns
      */
     #tryParsePropertyNameAndColon(): string | undefined {
@@ -316,24 +315,30 @@ class Parser {
         return undefined;
     }
 
-    #readPropertyValue(): string { 
+    /**
+     * Note that this will leave #index pointing at the semicolon.
+     * @returns
+     */
+    #readPropertyValue(): string {
         this.#consumeWhitespaceAndComments();
 
         const result: number[] = [];
 
         while (this.#index < this.#input.length) {
-            // We should NOT be seeing any comments here, as #consumeWhitespaceAndComments() 
+            // We should NOT be seeing any comments here, as #consumeWhitespaceAndComments()
             // or #moveNext() have been called and they should exhaustively skip any comments.
-            
+
             const current = this.#input.charCodeAt(this.#index);
 
             // EXIT We have hit the ending ; for the property value
             if (current === charCodes.semicolon) {
-                this.#moveNext(); // Remove the semicolon
                 break;
             }
 
-            if (current === charCodes.singleQuote || current === charCodes.doubleQuote) {
+            if (
+                current === charCodes.singleQuote ||
+                current === charCodes.doubleQuote
+            ) {
                 this.#readQuotedStringInto(result);
                 continue;
             }
@@ -349,6 +354,31 @@ class Parser {
         }
 
         return String.fromCharCode(...result);
+    }
+
+    /**
+     * Assumes (and does not check) that #index points to a " or a ', so really will
+     * treat whatever character is passed as the delimiter.
+     * @param output
+     */
+    #readQuotedStringInto(output: number[]): void {
+        const quoteChar = this.#input.charCodeAt(this.#index);
+
+        output.push(quoteChar);
+
+        this.#moveNext();
+
+        while (this.#index < this.#input.length) {
+            const current = this.#input.charCodeAt(this.#index);
+
+            output.push(current);
+
+            this.#moveNext();
+
+            if (current === quoteChar) {
+                return; // Stop after the next quote char
+            }
+        }
     }
 
     #tryReadIdent(): string | undefined {
@@ -402,7 +432,7 @@ class Parser {
     #consumeWhitespaceAndComments(): void {
         while (this.#index < this.#input.length) {
             if (
-                whitespaceCharCodeArray.includes(
+                whitespaceCharCodes.includes(
                     this.#input.charCodeAt(this.#index),
                 )
             ) {
@@ -453,7 +483,9 @@ class Parser {
      */
     #skipComments(): boolean {
         const skipOneComment = (): boolean => {
-            if (this.#input.charCodeAt(this.#index) !== charCodes.forwardSlash) {
+            if (
+                this.#input.charCodeAt(this.#index) !== charCodes.forwardSlash
+            ) {
                 return false;
             }
 
@@ -463,10 +495,11 @@ class Parser {
                 const end = this.#findSequence(
                     this.#input,
                     this.#index,
-                    endSinglelineComment,
+                    charCodeSequences.endSinglelineComment,
                 );
                 if (end !== undefined) {
-                    this.#index = end + endSinglelineComment.length;
+                    this.#index =
+                        end + charCodeSequences.endSinglelineComment.length;
                     return true;
                 }
             } else if (next === charCodes.star) {
@@ -474,10 +507,11 @@ class Parser {
                 const end = this.#findSequence(
                     this.#input,
                     this.#index,
-                    endMultilineComment,
+                    charCodeSequences.endMultilineComment,
                 );
                 if (end !== undefined) {
-                    this.#index = end + endMultilineComment.length;
+                    this.#index =
+                        end + charCodeSequences.endMultilineComment.length;
                     return true;
                 }
             }

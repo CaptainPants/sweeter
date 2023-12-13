@@ -148,6 +148,35 @@ it('multi line comment inside selector', () => {
     expect(ast).toMatchSnapshot();
 });
 
+it('single line comment inside @ rule', () => {
+    const content = `
+    @media screen and //comment
+     (max-width: 100px) {
+        body div {
+            color: red;
+        }
+    }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});
+
+it('multi line comment inside @ rule', () => {
+    const content = `
+        @media screen and /* this is pretty cool */ (max-width: 100px) {
+            body div {
+                color: red;
+            }
+        }
+    `;
+
+    const ast = parse(content);
+
+    expect(ast).toMatchSnapshot();
+});
+
 it('single line comment inside value', () => {
     const content = `
         body {

@@ -19,6 +19,33 @@ exports[`multi line comment at top level 1`] = `
 ]
 `;
 
+exports[`multi line comment inside @ rule 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "red",
+          },
+        ],
+        "selectors": [
+          "body div",
+        ],
+      },
+    ],
+    "parameters": "screen and  (max-width: 100px)",
+    "properties": [],
+    "type": "media",
+  },
+]
+`;
+
 exports[`multi line comment inside @rule 1`] = `
 [
   {
@@ -147,6 +174,33 @@ exports[`single line comment at top level 1`] = `
     "selectors": [
       "body",
     ],
+  },
+]
+`;
+
+exports[`single line comment inside @ rule 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "red",
+          },
+        ],
+        "selectors": [
+          "body div",
+        ],
+      },
+    ],
+    "parameters": "screen and      (max-width: 100px)",
+    "properties": [],
+    "type": "media",
   },
 ]
 `;

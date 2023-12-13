@@ -59,11 +59,13 @@ class Parser {
         // End of the containing block
         if (next === charCodes.closeBrace) {
             throw new Error(this.#errorMessage('Unexpected'));
-            // @rule
-        } else if (next === charCodes.at) {
+        }
+        // @rule
+        else if (next === charCodes.at) {
             return this.#parseAtRule();
-            // normal selector rule: a.x#banana[test=1], b { }
-        } else {
+        }
+        // normal selector rule: a.x#banana[test=1], b { }
+        else {
             return this.#parseRule();
         }
     }
@@ -72,7 +74,9 @@ class Parser {
         const selectors = this.#readSelectors();
 
         // '{'
-        this.#expectAndMoveNextSkippingWhitespaceAndComments(charCodes.openBrace);
+        this.#expect(charCodes.openBrace);
+
+        this.#moveNextSkippingWhitespaceAndComments();
 
         const { nestedRules, properties } = this.parseRuleBodyContent(true);
 
@@ -110,6 +114,8 @@ class Parser {
                 continue;
             }
 
+            // If its a comma (and we're not inside a nested selector/brackets) then add the
+            // currentResult selector to the result set and start a new selector
             if (bracketCount === 0 && current === charCodes.comma) {
                 result.push(String.fromCharCode(...currentResult).trim());
                 currentResult = [];
@@ -128,7 +134,7 @@ class Parser {
 
             if (this.#moveNextSkippingWhitespaceAndComments()) {
                 // If we skipped a comment/space, add a space (so that a/* test */:not(b) has a space in between)
-                currentResult.push(charCodes.space)
+                currentResult.push(charCodes.space);
             }
         }
 
@@ -140,6 +146,7 @@ class Parser {
         }
         return result;
     }
+
     /**
      * Positions the #index at the next index on completion
      * @returns
@@ -181,7 +188,9 @@ class Parser {
         } else {
             throw new Error(
                 this.#errorMessage(
-                    `Unexpected ${String.fromCharCode(openBraceOrSemiColon)}`,
+                    `Unexpected character ${String.fromCharCode(
+                        openBraceOrSemiColon,
+                    )}`,
                 ),
             );
         }
@@ -253,6 +262,7 @@ class Parser {
             // property
             if (propertyName) {
                 if (!allowProperties) {
+                    // This applies
                     throw new Error('Found property when not allowed.');
                 }
 
@@ -269,7 +279,7 @@ class Parser {
             // nested rule OR at-rule
             else {
                 const nestedRule = this.#parseRuleOrAtRule(); // positions #index at the next character
-                this.#moveNextSkippingWhitespaceAndComments
+                this.#moveNextSkippingWhitespaceAndComments;
 
                 if (nestedRule) {
                     nestedRules.push(nestedRule);
@@ -458,7 +468,7 @@ class Parser {
      *
      * Then move to the next character, skipping any comments.
      */
-    #expectAndMoveNextSkippingWhitespaceAndComments(code: number): void {
+    #expect(code: number): void {
         // TODO: not sure if this is needed
         this.#skipComments();
 
@@ -471,9 +481,6 @@ class Parser {
                 ),
             );
         }
-
-        this.#index += 1;
-        this.#skipComments();
     }
 
     /**
@@ -483,9 +490,7 @@ class Parser {
     #skipWhitespace(): boolean {
         const savedIndex = this.#index;
         while (
-            whitespaceCharCodes.includes(
-                this.#input.charCodeAt(this.#index),
-            )
+            whitespaceCharCodes.includes(this.#input.charCodeAt(this.#index))
         ) {
             ++this.#index;
         }

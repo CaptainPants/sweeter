@@ -196,7 +196,7 @@ class Parser {
         }
     }
 
-    #readAtRuleParameters(): string {
+    #readAtRuleParameters(): string | undefined {
         this.#skipWhitespaceAndComments();
 
         const result: number[] = [];
@@ -234,7 +234,7 @@ class Parser {
         }
 
         if (result.length === 0) {
-            throw new Error(this.#errorMessage('No selectors found'));
+            return undefined;
         }
 
         return String.fromCharCode(...result).trim();

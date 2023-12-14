@@ -1,5 +1,18 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`@root 1`] = `
+".test div {
+    color: green;
+}
+.test div span.cheese {
+    color: blue;
+}
+span.cheese {
+    color: red;
+}
+"
+`;
+
 exports[`Common case produces sensible result 1`] = `
 ".test {
     color: white;

@@ -101,3 +101,31 @@ it('Complex', () => {
 
     expect(output).toMatchSnapshot();
 });
+
+it('@root', () => {
+    const class_ = new GlobalCssClass({
+        className: 'test',
+        content: () =>
+            stylesheet`
+                div {
+                    color: green;
+
+                    span.cheese {
+                        color: blue;
+                    }
+
+                    @root {
+                        span.cheese {
+                            color: red;
+                        }
+                    }
+                }
+            `,
+    });
+
+    const output = class_.getContent({
+        getPrefixedClassName: (class_) => class_.className,
+    });
+
+    expect(output).toMatchSnapshot();
+});

@@ -23,7 +23,9 @@ export const label = new GlobalCssClass({
     className: 'label',
     content: () => stylesheet`
         padding: .375rem .75rem;
-        border: solid transparent 1px;
-        display: inline-block;
+        // to match input fields for size
+        border: solid transparent 1px; 
+        // labels are 'inline' by default
+        display: inline-block; 
     `,
 });

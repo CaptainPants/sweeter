@@ -1,5 +1,4 @@
 import {
-    Reset,
     createTheme,
     grid,
     forms,
@@ -18,9 +17,8 @@ import {
     $mutable,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
-import { IncludeStylesheet } from '@captainpants/sweeter-web';
 
-const theme = createTheme({});
+const Theme = createTheme({});
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function App(props: {}, init: ComponentInit): JSX.Element {
@@ -36,8 +34,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
 
     return (
         <>
-            <Reset />
-            <IncludeStylesheet stylesheet={theme} />
+            <Theme />
             <div>
                 <h1>This is a test</h1>
                 <div class={grid.container}>

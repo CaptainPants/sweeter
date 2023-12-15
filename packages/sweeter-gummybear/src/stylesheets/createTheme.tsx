@@ -1,5 +1,7 @@
-import type { AbstractGlobalCssStylesheet } from '@captainpants/sweeter-web';
-import { GlobalCssStylesheet } from '@captainpants/sweeter-web';
+import {
+    GlobalCssStylesheet,
+    IncludeStylesheet,
+} from '@captainpants/sweeter-web';
 import type { ThemeOptions } from './ThemeOptions.js';
 import { themeBase } from './base.js';
 import { reset } from './reset.js';
@@ -8,10 +10,9 @@ import {
     type ThemeOptionDefinition,
     type ThemeOptionOrGroupDefinition,
 } from './internal/themeOptionDefinitions.js';
+import type { Component } from '@captainpants/sweeter-core';
 
-export function createTheme(
-    options: ThemeOptions,
-): AbstractGlobalCssStylesheet[] {
+export function createTheme(options: ThemeOptions): Component {
     const propertiesCss: string[] = [];
     function process(obj: ThemeOptionOrGroupDefinition) {
         if ((obj as ThemeOptionDefinition).cssVar) {
@@ -38,5 +39,7 @@ export function createTheme(
         `,
     });
 
-    return [reset, variables, themeBase];
+    return () => (
+        <IncludeStylesheet stylesheet={[reset, variables, themeBase]} />
+    );
 }

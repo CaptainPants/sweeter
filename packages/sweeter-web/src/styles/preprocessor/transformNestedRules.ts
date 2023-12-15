@@ -101,7 +101,7 @@ function expandSelectorsForPathImplementation(
     for (const current of firstPart.selectors) {
         const selector = compiledParentSelector
             ? current.includes('&')
-                ? current.replace('&', compiledParentSelector)
+                ? current.replaceAll('&', compiledParentSelector)
                 : compiledParentSelector + ' ' + current
             : current;
 

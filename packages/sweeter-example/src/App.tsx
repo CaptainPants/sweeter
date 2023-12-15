@@ -13,7 +13,11 @@ import {
 
 //import viteLogo from "/vite.svg";
 
-import { $calc, $mutable, type ComponentInit } from '@captainpants/sweeter-core';
+import {
+    $calc,
+    $mutable,
+    type ComponentInit,
+} from '@captainpants/sweeter-core';
 import { IncludeStylesheet } from '@captainpants/sweeter-web';
 
 const theme = createTheme({});
@@ -38,7 +42,11 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                 <h1>This is a test</h1>
                 <div class={grid.container}>
                     <div class={grid.row}>
-                        <div class={grid.columns.xs._3}><label for={ids.first} class={forms.label}>First:</label></div>
+                        <div class={grid.columns.xs._3}>
+                            <label for={ids.first} class={forms.label}>
+                                First:
+                            </label>
+                        </div>
                         <div class={grid.columns.xs._9}>
                             <input
                                 id={ids.first}
@@ -50,7 +58,9 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.second} class={forms.label}>Second:</label>
+                            <label for={ids.second} class={forms.label}>
+                                Second:
+                            </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
@@ -63,7 +73,9 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.nonMutable} class={forms.label}>Non-mutable:</label>
+                            <label for={ids.nonMutable} class={forms.label}>
+                                Non-mutable:
+                            </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
@@ -76,7 +88,9 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.nonMutable} class={forms.label}>Button:</label>
+                            <label for={ids.nonMutable} class={forms.label}>
+                                Button:
+                            </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <button

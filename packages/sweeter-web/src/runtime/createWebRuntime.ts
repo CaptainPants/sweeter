@@ -19,6 +19,7 @@ import { createDOMElement } from './internal/createDOMElement.js';
 import { createComponent } from './internal/createComponent.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
 import { type WebRuntime } from './types.js';
+import { getTransitiveReferences } from '../styles/internal/getTransitiveReferences.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -111,22 +112,11 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         return name;
     }
 
-    #sheetsFor(
-        stylesheet: AbstractGlobalCssStylesheet,
-    ): AbstractGlobalCssStylesheet[] {
-        const sheets: AbstractGlobalCssStylesheet[] = [stylesheet];
-        const references = stylesheet.getReferencedStylesheets();
-        if (references) {
-            sheets.push(...references);
-        }
-        return sheets;
-    }
-
     addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
         const callbacks: (() => void)[] = [];
 
         // Note reverse order so that the depended-on sheets are added first (not that it matters in all likelihood)
-        const sheets = this.#sheetsFor(stylesheet).reverse();
+        const sheets = getTransitiveReferences(stylesheet).reverse();
         for (const sheet of sheets) {
             callbacks.push(this.#addOneStylesheet(sheet));
         }
@@ -140,7 +130,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     }
 
     removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
-        const sheets = this.#sheetsFor(stylesheet);
+        const sheets = getTransitiveReferences(stylesheet);
         for (const sheet of sheets) {
             this.#removeOneStylesheet(sheet);
         }
@@ -261,7 +251,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     get type(): symbol {
         return webRuntimeSymbol;
     }
-    
+
     nextId(basis?: string | undefined): string {
         return `${basis ?? 'generated'}_${++this.#idCounter}`;
     }

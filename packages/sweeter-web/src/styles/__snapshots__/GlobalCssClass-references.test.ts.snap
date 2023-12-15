@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Reference to another class 1`] = `
+".b {
+    color: green;
+}
+.b .a {
+    color: blue;
+}
+"
+`;
+
+exports[`Self reference 1`] = `
+".test {
+    color: green;
+}
+.test .root .test {
+    color: red;
+}
+.test .root .test {
+    color: blue;
+}
+.test .root .test .test {
+    color: orange;
+}
+.test .inner .test {
+    color: rebeccapurple;
+}
+"
+`;
+
+exports[`Transitive reference to a 3rd class 1`] = `
+".b {
+    color: yellow;
+}
+.b .b {
+    color: rebeccapurple;
+}
+"
+`;

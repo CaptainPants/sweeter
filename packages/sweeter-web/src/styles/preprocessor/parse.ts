@@ -268,7 +268,6 @@ class Parser {
 
                 this.#skipWhitespaceAndComments();
                 const propertyValue = this.#readPropertyValue();
-                this.#moveNextSkippingWhitespaceAndComments(); // move past semicolon
 
                 properties.push({
                     $nodeType: 'property',
@@ -328,7 +327,7 @@ class Parser {
     }
 
     /**
-     * Note that this will leave #index pointing at the semicolon.
+     * Note that this will leave #index pointing after the end of the value (if semicolon present, then after that)
      * @returns
      */
     #readPropertyValue(): string {
@@ -344,6 +343,12 @@ class Parser {
 
             // EXIT We have hit the ending ; for the property value
             if (current === charCodes.semicolon) {
+                this.#moveNextSkippingWhitespaceAndComments(); // move past semicolon
+                break;
+            }
+
+            // EXIT We have hit the ending } for the current block (semicolons are 'delimiters' not 'terminators', so this is allowed)
+            if (current === charCodes.closeBrace) {
                 break;
             }
 
@@ -368,7 +373,7 @@ class Parser {
             throw new Error(this.#errorMessage('No selectors found'));
         }
 
-        return String.fromCharCode(...result);
+        return String.fromCharCode(...result).trim();
     }
 
     /**

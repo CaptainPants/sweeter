@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Missing semicolon on last property 1`] = `
+[
+  {
+    "$nodeType": "rule",
+    "nestedRules": [],
+    "properties": [
+      {
+        "$nodeType": "property",
+        "name": "color",
+        "value": "red",
+      },
+    ],
+    "selectors": [
+      ".banana",
+    ],
+  },
+]
+`;

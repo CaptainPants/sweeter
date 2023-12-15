@@ -24,7 +24,8 @@ export function transform(
 ): void {
     // TODO: optimise for @ rule containing regular rules - currently there is a clone of the @ rule for each
 
-    if (item.$nodeType == 'at' && item.type == 'root') { // @root {  } basically rests & to nothing so you can write root rules within another rule for convenience
+    if (item.$nodeType == 'at' && item.type == 'root') {
+        // @root {  } basically rests & to nothing so you can write root rules within another rule for convenience
         if (item.nestedRules) {
             for (const inner of item.nestedRules) {
                 transform([], [], inner, roots);

@@ -1,0 +1,27 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Nested media query implicitly adds parent selector 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "red",
+          },
+        ],
+        "selectors": [
+          ".banana",
+        ],
+      },
+    ],
+    "parameters": "screen",
+    "type": "media",
+  },
+]
+`;

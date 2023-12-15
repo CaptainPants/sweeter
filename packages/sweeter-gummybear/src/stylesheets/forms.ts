@@ -18,3 +18,12 @@ export const input = new GlobalCssClass({
         }
     `,
 });
+
+export const label = new GlobalCssClass({
+    className: 'label',
+    content: () => stylesheet`
+        padding: .375rem .75rem;
+        border: solid transparent 1px;
+        display: inline-block;
+    `,
+});

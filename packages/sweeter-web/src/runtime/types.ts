@@ -10,4 +10,6 @@ export interface WebRuntime
     addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void;
 
     removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void;
+
+    nextId(basis?: string): string;
 }

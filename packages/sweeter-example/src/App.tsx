@@ -13,14 +13,22 @@ import {
 
 //import viteLogo from "/vite.svg";
 
-import { $calc, $mutable } from '@captainpants/sweeter-core';
+import { $calc, $mutable, type ComponentInit } from '@captainpants/sweeter-core';
 import { IncludeStylesheet } from '@captainpants/sweeter-web';
 
 const theme = createTheme({});
 
-export function App(): JSX.Element {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function App(props: {}, init: ComponentInit): JSX.Element {
     const value = $mutable('test');
     const nonMutable = $calc(() => value.value);
+
+    const ids = {
+        first: init.nextId(),
+        second: init.nextId(),
+        nonMutable: init.nextId(),
+        buttons: init.nextId(),
+    } as const;
 
     return (
         <>
@@ -30,9 +38,10 @@ export function App(): JSX.Element {
                 <h1>This is a test</h1>
                 <div class={grid.container}>
                     <div class={grid.row}>
-                        <div class={grid.columns.xs._3}>First:</div>
+                        <div class={grid.columns.xs._3}><label for={ids.first} class={forms.label}>First:</label></div>
                         <div class={grid.columns.xs._9}>
                             <input
+                                id={ids.first}
                                 type="text"
                                 class={[forms.input, fillWidth]}
                                 value={value}
@@ -41,11 +50,12 @@ export function App(): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            Second:
+                            <label for={ids.second} class={forms.label}>Second:</label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
+                                id={ids.second}
                                 class={[forms.input, fillWidth]}
                                 value={value}
                             />
@@ -53,11 +63,12 @@ export function App(): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            Non-mutable:
+                            <label for={ids.nonMutable} class={forms.label}>Non-mutable:</label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
+                                id={ids.nonMutable}
                                 class={[forms.input, fillWidth]}
                                 value={nonMutable}
                             />
@@ -65,7 +76,7 @@ export function App(): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            Button:
+                            <label for={ids.nonMutable} class={forms.label}>Button:</label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <button

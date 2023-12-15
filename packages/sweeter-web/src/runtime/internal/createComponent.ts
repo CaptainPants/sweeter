@@ -98,6 +98,8 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
         );
     };
 
+    init.nextId = (basis?: string) => webRuntime.nextId(basis);
+
     init.runtime = webRuntime;
 
     // Not sure if this is really a valuable component in init as you can call Context.current

@@ -70,6 +70,8 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         { count: number; element: HTMLStyleElement }
     >;
 
+    #idCounter: number = 0;
+
     constructor(options: WebRuntimeOptions) {
         this.#target = options.root;
         this.#disposeList = [];
@@ -258,6 +260,10 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
     get type(): symbol {
         return webRuntimeSymbol;
+    }
+    
+    nextId(basis?: string | undefined): string {
+        return `${basis ?? 'generated'}_${++this.#idCounter}`;
     }
 }
 

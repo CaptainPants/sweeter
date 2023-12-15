@@ -27,6 +27,7 @@ export type ComponentInit = ComponentInitFunction & {
         invokeOnSubscribe?: boolean,
     ) => void;
     getContext: <T>(context: Context<T>) => T;
+    nextId(basis?: string): string;
     runtime: Runtime;
 
     isValid: boolean;

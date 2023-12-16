@@ -1,3 +1,4 @@
+import { type StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
 import { preprocessClassContent } from './preprocessor/preprocess.js';
 import type {
     GlobalStyleSheetContentGeneratorContext,
@@ -19,6 +20,7 @@ export interface GlobalCssClassOptions {
     className: string;
     content: GlobalCssClassContent;
     preprocess?: boolean;
+    extraDependencies?: StylesheetDependencyProvider;
 }
 
 export class GlobalCssClass
@@ -30,11 +32,14 @@ export class GlobalCssClass
     public readonly classContent: ContentConstructed;
     public readonly preprocess: boolean;
 
+    #extraDependencies?: AbstractGlobalCssStylesheet[];
+
     constructor(options: GlobalCssClassOptions);
     constructor({
         className,
         content,
         preprocess = true,
+        extraDependencies,
     }: GlobalCssClassOptions) {
         this.className = className;
         this.id = className;
@@ -43,6 +48,13 @@ export class GlobalCssClass
 
         this.classContent =
             typeof content === 'function' ? content(this) : content;
+
+        if (extraDependencies) {
+            extraDependencies.addDependencyListener((dependency) => {
+                this.#extraDependencies ??= [];
+                this.#extraDependencies.push(dependency);
+            });
+        }
     }
 
     getContent(
@@ -65,9 +77,18 @@ export class GlobalCssClass
         return transformed;
     }
 
-    getReferencedStylesheets(): readonly AbstractGlobalCssStylesheet[] | null {
-        return typeof this.classContent === 'function'
-            ? this.classContent.referencedClasses
-            : null;
+    getReferencedStylesheets():
+        | readonly AbstractGlobalCssStylesheet[]
+        | undefined {
+        let result: AbstractGlobalCssStylesheet[] | undefined =
+            typeof this.classContent === 'function'
+                ? [...this.classContent.references]
+                : undefined;
+
+        if (this.#extraDependencies) {
+            result ??= [];
+            result.push(...this.#extraDependencies);
+        }
+        return result;
     }
 }

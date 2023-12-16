@@ -1,4 +1,5 @@
 import {
+    type AbstractGlobalCssStylesheet,
     type GlobalStyleSheetContentGeneratorContext,
     type AbstractGlobalCssClass,
     type StylesheetGenerator,
@@ -40,15 +41,15 @@ export function stylesheet(
         return res.join('');
     };
 
-    const referencedClasses: GlobalCssClass[] = [];
+    const references: AbstractGlobalCssStylesheet[] = [];
     for (const param of params) {
         if (param instanceof GlobalCssClass) {
-            referencedClasses.push(param);
+            references.push(param);
         } else if (typeof param === 'function') {
-            referencedClasses.push(...param.referencedClasses);
+            references.push(...param.references);
         }
     }
-    result.referencedClasses = referencedClasses;
+    result.references = references;
 
     return result;
 }

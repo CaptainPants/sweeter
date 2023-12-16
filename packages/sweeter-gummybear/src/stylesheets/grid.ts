@@ -6,6 +6,7 @@ import {
     columnWidthNames,
 } from './internal/constants.js';
 import { themeDefinition } from './internal/themeOptionDefinitions.js';
+import { StylesheetDependencyProvider } from '../../../sweeter-web/build/styles/StylesheetDependencyProvider.js';
 
 export const container = new GlobalCssClass({
     className: 'container',

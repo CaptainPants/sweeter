@@ -1,7 +1,6 @@
 import type { StylesheetGenerator } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 import { stylesheet } from './stylesheet.js';
-import { GlobalCssMarkerClass } from './GlobalCssMarkerClass.js';
 
 function evaluate(thing: StylesheetGenerator) {
     return thing({ getPrefixedClassName: (class_) => class_.className });
@@ -10,7 +9,7 @@ function evaluate(thing: StylesheetGenerator) {
 it('General', () => {
     expect(
         evaluate(
-            stylesheet`.${new GlobalCssMarkerClass({
+            stylesheet`.${new GlobalCssClass({
                 className: 'Test',
             })} { color: blue; }`,
         ),
@@ -25,14 +24,14 @@ it('General', () => {
     ).toStrictEqual('.WithContent { color: blue; }');
     expect(
         evaluate(
-            stylesheet`.${new GlobalCssMarkerClass({
+            stylesheet`.${new GlobalCssClass({
                 className: 'Hovered',
             })}:hover { color: blue; }`,
         ),
     ).toStrictEqual('.Hovered:hover { color: blue; }');
     expect(
         evaluate(
-            stylesheet`.A {} .${new GlobalCssMarkerClass({
+            stylesheet`.A {} .${new GlobalCssClass({
                 className: 'NotAtStart',
             })} { color: blue; }`,
         ),

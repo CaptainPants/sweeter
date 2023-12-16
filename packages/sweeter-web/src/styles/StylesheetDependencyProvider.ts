@@ -4,9 +4,9 @@ export class StylesheetDependencyProvider {
     #callbacks: ((dependency: AbstractGlobalCssStylesheet) => void)[] = [];
     #frozen?: boolean;
 
-    addDependency(dependency: AbstractGlobalCssStylesheet): void {
+    addDependency(dependency: AbstractGlobalCssStylesheet): this {
         if (this.#frozen) {
-            return;
+            return this;
         }
 
         for (const callback of this.#callbacks) {
@@ -16,6 +16,7 @@ export class StylesheetDependencyProvider {
                 console.error('Swallowed error', ex);
             }
         }
+        return this;
     }
 
     addDependencyListener(

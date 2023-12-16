@@ -1,9 +1,9 @@
 import { stylesheet, GlobalCssStylesheet } from './index.js';
-import { GlobalCssMarkerClass } from './GlobalCssMarkerClass.js';
+import { GlobalCssClass } from './GlobalCssClass.js';
 
 it('Multiple class references produce sane output', () => {
-    const classA = new GlobalCssMarkerClass({ className: 'ClassA' });
-    const classB = new GlobalCssMarkerClass({ className: 'ClassB' });
+    const classA = new GlobalCssClass({ className: 'ClassA' });
+    const classB = new GlobalCssClass({ className: 'ClassB' });
 
     const sheet = new GlobalCssStylesheet({
         content: stylesheet`

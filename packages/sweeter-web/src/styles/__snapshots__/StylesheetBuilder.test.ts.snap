@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Circular dependency works 1`] = `
+"a
+b
+c"
+`;

@@ -18,7 +18,7 @@ export interface GlobalCssClassOptions {
      * Base the class name for this class on this value (it will be prefixed/suffixed or otherwise made unique).
      */
     className: string;
-    content: GlobalCssClassContent;
+    content?: GlobalCssClassContent | undefined;
     preprocess?: boolean;
     extraDependencies?: StylesheetDependencyProvider;
 }
@@ -29,7 +29,7 @@ export class GlobalCssClass
     public readonly className: string;
     public readonly id: string;
     public readonly symbol: symbol;
-    public readonly classContent: ContentConstructed;
+    public readonly classContent?: ContentConstructed | undefined;
     public readonly preprocess: boolean;
 
     #extraDependencies?: AbstractGlobalCssStylesheet[];

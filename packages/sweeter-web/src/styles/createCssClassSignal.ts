@@ -1,7 +1,7 @@
 import type { Signal } from '@captainpants/sweeter-core';
 import { $calc, isSignal, $val } from '@captainpants/sweeter-core';
 import type { AbstractGlobalCssClass, ElementCssClasses } from './index.js';
-import { GlobalCssClass, GlobalCssMarkerClass } from './index.js';
+import { GlobalCssClass } from './index.js';
 
 /**
  * Flatten the provided classes into a Signal of string | GlobalCssClass - that can be subscribed to in case of changes to any of the inputs.
@@ -65,5 +65,5 @@ function createCssClassSignalImplementation(
 }
 
 function isAbstractGlobalCssClass(val: unknown): val is AbstractGlobalCssClass {
-    return val instanceof GlobalCssClass || val instanceof GlobalCssMarkerClass;
+    return val instanceof GlobalCssClass || val instanceof GlobalCssClass;
 }

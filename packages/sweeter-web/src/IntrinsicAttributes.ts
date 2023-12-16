@@ -2,6 +2,7 @@ import type {
     WritableSignal,
     ReadWriteSignal,
     Signal,
+    MightBeSignal,
 } from '@captainpants/sweeter-core';
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
@@ -63,12 +64,24 @@ type AllElementAttributes<TElement> = {
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;
 };
 
+type OptionAttributes = {
+    value?: MightBeSignal<string>;
+};
+
 type ElementSpecificOverrideAttributes<TElement> =
-    TElement extends HTMLLabelElement ? { for?: string } : unknown;
+    TElement extends HTMLLabelElement
+        ? { for?: string }
+        : TElement extends HTMLOptionElement
+        ? OptionAttributes
+        : unknown;
 
 type TextInputAttributes = {
     placeholder?: string;
     type?: string;
+    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
+};
+
+type SelectAttributes = {
     value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
 };
 
@@ -86,13 +99,14 @@ type HasDisabledAttributes = {
 
 type FormElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
-type FormElementAttributes<TElement> = TElement extends HTMLInputElement
-    ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
-    : TElement extends HTMLTextAreaElement
-    ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
-    : TElement extends HTMLSelectElement
-    ? HasDisabledAttributes & NamedElementAttributes
-    : NamedElementAttributes;
+type FormElementAttributes<TFormElement extends FormElement> =
+    TFormElement extends HTMLInputElement
+        ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
+        : TFormElement extends HTMLTextAreaElement
+        ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
+        : TFormElement extends HTMLSelectElement
+        ? SelectAttributes & HasDisabledAttributes & NamedElementAttributes
+        : NamedElementAttributes;
 
 export type ElementAttributesByName<TElementTypeString extends string> =
     TElementTypeString extends keyof IntrinsicElementTypeMap

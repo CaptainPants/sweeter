@@ -8,5 +8,13 @@ export const themeBase = new GlobalCssStylesheet({
             background: var(${themeDefinition.bodyBackground.cssVar});
             color: var(${themeDefinition.common.fontColor.cssVar});
         }
+
+        option, select {
+            background: var(${themeDefinition.bodyBackground.cssVar});
+        }
+
+        * {
+            box-sizing: border-box;
+        }
     `,
 });

@@ -40,6 +40,9 @@ export const columns = createConstantMap(
                             padding-left: var(${
                                 themeDefinition.grid.columnPadding.cssVar
                             });
+                            padding-right: var(${
+                                themeDefinition.grid.columnPadding.cssVar
+                            });
                             width: ${(i + 1) * Math.floor(100 / 12)}%;
                         `,
                     }),
@@ -54,6 +57,9 @@ export const columns = createConstantMap(
                     content: `
                         @media screen and (min-width: ${breakpointSize}px) {
                             padding-left: var(${
+                                themeDefinition.grid.columnPadding.cssVar
+                            });
+                            padding-right: var(${
                                 themeDefinition.grid.columnPadding.cssVar
                             });
                             width: ${(i + 1) * Math.floor(100 / 12)}%;

@@ -46,7 +46,7 @@ export const themeDefinition = {
 
         focusOutlineColor: {
             cssVar: '--input-focus-outline-color',
-            defaultValue: 'red' as string,
+            defaultValue: '#5ec2ff' as string,
         },
         focusOutlineWidth: {
             cssVar: '--input-focus-outline-width',

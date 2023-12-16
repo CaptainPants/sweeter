@@ -25,10 +25,13 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
     const value = $mutable('test');
     const nonMutable = $calc(() => value.value);
 
+    const dropdown = $mutable<string>('Option 3');
+
     const ids = {
         first: init.nextId(),
         second: init.nextId(),
         nonMutable: init.nextId(),
+        select: init.nextId(),
         buttons: init.nextId(),
     } as const;
 
@@ -85,11 +88,27 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.nonMutable} class={forms.label}>
-                                Button:
+                            <label for={ids.select} class={forms.label}>
+                                Select:
                             </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                            <select
+                                id={ids.select}
+                                class={[forms.select, fillWidth]}
+                                value={dropdown}
+                            >
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                                <option>Option 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
+                            <label class={forms.label}>Button:</label>
+                        </div>
+                        <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
                             <button
                                 class={[button, variants.primary]}
                                 onclick={() => {

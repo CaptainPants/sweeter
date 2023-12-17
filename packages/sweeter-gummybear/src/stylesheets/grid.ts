@@ -46,11 +46,17 @@ export const columns = createConstantMap(
         if (breakpointSize === undefined) {
             return createConstantMap(
                 columnWidthNames,
-                (columnSizeName, i) =>
-                    new GlobalCssClass({
-                        className: 'col-' + breakpointName,
+                (columnSizeName, i) =>{            
+                    const columnNameWithoutUnderscore =
+                        columnSizeName.charCodeAt(0) == underscore
+                            ? columnSizeName.substring(1)
+                            : columnSizeName;
+
+                    return new GlobalCssClass({
+                        className: 'col-' + columnNameWithoutUnderscore,
                         extraDependencies: dependencies,
-                    }),
+                    });
+                },
             );
         }
 
@@ -61,7 +67,7 @@ export const columns = createConstantMap(
                     ? columnSizeName.substring(1)
                     : columnSizeName;
             const className =
-                'col-' + columnNameWithoutUnderscore + '-' + breakpointName;
+                'col-' + breakpointName + '-' + columnNameWithoutUnderscore;
 
             return new GlobalCssClass({
                 className: className,

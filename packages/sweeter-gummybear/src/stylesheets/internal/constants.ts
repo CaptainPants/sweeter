@@ -14,7 +14,7 @@ export const columnWidths = [
     undefined,
 ] as const;
 
-export const columnWidthNames = [
+export const columnWidthIdentifiers = [
     '_1',
     '_2',
     '_3',
@@ -27,6 +27,21 @@ export const columnWidthNames = [
     '_10',
     '_11',
     '_12',
+    'auto',
+] as const;
+export const columnWidthNames = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
     'auto',
 ] as const;
 

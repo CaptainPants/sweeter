@@ -38,7 +38,7 @@ export class StylesheetFragmentBuilder {
     }
 
     /**
-     * Create a StylesheetContentGenerator from this builder, resets the builder to the initial state.
+     * Create a StylesheetContentGenerator from this builder, and freezes the builder.
      * @returns
      */
     build(): StylesheetContentGenerator {

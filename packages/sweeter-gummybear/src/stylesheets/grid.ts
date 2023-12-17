@@ -9,6 +9,7 @@ import { createConstantMap } from '../internal/createConstantMap.js';
 import {
     breakpointNames,
     breakpointSizes,
+    columnWidthIdentifiers,
     columnWidthNames,
 } from './internal/constants.js';
 import { themeDefinition } from './internal/themeOptionDefinitions.js';
@@ -36,8 +37,6 @@ export const row = new GlobalCssClass({
 
 const dependencies = new StylesheetDependencyProvider();
 
-const underscore = '_'.charCodeAt(0);
-
 export const columns = createConstantMap(
     breakpointNames,
     (breakpointName, breakpointIndex) => {
@@ -45,35 +44,26 @@ export const columns = createConstantMap(
 
         if (breakpointSize === undefined) {
             return createConstantMap(
-                columnWidthNames,
-                (columnSizeName, i) =>{            
-                    const columnNameWithoutUnderscore =
-                        columnSizeName.charCodeAt(0) == underscore
-                            ? columnSizeName.substring(1)
-                            : columnSizeName;
-
+                columnWidthIdentifiers,
+                (columnSizeName, i) => {
                     return new GlobalCssClass({
-                        className: 'col-' + columnNameWithoutUnderscore,
+                        className: 'col-' + columnWidthNames[i],
                         extraDependencies: dependencies,
                     });
                 },
             );
         }
 
-        return createConstantMap(columnWidthNames, (columnSizeName, i) => {
-            // Numbered columns are prefixed with _ to make them valid identifiers
-            const columnNameWithoutUnderscore =
-                columnSizeName.charCodeAt(0) == underscore
-                    ? columnSizeName.substring(1)
-                    : columnSizeName;
-            const className =
-                'col-' + breakpointName + '-' + columnNameWithoutUnderscore;
-
-            return new GlobalCssClass({
-                className: className,
-                extraDependencies: dependencies,
-            });
-        });
+        return createConstantMap(
+            columnWidthIdentifiers,
+            (columnSizeName, i) => {
+                return new GlobalCssClass({
+                    className:
+                        'col-' + breakpointName + '-' + columnWidthNames[i],
+                    extraDependencies: dependencies,
+                });
+            },
+        );
     },
 );
 
@@ -92,15 +82,15 @@ for (
 
     for (
         let columnIndex = 0;
-        columnIndex < columnWidthNames.length;
+        columnIndex < columnWidthIdentifiers.length;
         ++columnIndex
     ) {
-        const columnWidthName = columnWidthNames[columnIndex]!;
+        const columnWidthIdentifier = columnWidthIdentifiers[columnIndex]!;
 
-        const currentClass = columns[breakpointName][columnWidthName]!;
+        const currentClass = columns[breakpointName][columnWidthIdentifier]!;
         allColClasses.push(currentClass);
 
-        if (columnWidthName === 'auto') {
+        if (columnWidthIdentifier === 'auto') {
             // Auto-size
             thisBreakpointCss.appendLine(stylesheet`
                 .${currentClass} {

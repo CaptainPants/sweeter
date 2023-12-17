@@ -48,7 +48,7 @@ export function transformOne(
                 const thisTime = transformMany(
                     undefined,
                     node.nestedRules,
-                    roots,
+                    roots, // reset the currentRootOrAtRuleNestedNodes value for child nodes
                     roots,
                 );
                 anyProperties ||= thisTime;

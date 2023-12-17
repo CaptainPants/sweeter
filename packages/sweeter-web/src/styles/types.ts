@@ -35,7 +35,10 @@ export type StylesheetInclude =
     | AbstractGlobalCssStylesheet
     | AbstractGlobalCssStylesheet[];
 
-export type StylesheetGenerator = {
+export type StylesheetContentGenerator = {
     (context: GlobalStyleSheetContentGeneratorContext): string;
-    references: readonly AbstractGlobalCssStylesheet[];
+
+    getReferencedStylesheets():
+        | AbstractGlobalCssStylesheet[]
+        | undefined
 };

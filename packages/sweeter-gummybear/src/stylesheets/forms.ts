@@ -41,6 +41,10 @@ export const select = new GlobalCssClass({
         color: var(${themeDefinition.input.color.cssVar});
 
         ${focusMixin}
+
+        > option {
+            ${inputPaddingMixin}
+        }
     `,
 });
 

@@ -3,15 +3,15 @@ import { preprocessClassContent } from './preprocessor/preprocess.js';
 import type {
     GlobalStyleSheetContentGeneratorContext,
     AbstractGlobalCssStylesheet,
-    StylesheetGenerator,
+    StylesheetContentGenerator,
     AbstractGlobalCssClass,
 } from './types.js';
 
 type GlobalCssClassContent =
-    | ((self: GlobalCssClass) => string | StylesheetGenerator)
+    | ((self: GlobalCssClass) => string | StylesheetContentGenerator)
     | string;
 
-type ContentConstructed = StylesheetGenerator | string;
+type ContentConstructed = StylesheetContentGenerator | string;
 
 export interface GlobalCssClassOptions {
     /**
@@ -80,15 +80,13 @@ export class GlobalCssClass
     getReferencedStylesheets():
         | readonly AbstractGlobalCssStylesheet[]
         | undefined {
-        let result: AbstractGlobalCssStylesheet[] | undefined =
-            typeof this.classContent === 'function'
-                ? [...this.classContent.references]
-                : undefined;
+        let result = typeof this.classContent === 'function' ? this.classContent.getReferencedStylesheets() : undefined;
 
         if (this.#extraDependencies) {
             result ??= [];
             result.push(...this.#extraDependencies);
         }
+        
         return result;
     }
 }

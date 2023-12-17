@@ -3,10 +3,10 @@ import { preprocess } from './preprocessor/preprocess.js';
 import type {
     AbstractGlobalCssStylesheet,
     GlobalStyleSheetContentGeneratorContext,
-    StylesheetGenerator,
+    StylesheetContentGenerator,
 } from './types.js';
 
-type Content = string | StylesheetGenerator;
+type Content = string | StylesheetContentGenerator;
 
 export interface GlobalCssStylesheetOptions {
     id: string;
@@ -59,15 +59,13 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
     getReferencedStylesheets():
         | readonly AbstractGlobalCssStylesheet[]
         | undefined {
-        let result: AbstractGlobalCssStylesheet[] | undefined =
-            typeof this.content === 'function'
-                ? [...this.content.references]
-                : undefined;
-
-        if (this.#extraDependencies) {
-            result ??= [];
-            result.push(...this.#extraDependencies);
-        }
-        return result;
+            let result = typeof this.content === 'function' ? this.content.getReferencedStylesheets() : undefined;
+    
+            if (this.#extraDependencies) {
+                result ??= [];
+                result.push(...this.#extraDependencies);
+            }
+            
+            return result;
     }
 }

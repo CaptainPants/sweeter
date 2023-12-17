@@ -2,13 +2,13 @@ import {
     type AbstractGlobalCssStylesheet,
     type GlobalStyleSheetContentGeneratorContext,
     type AbstractGlobalCssClass,
-    type StylesheetGenerator,
+    type StylesheetContentGenerator,
 } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 
 type ParamType =
     | AbstractGlobalCssClass
-    | StylesheetGenerator
+    | StylesheetContentGenerator
     | string
     | number
     | string
@@ -17,7 +17,7 @@ type ParamType =
 /**
  * Template string function.
  *
- * Creates a StylesheetGenerator based on a templated string, where you can use GlobalCssClass references in style selectors.
+ * Creates a StylesheetContentGenerator based on a templated string, where you can use GlobalCssClass references in style selectors.
  * @param template
  * @param params
  * @returns
@@ -25,8 +25,8 @@ type ParamType =
 export function stylesheet(
     template: TemplateStringsArray,
     ...params: ParamType[]
-): StylesheetGenerator {
-    const result: StylesheetGenerator = (context) => {
+): StylesheetContentGenerator {
+    const result: StylesheetContentGenerator = (context) => {
         const res: string[] = [];
         const last = template.length - 1;
         for (let i = 0; i < template.length; ++i) {
@@ -40,16 +40,20 @@ export function stylesheet(
         }
         return res.join('');
     };
-
-    const references: AbstractGlobalCssStylesheet[] = [];
-    for (const param of params) {
-        if (param instanceof GlobalCssClass) {
-            references.push(param);
-        } else if (typeof param === 'function') {
-            references.push(...param.references);
+    result.getReferencedStylesheets = () => {
+        const references: AbstractGlobalCssStylesheet[] = [];
+        for (const param of params) {
+            if (param instanceof GlobalCssClass) {
+                references.push(param);
+            } else if (typeof param === 'function') {
+                const refsFromNestedGenerator = param.getReferencedStylesheets();
+                if (refsFromNestedGenerator){
+                    references.push(...refsFromNestedGenerator);
+                }
+            }
         }
+        return references;
     }
-    result.references = references;
 
     return result;
 }

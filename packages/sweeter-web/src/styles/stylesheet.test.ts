@@ -1,8 +1,8 @@
-import type { StylesheetGenerator } from './types.js';
+import type { StylesheetContentGenerator } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 import { stylesheet } from './stylesheet.js';
 
-function evaluate(thing: StylesheetGenerator) {
+function evaluate(thing: StylesheetContentGenerator) {
     return thing({ getPrefixedClassName: (class_) => class_.className });
 }
 

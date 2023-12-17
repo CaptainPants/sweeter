@@ -26,7 +26,7 @@ export const themeDefinition = {
         rowBottomPadding: {
             cssVar: '--row-bottom-padding',
             defaultValue: '2px' as string,
-        }
+        },
     },
 
     // Input

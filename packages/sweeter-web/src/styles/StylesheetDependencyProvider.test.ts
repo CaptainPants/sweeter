@@ -1,7 +1,7 @@
-import { GlobalCssClass, } from "./GlobalCssClass.js";
-import { GlobalCssStylesheet } from "./GlobalCssStylesheet.js";
-import { StylesheetDependencyProvider } from "./StylesheetDependencyProvider.js";
-import { stylesheet } from "./stylesheet.js";
+import { GlobalCssClass } from './GlobalCssClass.js';
+import { GlobalCssStylesheet } from './GlobalCssStylesheet.js';
+import { StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
+import { stylesheet } from './stylesheet.js';
 
 it('Circular dependency works', () => {
     const dependencies = new StylesheetDependencyProvider();
@@ -13,7 +13,7 @@ it('Circular dependency works', () => {
                 color: blue;
             }
         `,
-        extraDependencies: dependencies
+        extraDependencies: dependencies,
     });
 
     const a = new GlobalCssClass({
@@ -22,7 +22,7 @@ it('Circular dependency works', () => {
             .check {
                 color: green;
             }
-        `
+        `,
     });
 
     dependencies.addDependency(a);

@@ -2,8 +2,10 @@ import {
     GlobalCssClass,
     GlobalCssStylesheet,
     StylesheetDependencyProvider,
- StylesheetBuilder, 
- stylesheet} from '@captainpants/sweeter-web';
+    StylesheetFragmentBuilder,
+    stylesheet,
+    type StylesheetContentGenerator,
+} from '@captainpants/sweeter-web';
 import { createConstantMap } from '../internal/createConstantMap.js';
 import {
     breakpointNames,
@@ -62,7 +64,8 @@ export const columns = createConstantMap(
     },
 );
 
-const breakpointCss = new StylesheetBuilder();
+const gridStylesheetCss = new StylesheetFragmentBuilder();
+const allColClasses: GlobalCssClass[] = []
 
 for (
     let breakpointIndex = 0;
@@ -79,35 +82,36 @@ for (
     ) {
         const columnWidthName = columnWidthNames[columnIndex]!;
 
-        const current = columns[breakpointName][columnWidthName]!;
+        const currentClass = columns[breakpointName][columnWidthName]!;
+        allColClasses.push(currentClass);
 
+        let widthCss: StylesheetContentGenerator;
+
+        if (columnWidthName === 'auto') {
+            // Auto-size
+            widthCss = stylesheet`
+                flex: 1 1;
+            `;
+        } else {
+            widthCss = stylesheet`
+                flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+                width: 100%;
+                max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+            `;
+        }
+
+        // No media query
         if (breakpointSize === undefined) {
-            breakpointCss.append(stylesheet`
-                .${current} {
-                    padding-left: var(${
-                        themeDefinition.grid.columnPadding.cssVar
-                    });
-                    padding-right: var(${
-                        themeDefinition.grid.columnPadding.cssVar
-                    });
-                    flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
-                    width: 100%;
-                    max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+            gridStylesheetCss.appendLine(stylesheet`
+                .${currentClass} {
+                    ${widthCss}
                 }
             `);
         } else {
-            breakpointCss.append(stylesheet`
-                .${current} {
+            gridStylesheetCss.appendLine(stylesheet`
+                .${currentClass} {
                     @media screen and (min-width: ${breakpointSize}px) {
-                        padding-left: var(${
-                            themeDefinition.grid.columnPadding.cssVar
-                        });
-                        padding-right: var(${
-                            themeDefinition.grid.columnPadding.cssVar
-                        });
-                        flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
-                        width: 100%;
-                        max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+                        ${widthCss}
                     }
                 }
             `);
@@ -115,10 +119,24 @@ for (
     }
 }
 
+for (let i = 0; i < allColClasses.length; ++i) {
+    if (i !== 0) {
+        gridStylesheetCss.append(', ');
+    }
+
+    gridStylesheetCss.append(stylesheet`${allColClasses[i]!}`);
+}
+gridStylesheetCss.appendLine(stylesheet`
+    {
+        padding-left: var(${themeDefinition.grid.columnPadding.cssVar});
+        padding-right: var(${themeDefinition.grid.columnPadding.cssVar});
+    }
+`);
+
 // All the grid classes are defined in this stylesheet (so we have a circular reference here which is a bit hacky but its fine)
-const gridStylesheet = new GlobalCssStylesheet({
+export const gridStylesheet = new GlobalCssStylesheet({
     id: 'grid',
-    content: breakpointCss.build(),
+    content: gridStylesheetCss.build(),
 });
 
 dependencies.addDependency(gridStylesheet).freeze();

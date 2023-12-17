@@ -18,3 +18,66 @@ exports[`Missing semicolon on last property 1`] = `
   },
 ]
 `;
+
+exports[`Normal @ rule nesting 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "at",
+        "nestedRules": [
+          {
+            "$nodeType": "rule",
+            "nestedRules": [],
+            "properties": [
+              {
+                "$nodeType": "property",
+                "name": "color",
+                "value": "green",
+              },
+            ],
+            "selectors": [
+              "a",
+            ],
+          },
+          {
+            "$nodeType": "rule",
+            "nestedRules": [],
+            "properties": [
+              {
+                "$nodeType": "property",
+                "name": "color",
+                "value": "green",
+              },
+            ],
+            "selectors": [
+              "b",
+            ],
+          },
+        ],
+        "parameters": "(max-width: 200px) and screen",
+        "properties": [],
+        "type": "media",
+      },
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "rebeccapurple",
+          },
+        ],
+        "selectors": [
+          "div",
+        ],
+      },
+    ],
+    "parameters": "screen",
+    "properties": [],
+    "type": "media",
+  },
+]
+`;

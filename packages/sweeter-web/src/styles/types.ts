@@ -38,7 +38,5 @@ export type StylesheetInclude =
 export type StylesheetContentGenerator = {
     (context: GlobalStyleSheetContentGeneratorContext): string;
 
-    getReferencedStylesheets():
-        | AbstractGlobalCssStylesheet[]
-        | undefined
+    getReferencedStylesheets(): AbstractGlobalCssStylesheet[] | undefined;
 };

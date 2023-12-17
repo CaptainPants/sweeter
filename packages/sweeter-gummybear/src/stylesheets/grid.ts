@@ -4,7 +4,6 @@ import {
     StylesheetDependencyProvider,
     StylesheetFragmentBuilder,
     stylesheet,
-    type StylesheetContentGenerator,
 } from '@captainpants/sweeter-web';
 import { createConstantMap } from '../internal/createConstantMap.js';
 import {
@@ -37,6 +36,8 @@ export const row = new GlobalCssClass({
 
 const dependencies = new StylesheetDependencyProvider();
 
+const underscore = '_'.charCodeAt(0);
+
 export const columns = createConstantMap(
     breakpointNames,
     (breakpointName, breakpointIndex) => {
@@ -53,19 +54,26 @@ export const columns = createConstantMap(
             );
         }
 
+
         return createConstantMap(
             columnWidthNames,
-            (columnSizeName, i) =>
-                new GlobalCssClass({
-                    className: 'col' + columnSizeName + '-' + breakpointName,
+            (columnSizeName, i) => {
+                // Numbered columns are prefixed with _ to make them valid identifiers
+                const columnNameWithoutUnderscore = (columnSizeName.charCodeAt(0) == underscore ? columnSizeName.substring(1) : columnSizeName);
+                const className = 'col-' + columnNameWithoutUnderscore + '-' + breakpointName;
+
+                return new GlobalCssClass({
+                    className:
+                        className,
                     extraDependencies: dependencies,
-                }),
+                });
+            },
         );
     },
 );
 
 const gridStylesheetCss = new StylesheetFragmentBuilder();
-const allColClasses: GlobalCssClass[] = []
+const allColClasses: GlobalCssClass[] = [];
 
 for (
     let breakpointIndex = 0;
@@ -104,11 +112,11 @@ for (
             `);
         }
     }
-    
+
     // No media query
     if (breakpointSize === undefined) {
         gridStylesheetCss.appendLine(thisBreakpointCss.build());
-    } 
+    }
     // Media query
     else {
         gridStylesheetCss.appendLine(stylesheet`
@@ -125,7 +133,7 @@ for (let i = 0; i < allColClasses.length; ++i) {
         gridStylesheetCss.append(', ');
     }
 
-    gridStylesheetCss.append(stylesheet`${allColClasses[i]!}`);
+    gridStylesheetCss.append(stylesheet`.${allColClasses[i]!}`);
 }
 gridStylesheetCss.appendLine(stylesheet`
     {

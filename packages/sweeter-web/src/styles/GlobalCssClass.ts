@@ -80,13 +80,16 @@ export class GlobalCssClass
     getReferencedStylesheets():
         | readonly AbstractGlobalCssStylesheet[]
         | undefined {
-        let result = typeof this.classContent === 'function' ? this.classContent.getReferencedStylesheets() : undefined;
+        let result =
+            typeof this.classContent === 'function'
+                ? this.classContent.getReferencedStylesheets()
+                : undefined;
 
         if (this.#extraDependencies) {
             result ??= [];
             result.push(...this.#extraDependencies);
         }
-        
+
         return result;
     }
 }

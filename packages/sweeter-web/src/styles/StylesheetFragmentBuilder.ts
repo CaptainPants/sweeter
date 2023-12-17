@@ -15,7 +15,9 @@ export class StylesheetFragmentBuilder {
 
     append(part: StylesheetContentGenerator | string): this {
         if (this.#built) {
-            throw new TypeError('Builder already built, so cannot be modified.');
+            throw new TypeError(
+                'Builder already built, so cannot be modified.',
+            );
         }
 
         this.#parts.push(part);
@@ -37,7 +39,7 @@ export class StylesheetFragmentBuilder {
 
     /**
      * Create a StylesheetContentGenerator from this builder, resets the builder to the initial state.
-     * @returns 
+     * @returns
      */
     build(): StylesheetContentGenerator {
         const res: StylesheetContentGenerator = (context) => {
@@ -55,12 +57,12 @@ export class StylesheetFragmentBuilder {
 
     /**
      * Mostly for debugging.
-     * @returns 
+     * @returns
      */
     getState(): StylesheetFragmentBuilderState {
         return {
             parts: this.#parts.slice(),
-            references: this.#references?.slice()
+            references: this.#references?.slice(),
         };
     }
 

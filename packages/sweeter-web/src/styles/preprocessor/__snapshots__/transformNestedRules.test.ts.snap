@@ -25,3 +25,87 @@ exports[`Nested media query implicitly adds parent selector 1`] = `
   },
 ]
 `;
+
+exports[`Normal @ rule nesting 1`] = `
+[
+  {
+    "$nodeType": "at",
+    "nestedRules": [
+      {
+        "$nodeType": "at",
+        "nestedRules": [
+          {
+            "$nodeType": "rule",
+            "nestedRules": [],
+            "properties": [
+              {
+                "$nodeType": "property",
+                "name": "color",
+                "value": "green",
+              },
+            ],
+            "selectors": [
+              "a",
+            ],
+          },
+          {
+            "$nodeType": "rule",
+            "nestedRules": [],
+            "properties": [
+              {
+                "$nodeType": "property",
+                "name": "color",
+                "value": "green",
+              },
+            ],
+            "selectors": [
+              "b",
+            ],
+          },
+        ],
+        "parameters": "(max-width: 200px)",
+        "properties": [],
+        "type": "media",
+      },
+      {
+        "$nodeType": "rule",
+        "nestedRules": [],
+        "properties": [
+          {
+            "$nodeType": "property",
+            "name": "color",
+            "value": "rebeccapurple",
+          },
+        ],
+        "selectors": [
+          "div",
+        ],
+      },
+      {
+        "$nodeType": "at",
+        "nestedRules": [
+          {
+            "$nodeType": "rule",
+            "nestedRules": [],
+            "properties": [
+              {
+                "$nodeType": "property",
+                "name": "background",
+                "value": "grey",
+              },
+            ],
+            "selectors": [
+              "div",
+            ],
+          },
+        ],
+        "parameters": "(min-width: 200px)",
+        "type": "media",
+      },
+    ],
+    "parameters": "screen",
+    "properties": [],
+    "type": "media",
+  },
+]
+`;

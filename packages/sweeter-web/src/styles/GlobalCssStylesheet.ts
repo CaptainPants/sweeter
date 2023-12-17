@@ -59,13 +59,16 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
     getReferencedStylesheets():
         | readonly AbstractGlobalCssStylesheet[]
         | undefined {
-            let result = typeof this.content === 'function' ? this.content.getReferencedStylesheets() : undefined;
-    
-            if (this.#extraDependencies) {
-                result ??= [];
-                result.push(...this.#extraDependencies);
-            }
-            
-            return result;
+        let result =
+            typeof this.content === 'function'
+                ? this.content.getReferencedStylesheets()
+                : undefined;
+
+        if (this.#extraDependencies) {
+            result ??= [];
+            result.push(...this.#extraDependencies);
+        }
+
+        return result;
     }
 }

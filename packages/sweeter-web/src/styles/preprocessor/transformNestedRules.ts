@@ -6,29 +6,54 @@ import {
     type PropertyAstNode,
 } from './types.js';
 
-export function transformNestedRules(ast: RuleOrAtRule[]): RuleOrAtRule[] {
+export function transformNestedRules(nodes: RuleOrAtRule[]): RuleOrAtRule[] {
     const result: RuleOrAtRule[] = [];
 
-    for (const item of ast) {
-        transform([], [], item, result);
-    }
+    transformNestedRulesImplementation(nodes, result);
 
     return result;
 }
 
-export function transform(
+export function transformNestedRulesImplementation(
+    nodes: RuleOrAtRule[],
+    result: RuleOrAtRule[],
+): void {
+    for (const node of nodes) {
+        // For a stack of @ rules we try and keep the original structure
+        if (node.$nodeType === 'at') {
+            if (node.nestedRules && node.nestedRules.length > 0) {
+                const cloneChildren: RuleOrAtRule[] = [];
+                const clone: AtRuleAstNode = {
+                    ...node,
+                    nestedRules: cloneChildren,
+                };
+                result.push(clone);
+
+                // TODO: return a boolean result to indicate if there was any properties actually written in this structure
+                transformNestedRulesImplementation(
+                    node.nestedRules,
+                    cloneChildren,
+                );
+            }
+
+            continue;
+        }
+
+        transformComplex([], [], node, result);
+    }
+}
+
+export function transformComplex(
     atRulePath: AtRuleAstNode[],
     rulePath: RuleAstNode[],
     item: RuleOrAtRule,
     roots: RuleOrAtRule[],
 ): void {
-    // TODO: optimise for @ rule containing regular rules - currently there is a clone of the @ rule for each
-
     if (item.$nodeType == 'at' && item.type == 'root') {
         // @root {  } basically rests & to nothing so you can write root rules within another rule for convenience
         if (item.nestedRules) {
             for (const inner of item.nestedRules) {
-                transform([], [], inner, roots);
+                transformComplex([], [], inner, roots);
             }
         }
         return;
@@ -46,7 +71,7 @@ export function transform(
 
     if (item.nestedRules) {
         for (const nestedRule of item.nestedRules) {
-            transform(newAtRulePath, newRulePath, nestedRule, roots);
+            transformComplex(newAtRulePath, newRulePath, nestedRule, roots);
         }
     }
 }

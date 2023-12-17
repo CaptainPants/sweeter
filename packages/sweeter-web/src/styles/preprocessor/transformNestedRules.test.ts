@@ -13,3 +13,33 @@ it('Nested media query implicitly adds parent selector', () => {
 
     expect(transformed).toMatchSnapshot();
 });
+
+it('Normal @ rule nesting', () => {
+    const content = `
+        @media screen {
+            @media (max-width: 200px) {
+                a {
+                    color: green;
+                }
+
+                b {
+                    color: green;
+                }
+            }
+
+            div {
+                color: rebeccapurple;
+
+                @media (min-width: 200px) {
+                    background: grey;
+                }
+            }
+        }
+    `;
+
+    const parsed = parse(content);
+
+    const transformed = transformNestedRules(parsed);
+
+    expect(transformed).toMatchSnapshot();
+});

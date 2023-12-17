@@ -46,14 +46,15 @@ export function stylesheet(
             if (param instanceof GlobalCssClass) {
                 references.push(param);
             } else if (typeof param === 'function') {
-                const refsFromNestedGenerator = param.getReferencedStylesheets();
-                if (refsFromNestedGenerator){
+                const refsFromNestedGenerator =
+                    param.getReferencedStylesheets();
+                if (refsFromNestedGenerator) {
                     references.push(...refsFromNestedGenerator);
                 }
             }
         }
         return references;
-    }
+    };
 
     return result;
 }

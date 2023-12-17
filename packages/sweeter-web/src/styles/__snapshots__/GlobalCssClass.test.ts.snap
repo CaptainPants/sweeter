@@ -29,8 +29,6 @@ exports[`Complex 1`] = `
             width: 50%;
         }
     }
-}
-@media screen and (min-width: 200px) {
     .test-also {
         color: red;
     }

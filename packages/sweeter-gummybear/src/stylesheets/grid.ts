@@ -54,21 +54,20 @@ export const columns = createConstantMap(
             );
         }
 
+        return createConstantMap(columnWidthNames, (columnSizeName, i) => {
+            // Numbered columns are prefixed with _ to make them valid identifiers
+            const columnNameWithoutUnderscore =
+                columnSizeName.charCodeAt(0) == underscore
+                    ? columnSizeName.substring(1)
+                    : columnSizeName;
+            const className =
+                'col-' + columnNameWithoutUnderscore + '-' + breakpointName;
 
-        return createConstantMap(
-            columnWidthNames,
-            (columnSizeName, i) => {
-                // Numbered columns are prefixed with _ to make them valid identifiers
-                const columnNameWithoutUnderscore = (columnSizeName.charCodeAt(0) == underscore ? columnSizeName.substring(1) : columnSizeName);
-                const className = 'col-' + columnNameWithoutUnderscore + '-' + breakpointName;
-
-                return new GlobalCssClass({
-                    className:
-                        className,
-                    extraDependencies: dependencies,
-                });
-            },
-        );
+            return new GlobalCssClass({
+                className: className,
+                extraDependencies: dependencies,
+            });
+        });
     },
 );
 

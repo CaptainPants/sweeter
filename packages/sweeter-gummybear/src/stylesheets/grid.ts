@@ -75,6 +75,8 @@ for (
     const breakpointSize = breakpointSizes[breakpointIndex]!;
     const breakpointName = breakpointNames[breakpointIndex]!;
 
+    const thisBreakpointCss = new StylesheetFragmentBuilder();
+
     for (
         let columnIndex = 0;
         columnIndex < columnWidthNames.length;
@@ -85,40 +87,39 @@ for (
         const currentClass = columns[breakpointName][columnWidthName]!;
         allColClasses.push(currentClass);
 
-        let widthCss: StylesheetContentGenerator;
-
         if (columnWidthName === 'auto') {
             // Auto-size
-            widthCss = stylesheet`
-                flex: 1 1;
-            `;
-        } else {
-            widthCss = stylesheet`
-                flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
-                width: 100%;
-                max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
-            `;
-        }
-
-        // No media query
-        if (breakpointSize === undefined) {
-            gridStylesheetCss.appendLine(stylesheet`
+            thisBreakpointCss.appendLine(stylesheet`
                 .${currentClass} {
-                    ${widthCss}
+                    flex: 1 1;
                 }
             `);
         } else {
-            gridStylesheetCss.appendLine(stylesheet`
+            thisBreakpointCss.appendLine(stylesheet`
                 .${currentClass} {
-                    @media screen and (min-width: ${breakpointSize}px) {
-                        ${widthCss}
-                    }
+                    flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+                    width: 100%;
+                    max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
                 }
             `);
         }
     }
+    
+    // No media query
+    if (breakpointSize === undefined) {
+        gridStylesheetCss.appendLine(thisBreakpointCss.build());
+    } 
+    // Media query
+    else {
+        gridStylesheetCss.appendLine(stylesheet`
+            @media screen and (min-width: ${breakpointSize}px) {
+                ${thisBreakpointCss.build()}
+            }
+        `);
+    }
 }
 
+// == Stuff thats common to all columns:
 for (let i = 0; i < allColClasses.length; ++i) {
     if (i !== 0) {
         gridStylesheetCss.append(', ');
@@ -132,6 +133,7 @@ gridStylesheetCss.appendLine(stylesheet`
         padding-right: var(${themeDefinition.grid.columnPadding.cssVar});
     }
 `);
+// == END OF Stuff thats common to all columns
 
 // All the grid classes are defined in this stylesheet (so we have a circular reference here which is a bit hacky but its fine)
 export const gridStylesheet = new GlobalCssStylesheet({

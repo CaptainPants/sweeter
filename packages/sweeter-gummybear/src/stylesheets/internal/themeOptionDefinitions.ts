@@ -23,6 +23,10 @@ export const themeDefinition = {
             cssVar: '--column-padding',
             defaultValue: '10px' as string,
         },
+        rowBottomPadding: {
+            cssVar: '--row-bottom-padding',
+            defaultValue: '2px' as string,
+        }
     },
 
     // Input
@@ -41,7 +45,11 @@ export const themeDefinition = {
         },
         backgroundColor: {
             cssVar: '--input-background-color',
-            defaultValue: 'transparent' as string,
+            defaultValue: '#000000' as string,
+        },
+        color: {
+            cssVar: '--input-color-color',
+            defaultValue: '#FFFFFF' as string,
         },
 
         focusOutlineColor: {

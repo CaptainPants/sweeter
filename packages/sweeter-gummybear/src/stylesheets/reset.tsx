@@ -6,11 +6,14 @@ import {
 export const reset = new GlobalCssStylesheet({
     id: 'reset',
     content: `
+        /*thead, tbody, tr, td, th {
+            background: transparent;
+            color: inherit;
+        }*/
+
         select, option, input, textarea, tabel, thead, tbody, tr, td, th, button {
             font-family: inherit;
             font-size: inherit;
-            background: transparent;
-            color: inherit;
         }
 
         * {

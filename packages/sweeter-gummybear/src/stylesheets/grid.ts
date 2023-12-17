@@ -25,8 +25,11 @@ export const row = new GlobalCssClass({
     content: `
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+
         margin-left: calc(-1 * var(${themeDefinition.grid.columnPadding.cssVar}));
         margin-right: calc(-1 * var(${themeDefinition.grid.columnPadding.cssVar}));
+        margin-bottom: var(${themeDefinition.grid.rowBottomPadding.cssVar});
     `,
 });
 
@@ -62,9 +65,9 @@ export const columns = createConstantMap(
 const breakpointCss = new StylesheetBuilder();
 
 for (
-    let breakpointIndex = breakpointNames.length - 1;
-    breakpointIndex >= 0;
-    --breakpointIndex
+    let breakpointIndex = 0;
+    breakpointIndex < breakpointNames.length;
+    ++breakpointIndex
 ) {
     const breakpointSize = breakpointSizes[breakpointIndex]!;
     const breakpointName = breakpointNames[breakpointIndex]!;
@@ -87,7 +90,7 @@ for (
                     padding-right: var(${
                         themeDefinition.grid.columnPadding.cssVar
                     });
-                    flex-basis: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+                    flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
                     width: 100%;
                     max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
                 }
@@ -102,7 +105,7 @@ for (
                         padding-right: var(${
                             themeDefinition.grid.columnPadding.cssVar
                         });
-                        flex-basis: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+                        flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
                         width: 100%;
                         max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
                     }

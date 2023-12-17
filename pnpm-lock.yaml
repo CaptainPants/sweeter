@@ -114,6 +114,12 @@ importers:
         specifier: ^2.11.8
         version: 2.11.8
 
+  packages/sweeter-typeytype:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../sweeter-core
+
   packages/sweeter-web:
     dependencies:
       '@captainpants/sweeter-core':

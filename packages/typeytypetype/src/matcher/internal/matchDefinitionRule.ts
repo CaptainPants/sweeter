@@ -1,7 +1,7 @@
-import { deepEqual } from 'fast-equals';
 
 import { and, or } from '../../internal/logical.js';
 import { type ParentTypeInfo, type TypeInfo } from '../../models/parents.js';
+import { deepEqual } from '../../utility/deepEqual.js';
 import { descend } from '../../utility/descend.js';
 import {
     type MatcherContext,

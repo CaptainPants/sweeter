@@ -52,7 +52,7 @@ it('error', async () => {
     release.abort();
 
     // wait for .then to complete
-    await new Promise((resolve) => setTimeout(() => resolve(void 0), 1000));
+    await new Promise((resolve) => globalThis.setTimeout(() => resolve(void 0), 1000));
 
     expect(lazy.outcome).toStrictEqual('ERROR');
 

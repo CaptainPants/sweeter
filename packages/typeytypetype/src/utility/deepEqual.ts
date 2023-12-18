@@ -28,7 +28,8 @@ export function deepEqual(a: unknown, b: unknown): boolean {
                 return false;
             }
 
-            return a.getUTCDate() === b.getUTCDate();
+            // Bizarrely "getTime()" gets number of minutes since the epoch Midnight 1 Jan 1970
+            return a.getTime() === b.getTime();
         }
 
         const aKeys = keys(a);

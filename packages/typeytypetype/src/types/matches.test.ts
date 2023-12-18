@@ -73,7 +73,7 @@ test('object', () => {
     expect(type.toTypeString()).toMatchSnapshot();
 });
 
-test.only('union', () => {
+test('union', () => {
     const type = Types.union(
         Types.constant(1),
         Types.constant(2),

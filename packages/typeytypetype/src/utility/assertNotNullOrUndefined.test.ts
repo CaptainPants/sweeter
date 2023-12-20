@@ -1,5 +1,3 @@
-
-
 import { assertNotNullOrUndefined } from './assertNotNullOrUndefined.js';
 
 test('assertNotNullOrUndefined', async () => {

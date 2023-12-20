@@ -1,5 +1,3 @@
-
-
 import { ModelFactory } from '../models/ModelFactory.js';
 import { type TypeInfo } from '../models/parents.js';
 import { Types } from '../types/Types.js';

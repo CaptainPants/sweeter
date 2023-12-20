@@ -1,5 +1,3 @@
-
-
 import { Types } from '../types/Types.js';
 
 import { isModel } from './isModel.js';

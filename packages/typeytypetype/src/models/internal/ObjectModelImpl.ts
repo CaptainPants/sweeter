@@ -154,7 +154,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         }
 
         const copy = { ...this.value };
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+
         delete copy[key];
 
         if (validate) {
@@ -162,7 +162,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         }
 
         const propertyModels = { ...this.#propertyModels };
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+
         delete propertyModels[key];
 
         const result = new ObjectModelImpl<TObject>(

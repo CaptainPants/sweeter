@@ -94,7 +94,6 @@ export class RigidObjectType<
         const res: Record<string, unknown> = {};
         // Object.keys avoids prototype polution
         for (const propName of Object.keys(this.propertyDefinitions)) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const prop = this.propertyDefinitions[propName];
 
             assertNotNullOrUndefined(prop);

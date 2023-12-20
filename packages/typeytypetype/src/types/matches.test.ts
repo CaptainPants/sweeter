@@ -1,5 +1,3 @@
-
-
 import { Types } from './Types.js';
 
 test('constant', () => {

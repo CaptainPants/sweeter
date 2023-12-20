@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-
 import { type TypeMatchAssert } from '../testing.js';
 import { type ValueTypeFromType } from '../types.js';
 import { Types } from '../types/Types.js';

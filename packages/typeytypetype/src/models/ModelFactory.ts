@@ -51,7 +51,6 @@ type ModelFactoryMethod = (
 ) => Model<any>;
 
 const defaults: Array<
-    // eslint-disable-next-line @typescript-eslint/ban-types -- Used as a key to identify the actual type of a Definition object
     [constructor: ConstructorFunction, factoryMethod: ModelFactoryMethod]
 > = [
     [

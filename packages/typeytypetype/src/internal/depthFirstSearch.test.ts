@@ -1,5 +1,3 @@
-
-
 import { depthFirstSearch } from './depthFirstSearch.js';
 
 interface Node {

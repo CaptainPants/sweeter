@@ -1,4 +1,3 @@
-
 type Obj = Record<string | symbol, undefined>;
 
 export function deepEqual(a: unknown, b: unknown): boolean {
@@ -7,10 +6,11 @@ export function deepEqual(a: unknown, b: unknown): boolean {
             return false;
         }
 
-        return a.length === b.length && a.every(
-            (aItem, i): boolean => {
+        return (
+            a.length === b.length &&
+            a.every((aItem, i): boolean => {
                 return deepEqual(aItem, b[i]!);
-            }
+            })
         );
     }
 
@@ -39,7 +39,9 @@ export function deepEqual(a: unknown, b: unknown): boolean {
             return false;
         }
 
-        return aKeys.every(key => deepEqual((a as Obj)[key], (b as Obj)[key]));
+        return aKeys.every((key) =>
+            deepEqual((a as Obj)[key], (b as Obj)[key]),
+        );
     }
 
     // simple types
@@ -48,7 +50,7 @@ export function deepEqual(a: unknown, b: unknown): boolean {
 
 function keys(obj: object): readonly (string | symbol)[] {
     const res: (string | symbol)[] = [];
-    
+
     for (; obj; ) {
         for (const name of Object.getOwnPropertyNames(obj)) {
             res.push(name);
@@ -56,7 +58,7 @@ function keys(obj: object): readonly (string | symbol)[] {
         for (const symbol of Object.getOwnPropertySymbols(obj)) {
             res.push(symbol);
         }
-        
+
         obj = Object.getPrototypeOf(obj);
     }
 

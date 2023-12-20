@@ -41,7 +41,6 @@ export function categorizeProperties<TProperty>(
     const keys = [...map.keys()];
     keys.sort();
     return keys.map((x) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const items = map.get(x)!.items;
         const sorted = sortProperties(items);
         const mapped = sorted.map((x) => transform(x));

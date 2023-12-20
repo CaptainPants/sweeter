@@ -29,7 +29,6 @@ export abstract class BaseType<TValue> implements Type<TValue> {
         unknown
     >();
 
-    // eslint-disable-next-line @typescript-eslint/class-literal-property-style
     public get isConstant(): boolean {
         return false;
     }
@@ -188,9 +187,8 @@ export abstract class BaseType<TValue> implements Type<TValue> {
             const result = await validator(value);
 
             if (result !== null) {
-                const flattened = await flattenValidatorResultsToStrings(
-                    result,
-                );
+                const flattened =
+                    await flattenValidatorResultsToStrings(result);
                 errors.push(...flattened.map((item) => ({ message: item })));
             }
         }

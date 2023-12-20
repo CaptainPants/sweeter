@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
-
 
 import { type TypeMatchAssert } from '../testing.js';
 

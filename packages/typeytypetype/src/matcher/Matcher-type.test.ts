@@ -1,5 +1,3 @@
-
-
 import { type TypeInfo } from '../models/parents.js';
 import { NumberType } from '../types/NumberType.js';
 import { StringType } from '../types/StringType.js';

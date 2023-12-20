@@ -1,5 +1,3 @@
-
-
 import { Types } from '../../types/index.js';
 import { Rules } from '../Rules.js';
 

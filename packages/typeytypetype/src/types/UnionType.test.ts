@@ -1,5 +1,3 @@
-
-
 import { type TypeMatchAssert } from '../testing.js';
 
 import { Types } from './Types.js';

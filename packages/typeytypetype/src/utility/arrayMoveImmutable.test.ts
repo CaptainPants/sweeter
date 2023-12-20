@@ -1,5 +1,3 @@
-
-
 import { arrayMoveImmutable } from './arrayMoveImmutable.js';
 
 test('arrayMoveImmutable', async () => {

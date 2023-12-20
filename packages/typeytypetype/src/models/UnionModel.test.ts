@@ -1,5 +1,3 @@
-
-
 import { type ValueTypeFromType } from '../types.js';
 import { Types } from '../types/Types.js';
 

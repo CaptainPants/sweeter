@@ -8,7 +8,6 @@ export type Maybe<TResult, TError = string | Error> =
           error: TError;
       };
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare -- Using typescripts declaration merging magic here.
 export const Maybe = {
     error: <TResult, TError>(error: TError): Maybe<TResult, TError> => {
         return {

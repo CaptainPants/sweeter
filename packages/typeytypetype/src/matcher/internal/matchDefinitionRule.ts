@@ -1,4 +1,3 @@
-
 import { and, or } from '../../internal/logical.js';
 import { type ParentTypeInfo, type TypeInfo } from '../../models/parents.js';
 import { deepEqual } from '../../utility/deepEqual.js';

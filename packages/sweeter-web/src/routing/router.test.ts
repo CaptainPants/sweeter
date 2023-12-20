@@ -1,24 +1,38 @@
-import { matchers } from "./matchers/index.js";
-import { matches } from "./matches.js";
-import { route } from "./route.js";
+import { match } from './match/index.js';
+import { route } from './route.js';
 
 it('static', () => {
     const template = route`route/to/whatever`;
     const input = 'route/to/whatever';
 
-    const match = matches(input, template)
+    const matches = template.match(input);
 
-    expect(match).toStrictEqual(true);
-})
+    expect(matches).toStrictEqual([]);
+});
 
 it('with a matcher', () => {
-    const params = {
-        a: matchers.string
-    };
-    const template = route`route/${params.a}/whatever`;
-    const input = 'route/to/whatever';
+    const template = route`route/${match.part}/whatever`;
+    const input = 'route/abra-kadabra/whatever';
 
-    const match = matches(input, template)
+    const matches = template.match(input);
 
-    expect(match).toStrictEqual(true);
-})
+    expect(matches).toStrictEqual(['abra-kadabra']);
+});
+
+it('with an end matcher', () => {
+    const template = route`route/whatever/${match.rest}`;
+    const input = 'route/whatever/path/to/something';
+
+    const matches = template.match(input);
+
+    expect(matches).toStrictEqual(['path/to/something']);
+});
+
+it('case insensitive', () => {
+    const template = route`route/${match.part}/whatever`;
+    const input = 'RoUtE/AbRa-KaDaBrA/WhAtEvEr';
+
+    const matches = template.match(input);
+
+    expect(matches).toStrictEqual(['AbRa-KaDaBrA']);
+});

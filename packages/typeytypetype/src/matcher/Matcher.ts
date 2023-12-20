@@ -52,7 +52,6 @@ export class Matcher<TRule extends Rule, TTypeType> {
         const matches: Array<[rule: TRule, index: number]> = [];
 
         for (let i = this.rules.length - 1; i >= 0; --i) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const rule = this.rules[i];
             assertNotNullOrUndefined(rule);
 

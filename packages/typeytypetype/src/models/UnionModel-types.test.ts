@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-
 import { type TypeMatchAssert } from '../testing.js';
 import { Types } from '../types/Types.js';
 import { type UnionType } from '../types/UnionType.js';

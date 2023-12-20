@@ -1,5 +1,3 @@
-
-
 import { and, or } from './logical.js';
 
 test('or', async () => {

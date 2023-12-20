@@ -1,22 +1,15 @@
-
-export interface PartMatcherContext<T> {
-    matches: boolean;
-    matchLength: number | undefined;
-    result: T | undefined;
+export interface ArgumentMatcher {
+    match(input: string, startIndex: number): number | undefined;
 }
 
-export interface PartMatcher<T> {
-    matches(input: string, startIndex: number, context: PartMatcherContext<T>): void;
-}
+export type ArgumentMatcherTuple = readonly ArgumentMatcher[];
 
-export type TypeForPartMatcher<TPartMatcher> = TPartMatcher extends PartMatcher<infer S> ? S : never;
+export type ResultTupleFromSegmentMatcherTuple<
+    TArgumentMatcherTuple extends readonly ArgumentMatcher[],
+> = { [Key in keyof TArgumentMatcherTuple]: string };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type MapTypeForPartMatcher<TPartMatcherTuple extends readonly PartMatcher<any>[]> = { [Key in keyof TPartMatcherTuple]: TypeForPartMatcher<TPartMatcherTuple[Key]> };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Parameters = readonly PartMatcher<any>[];
-
-export interface PathMatcher<TArguments extends Parameters> {
-    match(input: string): TArguments | undefined;
+export interface PathTemplate<TArguments extends ArgumentMatcherTuple> {
+    match(
+        input: string,
+    ): ResultTupleFromSegmentMatcherTuple<TArguments> | undefined;
 }

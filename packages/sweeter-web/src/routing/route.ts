@@ -36,9 +36,13 @@ class RouteTemplateImplementation<const TResultTuple extends readonly string[]>
     implements RouteTemplate<TResultTuple>
 {
     #parts: (string | ArgumentMatcher)[];
+    #staticPrefix: string;
 
     constructor(parts: (string | ArgumentMatcher)[]) {
         this.#parts = parts;
+
+        const first = this.#parts[0];
+        this.#staticPrefix = typeof first === 'string' ? first : '';
     }
 
     match(input: string): TResultTuple | undefined {
@@ -52,7 +56,7 @@ class RouteTemplateImplementation<const TResultTuple extends readonly string[]>
 
             // Constant string match
             if (typeof part === 'string') {
-                matchLength = this.matchString(input, inputIndex, part)
+                matchLength = this.#matchString(input, inputIndex, part)
                     ? part.length
                     : undefined;
 
@@ -87,7 +91,7 @@ class RouteTemplateImplementation<const TResultTuple extends readonly string[]>
         return matches as unknown as TResultTuple;
     }
 
-    matchString(
+    #matchString(
         input: string,
         startIndex: number,
         matchAgainst: string,
@@ -102,6 +106,10 @@ class RouteTemplateImplementation<const TResultTuple extends readonly string[]>
         }
 
         return true;
+    }
+
+    getStaticPrefix(): string {
+        return this.#staticPrefix;
     }
 }
 

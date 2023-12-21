@@ -1,16 +1,15 @@
 import type {
     ArgumentMatcher,
-    PathTemplate,
-    ResultTupleFromSegmentMatcherTuple,
+    RouteTemplate,
+    StringForEachItem,
 } from './types.js';
 
- 
 export function route<
-    const TSegmentMatcherTuple extends readonly ArgumentMatcher[],
+    const TArgumentMatcher extends readonly ArgumentMatcher[],
 >(
     template: TemplateStringsArray,
-    ...args: [...TSegmentMatcherTuple]
-): PathTemplate<TSegmentMatcherTuple> {
+    ...args: [...TArgumentMatcher]
+): RouteTemplate<StringForEachItem<TArgumentMatcher>> {
     const parts: (string | ArgumentMatcher)[] = [];
 
     const lastIndex = template.length - 1;
@@ -30,12 +29,11 @@ export function route<
         }
     }
 
-    return new PathTemplateImplementation(parts);
+    return new RouteTemplateImplementation(parts);
 }
 
-class PathTemplateImplementation<
-    const TSegmentMatcherTuple extends readonly ArgumentMatcher[],
-> implements PathTemplate<TSegmentMatcherTuple>
+class RouteTemplateImplementation<const TResultTuple extends readonly string[]>
+    implements RouteTemplate<TResultTuple>
 {
     #parts: (string | ArgumentMatcher)[];
 
@@ -43,9 +41,7 @@ class PathTemplateImplementation<
         this.#parts = parts;
     }
 
-    match(
-        input: string,
-    ): ResultTupleFromSegmentMatcherTuple<TSegmentMatcherTuple> | undefined {
+    match(input: string): TResultTuple | undefined {
         let inputIndex = 0;
         let partIndex = 0;
         const matches: string[] = [];
@@ -88,7 +84,7 @@ class PathTemplateImplementation<
         }
 
         // Too complicated for typescript to follow
-        return matches as ResultTupleFromSegmentMatcherTuple<TSegmentMatcherTuple>;
+        return matches as unknown as TResultTuple;
     }
 
     matchString(

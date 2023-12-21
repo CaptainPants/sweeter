@@ -3,8 +3,15 @@ import { RestMatcher } from './RestMatcher.js';
 import { SinglePartMatcher } from './SinglePartMatcher.js';
 
 export const match = {
-    part: new SinglePartMatcher() as ArgumentMatcher,
-    rest: new RestMatcher() as ArgumentMatcher,
+    /**
+     * Match a segment of the path up to the next /
+     */
+    segment: new SinglePartMatcher() as ArgumentMatcher,
+
+    /**
+     * Match the rest of the path.
+     */
+    remaining: new RestMatcher() as ArgumentMatcher,
 } as const;
 
 Object.freeze(match);

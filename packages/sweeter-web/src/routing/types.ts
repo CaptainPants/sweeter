@@ -4,12 +4,10 @@ export interface ArgumentMatcher {
 
 export type ArgumentMatcherTuple = readonly ArgumentMatcher[];
 
-export type ResultTupleFromSegmentMatcherTuple<
+export type StringForEachItem<
     TArgumentMatcherTuple extends readonly ArgumentMatcher[],
 > = { [Key in keyof TArgumentMatcherTuple]: string };
 
-export interface PathTemplate<TArguments extends ArgumentMatcherTuple> {
-    match(
-        input: string,
-    ): ResultTupleFromSegmentMatcherTuple<TArguments> | undefined;
+export interface RouteTemplate<TResult extends readonly string[]> {
+    match(input: string): TResult | undefined;
 }

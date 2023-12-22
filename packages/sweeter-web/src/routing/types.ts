@@ -17,7 +17,13 @@ export interface RouteTemplate<TResult extends readonly string[]> {
     getStaticPrefix(): string;
 }
 
+export interface RouteRenderArgs<TArguments extends readonly string[]> {
+    routeArgs: TArguments;
+    path: string;
+    url: URL;
+}
+
 export type Route<TArguments extends readonly string[]> = {
     route: RouteTemplate<TArguments>;
-    render(routeArgs: TArguments): JSX.Element;
+    render(routeArgs: RouteRenderArgs<TArguments>): JSX.Element;
 };

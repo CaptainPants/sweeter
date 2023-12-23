@@ -7,21 +7,21 @@ import {
 } from '@captainpants/sweeter-core';
 import { testRender } from '../test/testRender.js';
 import { Router } from './Router.js';
-import { match, pathTemplate } from './index.js';
+import { type Route, match, pathTemplate } from './index.js';
 import { $route } from './$route.js';
 
 it('General', () => {
-    const routes = [
-        $route({
-            path: pathTemplate`this/is/a/${match.segment}`,
-            prepareProps: ([segment0]) => {
-                return { texts: 'Hello' };
-            },
-            Component: $lazyComponent(() =>
-                Promise.resolve<Component<{ texts: string }>>((props) => {
-                    return `Text: ${props.texts}`;
+    const routes: Route<readonly string[]>[] = [
+        $route(pathTemplate`this/is/a/${match.segment}`, () => {
+            const Component = $lazyComponent(() =>
+                Promise.resolve<Component<{ text: string }>>((props) => {
+                    return `Text: ${props.text}`;
                 }),
-            ),
+            );
+
+            return ([arg], path, url) => {
+                return <Component text="Test" />;
+            };
         }),
     ];
 

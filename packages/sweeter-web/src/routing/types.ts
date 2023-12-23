@@ -1,4 +1,4 @@
-import { type AnyComponent } from '@captainpants/sweeter-core';
+import type { pathDoesNotMatch } from './pathDoesNotMatch.js';
 
 export interface ArgumentMatcher {
     match(input: string, startIndex: number): number | undefined;
@@ -19,8 +19,7 @@ export interface PathTemplate<TResult extends readonly string[]> {
     getStaticPrefix(): string;
 }
 
-export type Route<TArguments extends readonly string[], TProps> = {
-    path: PathTemplate<TArguments>;
-    prepareProps(args: TArguments, path: string, url: URL): TProps;
-    Component: AnyComponent<TProps>;
+export type Route<TArguments extends readonly string[]> = {
+    pathTemplate: PathTemplate<TArguments>;
+    match(path: string, url: URL): typeof pathDoesNotMatch | JSX.Element;
 };

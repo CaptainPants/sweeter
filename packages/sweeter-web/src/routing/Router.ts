@@ -1,12 +1,13 @@
 import type { PropertiesMightBeSignals } from '@captainpants/sweeter-core';
-import { $calc, $val, getRuntime } from '@captainpants/sweeter-core';
-import type { Route } from './types.js';
+import { $calc, $val } from '@captainpants/sweeter-core';
+import { type Route } from './types.js';
+import { pathDoesNotMatch } from './pathDoesNotMatch.js';
 
 export interface RouterProps {
     rootRelativePath: string;
     url: URL;
 
-    routes: readonly Route<readonly string[], unknown>[];
+    routes: readonly Route<readonly string[]>[];
 }
 
 export function Router({
@@ -16,15 +17,13 @@ export function Router({
 }: PropertiesMightBeSignals<RouterProps>): JSX.Element {
     return $calc(() => {
         const path = $val(rootRelativePath);
+        const resolvedUrl = $val(url);
 
         for (const route of $val(routes)) {
-            const match = route.path.match(path);
+            const match = route.match(path, resolvedUrl);
 
-            if (match) {
-                const props = route.prepareProps(match, path, $val(url));
-
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                return getRuntime().jsx(route.Component, props as any);
+            if (match !== pathDoesNotMatch) {
+                return match;
             }
         }
 

@@ -20,7 +20,16 @@ it('with a matcher', () => {
     expect(matches).toStrictEqual(['abra-kadabra']);
 });
 
-it('with an end matcher', () => {
+it('with a matcher at end', () => {
+    const template = pathTemplate`route/${match.segment}`;
+    const input = 'route/abra-kadabra';
+
+    const matches = template.match(input);
+
+    expect(matches).toStrictEqual(['abra-kadabra']);
+});
+
+it('with an remaining matcher', () => {
     const template = pathTemplate`route/whatever/${match.remaining}`;
     const input = 'route/whatever/path/to/something';
 

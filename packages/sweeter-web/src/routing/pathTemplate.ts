@@ -1,15 +1,15 @@
 import type {
     ArgumentMatcher,
-    RouteTemplate,
+    PathTemplate,
     StringForEachItem,
 } from './types.js';
 
-export function route<
+export function pathTemplate<
     const TArgumentMatcher extends readonly ArgumentMatcher[],
 >(
     template: TemplateStringsArray,
     ...args: [...TArgumentMatcher]
-): RouteTemplate<StringForEachItem<TArgumentMatcher>> {
+): PathTemplate<StringForEachItem<TArgumentMatcher>> {
     const parts: (string | ArgumentMatcher)[] = [];
 
     const lastIndex = template.length - 1;
@@ -33,7 +33,7 @@ export function route<
 }
 
 class RouteTemplateImplementation<const TResultTuple extends readonly string[]>
-    implements RouteTemplate<TResultTuple>
+    implements PathTemplate<TResultTuple>
 {
     #parts: (string | ArgumentMatcher)[];
     #staticPrefix: string;

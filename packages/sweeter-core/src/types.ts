@@ -68,6 +68,10 @@ export type AsyncComponent<TProps, TAsyncInitializationResult> = ((
     ) => Promise<TAsyncInitializationResult>;
 };
 
+export type AnyComponent<TProps> =
+    | Component<TProps>
+    | AsyncComponent<TProps, unknown>;
+
 export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any> | AsyncComponent<any, any> | string | undefined;

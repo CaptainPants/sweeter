@@ -14,7 +14,7 @@ interface Component1Props {
 }
 
 const Component1: Component<Component1Props> = (props, init) => {
-    const rendered = $async(
+    return $async(
         (abort) => {
             return new Promise<string>((resolve) => {
                 props.dataLoadComplete.addEventListener('abort', () => {
@@ -23,13 +23,10 @@ const Component1: Component<Component1Props> = (props, init) => {
             });
         },
         (asyncInitializerResult) => {
+            props.rendered.abort();
             return <div>RESULT: {$val(asyncInitializerResult)}</div>;
         },
     );
-
-    props.rendered.abort();
-
-    return rendered;
 };
 
 it('example 1', async () => {

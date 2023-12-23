@@ -17,7 +17,7 @@ export class SinglePartMatcher implements ArgumentMatcher {
             // Non-zero-length match
             return i - startIndex;
         }
-        
+
         return undefined;
     }
 }

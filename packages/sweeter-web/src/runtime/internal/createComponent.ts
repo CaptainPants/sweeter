@@ -1,23 +1,12 @@
-import { subscribeToChanges, Context, Async } from '@captainpants/sweeter-core';
+import { subscribeToChanges, Context } from '@captainpants/sweeter-core';
 import {
     type ComponentTypeConstraint,
-    type AsyncComponent,
     type UnsignalAll,
     type ComponentInit,
-    type AsyncInitializerInit,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/sweeter-core';
 import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
-
-type UnknownComponent = {
-    (
-        props: unknown,
-        init: ComponentInit,
-        asyncInitializerResult: unknown,
-    ): JSX.Element;
-    asyncInitializer?: AsyncComponent<unknown, unknown>['asyncInitializer'];
-};
 
 const hookInitSymbol = Symbol('hook');
 
@@ -122,46 +111,10 @@ export function createComponent<TComponentType extends ComponentTypeConstraint>(
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
-    initializerComplete: boolean = false,
-    initializerResult: unknown = undefined,
 ): JSX.Element {
-    const ComponentUnTyped = Component as unknown as UnknownComponent;
-
-    // Special case for asyncInitializer
-    if (!initializerComplete && ComponentUnTyped.asyncInitializer) {
-        const initializer = ComponentUnTyped.asyncInitializer;
-
-        const getContext = Context.createSnapshot();
-
-        return createComponent(
-            Async<unknown>,
-            {
-                loadData: function createComponent_Async_loadData(signal) {
-                    const init: AsyncInitializerInit = (Hook, ...args) =>
-                        new Hook(init, ...args);
-
-                    init.getContext = getContext;
-
-                    // Not awaiting: mainly so we don't cause it to wait another tick
-                    return initializer(props, init, signal);
-                },
-                children: function createComponent_Async_children(result) {
-                    return createComponent(
-                        Component,
-                        props,
-                        webRuntime,
-                        true,
-                        result,
-                    );
-                },
-            },
-            webRuntime,
-        );
-    }
-
     const init = createComponentInit(Component, webRuntime);
 
-    const res = ComponentUnTyped(props, init, initializerResult);
+    const res = Component(props, init);
 
     // Makes all init calls throw from now on
     init.isValid = false;

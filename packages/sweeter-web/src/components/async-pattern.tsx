@@ -1,6 +1,11 @@
 /* @jsxImportSource .. */
 
-import { Suspense, type AsyncComponent } from '@captainpants/sweeter-core';
+import {
+    $async,
+    $val,
+    type Component,
+    Suspense,
+} from '@captainpants/sweeter-core';
 import { testRender } from '../test/testRender.js';
 
 interface Component1Props {
@@ -8,21 +13,23 @@ interface Component1Props {
     rendered: AbortController;
 }
 
-const Component1: AsyncComponent<Component1Props, string> = (
-    props,
-    init,
-    asyncInitializerResult,
-) => {
-    props.rendered.abort();
-    return <div>RESULT: {asyncInitializerResult}</div>;
-};
+const Component1: Component<Component1Props> = (props, init) => {
+    const rendered = $async(
+        (abort) => {
+            return new Promise<string>((resolve) => {
+                props.dataLoadComplete.addEventListener('abort', () => {
+                    resolve('RESOLVED!');
+                });
+            });
+        },
+        (asyncInitializerResult) => {
+            return <div>RESULT: {$val(asyncInitializerResult)}</div>;
+        },
+    );
 
-Component1.asyncInitializer = async (props) => {
-    return new Promise((resolve) => {
-        props.dataLoadComplete.addEventListener('abort', () => {
-            resolve('RESOLVED!');
-        });
-    });
+    props.rendered.abort();
+
+    return rendered;
 };
 
 it('example 1', async () => {

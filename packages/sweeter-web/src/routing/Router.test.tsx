@@ -29,19 +29,21 @@ it('General', async () => {
     const path = $mutable('this/is/a/banana');
 
     const res = testRender(() => (
-        <Suspense fallback={() => "Loading"}>{
-            () => <Router
-                routes={routes}
-                rootRelativePath={path}
-                url={new URL('https://google.com/this/is/a/banana')}
-            />
-        }</Suspense>
+        <Suspense fallback={() => 'Loading'}>
+            {() => (
+                <Router
+                    routes={routes}
+                    rootRelativePath={path}
+                    url={new URL('https://google.com/this/is/a/banana')}
+                />
+            )}
+        </Suspense>
     ));
 
     // LOADING
     expect(res.getHTML()).toMatchSnapshot();
 
-    await new Promise(resolve => queueMicrotask(() => resolve(void 0)));
+    await new Promise((resolve) => queueMicrotask(() => resolve(void 0)));
 
     // LOADED
     expect(res.getHTML()).toMatchSnapshot();

@@ -33,51 +33,18 @@ export type ComponentInit = ComponentInitFunction & {
     isValid: boolean;
 };
 
-export type AsyncInitializerHookConstructor<
-    TArgs extends readonly unknown[],
-    TResult,
-> = new (setup: AsyncInitializerInit, ...args: TArgs) => TResult;
-
-export type AsyncInitializerInitFunction = <
-    TArgs extends readonly unknown[],
-    TResult,
->(
-    hook: AsyncInitializerHookConstructor<TArgs, TResult>,
-    ...args: TArgs
-) => TResult;
-
-export type AsyncInitializerInit = AsyncInitializerInitFunction & {
-    getContext: <T>(context: Context<T>) => T;
-};
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Component<TProps = {}> = (
     props: TProps,
     init: ComponentInit,
 ) => JSX.Element;
 
-export type AsyncComponent<TProps, TAsyncInitializationResult> = ((
-    props: TProps,
-    init: ComponentInit,
-    initializerResult: TAsyncInitializationResult,
-) => JSX.Element) & {
-    asyncInitializer: (
-        props: TProps,
-        init: AsyncInitializerInit,
-        signal: AbortSignal,
-    ) => Promise<TAsyncInitializationResult>;
-};
-
-export type AnyComponent<TProps> =
-    | Component<TProps>
-    | AsyncComponent<TProps, unknown>;
-
 export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Component<any> | AsyncComponent<any, any> | string | undefined;
+    Component<any> | string | undefined;
 export type ComponentTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Component<any> | AsyncComponent<any, any>;
+    Component<any>;
 
 export type JSXResultForComponentOrElementType<
     ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
@@ -89,14 +56,6 @@ export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > = ComponentOrIntrinsicElementTypeString extends Component<infer Props>
-    ? Props
-    : // I don't think its possible to have a Component that doesn't implement AsyncComponent but just in case
-
-    ComponentOrIntrinsicElementTypeString extends AsyncComponent<
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          infer AsyncInitializerResult,
-          infer Props
-      >
     ? Props
     : ComponentOrIntrinsicElementTypeString extends string
     ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>

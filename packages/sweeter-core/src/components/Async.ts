@@ -9,6 +9,11 @@ import { getRuntime } from '../index.js';
 
 export type AsyncProps<T> = PropertiesMightBeSignals<{
     loadData: (abort: AbortSignal) => Promise<T>;
+    /**
+     * Note that this is called inside a $calc, so signals can be subscribed without additionally wrapping in another $calc.
+     * @param data
+     * @returns
+     */
     children: (data: Signal<T>) => JSX.Element;
 }>;
 
@@ -106,6 +111,6 @@ export function Async<T>(
 export function $async<T>(
     loadData: MightBeSignal<(abort: AbortSignal) => Promise<T>>,
     render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
-) {
+): JSX.Element {
     return getRuntime().jsx(Async<T>, { loadData, children: render });
 }

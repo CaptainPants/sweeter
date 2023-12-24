@@ -1,2 +1,2 @@
 export * from './$lazy.js';
-export * from './$createLazyComponent.js';
+export * from './$lazyComponentType.js';

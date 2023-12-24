@@ -220,11 +220,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
                 switch (typeof type) {
                     case 'function': {
                         // Component function
-                        return createComponentInstance(
-                            type,
-                            props,
-                            this,
-                        );
+                        return createComponentInstance(type, props, this);
                     }
 
                     case 'string': {

@@ -7,7 +7,12 @@ import {
 } from '../types.js';
 import { $lazy } from './$lazy.js';
 
-export function $createLazyComponent<TProps>(
+/**
+ * Create a new lazy loaded component - to be used for SPA-style applications.
+ * @param callback
+ * @returns
+ */
+export function $lazyComponentType<TProps>(
     callback: () => Promise<Component<TProps>>,
 ): Component<TProps> {
     const lazy = $lazy(callback);

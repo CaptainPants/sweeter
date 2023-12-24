@@ -1,30 +1,66 @@
-export type LazyOutcome = 'INITIAL' | 'LOADING' | 'SUCCESS' | 'ERROR';
+export type LazyState = 'INITIAL' | 'LOADING' | 'SUCCESS' | 'ERROR';
 
 export interface Lazy<T> {
+    /**
+     * Make sure that the lazy load has been triggered.
+     */
     ensure(): void;
-    promise: Promise<T>;
-    outcome: LazyOutcome;
-    resolved: boolean;
+
+    /**
+     * Promise that resolves when the result of this lazy operation becomes available.
+     */
+    readonly promise: Promise<T>;
+
+    /**
+     * The current state of the Lazy operation.
+     */
+    readonly state: LazyState;
+
+    /**
+     * Whether or not it is valid to retrieve the result of the lazy operation (I.e. outcome == 'SUCCESS' || outcome == 'ERROR')
+     */
+    readonly resolved: boolean;
+
+    /**
+     * Get the result of the lazy load immediately, returning undefined if it is not yet available.
+     */
     tryGetResult(): T | undefined;
+
+    /**
+     * Get the result of the lazy load immediately, throwing a TypeError if it is not yet available.
+     */
     getResult(): T;
+
+    /**
+     * Get the exception thrown as the result of the lazy load immediately, returning undefined if it is not yet available. Throws a TypeError if the result was not an error.
+     */
     tryGetError(): unknown | undefined;
+
+    /**
+     * Get the exception thrown as the result of the lazy load immediately, throwing a TypeError if it is not yet available. Throws a TypeError if the result was not an error.
+     */
     getError(): unknown;
 }
 
-export function $lazy<T>(callback: () => Promise<T>) {
-    return new LazyImplementation(callback);
+/**
+ * A wrapper for a lazily evaluated asynchronous operation. Looks outwardly like a promise that has accessors for the caller to determine if the operation has completed and what the outcome was.
+ * @param factory Callback to be invoked the first time that the outcome of the operation is needed.
+ * @returns
+ */
+export function $lazy<T>(factory: () => Promise<T>) {
+    return new LazyImplementation(factory);
 }
 
 class LazyImplementation<T> implements Lazy<T> {
-    #callback: () => Promise<T>;
+    #factory: () => Promise<T>;
 
     #promise: Promise<T> | undefined = undefined;
-    #outcome: LazyOutcome = 'INITIAL';
+    #outcome: LazyState = 'INITIAL';
     #result: T | undefined = undefined;
     #error: unknown = undefined;
 
-    constructor(callback: () => Promise<T>) {
-        this.#callback = callback;
+    constructor(factory: () => Promise<T>) {
+        this.#factory = factory;
     }
 
     get promise(): Promise<T> {
@@ -38,7 +74,7 @@ class LazyImplementation<T> implements Lazy<T> {
     #getOrCreatePromise(): Promise<T> {
         if (!this.#promise) {
             this.#outcome = 'LOADING';
-            const promise = this.#callback();
+            const promise = this.#factory();
 
             promise.then(
                 (res) => {
@@ -56,7 +92,7 @@ class LazyImplementation<T> implements Lazy<T> {
         return this.#promise;
     }
 
-    get outcome(): LazyOutcome {
+    get state(): LazyState {
         return this.#outcome;
     }
 

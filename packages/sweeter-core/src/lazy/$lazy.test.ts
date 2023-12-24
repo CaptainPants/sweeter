@@ -12,18 +12,18 @@ it('general', async () => {
             }),
     );
 
-    expect(lazy.outcome).toStrictEqual('INITIAL');
+    expect(lazy.state).toStrictEqual('INITIAL');
 
     // Causes the promise to kick off
     lazy.ensure();
 
-    expect(lazy.outcome).toStrictEqual('LOADING');
+    expect(lazy.state).toStrictEqual('LOADING');
 
     release.abort();
 
     await new Promise((resolve) => queueMicrotask(() => resolve(void 0)));
 
-    expect(lazy.outcome).toStrictEqual('SUCCESS');
+    expect(lazy.state).toStrictEqual('SUCCESS');
 
     expect(lazy.getResult()).toStrictEqual(1);
 
@@ -42,12 +42,12 @@ it('error', async () => {
             }),
     );
 
-    expect(lazy.outcome).toStrictEqual('INITIAL');
+    expect(lazy.state).toStrictEqual('INITIAL');
 
     // Causes the promise to kick off
     lazy.ensure();
 
-    expect(lazy.outcome).toStrictEqual('LOADING');
+    expect(lazy.state).toStrictEqual('LOADING');
 
     release.abort();
 
@@ -56,7 +56,7 @@ it('error', async () => {
         globalThis.setTimeout(() => resolve(void 0), 1000),
     );
 
-    expect(lazy.outcome).toStrictEqual('ERROR');
+    expect(lazy.state).toStrictEqual('ERROR');
 
     expect(lazy.getError()).toHaveProperty('message', 'FAILED');
 

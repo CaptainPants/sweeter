@@ -1,7 +1,7 @@
 /* @jsxImportSource .. */
 
 import {
-    $lazyComponent,
+    $createLazyComponent,
     $mutable,
     Suspense,
     type Component,
@@ -14,7 +14,7 @@ import { $route } from './$route.js';
 it('General', async () => {
     const routes = [
         $route(pathTemplate`this/is/a/${match.segment}`, () => {
-            const Component = $lazyComponent(() =>
+            const Component = $createLazyComponent(() =>
                 Promise.resolve<Component<{ text: string }>>((props) => {
                     return `Text: ${props.text}`;
                 }),

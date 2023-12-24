@@ -7,7 +7,7 @@ import {
 } from '../types.js';
 import { $lazy } from './$lazy.js';
 
-export function $lazyComponent<TProps>(
+export function $createLazyComponent<TProps>(
     callback: () => Promise<Component<TProps>>,
 ): Component<TProps> {
     const lazy = $lazy(callback);

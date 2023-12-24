@@ -16,7 +16,7 @@ import { jsx } from './jsx.js';
 import type { AbstractGlobalCssStylesheet } from '../styles/types.js';
 import type { GlobalCssClass } from '../styles/GlobalCssClass.js';
 import { createDOMElement } from './internal/createDOMElement.js';
-import { createComponent } from './internal/createComponent.js';
+import { createComponentInstance } from './internal/createComponentInstance.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
 import { type WebRuntime } from './types.js';
 import { getTransitiveReferences } from '../styles/internal/getTransitiveReferences.js';
@@ -220,7 +220,11 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
                 switch (typeof type) {
                     case 'function': {
                         // Component function
-                        return createComponent(type, props, this);
+                        return createComponentInstance(
+                            type,
+                            props,
+                            this,
+                        );
                     }
 
                     case 'string': {

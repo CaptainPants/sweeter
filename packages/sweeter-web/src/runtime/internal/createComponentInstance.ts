@@ -14,10 +14,9 @@ type ExtendedComponentInit = ComponentInit & {
     [hookInitSymbol]: Comment | undefined;
 };
 
-function createComponentInit<TComponentType extends ComponentTypeConstraint>(
-    Component: TComponentType,
-    webRuntime: WebRuntime,
-): ExtendedComponentInit {
+function createComponentInstanceInit<
+    TComponentType extends ComponentTypeConstraint,
+>(Component: TComponentType, webRuntime: WebRuntime): ExtendedComponentInit {
     // Use this to get the error context within callbacks
     const contextSnapshot = Context.createSnapshot();
 
@@ -107,12 +106,14 @@ function createComponentInit<TComponentType extends ComponentTypeConstraint>(
     return init;
 }
 
-export function createComponent<TComponentType extends ComponentTypeConstraint>(
+export function createComponentInstance<
+    TComponentType extends ComponentTypeConstraint,
+>(
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
 ): JSX.Element {
-    const init = createComponentInit(Component, webRuntime);
+    const init = createComponentInstanceInit(Component, webRuntime);
 
     const res = Component(props, init);
 

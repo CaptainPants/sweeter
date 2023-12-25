@@ -1,0 +1,7 @@
+{
+    "entryPoints": [
+        "./src/index.ts",
+        "./src/jsx-runtime.ts",
+        "./src/jsx-dev-runtime.ts"
+    ],
+}

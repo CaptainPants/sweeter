@@ -1,16 +1,15 @@
 import { popAndCallAll } from '../internal/popAndCallAll.js';
 import { allExecutionContextVariables } from './internal/allExecutionContextVariables.js';
 
-type RevertCallback = () => void;
-type SavedExecutionContextVariable = () => RevertCallback;
+export type SavedExecutionContextRevertCallback = () => void;
 
 export interface SavedExecutionContext {
-    restore(): RevertCallback;
+    restore(): SavedExecutionContextRevertCallback;
     invokeWith<T>(callback: () => T): T;
 }
 
 export function saveExecutionContext(): SavedExecutionContext {
-    const restoreList: SavedExecutionContextVariable[] = [];
+    const restoreList: (() => SavedExecutionContextRevertCallback)[] = [];
 
     for (const item of allExecutionContextVariables) {
         const saved = item.current;
@@ -18,7 +17,7 @@ export function saveExecutionContext(): SavedExecutionContext {
     }
 
     function restoreAll() {
-        const revertList: RevertCallback[] = [];
+        const revertList: SavedExecutionContextRevertCallback[] = [];
 
         try {
             for (const restore of restoreList) {

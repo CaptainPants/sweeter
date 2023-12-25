@@ -1,0 +1,10 @@
+{
+    "entryPoints": [
+        "packages/sweeter-core",
+        "packages/sweeter-web",
+        "packages/sweeter-gummybear",
+        "packages/typeytypetype"
+    ],
+    "entryPointStrategy": "packages",
+    "out": "docs"
+}

@@ -47,7 +47,7 @@ export interface Lazy<T> {
  * @param factory Callback to be invoked the first time that the outcome of the operation is needed.
  * @returns
  */
-export function $lazy<T>(factory: () => Promise<T>) {
+export function $lazy<T>(factory: () => Promise<T>): Lazy<T> {
     return new LazyImplementation(factory);
 }
 

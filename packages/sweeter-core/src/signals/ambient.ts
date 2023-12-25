@@ -1,6 +1,6 @@
 import type { Signal } from './types.js';
 
-type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
+export type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 
 let _ambientUsageListener: AmbientSignalUsageListener | undefined;
 let _ambientListenerExpectsReadonly: boolean = false;

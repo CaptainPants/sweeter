@@ -13,7 +13,8 @@
     "watch-example": "lerna run watch --scope @captainpants/sweeter-example",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
-    "set-versions": "pnpm -r exec npm version"
+    "set-versions": "pnpm -r exec npm version",
+    "generate-docs": "pnpm run build && typedoc --options typedoc.json"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -37,6 +38,7 @@
     "rimraf": "^5.0.1",
     "rollup": "^3.28.1",
     "typed-assert": "^1.0.9",
+    "typedoc": "^0.25.4",
     "typescript": "^5.2.2",
     "vite": "^5.0.2",
     "vite-plugin-dts": "^3.6.3",

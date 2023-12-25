@@ -4,6 +4,9 @@ import type { Signal, UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;
 
+/**
+ * Alias for JSX.Element that doesn't rely on globals.
+ */
 export type JSXElement = JSX.Element;
 
 export type HookConstructor<TArgs extends readonly unknown[], TResult> = new (
@@ -11,12 +14,19 @@ export type HookConstructor<TArgs extends readonly unknown[], TResult> = new (
     ...args: TArgs
 ) => TResult;
 
+/**
+ * Component init function.
+ */
 export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
     hook: HookConstructor<TArgs, TResult>,
     ...args: TArgs
 ) => TResult;
 
 // There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
+
+/**
+ * Object passed to Component functions for initialization. Gives access to mount/unmo0unt callbacks, as well as subscribeToChanges for subscribing to signals with automatic cleanup.
+ */
 export type ComponentInit = ComponentInitFunction & {
     onMount(callback: () => (() => void) | void): void;
     onUnMount(callback: () => void): void;

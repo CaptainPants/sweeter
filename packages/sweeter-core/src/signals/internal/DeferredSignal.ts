@@ -1,9 +1,9 @@
 import { SignalBase } from '../SignalBase.js';
 import { deferForBatchEnd, isBatching } from '../batching.js';
-import { type Later, type Signal } from '../types.js';
+import { type CallbackDelayedRunner, type Signal } from '../types.js';
 
 export class DeferredSignal<T> extends SignalBase<T> {
-    constructor(inner: Signal<T>, later: Later = queueMicrotask) {
+    constructor(inner: Signal<T>, later: CallbackDelayedRunner = queueMicrotask) {
         super(inner.peekState());
 
         this.#inner = inner;
@@ -30,7 +30,7 @@ export class DeferredSignal<T> extends SignalBase<T> {
      * Strong reference to the signal we depend on..
      */
     #inner: Signal<T>;
-    #later: Later;
+    #later: CallbackDelayedRunner;
 
     /**
      * Bound as its used as its passed to .listen calls.

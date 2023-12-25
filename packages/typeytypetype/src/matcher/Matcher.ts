@@ -2,11 +2,11 @@ import { assertNotNullOrUndefined } from '../utility/index.js';
 
 import { type MatcherContext } from './types.js';
 
-interface Rule {
+export interface MatcherRuleConstraint {
     priority: number;
 }
 
-export class Matcher<TRule extends Rule, TTypeType> {
+export class Matcher<TRule extends MatcherRuleConstraint, TTypeType> {
     public constructor(
         rules: TRule[],
         match: (
@@ -73,7 +73,7 @@ export class Matcher<TRule extends Rule, TTypeType> {
     }
 }
 
-type SortingMatch = [rule: Rule, index: number];
+type SortingMatch = [rule: MatcherRuleConstraint, index: number];
 
 function priorityDescendingThenIndexDescending(
     [aRule, aIndex]: SortingMatch,

@@ -60,7 +60,7 @@ export type UnsignalAll<T extends readonly unknown[]> = {
     [Key in keyof T]: Unsignal<T[Key]>;
 };
 
-export type Later = (callback: () => void) => void;
+export type CallbackDelayedRunner = (callback: () => void) => void;
 
 export interface CalculatedSignalOptions {
     /**

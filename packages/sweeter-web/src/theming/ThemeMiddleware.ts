@@ -2,7 +2,7 @@ import {
     type JSXMiddlewareCallback,
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXMiddleware,
-    type JSXMiddleUnknownProps,
+    type JSXMiddlewareUnknownProps,
 } from '@captainpants/sweeter-core';
 
 interface ThemableProps {
@@ -14,7 +14,7 @@ export class ThemeMiddleware implements JSXMiddleware {
 
     invoke(
         type: ComponentOrIntrinsicElementTypeConstraint,
-        props: JSXMiddleUnknownProps,
+        props: JSXMiddlewareUnknownProps,
         next: JSXMiddlewareCallback,
     ): JSX.Element {
         if (typeof type === 'string') {
@@ -23,7 +23,7 @@ export class ThemeMiddleware implements JSXMiddleware {
             if (themableProps.themed !== false) {
                 return next(
                     type,
-                    this.applyThemeToProps(props) as JSXMiddleUnknownProps,
+                    this.applyThemeToProps(props) as JSXMiddlewareUnknownProps,
                 );
             }
         }

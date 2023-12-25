@@ -43,7 +43,7 @@ type EventHandlerProperties<TElement extends Element> = {
 // ==== CSS
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type StyleProperties = StandardPropertiesHyphen<number | (string & {})>;
+export type StyleProperties = StandardPropertiesHyphen<number | (string & {})>;
 
 export type Styles = {
     [Key in keyof StyleProperties]:

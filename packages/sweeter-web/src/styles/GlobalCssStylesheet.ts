@@ -6,17 +6,17 @@ import type {
     StylesheetContentGenerator,
 } from './types.js';
 
-type Content = string | StylesheetContentGenerator;
+export type GlobalCssStylesheetContent = string | StylesheetContentGenerator;
 
 export interface GlobalCssStylesheetOptions {
     id: string;
-    content: Content;
+    content: GlobalCssStylesheetContent;
     preprocess?: boolean;
     extraDependencies?: StylesheetDependencyProvider;
 }
 
 export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
-    public readonly content: Content;
+    public readonly content: GlobalCssStylesheetContent;
     public readonly id: string;
     public readonly symbol: symbol;
     public readonly preprocess: boolean;

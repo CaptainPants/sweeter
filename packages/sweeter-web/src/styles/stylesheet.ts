@@ -6,13 +6,13 @@ import {
 } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 
-type ParamType =
+export type StylesheetParametersType =
     | AbstractGlobalCssClass
     | StylesheetContentGenerator
     | string
     | number
     | string
-    | ParamType[];
+    | StylesheetParametersType[];
 
 /**
  * Template string function.
@@ -24,7 +24,7 @@ type ParamType =
  */
 export function stylesheet(
     template: TemplateStringsArray,
-    ...params: ParamType[]
+    ...params: StylesheetParametersType[]
 ): StylesheetContentGenerator {
     const result: StylesheetContentGenerator = (context) => {
         const res: string[] = [];
@@ -59,7 +59,7 @@ export function stylesheet(
     return result;
 }
 function processParam(
-    param: ParamType,
+    param: StylesheetParametersType,
     res: string[],
     context: GlobalStyleSheetContentGeneratorContext,
 ): void {

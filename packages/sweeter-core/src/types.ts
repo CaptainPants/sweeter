@@ -30,7 +30,7 @@ export type ComponentInit = ComponentInitFunction & {
     nextId(basis?: string): string;
 
     runtime: Runtime;
-    
+
     isValid: boolean;
 };
 

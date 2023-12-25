@@ -135,22 +135,6 @@ export type UnionModel<TUnion> = ModelBase<TUnion, UnionType<TUnion>> &
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
-type SimpleModels<T> = T extends string
-    ? string extends T
-        ? StringModel
-        : StringConstantModel<T>
-    : T extends number
-    ? number extends T
-        ? NumberModel
-        : NumberConstantModel<T>
-    : T extends boolean
-    ? BooleanConstantModel<T>
-    : T extends null
-    ? NullModel
-    : T extends undefined
-    ? UndefinedModel
-    : never;
-
 export interface RealUnknownModel extends ModelBase<unknown, UnknownType> {}
 
 export type UnknownModel =
@@ -174,6 +158,18 @@ export type Model<T> = IsUnion<T> extends true
     ? ArrayModel<TElement>
     : T extends Record<string, unknown>
     ? ObjectModel<T>
-    : T extends string | number | boolean | null | undefined
-    ? SimpleModels<T>
+    : T extends string
+    ? string extends T
+        ? StringModel
+        : StringConstantModel<T>
+    : T extends number
+    ? number extends T
+        ? NumberModel
+        : NumberConstantModel<T>
+    : T extends boolean
+    ? BooleanConstantModel<T>
+    : T extends null
+    ? NullModel
+    : T extends undefined
+    ? UndefinedModel
     : UnknownModel;

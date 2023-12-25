@@ -7,11 +7,13 @@ import type {
     AbstractGlobalCssClass,
 } from './types.js';
 
-type GlobalCssClassContent =
+export type GlobalCssClassContent =
     | ((self: GlobalCssClass) => string | StylesheetContentGenerator)
     | string;
 
-export type GlobalCssClassContentConstructed = StylesheetContentGenerator | string;
+export type GlobalCssClassContentConstructed =
+    | StylesheetContentGenerator
+    | string;
 
 export interface GlobalCssClassOptions {
     /**

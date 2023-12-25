@@ -29,6 +29,6 @@ export const Portal: Component<PortalProps> = ({ target, children }, init) => {
 export function $portal(
     target: MightBeSignal<RuntimeRootHostElement>,
     children: MightBeSignal<() => JSX.Element>,
-) {
-    getRuntime().jsx(Portal, { target, children });
+): JSX.Element {
+    return getRuntime().jsx(Portal, { target, children });
 }

@@ -11,7 +11,7 @@ type GlobalCssClassContent =
     | ((self: GlobalCssClass) => string | StylesheetContentGenerator)
     | string;
 
-type ContentConstructed = StylesheetContentGenerator | string;
+export type GlobalCssClassContentConstructed = StylesheetContentGenerator | string;
 
 export interface GlobalCssClassOptions {
     /**
@@ -29,7 +29,7 @@ export class GlobalCssClass
     public readonly className: string;
     public readonly id: string;
     public readonly symbol: symbol;
-    public readonly classContent?: ContentConstructed | undefined;
+    public readonly classContent?: GlobalCssClassContentConstructed | undefined;
     public readonly preprocess: boolean;
 
     #extraDependencies?: AbstractGlobalCssStylesheet[];

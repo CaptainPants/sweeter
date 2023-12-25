@@ -13,6 +13,9 @@ const contextStack = new ExecutionContextVariable<ContextNode | undefined>(
     undefined,
 );
 
+/**
+ * @category Context
+ */
 export class Context<T> {
     constructor(name: string, defaultValue: T) {
         this.name = name;

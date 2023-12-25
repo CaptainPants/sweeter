@@ -18,18 +18,19 @@ export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
 
 // There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
 export type ComponentInit = ComponentInitFunction & {
-    onMount: (callback: () => (() => void) | void) => void;
-    onUnMount: (callback: () => void) => void;
-    subscribeToChanges: <TArgs extends readonly unknown[]>(
+    onMount(callback: () => (() => void) | void): void;
+    onUnMount(callback: () => void): void;
+    subscribeToChanges<TArgs extends readonly unknown[]>(
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void | (() => void),
         invokeOnSubscribe?: boolean,
-    ) => void;
-    getContext: <T>(context: Context<T>) => T;
+    ): void;
+    getContext<T>(context: Context<T>): T;
     nextId(basis?: string): string;
-    runtime: Runtime;
 
+    runtime: Runtime;
+    
     isValid: boolean;
 };
 

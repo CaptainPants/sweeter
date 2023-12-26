@@ -60,20 +60,7 @@ export class Context<T> {
     }
 
     getCurrent(): T {
-        return Context.#find(contextStack.current, this);
-    }
-
-    static #find<T>(snapshot: ContextNode | undefined, context: Context<T>): T {
-        let current: ContextNode | undefined = snapshot;
-        while (current) {
-            // We could alternatively use the 'type' but whatever
-            if (current.id === context.id) {
-                return current.value as T;
-            }
-
-            current = current.parent;
-        }
-        return context.defaultValue;
+        return findContext(contextStack.current, this);
     }
 
     /**
@@ -83,7 +70,7 @@ export class Context<T> {
     static createSnapshot(): <T>(context: Context<T>) => T {
         const snapshot = contextStack.current;
         return (context) => {
-            return Context.#find(snapshot, context);
+            return findContext(snapshot, context);
         };
     }
 }
@@ -95,6 +82,19 @@ export interface ContextSummary {
 }
 
 export type ContextType<T> = T extends Context<infer S> ? S : never;
+
+function findContext<T>(snapshot: ContextNode | undefined, context: Context<T>): T {
+    let current: ContextNode | undefined = snapshot;
+    while (current) {
+        // We could alternatively use the 'type' but whatever
+        if (current.id === context.id) {
+            return current.value as T;
+        }
+
+        current = current.parent;
+    }
+    return context.defaultValue;
+}
 
 export function getContexts(): ContextSummary[] {
     const res: ContextSummary[] = [];

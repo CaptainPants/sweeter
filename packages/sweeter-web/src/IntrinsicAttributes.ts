@@ -75,10 +75,17 @@ type ElementSpecificOverrideAttributes<TElement> =
         ? OptionAttributes
         : unknown;
 
-type TextInputAttributes = {
+type InputAttributes = {
     placeholder?: string;
     type?: string;
+    /**
+     * Note that this is explicitly excluded from MightBeSignal logic.
+     */
     value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
+
+    // TODO: combine checked/indeterminite using a symbol to represent, and make checked a ReadWriteSignal
+    checked?: boolean;
+    indeterminite?: boolean;
 };
 
 type SelectAttributes = {
@@ -101,9 +108,9 @@ type FormElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 type FormElementAttributes<TFormElement extends FormElement> =
     TFormElement extends HTMLInputElement
-        ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
+        ? InputAttributes & HasDisabledAttributes & HasReadOnlyAttributes & NamedElementAttributes
         : TFormElement extends HTMLTextAreaElement
-        ? TextInputAttributes & HasReadOnlyAttributes & NamedElementAttributes
+        ? InputAttributes & HasReadOnlyAttributes & NamedElementAttributes
         : TFormElement extends HTMLSelectElement
         ? SelectAttributes & HasDisabledAttributes & NamedElementAttributes
         : NamedElementAttributes;

@@ -3,7 +3,10 @@ import { deferForBatchEnd, isBatching } from '../batching.js';
 import { type CallbackDelayedRunner, type Signal } from '../types.js';
 
 export class DeferredSignal<T> extends SignalBase<T> {
-    constructor(inner: Signal<T>, later: CallbackDelayedRunner = queueMicrotask) {
+    constructor(
+        inner: Signal<T>,
+        later: CallbackDelayedRunner = queueMicrotask,
+    ) {
         super(inner.peekState());
 
         this.#inner = inner;

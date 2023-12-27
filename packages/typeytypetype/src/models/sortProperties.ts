@@ -1,10 +1,12 @@
-
 export interface PropertyConstraint {
     readonly name: string;
     readonly order?: number | undefined;
 }
 
-function compareProperties(a: PropertyConstraint, b: PropertyConstraint): number {
+function compareProperties(
+    a: PropertyConstraint,
+    b: PropertyConstraint,
+): number {
     const orderDifferent = (b.order ?? 0) - (a.order ?? 0);
 
     if (orderDifferent !== 0) {

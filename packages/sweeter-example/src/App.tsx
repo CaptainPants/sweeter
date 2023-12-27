@@ -31,7 +31,10 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
         first: init.nextId(),
         second: init.nextId(),
         nonMutable: init.nextId(),
+        disabled: init.nextId(),
         select: init.nextId(),
+        checkbox: init.nextId(),
+        radiobuttons: init.nextId(),
         buttons: init.nextId(),
     } as const;
 
@@ -80,8 +83,27 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
+                                disabled
                                 id={ids.nonMutable}
                                 class={[forms.input, fillWidth]}
+                                value={nonMutable}
+                            />
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
+                            <label
+                                for={ids.disabled}
+                                class={[forms.label, forms.disabled]}
+                            >
+                                Disabled:
+                            </label>
+                        </div>
+                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                            <input
+                                type="text"
+                                id={ids.disabled}
+                                class={[forms.input, fillWidth, forms.disabled]}
                                 value={nonMutable}
                             />
                         </div>
@@ -102,6 +124,21 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 <option>Option 2</option>
                                 <option>Option 3</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
+                            <label for={ids.checkbox} class={forms.label}>
+                                Select:
+                            </label>
+                        </div>
+                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                            <input
+                                type="checkbox"
+                                id={ids.checkbox}
+                                class={[forms.input]}
+                                value={dropdown}
+                            />
                         </div>
                     </div>
                     <div class={grid.row}>

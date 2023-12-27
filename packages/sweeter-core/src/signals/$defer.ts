@@ -1,6 +1,9 @@
 import { DeferredSignal } from './internal/DeferredSignal.js';
 import { type CallbackDelayedRunner, type Signal } from './types.js';
 
-export function $defer<T>(inner: Signal<T>, later?: CallbackDelayedRunner): Signal<T> {
+export function $defer<T>(
+    inner: Signal<T>,
+    later?: CallbackDelayedRunner,
+): Signal<T> {
     return new DeferredSignal(inner, later);
 }

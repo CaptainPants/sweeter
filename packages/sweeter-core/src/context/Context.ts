@@ -83,7 +83,10 @@ export interface ContextSummary {
 
 export type ContextType<T> = T extends Context<infer S> ? S : never;
 
-function findContext<T>(snapshot: ContextNode | undefined, context: Context<T>): T {
+function findContext<T>(
+    snapshot: ContextNode | undefined,
+    context: Context<T>,
+): T {
     let current: ContextNode | undefined = snapshot;
     while (current) {
         // We could alternatively use the 'type' but whatever

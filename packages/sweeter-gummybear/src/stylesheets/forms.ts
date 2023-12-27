@@ -12,19 +12,42 @@ const inputPaddingMixin = stylesheet`
     padding: .375rem .75rem;
 `;
 
+export const disabled = new GlobalCssClass({
+    className: 'disabled',
+    content: () => stylesheet`
+        opacity: 0.5;
+
+        @root {
+            :disabled {
+                opacity: 0.5;
+            }
+        }
+    `,
+});
+
 export const input = new GlobalCssClass({
     className: 'input',
     content: () => stylesheet`
-        ${inputPaddingMixin}
+        &:not([type=checkbox]):not([type=radio]) {
+            ${inputPaddingMixin}
 
-        border-color: var(${themeDefinition.input.borderColor.cssVar});
-        border-width: var(${themeDefinition.input.borderWidth.cssVar});
-        border-radius: var(${themeDefinition.input.borderRadius.cssVar});
+            border-color: var(${themeDefinition.input.borderColor.cssVar});
+            border-width: var(${themeDefinition.input.borderWidth.cssVar});
+            border-radius: var(${themeDefinition.input.borderRadius.cssVar});
 
-        background-color: var(${themeDefinition.input.backgroundColor.cssVar});
-        color: var(${themeDefinition.input.color.cssVar});
+            background-color: var(${themeDefinition.input.backgroundColor.cssVar});
+            color: var(${themeDefinition.input.color.cssVar});
 
-        ${focusMixin}
+            ${focusMixin}
+        }
+
+        &[type=checkbox] {
+            padding: 10px;
+        }
+
+        &[type=radio] {
+            padding: 10px;
+        }
     `,
 });
 
@@ -56,6 +79,6 @@ export const label = new GlobalCssClass({
         // to match input fields for size
         border: solid transparent 1px; 
         // labels are 'inline' by default
-        display: inline-block; 
+        display: inline-block;
     `,
 });

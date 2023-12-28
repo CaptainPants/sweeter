@@ -8,6 +8,7 @@ import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 import { type StandardPropertiesHyphen } from 'csstype';
 import type { ElementCssClasses } from './styles/index.js';
+import type { ThreeValueBoolean } from './indeterminate.js';
 
 // ==== EVENTS
 
@@ -64,6 +65,17 @@ type AllElementAttributes<TElement> = {
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;
 };
 
+type HasInputValue = {
+    /**
+     * Note that this is explicitly excluded from MightBeSignal logic.
+     *
+     * Potential trap: A Signal<boolean> is valid, and ReadWriteSignal<boolean> is not as it does not have indeterminite in the update
+     * signature. As TypeScript erases the type info, assigning a mutable Signal<boolean> will actually cause two way data binding
+     * and the indeterminite value can be assigned back to the backing signal.
+     */
+    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
+};
+
 type OptionAttributes = {
     value?: MightBeSignal<string>;
 };
@@ -78,14 +90,19 @@ type ElementSpecificOverrideAttributes<TElement> =
 type InputAttributes = {
     placeholder?: string;
     type?: string;
+
     /**
      * Note that this is explicitly excluded from MightBeSignal logic.
+     *
+     * Potential trap: A Signal<boolean> is valid, and ReadWriteSignal<boolean> is not as it does not have indeterminite in the update
+     * signature. As TypeScript erases the type info, assigning a mutable Signal<boolean> will actually cause two way data binding
+     * and the indeterminite value can be assigned back to the backing signal.
      */
-    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
-    /**
-     * Note that this is explicitly excluded from MightBeSignal logic.
-     */
-    checked?: ReadWriteSignal<boolean> | Signal<boolean> | boolean | undefined;
+    checked?:
+        | ReadWriteSignal<ThreeValueBoolean>
+        | Signal<ThreeValueBoolean>
+        | ThreeValueBoolean
+        | undefined;
 
     indeterminite?: boolean;
 };
@@ -119,13 +136,20 @@ type FormElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 type FormElementAttributes<TFormElement extends FormElement> =
     TFormElement extends HTMLInputElement
         ? InputAttributes &
+              HasInputValue &
               HasDisabledAttributes &
               HasReadOnlyAttributes &
               NamedElementAttributes
         : TFormElement extends HTMLTextAreaElement
-        ? TextAreaAttributes & HasReadOnlyAttributes & NamedElementAttributes
+        ? TextAreaAttributes &
+              HasInputValue &
+              HasReadOnlyAttributes &
+              NamedElementAttributes
         : TFormElement extends HTMLSelectElement
-        ? SelectAttributes & HasDisabledAttributes & NamedElementAttributes
+        ? SelectAttributes &
+              HasInputValue &
+              HasDisabledAttributes &
+              NamedElementAttributes
         : NamedElementAttributes;
 
 export type ElementAttributesByName<TElementTypeString extends string> =

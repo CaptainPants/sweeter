@@ -120,6 +120,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 class={[forms.select, fillWidth]}
                                 value={dropdown}
                             >
+                                015.
                                 <option>Option 1</option>
                                 <option>Option 2</option>
                                 <option>Option 3</option>

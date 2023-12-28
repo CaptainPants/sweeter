@@ -5,6 +5,7 @@ import {
     isSignal,
 } from '@captainpants/sweeter-core';
 import { type WebRuntime } from '../types.js';
+import { indeterminite } from '../../indeterminate.js';
 
 type Untyped = Record<string, unknown>;
 
@@ -15,12 +16,45 @@ const mappedProperties: Record<string, string> = {
 
 interface MutableMapping {
     eventName: string;
-    domProperty: string;
+    setDomProperty: (ele: unknown, value: unknown) => void;
+    getDomProperty: (ele: unknown) => unknown;
 }
 
+type HTMLInputTextAreaOrSelect =
+    | HTMLInputElement
+    | HTMLTextAreaElement
+    | HTMLSelectElement;
+
 const mutableMap = new Map<string, MutableMapping>([
-    ['value', { eventName: 'input', domProperty: 'value' }],
-    ['checked', { eventName: 'input', domProperty: 'checked' }],
+    [
+        'value',
+        {
+            eventName: 'input',
+            getDomProperty: (ele) => (ele as HTMLInputTextAreaOrSelect).value,
+            setDomProperty: (ele, value) => {
+                (ele as HTMLInputTextAreaOrSelect).value = String(value);
+            },
+        },
+    ],
+    [
+        'checked',
+        {
+            eventName: 'input',
+            setDomProperty: (ele, value) => {
+                if (value === indeterminite) {
+                    (ele as HTMLInputElement).indeterminate = true;
+                } else {
+                    (ele as HTMLInputElement).checked = Boolean(value);
+                }
+            },
+            getDomProperty: (ele) => {
+                if ((ele as HTMLInputElement).indeterminate) {
+                    return indeterminite;
+                }
+                return (ele as HTMLInputElement).checked;
+            },
+        },
+    ],
 ]);
 
 const specialHandlingProps = ['children', 'ref', 'class', 'style'];
@@ -30,44 +64,41 @@ export function bindDOMMiscProps<TElementType extends string>(
     props: PropsWithIntrinsicAttributesFor<TElementType>,
     runtime: WebRuntime,
 ): void {
-    for (const key of Object.getOwnPropertyNames(props)) {
-        if (specialHandlingProps.includes(key)) {
+    for (const propKey of Object.getOwnPropertyNames(props)) {
+        if (specialHandlingProps.includes(propKey)) {
             continue;
         }
 
         // Deal with class (className) and for (htmlFor)
-        const mappedKey = Object.hasOwn(mappedProperties, key)
-            ? mappedProperties[key]!
-            : key;
+        const mappedPropKey = Object.hasOwn(mappedProperties, propKey)
+            ? mappedProperties[propKey]!
+            : propKey;
 
-        const value = (props as Untyped)[key];
+        const value = (props as Untyped)[propKey];
 
-        const mutableMapEntry = mutableMap.get(mappedKey);
+        const mutableMapEntry = mutableMap.get(mappedPropKey);
 
         if (mutableMapEntry && isSignal(value)) {
             // ==== MUTABLE SIGNAL SPECIAL CASE BINDING (e.g. input.value) ====
-            const { eventName, domProperty } = mutableMapEntry;
+            const { eventName, setDomProperty, getDomProperty } =
+                mutableMapEntry;
 
-            (node as unknown as Untyped)[domProperty] = value.peek();
+            setDomProperty(node, value.peek());
 
             node.addEventListener(eventName, (evt) => {
                 // It might be a readonly signal, in which case we can't update it.
                 // we should actually ignore attempts to write it in this case..
                 if (isReadWriteSignal(value)) {
-                    const updatedValue = (
-                        evt.currentTarget as unknown as Record<string, unknown>
-                    )[domProperty];
+                    const updatedValue = getDomProperty(evt.currentTarget);
 
                     value.update(updatedValue);
                 } else {
                     // Reset the DOM element value
-                    (evt.currentTarget as unknown as Record<string, unknown>)[
-                        domProperty
-                    ] = value.value;
+                    setDomProperty(evt.currentTarget, value.peek());
                 }
             });
             const changeCallback = () => {
-                (node as unknown as Untyped)[mappedKey] = value.peek();
+                (node as unknown as Untyped)[mappedPropKey] = value.peek();
             };
 
             // Add a weak listener (so that it will be cleaned up when no references held)
@@ -76,10 +107,10 @@ export function bindDOMMiscProps<TElementType extends string>(
             value.listen(changeCallback, false);
 
             addExplicitStrongReference(node, changeCallback);
-        } else if (mappedKey.startsWith('on')) {
+        } else if (mappedPropKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====
 
-            const eventName = mappedKey.substring(2);
+            const eventName = mappedPropKey.substring(2);
 
             // We don't need to subscribe, we can just use the current value of
             // the signal when an event is triggered.
@@ -96,10 +127,10 @@ export function bindDOMMiscProps<TElementType extends string>(
         } else {
             // ==== NORMAL SIGNAL BINDING ====
             if (isSignal(value)) {
-                (node as unknown as Untyped)[mappedKey] = value.peek();
+                (node as unknown as Untyped)[mappedPropKey] = value.peek();
 
                 const changeCallback = () => {
-                    (node as unknown as Untyped)[mappedKey] = value.peek();
+                    (node as unknown as Untyped)[mappedPropKey] = value.peek();
                 };
 
                 // Add a weak listener (so that it will be cleaned up when no references held)
@@ -109,7 +140,7 @@ export function bindDOMMiscProps<TElementType extends string>(
 
                 addExplicitStrongReference(node, changeCallback);
             } else {
-                (node as unknown as Untyped)[mappedKey] = value;
+                (node as unknown as Untyped)[mappedPropKey] = value;
             }
         }
     }

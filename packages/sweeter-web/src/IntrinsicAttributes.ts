@@ -66,14 +66,14 @@ type AllElementAttributes<TElement> = {
 };
 
 type HasFormControlValueAttribute = {
-    value?: string;
+    value?: string | undefined;
     ['bind:value']?: ReadWriteSignal<string> | undefined;
 };
 
 type HasCheckedAttribute = {
     checked?: ThreeValueBoolean;
 
-    ['bind:checked']?: ReadWriteSignal<string> | undefined;
+    ['bind:checked']?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 };
 
 type OptionAttributes = {

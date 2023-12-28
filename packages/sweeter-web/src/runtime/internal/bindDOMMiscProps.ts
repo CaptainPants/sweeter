@@ -25,7 +25,7 @@ type HTMLInputTextAreaOrSelect =
     | HTMLTextAreaElement
     | HTMLSelectElement;
 
-const mutableMap = new Map<string, MutableMapping>([
+const bindableMap = new Map<string, MutableMapping>([
     [
         'value',
         {
@@ -76,12 +76,19 @@ export function bindDOMMiscProps<TElementType extends string>(
 
         const value = (props as Untyped)[propKey];
 
-        const mutableMapEntry = mutableMap.get(mappedPropKey);
+        const isBindable = mappedPropKey.startsWith('bind:');
 
-        if (mutableMapEntry && isSignal(value)) {
+        if (isBindable) {
+            const bindableMapEntry = bindableMap.get(
+                mappedPropKey.substring('bind:'.length),
+            );
+            if (!bindableMapEntry || !isSignal(value)) {
+                continue;
+            }
+
             // ==== MUTABLE SIGNAL SPECIAL CASE BINDING (e.g. input.value) ====
             const { eventName, setDomProperty, getDomProperty } =
-                mutableMapEntry;
+                bindableMapEntry;
 
             setDomProperty(node, value.peek());
 

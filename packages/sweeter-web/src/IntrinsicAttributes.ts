@@ -65,15 +65,15 @@ type AllElementAttributes<TElement> = {
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;
 };
 
-type HasInputValue = {
-    /**
-     * Note that this is explicitly excluded from MightBeSignal logic.
-     *
-     * Potential trap: A Signal<boolean> is valid, and ReadWriteSignal<boolean> is not as it does not have indeterminite in the update
-     * signature. As TypeScript erases the type info, assigning a mutable Signal<boolean> will actually cause two way data binding
-     * and the indeterminite value can be assigned back to the backing signal.
-     */
-    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
+type HasFormControlValueAttribute = {
+    value?: string;
+    ['bind:value']?: ReadWriteSignal<string> | undefined;
+};
+
+type HasCheckedAttribute = {
+    checked?: ThreeValueBoolean;
+
+    ['bind:checked']?: ReadWriteSignal<string> | undefined;
 };
 
 type OptionAttributes = {
@@ -87,24 +87,9 @@ type ElementSpecificOverrideAttributes<TElement> =
         ? OptionAttributes
         : unknown;
 
-type InputAttributes = {
+type InputGeneralAttributes = {
     placeholder?: string;
     type?: string;
-
-    /**
-     * Note that this is explicitly excluded from MightBeSignal logic.
-     *
-     * Potential trap: A Signal<boolean> is valid, and ReadWriteSignal<boolean> is not as it does not have indeterminite in the update
-     * signature. As TypeScript erases the type info, assigning a mutable Signal<boolean> will actually cause two way data binding
-     * and the indeterminite value can be assigned back to the backing signal.
-     */
-    checked?:
-        | ReadWriteSignal<ThreeValueBoolean>
-        | Signal<ThreeValueBoolean>
-        | ThreeValueBoolean
-        | undefined;
-
-    indeterminite?: boolean;
 };
 
 type TextAreaAttributes = {
@@ -119,15 +104,15 @@ type SelectAttributes = {
     value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
 };
 
-type NamedElementAttributes = {
+type HasNameAttribute = {
     name?: string;
 };
 
-type HasReadOnlyAttributes = {
+type HasReadOnlyAttribute = {
     readonly?: boolean;
 };
 
-type HasDisabledAttributes = {
+type HasDisabledAttribute = {
     disabled?: boolean;
 };
 
@@ -135,22 +120,23 @@ type FormElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 type FormElementAttributes<TFormElement extends FormElement> =
     TFormElement extends HTMLInputElement
-        ? InputAttributes &
-              HasInputValue &
-              HasDisabledAttributes &
-              HasReadOnlyAttributes &
-              NamedElementAttributes
+        ? InputGeneralAttributes &
+              HasFormControlValueAttribute &
+              HasCheckedAttribute &
+              HasDisabledAttribute &
+              HasReadOnlyAttribute &
+              HasNameAttribute
         : TFormElement extends HTMLTextAreaElement
         ? TextAreaAttributes &
-              HasInputValue &
-              HasReadOnlyAttributes &
-              NamedElementAttributes
+              HasFormControlValueAttribute &
+              HasReadOnlyAttribute &
+              HasNameAttribute
         : TFormElement extends HTMLSelectElement
         ? SelectAttributes &
-              HasInputValue &
-              HasDisabledAttributes &
-              NamedElementAttributes
-        : NamedElementAttributes;
+              HasFormControlValueAttribute &
+              HasDisabledAttribute &
+              HasNameAttribute
+        : HasNameAttribute;
 
 export type ElementAttributesByName<TElementTypeString extends string> =
     TElementTypeString extends keyof IntrinsicElementTypeMap
@@ -168,9 +154,5 @@ export type ElementAttributes<TElement extends Element> =
 export type NonSpecificElementAttributes = ElementAttributes<HTMLElement>;
 
 export type WebSkipSignalifyingIntrinsicElementAttributes<
-    TElementTypeString extends string,
-> =
-    | 'ref'
-    | 'class'
-    | (TElementTypeString extends 'textarea' | 'select' ? 'value' : never)
-    | (TElementTypeString extends 'input' ? 'checked' | 'value' : never);
+    _TElementTypeString extends string,
+> = 'ref' | 'class' | `bind:${string}`;

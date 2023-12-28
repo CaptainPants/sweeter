@@ -9,7 +9,11 @@ it('changing value updates original signal', () => {
     const state = $mutable<string>('original-0');
 
     const res = testRender(() => (
-        <input type="text" ref={(ref) => (storedRef = ref)} value={state} />
+        <input
+            type="text"
+            ref={(ref) => (storedRef = ref)}
+            bind:value={state}
+        />
     ));
 
     assertNeverNullish(storedRef);
@@ -36,7 +40,11 @@ it('changing checked updates original signal', () => {
     const state = $mutable<ThreeValueBoolean>(false);
 
     const res = testRender(() => (
-        <input type="text" ref={(ref) => (storedRef = ref)} checked={state} />
+        <input
+            type="text"
+            ref={(ref) => (storedRef = ref)}
+            bind:checked={state}
+        />
     ));
 
     assertNeverNullish(storedRef);
@@ -58,12 +66,16 @@ it('changing checked updates original signal', () => {
     res.dispose();
 });
 
-it('changing checked to indeterminite updates original signal', () => {
+it('changing checked from indeterminite updates original signal', () => {
     let storedRef: HTMLInputElement | undefined;
     const state = $mutable<ThreeValueBoolean>(indeterminite);
 
     const res = testRender(() => (
-        <input type="text" ref={(ref) => (storedRef = ref)} checked={state} />
+        <input
+            type="text"
+            ref={(ref) => (storedRef = ref)}
+            bind:checked={state}
+        />
     ));
 
     assertNeverNullish(storedRef);
@@ -82,6 +94,37 @@ it('changing checked to indeterminite updates original signal', () => {
     storedRef.dispatchEvent(inputEvent);
 
     expect(state.value).toStrictEqual(true);
+
+    res.dispose();
+});
+
+it('changing checked to indeterminite updates original signal', () => {
+    let storedRef: HTMLInputElement | undefined;
+    const state = $mutable<ThreeValueBoolean>(true);
+
+    const res = testRender(() => (
+        <input
+            type="text"
+            ref={(ref) => (storedRef = ref)}
+            bind:checked={state}
+        />
+    ));
+
+    assertNeverNullish(storedRef);
+
+    // Make sure the initial value made it through
+    expect(storedRef.indeterminate).toStrictEqual(false);
+
+    storedRef.indeterminate = true;
+
+    const inputEvent = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+    });
+
+    storedRef.dispatchEvent(inputEvent);
+
+    expect(state.value).toStrictEqual(indeterminite);
 
     res.dispose();
 });

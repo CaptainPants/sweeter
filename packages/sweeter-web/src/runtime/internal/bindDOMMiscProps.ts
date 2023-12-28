@@ -20,7 +20,7 @@ interface MutableMapping {
 
 const mutableMap = new Map<string, MutableMapping>([
     ['value', { eventName: 'input', domProperty: 'value' }],
-    ['checked', { eventName: 'change', domProperty: 'checked' }],
+    ['checked', { eventName: 'input', domProperty: 'checked' }],
 ]);
 
 const specialHandlingProps = ['children', 'ref', 'class', 'style'];

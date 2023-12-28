@@ -1,5 +1,8 @@
 import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
-import type { ElementAttributesByName } from './IntrinsicAttributes.js';
+import type {
+    ElementAttributesByName,
+    WebSkipSignalifyingIntrinsicElementAttributes,
+} from './IntrinsicAttributes.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -35,13 +38,7 @@ declare global {
         interface SkipSignalifyingIntrinsicElementAttributes<
             TElementTypeString extends string,
         > {
-            'wireui-web/all': 'ref' | 'class';
-            'wireui-web/input': TElementTypeString extends
-                | 'input'
-                | 'textarea'
-                | 'select'
-                ? 'value'
-                : never;
+            'wireui-web': WebSkipSignalifyingIntrinsicElementAttributes<TElementTypeString>;
         }
     }
 }

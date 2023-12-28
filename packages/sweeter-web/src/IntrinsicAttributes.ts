@@ -82,10 +82,20 @@ type InputAttributes = {
      * Note that this is explicitly excluded from MightBeSignal logic.
      */
     value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
+    /**
+     * Note that this is explicitly excluded from MightBeSignal logic.
+     */
+    checked?: ReadWriteSignal<boolean> | Signal<boolean> | boolean | undefined;
 
-    // TODO: combine checked/indeterminite using a symbol to represent, and make checked a ReadWriteSignal
-    checked?: boolean;
     indeterminite?: boolean;
+};
+
+type TextAreaAttributes = {
+    placeholder?: string;
+    /**
+     * Note that this is explicitly excluded from MightBeSignal logic.
+     */
+    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
 };
 
 type SelectAttributes = {
@@ -108,9 +118,12 @@ type FormElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 type FormElementAttributes<TFormElement extends FormElement> =
     TFormElement extends HTMLInputElement
-        ? InputAttributes & HasDisabledAttributes & HasReadOnlyAttributes & NamedElementAttributes
+        ? InputAttributes &
+              HasDisabledAttributes &
+              HasReadOnlyAttributes &
+              NamedElementAttributes
         : TFormElement extends HTMLTextAreaElement
-        ? InputAttributes & HasReadOnlyAttributes & NamedElementAttributes
+        ? TextAreaAttributes & HasReadOnlyAttributes & NamedElementAttributes
         : TFormElement extends HTMLSelectElement
         ? SelectAttributes & HasDisabledAttributes & NamedElementAttributes
         : NamedElementAttributes;
@@ -129,3 +142,11 @@ export type ElementAttributes<TElement extends Element> =
             : unknown);
 
 export type NonSpecificElementAttributes = ElementAttributes<HTMLElement>;
+
+export type WebSkipSignalifyingIntrinsicElementAttributes<
+    TElementTypeString extends string,
+> =
+    | 'ref'
+    | 'class'
+    | (TElementTypeString extends 'textarea' | 'select' ? 'value' : never)
+    | (TElementTypeString extends 'input' ? 'checked' | 'value' : never);

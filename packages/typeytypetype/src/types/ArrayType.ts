@@ -1,5 +1,5 @@
+import { descend } from '@captainpants/sweeter-utilities';
 import { combineTypeDefinitionPath } from '../internal/combineTypeDefinitionPath.js';
-import { descend } from '../utility/descend.js';
 import {
     type ValidationOptions,
     type ValidationSingleResult,

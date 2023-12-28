@@ -11,12 +11,12 @@ export type ContextualValueCalculationCallback<T> = (
 ) => unknown;
 
 /**
- * Note that returning undefined means 'not found'. If you need a nully value you need to use 'null' or a special case object.
+ * Return typeof notFound to indicate that there was no matching value.
  */
 export type LocalValueCallback = (name: string) => unknown;
 
 /**
- * Note that returning undefined means 'not found'. If you need a nully value you need to use 'null' or a special case object.
+ * Return typeof notFound to indicate that there was no matching value.
  */
 export interface AmbientValueCallback {
     get: (name: string) => unknown;

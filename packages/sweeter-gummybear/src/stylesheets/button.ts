@@ -1,5 +1,5 @@
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { assertNeverNullish } from '@captainpants/sweeter-core';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import { tags, variants } from './markers.js';
 import { themeDefinition } from './internal/themeOptionDefinitions.js';
 
@@ -26,11 +26,11 @@ export const button = new GlobalCssClass({
                     themeDefinition.variants[
                         key as keyof typeof themeDefinition.variants
                     ];
-                assertNeverNullish(variant);
+                assertNotNullOrUndefined(variant);
 
                 const variantTag =
                     variants[key as keyof typeof themeDefinition.variants];
-                assertNeverNullish(variantTag);
+                assertNotNullOrUndefined(variantTag);
 
                 return stylesheet`
                     &.${variantTag} {

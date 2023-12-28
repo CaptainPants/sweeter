@@ -1,10 +1,9 @@
+import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { type GetExpandoType } from '../../internal/utilityTypes.js';
 import { type ObjectType } from '../../types/ObjectType.js';
 import { PropertyDefinition } from '../../types/PropertyDefinition.js';
 import { type Type } from '../../types/Type.js';
 import { Types } from '../../types/Types.js';
-import { descend } from '../../utility/descend.js';
-import { hasOwnProperty } from '../../utility/hasOwnProperty.js';
 import { type ObjectModel, type PropertyModelFor } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';

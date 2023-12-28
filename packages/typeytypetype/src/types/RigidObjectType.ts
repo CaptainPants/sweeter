@@ -1,7 +1,8 @@
-import { descend } from '../utility/descend.js';
-import { hasOwnProperty } from '../utility/hasOwnProperty.js';
-import { assertNotNullOrUndefined } from '../utility/index.js';
-
+import {
+    assertNotNullOrUndefined,
+    descend,
+    hasOwnProperty,
+} from '@captainpants/sweeter-utilities';
 import { type PropertyDefinitions } from './internal/types.js';
 import { ObjectType } from './ObjectType.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';

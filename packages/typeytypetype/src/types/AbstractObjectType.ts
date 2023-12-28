@@ -1,5 +1,4 @@
-import { descend } from '../utility/descend.js';
-
+import { descend } from '@captainpants/sweeter-utilities';
 import { ObjectType } from './ObjectType.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';
 import { type Type } from './Type.js';

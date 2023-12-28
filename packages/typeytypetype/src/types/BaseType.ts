@@ -1,3 +1,4 @@
+import { descend } from '@captainpants/sweeter-utilities';
 import {
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
@@ -5,7 +6,6 @@ import {
 import { deepFreeze } from '../internal/deepFreeze.js';
 import { stringForError } from '../internal/stringForError.js';
 import { type ReadonlySignalLike } from '../ReadonlySignalLike.js';
-import { descend } from '../utility/descend.js';
 import { Maybe } from '../utility/Maybe.js';
 import { flattenValidatorResultsToStrings } from '../validation/flattenValidatorResultsToStrings.js';
 import {

@@ -1,8 +1,9 @@
 /* @jsxImportSource ../.. */
 
-import { $mutable, assertNeverNullish } from '@captainpants/sweeter-core';
+import { $mutable } from '@captainpants/sweeter-core';
 import { testRender } from '../../test/testRender.js';
 import { type ThreeValueBoolean, indeterminite } from '../../indeterminate.js';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 it('changing value updates original signal', () => {
     let storedRef: HTMLInputElement | undefined;
@@ -16,7 +17,7 @@ it('changing value updates original signal', () => {
         />
     ));
 
-    assertNeverNullish(storedRef);
+    assertNotNullOrUndefined(storedRef);
 
     // Make sure the initial value made it through
     expect(storedRef.value).toStrictEqual('original-0');
@@ -47,7 +48,7 @@ it('changing checked updates original signal', () => {
         />
     ));
 
-    assertNeverNullish(storedRef);
+    assertNotNullOrUndefined(storedRef);
 
     // Make sure the initial value made it through
     expect(storedRef.checked).toStrictEqual(false);
@@ -78,7 +79,7 @@ it('changing checked from indeterminite updates original signal', () => {
         />
     ));
 
-    assertNeverNullish(storedRef);
+    assertNotNullOrUndefined(storedRef);
 
     // Make sure the initial value made it through
     expect(storedRef.indeterminate).toStrictEqual(true);
@@ -110,7 +111,7 @@ it('changing checked to indeterminite updates original signal', () => {
         />
     ));
 
-    assertNeverNullish(storedRef);
+    assertNotNullOrUndefined(storedRef);
 
     // Make sure the initial value made it through
     expect(storedRef.indeterminate).toStrictEqual(false);

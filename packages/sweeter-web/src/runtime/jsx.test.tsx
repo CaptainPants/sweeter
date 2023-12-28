@@ -1,11 +1,9 @@
 /* @jsxImportSource ../. */
 
-import {
-    assertNeverNullish,
-    type TypeMatchAssert,
-} from '@captainpants/sweeter-core';
+import { type TypeMatchAssert } from '@captainpants/sweeter-core';
 import { jsx } from './jsx.js';
 import { testRender } from '../test/testRender.js';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 it('basic div creates with props (function syntax)', () => {
     let div: HTMLDivElement | undefined;
@@ -24,7 +22,7 @@ it('basic div creates with props (function syntax)', () => {
         return inner;
     });
 
-    assertNeverNullish(div);
+    assertNotNullOrUndefined(div);
 
     expect(div).toBeInstanceOf(HTMLDivElement);
 

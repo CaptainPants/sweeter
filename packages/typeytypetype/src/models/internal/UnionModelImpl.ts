@@ -1,6 +1,6 @@
+import { descend } from '@captainpants/sweeter-utilities';
 import { type Type } from '../../types/Type.js';
 import { type UnionType } from '../../types/UnionType.js';
-import { descend } from '../../utility/descend.js';
 import { type Model, type SpreadModel, type UnionModel } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';

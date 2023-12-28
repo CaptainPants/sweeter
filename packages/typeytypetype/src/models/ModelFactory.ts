@@ -1,3 +1,4 @@
+import { descend } from '@captainpants/sweeter-utilities';
 import { AbstractObjectType } from '../types/AbstractObjectType.js';
 import { ArrayType } from '../types/ArrayType.js';
 import {
@@ -15,7 +16,6 @@ import {
 import { type ObjectType } from '../types/ObjectType.js';
 import { UnionType } from '../types/UnionType.js';
 import { UnknownType } from '../types/UnknownType.js';
-import { descend } from '../utility/descend.js';
 
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { ObjectModelImpl } from './internal/ObjectModelImpl.js';

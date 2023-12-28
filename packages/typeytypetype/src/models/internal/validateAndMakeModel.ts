@@ -1,5 +1,5 @@
+import { descend } from '@captainpants/sweeter-utilities';
 import { type Type } from '../../types/Type.js';
-import { descend } from '../../utility/descend.js';
 import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';

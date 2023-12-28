@@ -1,5 +1,4 @@
-import { descend } from '../utility/descend.js';
-
+import { descend } from '@captainpants/sweeter-utilities';
 import { BaseType } from './BaseType.js';
 
 abstract class ConstantBaseType<T> extends BaseType<T> {

@@ -1,4 +1,4 @@
-import { assertNotNullOrUndefined } from './index.js';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 export function arrayMoveImmutable<T>(
     array: readonly T[],

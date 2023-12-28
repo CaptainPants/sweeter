@@ -1,8 +1,8 @@
+import { descend } from '@captainpants/sweeter-utilities';
 import { mapAsync } from '../../internal/mapAsync.js';
 import { type ArrayType } from '../../types/ArrayType.js';
 import { type Type } from '../../types/Type.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
-import { descend } from '../../utility/descend.js';
 import { type ArrayModel, type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';

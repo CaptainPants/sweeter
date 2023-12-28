@@ -1,4 +1,4 @@
-import { assertNotNullOrUndefined } from '../utility/index.js';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 export function depthFirstSearch<TNode>(
     nodes: Iterable<TNode>,

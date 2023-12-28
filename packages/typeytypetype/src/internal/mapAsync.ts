@@ -1,4 +1,4 @@
-import { assertNotNullOrUndefined } from '../utility/index.js';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 export async function mapAsync<T, U>(
     list: readonly T[],

@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/sweeter-web",
+    "name": "@captainpants/sweeter-utilities",
     "version": "0.0.3",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
@@ -8,25 +8,15 @@
     "type": "module",
     "packageManager": "pnpm@8.6.7",
     "main": "./build/index.js",
+    "types": "./build/index.d.ts",
     "exports": {
         ".": {
             "import": "./build/index.js",
-            "require": "./build/index.cjs",
-            "types": "./build/index.d.ts"
-        },
-        "./jsx-runtime": {
-            "import": "./build/jsx-runtime.js",
-            "require": "./build/jsx-runtime.cjs",
-            "types": "./build/jsx-runtime.d.ts"
-        },
-        "./jsx-dev-runtime": {
-            "import": "./build/jsx-dev-runtime.js",
-            "require": "./build/jsx-dev-runtime.cjs",
-            "types": "./build/jsx-dev-runtime.d.ts"
+            "require": "./build/index.cjs"
         }
     },
     "scripts": {
-        "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
+        "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",
@@ -40,10 +30,5 @@
     },
     "engines": {
         "pnpm": "8.6.7"
-    },
-    "dependencies": {
-        "@captainpants/sweeter-utilities": "workspace:^",
-        "@captainpants/sweeter-core": "workspace:^",
-        "csstype": "^3.1.2"
     }
 }

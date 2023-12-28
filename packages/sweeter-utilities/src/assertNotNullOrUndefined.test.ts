@@ -5,12 +5,8 @@ test('assertNotNullOrUndefined', async () => {
 
     expect(() => {
         assertNotNullOrUndefined(null);
-    }).toThrowError(
-        new TypeError('Value was not expected to be null or undefined.'),
-    );
+    }).toThrowError(new TypeError('Unexpected value null'));
     expect(() => {
         assertNotNullOrUndefined(undefined);
-    }).toThrowError(
-        new TypeError('Value was not expected to be null or undefined.'),
-    );
+    }).toThrowError(new TypeError('Unexpected value undefined'));
 });

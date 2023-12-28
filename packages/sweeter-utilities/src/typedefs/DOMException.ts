@@ -9,9 +9,9 @@ declare global {
     }
 }
 
+
+// NOTE: Rollup doesn't like it if you directly export DOMException, hence creating a const variable and then exporting with an alias.
 /**
- * Rollup doesn't like it if you directly export DOMException.
- *
  * This export mostly exists so that you do import DOMException for code that runs with or without a DOM.
  */
 const _DOMException = DOMException;

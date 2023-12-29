@@ -55,7 +55,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 id={ids.first}
                                 type="text"
                                 class={[forms.input, fillWidth]}
-                                value={value}
+                                bind:value={value}
                             />
                         </div>
                     </div>
@@ -70,7 +70,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.second}
                                 class={[forms.input, fillWidth]}
-                                value={value}
+                                bind:value={value}
                             />
                         </div>
                     </div>
@@ -118,7 +118,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <select
                                 id={ids.select}
                                 class={[forms.select, fillWidth]}
-                                value={dropdown}
+                                bind:value={dropdown}
                             >
                                 015.
                                 <option>Option 1</option>
@@ -138,7 +138,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="checkbox"
                                 id={ids.checkbox}
                                 class={[forms.input]}
-                                value={dropdown}
+                                bind:value={dropdown}
                             />
                         </div>
                     </div>

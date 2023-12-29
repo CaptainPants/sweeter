@@ -52,7 +52,7 @@ export type Styles = {
         | Signal<StyleProperties[Key]>;
 };
 
-// ==== OTHER
+// ==== Generic
 
 type AllElementAttributes<TElement> = {
     id?: string;
@@ -76,16 +76,27 @@ type HasCheckedAttribute = {
     'bind:checked'?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 };
 
-type OptionAttributes = {
+type HasNameAttribute = {
+    name?: string;
+};
+
+type HasReadOnlyAttribute = {
+    readonly?: boolean;
+};
+
+type HasDisabledAttribute = {
+    disabled?: boolean;
+};
+
+// == Element-specific ==
+
+type HTMLOptionElementAttributes = {
     value?: MightBeSignal<string>;
 };
 
-type ElementSpecificOverrideAttributes<TElement> =
-    TElement extends HTMLLabelElement
-        ? { for?: string }
-        : TElement extends HTMLOptionElement
-        ? OptionAttributes
-        : unknown;
+type HTMLLabelElementAttributes = {
+    for?: string;
+};
 
 type InputType =
     | 'button'
@@ -113,51 +124,39 @@ type InputType =
     // eslint-disable-next-line @typescript-eslint/ban-types -- This allows custom values but also autocomplete. If you specify | string, the whole thing just becomes 'string'
     | (string & {});
 
-type InputGeneralAttributes = {
+type HTMLInputElementAttributes = {
     placeholder?: string;
     type?: InputType;
-};
+} & HasFormControlValueAttribute &
+    HasCheckedAttribute &
+    HasDisabledAttribute &
+    HasReadOnlyAttribute &
+    HasNameAttribute;
 
-type TextAreaAttributes = {
+type HTMLTextAreaAttributes = {
     placeholder?: string;
-};
+} & HasFormControlValueAttribute &
+    HasReadOnlyAttribute &
+    HasNameAttribute;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type SelectAttributes = {};
+type HTMLSelectElementAttributes = HasFormControlValueAttribute &
+    HasDisabledAttribute &
+    HasNameAttribute;
 
-type HasNameAttribute = {
-    name?: string;
-};
+// == (END) Element-specific ==
 
-type HasReadOnlyAttribute = {
-    readonly?: boolean;
-};
-
-type HasDisabledAttribute = {
-    disabled?: boolean;
-};
-
-type FormElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-
-type FormElementAttributes<TFormElement extends FormElement> =
-    TFormElement extends HTMLInputElement
-        ? InputGeneralAttributes &
-              HasFormControlValueAttribute &
-              HasCheckedAttribute &
-              HasDisabledAttribute &
-              HasReadOnlyAttribute &
-              HasNameAttribute
-        : TFormElement extends HTMLTextAreaElement
-        ? TextAreaAttributes &
-              HasFormControlValueAttribute &
-              HasReadOnlyAttribute &
-              HasNameAttribute
-        : TFormElement extends HTMLSelectElement
-        ? SelectAttributes &
-              HasFormControlValueAttribute &
-              HasDisabledAttribute &
-              HasNameAttribute
-        : HasNameAttribute;
+type SpecificElementAttributes<TElement> = TElement extends HTMLLabelElement
+    ? HTMLLabelElementAttributes
+    : TElement extends HTMLInputElement
+    ? HTMLInputElementAttributes
+    : TElement extends HTMLTextAreaElement
+    ? HTMLTextAreaAttributes
+    : TElement extends HTMLSelectElement
+    ? HTMLSelectElementAttributes
+    : TElement extends HTMLOptionElement
+    ? HTMLOptionElementAttributes
+    : // eslint-disable-next-line @typescript-eslint/ban-types
+      {};
 
 export type ElementAttributesByName<TElementTypeString extends string> =
     TElementTypeString extends keyof IntrinsicElementTypeMap
@@ -166,11 +165,8 @@ export type ElementAttributesByName<TElementTypeString extends string> =
 
 export type ElementAttributes<TElement extends Element> =
     EventHandlerProperties<TElement> &
-        ElementSpecificOverrideAttributes<TElement> &
-        AllElementAttributes<TElement> &
-        (TElement extends FormElement
-            ? FormElementAttributes<TElement>
-            : unknown);
+        SpecificElementAttributes<TElement> &
+        AllElementAttributes<TElement>;
 
 export type NonSpecificElementAttributes = ElementAttributes<HTMLElement>;
 

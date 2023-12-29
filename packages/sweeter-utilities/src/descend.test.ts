@@ -1,4 +1,4 @@
-import { descend } from "./descend.js";
+import { descend } from './descend.js';
 
 it('General', () => {
     const infinitelyRecursive = (depth: number) => {

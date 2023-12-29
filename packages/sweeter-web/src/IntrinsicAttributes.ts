@@ -87,22 +87,43 @@ type ElementSpecificOverrideAttributes<TElement> =
         ? OptionAttributes
         : unknown;
 
+type InputType =
+    | 'button'
+    | 'checkbox'
+    | 'color'
+    | 'date'
+    | 'datetime-local'
+    | 'email'
+    | 'file'
+    | 'hidden'
+    | 'image'
+    | 'month'
+    | 'number'
+    | 'password'
+    | 'radio'
+    | 'range'
+    | 'reset'
+    | 'search'
+    | 'submit'
+    | 'tel'
+    | 'text'
+    | 'time'
+    | 'url'
+    | 'week'
+    // eslint-disable-next-line @typescript-eslint/ban-types -- This allows custom values but also autocomplete. If you specify | string, the whole thing just becomes 'string'
+    | (string & {});
+
 type InputGeneralAttributes = {
     placeholder?: string;
-    type?: string;
+    type?: InputType;
 };
 
 type TextAreaAttributes = {
     placeholder?: string;
-    /**
-     * Note that this is explicitly excluded from MightBeSignal logic.
-     */
-    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
 };
 
-type SelectAttributes = {
-    value?: ReadWriteSignal<string> | Signal<string> | string | undefined;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+type SelectAttributes = {};
 
 type HasNameAttribute = {
     name?: string;

@@ -105,7 +105,7 @@ it('changing checked to indeterminite updates original signal', () => {
 
     const res = testRender(() => (
         <input
-            type="text"
+            type="checkbox"
             ref={(ref) => (storedRef = ref)}
             bind:checked={state}
         />

@@ -57,13 +57,23 @@ const bindableMap = new Map<string, MutableMapping>([
     ],
 ]);
 
-const specialHandlingProps = ['children', 'ref', 'class', 'style'];
+const specialHandlingProps = [
+    'children',
+    'ref',
+    'class',
+    'style',
+    'disabled',
+    'readonly',
+];
+const causesReadonlyIfOneWayBound = ['checked', 'value'];
 
 export function bindDOMMiscProps<TElementType extends string>(
     node: Node,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
     runtime: WebRuntime,
 ): void {
+    let forcedToBeReadonly = false; // Note that readonly is only valid on input and textarea, whereas disabled is valid on select
+
     for (const propKey of Object.getOwnPropertyNames(props)) {
         if (specialHandlingProps.includes(propKey)) {
             continue;
@@ -132,6 +142,10 @@ export function bindDOMMiscProps<TElementType extends string>(
                 node.addEventListener(eventName, value as EventListener);
             }
         } else {
+            if (causesReadonlyIfOneWayBound.includes(mappedPropKey)) {
+                forcedToBeReadonly = true;
+            }
+
             // ==== NORMAL SIGNAL BINDING ====
             if (isSignal(value)) {
                 (node as unknown as Untyped)[mappedPropKey] = value.peek();
@@ -148,6 +162,17 @@ export function bindDOMMiscProps<TElementType extends string>(
                 addExplicitStrongReference(node, changeCallback);
             } else {
                 (node as unknown as Untyped)[mappedPropKey] = value;
+            }
+        }
+
+        if (forcedToBeReadonly) {
+            if (
+                node instanceof HTMLInputElement ||
+                node instanceof HTMLTextAreaElement
+            ) {
+                node.readOnly = true;
+            } else if (node instanceof HTMLSelectElement) {
+                node.disabled = true; // Need to decide if this is appropriate
             }
         }
     }

@@ -5,7 +5,17 @@ declare global {
     class DOMException extends Error {
         readonly name: string;
 
+        /**
+         * @deprecated
+         */
+        readonly code: number;
+
         constructor(message?: string, name?: string);
+
+        /**
+         * @deprecated Legacy constant code for AbortError
+         */
+        static readonly ABORT_ERR: number;
     }
 }
 

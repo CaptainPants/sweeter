@@ -3,7 +3,7 @@ import {
     GlobalCssStylesheet,
     stylesheet,
 } from '@captainpants/sweeter-web';
-import { themeDefinition } from './internal/themeOptionDefinitions.js';
+import { themeStructure } from '../themeStructure.js';
 
 export const disabled = new GlobalCssClass({
     className: 'disabled',
@@ -13,12 +13,12 @@ export const themeBase = new GlobalCssStylesheet({
     id: 'base',
     content: stylesheet`
         body {
-            background: var(${themeDefinition.bodyBackground.cssVar});
-            color: var(${themeDefinition.common.fontColor.cssVar});
+            background: var(${themeStructure.bodyBackground.cssVar});
+            color: var(${themeStructure.common.fontColor.cssVar});
         }
 
         option, select {
-            background: var(${themeDefinition.bodyBackground.cssVar});
+            background: var(${themeStructure.bodyBackground.cssVar});
         }
 
         * {

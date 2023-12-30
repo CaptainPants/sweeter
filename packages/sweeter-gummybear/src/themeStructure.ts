@@ -1,13 +1,6 @@
-export type ThemeOptionDefinition = {
-    cssVar: string;
-    defaultValue: string | number | undefined;
-};
+import type { ThemeOptionOrGroupDefinition } from './types.js';
 
-export type ThemeOptionOrGroupDefinition =
-    | ThemeOptionDefinition
-    | { [key: string]: ThemeOptionOrGroupDefinition };
-
-export const themeDefinition = {
+export const themeStructure = {
     bodyBackground: {
         cssVar: '--body-background',
         defaultValue: 'black' as string,
@@ -41,7 +34,7 @@ export const themeDefinition = {
         },
         borderRadius: {
             cssVar: '--input-border-radius',
-            defaultValue: '0' // '0.375rem' as string,
+            defaultValue: '0', // '0.375rem' as string,
         },
         backgroundColor: {
             cssVar: '--input-background-color',
@@ -196,4 +189,19 @@ export const themeDefinition = {
             },
         },
     },
-} as const satisfies Record<string, ThemeOptionOrGroupDefinition>;
+} as const satisfies ThemeOptionOrGroupDefinition;
+
+type ExtractThemeOptionsFromDefinition<T> = T extends {
+    cssVar: string;
+    defaultValue: infer S;
+}
+    ? S
+    : {
+          -readonly [Key in keyof T]?: ExtractThemeOptionsFromDefinition<
+              T[Key]
+          >;
+      };
+
+export type ThemeOptions = ExtractThemeOptionsFromDefinition<
+    typeof themeStructure
+>;

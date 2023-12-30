@@ -1,10 +1,10 @@
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { themeDefinition } from './internal/themeOptionDefinitions.js';
+import { themeStructure } from '../themeStructure.js';
 
 const focusMixin = stylesheet`
     &:focus {
-        outline-color: var(${themeDefinition.input.focusOutlineColor.cssVar});
-        outline-width: var(${themeDefinition.input.focusOutlineWidth.cssVar});
+        outline-color: var(${themeStructure.input.focusOutlineColor.cssVar});
+        outline-width: var(${themeStructure.input.focusOutlineWidth.cssVar});
         outline-style: solid;
     }
 `;
@@ -18,12 +18,12 @@ export const input = new GlobalCssClass({
         &:not([type=checkbox]):not([type=radio]) {
             ${inputPaddingMixin}
 
-            border-color: var(${themeDefinition.input.borderColor.cssVar});
-            border-width: var(${themeDefinition.input.borderWidth.cssVar});
-            border-radius: var(${themeDefinition.input.borderRadius.cssVar});
+            border-color: var(${themeStructure.input.borderColor.cssVar});
+            border-width: var(${themeStructure.input.borderWidth.cssVar});
+            border-radius: var(${themeStructure.input.borderRadius.cssVar});
 
-            background-color: var(${themeDefinition.input.backgroundColor.cssVar});
-            color: var(${themeDefinition.input.color.cssVar});
+            background-color: var(${themeStructure.input.backgroundColor.cssVar});
+            color: var(${themeStructure.input.color.cssVar});
 
             ${focusMixin}
         }
@@ -43,12 +43,12 @@ export const select = new GlobalCssClass({
     content: () => stylesheet`
         ${inputPaddingMixin}
         
-        border-color: var(${themeDefinition.input.borderColor.cssVar});
-        border-width: var(${themeDefinition.input.borderWidth.cssVar});
-        border-radius: var(${themeDefinition.input.borderRadius.cssVar});
+        border-color: var(${themeStructure.input.borderColor.cssVar});
+        border-width: var(${themeStructure.input.borderWidth.cssVar});
+        border-radius: var(${themeStructure.input.borderRadius.cssVar});
 
-        background-color: var(${themeDefinition.input.backgroundColor.cssVar});
-        color: var(${themeDefinition.input.color.cssVar});
+        background-color: var(${themeStructure.input.backgroundColor.cssVar});
+        color: var(${themeStructure.input.color.cssVar});
 
         ${focusMixin}
 

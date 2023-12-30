@@ -12,7 +12,7 @@ import {
     columnWidthIdentifiers,
     columnWidthNames,
 } from './internal/constants.js';
-import { themeDefinition } from './internal/themeOptionDefinitions.js';
+import { themeStructure } from '../themeStructure.js';
 
 export const container = new GlobalCssClass({
     className: 'container',
@@ -29,9 +29,9 @@ export const row = new GlobalCssClass({
         flex-direction: row;
         flex-wrap: wrap;
 
-        margin-left: calc(-1 * var(${themeDefinition.grid.columnPadding.cssVar}));
-        margin-right: calc(-1 * var(${themeDefinition.grid.columnPadding.cssVar}));
-        margin-bottom: var(${themeDefinition.grid.rowBottomPadding.cssVar});
+        margin-left: calc(-1 * var(${themeStructure.grid.columnPadding.cssVar}));
+        margin-right: calc(-1 * var(${themeStructure.grid.columnPadding.cssVar}));
+        margin-bottom: var(${themeStructure.grid.rowBottomPadding.cssVar});
     `,
 });
 
@@ -132,8 +132,8 @@ for (let i = 0; i < allColClasses.length; ++i) {
 }
 gridStylesheetCss.appendLine(stylesheet`
     {
-        padding-left: var(${themeDefinition.grid.columnPadding.cssVar});
-        padding-right: var(${themeDefinition.grid.columnPadding.cssVar});
+        padding-left: var(${themeStructure.grid.columnPadding.cssVar});
+        padding-right: var(${themeStructure.grid.columnPadding.cssVar});
     }
 `);
 // == END OF Stuff thats common to all columns

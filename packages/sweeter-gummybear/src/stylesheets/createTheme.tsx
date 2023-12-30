@@ -2,15 +2,14 @@ import {
     GlobalCssStylesheet,
     IncludeStylesheet,
 } from '@captainpants/sweeter-web';
-import type { ThemeOptions } from './ThemeOptions.js';
 import { themeBase } from './base.js';
 import { reset } from './reset.js';
+import { themeStructure, type ThemeOptions } from '../themeStructure.js';
+import { type Component } from '@captainpants/sweeter-core';
 import {
-    themeDefinition,
     type ThemeOptionDefinition,
     type ThemeOptionOrGroupDefinition,
-} from './internal/themeOptionDefinitions.js';
-import type { Component } from '@captainpants/sweeter-core';
+} from '../types.js';
 
 export function createTheme(options: ThemeOptions): Component {
     const propertiesCss: string[] = [];
@@ -28,7 +27,7 @@ export function createTheme(options: ThemeOptions): Component {
             }
         }
     }
-    process(themeDefinition);
+    process(themeStructure);
 
     const variables = new GlobalCssStylesheet({
         id: 'variables',

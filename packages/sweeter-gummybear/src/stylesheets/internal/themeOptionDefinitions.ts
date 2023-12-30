@@ -25,7 +25,7 @@ export const themeDefinition = {
         },
         rowBottomPadding: {
             cssVar: '--row-bottom-padding',
-            defaultValue: '2px' as string,
+            defaultValue: '4px' as string,
         },
     },
 
@@ -41,7 +41,7 @@ export const themeDefinition = {
         },
         borderRadius: {
             cssVar: '--input-border-radius',
-            defaultValue: '0.375rem' as string,
+            defaultValue: '0' // '0.375rem' as string,
         },
         backgroundColor: {
             cssVar: '--input-background-color',

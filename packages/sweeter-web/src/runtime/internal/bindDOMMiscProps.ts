@@ -62,8 +62,6 @@ const specialHandlingProps = [
     'ref',
     'class',
     'style',
-    'disabled',
-    'readonly',
 ];
 const causesReadonlyIfOneWayBound = ['checked', 'value'];
 
@@ -88,7 +86,7 @@ export function bindDOMMiscProps<TElementType extends string>(
 
         const isBindable = mappedPropKey.startsWith('bind:');
 
-        if (isBindable) {
+        if (isBindable && isReadWriteSignal(value)) {
             const bindableMapEntry = bindableMap.get(
                 mappedPropKey.substring('bind:'.length),
             );
@@ -103,19 +101,12 @@ export function bindDOMMiscProps<TElementType extends string>(
             setDomProperty(node, value.peek());
 
             node.addEventListener(eventName, (evt) => {
-                // It might be a readonly signal, in which case we can't update it.
-                // we should actually ignore attempts to write it in this case..
-                if (isReadWriteSignal(value)) {
-                    const updatedValue = getDomProperty(evt.currentTarget);
+                const updatedValue = getDomProperty(evt.currentTarget);
 
-                    value.update(updatedValue);
-                } else {
-                    // Reset the DOM element value
-                    setDomProperty(evt.currentTarget, value.peek());
-                }
+                value.update(updatedValue);
             });
             const changeCallback = () => {
-                (node as unknown as Untyped)[mappedPropKey] = value.peek();
+                setDomProperty(node, value.peek());
             };
 
             // Add a weak listener (so that it will be cleaned up when no references held)
@@ -165,6 +156,8 @@ export function bindDOMMiscProps<TElementType extends string>(
             }
         }
 
+        // They may already be readonly or disabled, this happens last as an override
+        // Not sure if this behaviour should be optional
         if (forcedToBeReadonly) {
             if (
                 node instanceof HTMLInputElement ||

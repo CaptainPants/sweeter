@@ -1,9 +1,13 @@
-import { GlobalCssStylesheet } from '@captainpants/sweeter-web';
+import { GlobalCssClass, GlobalCssStylesheet, stylesheet } from '@captainpants/sweeter-web';
 import { themeDefinition } from './internal/themeOptionDefinitions.js';
+
+export const disabled = new GlobalCssClass({
+    className: 'disabled',
+});
 
 export const themeBase = new GlobalCssStylesheet({
     id: 'base',
-    content: `
+    content: stylesheet`
         body {
             background: var(${themeDefinition.bodyBackground.cssVar});
             color: var(${themeDefinition.common.fontColor.cssVar});
@@ -15,6 +19,10 @@ export const themeBase = new GlobalCssStylesheet({
 
         * {
             box-sizing: border-box;
+        }
+
+        .${disabled}, :disabled {
+            opacity: 0.5;
         }
     `,
 });

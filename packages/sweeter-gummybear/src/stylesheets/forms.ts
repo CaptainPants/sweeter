@@ -12,19 +12,6 @@ const inputPaddingMixin = stylesheet`
     padding: .375rem .75rem;
 `;
 
-export const disabled = new GlobalCssClass({
-    className: 'disabled',
-    content: () => stylesheet`
-        opacity: 0.5;
-
-        @root {
-            :disabled {
-                opacity: 0.5;
-            }
-        }
-    `,
-});
-
 export const input = new GlobalCssClass({
     className: 'input',
     content: () => stylesheet`

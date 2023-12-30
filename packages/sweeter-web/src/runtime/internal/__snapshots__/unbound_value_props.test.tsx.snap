@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`input type="checkbox" 1`] = `"<input type=\\"checkbox\\" readonly=\\"\\">"`;
+
+exports[`input type="text" 1`] = `"<input type=\\"text\\" readonly=\\"\\">"`;
+
+exports[`textarea 1`] = `"<textarea readonly=\\"\\"></textarea>"`;

@@ -6,6 +6,7 @@ import {
     button,
     variants,
     tags,
+    disabled,
 } from '@captainpants/sweeter-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
@@ -22,14 +23,14 @@ const Theme = createTheme({});
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function App(props: {}, init: ComponentInit): JSX.Element {
-    const value = $mutable('test');
-    const nonMutable = $calc(() => value.value);
+    const mutable1 = $mutable('test');
+    const textinputNonMutable = $calc(() => mutable1.value);
 
-    const dropdown = $mutable<string>('Option 3');
+    const select = $mutable<string>('Option 3');
 
     const ids = {
-        first: init.nextId(),
-        second: init.nextId(),
+        mutable1_1: init.nextId(),
+        mutable1_2: init.nextId(),
         nonMutable: init.nextId(),
         disabled: init.nextId(),
         select: init.nextId(),
@@ -45,48 +46,37 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                 <h1>This is a test</h1>
                 <div class={grid.container}>
                     <div class={grid.row}>
+                        <h2 class={grid.columns.xs._12}>
+                            mutable1:
+                        </h2>
+                    </div>
+                    <div class={grid.row}>
                         <div class={grid.columns.xs._3}>
-                            <label for={ids.first} class={forms.label}>
-                                First:
+                            <label for={ids.mutable1_1} class={forms.label}>
+                                mutable1:
                             </label>
                         </div>
                         <div class={grid.columns.xs._9}>
                             <input
-                                id={ids.first}
+                                id={ids.mutable1_1}
                                 type="text"
                                 class={[forms.input, fillWidth]}
-                                bind:value={value}
+                                bind:value={mutable1}
                             />
                         </div>
                     </div>
                     <div class={grid.row}>
-                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.second} class={forms.label}>
-                                Second:
+                        <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
+                            <label for={ids.mutable1_2} class={forms.label}>
+                                mutable1 again:
                             </label>
                         </div>
-                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                        <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
                             <input
                                 type="text"
-                                id={ids.second}
+                                id={ids.mutable1_2}
                                 class={[forms.input, fillWidth]}
-                                bind:value={value}
-                            />
-                        </div>
-                    </div>
-                    <div class={grid.row}>
-                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.nonMutable} class={forms.label}>
-                                Non-mutable:
-                            </label>
-                        </div>
-                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
-                            <input
-                                type="text"
-                                disabled
-                                id={ids.nonMutable}
-                                class={[forms.input, fillWidth]}
-                                value={nonMutable}
+                                bind:value={mutable1}
                             />
                         </div>
                     </div>
@@ -94,19 +84,40 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
                             <label
                                 for={ids.disabled}
-                                class={[forms.label, forms.disabled]}
+                                class={[forms.label, disabled]}
                             >
-                                Disabled:
+                                mutable1 with disabled input:
                             </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
                                 id={ids.disabled}
-                                class={[forms.input, fillWidth, forms.disabled]}
-                                value={nonMutable}
+                                class={[forms.input, fillWidth]}
+                                bind:value={mutable1}
+                                disabled
                             />
                         </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
+                            <label for={ids.nonMutable} class={forms.label}>
+                                Non-mutable derived from mutable1:
+                            </label>
+                        </div>
+                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                            <input
+                                type="text"
+                                id={ids.nonMutable}
+                                class={[forms.input, fillWidth]}
+                                value={textinputNonMutable}
+                            />
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <h2 class={grid.columns.xs._12}>
+                            select
+                        </h2>
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
@@ -118,9 +129,27 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <select
                                 id={ids.select}
                                 class={[forms.select, fillWidth]}
-                                bind:value={dropdown}
+                                bind:value={select}
                             >
-                                015.
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                                <option>Option 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
+                            <label for={ids.select} class={[forms.label, disabled]}>
+                                Select / disabled:
+                            </label>
+                        </div>
+                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                            <select
+                                id={ids.select}
+                                class={[forms.select, fillWidth]}
+                                bind:value={select}
+                                disabled
+                            >
                                 <option>Option 1</option>
                                 <option>Option 2</option>
                                 <option>Option 3</option>
@@ -130,7 +159,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
                             <label for={ids.checkbox} class={forms.label}>
-                                Select:
+                                Checkbox:
                             </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
@@ -138,7 +167,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="checkbox"
                                 id={ids.checkbox}
                                 class={[forms.input]}
-                                bind:value={dropdown}
+                                bind:value={select}
                             />
                         </div>
                     </div>

@@ -46,9 +46,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                 <h1>This is a test</h1>
                 <div class={grid.container}>
                     <div class={grid.row}>
-                        <h2 class={grid.columns.xs._12}>
-                            mutable1:
-                        </h2>
+                        <h2 class={grid.columns.xs._12}>Text input:</h2>
                     </div>
                     <div class={grid.row}>
                         <div class={grid.columns.xs._3}>
@@ -68,7 +66,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
                             <label for={ids.mutable1_2} class={forms.label}>
-                                mutable1 again:
+                                Text input (bound to the same backing field):
                             </label>
                         </div>
                         <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
@@ -86,7 +84,8 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 for={ids.disabled}
                                 class={[forms.label, disabled]}
                             >
-                                mutable1 with disabled input:
+                                Disabled text input (bound to the same backing
+                                field):
                             </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
@@ -102,7 +101,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
                             <label for={ids.nonMutable} class={forms.label}>
-                                Non-mutable derived from mutable1:
+                                Text input bound to a read only signal:
                             </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
@@ -115,9 +114,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         </div>
                     </div>
                     <div class={grid.row}>
-                        <h2 class={grid.columns.xs._12}>
-                            select
-                        </h2>
+                        <h2 class={grid.columns.xs._12}>Select:</h2>
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
@@ -139,8 +136,11 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.select} class={[forms.label, disabled]}>
-                                Select / disabled:
+                            <label
+                                for={ids.select}
+                                class={[forms.label, disabled]}
+                            >
+                                Disabled select:
                             </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>

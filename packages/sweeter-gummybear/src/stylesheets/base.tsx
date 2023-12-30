@@ -1,4 +1,8 @@
-import { GlobalCssClass, GlobalCssStylesheet, stylesheet } from '@captainpants/sweeter-web';
+import {
+    GlobalCssClass,
+    GlobalCssStylesheet,
+    stylesheet,
+} from '@captainpants/sweeter-web';
 import { themeDefinition } from './internal/themeOptionDefinitions.js';
 
 export const disabled = new GlobalCssClass({

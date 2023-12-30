@@ -57,12 +57,7 @@ const bindableMap = new Map<string, MutableMapping>([
     ],
 ]);
 
-const specialHandlingProps = [
-    'children',
-    'ref',
-    'class',
-    'style',
-];
+const specialHandlingProps = ['children', 'ref', 'class', 'style'];
 const causesReadonlyIfOneWayBound = ['checked', 'value'];
 
 export function bindDOMMiscProps<TElementType extends string>(

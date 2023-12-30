@@ -18,9 +18,7 @@ import {
     $mutable,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
-import {
-    type ThreeValueBoolean,
-} from '@captainpants/sweeter-web';
+import { type ThreeValueBoolean } from '@captainpants/sweeter-web';
 
 const Theme = createTheme({});
 
@@ -33,12 +31,17 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
     const checked = $mutable<ThreeValueBoolean>(false);
 
     const ids = {
-        mutable1_1: init.nextId(),
-        mutable1_2: init.nextId(),
-        nonMutable: init.nextId(),
-        disabled: init.nextId(),
+        textMutable1: init.nextId(),
+        textMutable2: init.nextId(),
+        textNonMutable: init.nextId(),
+        textDisabled: init.nextId(),
+        textReadonly: init.nextId(),
+
         select: init.nextId(),
+        selectDisabled: init.nextId(),
         checkbox: init.nextId(),
+        checkboxDisabled: init.nextId(),
+
         radiobuttons: init.nextId(),
         buttons: init.nextId(),
     } as const;
@@ -54,13 +57,13 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={grid.columns.xs._3}>
-                            <label for={ids.mutable1_1} class={forms.label}>
+                            <label for={ids.textMutable1} class={forms.label}>
                                 Text input:
                             </label>
                         </div>
                         <div class={grid.columns.xs._9}>
                             <input
-                                id={ids.mutable1_1}
+                                id={ids.textMutable1}
                                 type="text"
                                 class={[forms.input, fillWidth]}
                                 bind:value={mutable1}
@@ -69,14 +72,14 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
-                            <label for={ids.mutable1_2} class={forms.label}>
+                            <label for={ids.textMutable2} class={forms.label}>
                                 Text input (bound to the same backing field):
                             </label>
                         </div>
                         <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
                             <input
                                 type="text"
-                                id={ids.mutable1_2}
+                                id={ids.textMutable2}
                                 class={[forms.input, fillWidth]}
                                 bind:value={mutable1}
                             />
@@ -85,7 +88,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
                             <label
-                                for={ids.disabled}
+                                for={ids.textDisabled}
                                 class={[forms.label, disabled]}
                             >
                                 Disabled text input (bound to the same backing
@@ -95,7 +98,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
-                                id={ids.disabled}
+                                id={ids.textDisabled}
                                 class={[forms.input, fillWidth]}
                                 bind:value={mutable1}
                                 disabled
@@ -104,10 +107,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label
-                                for={ids.disabled}
-                                class={[forms.label]}
-                            >
+                            <label for={ids.textReadonly} class={[forms.label]}>
                                 Readonly text input (bound to the same backing
                                 field):
                             </label>
@@ -115,7 +115,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
-                                id={ids.disabled}
+                                id={ids.textReadonly}
                                 class={[forms.input, fillWidth]}
                                 bind:value={mutable1}
                                 readonly
@@ -124,14 +124,14 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.nonMutable} class={forms.label}>
+                            <label for={ids.textNonMutable} class={forms.label}>
                                 Text input bound to a read only signal:
                             </label>
                         </div>
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <input
                                 type="text"
-                                id={ids.nonMutable}
+                                id={ids.textNonMutable}
                                 class={[forms.input, fillWidth]}
                                 value={textinputNonMutable}
                             />
@@ -197,7 +197,10 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </div>
                     <div class={grid.row}>
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
-                            <label for={ids.checkbox} class={[forms.label, disabled]}>
+                            <label
+                                for={ids.checkboxDisabled}
+                                class={[forms.label, disabled]}
+                            >
                                 Disabled checkbox:
                             </label>
                         </div>

@@ -18,6 +18,9 @@ import {
     $mutable,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
+import {
+    type ThreeValueBoolean,
+} from '@captainpants/sweeter-web';
 
 const Theme = createTheme({});
 
@@ -27,6 +30,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
     const textinputNonMutable = $calc(() => mutable1.value);
 
     const select = $mutable<string>('Option 3');
+    const checked = $mutable<ThreeValueBoolean>(false);
 
     const ids = {
         mutable1_1: init.nextId(),
@@ -51,7 +55,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     <div class={grid.row}>
                         <div class={grid.columns.xs._3}>
                             <label for={ids.mutable1_1} class={forms.label}>
-                                mutable1:
+                                Text input:
                             </label>
                         </div>
                         <div class={grid.columns.xs._9}>
@@ -95,6 +99,26 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 class={[forms.input, fillWidth]}
                                 bind:value={mutable1}
                                 disabled
+                            />
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
+                            <label
+                                for={ids.disabled}
+                                class={[forms.label]}
+                            >
+                                Readonly text input (bound to the same backing
+                                field):
+                            </label>
+                        </div>
+                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                            <input
+                                type="text"
+                                id={ids.disabled}
+                                class={[forms.input, fillWidth]}
+                                bind:value={mutable1}
+                                readonly
                             />
                         </div>
                     </div>
@@ -167,7 +191,23 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="checkbox"
                                 id={ids.checkbox}
                                 class={[forms.input]}
-                                bind:value={select}
+                                bind:checked={checked}
+                            />
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
+                            <label for={ids.checkbox} class={[forms.label, disabled]}>
+                                Disabled checkbox:
+                            </label>
+                        </div>
+                        <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
+                            <input
+                                type="checkbox"
+                                id={ids.checkbox}
+                                class={[forms.input]}
+                                bind:checked={checked}
+                                disabled
                             />
                         </div>
                     </div>

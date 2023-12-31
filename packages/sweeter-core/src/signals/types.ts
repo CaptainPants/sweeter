@@ -10,11 +10,16 @@ export type SignalListener<T> = (
     next: SignalState<T>,
 ) => void;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type KeysForDerivable<T> = T extends object | any[] ? keyof T : never;
+
 export interface Signal<T> {
     /**
      * Get the current value of the signal and subscribe for updates.
      */
     readonly value: T;
+
+    readonly [signalMarker]: true;
 
     /**
      * Get the current value of the signal without subscribing for updates.
@@ -48,9 +53,9 @@ export interface Signal<T> {
 }
 
 export interface WritableSignal<T> {
-    update(value: T): void; // You can't have a write only property so using a method
-
     readonly [writableSignalMarker]: true;
+
+    update(value: T): void; // You can't have a write only property so using a method
 }
 
 export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {}

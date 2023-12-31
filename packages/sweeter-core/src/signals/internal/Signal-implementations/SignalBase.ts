@@ -10,14 +10,13 @@ import type { Signal, SignalListener, SignalState } from '../../types.js';
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
-        this[signalMarker] = true;
         this.#state = state;
     }
 
     #state: SignalState<T>;
     #listeners = new ListenerSet<SignalListener<T>>();
 
-    public [signalMarker]: true;
+    public readonly [signalMarker] = true;
 
     public get value(): T {
         announceSignalUsage(this);

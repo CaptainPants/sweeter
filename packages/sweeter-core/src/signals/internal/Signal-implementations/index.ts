@@ -6,3 +6,6 @@ export * from './ControlledSignal.js';
 export * from './DeferredSignal.js';
 export * from './MutableCalculatedSignal.js';
 export * from './MutableValueSignal.js';
+
+// SIDE EFFECTS HERE
+import './add-convenience-functions.js';

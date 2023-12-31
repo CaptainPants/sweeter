@@ -1,14 +1,14 @@
-import type { SavedExecutionContext } from '../../executionContext/saveExecutionContext.js';
-import { saveExecutionContext } from '../../executionContext/saveExecutionContext.js';
-import { SignalBase } from '../SignalBase.js';
-import { callAndReturnDependencies } from '../ambient.js';
-import { deferForBatchEnd, isBatching } from '../batching.js';
+import type { SavedExecutionContext } from '../../../executionContext/saveExecutionContext.js';
+import { saveExecutionContext } from '../../../executionContext/saveExecutionContext.js';
+import { SignalBase } from './SignalBase.js';
+import { callAndReturnDependencies } from '../../ambient.js';
+import { deferForBatchEnd, isBatching } from '../../batching.js';
 import {
     type SignalState,
     type Signal,
     type CalculatedSignalOptions,
-} from '../types.js';
-import { finishCalculation, startCalculation } from './calculationDeferral.js';
+} from '../../types.js';
+import { finishCalculation, startCalculation } from '../calculationDeferral.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
     const result = (): SignalState<T> => {

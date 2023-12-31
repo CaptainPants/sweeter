@@ -1,4 +1,4 @@
-import { MutableCalculatedSignal } from './internal/MutableCalculatedSignal.js';
+import { MutableCalculatedSignal } from './internal/Signal-implementations.js';
 import type { ReadWriteSignal } from './types.js';
 
 /**

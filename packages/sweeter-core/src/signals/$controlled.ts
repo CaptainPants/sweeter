@@ -1,5 +1,5 @@
 import { type SignalController } from './SignalController.js';
-import { ControlledSignal } from './internal/ControlledSignal.js';
+import { ControlledSignal } from './internal/Signal-implementations.js';
 import { type Signal } from './types.js';
 
 /**

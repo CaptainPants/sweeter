@@ -1,7 +1,7 @@
-import { SignalBase } from '../SignalBase.js';
-import { announceMutatingSignal, announceSignalUsage } from '../ambient.js';
-import { writableSignalMarker } from '../internal/markers.js';
-import { type ReadWriteSignal } from '../types.js';
+import { SignalBase } from './SignalBase.js';
+import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
+import { writableSignalMarker } from '../markers.js';
+import { type ReadWriteSignal } from '../../types.js';
 
 export class MutableValueSignal<T>
     extends SignalBase<T>

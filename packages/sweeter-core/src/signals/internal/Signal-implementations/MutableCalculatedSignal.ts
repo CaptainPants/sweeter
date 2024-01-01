@@ -1,7 +1,7 @@
 import { CalculatedSignal } from './CalculatedSignal.js';
 import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
 import { writableSignalMarker } from '../markers.js';
-import { type Signal, type ReadWriteSignal } from '../../types.js';
+import { type ReadWriteSignal } from '../../types.js';
 
 export class MutableCalculatedSignal<T>
     extends CalculatedSignal<T>

@@ -14,8 +14,8 @@ import {
 //import viteLogo from "/vite.svg";
 
 import {
-    $calc,
     $mutable,
+    $property,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 import { type ThreeValueBoolean } from '@captainpants/sweeter-web';
@@ -24,11 +24,11 @@ const Theme = createTheme({});
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function App(props: {}, init: ComponentInit): JSX.Element {
-    const mutable1 = $mutable('test');
-    const textinputNonMutable = $calc(() => mutable1.value);
-
-    const select = $mutable<string>('Option 3');
-    const checked = $mutable<ThreeValueBoolean>(false);
+    const state = $mutable({
+        textInput: 'test',
+        select: 'Option 3',
+        checked: false as ThreeValueBoolean,
+    });
 
     const ids = {
         textMutable1: init.nextId(),
@@ -66,7 +66,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 id={ids.textMutable1}
                                 type="text"
                                 class={[forms.input, fillWidth]}
-                                bind:value={mutable1}
+                                bind:value={$property(state, 'textInput')}
                             />
                         </div>
                     </div>
@@ -81,7 +81,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textMutable2}
                                 class={[forms.input, fillWidth]}
-                                bind:value={mutable1}
+                                bind:value={$property(state, 'textInput')}
                             />
                         </div>
                     </div>
@@ -100,7 +100,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textDisabled}
                                 class={[forms.input, fillWidth]}
-                                bind:value={mutable1}
+                                bind:value={$property(state, 'textInput')}
                                 disabled
                             />
                         </div>
@@ -117,7 +117,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textReadonly}
                                 class={[forms.input, fillWidth]}
-                                bind:value={mutable1}
+                                bind:value={$property(state, 'textInput')}
                                 readonly
                             />
                         </div>
@@ -133,7 +133,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textNonMutable}
                                 class={[forms.input, fillWidth]}
-                                value={textinputNonMutable}
+                                value={$property(state, 'textInput', true)}
                             />
                         </div>
                     </div>
@@ -150,7 +150,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <select
                                 id={ids.select}
                                 class={[forms.select, fillWidth]}
-                                bind:value={select}
+                                bind:value={$property(state, 'select')}
                             >
                                 <option>Option 1</option>
                                 <option>Option 2</option>
@@ -171,7 +171,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <select
                                 id={ids.select}
                                 class={[forms.select, fillWidth]}
-                                bind:value={select}
+                                bind:value={$property(state, 'select')}
                                 disabled
                             >
                                 <option>Option 1</option>
@@ -191,7 +191,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="checkbox"
                                 id={ids.checkbox}
                                 class={[forms.input]}
-                                bind:checked={checked}
+                                bind:checked={$property(state, 'checked')}
                             />
                         </div>
                     </div>
@@ -209,7 +209,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="checkbox"
                                 id={ids.checkbox}
                                 class={[forms.input]}
-                                bind:checked={checked}
+                                bind:checked={$property(state, 'checked')}
                                 disabled
                             />
                         </div>

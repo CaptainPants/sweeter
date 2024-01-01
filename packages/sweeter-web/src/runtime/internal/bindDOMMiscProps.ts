@@ -12,6 +12,7 @@ type Untyped = Record<string, unknown>;
 const mappedProperties: Record<string, string> = {
     class: 'className',
     for: 'htmlFor',
+    readonly: 'readOnly',
 };
 
 interface MutableMapping {

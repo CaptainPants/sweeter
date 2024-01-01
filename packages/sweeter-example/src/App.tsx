@@ -15,7 +15,7 @@ import {
 
 import {
     $mutable,
-    $property,
+    $propertyOf,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 import { type ThreeValueBoolean } from '@captainpants/sweeter-web';
@@ -66,7 +66,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 id={ids.textMutable1}
                                 type="text"
                                 class={[forms.input, fillWidth]}
-                                bind:value={$property(state, 'textInput')}
+                                bind:value={$propertyOf(state, 'textInput')}
                             />
                         </div>
                     </div>
@@ -81,7 +81,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textMutable2}
                                 class={[forms.input, fillWidth]}
-                                bind:value={$property(state, 'textInput')}
+                                bind:value={$propertyOf(state, 'textInput')}
                             />
                         </div>
                     </div>
@@ -100,7 +100,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textDisabled}
                                 class={[forms.input, fillWidth]}
-                                bind:value={$property(state, 'textInput')}
+                                bind:value={$propertyOf(state, 'textInput')}
                                 disabled
                             />
                         </div>
@@ -117,7 +117,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textReadonly}
                                 class={[forms.input, fillWidth]}
-                                bind:value={$property(state, 'textInput')}
+                                bind:value={$propertyOf(state, 'textInput')}
                                 readonly
                             />
                         </div>
@@ -133,7 +133,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="text"
                                 id={ids.textNonMutable}
                                 class={[forms.input, fillWidth]}
-                                value={$property(state, 'textInput', true)}
+                                value={$propertyOf(state, 'textInput', true)}
                             />
                         </div>
                     </div>
@@ -150,7 +150,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <select
                                 id={ids.select}
                                 class={[forms.select, fillWidth]}
-                                bind:value={$property(state, 'select')}
+                                bind:value={$propertyOf(state, 'select')}
                             >
                                 <option>Option 1</option>
                                 <option>Option 2</option>
@@ -171,7 +171,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <select
                                 id={ids.select}
                                 class={[forms.select, fillWidth]}
-                                bind:value={$property(state, 'select')}
+                                bind:value={$propertyOf(state, 'select')}
                                 disabled
                             >
                                 <option>Option 1</option>
@@ -191,7 +191,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="checkbox"
                                 id={ids.checkbox}
                                 class={[forms.input]}
-                                bind:checked={$property(state, 'checked')}
+                                bind:checked={$propertyOf(state, 'checked')}
                             />
                         </div>
                     </div>
@@ -209,7 +209,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 type="checkbox"
                                 id={ids.checkbox}
                                 class={[forms.input]}
-                                bind:checked={$property(state, 'checked')}
+                                bind:checked={$propertyOf(state, 'checked')}
                                 disabled
                             />
                         </div>

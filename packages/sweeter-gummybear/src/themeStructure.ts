@@ -34,7 +34,7 @@ export const themeStructure = {
         },
         borderRadius: {
             cssVar: '--input-border-radius',
-            defaultValue: '0', // '0.375rem' as string,
+            defaultValue: '0' as string, // '0.375rem' as string,
         },
         backgroundColor: {
             cssVar: '--input-background-color',

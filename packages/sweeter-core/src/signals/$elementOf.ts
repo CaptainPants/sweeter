@@ -5,25 +5,10 @@ import {
 import { isReadWriteSignal } from './isSignal.js';
 import { type Signal, type ReadWriteSignal } from './types.js';
 
-/**
- * Create a new signal pointing to an array element of an existing signal.
- *
- * If the source signal was mutable, and readonly = false, then changes are propogated back to the source signal.
- * @param source
- * @param keyOrIndex
- * @param readonly The derived signal must be readonly - Defaults to false
- */
-export function $elementOf<
-    TSource extends readonly unknown[],
-    TKeyOrIndex extends keyof TSource & number,
->(
-    source: ReadWriteSignal<TSource>,
-    keyOrIndex: TKeyOrIndex,
-    /**
-     * @default false
-     */
-    readonly?: boolean,
-): ReadWriteSignal<TSource[TKeyOrIndex]> & { value: TSource[TKeyOrIndex] };
+type ElementType<
+    T extends readonly unknown[],
+    TKey extends keyof T,
+> = number extends T['length'] ? T[TKey] | undefined : T[TKey];
 
 /**
  * Create a new signal pointing to an array element of an existing signal.
@@ -35,15 +20,39 @@ export function $elementOf<
  */
 export function $elementOf<
     TSource extends readonly unknown[],
-    TKey extends keyof TSource & number,
+    TKeyOrIndex extends keyof TSource,
 >(
-    source: Signal<TSource>,
-    keyOrIndex: TKey,
+    source: ReadWriteSignal<TSource>,
+    keyOrIndex: TKeyOrIndex,
     /**
      * @default false
      */
     readonly?: boolean,
-): Signal<TSource[TKey]> & { value: TSource[TKey] };
+): ReadWriteSignal<ElementType<TSource, TKeyOrIndex>> & {
+    value: ElementType<TSource, TKeyOrIndex>;
+};
+
+/**
+ * Create a new signal pointing to an array element of an existing signal.
+ *
+ * If the source signal was mutable, and readonly = false, then changes are propogated back to the source signal.
+ * @param source
+ * @param keyOrIndex
+ * @param readonly The derived signal must be readonly - Defaults to false
+ */
+export function $elementOf<
+    TSource extends readonly unknown[],
+    TKeyOrIndex extends keyof TSource,
+>(
+    source: Signal<TSource>,
+    keyOrIndex: TKeyOrIndex,
+    /**
+     * @default false
+     */
+    readonly?: boolean,
+): Signal<ElementType<TSource, TKeyOrIndex>> & {
+    value: ElementType<TSource, TKeyOrIndex>;
+};
 
 export function $elementOf<
     TSource extends readonly unknown[],

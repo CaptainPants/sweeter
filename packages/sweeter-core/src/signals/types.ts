@@ -10,9 +10,6 @@ export type SignalListener<T> = (
     next: SignalState<T>,
 ) => void;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type KeysForDerivable<T> = T extends object | any[] ? keyof T : never;
-
 export interface Signal<T> {
     /**
      * Get the current value of the signal and subscribe for updates.

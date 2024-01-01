@@ -2,7 +2,8 @@ export * from './$calc.js';
 export * from './$defer.js';
 export * from './$mutable.js';
 export * from './$mutableFromCallbacks.js';
-export * from './$mutableFromIndex.js';
+export * from './$property.js';
+export * from './$element.js';
 
 export * from './ambient.js';
 export * from './afterCalculationsComplete.js';

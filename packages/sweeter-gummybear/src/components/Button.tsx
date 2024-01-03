@@ -24,7 +24,7 @@ export type ButtonProps = PropertiesMightBeSignals<{
         | ((evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void)
         | undefined;
 }> & {
-    passthrough?: IntrinsicElementProps<'button'> | undefined;
+    passthroughProps?: IntrinsicElementProps<'button'> | undefined;
 };
 
 export const Button: Component<ButtonProps> = ({
@@ -33,9 +33,9 @@ export const Button: Component<ButtonProps> = ({
     onclick,
     outline = false,
     disabled = false,
-    passthrough: {
-        class: classFromButtonProps,
-        onclick: onclickFromButtonProps,
+    passthroughProps: {
+        class: classFromPassthoughProps,
+        onclick: onclickFromPassthroughProps,
         ...buttonProps
     } = {},
 }) => {
@@ -60,9 +60,9 @@ export const Button: Component<ButtonProps> = ({
 
     return (
         <button
-            onclick={combineEventHandlers(onclick, onclickFromButtonProps)}
+            onclick={combineEventHandlers(onclick, onclickFromPassthroughProps)}
             disabled={disabled}
-            class={[classFromButtonProps, fromVariantsSignal]}
+            class={[classFromPassthoughProps, fromVariantsSignal]}
             {...buttonProps}
         >
             {children}

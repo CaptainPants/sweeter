@@ -1,22 +1,18 @@
 import { GlobalCssClass } from '@captainpants/sweeter-web';
+import { createConstantMap } from '../internal/createConstantMap.js';
+import { sizeNames, tagNames, variantNames } from '../internal/constants.js';
 
-export const variants = {
-    primary: new GlobalCssClass({ className: 'primary' }),
-    secondary: new GlobalCssClass({ className: 'secondary' }),
-    success: new GlobalCssClass({ className: 'success' }),
-    danger: new GlobalCssClass({ className: 'danger' }),
-    warning: new GlobalCssClass({ className: 'warning' }),
-    info: new GlobalCssClass({ className: 'info' }),
-    light: new GlobalCssClass({ className: 'light' }),
-    dark: new GlobalCssClass({ className: 'dark' }),
-};
+export const variants = createConstantMap(
+    variantNames,
+    (name) => new GlobalCssClass({ className: name }),
+);
 
-export const tags = {
-    outline: new GlobalCssClass({ className: 'outline' }),
-    disabled: new GlobalCssClass({ className: 'disabled' }),
-};
+export const tags = createConstantMap(
+    tagNames,
+    (name) => new GlobalCssClass({ className: name }),
+);
 
-export const sizes = {
-    large: new GlobalCssClass({ className: 'large' }),
-    small: new GlobalCssClass({ className: 'small' }),
-};
+export const sizes = createConstantMap(
+    sizeNames,
+    (name) => new GlobalCssClass({ className: name }),
+);

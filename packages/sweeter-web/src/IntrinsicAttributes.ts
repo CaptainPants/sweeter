@@ -17,7 +17,7 @@ type PrefixedNames<
     TPrefix extends string,
 > = TNames extends `${TPrefix}${string}` ? TNames : never;
 
-type Event<TElement, TEvent> = Omit<TEvent, 'target'> & {
+export type TypedEvent<TElement, TEvent> = Omit<TEvent, 'target'> & {
     /**
      * Returns the object to which event is dispatched (its target).
      */
@@ -35,10 +35,15 @@ type FirstParamForProperty<TElement, PropertyName extends string> = FirstParam<
 >;
 
 type EventHandlerProperties<TElement extends Element> = {
-    [Property in EventHandlerNames<TElement>]?: (
-        this: TElement,
-        evt: Event<TElement, FirstParamForProperty<TElement, Property>>,
-    ) => void;
+    [Property in EventHandlerNames<TElement>]?:
+        | ((
+              this: TElement,
+              evt: TypedEvent<
+                  TElement,
+                  FirstParamForProperty<TElement, Property>
+              >,
+          ) => void)
+        | undefined;
 };
 
 // ==== CSS
@@ -58,9 +63,9 @@ type AllElementAttributes<TElement> = {
     id?: string;
     title?: string;
 
-    class?: ElementCssClasses;
-    style?: Styles;
-    children?: JSX.Element;
+    class?: ElementCssClasses | undefined;
+    style?: Styles | undefined;
+    children?: JSX.Element | undefined;
 
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;
 };
@@ -71,31 +76,31 @@ type HasFormControlValueAttribute = {
 };
 
 type HasCheckedAttribute = {
-    checked?: ThreeValueBoolean;
+    checked?: ThreeValueBoolean | undefined;
 
     'bind:checked'?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 };
 
 type HasNameAttribute = {
-    name?: string;
+    name?: string | undefined;
 };
 
 type HasReadOnlyAttribute = {
-    readonly?: boolean;
+    readonly?: boolean | undefined;
 };
 
 type HasDisabledAttribute = {
-    disabled?: boolean;
+    disabled?: boolean | undefined;
 };
 
 // == Element-specific ==
 
 type HTMLOptionElementAttributes = {
-    value?: MightBeSignal<string>;
+    value?: MightBeSignal<string> | undefined;
 };
 
 type HTMLLabelElementAttributes = {
-    for?: string;
+    for?: string | undefined;
 };
 
 type InputType =
@@ -143,9 +148,15 @@ type HTMLSelectElementAttributes = HasFormControlValueAttribute &
     HasDisabledAttribute &
     HasNameAttribute;
 
+type HTMLButtonElementAttributes = HasFormControlValueAttribute &
+    HasDisabledAttribute &
+    HasNameAttribute;
+
 // == (END) Element-specific ==
 
-type SpecificElementAttributes<TElement> = TElement extends HTMLLabelElement
+type SpecificElementAttributes<TElement> = TElement extends HTMLButtonElement
+    ? HTMLButtonElementAttributes
+    : TElement extends HTMLLabelElement
     ? HTMLLabelElementAttributes
     : TElement extends HTMLInputElement
     ? HTMLInputElementAttributes

@@ -11,18 +11,20 @@ import {
     type ElementCssClasses,
 } from '@captainpants/sweeter-web';
 import { tags, variants } from '../stylesheets/markers.js';
-import { combineHandlers } from '../internal/combineHandlers.js';
+import { combineEventHandlers } from '../internal/combineEventHandlers.js';
 
 export type ButtonProps = PropertiesMightBeSignals<{
-    children: JSX.Element;
+    children?: JSX.Element | undefined;
 
     variant?: VariantName | undefined;
-    outline?: boolean;
-    disabled?: boolean;
+    outline?: boolean | undefined;
+    disabled?: boolean | undefined;
 
-    onclick?: (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void;
+    onclick?:
+        | ((evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void)
+        | undefined;
 }> & {
-    buttonProps: IntrinsicElementProps<'button'>;
+    passthrough?: IntrinsicElementProps<'button'> | undefined;
 };
 
 export const Button: Component<ButtonProps> = ({
@@ -31,11 +33,11 @@ export const Button: Component<ButtonProps> = ({
     onclick,
     outline = false,
     disabled = false,
-    buttonProps: {
+    passthrough: {
         class: classFromButtonProps,
         onclick: onclickFromButtonProps,
         ...buttonProps
-    },
+    } = {},
 }) => {
     const fromVariantsSignal = $calc(() => {
         const fromVariants: ElementCssClasses = [];
@@ -58,7 +60,7 @@ export const Button: Component<ButtonProps> = ({
 
     return (
         <button
-            onclick={combineHandlers(onclick, onclickFromButtonProps)}
+            onclick={combineEventHandlers(onclick, onclickFromButtonProps)}
             disabled={disabled}
             class={[classFromButtonProps, fromVariantsSignal]}
             {...buttonProps}

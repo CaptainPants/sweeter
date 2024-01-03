@@ -74,6 +74,9 @@ type HasFormControlValueAttribute = {
     value?: string | undefined;
     'bind:value'?: ReadWriteSignal<string> | undefined;
 };
+type HasNonBindableFormControlValueAttribute = {
+    value?: string | undefined;
+};
 
 type HasCheckedAttribute = {
     checked?: ThreeValueBoolean | undefined;
@@ -148,7 +151,7 @@ type HTMLSelectElementAttributes = HasFormControlValueAttribute &
     HasDisabledAttribute &
     HasNameAttribute;
 
-type HTMLButtonElementAttributes = HasFormControlValueAttribute &
+type HTMLButtonElementAttributes = HasNonBindableFormControlValueAttribute &
     HasDisabledAttribute &
     HasNameAttribute;
 

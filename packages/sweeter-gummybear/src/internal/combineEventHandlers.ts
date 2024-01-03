@@ -1,7 +1,7 @@
 import { $peek, type MightBeSignal } from '@captainpants/sweeter-core';
 import { type TypedEvent } from '@captainpants/sweeter-web';
 
-export function combineHandlers<TElement extends Element, TEvent extends Event>(
+export function combineEventHandlers<TElement extends Element, TEvent extends Event>(
     ...handlers: MightBeSignal<
         ((evt: TypedEvent<TElement, TEvent>) => void) | undefined
     >[]

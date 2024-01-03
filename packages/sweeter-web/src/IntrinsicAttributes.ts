@@ -60,8 +60,8 @@ export type Styles = {
 // ==== Generic
 
 type AllElementAttributes<TElement> = {
-    id?: string;
-    title?: string;
+    id?: string | undefined;
+    title?: string | undefined;
 
     class?: ElementCssClasses | undefined;
     style?: Styles | undefined;
@@ -106,7 +106,7 @@ type HTMLLabelElementAttributes = {
     for?: string | undefined;
 };
 
-type InputType =
+export type InputType =
     | 'button'
     | 'checkbox'
     | 'color'
@@ -133,8 +133,8 @@ type InputType =
     | (string & {});
 
 type HTMLInputElementAttributes = {
-    placeholder?: string;
-    type?: InputType;
+    placeholder?: string | undefined;
+    type?: InputType | undefined;
 } & HasFormControlValueAttribute &
     HasCheckedAttribute &
     HasDisabledAttribute &
@@ -142,8 +142,9 @@ type HTMLInputElementAttributes = {
     HasNameAttribute;
 
 type HTMLTextAreaAttributes = {
-    placeholder?: string;
+    placeholder?: string | undefined;
 } & HasFormControlValueAttribute &
+    HasDisabledAttribute &
     HasReadOnlyAttribute &
     HasNameAttribute;
 

@@ -5,13 +5,14 @@ import {
     $calc,
     $val,
 } from '@captainpants/sweeter-core';
-import { type VariantName } from '../internal/constants.js';
+import { type VariantName } from '../../internal/constants.js';
 import {
     type TypedEvent,
     type ElementCssClasses,
 } from '@captainpants/sweeter-web';
-import { tags, variants } from '../stylesheets/markers.js';
-import { combineEventHandlers } from '../internal/combineEventHandlers.js';
+import { tags, variants } from '../../stylesheets/markers.js';
+import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
+import { button } from '../../stylesheets/button.js';
 
 export type ButtonProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
@@ -19,6 +20,8 @@ export type ButtonProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
     outline?: boolean | undefined;
     disabled?: boolean | undefined;
+
+    id?: string | undefined;
 
     onclick?:
         | ((evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void)
@@ -30,13 +33,14 @@ export type ButtonProps = PropertiesMightBeSignals<{
 export const Button: Component<ButtonProps> = ({
     children,
     variant,
+    id,
     onclick,
     outline = false,
     disabled = false,
     passthroughProps: {
-        class: classFromPassthoughProps,
+        class: classFromPassthroughProps,
         onclick: onclickFromPassthroughProps,
-        ...buttonProps
+        ...passthroughProps
     } = {},
 }) => {
     const fromVariantsSignal = $calc(() => {
@@ -60,10 +64,11 @@ export const Button: Component<ButtonProps> = ({
 
     return (
         <button
+            id={id}
             onclick={combineEventHandlers(onclick, onclickFromPassthroughProps)}
             disabled={disabled}
-            class={[classFromPassthoughProps, fromVariantsSignal]}
-            {...buttonProps}
+            class={[classFromPassthroughProps, fromVariantsSignal, button]}
+            {...passthroughProps}
         >
             {children}
         </button>

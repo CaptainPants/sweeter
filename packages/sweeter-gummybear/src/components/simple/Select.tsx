@@ -6,9 +6,10 @@ import {
     $val,
     type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
-import { type VariantName } from '../internal/constants.js';
+import { type VariantName } from '../../internal/constants.js';
 import { type ElementCssClasses } from '@captainpants/sweeter-web';
-import { variants } from '../stylesheets/markers.js';
+import { variants } from '../../stylesheets/markers.js';
+import { forms } from '../../index.js';
 
 export interface SelectOption {
     text?: string | undefined;
@@ -18,6 +19,7 @@ export interface SelectOption {
 export type SelectProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
+    id?: string;
 
     value?: string | undefined;
 
@@ -32,6 +34,7 @@ export const Select: Component<SelectProps> = ({
     variant,
     disabled = false,
     options,
+    id,
     value,
     'bind:value': bindValue,
     passthrough: { class: classFromPassthroughProps, ...passthroughProps } = {},
@@ -56,10 +59,15 @@ export const Select: Component<SelectProps> = ({
 
     return (
         <select
+            id={id}
             value={value}
             bind:value={bindValue}
             disabled={disabled}
-            class={[classFromPassthroughProps, fromVariantsSignal]}
+            class={[
+                classFromPassthroughProps,
+                fromVariantsSignal,
+                forms.select,
+            ]}
             {...passthroughProps}
         >
             {children}

@@ -125,12 +125,14 @@ export type IntrinsicElementProps<TElementTypeString extends string> =
     PropertiesMightBeSignals<
         Omit<
             IntrinsicElementAttributes<TElementTypeString>,
-            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString>
+            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString> &
+                keyof IntrinsicElementAttributes<TElementTypeString>
         >
     > &
         Pick<
             IntrinsicElementAttributes<TElementTypeString>,
-            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString>
+            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString> &
+                keyof IntrinsicElementAttributes<TElementTypeString>
         >;
 
 /**

@@ -80,6 +80,11 @@ export function bindDOMMiscProps<TElementType extends string>(
 
         const value = (props as Untyped)[propKey];
 
+        if (value === undefined) {
+            // don't assign value if undefined- as we rely on undefined to represent 'not present' for convenience, but its not a valid value for a bunch of properties
+            continue;
+        }
+
         const isBindable = mappedPropKey.startsWith('bind:');
 
         if (isBindable && isReadWriteSignal(value)) {

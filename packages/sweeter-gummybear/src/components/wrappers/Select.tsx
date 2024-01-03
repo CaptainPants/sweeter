@@ -14,6 +14,7 @@ import { forms } from '../../index.js';
 export interface SelectOption {
     text?: string | undefined;
     value: string;
+    disabled?: boolean;
 }
 
 export type SelectProps = PropertiesMightBeSignals<{
@@ -53,7 +54,9 @@ export const Select: Component<SelectProps> = ({
     const children = $calc(() => {
         const optionsResolved = $val(options);
         return optionsResolved.map((item) => (
-            <option value={item.value}>{item.text ?? item.value}</option>
+            <option value={item.value} disabled={item.disabled}>
+                {item.text ?? item.value}
+            </option>
         ));
     });
 

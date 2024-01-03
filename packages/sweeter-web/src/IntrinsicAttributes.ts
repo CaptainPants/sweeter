@@ -100,7 +100,7 @@ type HasDisabledAttribute = {
 
 type HTMLOptionElementAttributes = {
     value?: MightBeSignal<string> | undefined;
-};
+} & HasDisabledAttribute;
 
 type HTMLLabelElementAttributes = {
     for?: string | undefined;

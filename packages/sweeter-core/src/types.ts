@@ -4,10 +4,16 @@ import type { Signal, UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;
 
-/**
- * Alias for JSX.Element that doesn't rely on globals.
- */
-export type JSXElement = JSX.Element;
+export type JSXElement = IntrinsicElement | Signal<JSXElement> | JSXElement[];
+
+export type JSXIntrinsicElements = {
+    [Key in SweeterExtensionPoints.IntrinsicElementNames[keyof SweeterExtensionPoints.IntrinsicElementNames] &
+        string]: IntrinsicElementProps<Key>;
+};
+
+export interface JSXIntrinsicAttributes {
+    readonly key?: JSXKey | undefined;
+}
 
 export type HookConstructor<TArgs extends readonly unknown[], TResult> = new (
     setup: ComponentInit,

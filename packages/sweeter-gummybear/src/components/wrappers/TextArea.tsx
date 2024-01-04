@@ -46,8 +46,8 @@ export const TextArea: Component<TextAreaProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const fromVariantsSignal = $calc(() => {
-        const fromVariants: ElementCssClasses = [];
+    const classesFromProps = $calc(() => {
+        const result: ElementCssClasses = [];
 
         const resolvedVariant = $val(variant);
         if (resolvedVariant) {
@@ -55,10 +55,10 @@ export const TextArea: Component<TextAreaProps> = ({
         }
 
         if ($val(disabled)) {
-            fromVariants.push(tags.disabled);
+            result.push(tags.disabled);
         }
 
-        return fromVariants;
+        return result;
     });
 
     return (
@@ -69,7 +69,7 @@ export const TextArea: Component<TextAreaProps> = ({
             disabled={disabled}
             readonly={readOnly}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
-            class={[classFromPassthroughProps, fromVariantsSignal, forms.input]}
+            class={[classFromPassthroughProps, classesFromProps, forms.input]}
             {...passthroughProps}
         />
     );

@@ -64,9 +64,9 @@ const bindableMap = new Map<string, MutableMapping>([
 const specialHandlingProps = ['children', 'ref', 'class', 'style'];
 
 /**
- * These attributes if set will make their elements readonly (or disabled) as it 
+ * These attributes if set will make their elements readonly (or disabled) as it
  * implies they should always show the current value of the bound signal/constant.
- * 
+ *
  * Alternatively if you use the bind:${name} version the elements will write back
  * updates and therefore not be readonly.
  */

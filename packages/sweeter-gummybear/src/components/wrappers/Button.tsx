@@ -43,8 +43,8 @@ export const Button: Component<ButtonProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const fromVariantsSignal = $calc(() => {
-        const fromVariants: ElementCssClasses = [];
+    const classesFromProps = $calc(() => {
+        const result: ElementCssClasses = [];
 
         const resolvedVariant = $val(variant);
         if (resolvedVariant) {
@@ -52,14 +52,14 @@ export const Button: Component<ButtonProps> = ({
         }
 
         if ($val(outline)) {
-            fromVariants.push(tags.outline);
+            result.push(tags.outline);
         }
 
         if ($val(disabled)) {
-            fromVariants.push(tags.disabled);
+            result.push(tags.disabled);
         }
 
-        return fromVariants;
+        return result;
     });
 
     return (
@@ -67,7 +67,7 @@ export const Button: Component<ButtonProps> = ({
             id={id}
             onclick={combineEventHandlers(onclick, onclickFromPassthroughProps)}
             disabled={disabled}
-            class={[classFromPassthroughProps, fromVariantsSignal, button]}
+            class={[classFromPassthroughProps, classesFromProps, button]}
             {...passthroughProps}
         >
             {children}

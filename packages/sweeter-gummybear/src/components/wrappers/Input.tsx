@@ -49,8 +49,8 @@ export const Input: Component<InputProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const fromVariantsSignal = $calc(() => {
-        const fromVariants: ElementCssClasses = [];
+    const classesFromProps = $calc(() => {
+        const result: ElementCssClasses = [];
 
         const resolvedVariant = $val(variant);
         if (resolvedVariant) {
@@ -58,10 +58,10 @@ export const Input: Component<InputProps> = ({
         }
 
         if ($val(disabled)) {
-            fromVariants.push(tags.disabled);
+            result.push(tags.disabled);
         }
 
-        return fromVariants;
+        return result;
     });
 
     return (
@@ -73,7 +73,7 @@ export const Input: Component<InputProps> = ({
             disabled={disabled}
             readonly={readOnly}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
-            class={[classFromPassthroughProps, fromVariantsSignal, forms.input]}
+            class={[classFromPassthroughProps, classesFromProps, forms.input]}
             {...passthroughProps}
         />
     );

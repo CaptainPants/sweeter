@@ -40,15 +40,15 @@ export const Select: Component<SelectProps> = ({
     'bind:value': bindValue,
     passthrough: { class: classFromPassthroughProps, ...passthroughProps } = {},
 }) => {
-    const fromVariantsSignal = $calc(() => {
-        const fromVariants: ElementCssClasses = [];
+    const classesFromProps = $calc(() => {
+        const result: ElementCssClasses = [];
 
         const resolvedVariant = $val(variant);
         if (resolvedVariant) {
             variants[resolvedVariant];
         }
 
-        return fromVariants;
+        return result;
     });
 
     const children = $calc(() => {
@@ -66,11 +66,7 @@ export const Select: Component<SelectProps> = ({
             value={value}
             bind:value={bindValue}
             disabled={disabled}
-            class={[
-                classFromPassthroughProps,
-                fromVariantsSignal,
-                forms.select,
-            ]}
+            class={[classFromPassthroughProps, classesFromProps, forms.select]}
             {...passthroughProps}
         >
             {children}

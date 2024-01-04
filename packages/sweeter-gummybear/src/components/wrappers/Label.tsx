@@ -31,21 +31,21 @@ export const Label: Component<LabelProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const fromVariantsSignal = $calc(() => {
-        const fromVariants: ElementCssClasses = [];
+    const classesFromProps = $calc(() => {
+        const result: ElementCssClasses = [];
 
         if ($val(disabled)) {
-            fromVariants.push(tags.disabled);
+            result.push(tags.disabled);
         }
 
-        return fromVariants;
+        return result;
     });
 
     return (
         <label
             id={id}
             for={forProp}
-            class={[classFromPassthroughProps, fromVariantsSignal, forms.label]}
+            class={[classFromPassthroughProps, classesFromProps, forms.label]}
             {...passthroughProps}
         >
             {children}

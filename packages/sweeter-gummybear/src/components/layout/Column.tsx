@@ -1,26 +1,26 @@
 import {
     $calc,
+    $val,
     type Component,
     type IntrinsicElementAttributes,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { columns } from '../../stylesheets/grid.js';
 import { type ElementCssClasses } from '@captainpants/sweeter-web';
-import {
-    type ColumnWidthIdentifier,
-    columnWidthIdentifiers,
-} from '../../stylesheets/internal/constants.js';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
+import { type ColumnWidth } from '../../types.js';
+import { columnWidthToIdentifier } from '../../stylesheets/columnWidthToIdentifier.js';
 
 export type ColumnProps = PropertiesMightBeSignals<{
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
 
-    xs?: ColumnWidthIdentifier | undefined;
-    sm?: ColumnWidthIdentifier | undefined;
-    md?: ColumnWidthIdentifier | undefined;
-    lg?: ColumnWidthIdentifier | undefined;
-    xl?: ColumnWidthIdentifier | undefined;
+    xs?: ColumnWidth | undefined;
+    sm?: ColumnWidth | undefined;
+    md?: ColumnWidth | undefined;
+    lg?: ColumnWidth | undefined;
+    xl?: ColumnWidth | undefined;
 }> & {
     passthrough?: IntrinsicElementAttributes<'div'>;
 };
@@ -47,9 +47,14 @@ export const Column: Component<ColumnProps> = ({
         const result: ElementCssClasses[] = [];
 
         [xs, sm, md, lg, xl].forEach((numberOfColumns, index) => {
-            if (numberOfColumns !== undefined) {
-                const sizeGroup = mappedClasses[index]!;
-                const columnWidthIdent = columnWidthIdentifiers[index]!;
+            const numberOfColumnsResolved = $val(numberOfColumns);
+            if (numberOfColumnsResolved !== undefined) {
+                const sizeGroup = mappedClasses[index];
+                assertNotNullOrUndefined(sizeGroup);
+
+                const columnWidthIdent = columnWidthToIdentifier(
+                    numberOfColumnsResolved,
+                );
                 const columnClass = sizeGroup[columnWidthIdent];
 
                 result.push(columnClass);

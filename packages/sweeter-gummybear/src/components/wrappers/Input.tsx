@@ -37,8 +37,8 @@ export type InputProps = PropertiesMightBeSignals<{
 export const Input: Component<InputProps> = ({
     type,
     variant,
-    disabled = false,
-    readOnly = false,
+    disabled,
+    readOnly,
     id,
     value,
     'bind:value': bindValue,

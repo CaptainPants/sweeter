@@ -29,7 +29,6 @@ export const columnWidthIdentifiers = [
     '_12',
     'auto',
 ] as const;
-export type ColumnWidthIdentifier = (typeof columnWidthIdentifiers)[number];
 
 export const columnWidthNames = [
     '1',
@@ -46,7 +45,6 @@ export const columnWidthNames = [
     '12',
     'auto',
 ] as const;
-export type ColumnWidthName = (typeof columnWidthNames)[number];
 
 export const breakpointNames = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 export const breakpointSizes = [undefined, 576, 720, 960, 1200] as const;

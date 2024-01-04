@@ -34,8 +34,8 @@ export type TextAreaProps = PropertiesMightBeSignals<{
 
 export const TextArea: Component<TextAreaProps> = ({
     variant,
-    disabled = false,
-    readOnly = false,
+    disabled,
+    readOnly,
     id,
     value,
     'bind:value': bindValue,

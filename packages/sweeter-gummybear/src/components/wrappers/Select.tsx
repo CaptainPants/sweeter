@@ -33,7 +33,7 @@ export type SelectProps = PropertiesMightBeSignals<{
 
 export const Select: Component<SelectProps> = ({
     variant,
-    disabled = false,
+    disabled,
     options,
     id,
     value,

@@ -35,8 +35,8 @@ export const Button: Component<ButtonProps> = ({
     variant,
     id,
     onclick,
-    outline = false,
-    disabled = false,
+    outline,
+    disabled,
     passthroughProps: {
         class: classFromPassthroughProps,
         onclick: onclickFromPassthroughProps,

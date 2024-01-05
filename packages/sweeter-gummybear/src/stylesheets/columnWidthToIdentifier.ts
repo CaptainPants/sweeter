@@ -12,7 +12,9 @@ export function columnWidthToIdentifier(
     if (columnWidth == 'auto') {
         return 'auto';
     } else if (typeof columnWidth === 'number') {
-        return `_${columnWidth}`;
+        if (columnWidth >= 1 && columnWidth <= 12) {
+            return `_${columnWidth}`;
+        }
     }
 
     throw new TypeError(`Unexpected value ${columnWidth}`);

@@ -2,9 +2,9 @@ import {
     GlobalCssStylesheet,
     IncludeStylesheet,
 } from '@captainpants/sweeter-web';
-import { themeBase } from './base.js';
-import { reset } from './reset.js';
-import { themeStructure, type ThemeOptions } from '../themeStructure.js';
+import { themeBase } from '../stylesheets/base.js';
+import { reset } from '../stylesheets/reset.js';
+import { themeStructure, type ThemeOptions } from './themeStructure.js';
 import { type Component } from '@captainpants/sweeter-core';
 import {
     type ThemeOptionDefinition,

@@ -1,7 +1,7 @@
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import { tags, variants } from './markers.js';
-import { themeStructure } from '../themeStructure.js';
+import { themeStructure } from '../theme/themeStructure.js';
 
 export const button = new GlobalCssClass({
     className: 'button',

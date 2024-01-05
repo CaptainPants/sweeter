@@ -12,7 +12,7 @@ import {
     columnWidthIdentifiers,
     columnWidthNames,
 } from './internal/constants.js';
-import { themeStructure } from '../themeStructure.js';
+import { themeStructure } from '../theme/themeStructure.js';
 
 export const container = new GlobalCssClass({
     className: 'container',

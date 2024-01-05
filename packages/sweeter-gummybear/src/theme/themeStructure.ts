@@ -1,4 +1,4 @@
-import type { ThemeOptionOrGroupDefinition } from './types.js';
+import { type ThemeOptionOrGroupDefinition } from '../types.js';
 
 export const themeStructure = {
     bodyBackground: {

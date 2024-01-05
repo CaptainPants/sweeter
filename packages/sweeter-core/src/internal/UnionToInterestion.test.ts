@@ -1,5 +1,5 @@
-import type { TypeMatchAssert } from '../index.js';
-import type { UnionToIntersection } from './UnionToIntersection.js';
+import { type TypeMatchAssert } from '../index.js';
+import { type UnionToIntersection } from './UnionToIntersection.js';
 
 it('UnionToIntersection works', () => {
     const _text1: TypeMatchAssert<

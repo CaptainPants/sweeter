@@ -1,4 +1,4 @@
-import type { Signal } from '@captainpants/sweeter-core';
+import { type Signal } from '@captainpants/sweeter-core';
 
 export interface AbstractGlobalCssStylesheet {
     readonly symbol: symbol;

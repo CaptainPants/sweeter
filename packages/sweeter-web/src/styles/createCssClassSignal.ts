@@ -1,6 +1,9 @@
-import type { Signal } from '@captainpants/sweeter-core';
+import { type Signal } from '@captainpants/sweeter-core';
 import { $calc, isSignal, $val } from '@captainpants/sweeter-core';
-import type { AbstractGlobalCssClass, ElementCssClasses } from './index.js';
+import {
+    type AbstractGlobalCssClass,
+    type ElementCssClasses,
+} from './index.js';
 import { GlobalCssClass } from './index.js';
 
 /**

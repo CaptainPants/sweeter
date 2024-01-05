@@ -1,8 +1,8 @@
 import { $calc, $mutable, $val } from '../signals/index.js';
-import type {
-    Component,
-    ComponentInit,
-    PropertiesMightBeSignals,
+import {
+    type Component,
+    type ComponentInit,
+    type PropertiesMightBeSignals,
 } from '../types.js';
 import { SuspenseContext } from './SuspenseContext.js';
 

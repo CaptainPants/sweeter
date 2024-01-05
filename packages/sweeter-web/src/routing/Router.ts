@@ -1,4 +1,4 @@
-import type { PropertiesMightBeSignals } from '@captainpants/sweeter-core';
+import { type PropertiesMightBeSignals } from '@captainpants/sweeter-core';
 import { $calc, $val } from '@captainpants/sweeter-core';
 import { type Route } from './types.js';
 import { pathDoesNotMatch } from './pathDoesNotMatch.js';

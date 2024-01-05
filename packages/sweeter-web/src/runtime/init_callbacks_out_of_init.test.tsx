@@ -1,6 +1,6 @@
 /* @jsxImportSource ../. */
 
-import type { Component, ComponentInit } from '@captainpants/sweeter-core';
+import { type Component, type ComponentInit } from '@captainpants/sweeter-core';
 import { ErrorBoundary } from '@captainpants/sweeter-core';
 import { testRender } from '../test/testRender.js';
 

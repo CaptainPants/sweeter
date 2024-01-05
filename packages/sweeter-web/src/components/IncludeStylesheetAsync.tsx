@@ -8,7 +8,7 @@ import {
     type Component,
     type Lazy,
 } from '@captainpants/sweeter-core';
-import type { StylesheetInclude } from '../styles/index.js';
+import { type StylesheetInclude } from '../styles/index.js';
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
 export type IncludeStylesheetAsyncProps = PropertiesMightBeSignals<{

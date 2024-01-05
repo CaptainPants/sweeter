@@ -1,8 +1,8 @@
 /* @jsxImportSource ../.. */
 
-import type {
-    ComponentInit,
-    PropertiesMightBeSignals,
+import {
+    type ComponentInit,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { $val } from '@captainpants/sweeter-core';
 import { testRender } from '../../test/testRender.js';

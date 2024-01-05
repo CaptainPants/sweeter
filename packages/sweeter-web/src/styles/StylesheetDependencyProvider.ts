@@ -1,4 +1,4 @@
-import type { AbstractGlobalCssStylesheet } from './index.js';
+import { type AbstractGlobalCssStylesheet } from './index.js';
 
 export class StylesheetDependencyProvider {
     #callbacks: ((dependency: AbstractGlobalCssStylesheet) => void)[] = [];

@@ -1,7 +1,7 @@
-import type { Runtime } from '@captainpants/sweeter-core';
-import type {
-    AbstractGlobalCssStylesheet,
-    GlobalStyleSheetContentGeneratorContext,
+import { type Runtime } from '@captainpants/sweeter-core';
+import {
+    type AbstractGlobalCssStylesheet,
+    type GlobalStyleSheetContentGeneratorContext,
 } from '../index.js';
 
 export interface WebRuntime

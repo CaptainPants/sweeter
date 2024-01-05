@@ -1,4 +1,4 @@
-import type { PropsWithIntrinsicAttributesFor } from '@captainpants/sweeter-core';
+import { type PropsWithIntrinsicAttributesFor } from '@captainpants/sweeter-core';
 import {
     addExplicitStrongReference,
     isReadWriteSignal,

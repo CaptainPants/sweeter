@@ -8,10 +8,10 @@ import {
     UndefinedConstantType,
 } from './ConstantTypes.js';
 import { DeferredType } from './DeferredType.js';
-import type {
-    SpreadUnionType,
-    MappedType,
-    PropertyDefinitions,
+import {
+    type SpreadUnionType,
+    type MappedType,
+    type PropertyDefinitions,
 } from './internal/types.js';
 import { MapObjectType } from './MapObjectType.js';
 import { NumberType } from './NumberType.js';

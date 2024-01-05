@@ -1,7 +1,7 @@
-import type {
-    ArgumentMatcher,
-    PathTemplate,
-    StringForEachItem,
+import {
+    type ArgumentMatcher,
+    type PathTemplate,
+    type StringForEachItem,
 } from './types.js';
 
 export function pathTemplate<

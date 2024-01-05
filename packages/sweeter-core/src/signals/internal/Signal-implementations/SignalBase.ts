@@ -6,7 +6,11 @@ import { afterCalculationsComplete } from '../../afterCalculationsComplete.js';
 import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
 import { signalMarker } from '../markers.js';
-import type { Signal, SignalListener, SignalState } from '../../types.js';
+import {
+    type Signal,
+    type SignalListener,
+    type SignalState,
+} from '../../types.js';
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {

@@ -1,9 +1,9 @@
-import type { StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
+import { type StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
 import { preprocess } from './preprocessor/preprocess.js';
-import type {
-    AbstractGlobalCssStylesheet,
-    GlobalStyleSheetContentGeneratorContext,
-    StylesheetContentGenerator,
+import {
+    type AbstractGlobalCssStylesheet,
+    type GlobalStyleSheetContentGeneratorContext,
+    type StylesheetContentGenerator,
 } from './types.js';
 
 export type GlobalCssStylesheetContent = string | StylesheetContentGenerator;

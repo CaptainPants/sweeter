@@ -1,5 +1,5 @@
 import { $calc, $mutable, $val } from '../signals/index.js';
-import type { Component, PropertiesMightBeSignals } from '../types.js';
+import { type Component, type PropertiesMightBeSignals } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
 export type ErrorBoundaryProps = PropertiesMightBeSignals<{

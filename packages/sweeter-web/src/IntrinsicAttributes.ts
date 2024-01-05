@@ -1,14 +1,14 @@
-import type {
-    WritableSignal,
-    ReadWriteSignal,
-    Signal,
-    MightBeSignal,
+import {
+    type WritableSignal,
+    type ReadWriteSignal,
+    type Signal,
+    type MightBeSignal,
 } from '@captainpants/sweeter-core';
-import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
+import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 import { type StandardPropertiesHyphen } from 'csstype';
-import type { ElementCssClasses } from './styles/index.js';
-import type { ThreeValueBoolean } from './indeterminate.js';
+import { type ElementCssClasses } from './styles/index.js';
+import { type ThreeValueBoolean } from './indeterminate.js';
 
 // ==== EVENTS
 

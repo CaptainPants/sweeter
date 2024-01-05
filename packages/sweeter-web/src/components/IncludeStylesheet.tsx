@@ -8,9 +8,9 @@ import {
     type PropertiesMightBeSignals,
     $calc,
 } from '@captainpants/sweeter-core';
-import type {
-    AbstractGlobalCssStylesheet,
-    StylesheetInclude,
+import {
+    type AbstractGlobalCssStylesheet,
+    type StylesheetInclude,
 } from '../styles/index.js';
 import { getWebRuntime } from '../runtime/getWebRuntime.js';
 import { arrayExcept } from '../runtime/internal/utility/arrayExcept.js';

@@ -1,4 +1,4 @@
-import type { StylesheetContentGenerator } from './types.js';
+import { type StylesheetContentGenerator } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 import { stylesheet } from './stylesheet.js';
 

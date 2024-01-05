@@ -3,12 +3,12 @@ import {
     charCodeSequences,
     whitespaceCharCodes,
 } from './internal/charCodes.js';
-import type {
-    AtRuleAstNode,
-    PropertyAstNode,
-    RuleAstNode,
-    RuleBodyParts,
-    RuleOrAtRule,
+import {
+    type AtRuleAstNode,
+    type PropertyAstNode,
+    type RuleAstNode,
+    type RuleBodyParts,
+    type RuleOrAtRule,
 } from './types.js';
 
 /**

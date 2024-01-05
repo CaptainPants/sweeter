@@ -1,6 +1,6 @@
 import { isSignal } from './isSignal.js';
 import { $valEach } from './$val.js';
-import type { UnsignalAll } from './types.js';
+import { type UnsignalAll } from './types.js';
 import { popAndCallAll } from '../internal/popAndCallAll.js';
 
 /**

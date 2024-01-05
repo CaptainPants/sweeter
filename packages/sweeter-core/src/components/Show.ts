@@ -1,10 +1,10 @@
 import { getRuntime } from '../index.js';
 import { $calc } from '../signals/$calc.js';
 import { $val } from '../signals/$val.js';
-import type {
-    Component,
-    MightBeSignal,
-    PropertiesMightBeSignals,
+import {
+    type Component,
+    type MightBeSignal,
+    type PropertiesMightBeSignals,
 } from '../types.js';
 
 export type ShowProps = PropertiesMightBeSignals<{

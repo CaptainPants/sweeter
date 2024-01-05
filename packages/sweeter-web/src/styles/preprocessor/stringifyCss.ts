@@ -1,4 +1,4 @@
-import type { AstNode } from './types.js';
+import { type AstNode } from './types.js';
 
 export function stringifyCss(ast: AstNode[]) {
     const result: string[] = [];

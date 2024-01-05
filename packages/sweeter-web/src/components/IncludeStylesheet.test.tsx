@@ -1,6 +1,6 @@
 /* @jsxImportSource .. */
 
-import type { Component } from '@captainpants/sweeter-core';
+import { type Component } from '@captainpants/sweeter-core';
 import { GlobalCssClass } from '../styles/index.js';
 import { testRender } from '../test/testRender.js';
 import { IncludeStylesheet } from './IncludeStylesheet.js';

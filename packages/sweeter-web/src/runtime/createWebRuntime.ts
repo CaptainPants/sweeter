@@ -13,8 +13,8 @@ import {
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { jsx } from './jsx.js';
-import type { AbstractGlobalCssStylesheet } from '../styles/types.js';
-import type { GlobalCssClass } from '../styles/GlobalCssClass.js';
+import { type AbstractGlobalCssStylesheet } from '../styles/types.js';
+import { type GlobalCssClass } from '../styles/GlobalCssClass.js';
 import { createDOMElement } from './internal/createDOMElement.js';
 import { createComponentInstance } from './internal/createComponentInstance.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';

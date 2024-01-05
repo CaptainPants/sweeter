@@ -1,4 +1,4 @@
-import type { Signal, UnsignalAll } from './types.js';
+import { type Signal, type UnsignalAll } from './types.js';
 import { isSignal } from './isSignal.js';
 
 /**

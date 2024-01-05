@@ -1,7 +1,7 @@
-import type { IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
-import type {
-    ElementAttributesByName,
-    WebSkipSignalifyingIntrinsicElementAttributes,
+import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
+import {
+    type ElementAttributesByName,
+    type WebSkipSignalifyingIntrinsicElementAttributes,
 } from './IntrinsicAttributes.js';
 
 declare global {

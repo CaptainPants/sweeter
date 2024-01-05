@@ -1,4 +1,7 @@
-import type { signalMarker, writableSignalMarker } from './internal/markers.js';
+import {
+    type signalMarker,
+    type writableSignalMarker,
+} from './internal/markers.js';
 
 export type SignalState<T> =
     | { readonly mode: 'INITIALISING' }

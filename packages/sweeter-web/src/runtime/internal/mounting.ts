@@ -1,4 +1,4 @@
-import type { ContextSnapshot } from '@captainpants/sweeter-core';
+import { type ContextSnapshot } from '@captainpants/sweeter-core';
 import { callAgainstErrorBoundary } from './callAgainstErrorBoundary.js';
 
 function callbacks<T extends object>(name: string) {

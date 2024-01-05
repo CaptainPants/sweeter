@@ -1,4 +1,4 @@
-import type { pathDoesNotMatch } from './pathDoesNotMatch.js';
+import { type pathDoesNotMatch } from './pathDoesNotMatch.js';
 
 export interface ArgumentMatcher {
     match(input: string, startIndex: number): number | undefined;

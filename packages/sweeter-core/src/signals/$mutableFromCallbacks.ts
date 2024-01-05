@@ -1,5 +1,5 @@
 import { MutableCalculatedSignal } from './internal/Signal-implementations.js';
-import type { ReadWriteSignal } from './types.js';
+import { type ReadWriteSignal } from './types.js';
 
 /**
  * Create a new ReadWriteSignal from the results of a calculation, that can apply updates using a mutater callback.

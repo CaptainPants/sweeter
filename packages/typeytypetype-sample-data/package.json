@@ -1,10 +1,10 @@
 {
-    "name": "@captainpants/typeytypetype",
+    "name": "@captainpants/typeytype-sample-data",
     "version": "0.0.3",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
     "license": "MIT",
-    "private": false,
+    "private": true,
     "type": "module",
     "packageManager": "pnpm@8.6.7",
     "main": "./build/index.js",
@@ -32,6 +32,6 @@
         "pnpm": "8.6.7"
     },
     "dependencies": {
-        "@captainpants/sweeter-utilities": "workspace:^"
+        "@captainpants/typeytypetype": "workspace:^"
     }
 }

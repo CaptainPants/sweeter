@@ -147,6 +147,12 @@ importers:
         specifier: workspace:^
         version: link:../sweeter-utilities
 
+  packages/typeytypetype-sample-data:
+    dependencies:
+      '@captainpants/typeytypetype':
+        specifier: workspace:^
+        version: link:../typeytypetype
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:

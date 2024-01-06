@@ -3,7 +3,7 @@ import {
     type ComponentInit,
     type Signal,
     $mutable,
-    $calc,
+    $readonly,
     AsyncRunnerHook,
 } from '@captainpants/sweeter-core';
 import { type Maybe } from '@captainpants/sweeter-utilities';
@@ -12,6 +12,7 @@ export interface ValidatedDraftHookOptions<TModel, TDraft> {
     convertIn(value: TModel): TDraft;
     convertOut(value: TDraft): Maybe<TModel, string[]>;
     validate(abort: AbortSignal, value: TModel): Promise<string[] | null>;
+    onValid?(value: TModel): void;
 }
 
 export class ValidatedDraftHook<TModel, TDraft> {
@@ -24,7 +25,7 @@ export class ValidatedDraftHook<TModel, TDraft> {
         this.draft = $mutable<TDraft>(options.convertIn(this.actual.value));
 
         this.#validationErrors = $mutable<string[] | null>(null);
-        this.validationErrors = $calc(() => this.#validationErrors.value);
+        this.validationErrors = $readonly(this.#validationErrors);
 
         this.#convertIn = options.convertIn;
         this.#convertOut = options.convertOut;
@@ -35,14 +36,16 @@ export class ValidatedDraftHook<TModel, TDraft> {
         });
 
         const asyncRunner = init(AsyncRunnerHook);
+        this.isValidating = $readonly(asyncRunner.running);
 
         init.subscribeToChanges([this.draft], ([draft]) => {
+            // Should this be debounced?
             asyncRunner.run(async (signal) => {
                 this.#update(signal, draft);
             });
         });
 
-        this.isValidating = $calc(() => asyncRunner.running.value);
+        this.#onValid = options.onValid;
     }
 
     readonly actual: ReadWriteSignal<TModel>;
@@ -55,6 +58,7 @@ export class ValidatedDraftHook<TModel, TDraft> {
     #convertIn: (model: TModel) => TDraft;
     #convertOut: (draft: TDraft) => Maybe<TModel, string[]>;
     #validate: (abort: AbortSignal, value: TModel) => Promise<string[] | null>;
+    #onValid?: ((value: TModel) => void) | undefined;
 
     #reset(): void {
         this.draft.update(this.#convertIn(this.actual.value));
@@ -79,6 +83,7 @@ export class ValidatedDraftHook<TModel, TDraft> {
 
         if (validationFailures == null) {
             this.actual.update(converted);
+            this.#onValid?.(converted);
         }
     }
 }

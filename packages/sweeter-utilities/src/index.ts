@@ -5,3 +5,4 @@ export * from './descend.js';
 export * from './deepEqual.js';
 export * from './hasOwnProperty.js';
 export * from './isAbortError.js';
+export * from './Maybe.js';

@@ -91,23 +91,29 @@ importers:
         specifier: ^0.34.6
         version: 0.34.6(jsdom@23.0.1)
 
+  examples/sweeter-example:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-core
+      '@captainpants/sweeter-gummybear':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-gummybear
+      '@captainpants/sweeter-web':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-web
+
+  examples/typeytypetype-example-data:
+    dependencies:
+      '@captainpants/typeytypetype':
+        specifier: workspace:^
+        version: link:../../packages/typeytypetype
+
   packages/sweeter-core:
     dependencies:
       '@captainpants/sweeter-utilities':
         specifier: workspace:^
         version: link:../sweeter-utilities
-
-  packages/sweeter-example:
-    dependencies:
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../sweeter-core
-      '@captainpants/sweeter-gummybear':
-        specifier: workspace:^
-        version: link:../sweeter-gummybear
-      '@captainpants/sweeter-web':
-        specifier: workspace:^
-        version: link:../sweeter-web
 
   packages/sweeter-gummybear:
     dependencies:
@@ -127,7 +133,7 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
 
-  packages/sweeter-typetypetype:
+  packages/sweeter-typetypetype-web:
     dependencies:
       '@captainpants/sweeter-core':
         specifier: workspace:^
@@ -167,12 +173,6 @@ importers:
       '@captainpants/sweeter-utilities':
         specifier: workspace:^
         version: link:../sweeter-utilities
-
-  packages/typeytypetype-sample-data:
-    dependencies:
-      '@captainpants/typeytypetype':
-        specifier: workspace:^
-        version: link:../typeytypetype
 
 packages:
 

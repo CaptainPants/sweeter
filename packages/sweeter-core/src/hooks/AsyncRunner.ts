@@ -2,6 +2,11 @@ import { type ComponentInit, type HookFactory } from '../types.js';
 import { $mutable } from '../signals/$mutable.js';
 import { DOMException } from '@captainpants/sweeter-utilities';
 import { type Signal } from '../signals/types.js';
+import { $calc } from '../index.js';
+
+export interface AsyncRunnerHookOptions {
+    abortOnUnMount?: boolean;
+}
 
 export interface AsyncCallbackOptions {
     abortSignal?: AbortSignal;
@@ -16,9 +21,10 @@ export interface AsyncRunner {
     ): Promise<void>;
 }
 
-export const AsyncRunnerHook: HookFactory<[], AsyncRunner> = (
-    init: ComponentInit,
-) => {
+export const AsyncRunnerHook: HookFactory<
+    [options?: AsyncRunnerHookOptions | undefined],
+    AsyncRunner
+> = (init: ComponentInit, { abortOnUnMount } = {}) => {
     const running = $mutable(false);
     let currentAbortController: AbortController | null = null;
 
@@ -27,8 +33,13 @@ export const AsyncRunnerHook: HookFactory<[], AsyncRunner> = (
         currentAbortController = null;
     };
 
+    if (abortOnUnMount) {
+        init.onUnMount(abort);
+    }
+
     return {
-        running,
+        // Readonly version of running .value
+        running: $calc(() => running.value),
         abort,
         run: async (
             func: (abort: AbortSignal) => Promise<void>,

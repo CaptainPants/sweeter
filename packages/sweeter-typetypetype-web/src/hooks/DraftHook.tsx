@@ -8,18 +8,18 @@ import {
 } from '@captainpants/sweeter-core';
 import { type Maybe } from '@captainpants/sweeter-utilities';
 
-export interface ValidatedDraftHookOptions<TModel, TDraft> {
-    convertIn(value: TModel): TDraft;
-    convertOut(value: TDraft): Maybe<TModel, string[]>;
-    validate(abort: AbortSignal, value: TModel): Promise<string[] | null>;
-    onValid?(value: TModel): void;
+export interface DraftHookOptions<TModel, TDraft> {
+    convertIn: (value: TModel) => TDraft;
+    convertOut: (value: TDraft) => Maybe<TModel, string[]>;
+    validate: (abort: AbortSignal, value: TModel) => Promise<string[] | null>;
+    onValid?: (value: TModel) => void;
 }
 
-export class ValidatedDraftHook<TModel, TDraft> {
+export class DraftHook<TModel, TDraft> {
     constructor(
         init: ComponentInit,
         actual: ReadWriteSignal<TModel>,
-        options: ValidatedDraftHookOptions<TModel, TDraft>,
+        options: DraftHookOptions<TModel, TDraft>,
     ) {
         this.actual = actual;
         this.draft = $mutable<TDraft>(options.convertIn(this.actual.value));
@@ -32,6 +32,7 @@ export class ValidatedDraftHook<TModel, TDraft> {
         this.#validate = options.validate;
 
         init.subscribeToChanges([this.actual], () => {
+            // TODO: There is a circular reference here I think.. actual -> draft -> actual
             this.#reset();
         });
 

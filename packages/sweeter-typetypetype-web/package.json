@@ -36,6 +36,7 @@
         "@captainpants/sweeter-gummybear": "workspace:^",
         "@captainpants/sweeter-utilities": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
+        "@captainpants/typeytypetype": "workspace:^",
         "@popperjs/core": "^2.11.8",
         "tinycolor2": "^1.6.0"
     }

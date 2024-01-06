@@ -11,7 +11,12 @@ export const variantNames = [
 
 export type VariantName = (typeof variantNames)[number];
 
-export const tagNames = ['outline', 'disabled'] as const;
+export const tagNames = [
+    'outline',
+    'disabled',
+    'fillWidth',
+    'invalid',
+] as const;
 
 export type TagName = (typeof tagNames)[number];
 

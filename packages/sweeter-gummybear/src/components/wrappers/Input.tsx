@@ -12,9 +12,9 @@ import {
     type ElementCssClasses,
     type InputType,
 } from '@captainpants/sweeter-web';
-import { tags, variants } from '../../stylesheets/markers.js';
 import { forms } from '../../index.js';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
 export type InputProps = PropertiesMightBeSignals<{
     type?: InputType | undefined;
@@ -22,6 +22,8 @@ export type InputProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     readOnly?: boolean | undefined;
+    fillWidth?: boolean | undefined;
+    invalid?: boolean | undefined;
 
     id?: string | undefined;
 
@@ -39,6 +41,8 @@ export const Input: Component<InputProps> = ({
     variant,
     disabled,
     readOnly,
+    fillWidth,
+    invalid,
     id,
     value,
     'bind:value': bindValue,
@@ -52,14 +56,15 @@ export const Input: Component<InputProps> = ({
     const classesFromProps = $calc(() => {
         const result: ElementCssClasses = [];
 
-        const resolvedVariant = $val(variant);
-        if (resolvedVariant) {
-            variants[resolvedVariant];
-        }
-
-        if ($val(disabled)) {
-            result.push(tags.disabled);
-        }
+        applyStandardClasses(
+            result,
+            {
+                disabled: $val(disabled),
+                fillWidth: $val(fillWidth),
+                invalid: $val(invalid),
+            },
+            $val(variant),
+        );
 
         return result;
     });

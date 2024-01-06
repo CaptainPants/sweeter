@@ -8,7 +8,7 @@ import {
 } from '@captainpants/sweeter-core';
 import { type VariantName } from '../../internal/constants.js';
 import { type ElementCssClasses } from '@captainpants/sweeter-web';
-import { variants } from '../../stylesheets/markers.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 import { forms } from '../../index.js';
 
 export interface SelectOption {
@@ -20,6 +20,9 @@ export interface SelectOption {
 export type SelectProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
+    fillWidth?: boolean | undefined;
+    invalid?: boolean | undefined;
+
     id?: string;
 
     value?: string | undefined;
@@ -34,6 +37,8 @@ export type SelectProps = PropertiesMightBeSignals<{
 export const Select: Component<SelectProps> = ({
     variant,
     disabled,
+    fillWidth,
+    invalid,
     options,
     id,
     value,
@@ -43,10 +48,15 @@ export const Select: Component<SelectProps> = ({
     const classesFromProps = $calc(() => {
         const result: ElementCssClasses = [];
 
-        const resolvedVariant = $val(variant);
-        if (resolvedVariant) {
-            variants[resolvedVariant];
-        }
+        applyStandardClasses(
+            result,
+            {
+                disabled: $val(disabled),
+                fillWidth: $val(fillWidth),
+                invalid: $val(invalid),
+            },
+            $val(variant),
+        );
 
         return result;
     });

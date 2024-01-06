@@ -10,9 +10,9 @@ import {
     type TypedEvent,
     type ElementCssClasses,
 } from '@captainpants/sweeter-web';
-import { tags, variants } from '../../stylesheets/markers.js';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
 import { button } from '../../stylesheets/button.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
 export type ButtonProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
@@ -20,6 +20,7 @@ export type ButtonProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
     outline?: boolean | undefined;
     disabled?: boolean | undefined;
+    fillWidth?: boolean | undefined;
 
     id?: string | undefined;
 
@@ -37,6 +38,7 @@ export const Button: Component<ButtonProps> = ({
     onclick,
     outline,
     disabled,
+    fillWidth,
     passthroughProps: {
         class: classFromPassthroughProps,
         onclick: onclickFromPassthroughProps,
@@ -46,18 +48,15 @@ export const Button: Component<ButtonProps> = ({
     const classesFromProps = $calc(() => {
         const result: ElementCssClasses = [];
 
-        const resolvedVariant = $val(variant);
-        if (resolvedVariant) {
-            variants[resolvedVariant];
-        }
-
-        if ($val(outline)) {
-            result.push(tags.outline);
-        }
-
-        if ($val(disabled)) {
-            result.push(tags.disabled);
-        }
+        applyStandardClasses(
+            result,
+            {
+                outline: $val(outline),
+                disabled: $val(disabled),
+                fillWidth: $val(fillWidth),
+            },
+            $val(variant),
+        );
 
         return result;
     });

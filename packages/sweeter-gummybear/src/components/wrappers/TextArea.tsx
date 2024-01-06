@@ -10,14 +10,16 @@ import {
     type TypedEvent,
     type ElementCssClasses,
 } from '@captainpants/sweeter-web';
-import { tags, variants } from '../../stylesheets/markers.js';
 import { forms } from '../../index.js';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
 export type TextAreaProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     readOnly?: boolean | undefined;
+    fillWidth?: boolean | undefined;
+    invalid?: boolean | undefined;
 
     id?: string | undefined;
 
@@ -36,6 +38,8 @@ export const TextArea: Component<TextAreaProps> = ({
     variant,
     disabled,
     readOnly,
+    fillWidth,
+    invalid,
     id,
     value,
     'bind:value': bindValue,
@@ -49,14 +53,15 @@ export const TextArea: Component<TextAreaProps> = ({
     const classesFromProps = $calc(() => {
         const result: ElementCssClasses = [];
 
-        const resolvedVariant = $val(variant);
-        if (resolvedVariant) {
-            variants[resolvedVariant];
-        }
-
-        if ($val(disabled)) {
-            result.push(tags.disabled);
-        }
+        applyStandardClasses(
+            result,
+            {
+                disabled: $val(disabled),
+                fillWidth: $val(fillWidth),
+                invalid: $val(invalid),
+            },
+            $val(variant),
+        );
 
         return result;
     });

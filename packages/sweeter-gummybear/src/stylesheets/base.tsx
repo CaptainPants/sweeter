@@ -1,13 +1,6 @@
-import {
-    GlobalCssClass,
-    GlobalCssStylesheet,
-    stylesheet,
-} from '@captainpants/sweeter-web';
+import { GlobalCssStylesheet, stylesheet } from '@captainpants/sweeter-web';
 import { themeStructure } from '../theme/themeStructure.js';
-
-export const disabled = new GlobalCssClass({
-    className: 'disabled',
-});
+import { tags } from './markers.js';
 
 export const themeBase = new GlobalCssStylesheet({
     id: 'base',
@@ -25,8 +18,16 @@ export const themeBase = new GlobalCssStylesheet({
             box-sizing: border-box;
         }
 
-        .${disabled}, :disabled {
+        .${tags.disabled}, :disabled {
             opacity: 0.5;
+        }
+        
+        .${tags.fillWidth} {
+            width: 100%;
+        }
+
+        .${tags.invalid} {
+            border-color: red;
         }
     `,
 });

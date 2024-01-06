@@ -2,11 +2,9 @@ import {
     createTheme,
     grid,
     forms,
-    fillWidth,
     button,
     variants,
     tags,
-    disabled,
 } from '@captainpants/sweeter-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
@@ -65,7 +63,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <input
                                 id={ids.textMutable1}
                                 type="text"
-                                class={[forms.input, fillWidth]}
+                                class={[forms.input, tags.fillWidth]}
                                 bind:value={$propertyOf(state, 'textInput')}
                             />
                         </div>
@@ -80,7 +78,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <input
                                 type="text"
                                 id={ids.textMutable2}
-                                class={[forms.input, fillWidth]}
+                                class={[forms.input, tags.fillWidth]}
                                 bind:value={$propertyOf(state, 'textInput')}
                             />
                         </div>
@@ -89,7 +87,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
                             <label
                                 for={ids.textDisabled}
-                                class={[forms.label, disabled]}
+                                class={[forms.label, tags.disabled]}
                             >
                                 Disabled text input (bound to the same backing
                                 field):
@@ -99,7 +97,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <input
                                 type="text"
                                 id={ids.textDisabled}
-                                class={[forms.input, fillWidth]}
+                                class={[forms.input, tags.fillWidth]}
                                 bind:value={$propertyOf(state, 'textInput')}
                                 disabled
                             />
@@ -116,7 +114,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <input
                                 type="text"
                                 id={ids.textReadonly}
-                                class={[forms.input, fillWidth]}
+                                class={[forms.input, tags.fillWidth]}
                                 bind:value={$propertyOf(state, 'textInput')}
                                 readonly
                             />
@@ -132,7 +130,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             <input
                                 type="text"
                                 id={ids.textNonMutable}
-                                class={[forms.input, fillWidth]}
+                                class={[forms.input, tags.fillWidth]}
                                 value={$propertyOf(state, 'textInput', true)}
                             />
                         </div>
@@ -149,7 +147,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <select
                                 id={ids.select}
-                                class={[forms.select, fillWidth]}
+                                class={[forms.select, tags.fillWidth]}
                                 bind:value={$propertyOf(state, 'select')}
                             >
                                 <option>Option 1</option>
@@ -162,7 +160,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
                             <label
                                 for={ids.select}
-                                class={[forms.label, disabled]}
+                                class={[forms.label, tags.disabled]}
                             >
                                 Disabled select:
                             </label>
@@ -170,7 +168,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._9, grid.columns.sm._6]}>
                             <select
                                 id={ids.select}
-                                class={[forms.select, fillWidth]}
+                                class={[forms.select, tags.fillWidth]}
                                 bind:value={$propertyOf(state, 'select')}
                                 disabled
                             >
@@ -199,7 +197,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                         <div class={[grid.columns.xs._3, grid.columns.sm._6]}>
                             <label
                                 for={ids.checkboxDisabled}
-                                class={[forms.label, disabled]}
+                                class={[forms.label, tags.disabled]}
                             >
                                 Disabled checkbox:
                             </label>

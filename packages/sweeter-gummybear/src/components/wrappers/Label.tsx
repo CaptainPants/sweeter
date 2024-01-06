@@ -6,13 +6,14 @@ import {
     $val,
 } from '@captainpants/sweeter-core';
 import { type ElementCssClasses } from '@captainpants/sweeter-web';
-import { tags } from '../../stylesheets/markers.js';
 import { forms } from '../../stylesheets/index.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
 export type LabelProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
 
     disabled?: boolean | undefined;
+    fillWidth?: boolean | undefined;
 
     id?: string | undefined;
     for?: string | undefined;
@@ -25,6 +26,7 @@ export const Label: Component<LabelProps> = ({
     id,
     for: forProp,
     disabled = false,
+    fillWidth,
     passthroughProps: {
         class: classFromPassthroughProps,
         onclick: onclickFromPassthroughProps,
@@ -34,9 +36,10 @@ export const Label: Component<LabelProps> = ({
     const classesFromProps = $calc(() => {
         const result: ElementCssClasses = [];
 
-        if ($val(disabled)) {
-            result.push(tags.disabled);
-        }
+        applyStandardClasses(result, {
+            disabled: $val(disabled),
+            fillWidth: $val(fillWidth),
+        });
 
         return result;
     });

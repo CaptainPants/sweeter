@@ -147,6 +147,9 @@ importers:
       '@captainpants/sweeter-web':
         specifier: workspace:^
         version: link:../sweeter-web
+      '@captainpants/typeytypetype':
+        specifier: workspace:^
+        version: link:../typeytypetype
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -3737,7 +3740,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /is-fullwidth-code-point@3.0.0:
+  /is-fillWidth-code-point@3.0.0:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
     engines: {node: '>=8'}
     dev: true
@@ -5887,7 +5890,7 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       emoji-regex: 8.0.0
-      is-fullwidth-code-point: 3.0.0
+      is-fillWidth-code-point: 3.0.0
       strip-ansi: 6.0.1
     dev: true
 

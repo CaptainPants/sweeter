@@ -1,4 +1,8 @@
-import { subscribeToChanges, Context } from '@captainpants/sweeter-core';
+import {
+    subscribeToChanges,
+    Context,
+    initializeHook,
+} from '@captainpants/sweeter-core';
 import {
     type ComponentTypeConstraint,
     type UnsignalAll,
@@ -20,8 +24,8 @@ function createComponentInstanceInit<
     // Use this to get the error context within callbacks
     const contextSnapshot = Context.createSnapshot();
 
-    const init: ExtendedComponentInit = (Hook, ...args) =>
-        new Hook(init, ...args);
+    const init: ExtendedComponentInit = (hook, ...args) =>
+        initializeHook(init, hook, ...args);
 
     init.isValid = true;
     init[hookInitSymbol] = undefined;

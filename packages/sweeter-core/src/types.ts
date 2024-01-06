@@ -15,16 +15,24 @@ export interface JSXIntrinsicAttributes {
     readonly key?: JSXKey | undefined;
 }
 
+export type HookFactory<TArgs extends readonly unknown[], TResult> = (
+    setup: ComponentInit,
+    ...args: TArgs
+) => TResult;
 export type HookConstructor<TArgs extends readonly unknown[], TResult> = new (
     setup: ComponentInit,
     ...args: TArgs
 ) => TResult;
 
+export type HookInitializer<TArgs extends readonly unknown[], TResult> =
+    | HookFactory<TArgs, TResult>
+    | HookConstructor<TArgs, TResult>;
+
 /**
  * Component init function.
  */
 export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
-    hook: HookConstructor<TArgs, TResult>,
+    hook: HookInitializer<TArgs, TResult>,
     ...args: TArgs
 ) => TResult;
 

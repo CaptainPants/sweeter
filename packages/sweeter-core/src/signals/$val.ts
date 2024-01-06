@@ -1,5 +1,6 @@
 import { type Signal, type UnsignalAll } from './types.js';
 import { isSignal } from './isSignal.js';
+import { announceSignalUsage } from './ambient.js';
 
 /**
  * If the parameter is a signal, access the value via signal.value (and therefore subscribe), otherwise return the parameter unchanged.
@@ -17,7 +18,7 @@ export function $val<T>(value: T | Signal<T>): T {
  */
 export function $track<T>(value: T | Signal<T>): void {
     if (isSignal(value)) {
-        const _ = value.value;
+        announceSignalUsage(value);
     }
 }
 export function $peek<T>(value: T | Signal<T>): T {

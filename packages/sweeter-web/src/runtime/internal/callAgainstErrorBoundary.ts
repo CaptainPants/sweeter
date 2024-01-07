@@ -1,6 +1,7 @@
 import {
     type ContextSnapshot,
     ErrorBoundaryContext,
+    isCalculationRunning,
 } from '@captainpants/sweeter-core';
 
 export function callAgainstErrorBoundary<T>(
@@ -11,7 +12,11 @@ export function callAgainstErrorBoundary<T>(
     try {
         return callback();
     } catch (ex) {
-        contextSnapshot(ErrorBoundaryContext).error(ex);
-        return ifError;
+        if (isCalculationRunning()) {
+            throw ex;
+        } else {
+            contextSnapshot(ErrorBoundaryContext).error(ex);
+            return ifError;
+        }
     }
 }

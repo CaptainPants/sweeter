@@ -6,7 +6,7 @@ export * from './$propertyOf.js';
 export * from './$elementOf.js';
 
 export * from './ambient.js';
-export * from './afterCalculationsComplete.js';
+export * from './calculationDeferral-reexports.js';
 export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';

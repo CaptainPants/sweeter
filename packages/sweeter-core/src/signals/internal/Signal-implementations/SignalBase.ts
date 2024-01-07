@@ -2,7 +2,7 @@ import {
     getSignalValueFromState,
     isEqualSignalState,
 } from '../../SignalState-support.js';
-import { afterCalculationsComplete } from '../../afterCalculationsComplete.js';
+import { afterCalculationsComplete } from '../../calculationDeferral-reexports.js';
 import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
 import { signalMarker } from '../markers.js';

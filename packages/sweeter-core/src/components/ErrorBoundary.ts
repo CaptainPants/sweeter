@@ -1,4 +1,9 @@
-import { $calc, $mutable, $val } from '../signals/index.js';
+import {
+    $calc,
+    $mutable,
+    $val,
+    isCalculationRunning,
+} from '../signals/index.js';
 import { type Component, type PropertiesMightBeSignals } from '../types.js';
 import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
@@ -18,7 +23,13 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
     return ErrorBoundaryContext.invokeWith(
         {
             error(err) {
-                error.value = { error: err };
+                // If this error occurs during a 'calculation', the result of the calculation should be an error.
+                if (isCalculationRunning()) {
+                    console.error("This shouldn't happen");
+                    throw err;
+                } else {
+                    error.value = { error: err };
+                }
             },
         },
         () => {

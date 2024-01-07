@@ -1,42 +1,35 @@
+import { isCalculationRunning } from './internal/calculationDeferral.js';
 import { type Signal } from './types.js';
 
 export type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 
 let _ambientUsageListener: AmbientSignalUsageListener | undefined;
-let _ambientListenerExpectsReadonly: boolean = false;
 
 export function announceSignalUsage(signal: Signal<unknown>): void {
     _ambientUsageListener?.(signal);
 }
 
 export function untrack<T>(callback: () => T): T {
-    return callAndInvokeListenerForEachDependency(callback, () => {}, false);
+    return callAndInvokeListenerForEachDependency(callback, () => {});
 }
 
 export function trackingIsAnError<T>(callback: () => T): T {
-    return callAndInvokeListenerForEachDependency(
-        callback,
-        (signal) => {
-            throw new Error(
-                `Tracking is blocked here, meaning you have probably inadvertantly used .value when you should use .peek().`,
-            );
-        },
-        false,
-    );
+    return callAndInvokeListenerForEachDependency(callback, (signal) => {
+        throw new Error(
+            `Tracking is blocked here, meaning you have probably inadvertantly used .value when you should use .peek().`,
+        );
+    });
 }
 
 export function announceMutatingSignal(signal: Signal<unknown>) {
-    if (_ambientListenerExpectsReadonly) {
+    if (isCalculationRunning()) {
         throw new TypeError(
             'Mutating a signal inside a CalculatedSignal is not allowed.',
         );
     }
 }
 
-export function callAndReturnDependencies<T>(
-    callback: () => T,
-    readonly: boolean,
-): {
+export function callAndReturnDependencies<T>(callback: () => T): {
     result: T;
     dependencies: Set<Signal<unknown>>;
 } {
@@ -46,11 +39,7 @@ export function callAndReturnDependencies<T>(
         dependencies.add(signal);
     };
 
-    const result = callAndInvokeListenerForEachDependency(
-        callback,
-        listener,
-        readonly,
-    );
+    const result = callAndInvokeListenerForEachDependency(callback, listener);
 
     return { result, dependencies };
 }
@@ -58,22 +47,17 @@ export function callAndReturnDependencies<T>(
 export function callAndInvokeListenerForEachDependency<T>(
     callback: () => T,
     listener: AmbientSignalUsageListener,
-    readonly: boolean,
 ): T {
     // Save
     const saved_ambientUsageListener = _ambientUsageListener;
-    const saved_ambientListenerExpectsReadonly =
-        _ambientListenerExpectsReadonly;
 
     // Replace
     _ambientUsageListener = listener;
-    _ambientListenerExpectsReadonly = readonly;
 
     try {
         return callback();
     } finally {
         // Restore
         _ambientUsageListener = saved_ambientUsageListener;
-        _ambientListenerExpectsReadonly = saved_ambientListenerExpectsReadonly;
     }
 }

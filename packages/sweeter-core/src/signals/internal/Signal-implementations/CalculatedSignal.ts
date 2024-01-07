@@ -114,7 +114,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             const revert = this.#capturedContext.restore();
             try {
                 const { result, dependencies: nextDependencies } =
-                    callAndReturnDependencies(this.#wrappedCalculation, true);
+                    callAndReturnDependencies(this.#wrappedCalculation);
 
                 this.#detachExcept(nextDependencies);
 

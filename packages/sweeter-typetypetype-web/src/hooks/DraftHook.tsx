@@ -42,7 +42,7 @@ export class DraftHook<TModel, TDraft> {
             this.#reset();
         });
 
-        const asyncRunner = init(AsyncRunnerHook);
+        const asyncRunner = init.hook(AsyncRunnerHook);
         this.isValidating = $readonly(asyncRunner.running);
 
         init.subscribeToChanges([this.draft], ([draft]) => {

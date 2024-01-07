@@ -17,24 +17,29 @@ export function TextEditor(
         return cast(model.value, asString);
     });
 
-    const { draft, validationErrors } = init(DraftHook<StringModel, string>, {
-        model: typedModel,
-        onValid: async (validated) => {
-            await replace(validated);
+    const { draft, validationErrors } = init.hook(
+        DraftHook<StringModel, string>,
+        {
+            model: typedModel,
+            onValid: async (validated) => {
+                await replace(validated);
+            },
+            convertIn: (model) => model.value,
+            convertOut: (draft) => ({
+                success: true,
+                result: ModelFactory.createUnvalidatedReplacement(
+                    draft,
+                    typedModel.peek(),
+                ),
+            }),
+            validate: async (converted) => {
+                const res = await typedModel
+                    .peek()
+                    .type.validate(converted.value);
+                return res.success ? null : res.error;
+            },
         },
-        convertIn: (model) => model.value,
-        convertOut: (draft) => ({
-            success: true,
-            result: ModelFactory.createUnvalidatedReplacement(
-                draft,
-                typedModel.peek(),
-            ),
-        }),
-        validate: async (converted) => {
-            const res = await typedModel.peek().type.validate(converted.value);
-            return res.success ? null : res.error;
-        },
-    });
+    );
 
     const invalid = $calc(
         () =>

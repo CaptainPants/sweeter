@@ -24,13 +24,7 @@ function createComponentInstanceInit<
     // Use this to get the error context within callbacks
     const contextSnapshot = Context.createSnapshot();
 
-    const init: ExtendedComponentInit = (hook, ...args) =>
-        initializeHook(init, hook, ...args);
-
-    init.isValid = true;
-    init[hookInitSymbol] = undefined;
-
-    function getOrCreateMagicComment(reason: string) {
+    function getOrCreateMagicComment(reason: string): Comment {
         let hooks = init[hookInitSymbol];
 
         if (hooks) {
@@ -43,68 +37,79 @@ function createComponentInstanceInit<
         return hooks;
     }
 
-    init.onMount = (callback: () => (() => void) | void) => {
-        if (!init.isValid) {
-            throw new Error('onMount must only be called during init phase.');
-        }
+    const init: ExtendedComponentInit = {
+        isValid: true,
+        [hookInitSymbol]: undefined,
 
-        const hooks = getOrCreateMagicComment('onMount');
-
-        // This calls callAgainstErrorBoundary around callback and its resulting callback
-        addMountedCallback(contextSnapshot, hooks, callback);
-    };
-
-    init.onUnMount = (callback: () => void) => {
-        if (!init.isValid) {
-            throw new Error('onUnMount must only be called during init phase.');
-        }
-
-        addUnMountedCallback(
-            contextSnapshot,
-            getOrCreateMagicComment('onUnMount'),
-            callback,
-        );
-    };
-
-    init.subscribeToChanges = <TArgs extends readonly unknown[]>(
-        dependencies: [...TArgs],
-        callback: (args: UnsignalAll<TArgs>) => void | (() => void),
-        invokeOnSubscribe = true,
-    ) => {
-        if (!init.isValid) {
-            throw new Error(
-                'subscribeToChanges must only be called during init phase.',
-            );
-        }
-
-        addMountedCallback(
-            contextSnapshot,
-            getOrCreateMagicComment('subscribeToChanges'),
-            function subscribeChanges_onMount() {
-                return subscribeToChanges(
-                    dependencies,
-                    callback,
-                    invokeOnSubscribe,
+        hook(hook, ...args) {
+            return initializeHook(init, hook, ...args);
+        },
+        onMount(callback: () => (() => void) | void) {
+            if (!init.isValid) {
+                throw new Error(
+                    'onMount must only be called during init phase.',
                 );
-            },
-        );
-    };
+            }
 
-    init.nextId = (basis?: string) => webRuntime.nextId(basis);
+            const hooks = getOrCreateMagicComment('onMount');
 
-    init.runtime = webRuntime;
+            // This calls callAgainstErrorBoundary around callback and its resulting callback
+            addMountedCallback(contextSnapshot, hooks, callback);
+        },
+        onUnMount(callback: () => void) {
+            if (!init.isValid) {
+                throw new Error(
+                    'onUnMount must only be called during init phase.',
+                );
+            }
 
-    // Not sure if this is really a valuable component in init as you can call Context.current
-    // but it does indicate that you should capture the context values you need during init
-    // and not later when the context stack is gone
-    init.getContext = <T>(context: Context<T>): T => {
-        if (init.isValid) {
-            throw new Error(
-                'getContext must only be called during init phase.',
+            addUnMountedCallback(
+                contextSnapshot,
+                getOrCreateMagicComment('onUnMount'),
+                callback,
             );
-        }
+        },
+        subscribeToChanges<TArgs extends readonly unknown[]>(
+            dependencies: [...TArgs],
+            callback: (args: UnsignalAll<TArgs>) => void | (() => void),
+            invokeOnSubscribe = true,
+        ) {
+            if (!init.isValid) {
+                throw new Error(
+                    'subscribeToChanges must only be called during init phase.',
+                );
+            }
 
-        return context.getCurrent();
+            addMountedCallback(
+                contextSnapshot,
+                getOrCreateMagicComment('subscribeToChanges'),
+                function subscribeChanges_onMount() {
+                    return subscribeToChanges(
+                        dependencies,
+                        callback,
+                        invokeOnSubscribe,
+                    );
+                },
+            );
+        },
+        nextId(basis?: string) {
+            return webRuntime.nextId(basis);
+        },
+
+        // Not sure if this is really a valuable component in init as you can call Context.current
+        // but it does indicate that you should capture the context values you need during init
+        // and not later when the context stack is gone
+        getContext<T>(context: Context<T>): T {
+            if (init.isValid) {
+                throw new Error(
+                    'getContext must only be called during init phase.',
+                );
+            }
+
+            return context.getCurrent();
+        },
+
+        runtime: webRuntime,
     };
 
     return init;

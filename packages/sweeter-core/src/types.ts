@@ -31,17 +31,15 @@ export type HookInitializer<TArgs extends readonly unknown[], TResult> =
 /**
  * Component init function.
  */
-export type ComponentInitFunction = <TArgs extends readonly unknown[], TResult>(
+export type ComponentInitHookInitFunction = <
+    TArgs extends readonly unknown[],
+    TResult,
+>(
     hook: HookInitializer<TArgs, TResult>,
     ...args: TArgs
 ) => TResult;
 
-// There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
-
-/**
- * Object passed to Component functions for initialization. Gives access to mount/unmo0unt callbacks, as well as subscribeToChanges for subscribing to signals with automatic cleanup.
- */
-export type ComponentInit = ComponentInitFunction & {
+export interface ComponentInitFunctionsAndProperties {
     onMount(callback: () => (() => void) | void): void;
     onUnMount(callback: () => void): void;
     subscribeToChanges<TArgs extends readonly unknown[]>(
@@ -56,7 +54,15 @@ export type ComponentInit = ComponentInitFunction & {
     runtime: Runtime;
 
     isValid: boolean;
-};
+}
+
+// There may be extensions to this later, with Setup becoming SetupFunction & { other() => void };
+
+/**
+ * Object passed to Component functions for initialization. Gives access to mount/unmo0unt callbacks, as well as subscribeToChanges for subscribing to signals with automatic cleanup.
+ */
+export type ComponentInit = ComponentInitHookInitFunction &
+    ComponentInitFunctionsAndProperties;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Component<TProps = {}> = (

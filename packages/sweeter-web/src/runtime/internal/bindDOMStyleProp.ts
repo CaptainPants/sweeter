@@ -4,11 +4,11 @@ import {
     addExplicitStrongReference,
     $val,
 } from '@captainpants/sweeter-core';
-import { type Styles } from '../../IntrinsicAttributes.js';
+import { type ElementCssStyles } from '../../IntrinsicAttributes.js';
 
 export function bindDOMStyleProp(
     node: HTMLElement | SVGElement,
-    styles: Styles | Signal<Styles | undefined>,
+    styles: ElementCssStyles | Signal<ElementCssStyles | undefined>,
 ) {
     const signal = $calc(() => {
         const result: string[] = [];
@@ -17,7 +17,7 @@ export function bindDOMStyleProp(
 
         if (stylesValue) {
             for (const key of Object.getOwnPropertyNames(stylesValue)) {
-                const value = stylesValue[key as keyof Styles] as
+                const value = stylesValue[key as keyof ElementCssStyles] as
                     | string
                     | Signal<string>
                     | undefined;

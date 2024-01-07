@@ -1,5 +1,3 @@
-import { type Signal } from '@captainpants/sweeter-core';
-
 export interface AbstractGlobalCssStylesheet {
     readonly symbol: symbol;
     readonly id: string;
@@ -21,15 +19,6 @@ export interface AbstractGlobalCssClass extends AbstractGlobalCssStylesheet {
 export interface GlobalStyleSheetContentGeneratorContext {
     getPrefixedClassName(cssClass: AbstractGlobalCssClass): string;
 }
-
-export type ElementCssClasses =
-    | Signal<ElementCssClasses>
-    | string
-    | AbstractGlobalCssClass
-    | Record<string, Signal<boolean> | boolean>
-    | undefined
-    | null
-    | ElementCssClasses[];
 
 export type StylesheetInclude =
     | AbstractGlobalCssStylesheet

@@ -3,11 +3,11 @@ import {
     subscribeToChanges,
 } from '@captainpants/sweeter-core';
 import { createCssClassSignal } from '../../styles/createCssClassSignal.js';
-import { type ElementCssClasses } from '../../styles/types.js';
 import { type WebRuntime } from '../types.js';
 import { addMountedCallback } from './mounting.js';
 import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
 import { arrayExcept } from './utility/arrayExcept.js';
+import { type ElementCssClasses } from '../../IntrinsicAttributes.js';
 
 export function bindDOMClassProp(
     contextSnapshot: ContextSnapshot,

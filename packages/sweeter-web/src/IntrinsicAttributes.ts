@@ -7,7 +7,7 @@ import {
 import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 import { type StandardPropertiesHyphen } from 'csstype';
-import { type ElementCssClasses } from './styles/index.js';
+import { type AbstractGlobalCssClass } from './styles/index.js';
 import { type ThreeValueBoolean } from './indeterminate.js';
 
 // ==== EVENTS
@@ -51,11 +51,20 @@ type EventHandlerProperties<TElement extends Element> = {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type StyleProperties = StandardPropertiesHyphen<number | (string & {})>;
 
-export type Styles = {
+export type ElementCssStyles = {
     [Key in keyof StyleProperties]:
         | StyleProperties[Key]
         | Signal<StyleProperties[Key]>;
 };
+
+export type ElementCssClasses =
+    | Signal<ElementCssClasses>
+    | string
+    | AbstractGlobalCssClass
+    | Record<string, Signal<boolean> | boolean>
+    | undefined
+    | null
+    | ElementCssClasses[];
 
 // ==== Generic
 
@@ -64,7 +73,7 @@ type AllElementAttributes<TElement> = {
     title?: string | undefined;
 
     class?: ElementCssClasses | undefined;
-    style?: Styles | undefined;
+    style?: ElementCssStyles | undefined;
     children?: JSX.Element | undefined;
 
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;

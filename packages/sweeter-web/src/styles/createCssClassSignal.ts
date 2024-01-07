@@ -2,9 +2,9 @@ import { type Signal } from '@captainpants/sweeter-core';
 import { $calc, isSignal, $val } from '@captainpants/sweeter-core';
 import {
     type AbstractGlobalCssClass,
-    type ElementCssClasses,
 } from './index.js';
 import { GlobalCssClass } from './index.js';
+import { type ElementCssClasses } from '../IntrinsicAttributes.js';
 
 /**
  * Flatten the provided classes into a Signal of string | GlobalCssClass - that can be subscribed to in case of changes to any of the inputs.

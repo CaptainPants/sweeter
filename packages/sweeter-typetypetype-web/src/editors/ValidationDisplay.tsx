@@ -18,7 +18,7 @@ const css = new GlobalCssClass({
 });
 
 export type ValidationDisplayProps = PropertiesMightBeSignals<{
-    errors: ValidationSingleResult[] | undefined;
+    errors: ValidationSingleResult[] | null | undefined;
 }>;
 
 export function ValidationDisplay(

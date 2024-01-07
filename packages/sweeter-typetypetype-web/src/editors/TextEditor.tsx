@@ -7,7 +7,8 @@ import {
 import { DraftHook } from '../hooks/DraftHook.js';
 import { $calc, type ComponentInit } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
-import { Column, Label, Row, TextArea } from '@captainpants/sweeter-gummybear';
+import { TextArea } from '@captainpants/sweeter-gummybear';
+import { ValidationDisplay } from './ValidationDisplay.js';
 
 export function TextEditor(
     { model, replace, propertyDisplayName, idPath }: Readonly<EditorProps>,
@@ -48,18 +49,15 @@ export function TextEditor(
     );
 
     return (
-        <Row>
-            <Column>
-                <Label for={idPath}>{propertyDisplayName}</Label>
-            </Column>
-            <Column>
-                <TextArea
-                    id={idPath}
-                    fillWidth
-                    value={draft}
-                    invalid={invalid}
-                />
-            </Column>
-        </Row>
+        <>
+            <TextArea
+                id={idPath}
+                fillWidth
+                value={draft}
+                invalid={invalid}
+                placeholder={propertyDisplayName}
+            />
+            <ValidationDisplay errors={validationErrors} />
+        </>
     );
 }

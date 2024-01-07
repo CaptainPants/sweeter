@@ -28,6 +28,7 @@ export type InputProps = PropertiesMightBeSignals<{
     id?: string | undefined;
 
     value?: string | undefined;
+    placeholder?: string | undefined;
 
     onInput?: ((evt: TypedEvent<HTMLInputElement, Event>) => void) | undefined;
 }> & {
@@ -46,6 +47,7 @@ export const Input: Component<InputProps> = ({
     id,
     value,
     'bind:value': bindValue,
+    placeholder,
     onInput,
     passthroughProps: {
         class: classFromPassthroughProps,
@@ -77,6 +79,7 @@ export const Input: Component<InputProps> = ({
             bind:value={bindValue}
             disabled={disabled}
             readonly={readOnly}
+            placeholder={placeholder}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
             class={[classFromPassthroughProps, classesFromProps, forms.input]}
             {...passthroughProps}

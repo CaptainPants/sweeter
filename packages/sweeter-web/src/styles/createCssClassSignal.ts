@@ -1,8 +1,6 @@
 import { type Signal } from '@captainpants/sweeter-core';
 import { $calc, isSignal, $val } from '@captainpants/sweeter-core';
-import {
-    type AbstractGlobalCssClass,
-} from './index.js';
+import { type AbstractGlobalCssClass } from './index.js';
 import { GlobalCssClass } from './index.js';
 import { type ElementCssClasses } from '../IntrinsicAttributes.js';
 
@@ -68,5 +66,5 @@ function createCssClassSignalImplementation(
 }
 
 function isAbstractGlobalCssClass(val: unknown): val is AbstractGlobalCssClass {
-    return val instanceof GlobalCssClass || val instanceof GlobalCssClass;
+    return val instanceof GlobalCssClass;
 }

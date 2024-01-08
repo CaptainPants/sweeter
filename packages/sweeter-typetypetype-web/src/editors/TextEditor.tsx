@@ -5,7 +5,12 @@ import {
     type StringModel,
 } from '@captainpants/typeytypetype';
 import { DraftHook } from '../hooks/DraftHook.js';
-import { $calc, type ComponentInit } from '@captainpants/sweeter-core';
+import {
+    $calc,
+    $peek,
+    $val,
+    type ComponentInit,
+} from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
 import { TextArea } from '@captainpants/sweeter-gummybear';
 import { ValidationDisplay } from './ValidationDisplay.js';
@@ -15,7 +20,7 @@ export function TextEditor(
     init: ComponentInit,
 ): JSX.Element {
     const typedModel = $calc(() => {
-        return cast(model.value, asString);
+        return cast($val(model), asString);
     });
 
     const { draft, validationErrors } = init.hook(
@@ -23,7 +28,7 @@ export function TextEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                await replace(validated);
+                await $peek(replace)(validated);
             },
             convertIn: (model) => model.value,
             convertOut: (draft) => ({

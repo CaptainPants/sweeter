@@ -30,3 +30,15 @@ export function $valEach<TArgs extends readonly unknown[]>(
 ): UnsignalAll<[...TArgs]> {
     return values.map((x) => $val(x)) as UnsignalAll<[...TArgs]>;
 }
+
+export function $valObjectValues<
+    TObj extends Readonly<Record<string, unknown>>,
+>(source: TObj): UnsignalAll<TObj> {
+    const result = {} as Record<string, unknown>;
+
+    for (const key of Object.keys(source)) {
+        result[key] = $val(source[key]);
+    }
+
+    return result as UnsignalAll<TObj>;
+}

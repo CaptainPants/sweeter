@@ -112,9 +112,10 @@ export type PropertiesMightBeSignals<TProps> = {
  * Extended by declaration merging into IntrinsicElementNames and IntrinsicElementAttributeParts.
  */
 export type IntrinsicElementAttributes<TElementTypeString extends string> =
-    UnionToIntersection<
-        SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
-    >;
+    JSXIntrinsicAttributes &
+        UnionToIntersection<
+            SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
+        >;
 
 /**
  * Extended by declaration merging into RuntimeRootHostElementTypes.

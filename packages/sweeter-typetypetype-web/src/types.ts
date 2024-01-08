@@ -1,12 +1,15 @@
-import { type Signal, type Component } from '@captainpants/sweeter-core';
+import {
+    type Component,
+    type PropertiesMightBeSignals,
+} from '@captainpants/sweeter-core';
 import {
     type LocalValueCallback,
     type Model,
     type Replacer,
 } from '@captainpants/typeytypetype';
 
-export interface EditorLikeProps {
-    model: Signal<Model<unknown>>;
+export type EditorLikeProps = PropertiesMightBeSignals<{
+    model: Model<unknown>;
     replace: Replacer<unknown>;
     propertyDisplayName?: string | undefined;
     indent: number;
@@ -14,25 +17,27 @@ export interface EditorLikeProps {
 
     idPath: string | undefined;
     local?: LocalValueCallback | undefined;
-}
+}>;
 
 export type EditorSettings = Readonly<Record<string, unknown>>;
 
 export type RenderNextFunction = (props: RenderNextFunctionArgs) => JSX.Element;
 
-interface EditorCommonProps extends EditorLikeProps {
-    settings: EditorSettings;
-}
+export type EditorCommonProps = EditorLikeProps &
+    PropertiesMightBeSignals<{
+        settings: EditorSettings;
+    }>;
 
 export interface RenderNextFunctionArgs extends EditorCommonProps {
     key?: string;
 }
 
-export interface EditorProps extends EditorCommonProps {
-    next: RenderNextFunction;
-}
+export type EditorProps = EditorCommonProps &
+    PropertiesMightBeSignals<{
+        next: RenderNextFunction;
+    }>;
 
-export interface EditorHostProps extends EditorLikeProps {}
+export type EditorHostProps = EditorLikeProps;
 
 export type EditorComponentType = Component<EditorProps>;
 

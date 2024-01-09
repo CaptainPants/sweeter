@@ -11,7 +11,7 @@ import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 
 const classes = {
     frame: new GlobalCssClass({
-        className: 'Modal_background',
+        className: 'Modal-Frame',
         content: stylesheet`
             position: fixed;
             top: 0px;
@@ -23,6 +23,8 @@ const classes = {
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
+            overflow: auto;
         `,
     }),
     background: new GlobalCssClass({
@@ -40,18 +42,25 @@ const classes = {
     window: new GlobalCssClass({
         className: 'Modal-Window',
         content: stylesheet`
-            background: #e0e0e0;
+            position: relative;
+
+            background: #606060;
             border: solid green 1px;
 
             max-width: 1000px;
-            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         `,
     }),
-    heading: new GlobalCssClass({
-        className: 'Modal-Heading',
+    header: new GlobalCssClass({
+        className: 'Modal-Header',
         content: stylesheet`
             display: flex;
             flex-direction: row;
+            align-items: center;
+
+            padding: 4px;
+            border-bottom: solid black 1px;
         `,
     }),
     title: new GlobalCssClass({
@@ -63,19 +72,37 @@ const classes = {
     closeButton: new GlobalCssClass({
         className: 'Modal-CloseButton',
         content: stylesheet`
+            width: 20px;
             
+            height: 20px;
+            border: solid black 1px;
+            border-radius: 4px;
+            margin: 1px;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                background-color: #505050;
+            }
         `,
     }),
     body: new GlobalCssClass({
         className: 'Modal-Body',
         content: stylesheet`
-
+            padding: 4px;
         `,
     }),
     footer: new GlobalCssClass({
         className: 'Modal-ButtonRow',
         content: stylesheet`
+            padding: 4px;
 
+            // align footer buttons to the end
+            align-content: flex-end;
         `,
     }),
 } as const;
@@ -116,7 +143,7 @@ export const Modal: Component<ModalProps> = (
                 <div class={classes.frame}>
                     <div class={classes.background} onclick={onClose} />
                     <div class={classes.window}>
-                        <div class={classes.heading}>
+                        <div class={classes.header}>
                             <div class={classes.title}>{$resolve(title)}</div>
                             <div onclick={onClose} class={classes.closeButton}>
                                 x

@@ -5,6 +5,7 @@ import {
     button,
     variants,
     tags,
+    Modal,
 } from '@captainpants/sweeter-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
@@ -26,7 +27,10 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
         textInput: 'test',
         select: 'Option 3',
         checked: false as ThreeValueBoolean,
+        modalOpen: false
     });
+
+    const modalOpen = $propertyOf(state, 'modalOpen');
 
     const ids = {
         textMutable1: init.nextId(),
@@ -281,6 +285,24 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             >
                                 Light
                             </button>
+                        </div>
+                    </div>
+                    <div class={grid.row}>
+                        <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
+                            <label class={forms.label}>Modal:</label>
+                        </div>
+                        <div class={[grid.columns.xs._12, grid.columns.sm._6]}>
+                            <button
+                                class={[button, variants.primary]}
+                                onclick={() => {
+                                    modalOpen.value = true;
+                                }}
+                            >
+                                Open Modal
+                            </button>
+                            <Modal isOpen={modalOpen} title="Testing Modal" onClose={() => modalOpen.value = false}>
+                                Content
+                            </Modal>
                         </div>
                     </div>
                 </div>

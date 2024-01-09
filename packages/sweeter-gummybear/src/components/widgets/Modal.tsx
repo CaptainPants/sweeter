@@ -1,5 +1,4 @@
 import {
-    $mutable,
     type Component,
     Portal,
     $calc,
@@ -22,24 +21,24 @@ export const Modal: Component<ModalProps> = (
     { title, children, isOpen, onClose },
     init,
 ) => {
-    const container = $mutable<HTMLElement>(document.createElement('div'));
+    const container = document.createElement('div');
 
     init.onMount(() => {
-        document.body.appendChild(container.value);
+        document.body.appendChild(container);
 
         return () => {
-            container.value.remove();
+            container.remove();
         };
     });
 
     return $calc(() => {
         if (!$val(isOpen)) {
-            // Is it OK not to mount the children?
+            // Is it OK not to mount(/invoke callback) the children?
             return undefined;
         }
 
         return (
-            <Portal target={$val(container)}>
+            <Portal target={container}>
                 <div>
                     <div onclick={onClose}>BACKGROUND</div>
                     <div>

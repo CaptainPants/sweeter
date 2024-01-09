@@ -25,7 +25,7 @@ export type StylesheetInclude =
     | AbstractGlobalCssStylesheet[];
 
 export type StylesheetContentGenerator = {
-    (context: GlobalStyleSheetContentGeneratorContext): string;
+    generate(context: GlobalStyleSheetContentGeneratorContext): string;
 
     getReferencedStylesheets(): AbstractGlobalCssStylesheet[] | undefined;
 };

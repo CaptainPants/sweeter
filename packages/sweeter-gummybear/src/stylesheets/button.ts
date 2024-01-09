@@ -5,7 +5,7 @@ import { themeStructure } from '../theme/themeStructure.js';
 
 export const button = new GlobalCssClass({
     className: 'button',
-    content: () => stylesheet`
+    content: stylesheet`
         background-color: white;
         padding: .375rem .75rem;
         margin: 4px;

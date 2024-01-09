@@ -1,4 +1,5 @@
 import { type StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
+import { isStylesheetContentGenerator } from './isStylesheetContentGenerator.js';
 import { preprocessClassContent } from './preprocessor/preprocess.js';
 import {
     type GlobalStyleSheetContentGeneratorContext,
@@ -9,6 +10,7 @@ import {
 
 export type GlobalCssClassContent =
     | ((self: GlobalCssClass) => string | StylesheetContentGenerator)
+    | StylesheetContentGenerator
     | string;
 
 export type GlobalCssClassContentConstructed =
@@ -49,7 +51,11 @@ export class GlobalCssClass
         this.preprocess = preprocess;
 
         this.classContent =
-            typeof content === 'function' ? content(this) : content;
+            typeof content === 'function'
+                ? isStylesheetContentGenerator(content)
+                    ? content
+                    : content(this)
+                : content;
 
         if (extraDependencies) {
             extraDependencies.addDependencyListener((dependency) => {
@@ -67,7 +73,7 @@ export class GlobalCssClass
         const content =
             typeof this.classContent === 'string'
                 ? this.classContent
-                : this.classContent?.(context);
+                : this.classContent?.generate(context);
 
         if (!content) {
             return undefined;
@@ -83,9 +89,9 @@ export class GlobalCssClass
         | readonly AbstractGlobalCssStylesheet[]
         | undefined {
         let result =
-            typeof this.classContent === 'function'
-                ? this.classContent.getReferencedStylesheets()
-                : undefined;
+            typeof this.classContent === 'string'
+                ? undefined
+                : this.classContent?.getReferencedStylesheets();
 
         if (this.#extraDependencies) {
             result ??= [];

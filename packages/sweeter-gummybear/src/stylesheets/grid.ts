@@ -16,7 +16,7 @@ import { themeStructure } from '../theme/themeStructure.js';
 
 export const container = new GlobalCssClass({
     className: 'container',
-    content: `
+    content: stylesheet`
         max-width: 900px;
         margin: 0 auto;
     `,
@@ -24,7 +24,7 @@ export const container = new GlobalCssClass({
 
 export const row = new GlobalCssClass({
     className: 'row',
-    content: `
+    content: stylesheet`
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;

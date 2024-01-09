@@ -3,7 +3,9 @@ import { GlobalCssClass } from './GlobalCssClass.js';
 import { stylesheet } from './stylesheet.js';
 
 function evaluate(thing: StylesheetContentGenerator) {
-    return thing({ getPrefixedClassName: (class_) => class_.className });
+    return thing.generate({
+        getPrefixedClassName: (class_) => class_.className,
+    });
 }
 
 it('General', () => {

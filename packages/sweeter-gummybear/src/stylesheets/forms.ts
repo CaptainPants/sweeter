@@ -14,7 +14,7 @@ const inputPaddingMixin = stylesheet`
 
 export const input = new GlobalCssClass({
     className: 'input',
-    content: () => stylesheet`
+    content: stylesheet`
         &:not([type=checkbox]):not([type=radio]) {
             ${inputPaddingMixin}
 
@@ -40,7 +40,7 @@ export const input = new GlobalCssClass({
 
 export const select = new GlobalCssClass({
     className: 'select',
-    content: () => stylesheet`
+    content: stylesheet`
         ${inputPaddingMixin}
         
         border-color: var(${themeStructure.input.borderColor.cssVar});
@@ -60,7 +60,7 @@ export const select = new GlobalCssClass({
 
 export const label = new GlobalCssClass({
     className: 'label',
-    content: () => stylesheet`
+    content: stylesheet`
         ${inputPaddingMixin}
 
         // to match input fields for size

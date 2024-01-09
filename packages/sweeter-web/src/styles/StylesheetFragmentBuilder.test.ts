@@ -11,7 +11,7 @@ it('Circular dependency works', () => {
 
     const built = builder.build();
 
-    const asString = built({
+    const asString = built.generate({
         getPrefixedClassName: (thing) => thing.className,
     });
 

@@ -5,6 +5,7 @@ import {
     type StylesheetContentGenerator,
 } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
+import { isStylesheetContentGenerator } from './isStylesheetContentGenerator.js';
 
 export type StylesheetParametersType =
     | AbstractGlobalCssClass
@@ -26,34 +27,38 @@ export function stylesheet(
     template: TemplateStringsArray,
     ...params: StylesheetParametersType[]
 ): StylesheetContentGenerator {
-    const result: StylesheetContentGenerator = (context) => {
-        const res: string[] = [];
-        const last = template.length - 1;
-        for (let i = 0; i < template.length; ++i) {
-            res.push(template[i]!);
+    // TODO: if params.length is zero, we can safely cache the result based on the template reference in a WeakMap.
 
-            if (i !== last) {
-                const param = params[i]!;
+    const result: StylesheetContentGenerator = {
+        generate: (context) => {
+            const res: string[] = [];
+            const last = template.length - 1;
+            for (let i = 0; i < template.length; ++i) {
+                res.push(template[i]!);
 
-                processParam(param, res, context);
-            }
-        }
-        return res.join('');
-    };
-    result.getReferencedStylesheets = () => {
-        const references: AbstractGlobalCssStylesheet[] = [];
-        for (const param of params) {
-            if (param instanceof GlobalCssClass) {
-                references.push(param);
-            } else if (typeof param === 'function') {
-                const refsFromNestedGenerator =
-                    param.getReferencedStylesheets();
-                if (refsFromNestedGenerator) {
-                    references.push(...refsFromNestedGenerator);
+                if (i !== last) {
+                    const param = params[i]!;
+
+                    processParam(param, res, context);
                 }
             }
-        }
-        return references;
+            return res.join('');
+        },
+        getReferencedStylesheets: () => {
+            const references: AbstractGlobalCssStylesheet[] = [];
+            for (const param of params) {
+                if (param instanceof GlobalCssClass) {
+                    references.push(param);
+                } else if (isStylesheetContentGenerator(param)) {
+                    const refsFromNestedGenerator =
+                        param.getReferencedStylesheets();
+                    if (refsFromNestedGenerator) {
+                        references.push(...refsFromNestedGenerator);
+                    }
+                }
+            }
+            return references;
+        },
     };
 
     return result;
@@ -71,8 +76,8 @@ function processParam(
         res.push(String(param));
     } else if (typeof param === 'string') {
         res.push(param);
-    } else if (typeof param === 'function') {
-        res.push(param(context));
+    } else if (isStylesheetContentGenerator(param)) {
+        res.push(param.generate(context));
     } else {
         res.push(context.getPrefixedClassName(param));
     }

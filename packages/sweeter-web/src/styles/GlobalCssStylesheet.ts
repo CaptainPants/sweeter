@@ -49,7 +49,7 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
         const content =
             typeof this.content === 'string'
                 ? this.content
-                : this.content(context);
+                : this.content?.generate(context);
 
         const transformed = this.preprocess ? preprocess(content) : content;
 
@@ -60,9 +60,9 @@ export class GlobalCssStylesheet implements AbstractGlobalCssStylesheet {
         | readonly AbstractGlobalCssStylesheet[]
         | undefined {
         let result =
-            typeof this.content === 'function'
-                ? this.content.getReferencedStylesheets()
-                : undefined;
+            typeof this.content === 'string'
+                ? undefined
+                : this.content.getReferencedStylesheets();
 
         if (this.#extraDependencies) {
             result ??= [];

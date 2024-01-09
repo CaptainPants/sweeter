@@ -42,13 +42,16 @@ export class StylesheetFragmentBuilder {
      * @returns
      */
     build(): StylesheetContentGenerator {
-        const res: StylesheetContentGenerator = (context) => {
-            return this.#parts
-                .map((x) => (typeof x === 'string' ? x : x(context)))
-                .join('');
+        const res: StylesheetContentGenerator = {
+            generate: (context) => {
+                return this.#parts
+                    .map((x) =>
+                        typeof x === 'string' ? x : x.generate(context),
+                    )
+                    .join('');
+            },
+            getReferencedStylesheets: () => this.#references?.slice(),
         };
-
-        res.getReferencedStylesheets = () => this.#references?.slice();
 
         this.#built = true;
 

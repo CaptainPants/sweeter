@@ -10,7 +10,7 @@ import {
 export type ShowProps = PropertiesMightBeSignals<{
     if: boolean;
     children: () => JSX.Element;
-    otherwise?: () => JSX.Element;
+    otherwise?: (() => JSX.Element) | undefined;
 }>;
 
 /**
@@ -37,7 +37,7 @@ export const Show: Component<ShowProps> = ({
 export function $if(
     condition: MightBeSignal<boolean>,
     ifTrue: MightBeSignal<() => JSX.Element>,
-    otherwise: MightBeSignal<() => JSX.Element>,
+    otherwise?: MightBeSignal<(() => JSX.Element) | undefined>,
 ): JSX.Element {
     return getRuntime().jsx(Show, {
         if: condition,

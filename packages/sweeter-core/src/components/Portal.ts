@@ -8,7 +8,7 @@ import {
 
 export type PortalProps = PropertiesMightBeSignals<{
     target: RuntimeRootHostElement;
-    children: () => JSX.Element;
+    children?: JSX.Element;
 }>;
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
@@ -17,7 +17,11 @@ export const Portal: Component<PortalProps> = ({ target, children }, init) => {
     init.subscribeToChanges(
         [target, children],
         ([target, children]) => {
-            return runtime.createNestedRoot(target, children);
+            return runtime.createNestedRoot(
+                target,
+                // Note that we could (easily) allow a callback to be passed for children, but I think the API is cleaner this way
+                () => children,
+            );
         },
         true,
     );
@@ -28,7 +32,7 @@ export const Portal: Component<PortalProps> = ({ target, children }, init) => {
 
 export function $portal(
     target: MightBeSignal<RuntimeRootHostElement>,
-    children: MightBeSignal<() => JSX.Element>,
+    children: MightBeSignal<JSX.Element>,
 ): JSX.Element {
     return getRuntime().jsx(Portal, { target, children });
 }

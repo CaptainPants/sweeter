@@ -7,7 +7,9 @@ it('Portal element mounts', () => {
     const target = document.createElement('div');
 
     const { dispose, getHTML } = testRender(() => (
-        <Portal target={target}>{() => <div>CONTENT</div>}</Portal>
+        <Portal target={target}>
+            <div>CONTENT</div>
+        </Portal>
     ));
 
     // The contents of our in-tree render should be empty, but will have hook placeholders

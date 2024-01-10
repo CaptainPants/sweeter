@@ -341,16 +341,6 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 test<br />
                                 test<br />
                                 test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
                             </Modal>
                         </div>
                     </div>

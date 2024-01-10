@@ -11,23 +11,6 @@ import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { themeStructure } from '../../theme/themeStructure.js';
 
 const classes = {
-    frame: new GlobalCssClass({
-        className: 'Modal-Frame',
-        content: stylesheet`
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            bottom: 0px;
-            right: 0px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-
-            overflow: auto;
-        `,
-    }),
     backdrop: new GlobalCssClass({
         className: 'Modal-Backdrop',
         content: stylesheet`
@@ -39,6 +22,27 @@ const classes = {
             background: var(${themeStructure.modal.backdropBackground.cssVar});
             opacity: 0.8;
         `,
+    }),
+    centerColumn: new GlobalCssClass({
+        className: 'Modal-CenterColumn',
+        content: stylesheet`
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            right: 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 20px;
+        `
+    }),
+    verticalSpacer: new GlobalCssClass({
+        className: 'Modal-VerticalSpacer',
+        content: stylesheet`
+            flex-grow: 1;
+        `
     }),
     window: new GlobalCssClass({
         className: 'Modal-Window',
@@ -55,6 +59,8 @@ const classes = {
 
             display: flex;
             flex-direction: column;
+
+            overflow: hidden;
         `,
     }),
     header: new GlobalCssClass({
@@ -104,6 +110,9 @@ const classes = {
         className: 'Modal-Body',
         content: stylesheet`
             margin: var(${themeStructure.modal.padding.cssVar});
+            flex-shrink: 1;
+
+            overflow: auto;
         `,
     }),
     footer: new GlobalCssClass({
@@ -152,17 +161,21 @@ export const Modal: Component<ModalProps> = (
 
         return (
             <Portal target={container}>
-                <div class={classes.frame}>
+                <div>
                     <div class={classes.backdrop} onclick={onClose} />
-                    <div class={classes.window}>
-                        <div class={classes.header}>
-                            <div class={classes.title}>{$resolve(title)}</div>
-                            <div onclick={onClose} class={classes.closeButton}>
-                                ×
+                    <div class={classes.centerColumn}>
+                        <div class={classes.verticalSpacer} />
+                        <div class={classes.window}>
+                            <div class={classes.header}>
+                                <div class={classes.title}>{$resolve(title)}</div>
+                                <div onclick={onClose} class={classes.closeButton}>
+                                    ×
+                                </div>
                             </div>
+                            <div class={classes.body}>{$resolve(children)}</div>
+                            <div class={classes.footer}>{$resolve(footer)}</div>
                         </div>
-                        <div class={classes.body}>{$resolve(children)}</div>
-                        <div class={classes.footer}>{$resolve(footer)}</div>
+                        <div class={classes.verticalSpacer} />
                     </div>
                 </div>
             </Portal>

@@ -13,7 +13,7 @@ import {
     type StylesheetInclude,
 } from '../styles/index.js';
 import { getWebRuntime } from '../runtime/getWebRuntime.js';
-import { arrayExcept } from '../runtime/internal/utility/arrayExcept.js';
+import { arrayExcept } from '@captainpants/sweeter-utilities';
 
 export type IncludeStylesheetProps = PropertiesMightBeSignals<{
     stylesheet: StylesheetInclude;

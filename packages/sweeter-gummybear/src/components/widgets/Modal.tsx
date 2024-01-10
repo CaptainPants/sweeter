@@ -8,6 +8,7 @@ import {
 } from '@captainpants/sweeter-core';
 
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+import { themeStructure } from '../../theme/themeStructure.js';
 
 const classes = {
     frame: new GlobalCssClass({
@@ -27,15 +28,15 @@ const classes = {
             overflow: auto;
         `,
     }),
-    background: new GlobalCssClass({
-        className: 'Modal-Background',
+    backdrop: new GlobalCssClass({
+        className: 'Modal-Backdrop',
         content: stylesheet`
             position: absolute;
             top: 0px;
             left: 0px;
             bottom: 0px;
             right: 0px;
-            background: black;
+            background: var(${themeStructure.modal.backdropBackground.cssVar});
             opacity: 0.8;
         `,
     }),
@@ -44,12 +45,16 @@ const classes = {
         content: stylesheet`
             position: relative;
 
-            background: #606060;
-            border: solid green 1px;
+            background: var(${themeStructure.modal.windowBackground.cssVar});
+            border: var(${themeStructure.modal.border.cssVar});
+            border-radius: var(${themeStructure.modal.borderRadius.cssVar});
 
             max-width: 1000px;
             width: 100%;
             box-sizing: border-box;
+
+            display: flex;
+            flex-direction: column;
         `,
     }),
     header: new GlobalCssClass({
@@ -59,8 +64,11 @@ const classes = {
             flex-direction: row;
             align-items: center;
 
-            padding: 4px;
-            border-bottom: solid black 1px;
+            margin: var(${themeStructure.modal.padding.cssVar});
+            margin-bottom: 0px;
+            padding-bottom: var(${themeStructure.modal.padding.cssVar});
+
+            border-bottom: var(${themeStructure.modal.headerBottomBorder.cssVar});
         `,
     }),
     title: new GlobalCssClass({
@@ -72,9 +80,9 @@ const classes = {
     closeButton: new GlobalCssClass({
         className: 'Modal-CloseButton',
         content: stylesheet`
-            width: 20px;
-            
-            height: 20px;
+            width:  var(${themeStructure.modal.closeButtonSize.cssVar});
+            height:  var(${themeStructure.modal.closeButtonSize.cssVar});
+
             border: solid black 1px;
             border-radius: 4px;
             margin: 1px;
@@ -85,6 +93,8 @@ const classes = {
             align-items: center;
             justify-content: center;
 
+            vertical-align: center;
+
             &:hover {
                 background-color: #505050;
             }
@@ -93,16 +103,18 @@ const classes = {
     body: new GlobalCssClass({
         className: 'Modal-Body',
         content: stylesheet`
-            padding: 4px;
+            margin: var(${themeStructure.modal.padding.cssVar});
         `,
     }),
     footer: new GlobalCssClass({
-        className: 'Modal-ButtonRow',
+        className: 'Modal-Footer',
         content: stylesheet`
-            padding: 4px;
+            margin: var(${themeStructure.modal.padding.cssVar});
 
+            display: flex;
+            flex-direction: row;
             // align footer buttons to the end
-            align-content: flex-end;
+            justify-content: flex-end;
         `,
     }),
 } as const;
@@ -141,17 +153,17 @@ export const Modal: Component<ModalProps> = (
         return (
             <Portal target={container}>
                 <div class={classes.frame}>
-                    <div class={classes.background} onclick={onClose} />
+                    <div class={classes.backdrop} onclick={onClose} />
                     <div class={classes.window}>
                         <div class={classes.header}>
                             <div class={classes.title}>{$resolve(title)}</div>
                             <div onclick={onClose} class={classes.closeButton}>
-                                x
+                                ×
                             </div>
                         </div>
                         <div class={classes.body}>{$resolve(children)}</div>
+                        <div class={classes.footer}>{$resolve(footer)}</div>
                     </div>
-                    <div class={classes.footer}>{$resolve(footer)}</div>
                 </div>
             </Portal>
         );

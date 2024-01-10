@@ -6,8 +6,8 @@ import { createCssClassSignal } from '../../styles/createCssClassSignal.js';
 import { type WebRuntime } from '../types.js';
 import { addMountedCallback } from './mounting.js';
 import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
-import { arrayExcept } from './utility/arrayExcept.js';
 import { type ElementCssClasses } from '../../IntrinsicAttributes.js';
+import { arrayExcept } from '@captainpants/sweeter-utilities';
 
 export function bindDOMClassProp(
     contextSnapshot: ContextSnapshot,

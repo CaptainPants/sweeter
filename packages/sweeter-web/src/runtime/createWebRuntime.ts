@@ -151,12 +151,14 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             this.#target.ownerDocument.head.appendChild(element);
 
             entry = {
-                count: 1,
+                count: 0,
                 element: element,
             };
 
             this.#includedSingletonStylesheetCounts.set(stylesheet, entry);
         }
+
+        entry.count += 1;
 
         let removed = false;
 

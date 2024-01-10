@@ -6,6 +6,7 @@ import {
     variants,
     tags,
     Modal,
+    Button,
 } from '@captainpants/sweeter-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
@@ -300,8 +301,56 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             >
                                 Open Modal
                             </button>
-                            <Modal isOpen={modalOpen} title="Testing Modal" onClose={() => modalOpen.value = false}>
-                                Content
+                            <Modal isOpen={modalOpen} title="Example modal" onClose={() => modalOpen.value = false} footer={<Button variant="primary" onclick={() => modalOpen.value = false}>Close</Button>}>
+                                This is a <strong>Modal</strong>, press the x button to close. <br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
+                                test<br />
                             </Modal>
                         </div>
                     </div>

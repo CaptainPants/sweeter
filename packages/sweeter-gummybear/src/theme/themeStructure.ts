@@ -3,7 +3,38 @@ import { type ThemeOptionOrGroupDefinition } from '../types.js';
 export const themeStructure = {
     bodyBackground: {
         cssVar: '--body-background',
-        defaultValue: 'black' as string,
+        defaultValue: '#000000' as string,
+    },
+
+    modal: {
+        backdropBackground: {
+            cssVar: '--modal-backdrop-background',
+            defaultValue: '#000000' as string,
+        },
+        windowBackground: {
+            cssVar: '--modal-window-background',
+            defaultValue: '#202020' as string,
+        },
+        border: {
+            cssVar: '--modal-border',
+            defaultValue: 'solid #535353 2px' as string,
+        },
+        headerBottomBorder: {
+            cssVar: '--modal-header-bottom-border',
+            defaultValue: 'solid #535353 1px' as string,
+        },
+        borderRadius: {
+            cssVar: '--modal-border-radius',
+            defaultValue: '5px' as string,
+        },
+        padding: {
+            cssVar: '--modal-padding',
+            defaultValue: '10px' as string,
+        },
+        closeButtonSize: {
+            cssVar: '--modal-close-button-size',
+            defaultValue: '30px' as string,
+        }
     },
 
     common: {

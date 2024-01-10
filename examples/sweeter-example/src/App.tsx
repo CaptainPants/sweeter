@@ -238,6 +238,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             >
                                 Primary (Outline)
                             </button>
+                            <br />
                             <button
                                 class={[button, variants.secondary]}
                                 onclick={() => {
@@ -247,6 +248,15 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 Secondary
                             </button>
                             <button
+                                class={[button, variants.secondary, tags.outline]}
+                                onclick={() => {
+                                    alert('Clicked!');
+                                }}
+                            >
+                                Secondary (Outline)
+                            </button>
+                            <br />
+                            <button
                                 class={[button, variants.success]}
                                 onclick={() => {
                                     alert('Clicked!');
@@ -254,6 +264,15 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             >
                                 Success
                             </button>
+                            <button
+                                class={[button, variants.success, tags.outline]}
+                                onclick={() => {
+                                    alert('Clicked!');
+                                }}
+                            >
+                                Success (Outline)
+                            </button>
+                            <br />
                             <button
                                 class={[button, variants.danger]}
                                 onclick={() => {
@@ -263,6 +282,15 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 Danger
                             </button>
                             <button
+                                class={[button, variants.danger, tags.outline]}
+                                onclick={() => {
+                                    alert('Clicked!');
+                                }}
+                            >
+                                Danger (Outline)
+                            </button>
+                            <br />
+                            <button
                                 class={[button, variants.warning]}
                                 onclick={() => {
                                     alert('Clicked!');
@@ -270,6 +298,15 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             >
                                 Warning
                             </button>
+                            <button
+                                class={[button, variants.warning, tags.outline]}
+                                onclick={() => {
+                                    alert('Clicked!');
+                                }}
+                            >
+                                Warning (Outline)
+                            </button>
+                            <br />
                             <button
                                 class={[button, variants.dark]}
                                 onclick={() => {
@@ -279,12 +316,29 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 Dark
                             </button>
                             <button
+                                class={[button, variants.dark, tags.outline]}
+                                onclick={() => {
+                                    alert('Clicked!');
+                                }}
+                            >
+                                Dark (Outline)
+                            </button>
+                            <br />
+                            <button
                                 class={[button, variants.light]}
                                 onclick={() => {
                                     alert('Clicked!');
                                 }}
                             >
                                 Light
+                            </button>
+                            <button
+                                class={[button, variants.light, tags.outline]}
+                                onclick={() => {
+                                    alert('Clicked!');
+                                }}
+                            >
+                                Light (Outline)
                             </button>
                         </div>
                     </div>

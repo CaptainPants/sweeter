@@ -20,9 +20,8 @@ import {
     type RenderNextFunction,
     type RenderNextFunctionArgs,
 } from '../types.js';
-import { EditorProviderContext } from '../context/EditorProviderContext.js';
-import { EditorHostContext } from '../context/EditorHostContext.js';
 import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
+import { EditorRootContext } from '../context/EditorRootContext.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const Last = (props: {}, init: ComponentInit): JSX.Element => {
@@ -62,8 +61,7 @@ export function EditorHost(
     { model, local: localProp, ...rest }: EditorHostProps,
     init: ComponentInit,
 ): JSX.Element {
-    const { rules } = init.getContext(EditorProviderContext);
-    const { settings } = init.getContext(EditorHostContext);
+    const { rules, settings } = init.getContext(EditorRootContext);
 
     const calculateLocal = (
         name: string,

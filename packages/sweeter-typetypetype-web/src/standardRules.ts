@@ -2,7 +2,7 @@ import { createDefaultRulesSet } from './createDefaultRulesSet.js';
 import { RigidObjectEditor } from './editors/RigidObjectEditor.js';
 import { TextEditor } from './editors/TextEditor.js';
 
-export const muiStandardRules = createDefaultRulesSet({
+export const standardRules = createDefaultRulesSet({
     rigidObject: RigidObjectEditor,
     //mapObject: MuiMapObjectEditor,
     string: TextEditor,

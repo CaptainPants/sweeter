@@ -1,10 +1,5 @@
-/* @jsxImportSource .. */
-
 import { $mutable, type Component } from '@captainpants/sweeter-core';
-import {
-    type ElementCssStyles,
-    type ElementCssClasses,
-} from '../IntrinsicAttributes.js';
+import { type ElementCssClasses, type ElementCssStyles } from '@captainpants/sweeter-web';
 
 export interface MeasuredBoxProps {
     children?: JSX.Element | undefined;

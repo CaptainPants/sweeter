@@ -3,28 +3,31 @@ import {
     asUnknown,
     type Model,
     type Replacer,
+    type TypeMatcherRule,
 } from '@captainpants/typeytypetype';
 
 import { AmbientValues } from './AmbientValues.js';
 import { EditorHost } from './EditorHost.js';
-import { type EditorSettings } from '../types.js';
+import { type EditorComponentType, type EditorSettings } from '../types.js';
 import {
-    EditorHostContext,
-    type EditorHostContextType,
-} from '../context/EditorHostContext.js';
-import { $calc, $val } from '@captainpants/sweeter-core';
-import { hasOwnProperty } from '@captainpants/sweeter-utilities';
+    EditorRootContext,
+    type EditorRootContextType,
+} from '../context/EditorRootContext.js';
+import { $calc, $val, type PropertiesMightBeSignals } from '@captainpants/sweeter-core';
+import { Button, Modal } from '@captainpants/sweeter-gummybear';
+import { standardRules } from '../standardRules.js';
 
-export interface EditorRootProps<T> {
+export type EditorRootProps<T> = PropertiesMightBeSignals<{
     model: Model<T>;
     replace: Replacer<T>;
     settings?: EditorSettings;
 
     idPath?: string;
 
-    // TODO: we should just use a callback for this and rely on signals for invalidation
-    ambientValues?: Record<string, unknown>;
-}
+    getAmbientValue?: (name: string) => unknown;
+
+    rules?: Array<TypeMatcherRule<EditorComponentType>>;
+}>
 
 /**
  * Constant default settings so that the default value doesn't cause constant re-renders from updating the context value.
@@ -39,30 +42,35 @@ export function EditorRoot<T>(props: Readonly<EditorRootProps<T>>): JSX.Element;
 export function EditorRoot<T>({
     model,
     replace,
-    settings = defaultSettings,
+    settings,
     idPath,
-    ambientValues,
+    getAmbientValue,
+    rules: rulesProp,
 }: Readonly<EditorRootProps<T>>): JSX.Element {
+    const typedModel = $calc(() => asUnknown($val(model)));
+
     return $calc(() => {
-        const hostContext: EditorHostContextType = {
-            settings: $val(settings),
+        const hostContext: EditorRootContextType = {
+            settings: $val(settings) ?? defaultSettings,
+            editButtonComponentType: props => {
+                return <Button onclick={props.onClick}>{props.text}</Button>
+            },
+            modalComponentType: ({ isOpen, onClose, onCommit, title, children }) =>{
+                return <Modal isOpen={isOpen} onClose={onClose} title={title} footer={<>
+                    <Button variant="primary" outline onclick={onClose}>Cancel</Button>
+                    <Button variant="primary" onclick={onCommit}>Ok</Button>
+                </>}>{children}</Modal>
+            },
+            rules: $val(rulesProp) ?? standardRules
         };
 
-        const resolvedAmbientValues = $val(ambientValues);
+        const getAmbientValueResolved = $val(getAmbientValue);
 
         let newAmbientValuesCallback: AmbientValueCallback | undefined;
 
-        if (resolvedAmbientValues) {
+        if (getAmbientValueResolved) {
             newAmbientValuesCallback = {
-                get: (name: string): unknown => {
-                    if (hasOwnProperty(resolvedAmbientValues, name)) {
-                        return {
-                            exists: true,
-                            getValue: () => resolvedAmbientValues[name],
-                        };
-                    }
-                    return undefined;
-                },
+                get: (name: string): unknown => getAmbientValueResolved?.(name),
             };
         }
 
@@ -71,9 +79,9 @@ export function EditorRoot<T>({
         return (
             <AmbientValues callback={newAmbientValuesCallback}>
                 {() =>
-                    EditorHostContext.invokeWith(hostContext, () => (
+                    EditorRootContext.invokeWith(hostContext, () => (
                         <EditorHost
-                            model={asUnknown(model)}
+                            model={typedModel}
                             replace={replace as unknown as Replacer<unknown>}
                             indent={0}
                             isRoot

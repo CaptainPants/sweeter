@@ -11,7 +11,11 @@ import {
     type ThemeOptionOrGroupDefinition,
 } from '../types.js';
 
-export function createTheme(options: ThemeOptions): Component {
+export interface Theme { 
+    IncludeThemeStylesheets: Component
+}
+
+export function createTheme(options: ThemeOptions): Theme {
     const propertiesCss: string[] = [];
     function process(obj: ThemeOptionOrGroupDefinition) {
         if ((obj as ThemeOptionDefinition).cssVar) {
@@ -38,7 +42,9 @@ export function createTheme(options: ThemeOptions): Component {
         `,
     });
 
-    return () => (
-        <IncludeStylesheet stylesheet={[reset, variables, themeBase]} />
-    );
+    return {
+        IncludeThemeStylesheets: () => (
+            <IncludeStylesheet stylesheet={[reset, variables, themeBase]} />
+        )
+    }
 }

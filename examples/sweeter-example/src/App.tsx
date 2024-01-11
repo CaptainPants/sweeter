@@ -20,7 +20,7 @@ import {
 } from '@captainpants/sweeter-core';
 import { type ThreeValueBoolean } from '@captainpants/sweeter-web';
 
-const Theme = createTheme({});
+const { IncludeThemeStylesheets } = createTheme({});
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function App(props: {}, init: ComponentInit): JSX.Element {
@@ -51,7 +51,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
 
     return (
         <>
-            <Theme />
+            <IncludeThemeStylesheets />
             <div>
                 <h1>This is a test</h1>
                 <div class={grid.container}>

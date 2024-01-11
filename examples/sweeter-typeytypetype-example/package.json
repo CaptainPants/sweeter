@@ -1,20 +1,9 @@
 {
-    "name": "@captainpants/sweeter-typeytypetype",
-    "version": "0.0.3",
-    "repository": "https://github.com/CaptainPants/sweeter",
-    "author": "Stuart Murray <captainpantsnpm@gmail.com>",
-    "license": "MIT",
-    "private": false,
+    "name": "@captainpants/sweeter-typeytypetype-example",
+    "private": true,
+    "version": "0.0.0",
     "type": "module",
-    "packageManager": "pnpm@8.6.7",
-    "main": "./build/index.js",
-    "types": "./build/index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./build/index.js",
-            "require": "./build/index.js"
-        }
-    },
+    "packageManager": "pnpm@8.14.1",
     "scripts": {
         "trace": "pnpm exec tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
@@ -25,19 +14,19 @@
         "test": "vitest --globals --watch=false",
         "verify:fix": "corepack pnpm run lint --fix && corepack pnpm run format && corepack pnpm run test && corepack pnpm run typecheck",
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
-        "watch": "vite build --watch",
-        "build": "pnpm run typecheck && vite build"
+        "dev": "vite",
+        "watch": "vite",
+        "build": "pnpm run typecheck && vite build --watch=false",
+        "preview": "vite preview"
     },
     "engines": {
-        "pnpm": "8.6.7"
+        "pnpm": "8.14.1"
     },
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",
-        "@captainpants/sweeter-gummybear": "workspace:^",
-        "@captainpants/sweeter-utilities": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
-        "@captainpants/typeytypetype": "workspace:^",
-        "@popperjs/core": "^2.11.8",
-        "tinycolor2": "^1.6.0"
+        "@captainpants/sweeter-gummybear": "workspace:^",
+        "@captainpants/sweeter-typeytypetype-web": "workspace:^",
+        "@captainpants/typeytypetype-example-data": "workspace:^"
     }
 }

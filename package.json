@@ -1,7 +1,7 @@
 {
   "name": "root",
   "private": true,
-  "packageManager": "pnpm@8.6.7",
+  "packageManager": "pnpm@8.14.1",
   "scripts": {
     "clean": "pnpm exec nx reset; lerna run clean",
     "build": "lerna run build",
@@ -11,6 +11,7 @@
     "test": "lerna run test",
     "watch-libs": "lerna watch --scope @captainpants/sweeter-core --scope @captainpants/sweeter-web --scope @captainpants/sweeter-gummybear -- pnpm run build --scope \\$LERNA_PACKAGE_NAME",
     "watch-example": "lerna run watch --scope @captainpants/sweeter-example",
+    "watch-typeytypetype-example": "lerna run watch --scope @captainpants/sweeter-typeytypetype-example",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
     "set-versions": "pnpm -r exec npm version",
@@ -45,7 +46,7 @@
     "vitest": "^0.34.6"
   },
   "engines": {
-    "pnpm": "8.6.7"
+    "pnpm": "8.14.1"
   },
   "dependencies": {
     "tslib": "^2.6.2"

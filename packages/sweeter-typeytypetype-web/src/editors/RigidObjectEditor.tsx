@@ -95,6 +95,8 @@ export function RigidObjectEditor(
                 <PropertyEditorPart
                     owner={owner}
                     propertyModel={$calc(
+                        // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
+                        // No other signals are referenced
                         () => draft.value.getPropertyModel(name)!,
                     )}
                     updateValue={updatePropertyValue}

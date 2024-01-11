@@ -3,7 +3,7 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "packageManager": "pnpm@8.6.7",
+    "packageManager": "pnpm@8.14.1",
     "scripts": {
         "trace": "pnpm exec tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
@@ -20,7 +20,7 @@
         "preview": "vite preview"
     },
     "engines": {
-        "pnpm": "8.6.7"
+        "pnpm": "8.14.1"
     },
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",

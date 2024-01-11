@@ -103,6 +103,24 @@ importers:
         specifier: workspace:^
         version: link:../../packages/sweeter-web
 
+  examples/sweeter-typeytypetype-example:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-core
+      '@captainpants/sweeter-gummybear':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-gummybear
+      '@captainpants/sweeter-typeytypetype-web':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-typeytypetype-web
+      '@captainpants/sweeter-web':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-web
+      '@captainpants/typeytypetype-example-data':
+        specifier: workspace:^
+        version: link:../typeytypetype-example-data
+
   examples/typeytypetype-example-data:
     dependencies:
       '@captainpants/typeytypetype':
@@ -133,7 +151,7 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
 
-  packages/sweeter-typetypetype-web:
+  packages/sweeter-typeytypetype-web:
     dependencies:
       '@captainpants/sweeter-core':
         specifier: workspace:^
@@ -3745,6 +3763,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /is-fullwidth-code-point@3.0.0:
+    resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
+    engines: {node: '>=8'}
+    dev: true
+
   /is-glob@4.0.3:
     resolution: {integrity: sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==}
     engines: {node: '>=0.10.0'}
@@ -5891,6 +5914,7 @@ packages:
     dependencies:
       emoji-regex: 8.0.0
       is-fillWidth-code-point: 3.0.0
+      is-fullwidth-code-point: 3.0.0
       strip-ansi: 6.0.1
     dev: true
 

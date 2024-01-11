@@ -56,21 +56,27 @@ export interface Localizer {
 /**
  * Abstraction around different modal implementations
  */
-export interface ModalProps {
+export type ModalProps = PropertiesMightBeSignals<{
     onClose: () => void;
+
+    commitEnabled?: boolean;
     onCommit: () => void;
 
     title: string | undefined;
     children?: JSX.Element | undefined;
 
     isOpen: boolean;
-}
+}>;
 
 export type ModalComponentType = Component<ModalProps>;
 
-export interface EditButtonProps {
+export type EditButtonProps = PropertiesMightBeSignals<{
     onClick: () => void;
     text?: string;
-}
+}>;
 
 export type EditButtonComponentType = Component<EditButtonProps>;
+
+export interface ValidationListener {
+    isValid: () => boolean;
+}

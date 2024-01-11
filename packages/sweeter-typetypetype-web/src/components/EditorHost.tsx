@@ -4,6 +4,7 @@ import {
     type ContextualValueCalculationContext,
     createTypeMatcher,
     type TypeMatcherRule,
+    notFound,
 } from '@captainpants/typeytypetype';
 import {
     $calc,
@@ -31,11 +32,12 @@ const Last = (props: {}, init: ComponentInit): JSX.Element => {
 function createRenderFunction(
     matches: Array<TypeMatcherRule<EditorComponentType>>,
 ): RenderNextFunction {
+    // This is a failure case, when no final editor has stopped deputizing rendering to the next in the pipeline
     let renderFunction: RenderNextFunction = (_props) => {
         return <Last />;
     };
 
-    // In reverse order from last to first, create a render function that calls the next latest render function as its 'next'
+    // In reverse order from last to first, create a render function that calls the next ('previous' in reverse) render function as its 'next'
     for (let i = matches.length - 1; i >= 0; --i) {
         const Editor = matches[i]?.result;
         assert.isNotUndefined(Editor);
@@ -58,7 +60,7 @@ export function EditorHost(
     init: ComponentInit,
 ): JSX.Element;
 export function EditorHost(
-    { model, local: localProp, ...rest }: EditorHostProps,
+    { model, local: localProp, ...passThroughToRenderProps }: EditorHostProps,
     init: ComponentInit,
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
@@ -73,8 +75,16 @@ export function EditorHost(
             $peek(model),
             context,
         );
-        if (found !== undefined) return found;
-        return $peek(localProp)?.(name) ?? undefined;
+        if (found !== notFound) {
+            return found;
+        }
+
+        const localPropResolved = $peek(localProp);
+        if (!localPropResolved) {
+            return notFound;
+        }
+
+        return localPropResolved(name);
     };
     const calculateAmbient = (
         name: string,
@@ -93,24 +103,27 @@ export function EditorHost(
         calculateAmbient,
     );
 
-    return $calc(() => {
-        const resolvedModel = $val(model);
+    const type = $calc(() => $val(model).type);
+    const parentInfo = $calc(() => $val(model).parentInfo);
 
+    const render = $calc(() => {
         const matches = createTypeMatcher<EditorComponentType>(
             rules,
         ).findAllMatches(
             { settings },
             {
-                type: resolvedModel.type,
-                parentInfo: resolvedModel.parentInfo,
+                type: type.value,
+                parentInfo: parentInfo.value,
             },
         );
 
-        const render = createRenderFunction(matches);
+        return createRenderFunction(matches);
+    });
 
+    return $calc(() => {
         const args: RenderNextFunctionArgs = Object.assign(
             {},
-            $valObjectValues(rest),
+            $valObjectValues(passThroughToRenderProps),
             {
                 model,
                 local,
@@ -121,7 +134,7 @@ export function EditorHost(
         return (
             <AmbientValues callback={ambient}>
                 {() => {
-                    return render(args);
+                    return render.value(args);
                 }}
             </AmbientValues>
         );

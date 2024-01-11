@@ -28,7 +28,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
         textInput: 'test',
         select: 'Option 3',
         checked: false as ThreeValueBoolean,
-        modalOpen: false
+        modalOpen: false,
     });
 
     const modalOpen = $propertyOf(state, 'modalOpen');
@@ -248,7 +248,11 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 Secondary
                             </button>
                             <button
-                                class={[button, variants.secondary, tags.outline]}
+                                class={[
+                                    button,
+                                    variants.secondary,
+                                    tags.outline,
+                                ]}
                                 onclick={() => {
                                     alert('Clicked!');
                                 }}
@@ -355,46 +359,99 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             >
                                 Open Modal
                             </button>
-                            <Modal isOpen={modalOpen} title="Example modal" onClose={() => modalOpen.value = false} footer={<Button variant="primary" onclick={() => modalOpen.value = false}>Close</Button>}>
-                                This is a <strong>Modal</strong>, press the x button to close. <br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
-                                test<br />
+                            <Modal
+                                isOpen={modalOpen}
+                                title="Example modal"
+                                onClose={() => (modalOpen.value = false)}
+                                footer={
+                                    <Button
+                                        variant="primary"
+                                        onclick={() =>
+                                            (modalOpen.value = false)
+                                        }
+                                    >
+                                        Close
+                                    </Button>
+                                }
+                            >
+                                This is a <strong>Modal</strong>, press the x
+                                button to close. <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
+                                test
+                                <br />
                             </Modal>
                         </div>
                     </div>

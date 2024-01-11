@@ -1,7 +1,17 @@
-import { $mutable, type Component } from '@captainpants/sweeter-core';
-import { type ElementCssClasses, type ElementCssStyles } from '@captainpants/sweeter-web';
+import {
+    $mutable,
+    type PropertiesMightBeSignals,
+    type Component,
+    $peek,
+} from '@captainpants/sweeter-core';
+import {
+    type ElementCssClasses,
+    type ElementCssStyles,
+} from '@captainpants/sweeter-web';
+import { observeSize } from '../utilities/observeSize.js';
+import { debounce } from '@captainpants/sweeter-utilities';
 
-export interface MeasuredBoxProps {
+export type MeasuredBoxProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
 
     onInitialLayout: (width: number, height: number) => void;
@@ -9,7 +19,7 @@ export interface MeasuredBoxProps {
 
     class?: ElementCssClasses;
     style?: ElementCssStyles;
-}
+}>;
 
 export const MeasuredBox: Component<MeasuredBoxProps> = (
     { children, onInitialLayout, onLayout, ...passthrugh },
@@ -17,40 +27,39 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
 ) => {
     const elementSignal = $mutable<HTMLDivElement | undefined>(undefined);
 
-    const elementRef = (element: HTMLDivElement): void => {
+    const setElement = (element: HTMLDivElement): void => {
         if (element) {
             const { width, height } = element.getBoundingClientRect();
-            onInitialLayout(width, height);
+            $peek(onInitialLayout)(width, height);
         }
 
-        // Consider assigning a ref passed in from props
         elementSignal.update(element);
     };
 
-    const callback = (
-        entries: ResizeObserverEntry[],
-        observer: ResizeObserver,
-    ) => {
-        for (const entry of entries) {
-            const { width, height } = entry.contentRect;
-            onLayout(width, height);
-        }
-    };
+    init.subscribeToChanges(
+        [elementSignal],
+        ([element]) => {
+            if (!element) return;
 
-    init.onMount(() => {
-        // Create a ResizeObserver
-        // TODO: we can probably combine these together nicely so we don't have multiple ResizeObserver instances
-        // similar to how @react-hook/resize-observer works internally
-        const resizeObserver = new ResizeObserver(callback);
-        resizeObserver.observe(elementSignal.value!);
+            const debouncedCallback = debounce(
+                1000,
+                (entry: ResizeObserverEntry) => {
+                    const { width, height } = entry.contentRect;
+                    $peek(onLayout)(width, height);
+                },
+            );
+            const stopObserving = observeSize(element, debouncedCallback);
 
-        return () => {
-            resizeObserver.disconnect();
-        };
-    });
+            return () => {
+                stopObserving();
+                debouncedCallback.cancel();
+            };
+        },
+        true,
+    );
 
     return (
-        <div ref={elementRef} {...passthrugh}>
+        <div ref={setElement} {...passthrugh}>
             {children}
         </div>
     );

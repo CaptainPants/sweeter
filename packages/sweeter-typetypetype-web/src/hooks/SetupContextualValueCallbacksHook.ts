@@ -1,4 +1,5 @@
 import {
+    notFound,
     type AmbientValueCallback,
     type ContextualValueCalculationContext,
     type LocalValueCallback,
@@ -39,12 +40,14 @@ export function SetupContextualValueCallbacksHook(
                 throw descend.error();
             }
 
-            return (
-                local?.(name, {
-                    local: localResult,
-                    ambient: ambientResult,
-                }) ?? undefined
-            );
+            if (!local) {
+                return notFound;
+            }
+
+            return local(name, {
+                local: localResult,
+                ambient: ambientResult,
+            });
         } finally {
             ++depth;
         }
@@ -62,7 +65,7 @@ export function SetupContextualValueCallbacksHook(
                 ambient: ambientResult,
             });
 
-            if (thisLevel !== undefined) {
+            if (thisLevel !== notFound) {
                 return thisLevel;
             }
 

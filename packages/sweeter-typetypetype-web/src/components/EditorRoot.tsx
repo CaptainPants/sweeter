@@ -13,7 +13,11 @@ import {
     EditorRootContext,
     type EditorRootContextType,
 } from '../context/EditorRootContext.js';
-import { $calc, $val, type PropertiesMightBeSignals } from '@captainpants/sweeter-core';
+import {
+    $calc,
+    $val,
+    type PropertiesMightBeSignals,
+} from '@captainpants/sweeter-core';
 import { Button, Modal } from '@captainpants/sweeter-gummybear';
 import { standardRules } from '../standardRules.js';
 
@@ -27,7 +31,7 @@ export type EditorRootProps<T> = PropertiesMightBeSignals<{
     getAmbientValue?: (name: string) => unknown;
 
     rules?: Array<TypeMatcherRule<EditorComponentType>>;
-}>
+}>;
 
 /**
  * Constant default settings so that the default value doesn't cause constant re-renders from updating the context value.
@@ -52,16 +56,46 @@ export function EditorRoot<T>({
     return $calc(() => {
         const hostContext: EditorRootContextType = {
             settings: $val(settings) ?? defaultSettings,
-            editButtonComponentType: props => {
-                return <Button onclick={props.onClick}>{props.text}</Button>
+            EditButton: (props) => {
+                return <Button onclick={props.onClick}>{props.text}</Button>;
             },
-            modalComponentType: ({ isOpen, onClose, onCommit, title, children }) =>{
-                return <Modal isOpen={isOpen} onClose={onClose} title={title} footer={<>
-                    <Button variant="primary" outline onclick={onClose}>Cancel</Button>
-                    <Button variant="primary" onclick={onCommit}>Ok</Button>
-                </>}>{children}</Modal>
+            Modal: ({
+                isOpen,
+                onClose,
+                commitEnabled,
+                onCommit,
+                title,
+                children,
+            }) => {
+                return (
+                    <Modal
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        title={title}
+                        footer={
+                            <>
+                                <Button
+                                    variant="primary"
+                                    outline
+                                    onclick={onClose}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onclick={onCommit}
+                                    disabled={$calc(() => !$val(commitEnabled))}
+                                >
+                                    Ok
+                                </Button>
+                            </>
+                        }
+                    >
+                        {children}
+                    </Modal>
+                );
             },
-            rules: $val(rulesProp) ?? standardRules
+            rules: $val(rulesProp) ?? standardRules,
         };
 
         const getAmbientValueResolved = $val(getAmbientValue);

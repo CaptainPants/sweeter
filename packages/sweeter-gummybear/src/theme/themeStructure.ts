@@ -34,7 +34,7 @@ export const themeStructure = {
         closeButtonSize: {
             cssVar: '--modal-close-button-size',
             defaultValue: '30px' as string,
-        }
+        },
     },
 
     common: {

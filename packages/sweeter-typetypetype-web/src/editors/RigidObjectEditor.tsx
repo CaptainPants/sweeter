@@ -4,7 +4,7 @@ import {
     $val,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
-import { EditorSizesHook } from '../hooks/EditorSizesHook.js';
+import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import {
     type ContextualValueCalculationContext,
     type Model,
@@ -38,6 +38,7 @@ export function RigidObjectEditor(
     });
 
     const { ambientValueCallback } = init.getContext(AmbientValuesContext);
+    const { indentWidth } = init.getContext(EditorSizesContext);
 
     const { draft } = init.hook(
         DraftHook<
@@ -82,16 +83,14 @@ export function RigidObjectEditor(
             local: $val(local),
         };
 
-        const properties = draft.value
-            .getProperties()
-            .filter(
-                (x) =>
-                    x.definition.getLocalValue(
-                        StandardLocalValues.Visible,
-                        typedModel.value,
-                        calculationContext,
-                    ) ?? true,
-            );
+        const properties = draft.value.getProperties().filter(
+            (x) =>
+                x.definition.getLocalValue(
+                    StandardLocalValues.Visible,
+                    typedModel.value,
+                    calculationContext,
+                ) != true, // likely values are notFound and false
+        );
 
         return categorizeProperties(properties, (propertyModel) => ({
             property: propertyModel,
@@ -109,12 +108,6 @@ export function RigidObjectEditor(
             },
         }));
     });
-
-    const isOnlyOneCategory = $calc(
-        () => categorizedProperties.value.length === 1,
-    );
-
-    const { indentWidth } = init.hook(EditorSizesHook);
 
     const addIndent = !isRoot;
 
@@ -143,11 +136,12 @@ export function RigidObjectEditor(
                                         class={styles.category}
                                         key={`cat-${categoryIndex}`}
                                     >
-                                        {!isOnlyOneCategory && (
+                                        {categorizedProperties.value.length >
+                                        0 ? (
                                             <div class={styles.categoryHeader}>
                                                 {category}
                                             </div>
-                                        )}
+                                        ) : undefined}
                                         {properties.map(
                                             ({ property, render }) => {
                                                 return (
@@ -174,7 +168,7 @@ export function RigidObjectEditor(
 const styles = {
     editorOuter: new GlobalCssClass({
         className: 'editorOuter',
-        content: () => stylesheet`
+        content: stylesheet`
             display: flex;
             flex-direction: column;
             margin: 10px 0 10px 0;
@@ -182,20 +176,20 @@ const styles = {
     }),
     editorPropertyDisplayName: new GlobalCssClass({
         className: 'editorPropertyDisplayName',
-        content: () => stylesheet`
+        content: stylesheet`
             line-height: 2;
         `,
     }),
     editorIndentContainer: new GlobalCssClass({
         className: 'editorIndentContainer',
-        content: () => stylesheet`
+        content: stylesheet`
             display: flex;
             flex-direction: row;
         `,
     }),
     editorIndent: new GlobalCssClass({
         className: 'editorIndent',
-        content: () => stylesheet`
+        content: stylesheet`
             padding-top: 14;
             padding-left: 8;
             svg: {
@@ -205,13 +199,13 @@ const styles = {
     }),
     editorContainer: new GlobalCssClass({
         className: 'editorContainer',
-        content: () => stylesheet`
+        content: stylesheet`
             flex: 1;
         `,
     }),
     categoryHeader: new GlobalCssClass({
         className: 'categoryHeader',
-        content: () => stylesheet` 
+        content: stylesheet` 
             font-weight: 'bold';
             line-height: 2;
         `,

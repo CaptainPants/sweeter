@@ -36,13 +36,13 @@ const classes = {
             align-items: center;
             box-sizing: border-box;
             padding: 20px;
-        `
+        `,
     }),
     verticalSpacer: new GlobalCssClass({
         className: 'Modal-VerticalSpacer',
         content: stylesheet`
             flex-grow: 1;
-        `
+        `,
     }),
     window: new GlobalCssClass({
         className: 'Modal-Window',
@@ -167,8 +167,13 @@ export const Modal: Component<ModalProps> = (
                         <div class={classes.verticalSpacer} />
                         <div class={classes.window}>
                             <div class={classes.header}>
-                                <div class={classes.title}>{$resolve(title)}</div>
-                                <div onclick={onClose} class={classes.closeButton}>
+                                <div class={classes.title}>
+                                    {$resolve(title)}
+                                </div>
+                                <div
+                                    onclick={onClose}
+                                    class={classes.closeButton}
+                                >
                                     ×
                                 </div>
                             </div>

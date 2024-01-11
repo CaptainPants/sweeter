@@ -53,6 +53,20 @@ export function EditorRoot<T>({
 }: Readonly<EditorRootProps<T>>): JSX.Element {
     const typedModel = $calc(() => asUnknown($val(model)));
 
+    const newAmbientValuesCallback = $calc(() => {
+        const getAmbientValueResolved = $val(getAmbientValue);
+
+        let newAmbientValuesCallback: AmbientValueCallback | undefined;
+
+        if (getAmbientValueResolved) {
+            newAmbientValuesCallback = {
+                get: (name: string): unknown => getAmbientValueResolved?.(name),
+            };
+        }
+
+        return newAmbientValuesCallback;
+    });
+
     return $calc(() => {
         const hostContext: EditorRootContextType = {
             settings: $val(settings) ?? defaultSettings,
@@ -97,16 +111,6 @@ export function EditorRoot<T>({
             },
             rules: $val(rulesProp) ?? standardRules,
         };
-
-        const getAmbientValueResolved = $val(getAmbientValue);
-
-        let newAmbientValuesCallback: AmbientValueCallback | undefined;
-
-        if (getAmbientValueResolved) {
-            newAmbientValuesCallback = {
-                get: (name: string): unknown => getAmbientValueResolved?.(name),
-            };
-        }
 
         // Cheating the type system here a bit (replace as any)
         // we'll need the editors themselves to validate that their models are the right type

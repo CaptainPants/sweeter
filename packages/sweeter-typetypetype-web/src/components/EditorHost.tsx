@@ -65,37 +65,39 @@ export function EditorHost(
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
 
-    const calculateLocal = (
-        name: string,
-        context: ContextualValueCalculationContext,
-    ) => {
-        // Look at the model, and then the parent's property model (which is passed via the localProp)
-        const found = $peek(model).type.getLocalValueForUnknown(
-            name,
-            $peek(model),
-            context,
-        );
-        if (found !== notFound) {
-            return found;
-        }
+    const calculateLocal = $calc(() => {
+        const modelResolved = $val(model);
 
-        const localPropResolved = $peek(localProp);
-        if (!localPropResolved) {
-            return notFound;
-        }
+        return (name: string, context: ContextualValueCalculationContext) => {
+            // Look at the model, and then the parent's property model (which is passed via the localProp)
+            const found = modelResolved.type.getLocalValueForUnknown(
+                name,
+                $peek(modelResolved),
+                context,
+            );
+            if (found !== notFound) {
+                return found;
+            }
 
-        return localPropResolved(name);
-    };
-    const calculateAmbient = (
-        name: string,
-        context: ContextualValueCalculationContext,
-    ) => {
-        return $peek(model).type.getAmbientValueForUnknown(
-            name,
-            $peek(model),
-            context,
-        );
-    };
+            const localPropResolved = $peek(localProp);
+            if (!localPropResolved) {
+                return notFound;
+            }
+
+            return localPropResolved(name);
+        };
+    });
+    const calculateAmbient = $calc(() => {
+        const modelResolved = $val(model);
+
+        return (name: string, context: ContextualValueCalculationContext) => {
+            return modelResolved.type.getAmbientValueForUnknown(
+                name,
+                $peek(modelResolved),
+                context,
+            );
+        };
+    });
 
     const { ambient, local } = init.hook(
         SetupContextualValueCallbacksHook,

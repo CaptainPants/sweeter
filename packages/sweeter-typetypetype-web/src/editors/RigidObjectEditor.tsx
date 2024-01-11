@@ -115,8 +115,6 @@ export function RigidObjectEditor(
                 ) !== true, // likely values are notFound and false
         );
 
-        // TODO: work out how to keep a $calc for each property
-        // and only invalidate those that need to change.
         return categorizeProperties(properties, (propertyModel) => ({
             property: propertyModel,
             render: getRenderer.get(

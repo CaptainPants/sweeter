@@ -22,29 +22,26 @@ export function AmbientValues(
 ): JSX.Element {
     const existingContext = init.getContext(AmbientValuesContext);
 
-    const ambientValueCallback = $calc(() => {
+    const ambientValueCallback = $calc<AmbientValueCallback>(() => {
         const newCallbackResolved = $val(newCallback);
         const existingContextResolved = $val(existingContext);
 
-        return () => {
-            // Shortcut for the 'do nothing' flow variation
-            if (!newCallbackResolved) {
-                return existingContext;
-            }
+        // Shortcut for the 'do nothing' flow variation
+        if (!newCallbackResolved) {
+            return existingContextResolved as AmbientValueCallback;
+        }
 
-            const replacementCallback = (name: string): unknown => {
+        return {
+            get: (name: string): unknown => {
                 const result = newCallbackResolved.get(name);
 
                 if (result !== notFound) {
                     return result;
                 }
 
-                return existingContextResolved(name);
-            };
-
-            return {
-                ambientValueCallback: replacementCallback,
-            };
+                return existingContextResolved.get(name);
+            },
+            parent: $val(existingContext).get,
         };
     });
 

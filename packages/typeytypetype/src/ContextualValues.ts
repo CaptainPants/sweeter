@@ -1,8 +1,11 @@
 import { type ReadonlySignalLike } from './ReadonlySignalLike.js';
 
 export interface ContextualValueCalculationContext {
-    ambient: AmbientValueCallback;
-    local: LocalValueCallback | undefined;
+    ambient: ReadonlySignalLike<AmbientValueCallback> | AmbientValueCallback;
+    local:
+        | ReadonlySignalLike<LocalValueCallback | undefined>
+        | LocalValueCallback
+        | undefined;
 }
 
 export type ContextualValueCalculationCallback<T> = (

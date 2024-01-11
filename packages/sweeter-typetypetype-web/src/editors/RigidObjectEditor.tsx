@@ -14,12 +14,14 @@ import {
     asRigidObject,
     cast,
     categorizeProperties,
+    type PropertyDefinition,
 } from '@captainpants/typeytypetype';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
 import { type EditorProps } from '../types.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { PropertyEditorPart } from './PropertyEditorPart.js';
+import { ImmutableLazyCache } from '../utilities/ImmutableLazyCache.js';
 
 export function RigidObjectEditor(
     {
@@ -37,7 +39,7 @@ export function RigidObjectEditor(
         return cast($val(model), asRigidObject);
     });
 
-    const ambientValueCallback = init.getContext(AmbientValuesContext);
+    const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
 
     const { draft } = init.hook(
@@ -77,35 +79,50 @@ export function RigidObjectEditor(
         draft.update(newDraft);
     };
 
-    const categorizedProperties = $calc(() => {
-        const calculationContext: ContextualValueCalculationContext = {
-            ambient: { get: $val(ambientValueCallback) },
-            local: $val(local),
-        };
+    const calculationContext: ContextualValueCalculationContext = {
+        ambient,
+        local,
+    };
 
+    const owner = $calc(() => draft.value.value);
+
+    // Keep the PropertyEditorPart instances for each property that hasn't changed
+    // we might even want to consider doing this based on property name, as then
+    // we can just update based on the value of the property changing
+    const getRenderer = new ImmutableLazyCache(
+        (_: PropertyDefinition<unknown>, name: string) => {
+            return () => (
+                <PropertyEditorPart
+                    owner={owner}
+                    propertyModel={$calc(
+                        () => draft.value.getPropertyModel(name)!,
+                    )}
+                    updateValue={updatePropertyValue}
+                    indent={indent}
+                    ownerIdPath={idPath}
+                />
+            );
+        },
+    );
+
+    const categorizedProperties = $calc(() => {
         const properties = draft.value.getProperties().filter(
-            (x) =>
-                x.definition.getLocalValue(
+            (propertyModel) =>
+                propertyModel.definition.getLocalValue(
                     StandardLocalValues.Visible,
                     typedModel.value,
                     calculationContext,
-                ) != true, // likely values are notFound and false
+                ) !== true, // likely values are notFound and false
         );
 
+        // TODO: work out how to keep a $calc for each property
+        // and only invalidate those that need to change.
         return categorizeProperties(properties, (propertyModel) => ({
             property: propertyModel,
-            render: (key?: string | undefined): JSX.Element => {
-                return (
-                    <PropertyEditorPart
-                        key={key}
-                        owner={$calc(() => draft.value.value)}
-                        propertyModel={propertyModel}
-                        updateValue={updatePropertyValue}
-                        indent={indent}
-                        ownerIdPath={idPath}
-                    />
-                );
-            },
+            render: getRenderer.get(
+                $val(propertyModel).definition,
+                propertyModel.name,
+            ),
         }));
     });
 

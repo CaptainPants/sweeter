@@ -64,7 +64,7 @@ export function SetupContextualValueCallbacksHook(
 
                 return localResolved(name, {
                     local: localResult,
-                    // Circular reference here:
+                    // Circular reference here
                     ambient: $peek(ambientResult),
                 });
             } finally {
@@ -72,42 +72,40 @@ export function SetupContextualValueCallbacksHook(
             }
         };
 
-        const ambientGet = (name: string): unknown => {
-            try {
-                --depth;
-                if (depth <= 0) {
-                    throw descend.error();
+        const ambientResult: AmbientValueCallback = {
+            get: (name: string): unknown => {
+                try {
+                    --depth;
+                    if (depth <= 0) {
+                        throw descend.error();
+                    }
+
+                    const thisLevel = ambientResolved(name, {
+                        local: localResult,
+                        // Circular reference here AND reference to self
+                        ambient: $peek(ambientResult),
+                    });
+
+                    if (thisLevel !== notFound) {
+                        return thisLevel;
+                    }
+
+                    return parentAmbientResolved.get(name);
+                } finally {
+                    ++depth;
                 }
-
-                const thisLevel = ambientResolved(name, {
-                    local: localResult,
-                    // Circular reference here:
-                    ambient: $peek(ambientResult),
-                });
-
-                if (thisLevel !== notFound) {
-                    return thisLevel;
-                }
-
-                return parentAmbientResolved(name);
-            } finally {
-                ++depth;
-            }
+            },
+            parent: parentAmbientResolved
+                ? parentAmbientResolved.get
+                : undefined,
         };
 
-        return { localResult, ambientGet };
+        return { localResult, ambientResult };
     });
 
     // All memoized so should never trigger changes
     const localResult = $calc(() => results.value.localResult);
-    const ambientGet = $calc(() => results.value.ambientGet);
-
-    const ambientResult: Signal<AmbientValueCallback> = $calc(() => {
-        return {
-            get: ambientGet.value,
-            parent: $val(parentAmbient),
-        };
-    });
+    const ambientResult = $calc(() => results.value.ambientResult);
 
     return {
         local: localResult,

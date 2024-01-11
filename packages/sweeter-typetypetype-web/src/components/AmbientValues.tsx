@@ -1,11 +1,13 @@
 import {
     $calc,
-    $peek,
     $val,
     type ComponentInit,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type AmbientValueCallback } from '@captainpants/typeytypetype';
+import {
+    notFound,
+    type AmbientValueCallback,
+} from '@captainpants/typeytypetype';
 
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 
@@ -20,33 +22,35 @@ export function AmbientValues(
 ): JSX.Element {
     const existingContext = init.getContext(AmbientValuesContext);
 
-    const context = () => {
-        // Shortcut for the 'do nothing' flow variation
-        if (!newCallback) {
-            return existingContext;
-        }
+    const ambientValueCallback = $calc(() => {
+        const newCallbackResolved = $val(newCallback);
+        const existingContextResolved = $val(existingContext);
 
-        const replacementCallback = (name: string): unknown => {
-            const result = $peek(newCallback)?.get(name);
-
-            if (result !== undefined) {
-                return result;
+        return () => {
+            // Shortcut for the 'do nothing' flow variation
+            if (!newCallbackResolved) {
+                return existingContext;
             }
 
-            return existingContext.ambientValueCallback?.(name) ?? undefined;
-        };
+            const replacementCallback = (name: string): unknown => {
+                const result = newCallbackResolved.get(name);
 
-        return {
-            ambientValueCallback: replacementCallback,
-        };
-    };
+                if (result !== notFound) {
+                    return result;
+                }
 
-    return AmbientValuesContext.invokeWith(
-        { ambientValueCallback: context },
-        () => {
-            return $calc(() => {
-                return $val(children)?.();
-            });
-        },
-    );
+                return existingContextResolved(name);
+            };
+
+            return {
+                ambientValueCallback: replacementCallback,
+            };
+        };
+    });
+
+    return AmbientValuesContext.invokeWith(ambientValueCallback, () => {
+        return $calc(() => {
+            return $val(children)?.();
+        });
+    });
 }

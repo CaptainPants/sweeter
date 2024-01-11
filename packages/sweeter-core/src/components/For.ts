@@ -2,7 +2,7 @@ import {
     $calc,
     $mutable,
     $peek,
-    $recalcOnChange,
+    $invalidateOnChange,
     $val,
     getRuntime,
     isSignal,
@@ -49,7 +49,7 @@ export function For<T>(
 
     return $calc(() => {
         // subscribe to changes, but ignore the actual value for now
-        $recalcOnChange(renderItem);
+        $invalidateOnChange(renderItem);
 
         // subscibes to items
         const itemsResolved = $val(items);

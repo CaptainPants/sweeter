@@ -10,7 +10,7 @@ import {
     $calc,
     $val,
     $peek,
-    $recalcOnChange,
+    $invalidateOnChange,
 } from '@captainpants/sweeter-core';
 
 import { idPaths } from '../idPaths.js';
@@ -45,7 +45,6 @@ export function PropertyEditorPart(
         idPaths.key($val(ownerIdPath), $val(propertyModel).name),
     );
 
-    // Stable
     const replace = async (value: Model<unknown>) => {
         await $peek(updateValue)($peek(propertyModel), value);
     };
@@ -53,23 +52,23 @@ export function PropertyEditorPart(
     const { localize } = init.hook(LocalizerHook);
 
     const calculateLocal = $calc(() => {
-        $recalcOnChange(propertyModel);
-        $recalcOnChange(owner);
+        const propertyModelResolved = $val(propertyModel);
+        $invalidateOnChange(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
-            $peek(propertyModel).definition.getLocalValue(
+            propertyModelResolved.definition.getLocalValue(
                 name,
                 $wrap(owner),
                 context,
             );
     });
-    
+
     const calculateAmbient = $calc(() => {
-        $recalcOnChange(propertyModel);
-        $recalcOnChange(owner);
+        const propertyModelResolved = $val(propertyModel);
+        $invalidateOnChange(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
-            $peek(propertyModel).definition.getAmbientValue(
+            propertyModelResolved.definition.getAmbientValue(
                 name,
                 $wrap(owner),
                 context,

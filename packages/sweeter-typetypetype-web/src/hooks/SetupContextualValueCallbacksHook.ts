@@ -10,7 +10,7 @@ import {
     type ComponentInit,
     $peek,
     $calc,
-    $recalcOnChange,
+    $val,
 } from '@captainpants/sweeter-core';
 import { descend } from '@captainpants/sweeter-utilities';
 
@@ -47,8 +47,9 @@ export function SetupContextualValueCallbacksHook(
     const parentAmbient = init.getContext(AmbientValuesContext);
 
     const results = $calc(() => {
-        $recalcOnChange(local);
-        $recalcOnChange(ambient);
+        const localResolved = $val(local);
+        const ambientResolved = $val(ambient);
+        const parentAmbientResolved = $val(parentAmbient);
 
         const localResult = (name: string): unknown => {
             try {
@@ -57,14 +58,13 @@ export function SetupContextualValueCallbacksHook(
                     throw descend.error();
                 }
 
-                const localResolved = $peek(local);
-
                 if (!localResolved) {
                     return notFound;
                 }
 
                 return localResolved(name, {
                     local: localResult,
+                    // Circular reference here:
                     ambient: $peek(ambientResult),
                 });
             } finally {
@@ -79,8 +79,9 @@ export function SetupContextualValueCallbacksHook(
                     throw descend.error();
                 }
 
-                const thisLevel = $peek(ambient)(name, {
-                    local: $peek(localResult),
+                const thisLevel = ambientResolved(name, {
+                    local: localResult,
+                    // Circular reference here:
                     ambient: $peek(ambientResult),
                 });
 
@@ -88,7 +89,7 @@ export function SetupContextualValueCallbacksHook(
                     return thisLevel;
                 }
 
-                return parentAmbient.ambientValueCallback(name);
+                return parentAmbientResolved(name);
             } finally {
                 ++depth;
             }
@@ -104,7 +105,7 @@ export function SetupContextualValueCallbacksHook(
     const ambientResult: Signal<AmbientValueCallback> = $calc(() => {
         return {
             get: ambientGet.value,
-            parent: parentAmbient.ambientValueCallback,
+            parent: $val(parentAmbient),
         };
     });
 

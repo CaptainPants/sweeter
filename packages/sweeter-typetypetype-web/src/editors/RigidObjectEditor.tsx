@@ -37,7 +37,7 @@ export function RigidObjectEditor(
         return cast($val(model), asRigidObject);
     });
 
-    const { ambientValueCallback } = init.getContext(AmbientValuesContext);
+    const ambientValueCallback = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
 
     const { draft } = init.hook(
@@ -79,7 +79,7 @@ export function RigidObjectEditor(
 
     const categorizedProperties = $calc(() => {
         const calculationContext: ContextualValueCalculationContext = {
-            ambient: { get: ambientValueCallback },
+            ambient: { get: $val(ambientValueCallback) },
             local: $val(local),
         };
 

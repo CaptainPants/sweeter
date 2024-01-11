@@ -1,7 +1,11 @@
-import { Context } from '@captainpants/sweeter-core';
+import { Context, type MightBeSignal } from '@captainpants/sweeter-core';
 
-export const AmbientValuesContext = new Context('AmbientValues', {
-    ambientValueCallback(name: string): unknown {
-        throw new TypeError('Not implemented');
-    },
+export interface AmbientValuesContextType {
+    ambientValueCallback: MightBeSignal<(name: string) => unknown>;
+}
+
+export const AmbientValuesContext = new Context<
+    MightBeSignal<(name: string) => unknown>
+>('AmbientValues', (name: string): unknown => {
+    throw new TypeError('Not implemented');
 });

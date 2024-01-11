@@ -98,11 +98,11 @@ export function RigidObjectEditor(
                 return (
                     <PropertyEditorPart
                         key={key}
-                        ownerSignal={$calc(() => draft.value.value)}
+                        owner={$calc(() => draft.value.value)}
                         propertyModel={propertyModel}
                         updateValue={updatePropertyValue}
-                        indent={$val(indent)}
-                        ownerIdPath={$val(idPath)}
+                        indent={indent}
+                        ownerIdPath={idPath}
                     />
                 );
             },

@@ -6,16 +6,21 @@ import {
 import {
     LocalizerHook,
     type ComponentInit,
-    type Signal,
+    type PropertiesMightBeSignals,
+    $calc,
+    $val,
+    $peek,
+    $recalcOnChange,
 } from '@captainpants/sweeter-core';
 
 import { idPaths } from '../idPaths.js';
 import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
 import { AmbientValues } from '../components/AmbientValues.js';
 import { EditorHost } from '../components/EditorHost.js';
+import { $wrap } from '@captainpants/sweeter-core';
 
-export interface PropertyEditorPartProps {
-    ownerSignal: Signal<Record<string, unknown>>;
+export type PropertyEditorPartProps = PropertiesMightBeSignals<{
+    owner: Record<string, unknown>;
     propertyModel: PropertyModel<unknown>;
     updateValue: (
         property: PropertyModel<unknown>,
@@ -24,11 +29,11 @@ export interface PropertyEditorPartProps {
 
     indent: number;
     ownerIdPath: string | undefined;
-}
+}>;
 
 export function PropertyEditorPart(
     {
-        ownerSignal,
+        owner,
         propertyModel,
         updateValue,
         indent,
@@ -36,26 +41,40 @@ export function PropertyEditorPart(
     }: PropertyEditorPartProps,
     init: ComponentInit,
 ): JSX.Element {
-    const idPath = idPaths.key(ownerIdPath, propertyModel.name);
-
-    const { definition: propertyDefinition, valueModel: propertyValue } =
-        propertyModel;
+    const idPath = $calc(() =>
+        idPaths.key($val(ownerIdPath), $val(propertyModel).name),
+    );
 
     // Stable
     const replace = async (value: Model<unknown>) => {
-        await updateValue(propertyModel, value);
+        await $peek(updateValue)($peek(propertyModel), value);
     };
 
     const { localize } = init.hook(LocalizerHook);
 
-    const calculateLocal = (
-        name: string,
-        context: ContextualValueCalculationContext,
-    ) => propertyModel.definition.getLocalValue(name, ownerSignal, context);
-    const calculateAmbient = (
-        name: string,
-        context: ContextualValueCalculationContext,
-    ) => propertyModel.definition.getAmbientValue(name, ownerSignal, context);
+    const calculateLocal = $calc(() => {
+        $recalcOnChange(propertyModel);
+        $recalcOnChange(owner);
+
+        return (name: string, context: ContextualValueCalculationContext) =>
+            $peek(propertyModel).definition.getLocalValue(
+                name,
+                $wrap(owner),
+                context,
+            );
+    });
+    
+    const calculateAmbient = $calc(() => {
+        $recalcOnChange(propertyModel);
+        $recalcOnChange(owner);
+
+        return (name: string, context: ContextualValueCalculationContext) =>
+            $peek(propertyModel).definition.getAmbientValue(
+                name,
+                $wrap(owner),
+                context,
+            );
+    });
 
     const { local, ambient } = init.hook(
         SetupContextualValueCallbacksHook,
@@ -63,20 +82,26 @@ export function PropertyEditorPart(
         calculateAmbient,
     );
 
-    return (
-        <AmbientValues callback={ambient}>
-            {() => (
-                <EditorHost
-                    model={propertyValue}
-                    replace={replace}
-                    propertyDisplayName={localize(
-                        propertyDefinition.displayName ?? propertyModel.name,
-                    )}
-                    indent={indent}
-                    idPath={idPath}
-                    local={local}
-                />
-            )}
-        </AmbientValues>
-    );
+    return $calc(() => {
+        const { definition: propertyDefinition, valueModel: propertyValue } =
+            $val(propertyModel);
+
+        return (
+            <AmbientValues callback={ambient}>
+                {() => (
+                    <EditorHost
+                        model={propertyValue}
+                        replace={replace}
+                        propertyDisplayName={localize(
+                            propertyDefinition.displayName ??
+                                $val(propertyModel).name,
+                        )}
+                        indent={indent}
+                        idPath={idPath}
+                        local={local}
+                    />
+                )}
+            </AmbientValues>
+        );
+    });
 }

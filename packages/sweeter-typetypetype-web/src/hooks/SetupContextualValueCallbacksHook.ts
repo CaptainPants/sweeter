@@ -5,7 +5,13 @@ import {
     type LocalValueCallback,
 } from '@captainpants/typeytypetype';
 
-import { type ComponentInit } from '@captainpants/sweeter-core';
+import {
+    type Signal,
+    type ComponentInit,
+    $peek,
+    $calc,
+    $recalcOnChange,
+} from '@captainpants/sweeter-core';
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
@@ -27,58 +33,80 @@ type CalculateContextualValueCallback = (
  */
 export function SetupContextualValueCallbacksHook(
     init: ComponentInit,
-    local: CalculateContextualValueCallback | undefined,
-    ambient: CalculateContextualValueCallback,
-): { local: LocalValueCallback; ambient: AmbientValueCallback } {
+    local:
+        | CalculateContextualValueCallback
+        | undefined
+        | Signal<CalculateContextualValueCallback | undefined>,
+    ambient:
+        | CalculateContextualValueCallback
+        | Signal<CalculateContextualValueCallback>,
+): {
+    local: Signal<LocalValueCallback>;
+    ambient: Signal<AmbientValueCallback>;
+} {
     const parentAmbient = init.getContext(AmbientValuesContext);
 
+    const results = $calc(() => {
+        $recalcOnChange(local);
+        $recalcOnChange(ambient);
+
+        const localResult = (name: string): unknown => {
+            try {
+                --depth;
+                if (depth <= 0) {
+                    throw descend.error();
+                }
+
+                const localResolved = $peek(local);
+
+                if (!localResolved) {
+                    return notFound;
+                }
+
+                return localResolved(name, {
+                    local: localResult,
+                    ambient: $peek(ambientResult),
+                });
+            } finally {
+                ++depth;
+            }
+        };
+
+        const ambientGet = (name: string): unknown => {
+            try {
+                --depth;
+                if (depth <= 0) {
+                    throw descend.error();
+                }
+
+                const thisLevel = $peek(ambient)(name, {
+                    local: $peek(localResult),
+                    ambient: $peek(ambientResult),
+                });
+
+                if (thisLevel !== notFound) {
+                    return thisLevel;
+                }
+
+                return parentAmbient.ambientValueCallback(name);
+            } finally {
+                ++depth;
+            }
+        };
+
+        return { localResult, ambientGet };
+    });
+
     // All memoized so should never trigger changes
-    const localResult = (name: string): unknown => {
-        try {
-            --depth;
-            if (depth <= 0) {
-                throw descend.error();
-            }
+    const localResult = $calc(() => results.value.localResult);
+    const ambientGet = $calc(() => results.value.ambientGet);
 
-            if (!local) {
-                return notFound;
-            }
-
-            return local(name, {
-                local: localResult,
-                ambient: ambientResult,
-            });
-        } finally {
-            ++depth;
-        }
-    };
-
-    const ambientGet = (name: string): unknown => {
-        try {
-            --depth;
-            if (depth <= 0) {
-                throw descend.error();
-            }
-
-            const thisLevel = ambient(name, {
-                local: localResult,
-                ambient: ambientResult,
-            });
-
-            if (thisLevel !== notFound) {
-                return thisLevel;
-            }
-
-            return parentAmbient.ambientValueCallback(name);
-        } finally {
-            ++depth;
-        }
-    };
-
-    const ambientResult: AmbientValueCallback = {
-        get: ambientGet,
-        parent: parentAmbient.ambientValueCallback,
-    };
+    const ambientResult: Signal<AmbientValueCallback> = $calc(() => {
+        return {
+            get: ambientGet.value,
+            parent: parentAmbient.ambientValueCallback,
+        };
+    });
 
     return {
         local: localResult,

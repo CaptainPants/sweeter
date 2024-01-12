@@ -155,21 +155,21 @@ export type UnknownModel =
 export type Model<T> = IsUnion<T> extends true
     ? UnionModel<T>
     : T extends Array<infer TElement>
-    ? ArrayModel<TElement>
-    : T extends Record<string, unknown>
-    ? ObjectModel<T>
-    : T extends string
-    ? string extends T
-        ? StringModel
-        : StringConstantModel<T>
-    : T extends number
-    ? number extends T
-        ? NumberModel
-        : NumberConstantModel<T>
-    : T extends boolean
-    ? BooleanConstantModel<T>
-    : T extends null
-    ? NullModel
-    : T extends undefined
-    ? UndefinedModel
-    : UnknownModel;
+      ? ArrayModel<TElement>
+      : T extends Record<string, unknown>
+        ? ObjectModel<T>
+        : T extends string
+          ? string extends T
+              ? StringModel
+              : StringConstantModel<T>
+          : T extends number
+            ? number extends T
+                ? NumberModel
+                : NumberConstantModel<T>
+            : T extends boolean
+              ? BooleanConstantModel<T>
+              : T extends null
+                ? NullModel
+                : T extends undefined
+                  ? UndefinedModel
+                  : UnknownModel;

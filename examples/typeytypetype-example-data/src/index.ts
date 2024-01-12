@@ -107,7 +107,7 @@ export const constantUnion = Types.union(
     Types.constant('test'),
 );
 
-export const exampleData: Record<string, () => Promise<Model<unknown>>> = {
+export const exampleData = {
     Complex: async () => {
         return asUnknown(
             await ModelFactory.createModel({
@@ -148,6 +148,6 @@ export const exampleData: Record<string, () => Promise<Model<unknown>>> = {
             }),
         );
     },
-};
+} as const satisfies Record<string, () => Promise<Model<unknown>>>;
 
 export const defaultExample = 'StringFieldOnly';

@@ -44,6 +44,6 @@
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",
         "@captainpants/sweeter-utilities": "workspace:^",
-        "csstype": "^3.1.2"
+        "csstype": "^3.1.3"
     }
 }

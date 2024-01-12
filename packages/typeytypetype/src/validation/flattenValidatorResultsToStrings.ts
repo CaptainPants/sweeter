@@ -7,6 +7,6 @@ export async function flattenValidatorResultsToStrings(
     return awaited === null
         ? []
         : Array.isArray(awaited)
-        ? awaited
-        : [...awaited];
+          ? awaited
+          : [...awaited];
 }

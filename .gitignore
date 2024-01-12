@@ -12,3 +12,6 @@ msbuild.binlog
 **/*.tsbuildinfo
 **/.rollup.cache
 **/.trace
+
+# Temp config files while vite is being compiled
+**/vite.config.js.timestamp-*.mjs

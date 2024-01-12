@@ -11,8 +11,8 @@ import {
     type ThemeOptionOrGroupDefinition,
 } from '../types.js';
 
-export interface Theme { 
-    IncludeThemeStylesheets: Component
+export interface Theme {
+    IncludeThemeStylesheets: Component;
 }
 
 export function createTheme(options: ThemeOptions): Theme {
@@ -45,6 +45,6 @@ export function createTheme(options: ThemeOptions): Theme {
     return {
         IncludeThemeStylesheets: () => (
             <IncludeStylesheet stylesheet={[reset, variables, themeBase]} />
-        )
-    }
+        ),
+    };
 }

@@ -21,7 +21,7 @@ import { DraftHook } from '../hooks/DraftHook.js';
 import { type EditorProps } from '../types.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { PropertyEditorPart } from './PropertyEditorPart.js';
-import { ImmutableLazyCache } from '../utilities/ImmutableLazyCache.js';
+import { ImmutableLazyCache } from '../internal/ImmutableLazyCache.js';
 
 export function RigidObjectEditor(
     {
@@ -90,7 +90,9 @@ export function RigidObjectEditor(
     // we might even want to consider doing this based on property name, as then
     // we can just update based on the value of the property changing
     const getRenderer = new ImmutableLazyCache(
-        (_: PropertyDefinition<unknown>, name: string) => {
+        (_key: PropertyDefinition<unknown>, name: string) => {
+            // note that _key is the actual WeakMap key, but it doesn't hold the name of the property so it is passed through separately
+
             return () => (
                 <PropertyEditorPart
                     owner={owner}

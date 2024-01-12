@@ -8,8 +8,8 @@ import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
-import { observeSize } from '../utilities/observeSize.js';
 import { debounce } from '@captainpants/sweeter-utilities';
+import { observeSize } from '../internal/observeSize.js';
 
 export type MeasuredBoxProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;

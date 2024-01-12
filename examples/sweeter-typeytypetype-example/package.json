@@ -27,6 +27,7 @@
         "@captainpants/sweeter-web": "workspace:^",
         "@captainpants/sweeter-gummybear": "workspace:^",
         "@captainpants/sweeter-typeytypetype-web": "workspace:^",
+        "@captainpants/typeytypetype": "workspace:^",
         "@captainpants/typeytypetype-example-data": "workspace:^"
     }
 }

@@ -81,8 +81,8 @@ export type PropsFor<
 > = ComponentOrIntrinsicElementTypeString extends Component<infer Props>
     ? Props
     : ComponentOrIntrinsicElementTypeString extends string
-    ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
-    : never;
+      ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
+      : never;
 
 export type PropsWithIntrinsicAttributesFor<
     ComponentOrIntrinsicElementTypeString extends

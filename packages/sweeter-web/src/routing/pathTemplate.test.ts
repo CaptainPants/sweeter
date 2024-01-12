@@ -58,9 +58,8 @@ it('case insensitive', () => {
 
 it('decay to string array', () => {
     // Note type here is not a tuple but a string array
-    const template: PathTemplate<
-        readonly string[]
-    > = pathTemplate`route/${match.segment}/whatever`;
+    const template: PathTemplate<readonly string[]> =
+        pathTemplate`route/${match.segment}/whatever`;
     const input = 'route/abra-kadabra/whatever';
 
     const matches = template.match(input);

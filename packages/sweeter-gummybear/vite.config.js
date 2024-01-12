@@ -16,7 +16,7 @@ export default defineConfig({
         rollupOptions: {
             // make sure to externalize deps that shouldn't be bundled
             // into your library
-            external: ['@captainpants/sweeter-core', '@captainpants/sweeter-web', '@captainpants/sweeter-web/jsx-runtime', '@captainpants/sweeter-web/jsx-dev-runtime'],
+            external: [/@captainpants\/.+/],
         }
     },
     plugins: [dts()],

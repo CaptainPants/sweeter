@@ -13,7 +13,7 @@ import {
     UnionType,
 } from '@captainpants/typeytypetype';
 
-//import { ModalEditorIfTooSmall } from './editors/index.js';
+import { ModalEditorIfTooSmall } from './editors/index.js';
 import { type EditorComponentType } from './types.js';
 
 export interface DefaultRulesSetOptions {
@@ -81,21 +81,21 @@ export function createDefaultRulesSet(
         options.constant,
     );
 
-    // // wrap in a modal
-    // result.push({
-    //     matches: Rules.or([
-    //         Rules.type(RigidObjectType),
-    //         Rules.type(MapObjectType),
-    //     ]),
-    //     result: (props) => <ModalEditorIfTooSmall {...props} minWidth={240} />,
-    //     priority: 10,
-    // });
+    // wrap in a modal
+    result.push({
+        matches: Rules.or([
+            Rules.type(RigidObjectType),
+            Rules.type(MapObjectType),
+        ]),
+        result: (props) => <ModalEditorIfTooSmall {...props} minWidth={240} />,
+        priority: 10,
+    });
 
-    // result.push({
-    //     matches: Rules.type(ArrayType),
-    //     result: (props) => <ModalEditorIfTooSmall {...props} minWidth={140} />,
-    //     priority: 10,
-    // });
+    result.push({
+        matches: Rules.type(ArrayType),
+        result: (props) => <ModalEditorIfTooSmall {...props} minWidth={140} />,
+        priority: 10,
+    });
 
     return result;
 }

@@ -33,7 +33,7 @@ function createRenderFunction(
     matches: Array<TypeMatcherRule<EditorComponentType>>,
 ): RenderNextFunction {
     // This is a failure case, when no final editor has stopped deputizing rendering to the next in the pipeline
-    let renderFunction: RenderNextFunction = (_props) => {
+    let renderFunction: RenderNextFunction = () => {
         return <Last />;
     };
 

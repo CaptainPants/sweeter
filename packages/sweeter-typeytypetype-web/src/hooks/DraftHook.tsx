@@ -26,7 +26,7 @@ export class DraftHook<TModel, TDraft> {
         options: DraftHookOptions<TModel, TDraft>,
     ) {
         this.model = options.model;
-        this.draft = $mutable<TDraft>(options.convertIn(this.model.value));
+        this.draft = $mutable<TDraft>(options.convertIn(this.model.peek()));
 
         this.#validationErrors = $mutable<ValidationSingleResult[] | null>(
             null,

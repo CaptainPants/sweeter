@@ -28,11 +28,6 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
     const elementSignal = $mutable<HTMLDivElement | undefined>(undefined);
 
     const setElement = (element: HTMLDivElement): void => {
-        if (element) {
-            const { width, height } = element.getBoundingClientRect();
-            $peek(onInitialLayout)(width, height);
-        }
-
         elementSignal.update(element);
     };
 
@@ -40,6 +35,9 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
         [elementSignal],
         ([element]) => {
             if (!element) return;
+
+            const { width, height } = element.getBoundingClientRect();
+            $peek(onInitialLayout)(width, height);
 
             const debouncedCallback = debounce(
                 1000,

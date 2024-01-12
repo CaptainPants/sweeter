@@ -7,6 +7,7 @@ it('CalculatedSignal listeners invoked with correct value after update', () => {
 
     const { result, dependencies } = callAndReturnDependencies(
         () => mutableSignal1.value + mutableSignal2.value,
+        true,
     );
 
     expect(result).toEqual(3);

@@ -42,6 +42,12 @@ function createComponentInstanceInit<
         [hookInitSymbol]: undefined,
 
         hook(hook, ...args) {
+            if (!init.isValid) {
+                throw new Error(
+                    'hook init must only be called during init phase.',
+                );
+            }
+
             return initializeHook(init, hook, ...args);
         },
         onMount(callback: () => (() => void) | void) {
@@ -100,7 +106,7 @@ function createComponentInstanceInit<
         // but it does indicate that you should capture the context values you need during init
         // and not later when the context stack is gone
         getContext<T>(context: Context<T>): T {
-            if (init.isValid) {
+            if (!init.isValid) {
                 throw new Error(
                     'getContext must only be called during init phase.',
                 );

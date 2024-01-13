@@ -6,6 +6,7 @@ import {
 } from '@captainpants/typeytypetype';
 
 export const stringOnly = Types.string();
+export const numberOnly = Types.number();
 
 export const stringFieldOnly = Types.object({
     test: Types.prop(Types.string()).withDisplayName('Test'),
@@ -147,6 +148,14 @@ export const exampleData = {
             await ModelFactory.createModel({
                 value: 'Test',
                 type: stringOnly,
+            }),
+        );
+    },
+    NumberOnly: async () => {
+        return asUnknown(
+            await ModelFactory.createModel({
+                value: 1,
+                type: numberOnly,
             }),
         );
     },

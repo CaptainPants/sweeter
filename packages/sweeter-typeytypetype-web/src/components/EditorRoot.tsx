@@ -22,6 +22,7 @@ import { Button, Modal } from '@captainpants/sweeter-gummybear';
 import { standardRules } from '../standardRules.js';
 
 export type EditorRootProps<T> = PropertiesMightBeSignals<{
+    id?: string | undefined;
     model: Model<T>;
     replace: Replacer<T>;
     settings?: EditorSettings;
@@ -44,6 +45,7 @@ const defaultSettings = Object.freeze({});
  */
 export function EditorRoot<T>(props: Readonly<EditorRootProps<T>>): JSX.Element;
 export function EditorRoot<T>({
+    id,
     model,
     replace,
     settings,
@@ -119,6 +121,7 @@ export function EditorRoot<T>({
                 {() =>
                     EditorRootContext.invokeWith(hostContext, () => (
                         <EditorHost
+                            id={id}
                             model={typedModel}
                             replace={replace as unknown as Replacer<unknown>}
                             indent={0}

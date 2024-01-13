@@ -22,6 +22,7 @@ import { type EditorProps } from '../types.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { PropertyEditorPart } from './PropertyEditorPart.js';
 import { ImmutableLazyCache } from '../internal/ImmutableLazyCache.js';
+import { Row, Column, Label } from '@captainpants/sweeter-gummybear';
 
 export function RigidObjectEditor(
     {
@@ -93,8 +94,9 @@ export function RigidObjectEditor(
         (_key: PropertyDefinition<unknown>, name: string) => {
             // note that _key is the actual WeakMap key, but it doesn't hold the name of the property so it is passed through separately
 
-            return () => (
+            return (id: string) => (
                 <PropertyEditorPart
+                    id={id}
                     owner={owner}
                     propertyModel={$calc(
                         // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
@@ -130,6 +132,8 @@ export function RigidObjectEditor(
 
     const addIndent = !isRoot;
 
+    const baseId = init.nextId();
+
     return $calc(() => {
         return (
             <div class={styles.editorOuter}>
@@ -163,13 +167,16 @@ export function RigidObjectEditor(
                                         ) : undefined}
                                         {properties.map(
                                             ({ property, render }) => {
+                                                const id = baseId + '_' + property.name;
+
                                                 return (
-                                                    <div
+                                                    <Row
                                                         class={styles.property}
                                                         key={`prop-${property.name}`}
                                                     >
-                                                        {render()}
-                                                    </div>
+                                                        <Column xs={4}><Label for={id}>{property.definition.displayName ?? property.name}</Label></Column>
+                                                        <Column xs={8}>{render(id)}</Column>
+                                                    </Row>
                                                 );
                                             },
                                         )}

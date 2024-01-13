@@ -20,6 +20,8 @@ import { EditorHost } from '../components/EditorHost.js';
 import { $wrap } from '@captainpants/sweeter-core';
 
 export type PropertyEditorPartProps = PropertiesMightBeSignals<{
+    id: string;
+
     owner: Record<string, unknown>;
     propertyModel: PropertyModel<unknown>;
     updateValue: (
@@ -33,6 +35,7 @@ export type PropertyEditorPartProps = PropertiesMightBeSignals<{
 
 export function PropertyEditorPart(
     {
+        id,
         owner,
         propertyModel,
         updateValue,
@@ -89,6 +92,7 @@ export function PropertyEditorPart(
             <AmbientValues callback={ambient}>
                 {() => (
                     <EditorHost
+                        id={id}
                         model={propertyValue}
                         replace={replace}
                         propertyDisplayName={localize(

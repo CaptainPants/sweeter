@@ -9,6 +9,7 @@ import {
 } from '@captainpants/typeytypetype';
 
 export type EditorLikeProps = PropertiesMightBeSignals<{
+    id?: string | undefined;
     model: Model<unknown>;
     replace: Replacer<unknown>;
     propertyDisplayName?: string | undefined;

@@ -58,7 +58,7 @@ export function TextEditor(
             <TextArea
                 id={idPath}
                 fillWidth
-                value={draft}
+                bind:value={draft}
                 invalid={invalid}
                 placeholder={propertyDisplayName}
             />

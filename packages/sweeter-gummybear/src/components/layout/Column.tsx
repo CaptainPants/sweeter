@@ -6,7 +6,7 @@ import {
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { columns } from '../../stylesheets/grid.js';
-import { type ElementCssClasses } from '@captainpants/sweeter-web';
+import { ElementCssStyles, type ElementCssClasses } from '@captainpants/sweeter-web';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import { type ColumnWidth } from '../../types.js';
 import { columnWidthToIdentifier } from '../../stylesheets/columnWidthToIdentifier.js';
@@ -15,6 +15,9 @@ export type ColumnProps = PropertiesMightBeSignals<{
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
+
+    style?: ElementCssStyles | undefined;
+    class?: ElementCssClasses | undefined;
 
     xs?: ColumnWidth | undefined;
     sm?: ColumnWidth | undefined;
@@ -41,6 +44,8 @@ export const Column: Component<ColumnProps> = ({
     md,
     lg,
     xl,
+    style,
+    class: classProp,
     passthrough: { class: classFromPassthroughProps, ...passthroughProps } = {},
 }) => {
     const classesFromProps = $calc(() => {
@@ -67,7 +72,8 @@ export const Column: Component<ColumnProps> = ({
     return (
         <div
             id={id}
-            class={[classFromPassthroughProps, classesFromProps]}
+            class={[classFromPassthroughProps, classesFromProps, classProp]}
+            style={style}
             {...passthroughProps}
         >
             {children}

@@ -9,3 +9,4 @@ export * from './Portal.js';
 export * from './Show.js';
 export * from './Suspense.js';
 export * from './SuspenseContext.js';
+export * from './WithId.js';

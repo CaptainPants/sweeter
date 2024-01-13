@@ -1,4 +1,3 @@
-import { isCalculationRunning } from './internal/calculationDeferral.js';
 import { type Signal } from './types.js';
 
 export type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;

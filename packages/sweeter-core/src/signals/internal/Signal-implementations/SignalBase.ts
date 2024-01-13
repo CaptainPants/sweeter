@@ -11,16 +11,26 @@ import {
     type SignalListener,
     type SignalState,
 } from '../../types.js';
+import { isDeveloperModeEnabled } from '../../../dev.js';
+import { getNiceStackTrace } from '@captainpants/sweeter-utilities';
+
+const getStackTrace = getNiceStackTrace(['new SignalBase']);
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
         this.#state = state;
+
+        if (isDeveloperModeEnabled()) {
+            this.createdAtStack = getStackTrace();
+        }
     }
 
     #state: SignalState<T>;
     #listeners = new ListenerSet<SignalListener<T>>();
 
     public readonly [signalMarker] = true;
+
+    public readonly createdAtStack?: string;
 
     public get value(): T {
         announceSignalUsage(this);

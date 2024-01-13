@@ -1,9 +1,9 @@
-import { enableDeveloperMode } from '@captainpants/sweeter-core';
+import { dev } from '@captainpants/sweeter-core';
 import { App } from './App.js';
 
 import { createWebRuntime } from '@captainpants/sweeter-web';
 
-enableDeveloperMode(true);
+dev.enabled = true;
 
 createWebRuntime({
     root: document.getElementById('app')!,

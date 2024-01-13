@@ -11,7 +11,7 @@ import {
     type SignalListener,
     type SignalState,
 } from '../../types.js';
-import { isDeveloperModeEnabled } from '../../../dev.js';
+import { dev } from '../../../dev.js';
 import { getStackTrace } from '@captainpants/sweeter-utilities';
 
 interface ChangeAnnouncerStackNode {
@@ -25,7 +25,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
         this.#state = state;
 
-        if (isDeveloperModeEnabled()) {
+        if (dev.enabled) {
             this.createdAtStack = getStackTrace();
         }
     }
@@ -95,14 +95,12 @@ export abstract class SignalBase<T> implements Signal<T> {
         if (!this.#listeners.any()) {
             return;
         }
-        
-        const devMode = isDeveloperModeEnabled()
 
         let SignalBase_announceChange = () => {
             this.#listeners.announce(previous, next);  
         };
 
-        if (devMode) {
+        if (dev.enabled) {
             SignalBase_announceChange = () => {
                 const saved = develChangeAnnouncerStack;
                 develChangeAnnouncerStack = {
@@ -157,7 +155,5 @@ export abstract class SignalBase<T> implements Signal<T> {
         }
 
         console.error('╚══════════════════╣ Signal dependents took too long to run: ╠══════════════════════╗ \n' + res.join('\n══════════════════════════════════════ TRIGGERED BY ══════════════════════════════════════ \n'))
-
-        debugger;
     }
 }

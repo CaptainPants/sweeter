@@ -6,7 +6,10 @@ import {
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { columns } from '../../stylesheets/grid.js';
-import { ElementCssStyles, type ElementCssClasses } from '@captainpants/sweeter-web';
+import {
+    type ElementCssStyles,
+    type ElementCssClasses,
+} from '@captainpants/sweeter-web';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import { type ColumnWidth } from '../../types.js';
 import { columnWidthToIdentifier } from '../../stylesheets/columnWidthToIdentifier.js';

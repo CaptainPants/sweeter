@@ -3,7 +3,7 @@ import { App } from './App.js';
 
 import { createWebRuntime } from '@captainpants/sweeter-web';
 
-dev.enabled = true;
+dev.enable(true, true);
 
 createWebRuntime({
     root: document.getElementById('app')!,

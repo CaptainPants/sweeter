@@ -167,15 +167,27 @@ export function RigidObjectEditor(
                                         ) : undefined}
                                         {properties.map(
                                             ({ property, render }) => {
-                                                const id = baseId + '_' + property.name;
+                                                const id =
+                                                    baseId +
+                                                    '_' +
+                                                    property.name;
 
                                                 return (
                                                     <Row
                                                         class={styles.property}
                                                         key={`prop-${property.name}`}
                                                     >
-                                                        <Column xs={4}><Label for={id}>{property.definition.displayName ?? property.name}</Label></Column>
-                                                        <Column xs={8}>{render(id)}</Column>
+                                                        <Column xs={4}>
+                                                            <Label for={id}>
+                                                                {property
+                                                                    .definition
+                                                                    .displayName ??
+                                                                    property.name}
+                                                            </Label>
+                                                        </Column>
+                                                        <Column xs={8}>
+                                                            {render(id)}
+                                                        </Column>
                                                     </Row>
                                                 );
                                             },

@@ -97,7 +97,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         }
 
         let SignalBase_announceChange = () => {
-            this.#listeners.announce(previous, next);  
+            this.#listeners.announce(previous, next);
         };
 
         if (dev.enabled) {
@@ -105,21 +105,21 @@ export abstract class SignalBase<T> implements Signal<T> {
                 const saved = develChangeAnnouncerStack;
                 develChangeAnnouncerStack = {
                     signal: this,
-                    previous: develChangeAnnouncerStack
+                    previous: develChangeAnnouncerStack,
                 };
-    
-                const start = Date.now();
+
+                const reverse = dev.monitorOperation(
+                    'Signal change announcement',
+                    1000,
+                    () => this.#getPanicContent(),
+                );
                 try {
-                    this.#listeners.announce(previous, next);   
-                }
-                finally {
+                    this.#listeners.announce(previous, next);
+                } finally {
+                    reverse();
                     develChangeAnnouncerStack = saved;
                 }
-    
-                if (Date.now() - start > 1000) {
-                    this.#tookTooLongToRunPanic();
-                }
-            }
+            };
         }
 
         // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
@@ -145,15 +145,20 @@ export abstract class SignalBase<T> implements Signal<T> {
         this.#listeners.clear();
     }
 
-    #tookTooLongToRunPanic() {
+    #getPanicContent(): string {
         const res: string[] = [];
 
         let current = develChangeAnnouncerStack;
         while (current) {
-            res.push(current.signal.createdAtStack ?? '')
+            res.push(current.signal.createdAtStack ?? '');
             current = current.previous;
         }
 
-        console.error('╚══════════════════╣ Signal dependents took too long to run: ╠══════════════════════╗ \n' + res.join('\n══════════════════════════════════════ TRIGGERED BY ══════════════════════════════════════ \n'))
+        return (
+            '╚══════════════════╣ Signal dependents took too long to run: ╠══════════════════════╗ \n' +
+            res.join(
+                '\n═══════════════════════════════════ TRIGGERED BY ═══════════════════════════════════ \n',
+            )
+        );
     }
 }

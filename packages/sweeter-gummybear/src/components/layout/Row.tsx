@@ -4,7 +4,10 @@ import {
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { row } from '../../stylesheets/grid.js';
-import { type ElementCssClasses, type ElementCssStyles } from '@captainpants/sweeter-web';
+import {
+    type ElementCssClasses,
+    type ElementCssStyles,
+} from '@captainpants/sweeter-web';
 
 export type RowProps = PropertiesMightBeSignals<{
     id?: string | undefined;

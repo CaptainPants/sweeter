@@ -1,4 +1,11 @@
-import { Column, Container, Label, Row, Select, createTheme } from '@captainpants/sweeter-gummybear';
+import {
+    Column,
+    Container,
+    Label,
+    Row,
+    Select,
+    createTheme,
+} from '@captainpants/sweeter-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
 
@@ -20,7 +27,9 @@ const { IncludeThemeStylesheets } = createTheme({});
 export function App(props: {}, init: ComponentInit): JSX.Element {
     const type = $mutable<keyof typeof exampleData>('StringOnly');
 
-    const keys = Object.keys(exampleData) as unknown as (keyof typeof exampleData)[];
+    const keys = Object.keys(
+        exampleData,
+    ) as unknown as (keyof typeof exampleData)[];
 
     return (
         <Suspense fallback={() => 'Loading...'}>
@@ -29,21 +38,27 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     <IncludeThemeStylesheets />
                     <h1>Simple Example</h1>
                     <Container>
-                        <WithId>{
-                            id => <Row>
-                                <Column xs={4}>
-                                    <Label for={id} fillWidth>Type</Label>
-                                </Column>
-                                <Column xs={8}>
-                                    <Select 
-                                        id={id}
-                                        fillWidth
-                                        bind:value={type} 
-                                        options={keys.map(item => ({ value: item }))}
-                                    />
-                                </Column>
-                            </Row>    
-                        }</WithId>
+                        <WithId>
+                            {(id) => (
+                                <Row>
+                                    <Column xs={4}>
+                                        <Label for={id} fillWidth>
+                                            Type
+                                        </Label>
+                                    </Column>
+                                    <Column xs={8}>
+                                        <Select
+                                            id={id}
+                                            fillWidth
+                                            bind:value={type}
+                                            options={keys.map((item) => ({
+                                                value: item,
+                                            }))}
+                                        />
+                                    </Column>
+                                </Row>
+                            )}
+                        </WithId>
                     </Container>
                     {$async(exampleData.StringOnly, (model) => {
                         const state = $mutable(model.peek());

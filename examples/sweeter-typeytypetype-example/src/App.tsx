@@ -23,7 +23,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                 <>
                     <IncludeThemeStylesheets />
                     <h1>Simple Example</h1>
-                    {$async(exampleData.StringFieldOnly, (model) => {
+                    {$async(exampleData.StringOnly, (model) => {
                         const state = $mutable(model.peek());
 
                         return (

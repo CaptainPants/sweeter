@@ -156,7 +156,7 @@ export abstract class SignalBase<T> implements Signal<T> {
             current = current.previous;
         }
 
-        console.error('Signal dependents took too long to run: ', res.join('\n----\n'))
+        console.error('╚══════════════════╣ Signal dependents took too long to run: ╠══════════════════════╗ \n' + res.join('\n══════════════════════════════════════ TRIGGERED BY ══════════════════════════════════════ \n'))
 
         debugger;
     }

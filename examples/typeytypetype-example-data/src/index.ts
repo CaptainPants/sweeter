@@ -5,6 +5,8 @@ import {
     Types,
 } from '@captainpants/typeytypetype';
 
+export const stringOnly = Types.string();
+
 export const stringFieldOnly = Types.object({
     test: Types.prop(Types.string()).withDisplayName('Test'),
 });
@@ -137,6 +139,14 @@ export const exampleData = {
             await ModelFactory.createModel({
                 value: { test: 'Test' },
                 type: stringFieldOnly,
+            }),
+        );
+    },
+    StringOnly: async () => {
+        return asUnknown(
+            await ModelFactory.createModel({
+                value: 'Test',
+                type: stringOnly,
             }),
         );
     },

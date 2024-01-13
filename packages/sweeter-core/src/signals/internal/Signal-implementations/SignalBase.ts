@@ -12,9 +12,14 @@ import {
     type SignalState,
 } from '../../types.js';
 import { isDeveloperModeEnabled } from '../../../dev.js';
-import { getNiceStackTrace } from '@captainpants/sweeter-utilities';
+import { getStackTrace } from '@captainpants/sweeter-utilities';
 
-const getStackTrace = getNiceStackTrace(['new SignalBase']);
+interface ChangeAnnouncerStackNode {
+    signal: Signal<unknown>;
+    previous: ChangeAnnouncerStackNode | undefined;
+}
+
+let develChangeAnnouncerStack: ChangeAnnouncerStackNode | undefined;
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
@@ -90,10 +95,34 @@ export abstract class SignalBase<T> implements Signal<T> {
         if (!this.#listeners.any()) {
             return;
         }
+        
+        const devMode = isDeveloperModeEnabled()
 
-        const SignalBase_announceChange = () => {
-            this.#listeners.announce(previous, next);
+        let SignalBase_announceChange = () => {
+            this.#listeners.announce(previous, next);  
         };
+
+        if (devMode) {
+            SignalBase_announceChange = () => {
+                const saved = develChangeAnnouncerStack;
+                develChangeAnnouncerStack = {
+                    signal: this,
+                    previous: develChangeAnnouncerStack
+                };
+    
+                const start = Date.now();
+                try {
+                    this.#listeners.announce(previous, next);   
+                }
+                finally {
+                    develChangeAnnouncerStack = saved;
+                }
+    
+                if (Date.now() - start > 1000) {
+                    this.#tookTooLongToRunPanic();
+                }
+            }
+        }
 
         // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
         // also prevents all kinds of cases that aren't allowed like updating a mutable signal within a recalculation
@@ -116,5 +145,19 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     public clearListeners(): void {
         this.#listeners.clear();
+    }
+
+    #tookTooLongToRunPanic() {
+        const res: string[] = [];
+
+        let current = develChangeAnnouncerStack;
+        while (current) {
+            res.push(current.signal.createdAtStack ?? '')
+            current = current.previous;
+        }
+
+        console.error('Signal dependents took too long to run: ', res.join('\n----\n'))
+
+        debugger;
     }
 }

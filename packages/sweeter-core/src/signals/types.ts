@@ -50,6 +50,8 @@ export interface Signal<T> {
     clearListeners(): void;
 
     readonly [signalMarker]: true;
+
+    readonly createdAtStack?: string;
 }
 
 export interface WritableSignal<T> {

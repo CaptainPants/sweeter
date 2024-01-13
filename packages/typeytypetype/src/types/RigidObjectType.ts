@@ -63,13 +63,13 @@ export class RigidObjectType<
 
     public override toTypeString(depth: number = descend.defaultDepth): string {
         return (
-            '{\r\n' +
+            '{\n' +
             Object.entries(this.propertyDefinitions)
                 .map(
                     ([key, prop]: [string, PropertyDefinition<unknown>]) =>
                         `    ${JSON.stringify(key)}: ${prop.type.toTypeString(
                             descend(depth),
-                        )};\r\n`,
+                        )};\n`,
                 )
                 .join('') +
             '}'

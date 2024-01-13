@@ -210,14 +210,14 @@ export abstract class BaseType<TValue> implements Type<TValue> {
             throw new TypeError(
                 `Value ${stringForError(
                     value,
-                )} did not pass validation:\r\n\r\n ${res.error
+                )} did not pass validation:\n\n ${res.error
                     .map(
                         (item) =>
                             `- ${item.idPath ? `(${item.idPath}) ` : ''} ${
                                 item.message
                             }`,
                     )
-                    .join('\r\n ')}`,
+                    .join('\n ')}`,
             );
         }
 

@@ -81,7 +81,7 @@ export class GlobalCssClass
 
         const transformed = this.preprocess
             ? preprocessClassContent(name, content)
-            : `.${name}\r\n{\r\n${content}\r\n}`;
+            : `.${name}\n{\n${content}\n}`;
         return transformed;
     }
 

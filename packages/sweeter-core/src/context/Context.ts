@@ -128,5 +128,5 @@ export function getContextSummary(): string {
         current = current.parent;
     }
 
-    return res.join('\r\n');
+    return res.join('\n');
 }

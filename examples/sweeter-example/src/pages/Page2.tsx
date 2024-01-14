@@ -1,9 +1,4 @@
-import {
-    Button,
-    Modal,
-    TextArea,
-    createTheme,
-} from '@captainpants/sweeter-gummybear';
+import { Button, Modal, TextArea } from '@captainpants/sweeter-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
 
@@ -16,14 +11,11 @@ import {
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 
-const { IncludeThemeStylesheets } = createTheme({});
-
 export function Page2(props: NoProps, init: ComponentInit): JSX.Element {
     const open = $mutable(false);
 
     return (
         <>
-            <IncludeThemeStylesheets />
             <Button
                 onclick={() => {
                     open.value = !open.peek();

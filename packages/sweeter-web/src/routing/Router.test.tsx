@@ -34,10 +34,8 @@ it('General', async () => {
             {() => (
                 <Router
                     routes={routes}
-                    rootRelativePath={path}
-                    url={$calc(
-                        () => new URL(`https://google.com${path.value}`),
-                    )}
+                    basePath={path}
+                    url={$calc(() => `https://google.com${path.value}`)}
                 />
             )}
         </Suspense>

@@ -10,6 +10,7 @@ import {
     type JSXMiddleware,
     createMiddlewarePipeline,
     type JSXMiddlewareCallback,
+    type Signal,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { jsx } from './jsx.js';
@@ -20,6 +21,7 @@ import { createComponentInstance } from './internal/createComponentInstance.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
 import { type WebRuntime } from './types.js';
 import { getTransitiveReferences } from '../styles/internal/getTransitiveReferences.js';
+import { createLocationSignal } from './internal/createLocationSignal.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -65,6 +67,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     #disposeList: (() => void)[];
 
     #jsxWithMiddleware: JSXMiddlewareCallback;
+    #locationAndDisposal: ReturnType<typeof createLocationSignal>;
 
     #includedSingletonStylesheetCounts: WeakMap<
         AbstractGlobalCssStylesheet,
@@ -72,6 +75,8 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     >;
 
     #idCounter: number = 0;
+
+    readonly location: Signal<string>;
 
     constructor(options: WebRuntimeOptions) {
         this.#target = options.root;
@@ -84,6 +89,9 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             options.classNameFormat ??
             ((counter, className) => `_glbl${counter}_${className}`);
         this.#includedSingletonStylesheetCounts = new WeakMap();
+
+        this.#locationAndDisposal = createLocationSignal();
+        this.location = this.#locationAndDisposal.signal;
     }
 
     createRoot(
@@ -100,6 +108,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         while (this.#disposeList.length > 0) {
             this.#disposeList.pop()?.();
         }
+        this.#locationAndDisposal.dispose();
     }
 
     getPrefixedClassName(cssClass: GlobalCssClass): string {
@@ -256,6 +265,11 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
     nextId(basis?: string | undefined): string {
         return `${basis ?? 'generated'}_${++this.#idCounter}`;
+    }
+
+    navigate(url: string): void {
+        window.history.pushState(undefined, '', url);
+        this.#locationAndDisposal.ping();
     }
 }
 

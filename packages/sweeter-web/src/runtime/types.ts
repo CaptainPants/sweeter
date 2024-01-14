@@ -1,4 +1,4 @@
-import { type Runtime } from '@captainpants/sweeter-core';
+import { type Signal, type Runtime } from '@captainpants/sweeter-core';
 import {
     type AbstractGlobalCssStylesheet,
     type GlobalStyleSheetContentGeneratorContext,
@@ -12,4 +12,8 @@ export interface WebRuntime
     removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void;
 
     nextId(basis?: string): string;
+
+    readonly location: Signal<string>;
+
+    navigate(url: string): void;
 }

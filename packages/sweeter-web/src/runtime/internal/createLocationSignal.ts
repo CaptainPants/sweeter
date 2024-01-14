@@ -1,13 +1,23 @@
-import { $controlled, SignalController } from '@captainpants/sweeter-core';
+import {
+    $controlled,
+    type Signal,
+    SignalController,
+} from '@captainpants/sweeter-core';
 
-export function createLocationSignal() {
-    const signalController = new SignalController<URL>();
+export interface LocationSignalResult {
+    dispose: () => void;
+    signal: Signal<string>;
+    ping: () => void;
+}
+
+export function createLocationSignal(): LocationSignalResult {
+    const signalController = new SignalController<string>();
     const signal = $controlled(signalController);
 
     function updateState() {
         signalController.update({
             mode: 'SUCCESS',
-            value: new URL(location.toString()),
+            value: location.toString(),
         });
     }
 
@@ -24,5 +34,6 @@ export function createLocationSignal() {
     return {
         dispose,
         signal,
+        ping: updateState,
     };
 }

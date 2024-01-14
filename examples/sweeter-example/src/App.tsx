@@ -1,23 +1,46 @@
 import {
     $route,
     Router,
-    createLocationSignal,
+    getWebRuntime,
     pathTemplate,
 } from '@captainpants/sweeter-web';
-import { type NoProps, type ComponentInit } from '@captainpants/sweeter-core';
+import {
+    type NoProps,
+    type ComponentInit,
+    ErrorBoundary,
+} from '@captainpants/sweeter-core';
 
-import { Page1 } from './Page1.js';
-import { Page2 } from './Page2.js';
+import { HomePage } from './pages/HomePage.js';
+import { Page1 } from './pages/Page1.js';
+import { Page2 } from './pages/Page2.js';
+import { createTheme } from '@captainpants/sweeter-gummybear';
+
+const { IncludeThemeStylesheets } = createTheme({});
 
 const routes = () => {
     return [
-        $route(pathTemplate`/`, () => () => <Page1 />),
+        $route(pathTemplate`/`, () => () => <HomePage />),
+        $route(pathTemplate`/page1`, () => () => <Page1 />),
         $route(pathTemplate`/page2`, () => () => <Page2 />),
     ];
 };
 
 export function App(props: NoProps, init: ComponentInit) {
-    const path = createLocationSignal();
+    const path = getWebRuntime().location;
 
-    return <Router routes={routes()} rootRelativePath="/" url={path.signal} />;
+    return (
+        <>
+            <IncludeThemeStylesheets />
+            <ErrorBoundary renderError={(err) => <h1>Error: {String(err)}</h1>}>
+                {() => (
+                    <Router
+                        routes={routes()}
+                        basePath="/"
+                        url={path}
+                        fallback={() => <h1>404</h1>}
+                    />
+                )}
+            </ErrorBoundary>
+        </>
+    );
 }

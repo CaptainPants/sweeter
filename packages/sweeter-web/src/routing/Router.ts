@@ -1,33 +1,38 @@
-import { type PropertiesMightBeSignals } from '@captainpants/sweeter-core';
+import {
+    type ComponentInit,
+    type PropertiesMightBeSignals,
+} from '@captainpants/sweeter-core';
 import { $calc, $val } from '@captainpants/sweeter-core';
 import { type Route } from './types.js';
 import { pathDoesNotMatch } from './pathDoesNotMatch.js';
 
 export interface RouterProps {
-    rootRelativePath: string;
-    url: URL;
+    basePath: string;
+    url: string;
 
     routes: readonly Route<readonly string[]>[];
+
+    fallback?: (() => JSX.Element) | undefined;
 }
 
-export function Router({
-    rootRelativePath,
-    url,
-    routes,
-}: PropertiesMightBeSignals<RouterProps>): JSX.Element {
+export function Router(
+    { basePath, url, routes, fallback }: PropertiesMightBeSignals<RouterProps>,
+    init: ComponentInit,
+): JSX.Element {
+    const asUrl = $calc(() => new URL($val(url)));
+
     return $calc(() => {
-        const _rootRelativePathResolved = $val(rootRelativePath);
-        const urlResolved = $val(url);
+        const path = asUrl.value.pathname; // Should use $val(basePath) to create a root relative path;
 
         for (const route of $val(routes)) {
-            // rootRelativePathResolved should be removed from path
-            const match = route.match(urlResolved.pathname, urlResolved);
+            // basePath should be removed from path
+            const match = route.match(path, asUrl.value);
 
             if (match !== pathDoesNotMatch) {
                 return match;
             }
         }
 
-        return undefined;
+        return $val(fallback)?.();
     });
 }

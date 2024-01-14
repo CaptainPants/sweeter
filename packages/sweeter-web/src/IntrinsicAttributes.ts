@@ -107,6 +107,10 @@ type HasDisabledAttribute = {
 
 // == Element-specific ==
 
+type HTMLAnchorAttributes = {
+    href?: string | undefined;
+};
+
 type HTMLOptionElementAttributes = {
     value?: MightBeSignal<string> | undefined;
 } & HasDisabledAttribute;
@@ -167,20 +171,22 @@ type HTMLButtonElementAttributes = HasNonBindableFormControlValueAttribute &
 
 // == (END) Element-specific ==
 
-type SpecificElementAttributes<TElement> = TElement extends HTMLButtonElement
-    ? HTMLButtonElementAttributes
-    : TElement extends HTMLLabelElement
-      ? HTMLLabelElementAttributes
-      : TElement extends HTMLInputElement
-        ? HTMLInputElementAttributes
-        : TElement extends HTMLTextAreaElement
-          ? HTMLTextAreaAttributes
-          : TElement extends HTMLSelectElement
-            ? HTMLSelectElementAttributes
-            : TElement extends HTMLOptionElement
-              ? HTMLOptionElementAttributes
-              : // eslint-disable-next-line @typescript-eslint/ban-types
-                {};
+type SpecificElementAttributes<TElement> = TElement extends HTMLAnchorElement
+    ? HTMLAnchorAttributes
+    : TElement extends HTMLButtonElement
+      ? HTMLButtonElementAttributes
+      : TElement extends HTMLLabelElement
+        ? HTMLLabelElementAttributes
+        : TElement extends HTMLInputElement
+          ? HTMLInputElementAttributes
+          : TElement extends HTMLTextAreaElement
+            ? HTMLTextAreaAttributes
+            : TElement extends HTMLSelectElement
+              ? HTMLSelectElementAttributes
+              : TElement extends HTMLOptionElement
+                ? HTMLOptionElementAttributes
+                : // eslint-disable-next-line @typescript-eslint/ban-types
+                  {};
 
 export type ElementAttributesByName<TElementTypeString extends string> =
     TElementTypeString extends keyof IntrinsicElementTypeMap

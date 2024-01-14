@@ -1,6 +1,7 @@
 import {
     Column,
     Container,
+    Input,
     Label,
     Row,
     Select,
@@ -17,6 +18,7 @@ import {
     Suspense,
     type ComponentInit,
     WithId,
+    $calc,
 } from '@captainpants/sweeter-core';
 import { exampleData } from '@captainpants/typeytypetype-example-data';
 import { EditorRoot } from '@captainpants/sweeter-typeytypetype-web';
@@ -25,7 +27,8 @@ const { IncludeThemeStylesheets } = createTheme({});
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function App(props: {}, init: ComponentInit): JSX.Element {
-    const type = $mutable<keyof typeof exampleData>('StringOnly');
+    const typeName = $mutable<keyof typeof exampleData>('StringOnly');
+    const type = $calc(() => exampleData[typeName.value]);
 
     const keys = Object.keys(
         exampleData,
@@ -50,7 +53,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                         <Select
                                             id={id}
                                             fillWidth
-                                            bind:value={type}
+                                            bind:value={typeName}
                                             options={keys.map((item) => ({
                                                 value: item,
                                             }))}
@@ -60,11 +63,12 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                             )}
                         </WithId>
                     </Container>
-                    {$async(exampleData.StringOnly, (model) => {
-                        const state = $mutable(model.peek());
+                    {$async(type, (model) => {
+                        return $calc(() => {
+                            const state = $mutable(model.value);
+                            console.log('State reset');
 
-                        return (
-                            <EditorRoot<unknown>
+                            return <EditorRoot<unknown>
                                 model={state}
                                 replace={(newValue) => {
                                     state.value = newValue;
@@ -72,7 +76,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                     return Promise.resolve(void 0);
                                 }}
                             />
-                        );
+                        });
                     })}
                 </>
             )}

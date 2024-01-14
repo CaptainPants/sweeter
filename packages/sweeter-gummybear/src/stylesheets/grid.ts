@@ -25,6 +25,7 @@ export const container = new GlobalCssClass({
 export const row = new GlobalCssClass({
     className: 'row',
     content: stylesheet`
+        width: 100%;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -100,9 +101,9 @@ for (
         } else {
             thisBreakpointCss.appendLine(stylesheet`
                 .${currentClass} {
-                    flex: 0 0 ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+                    flex: 0 0 ${((columnIndex + 1) * (100 / 12)).toFixed(4)}%;
                     width: 100%;
-                    max-width: ${(columnIndex + 1) * Math.floor(100 / 12)}%;
+                    max-width: ${((columnIndex + 1) * (100 / 12)).toFixed(4)}%;
                 }
             `);
         }

@@ -36,8 +36,7 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
         ([element]) => {
             if (!element) return;
 
-            const { width, height } = element.getBoundingClientRect();
-            $peek(onInitialLayout)(width, height);
+            let first = true;
 
             const debouncedCallback = debounce(
                 1000,
@@ -46,7 +45,15 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
                     $peek(onLayout)(width, height);
                 },
             );
-            const stopObserving = observeSize(element, debouncedCallback);
+            const stopObserving = observeSize(element, size => {
+                if (first) {
+                    first = false;
+                    $peek(onInitialLayout)(size.contentRect.width, size.contentRect.height);
+                }
+                else {
+                    debouncedCallback(size);
+                }
+            });
 
             return () => {
                 stopObserving();

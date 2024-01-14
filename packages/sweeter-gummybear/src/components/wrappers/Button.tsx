@@ -9,10 +9,12 @@ import { type VariantName } from '../../internal/constants.js';
 import {
     type TypedEvent,
     type ElementCssClasses,
+    type ElementCssStyles,
 } from '@captainpants/sweeter-web';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
 import { button } from '../../stylesheets/button.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+import { combineStyles } from '../../internal/combineStyles.js';
 
 export type ButtonProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
@@ -23,6 +25,9 @@ export type ButtonProps = PropertiesMightBeSignals<{
     fillWidth?: boolean | undefined;
 
     id?: string | undefined;
+
+    class?: ElementCssClasses | undefined;
+    style?: ElementCssStyles | undefined;
 
     onclick?:
         | ((evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void)
@@ -39,8 +44,11 @@ export const Button: Component<ButtonProps> = ({
     outline,
     disabled,
     fillWidth,
+    class: classProp,
+    style,
     passthroughProps: {
         class: classFromPassthroughProps,
+        style: styleFromPassthroughProps,
         onclick: onclickFromPassthroughProps,
         ...passthroughProps
     } = {},
@@ -67,6 +75,7 @@ export const Button: Component<ButtonProps> = ({
             onclick={combineEventHandlers(onclick, onclickFromPassthroughProps)}
             disabled={disabled}
             class={[classFromPassthroughProps, classesFromProps, button]}
+            style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         >
             {children}

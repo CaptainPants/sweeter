@@ -5,9 +5,10 @@ import {
     $calc,
     $val,
 } from '@captainpants/sweeter-core';
-import { type ElementCssClasses } from '@captainpants/sweeter-web';
+import { type ElementCssStyles, type ElementCssClasses } from '@captainpants/sweeter-web';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+import { combineStyles } from '../../internal/combineStyles.js';
 
 export type LabelProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
@@ -17,6 +18,9 @@ export type LabelProps = PropertiesMightBeSignals<{
 
     id?: string | undefined;
     for?: string | undefined;
+
+    class?: ElementCssClasses | undefined;
+    style?: ElementCssStyles | undefined;
 }> & {
     passthroughProps?: IntrinsicElementProps<'label'> | undefined;
 };
@@ -27,8 +31,11 @@ export const Label: Component<LabelProps> = ({
     for: forProp,
     disabled = false,
     fillWidth,
+    class: classProp,
+    style,
     passthroughProps: {
         class: classFromPassthroughProps,
+        style: styleFromPassthroughProps,
         onclick: onclickFromPassthroughProps,
         ...passthroughProps
     } = {},
@@ -48,7 +55,8 @@ export const Label: Component<LabelProps> = ({
         <label
             id={id}
             for={forProp}
-            class={[classFromPassthroughProps, classesFromProps, forms.label]}
+            class={[classProp, classFromPassthroughProps, classesFromProps, forms.label]}
+            style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         >
             {children}

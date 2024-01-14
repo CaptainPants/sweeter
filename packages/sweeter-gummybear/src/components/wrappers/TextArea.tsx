@@ -9,10 +9,12 @@ import { type VariantName } from '../../internal/constants.js';
 import {
     type TypedEvent,
     type ElementCssClasses,
+    type ElementCssStyles,
 } from '@captainpants/sweeter-web';
 import { forms } from '../../index.js';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+import { combineStyles } from '../../internal/combineStyles.js';
 
 export type TextAreaProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
@@ -25,6 +27,9 @@ export type TextAreaProps = PropertiesMightBeSignals<{
 
     value?: string | undefined;
     placeholder?: string | undefined;
+
+    class?: ElementCssClasses | undefined;
+    style?: ElementCssStyles | undefined;
 
     onInput?:
         | ((evt: TypedEvent<HTMLTextAreaElement, Event>) => void)
@@ -45,10 +50,13 @@ export const TextArea: Component<TextAreaProps> = ({
     value,
     'bind:value': bindValue,
     placeholder,
+    class: classProp,
+    style,
     onInput,
     passthroughProps: {
         class: classFromPassthroughProps,
         oninput: oninputFromPassthroughProps,
+        style: styleFromPassthroughProps,
         ...passthroughProps
     } = {},
 }) => {
@@ -78,6 +86,7 @@ export const TextArea: Component<TextAreaProps> = ({
             placeholder={placeholder}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
             class={[classFromPassthroughProps, classesFromProps, forms.input]}
+            style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         />
     );

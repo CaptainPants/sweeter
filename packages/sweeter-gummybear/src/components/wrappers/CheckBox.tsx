@@ -11,10 +11,12 @@ import {
     type TypedEvent,
     type ElementCssClasses,
     type ThreeValueBoolean,
+    type ElementCssStyles,
 } from '@captainpants/sweeter-web';
 import { forms } from '../../index.js';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+import { combineStyles } from '../../internal/combineStyles.js';
 
 export type CheckBoxProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;
@@ -27,6 +29,9 @@ export type CheckBoxProps = PropertiesMightBeSignals<{
 
     checked?: ThreeValueBoolean | undefined;
     placeholder?: string | undefined;
+
+    class?: ElementCssClasses | undefined;
+    style?: ElementCssStyles | undefined;
 
     onInput?: ((evt: TypedEvent<HTMLInputElement, Event>) => void) | undefined;
 }> & {
@@ -45,9 +50,12 @@ export const CheckBox: Component<CheckBoxProps> = ({
     checked,
     'bind:checked': bindChecked,
     placeholder,
+    class: classProp,
+    style,
     onInput,
     passthroughProps: {
         class: classFromPassthroughProps,
+        style: styleFromPassthroughProps,
         oninput: oninputFromPassthroughProps,
         ...passthroughProps
     } = {},
@@ -78,7 +86,8 @@ export const CheckBox: Component<CheckBoxProps> = ({
             readonly={readOnly}
             placeholder={placeholder}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
-            class={[classFromPassthroughProps, classesFromProps, forms.input]}
+            class={[classProp, classFromPassthroughProps, classesFromProps, forms.input]}
+            style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         />
     );

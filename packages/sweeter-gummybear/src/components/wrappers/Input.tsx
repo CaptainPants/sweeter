@@ -11,10 +11,12 @@ import {
     type TypedEvent,
     type ElementCssClasses,
     type InputType,
+    type ElementCssStyles,
 } from '@captainpants/sweeter-web';
 import { forms } from '../../index.js';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+import { combineStyles } from '../../internal/combineStyles.js';
 
 export type InputProps = PropertiesMightBeSignals<{
     type?: InputType | undefined;
@@ -29,6 +31,9 @@ export type InputProps = PropertiesMightBeSignals<{
 
     value?: string | undefined;
     placeholder?: string | undefined;
+
+    class?: ElementCssClasses | undefined;
+    style?: ElementCssStyles | undefined;
 
     onInput?: ((evt: TypedEvent<HTMLInputElement, Event>) => void) | undefined;
 }> & {
@@ -49,8 +54,11 @@ export const Input: Component<InputProps> = ({
     'bind:value': bindValue,
     placeholder,
     onInput,
+    class: classProp,
+    style,
     passthroughProps: {
         class: classFromPassthroughProps,
+        style: styleFromPassthroughProps,
         oninput: oninputFromPassthroughProps,
         ...passthroughProps
     } = {},
@@ -81,7 +89,8 @@ export const Input: Component<InputProps> = ({
             readonly={readOnly}
             placeholder={placeholder}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
-            class={[classFromPassthroughProps, classesFromProps, forms.input]}
+            class={[classProp, classFromPassthroughProps, classesFromProps, forms.input]}
+            style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         />
     );

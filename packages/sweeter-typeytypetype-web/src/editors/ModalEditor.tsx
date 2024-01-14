@@ -35,22 +35,27 @@ export function ModalEditor(
 
     const { validated, isValid } = init.hook(ValidationContainerHook);
 
-    const nextProps = Object.assign({}, $valObjectValues(passthrough), {
-        indent: 0,
-        model: modelSnapshot,
-        replace: async (replacement: Model<unknown>): Promise<void> => {
-            modelSnapshot.update(replacement);
-        },
-        isRoot: true,
-    });
+    const nextProps = $calc(() => {
+        return Object.assign({}, $valObjectValues(passthrough), {
+            indent: 0,
+            model: modelSnapshot,
+            replace: async (replacement: Model<unknown>): Promise<void> => {
+                modelSnapshot.update(replacement);
+            },
+            isRoot: true,
+        });
+    })
 
-    const onCommit = (): void => {
+    const onCommit = async (): Promise<void> => {
         if (!isValid.peek()) {
             // TODO: warn user
             return;
         }
 
-        void $peek(replace)(modelSnapshot.value);
+        // async
+        await $peek(replace)(modelSnapshot.value);
+
+        isOpen.update(false);
     };
 
     const onCancel = (): void => {
@@ -78,7 +83,7 @@ export function ModalEditor(
                 onCommit={onCommit}
                 onClose={onCancel}
             >
-                {validated(() => $val(next)(nextProps))}
+                {validated(() => $val(next)($val(nextProps)))}
             </Modal>
         </>
     ));

@@ -39,6 +39,12 @@ export interface ComponentInit {
 
     onMount(callback: () => (() => void) | void): void;
     onUnMount(callback: () => void): void;
+    /**
+     * 
+     * @param dependencies Subscribe to each of these dependencies
+     * @param callback Call this method any time one of the dependencies changes
+     * @param invokeOnSubscribe (Default to true) invokes the callback immediately if true
+     */
     subscribeToChanges<TArgs extends readonly unknown[]>(
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],

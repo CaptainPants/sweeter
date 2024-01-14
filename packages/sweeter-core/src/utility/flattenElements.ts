@@ -2,7 +2,7 @@ import { type Signal, isSignal, $calc } from '../signals/index.js';
 
 export type FlattenedElement = Exclude<
     JSX.Element,
-    JSX.Element[] | null | undefined | Signal<JSX.Element>
+    JSX.Element[] | null | undefined | Signal<JSX.Element> | boolean
 >;
 
 /**
@@ -35,6 +35,8 @@ function flattenImplementation(
     } else if (isSignal(children)) {
         // Note that this can be recursive if the result is a signal
         flattenImplementation(children.value, output);
+    } else if (typeof children === 'boolean') {
+        return; // So that && an || expressions can be used a la React
     } else {
         output.push(children);
     }

@@ -78,7 +78,7 @@ function createComponentInstanceInit<
         subscribeToChanges<TArgs extends readonly unknown[]>(
             dependencies: [...TArgs],
             callback: (args: UnsignalAll<TArgs>) => void | (() => void),
-            invokeOnSubscribe = true,
+            invokeOnSubscribe = false,
         ) {
             if (!init.isValid) {
                 throw new Error(

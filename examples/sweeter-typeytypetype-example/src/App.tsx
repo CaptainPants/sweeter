@@ -65,6 +65,8 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                     </Container>
                     {$async(type, (model) => {
                         return $calc(() => {
+                            // This is a little fruity - we're returning a mutable signal 
+                            // that can be updated by UI elements.
                             const state = $mutable(model.value);
                             console.log('State reset');
 

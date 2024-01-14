@@ -6,12 +6,17 @@ interface MeasurementNode {
 }
 
 const nodes = new Set<MeasurementNode>();
+const noop = () => {};
 
 function monitorOperation(
     name: string,
     timeout: number,
     content?: () => string | undefined,
 ) {
+    if (!dev.enabled) {
+        return noop
+    }
+
     ping();
 
     const added: MeasurementNode = {

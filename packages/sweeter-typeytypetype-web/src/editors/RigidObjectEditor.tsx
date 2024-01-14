@@ -77,6 +77,7 @@ export function RigidObjectEditor(
             .peek()
             .setPropertyValue(propertyModel.name, value, true);
 
+        console.log('updatePropertyValue');
         draft.update(newDraft);
     };
 

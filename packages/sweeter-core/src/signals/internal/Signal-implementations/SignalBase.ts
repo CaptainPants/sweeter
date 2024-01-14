@@ -12,7 +12,7 @@ import {
     type SignalState,
 } from '../../types.js';
 import { dev } from '../../../dev.js';
-import { getStackTrace } from '@captainpants/sweeter-utilities';
+import { StackTrace } from '@captainpants/sweeter-utilities';
 
 interface ChangeAnnouncerStackNode {
     signal: Signal<unknown>;
@@ -26,7 +26,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         this.#state = state;
 
         if (dev.enabled) {
-            this.createdAtStack = getStackTrace();
+            this.createdAtStack = new StackTrace();
         }
     }
 
@@ -35,7 +35,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     public readonly [signalMarker] = true;
 
-    public readonly createdAtStack?: string;
+    public readonly createdAtStack?: StackTrace;
 
     public get value(): T {
         announceSignalUsage(this);
@@ -150,7 +150,9 @@ export abstract class SignalBase<T> implements Signal<T> {
 
         let current = develChangeAnnouncerStack;
         while (current) {
-            res.push(current.signal.createdAtStack ?? '');
+            res.push(
+                current.signal.createdAtStack?.getNice() ?? '<not captured>',
+            );
             current = current.previous;
         }
 

@@ -64,7 +64,7 @@ export type Component<TProps = {}> = (
 
 export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Component<any> | string | undefined;
+    Component<any> | string;
 export type ComponentTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any>;

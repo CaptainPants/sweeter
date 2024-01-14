@@ -1,3 +1,4 @@
+import { type StackTrace } from '@captainpants/sweeter-utilities';
 import {
     type signalMarker,
     type writableSignalMarker,
@@ -51,7 +52,7 @@ export interface Signal<T> {
 
     readonly [signalMarker]: true;
 
-    readonly createdAtStack?: string;
+    readonly createdAtStack?: StackTrace;
 }
 
 export interface WritableSignal<T> {

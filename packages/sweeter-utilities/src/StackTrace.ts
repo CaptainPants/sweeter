@@ -104,44 +104,55 @@ function normalizeFunctionName(name: string | undefined) {
     return name;
 }
 
-export function getStackTrace(): string {
+export function getRawStackTrace(): string {
     return new Error().stack ?? '<no stack trace found>';
 }
 
-export function getNiceStackTrace(): string {
-    const error = new Error();
-    if (!error.stack) {
-        return '<no stack trace found>';
+export class StackTrace {
+    constructor() {
+        this.#error = new Error();
     }
 
-    const chromey = error.stack.startsWith('Error') ?? false;
+    #error: Error;
 
-    const regex = chromey ? chromeRegex : firefoxRegex;
-
-    const parts: (string | undefined)[] = [];
-
-    for (const match of error.stack.matchAll(regex)) {
-        if (!match.groups) continue;
-
-        const func = normalizeFunctionName(match.groups['func']);
-        const location =
-            match.groups['location'] ?? match.groups['location_alt'];
-        const row = match.groups['row'];
-        const col = match.groups['col'];
-
-        if (func === 'getNiceStackTrace') {
-            continue;
+    getNice() {
+        if (!this.#error.stack) {
+            return '<no stack trace found>';
         }
 
-        parts.push(func);
-        parts.push(' ');
-        parts.push(location);
-        parts.push(' (row: ');
-        parts.push(row);
-        parts.push(' col: ');
-        parts.push(col);
-        parts.push(')\n');
+        const chromey = this.#error.stack.startsWith('Error') ?? false;
+
+        const regex = chromey ? chromeRegex : firefoxRegex;
+
+        const parts: (string | undefined)[] = [];
+
+        for (const match of this.#error.stack.matchAll(regex)) {
+            if (!match.groups) continue;
+
+            const func = normalizeFunctionName(match.groups['func']);
+            const location =
+                match.groups['location'] ?? match.groups['location_alt'];
+            const row = match.groups['row'];
+            const col = match.groups['col'];
+
+            if (func === 'getNiceStackTrace') {
+                continue;
+            }
+
+            parts.push(func);
+            parts.push(' ');
+            parts.push(location);
+            parts.push(' (row: ');
+            parts.push(row);
+            parts.push(' col: ');
+            parts.push(col);
+            parts.push(')\n');
+        }
+
+        return parts.join('');
     }
 
-    return parts.join('');
+    get raw() {
+        return this.#error.stack ?? '<no stack trace found>';
+    }
 }

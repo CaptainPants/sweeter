@@ -63,7 +63,9 @@ export interface ComponentInit {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type Component<TProps = {}> = (
+export type NoProps = {};
+
+export type Component<TProps = NoProps> = (
     props: TProps,
     init: ComponentInit,
 ) => JSX.Element;

@@ -154,7 +154,7 @@ export const Modal: Component<ModalProps> = (
     });
 
     return $calc(() => {
-        if (!$val(isOpen)) {
+        if ($val(isOpen) === false) {
             // Is it OK not to mount(/invoke callback) the children?
             return undefined;
         }

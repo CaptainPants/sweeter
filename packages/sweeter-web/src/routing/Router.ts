@@ -16,11 +16,12 @@ export function Router({
     routes,
 }: PropertiesMightBeSignals<RouterProps>): JSX.Element {
     return $calc(() => {
-        const path = $val(rootRelativePath);
-        const resolvedUrl = $val(url);
+        const _rootRelativePathResolved = $val(rootRelativePath);
+        const urlResolved = $val(url);
 
         for (const route of $val(routes)) {
-            const match = route.match(path, resolvedUrl);
+            // rootRelativePathResolved should be removed from path
+            const match = route.match(urlResolved.pathname, urlResolved);
 
             if (match !== pathDoesNotMatch) {
                 return match;

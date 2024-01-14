@@ -5,6 +5,7 @@ import {
     $mutable,
     Suspense,
     type Component,
+    $calc,
 } from '@captainpants/sweeter-core';
 import { testRender } from '../test/testRender.js';
 import { Router } from './Router.js';
@@ -13,7 +14,7 @@ import { $route } from './$route.js';
 
 it('General', async () => {
     const routes = [
-        $route(pathTemplate`this/is/a/${match.segment}`, () => {
+        $route(pathTemplate`/this/is/a/${match.segment}`, () => {
             const Component = $lazyComponentType(() =>
                 Promise.resolve<Component<{ text: string }>>((props) => {
                     return `Text: ${props.text}`;
@@ -26,7 +27,7 @@ it('General', async () => {
         }),
     ];
 
-    const path = $mutable('this/is/a/banana');
+    const path = $mutable('/this/is/a/banana');
 
     const res = testRender(() => (
         <Suspense fallback={() => 'Loading'}>
@@ -34,7 +35,9 @@ it('General', async () => {
                 <Router
                     routes={routes}
                     rootRelativePath={path}
-                    url={new URL('https://google.com/this/is/a/banana')}
+                    url={$calc(
+                        () => new URL(`https://google.com${path.value}`),
+                    )}
                 />
             )}
         </Suspense>

@@ -5,8 +5,20 @@ import {
 } from '@captainpants/sweeter-core';
 
 export interface LocationSignalResult {
+    /**
+     * Removes event handlers from window.
+     */
     dispose: () => void;
+    /**
+     * Signal representing the current url.
+     */
     signal: Signal<string>;
+    /**
+     * Manually trigger an update to the location (noting that an unchanged location won't updated dependents).
+     * 
+     * This is called by navigate in WebRuntime.
+     * @returns 
+     */
     ping: () => void;
 }
 

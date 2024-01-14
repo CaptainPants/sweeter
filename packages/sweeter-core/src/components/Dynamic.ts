@@ -4,6 +4,11 @@ import { type PropertiesMightBeSignals } from '../types.js';
 
 export type DynamicProps<T> = PropertiesMightBeSignals<{
     value: T;
+    /**
+     * This is called inside a $calc, so 1) you cannot directly mutate signals in the children callback unless you use untrack, and 2) any signals used will be subscribed to.
+     * @param value
+     * @returns
+     */
     children: (value: T) => JSX.Element;
 }>;
 

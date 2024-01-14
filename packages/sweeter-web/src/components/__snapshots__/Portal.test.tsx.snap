@@ -1,7 +1,29 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Portal element mounts 1`] = `"<!--Hooks(Portal): subscribeToChanges-->"`;
+exports[`Portal elements unmount correctly 1`] = `
+"<head><style data-id=\\"style\\">
+div {
+    color: red;
+}
+</style></head>"
+`;
 
-exports[`Portal element mounts 2`] = `"<div><div>CONTENT</div></div>"`;
+exports[`Portal elements unmount correctly 2`] = `"<body><div id=\\"host\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
-exports[`Portal element mounts 3`] = `"<div></div>"`;
+exports[`Portal elements unmount correctly 3`] = `"<head></head>"`;
+
+exports[`Portal elements unmount correctly 4`] = `"<body><div id=\\"host\\"></div><div>NOT MOUNTED</div></body>"`;
+
+exports[`Portal elements unmount correctly 5`] = `
+"<head><style data-id=\\"style\\">
+div {
+    color: red;
+}
+</style></head>"
+`;
+
+exports[`Portal elements unmount correctly 6`] = `"<body><div id=\\"host\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
+
+exports[`Portal elements unmount correctly 7`] = `"<head></head>"`;
+
+exports[`Portal elements unmount correctly 8`] = `"<body><div id=\\"host\\"></div></body>"`;

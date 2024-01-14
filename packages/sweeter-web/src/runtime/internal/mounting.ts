@@ -112,11 +112,11 @@ export function announceChildrenMountedRecursive(node: Node) {
 
 // TODO: we can make this stack-based to avoid recursion
 export function announceMountedRecursive(node: Node): void {
+    // reverse order
+    announceChildrenMountedRecursive(node);
+
     // Call callbacks on current
     if (!isMounted.has(node)) {
-        // reverse order
-        announceChildrenMountedRecursive(node);
-
         mountedCallbacks.execute(node);
         isMounted.add(node);
     }
@@ -126,14 +126,14 @@ export function announceUnMountedRecursive(node: Node): void {
     if (isMounted.has(node)) {
         unMountedCallbacks.execute(node);
         isMounted.delete(node);
+    }
 
-        // reverse order
-        for (
-            let current = node.lastChild;
-            current;
-            current = current.previousSibling
-        ) {
-            announceUnMountedRecursive(current);
-        }
+    // reverse order
+    for (
+        let current = node.lastChild;
+        current;
+        current = current.previousSibling
+    ) {
+        announceUnMountedRecursive(current);
     }
 }

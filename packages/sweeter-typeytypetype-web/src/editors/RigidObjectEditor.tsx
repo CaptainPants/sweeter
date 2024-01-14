@@ -162,11 +162,22 @@ export function RigidObjectEditor(
                                     >
                                         {categorizedProperties.value.length >
                                         0 ? (
-                                            <Label
-                                                class={styles.categoryHeader}
-                                            >
-                                                {category}
-                                            </Label>
+                                            <Row>
+                                                <Column xl="auto">
+                                                    <Label
+                                                        style={{
+                                                            'font-weight':
+                                                                'bold',
+                                                        }}
+                                                        class={
+                                                            styles.categoryHeader
+                                                        }
+                                                        fillWidth
+                                                    >
+                                                        {category}
+                                                    </Label>
+                                                </Column>
+                                            </Row>
                                         ) : undefined}
                                         {properties.map(
                                             ({ property, render }) => {

@@ -162,9 +162,11 @@ export function RigidObjectEditor(
                                     >
                                         {categorizedProperties.value.length >
                                         0 ? (
-                                            <div class={styles.categoryHeader}>
+                                            <Label
+                                                class={styles.categoryHeader}
+                                            >
                                                 {category}
-                                            </div>
+                                            </Label>
                                         ) : undefined}
                                         {properties.map(
                                             ({ property, render }) => {

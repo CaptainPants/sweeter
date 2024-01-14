@@ -38,6 +38,10 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
 
             let first = true;
 
+            const size = element.getBoundingClientRect();
+
+            $peek(onInitialLayout)(size.width, size.height);
+
             const debouncedCallback = debounce(
                 1000,
                 (entry: ResizeObserverEntry) => {
@@ -45,12 +49,17 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
                     $peek(onLayout)(width, height);
                 },
             );
-            const stopObserving = observeSize(element, size => {
+            const stopObserving = observeSize(element, (size) => {
+                // Don't debounce the first resize as this is probably
+                // when the page is first displayed.
+                // In current testing the size is 0x0 when onInitialLayout is called.
                 if (first) {
                     first = false;
-                    $peek(onInitialLayout)(size.contentRect.width, size.contentRect.height);
-                }
-                else {
+                    $peek(onLayout)(
+                        size.contentRect.width,
+                        size.contentRect.height,
+                    );
+                } else {
                     debouncedCallback(size);
                 }
             });

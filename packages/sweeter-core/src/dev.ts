@@ -14,7 +14,7 @@ function monitorOperation(
     content?: () => string | undefined,
 ) {
     if (!dev.enabled) {
-        return noop
+        return noop;
     }
 
     ping();

@@ -40,7 +40,7 @@ export interface ComponentInit {
     onMount(callback: () => (() => void) | void): void;
     onUnMount(callback: () => void): void;
     /**
-     * 
+     *
      * @param dependencies Subscribe to each of these dependencies
      * @param callback Call this method any time one of the dependencies changes
      * @param invokeOnSubscribe (Default to true) invokes the callback immediately if true

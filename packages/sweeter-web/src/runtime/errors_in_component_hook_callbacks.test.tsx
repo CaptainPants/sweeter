@@ -27,9 +27,13 @@ it('onMount', () => {
 });
 
 const SubscribeToChangesThrows: Component = (_, init) => {
-    init.subscribeToChanges([1], ([_]) => {
-        throw new Error('Error thrown on subscribeToChanges');
-    });
+    init.subscribeToChanges(
+        [1],
+        ([_]) => {
+            throw new Error('Error thrown on subscribeToChanges');
+        },
+        true,
+    );
 
     return <></>;
 };

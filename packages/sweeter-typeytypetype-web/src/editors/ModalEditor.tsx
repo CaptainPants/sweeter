@@ -44,7 +44,7 @@ export function ModalEditor(
             },
             isRoot: true,
         });
-    })
+    });
 
     const onCommit = async (): Promise<void> => {
         if (!isValid.peek()) {

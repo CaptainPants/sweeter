@@ -89,7 +89,12 @@ export const Input: Component<InputProps> = ({
             readonly={readOnly}
             placeholder={placeholder}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
-            class={[classProp, classFromPassthroughProps, classesFromProps, forms.input]}
+            class={[
+                classProp,
+                classFromPassthroughProps,
+                classesFromProps,
+                forms.input,
+            ]}
             style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         />

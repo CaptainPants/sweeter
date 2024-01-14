@@ -70,7 +70,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         // Prevent accidental mutation of internal state by caller
         Object.freeze(state);
         this.#state = state;
-        
+
         this.#announceChange(previous, state);
     }
 

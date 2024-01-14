@@ -7,7 +7,11 @@ import {
     type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
 import { type VariantName } from '../../internal/constants.js';
-import { type ElementCssStyles, type ElementCssClasses, type TypedEvent } from '@captainpants/sweeter-web';
+import {
+    type ElementCssStyles,
+    type ElementCssClasses,
+    type TypedEvent,
+} from '@captainpants/sweeter-web';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 import { forms } from '../../index.js';
 import { combineStyles } from '../../internal/combineStyles.js';
@@ -52,7 +56,11 @@ export const Select: Component<SelectProps> = ({
     class: classProp,
     style,
     onInput,
-    passthrough: { class: classFromPassthroughProps, style: styleFromPassthroughProps, ...passthroughProps } = {},
+    passthrough: {
+        class: classFromPassthroughProps,
+        style: styleFromPassthroughProps,
+        ...passthroughProps
+    } = {},
 }) => {
     const classesFromProps = $calc(() => {
         const result: ElementCssClasses = [];
@@ -85,7 +93,12 @@ export const Select: Component<SelectProps> = ({
             value={value}
             bind:value={bindValue}
             disabled={disabled}
-            class={[classProp, classFromPassthroughProps, classesFromProps, forms.select]}
+            class={[
+                classProp,
+                classFromPassthroughProps,
+                classesFromProps,
+                forms.select,
+            ]}
             style={combineStyles(style, styleFromPassthroughProps)}
             oninput={onInput}
             {...passthroughProps}

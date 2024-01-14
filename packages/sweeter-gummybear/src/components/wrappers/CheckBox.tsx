@@ -86,7 +86,12 @@ export const CheckBox: Component<CheckBoxProps> = ({
             readonly={readOnly}
             placeholder={placeholder}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
-            class={[classProp, classFromPassthroughProps, classesFromProps, forms.input]}
+            class={[
+                classProp,
+                classFromPassthroughProps,
+                classesFromProps,
+                forms.input,
+            ]}
             style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         />

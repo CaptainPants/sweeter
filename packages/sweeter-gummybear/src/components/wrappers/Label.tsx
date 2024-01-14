@@ -5,7 +5,10 @@ import {
     $calc,
     $val,
 } from '@captainpants/sweeter-core';
-import { type ElementCssStyles, type ElementCssClasses } from '@captainpants/sweeter-web';
+import {
+    type ElementCssStyles,
+    type ElementCssClasses,
+} from '@captainpants/sweeter-web';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 import { combineStyles } from '../../internal/combineStyles.js';
@@ -55,7 +58,12 @@ export const Label: Component<LabelProps> = ({
         <label
             id={id}
             for={forProp}
-            class={[classProp, classFromPassthroughProps, classesFromProps, forms.label]}
+            class={[
+                classProp,
+                classFromPassthroughProps,
+                classesFromProps,
+                forms.label,
+            ]}
             style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         >

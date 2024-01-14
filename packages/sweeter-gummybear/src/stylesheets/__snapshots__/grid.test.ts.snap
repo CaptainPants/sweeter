@@ -2,128 +2,128 @@
 
 exports[`Check for unintended changes 1`] = `
 ".col-1 {
-    flex: 0 0 8%;
+    flex: 0 0 8.3333%;
     width: 100%;
-    max-width: 8%;
+    max-width: 8.3333%;
 }
 .col-2 {
-    flex: 0 0 16%;
+    flex: 0 0 16.6667%;
     width: 100%;
-    max-width: 16%;
+    max-width: 16.6667%;
 }
 .col-3 {
-    flex: 0 0 24%;
+    flex: 0 0 25.0000%;
     width: 100%;
-    max-width: 24%;
+    max-width: 25.0000%;
 }
 .col-4 {
-    flex: 0 0 32%;
+    flex: 0 0 33.3333%;
     width: 100%;
-    max-width: 32%;
+    max-width: 33.3333%;
 }
 .col-5 {
-    flex: 0 0 40%;
+    flex: 0 0 41.6667%;
     width: 100%;
-    max-width: 40%;
+    max-width: 41.6667%;
 }
 .col-6 {
-    flex: 0 0 48%;
+    flex: 0 0 50.0000%;
     width: 100%;
-    max-width: 48%;
+    max-width: 50.0000%;
 }
 .col-7 {
-    flex: 0 0 56%;
+    flex: 0 0 58.3333%;
     width: 100%;
-    max-width: 56%;
+    max-width: 58.3333%;
 }
 .col-8 {
-    flex: 0 0 64%;
+    flex: 0 0 66.6667%;
     width: 100%;
-    max-width: 64%;
+    max-width: 66.6667%;
 }
 .col-9 {
-    flex: 0 0 72%;
+    flex: 0 0 75.0000%;
     width: 100%;
-    max-width: 72%;
+    max-width: 75.0000%;
 }
 .col-10 {
-    flex: 0 0 80%;
+    flex: 0 0 83.3333%;
     width: 100%;
-    max-width: 80%;
+    max-width: 83.3333%;
 }
 .col-11 {
-    flex: 0 0 88%;
+    flex: 0 0 91.6667%;
     width: 100%;
-    max-width: 88%;
+    max-width: 91.6667%;
 }
 .col-12 {
-    flex: 0 0 96%;
+    flex: 0 0 100.0000%;
     width: 100%;
-    max-width: 96%;
+    max-width: 100.0000%;
 }
 .col-auto {
     flex: 1 1;
 }
 @media screen and (min-width: 576px) {
     .col-sm-1 {
-        flex: 0 0 8%;
+        flex: 0 0 8.3333%;
         width: 100%;
-        max-width: 8%;
+        max-width: 8.3333%;
     }
     .col-sm-2 {
-        flex: 0 0 16%;
+        flex: 0 0 16.6667%;
         width: 100%;
-        max-width: 16%;
+        max-width: 16.6667%;
     }
     .col-sm-3 {
-        flex: 0 0 24%;
+        flex: 0 0 25.0000%;
         width: 100%;
-        max-width: 24%;
+        max-width: 25.0000%;
     }
     .col-sm-4 {
-        flex: 0 0 32%;
+        flex: 0 0 33.3333%;
         width: 100%;
-        max-width: 32%;
+        max-width: 33.3333%;
     }
     .col-sm-5 {
-        flex: 0 0 40%;
+        flex: 0 0 41.6667%;
         width: 100%;
-        max-width: 40%;
+        max-width: 41.6667%;
     }
     .col-sm-6 {
-        flex: 0 0 48%;
+        flex: 0 0 50.0000%;
         width: 100%;
-        max-width: 48%;
+        max-width: 50.0000%;
     }
     .col-sm-7 {
-        flex: 0 0 56%;
+        flex: 0 0 58.3333%;
         width: 100%;
-        max-width: 56%;
+        max-width: 58.3333%;
     }
     .col-sm-8 {
-        flex: 0 0 64%;
+        flex: 0 0 66.6667%;
         width: 100%;
-        max-width: 64%;
+        max-width: 66.6667%;
     }
     .col-sm-9 {
-        flex: 0 0 72%;
+        flex: 0 0 75.0000%;
         width: 100%;
-        max-width: 72%;
+        max-width: 75.0000%;
     }
     .col-sm-10 {
-        flex: 0 0 80%;
+        flex: 0 0 83.3333%;
         width: 100%;
-        max-width: 80%;
+        max-width: 83.3333%;
     }
     .col-sm-11 {
-        flex: 0 0 88%;
+        flex: 0 0 91.6667%;
         width: 100%;
-        max-width: 88%;
+        max-width: 91.6667%;
     }
     .col-sm-12 {
-        flex: 0 0 96%;
+        flex: 0 0 100.0000%;
         width: 100%;
-        max-width: 96%;
+        max-width: 100.0000%;
     }
     .col-sm-auto {
         flex: 1 1;
@@ -131,64 +131,64 @@ exports[`Check for unintended changes 1`] = `
 }
 @media screen and (min-width: 720px) {
     .col-md-1 {
-        flex: 0 0 8%;
+        flex: 0 0 8.3333%;
         width: 100%;
-        max-width: 8%;
+        max-width: 8.3333%;
     }
     .col-md-2 {
-        flex: 0 0 16%;
+        flex: 0 0 16.6667%;
         width: 100%;
-        max-width: 16%;
+        max-width: 16.6667%;
     }
     .col-md-3 {
-        flex: 0 0 24%;
+        flex: 0 0 25.0000%;
         width: 100%;
-        max-width: 24%;
+        max-width: 25.0000%;
     }
     .col-md-4 {
-        flex: 0 0 32%;
+        flex: 0 0 33.3333%;
         width: 100%;
-        max-width: 32%;
+        max-width: 33.3333%;
     }
     .col-md-5 {
-        flex: 0 0 40%;
+        flex: 0 0 41.6667%;
         width: 100%;
-        max-width: 40%;
+        max-width: 41.6667%;
     }
     .col-md-6 {
-        flex: 0 0 48%;
+        flex: 0 0 50.0000%;
         width: 100%;
-        max-width: 48%;
+        max-width: 50.0000%;
     }
     .col-md-7 {
-        flex: 0 0 56%;
+        flex: 0 0 58.3333%;
         width: 100%;
-        max-width: 56%;
+        max-width: 58.3333%;
     }
     .col-md-8 {
-        flex: 0 0 64%;
+        flex: 0 0 66.6667%;
         width: 100%;
-        max-width: 64%;
+        max-width: 66.6667%;
     }
     .col-md-9 {
-        flex: 0 0 72%;
+        flex: 0 0 75.0000%;
         width: 100%;
-        max-width: 72%;
+        max-width: 75.0000%;
     }
     .col-md-10 {
-        flex: 0 0 80%;
+        flex: 0 0 83.3333%;
         width: 100%;
-        max-width: 80%;
+        max-width: 83.3333%;
     }
     .col-md-11 {
-        flex: 0 0 88%;
+        flex: 0 0 91.6667%;
         width: 100%;
-        max-width: 88%;
+        max-width: 91.6667%;
     }
     .col-md-12 {
-        flex: 0 0 96%;
+        flex: 0 0 100.0000%;
         width: 100%;
-        max-width: 96%;
+        max-width: 100.0000%;
     }
     .col-md-auto {
         flex: 1 1;
@@ -196,64 +196,64 @@ exports[`Check for unintended changes 1`] = `
 }
 @media screen and (min-width: 960px) {
     .col-lg-1 {
-        flex: 0 0 8%;
+        flex: 0 0 8.3333%;
         width: 100%;
-        max-width: 8%;
+        max-width: 8.3333%;
     }
     .col-lg-2 {
-        flex: 0 0 16%;
+        flex: 0 0 16.6667%;
         width: 100%;
-        max-width: 16%;
+        max-width: 16.6667%;
     }
     .col-lg-3 {
-        flex: 0 0 24%;
+        flex: 0 0 25.0000%;
         width: 100%;
-        max-width: 24%;
+        max-width: 25.0000%;
     }
     .col-lg-4 {
-        flex: 0 0 32%;
+        flex: 0 0 33.3333%;
         width: 100%;
-        max-width: 32%;
+        max-width: 33.3333%;
     }
     .col-lg-5 {
-        flex: 0 0 40%;
+        flex: 0 0 41.6667%;
         width: 100%;
-        max-width: 40%;
+        max-width: 41.6667%;
     }
     .col-lg-6 {
-        flex: 0 0 48%;
+        flex: 0 0 50.0000%;
         width: 100%;
-        max-width: 48%;
+        max-width: 50.0000%;
     }
     .col-lg-7 {
-        flex: 0 0 56%;
+        flex: 0 0 58.3333%;
         width: 100%;
-        max-width: 56%;
+        max-width: 58.3333%;
     }
     .col-lg-8 {
-        flex: 0 0 64%;
+        flex: 0 0 66.6667%;
         width: 100%;
-        max-width: 64%;
+        max-width: 66.6667%;
     }
     .col-lg-9 {
-        flex: 0 0 72%;
+        flex: 0 0 75.0000%;
         width: 100%;
-        max-width: 72%;
+        max-width: 75.0000%;
     }
     .col-lg-10 {
-        flex: 0 0 80%;
+        flex: 0 0 83.3333%;
         width: 100%;
-        max-width: 80%;
+        max-width: 83.3333%;
     }
     .col-lg-11 {
-        flex: 0 0 88%;
+        flex: 0 0 91.6667%;
         width: 100%;
-        max-width: 88%;
+        max-width: 91.6667%;
     }
     .col-lg-12 {
-        flex: 0 0 96%;
+        flex: 0 0 100.0000%;
         width: 100%;
-        max-width: 96%;
+        max-width: 100.0000%;
     }
     .col-lg-auto {
         flex: 1 1;
@@ -261,64 +261,64 @@ exports[`Check for unintended changes 1`] = `
 }
 @media screen and (min-width: 1200px) {
     .col-xl-1 {
-        flex: 0 0 8%;
+        flex: 0 0 8.3333%;
         width: 100%;
-        max-width: 8%;
+        max-width: 8.3333%;
     }
     .col-xl-2 {
-        flex: 0 0 16%;
+        flex: 0 0 16.6667%;
         width: 100%;
-        max-width: 16%;
+        max-width: 16.6667%;
     }
     .col-xl-3 {
-        flex: 0 0 24%;
+        flex: 0 0 25.0000%;
         width: 100%;
-        max-width: 24%;
+        max-width: 25.0000%;
     }
     .col-xl-4 {
-        flex: 0 0 32%;
+        flex: 0 0 33.3333%;
         width: 100%;
-        max-width: 32%;
+        max-width: 33.3333%;
     }
     .col-xl-5 {
-        flex: 0 0 40%;
+        flex: 0 0 41.6667%;
         width: 100%;
-        max-width: 40%;
+        max-width: 41.6667%;
     }
     .col-xl-6 {
-        flex: 0 0 48%;
+        flex: 0 0 50.0000%;
         width: 100%;
-        max-width: 48%;
+        max-width: 50.0000%;
     }
     .col-xl-7 {
-        flex: 0 0 56%;
+        flex: 0 0 58.3333%;
         width: 100%;
-        max-width: 56%;
+        max-width: 58.3333%;
     }
     .col-xl-8 {
-        flex: 0 0 64%;
+        flex: 0 0 66.6667%;
         width: 100%;
-        max-width: 64%;
+        max-width: 66.6667%;
     }
     .col-xl-9 {
-        flex: 0 0 72%;
+        flex: 0 0 75.0000%;
         width: 100%;
-        max-width: 72%;
+        max-width: 75.0000%;
     }
     .col-xl-10 {
-        flex: 0 0 80%;
+        flex: 0 0 83.3333%;
         width: 100%;
-        max-width: 80%;
+        max-width: 83.3333%;
     }
     .col-xl-11 {
-        flex: 0 0 88%;
+        flex: 0 0 91.6667%;
         width: 100%;
-        max-width: 88%;
+        max-width: 91.6667%;
     }
     .col-xl-12 {
-        flex: 0 0 96%;
+        flex: 0 0 100.0000%;
         width: 100%;
-        max-width: 96%;
+        max-width: 100.0000%;
     }
     .col-xl-auto {
         flex: 1 1;

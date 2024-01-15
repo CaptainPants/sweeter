@@ -1,29 +1,29 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Portal elements unmount correctly 1`] = `
-"<head><style data-id=\\"style\\">
-div {
+exports[`Portal elements unmount correctly (css class ref) 1`] = `
+"<head><style data-id=\\"name\\">
+.name div {
     color: red;
 }
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly 2`] = `"<body><div id=\\"host\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 2`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
-exports[`Portal elements unmount correctly 3`] = `"<head></head>"`;
+exports[`Portal elements unmount correctly (css class ref) 3`] = `"<head></head>"`;
 
-exports[`Portal elements unmount correctly 4`] = `"<body><div id=\\"host\\"></div><div>NOT MOUNTED</div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 4`] = `"<body><div id=\\"host3\\"></div><div>NOT MOUNTED</div></body>"`;
 
-exports[`Portal elements unmount correctly 5`] = `
-"<head><style data-id=\\"style\\">
-div {
+exports[`Portal elements unmount correctly (css class ref) 5`] = `
+"<head><style data-id=\\"name\\">
+.name div {
     color: red;
 }
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly 6`] = `"<body><div id=\\"host\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 6`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
-exports[`Portal elements unmount correctly 7`] = `"<head></head>"`;
+exports[`Portal elements unmount correctly (css class ref) 7`] = `"<head></head>"`;
 
-exports[`Portal elements unmount correctly 8`] = `"<body><div id=\\"host\\"></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 8`] = `"<body><div id=\\"host3\\"></div></body>"`;

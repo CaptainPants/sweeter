@@ -5,8 +5,8 @@ import {
 import { bindDOMMiscProps } from './bindDOMMiscProps.js';
 import { addJsxChildren } from './addJsxChildren.js';
 import { type WebRuntime } from '../types.js';
-import { bindDOMClassProp } from './bindDOMClassProp.js';
-import { bindDOMStyleProp } from './bindDOMStyleProp.js';
+import { bindDOMClassProp } from '../../styles/internal/bindDOMClassProp.js';
+import { bindDOMStyleProp } from '../../styles/internal/bindDOMStyleProp.js';
 
 export function createDOMElement<TElementTypeString extends string>(
     type: TElementTypeString,

@@ -20,8 +20,8 @@ import { createDOMElement } from './internal/createDOMElement.js';
 import { createComponentInstance } from './internal/createComponentInstance.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
 import { type WebRuntime } from './types.js';
-import { getTransitiveReferences } from '../styles/internal/getTransitiveReferences.js';
 import { createLocationSignal } from './internal/createLocationSignal.js';
+import { StylesheetManager } from '../styles/internal/StylesheetManager.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -60,21 +60,13 @@ export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
 class WebRuntimeImplementation implements WebRuntime, Runtime {
     #target: RuntimeRootHostElement;
 
-    #classNameFormat: (counter: number, className: string) => string;
-    #cssCounter: number = 0;
-    #cssClassNameMap: WeakMap<GlobalCssClass, string> = new WeakMap();
-
     #disposeList: (() => void)[];
 
     #jsxWithMiddleware: JSXMiddlewareCallback;
     #locationAndDisposal: ReturnType<typeof createLocationSignal>;
-
-    #includedSingletonStylesheetCounts: WeakMap<
-        AbstractGlobalCssStylesheet,
-        { count: number; element: HTMLStyleElement }
-    >;
-
     #idCounter: number = 0;
+
+    #stylesheets: StylesheetManager;
 
     readonly location: Signal<string>;
 
@@ -85,10 +77,11 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
             options.middleware ?? [],
             this.#endJsx.bind(this),
         );
-        this.#classNameFormat =
-            options.classNameFormat ??
-            ((counter, className) => `_glbl${counter}_${className}`);
-        this.#includedSingletonStylesheetCounts = new WeakMap();
+
+        this.#stylesheets = new StylesheetManager(
+            this.#target.ownerDocument,
+            options.classNameFormat,
+        );
 
         this.#locationAndDisposal = createLocationSignal();
         this.location = this.#locationAndDisposal.signal;
@@ -112,87 +105,15 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     }
 
     getPrefixedClassName(cssClass: GlobalCssClass): string {
-        let name = this.#cssClassNameMap.get(cssClass);
-        if (!name) {
-            name = this.#classNameFormat(this.#cssCounter, cssClass.className);
-            this.#cssClassNameMap.set(cssClass, name);
-            ++this.#cssCounter;
-        }
-        return name;
+        return this.#stylesheets.getPrefixedClassName(cssClass);
     }
 
     addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
-        const callbacks: (() => void)[] = [];
-
-        // Note reverse order so that the depended-on sheets are added first (not that it matters in all likelihood)
-        const sheets = getTransitiveReferences(stylesheet).reverse();
-        for (const sheet of sheets) {
-            callbacks.push(this.#addOneStylesheet(sheet));
-        }
-
-        return () => {
-            // Reverse order
-            for (let i = callbacks.length - 1; i >= 0; --i) {
-                callbacks[i]!();
-            }
-        };
+        return this.#stylesheets.addStylesheet(stylesheet);
     }
 
     removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
-        const sheets = getTransitiveReferences(stylesheet);
-        for (const sheet of sheets) {
-            this.#removeOneStylesheet(sheet);
-        }
-    }
-
-    #addOneStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
-        let entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
-        if (!entry) {
-            const sheetContent = stylesheet.getContent(this);
-            if (!sheetContent) {
-                // Shortcut for empty stylesheets, so we don't waste time/ram with DOM elements for them
-                return () => {};
-            }
-
-            const element = document.createElement('style');
-            element.textContent = '\n' + sheetContent;
-            element.setAttribute('data-id', stylesheet.id); // not a strictly unique id, just a way of identifying 'which' stylesheet it is
-            this.#target.ownerDocument.head.appendChild(element);
-
-            entry = {
-                count: 0,
-                element: element,
-            };
-
-            this.#includedSingletonStylesheetCounts.set(stylesheet, entry);
-        }
-
-        entry.count += 1;
-
-        let removed = false;
-
-        return () => {
-            if (removed) {
-                return;
-            }
-
-            this.removeStylesheet(stylesheet);
-
-            removed = true; // don't do this again;
-        };
-    }
-
-    #removeOneStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
-        const entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
-        if (!entry) {
-            return;
-        }
-
-        --entry.count;
-        if (entry.count === 0) {
-            entry.element.remove();
-            this.#includedSingletonStylesheetCounts.delete(stylesheet);
-        }
+        this.#stylesheets.removeStylesheet(stylesheet);
     }
 
     createNestedRoot(

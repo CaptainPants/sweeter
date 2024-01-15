@@ -3,8 +3,8 @@ import {
     subscribeToChanges,
 } from '@captainpants/sweeter-core';
 import { createCssClassSignal } from '../../styles/createCssClassSignal.js';
-import { type WebRuntime } from '../types.js';
-import { addMountedCallback } from './mounting.js';
+import { type WebRuntime } from '../../runtime/types.js';
+import { addMountedCallback } from '../../runtime/internal/mounting.js';
 import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
 import { type ElementCssClasses } from '../../IntrinsicAttributes.js';
 import { arrayExcept } from '@captainpants/sweeter-utilities';

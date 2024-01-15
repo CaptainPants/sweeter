@@ -1,63 +1,68 @@
-import {
-    type FlattenedElement,
-} from '@captainpants/sweeter-core';
+import { type FlattenedElement } from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
-    announceMountedRecursive,
     announceUnMountedRecursive,
 } from './mounting.js';
 import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 import { isText } from './utility/isText.js';
 import { isInDocument } from './utility/isInDocument.js';
-import { type WebRuntime } from '../types.js';
 
 export function replaceJsxChildren(
-    parent: Node,
+    parentNode: Node,
     updated: FlattenedElement[],
-    webRuntime: WebRuntime,
 ): void {
-    const onChangeParentInDocument = isInDocument(parent);
-
-    let before = parent.firstChild;
-
     const newlyMountedNodes: Node[] = [];
 
+    let insertBeforeIndex = 0;
     for (let child of updated) {
         if (isText(child)) {
-            child = document.createTextNode(String(child));
+            const asString = String(child);
+
+            const insertBefore =
+                parentNode.childNodes[insertBeforeIndex] ?? null;
+
+            // The current node is text, update its content and move insertAt to next:
+            if (insertBefore?.nodeType === Node.TEXT_NODE) {
+                insertBefore.textContent = asString;
+            }
+            // The current element is something else, insert a text node
+            else {
+                child = document.createTextNode(String(child));
+                parentNode.insertBefore(child, insertBefore);
+            }
+        } else {
+            const elementAt = parentNode.childNodes[insertBeforeIndex] ?? null;
+
+            // The updated node is next in the order
+            if (elementAt === child) {
+                // Do nothing, already in correct place
+            }
+            // The updated node is not in order or not in the doc, move it into the correct location
+            else {
+                parentNode.insertBefore(child, elementAt);
+            }
         }
+        ++insertBeforeIndex;
 
         // Nodes might have already been children of the parent, so we only include those that
         // don't have a parent
-        if (!child.parentNode) {
+        if (child instanceof Node && !child.parentNode) {
             newlyMountedNodes.push(child);
         }
-
-        parent.insertBefore(child, before);
-        before = child.nextSibling;
     }
 
-    // Go through added nodes in reverse order and call any mount callbacks
-    for (
-        let current = newlyMountedNodes.pop();
-        current;
-        current = newlyMountedNodes.pop()
-    ) {
-        if (isInDocument(current)) {
-            announceMountedRecursive(current);
-        }
-    }
+    const removeNodeAndLaterSiblings = parentNode.childNodes[insertBeforeIndex];
 
     // This items are being removed
     // Note that descendents are handled by the call to addJsxChildren that added them to their parent
-    removeSelfAndLaterSiblings(before, (removed) => {
+    removeSelfAndLaterSiblings(removeNodeAndLaterSiblings, (removed) => {
         // This should do onUnMount recursively
         if (!isInDocument(removed)) {
             announceUnMountedRecursive(removed);
         }
     });
 
-    if (onChangeParentInDocument) {
-        announceChildrenMountedRecursive(parent);
+    if (isInDocument(parentNode)) {
+        announceChildrenMountedRecursive(parentNode);
     }
 }

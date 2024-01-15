@@ -29,7 +29,10 @@ const currentRuntime = new ExecutionContextVariable<Runtime | undefined>(
     undefined,
 );
 
-export function callWithRuntime<T = void>(runtime: Runtime, callback: () => T): T {
+export function callWithRuntime<T = void>(
+    runtime: Runtime,
+    callback: () => T,
+): T {
     return currentRuntime.invokeWith(runtime, callback);
 }
 

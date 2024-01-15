@@ -25,14 +25,7 @@ import { ImmutableLazyCache } from '../internal/ImmutableLazyCache.js';
 import { Row, Column, Label } from '@captainpants/sweeter-gummybear';
 
 export function RigidObjectEditor(
-    {
-        model,
-        replace,
-        local,
-        idPath,
-        indent,
-        isRoot,
-    }: Readonly<EditorProps>,
+    { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
     const typedModel = $calc(() => {
@@ -95,19 +88,21 @@ export function RigidObjectEditor(
         (_key: PropertyDefinition<unknown>, name: string, id: string) => {
             // note that _key is the actual WeakMap key, but it doesn't hold the name of the property so it is passed through separately
 
-            return <PropertyEditorPart
-                id={id}
-                owner={owner}
-                propertyModel={$calc(
-                    // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
-                    // No other signals are referenced
-                    () => draft.value.getPropertyModel(name)!,
-                )}
-                updateValue={updatePropertyValue}
-                indent={indent}
-                ownerIdPath={idPath}
-            />;
-        }
+            return (
+                <PropertyEditorPart
+                    id={id}
+                    owner={owner}
+                    propertyModel={$calc(
+                        // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
+                        // No other signals are referenced
+                        () => draft.value.getPropertyModel(name)!,
+                    )}
+                    updateValue={updatePropertyValue}
+                    indent={indent}
+                    ownerIdPath={idPath}
+                />
+            );
+        },
     );
 
     const categorizedProperties = $calc(() => {
@@ -128,17 +123,17 @@ export function RigidObjectEditor(
                 content: propertyContent.get(
                     $val(propertyModel).definition,
                     propertyModel.name,
-                    id
+                    id,
                 ),
-                id
-            }
+                id,
+            };
         });
     });
 
     const addIndent = !isRoot;
 
     return $calc(() => {
-        const anyCategories = (categorizedProperties.value.length > 0);
+        const anyCategories = categorizedProperties.value.length > 0;
 
         return (
             <div class={styles.editorOuter}>

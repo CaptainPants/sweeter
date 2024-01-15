@@ -121,9 +121,9 @@ export function bindDOMMiscProps<TElementType extends string>(
                 const prev = getDomProperty(node);
                 const next = value.peek();
 
-                // If the value hasn't changed, then don't. This is mostly here 
-                // so that the value.update in the addEventListener above doesn't 
-                // trigger a disruptive (focus/selection lost) write-back to the 
+                // If the value hasn't changed, then don't. This is mostly here
+                // so that the value.update in the addEventListener above doesn't
+                // trigger a disruptive (focus/selection lost) write-back to the
                 // input field.
                 if (prev !== next) {
                     setDomProperty(node, next);

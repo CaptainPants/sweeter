@@ -74,7 +74,7 @@ export function bindDOMClassProp(
                     webRuntime.removeStylesheet(removedItem);
                 }
 
-				// Note that an element can be mounted and remounted - so its important that this be updated
+                // Note that an element can be mounted and remounted - so its important that this be updated
                 previousReferencedClasses = undefined;
             }
         };

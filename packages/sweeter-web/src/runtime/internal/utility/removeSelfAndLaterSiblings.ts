@@ -5,7 +5,7 @@
  * @returns
  */
 export function removeSelfAndLaterSiblings(
-    child: ChildNode | null,
+    child: ChildNode | null | undefined,
     afterRemoveCallback: (node: ChildNode) => void,
 ) {
     if (!child) return;

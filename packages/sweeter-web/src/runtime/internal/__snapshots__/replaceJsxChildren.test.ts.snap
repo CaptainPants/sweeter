@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`General 1`] = `"<div><u></u><strong></strong><em></em></div>"`;
+
+exports[`General 2`] = `"<div><strong></strong><u></u><em></em></div>"`;

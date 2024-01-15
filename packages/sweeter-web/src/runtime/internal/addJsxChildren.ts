@@ -12,11 +12,11 @@ import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
 
 export function addJsxChildren(
-    parent: Node,
+    parentNode: Node,
     children: JSX.Element,
     webRuntime: WebRuntime,
 ): () => void {
-    const parentInDocument = isInDocument(parent);
+    const parentInDocument = isInDocument(parentNode);
     const flattenedChildrenSignal = flattenElements(children);
     const original = flattenedChildrenSignal.peek();
 
@@ -29,27 +29,27 @@ export function addJsxChildren(
         }
 
         newlyMountedNodes.push(child);
-        parent.appendChild(child);
+        parentNode.appendChild(child);
     }
 
     const onChange = () => {
-        replaceJsxChildren(parent, flattenedChildrenSignal.peek(), webRuntime);
+        replaceJsxChildren(parentNode, flattenedChildrenSignal.peek());
     };
 
     flattenedChildrenSignal.listen(onChange, false);
 
     // Callback lifetime linked to the parent Node
-    addExplicitStrongReference(parent, onChange);
+    addExplicitStrongReference(parentNode, onChange);
 
     if (parentInDocument) {
-        announceChildrenMountedRecursive(parent);
+        announceChildrenMountedRecursive(parentNode);
     }
 
     return () => {
         for (
-            let current = parent.lastChild;
+            let current = parentNode.lastChild;
             current;
-            current = parent.lastChild
+            current = parentNode.lastChild
         ) {
             current.remove();
             announceUnMountedRecursive(current);

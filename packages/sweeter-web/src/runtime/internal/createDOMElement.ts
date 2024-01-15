@@ -49,7 +49,7 @@ export function createDOMElement<TElementTypeString extends string>(
 
             return () => {
                 ele.dataset['isMounted'] = '0';
-            }
+            };
         });
     }
 

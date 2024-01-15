@@ -85,7 +85,11 @@ export function PropertyEditorPart(
     );
 
     const valueModel = $calc(() => $val(propertyModel).valueModel);
-    const displayName = $calc(() => $val(propertyModel).definition.displayName ?? $val(propertyModel).name);
+    const displayName = $calc(
+        () =>
+            $val(propertyModel).definition.displayName ??
+            $val(propertyModel).name,
+    );
 
     return $calc(() => {
         return (

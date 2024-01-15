@@ -45,7 +45,7 @@ export class StylesheetManager {
 
         return () => {
             //this.#log(`[include with transitive dependendents] ${stylesheet.id}`);
-            
+
             // Reverse order
             for (let i = callbacks.length - 1; i >= 0; --i) {
                 callbacks[i]!();

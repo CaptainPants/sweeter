@@ -1,7 +1,5 @@
-import { dev, type ContextSnapshot } from '@captainpants/sweeter-core';
+import { type ContextSnapshot } from '@captainpants/sweeter-core';
 import { callAgainstErrorBoundary } from './callAgainstErrorBoundary.js';
-import { StackTrace } from '@captainpants/sweeter-utilities';
-
 
 function callbacks<T extends object>(name: string) {
     const map = new WeakMap<T, (() => void)[]>();

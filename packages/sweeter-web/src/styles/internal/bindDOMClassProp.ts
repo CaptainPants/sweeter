@@ -73,6 +73,9 @@ export function bindDOMClassProp(
                 for (const removedItem of previousReferencedClasses) {
                     webRuntime.removeStylesheet(removedItem);
                 }
+
+				// Note that an element can be mounted and remounted - so its important that this be updated
+                previousReferencedClasses = undefined;
             }
         };
     });

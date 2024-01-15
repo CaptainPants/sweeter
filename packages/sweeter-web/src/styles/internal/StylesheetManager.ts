@@ -32,8 +32,10 @@ export class StylesheetManager {
     }
 
     addStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
+        //this.#log(`[include with transitive dependendents] ${stylesheet.id}`);
+
         const callbacks: (() => void)[] = [];
-        this.#log(`=== Adding stylesheet and dependents ${stylesheet.id}`);
+        //this.#log(`=== Adding stylesheet and dependents ${stylesheet.id}`);
 
         // Note reverse order so that the depended-on sheets are added first (not that it matters in all likelihood)
         const sheets = getTransitiveReferences(stylesheet).reverse();
@@ -42,9 +44,8 @@ export class StylesheetManager {
         }
 
         return () => {
-            this.#log(
-                `=== Removing stylesheet and dependents ${stylesheet.id}`,
-            );
+            //this.#log(`[include with transitive dependendents] ${stylesheet.id}`);
+            
             // Reverse order
             for (let i = callbacks.length - 1; i >= 0; --i) {
                 callbacks[i]!();
@@ -53,7 +54,7 @@ export class StylesheetManager {
     }
 
     removeStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
-        this.#log(`=== Removing stylesheet and dependents ${stylesheet.id}`);
+        //this.#log(`[uninclude with transitive dependendents] ${stylesheet.id}`);
 
         const sheets = getTransitiveReferences(stylesheet);
         for (const sheet of sheets) {
@@ -64,13 +65,13 @@ export class StylesheetManager {
     #addOneStylesheet(stylesheet: AbstractGlobalCssStylesheet): () => void {
         let entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
         if (!entry) {
-            this.#log(`Added stylesheet ${stylesheet.id}`);
-
             const sheetContent = stylesheet.getContent(this);
             if (!sheetContent) {
                 // Shortcut for empty stylesheets, so we don't waste time/ram with DOM elements for them
                 return () => {};
             }
+
+            //this.#log(`[inserted] Added stylesheet ${stylesheet.id}`);
 
             const element = document.createElement('style');
             element.textContent = '\n' + sheetContent;
@@ -86,7 +87,7 @@ export class StylesheetManager {
         }
 
         entry.count += 1;
-        this.#log(`Counter updated for ${stylesheet.id} to ${entry.count}`);
+        //this.#log(`+ref ${stylesheet.id} => ${entry.count}`);
 
         let removed = false;
 
@@ -104,14 +105,17 @@ export class StylesheetManager {
     #removeOneStylesheet(stylesheet: AbstractGlobalCssStylesheet): void {
         const entry = this.#includedSingletonStylesheetCounts.get(stylesheet);
         if (!entry) {
+            // Possible cases:
+            // 1) removeStylesheet used without adding first / mismatching number of calls
+            // 2) the stylesheet is empty (.content === undefined | '')
             return;
         }
 
         --entry.count;
-        this.#log(`Counter updated for ${stylesheet.id} to ${entry.count}`);
+        //this.#log(`-ref ${stylesheet.id} => ${entry.count}`);
 
         if (entry.count === 0) {
-            this.#log(`Removed stylesheet ${stylesheet.id}`);
+            //this.#log(`[removed] Removed stylesheet ${stylesheet.id}`);
             entry.element.remove();
             this.#includedSingletonStylesheetCounts.delete(stylesheet);
         }

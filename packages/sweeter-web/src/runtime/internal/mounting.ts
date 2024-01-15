@@ -1,8 +1,11 @@
-import { type ContextSnapshot } from '@captainpants/sweeter-core';
+import { dev, type ContextSnapshot } from '@captainpants/sweeter-core';
 import { callAgainstErrorBoundary } from './callAgainstErrorBoundary.js';
+import { StackTrace } from '@captainpants/sweeter-utilities';
+
 
 function callbacks<T extends object>(name: string) {
     const map = new WeakMap<T, (() => void)[]>();
+    const running = new WeakSet<T>();
 
     return {
         name,
@@ -28,7 +31,12 @@ function callbacks<T extends object>(name: string) {
         execute: (obj: T): void => {
             const callbacks = map.get(obj);
             if (callbacks) {
-                map.delete(obj); // delete first in case we inadvertantly trigger a reentrant call
+                if (running.has(obj)) {
+                    // e-entrant calls detected
+                    return;
+                }
+
+                running.add(obj); // delete first in case we inadvertantly trigger a reentrant call
 
                 for (const callback of callbacks) {
                     try {
@@ -41,6 +49,8 @@ function callbacks<T extends object>(name: string) {
                         );
                     }
                 }
+
+                running.delete(obj);
             }
         },
         __map: map,

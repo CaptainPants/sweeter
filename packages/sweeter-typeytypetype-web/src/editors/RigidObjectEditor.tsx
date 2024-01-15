@@ -26,7 +26,6 @@ import { Row, Column, Label } from '@captainpants/sweeter-gummybear';
 
 export function RigidObjectEditor(
     {
-        propertyDisplayName,
         model,
         replace,
         local,
@@ -42,6 +41,8 @@ export function RigidObjectEditor(
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
+
+    const baseId = init.nextId();
 
     const { draft } = init.hook(
         DraftHook<
@@ -77,7 +78,6 @@ export function RigidObjectEditor(
             .peek()
             .setPropertyValue(propertyModel.name, value, true);
 
-        console.log('updatePropertyValue');
         draft.update(newDraft);
     };
 
@@ -91,25 +91,23 @@ export function RigidObjectEditor(
     // Keep the PropertyEditorPart instances for each property that hasn't changed
     // we might even want to consider doing this based on property name, as then
     // we can just update based on the value of the property changing
-    const getRenderer = new ImmutableLazyCache(
-        (_key: PropertyDefinition<unknown>, name: string) => {
+    const propertyContent = new ImmutableLazyCache(
+        (_key: PropertyDefinition<unknown>, name: string, id: string) => {
             // note that _key is the actual WeakMap key, but it doesn't hold the name of the property so it is passed through separately
 
-            return (id: string) => (
-                <PropertyEditorPart
-                    id={id}
-                    owner={owner}
-                    propertyModel={$calc(
-                        // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
-                        // No other signals are referenced
-                        () => draft.value.getPropertyModel(name)!,
-                    )}
-                    updateValue={updatePropertyValue}
-                    indent={indent}
-                    ownerIdPath={idPath}
-                />
-            );
-        },
+            return <PropertyEditorPart
+                id={id}
+                owner={owner}
+                propertyModel={$calc(
+                    // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
+                    // No other signals are referenced
+                    () => draft.value.getPropertyModel(name)!,
+                )}
+                updateValue={updatePropertyValue}
+                indent={indent}
+                ownerIdPath={idPath}
+            />;
+        }
     );
 
     const categorizedProperties = $calc(() => {
@@ -122,27 +120,28 @@ export function RigidObjectEditor(
                 ) !== true, // likely values are notFound and false
         );
 
-        return categorizeProperties(properties, (propertyModel) => ({
-            property: propertyModel,
-            render: getRenderer.get(
-                $val(propertyModel).definition,
-                propertyModel.name,
-            ),
-        }));
+        return categorizeProperties(properties, (propertyModel) => {
+            const id = baseId + '_' + propertyModel.name;
+
+            return {
+                property: propertyModel,
+                content: propertyContent.get(
+                    $val(propertyModel).definition,
+                    propertyModel.name,
+                    id
+                ),
+                id
+            }
+        });
     });
 
     const addIndent = !isRoot;
 
-    const baseId = init.nextId();
-
     return $calc(() => {
+        const anyCategories = (categorizedProperties.value.length > 0);
+
         return (
             <div class={styles.editorOuter}>
-                {propertyDisplayName && (
-                    <div class={styles.editorPropertyDisplayName}>
-                        {propertyDisplayName}
-                    </div>
-                )}
                 <div class={styles.editorIndentContainer}>
                     {addIndent && (
                         <div
@@ -160,8 +159,7 @@ export function RigidObjectEditor(
                                         class={styles.category}
                                         key={`cat-${categoryIndex}`}
                                     >
-                                        {categorizedProperties.value.length >
-                                        0 ? (
+                                        {anyCategories ? (
                                             <Row>
                                                 <Column xl="auto">
                                                     <Label
@@ -180,12 +178,7 @@ export function RigidObjectEditor(
                                             </Row>
                                         ) : undefined}
                                         {properties.map(
-                                            ({ property, render }) => {
-                                                const id =
-                                                    baseId +
-                                                    '_' +
-                                                    property.name;
-
+                                            ({ property, content, id }) => {
                                                 return (
                                                     <Row
                                                         class={styles.property}
@@ -200,7 +193,7 @@ export function RigidObjectEditor(
                                                             </Label>
                                                         </Column>
                                                         <Column xs={8}>
-                                                            {render(id)}
+                                                            {content}
                                                         </Column>
                                                     </Row>
                                                 );

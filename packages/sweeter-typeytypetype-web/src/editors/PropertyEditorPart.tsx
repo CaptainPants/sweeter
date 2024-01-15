@@ -84,21 +84,18 @@ export function PropertyEditorPart(
         calculateAmbient,
     );
 
-    return $calc(() => {
-        const { definition: propertyDefinition, valueModel: propertyValue } =
-            $val(propertyModel);
+    const valueModel = $calc(() => $val(propertyModel).valueModel);
+    const displayName = $calc(() => $val(propertyModel).definition.displayName ?? $val(propertyModel).name);
 
+    return $calc(() => {
         return (
             <AmbientValues callback={ambient}>
                 {() => (
                     <EditorHost
                         id={id}
-                        model={propertyValue}
+                        model={valueModel}
                         replace={replace}
-                        propertyDisplayName={localize(
-                            propertyDefinition.displayName ??
-                                $val(propertyModel).name,
-                        )}
+                        propertyDisplayName={localize(displayName.value)}
                         indent={indent}
                         idPath={idPath}
                         local={local}

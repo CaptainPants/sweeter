@@ -16,7 +16,6 @@ export function addJsxChildren(
     children: JSX.Element,
     webRuntime: WebRuntime,
 ): () => void {
-    const parentInDocument = isInDocument(parentNode);
     const flattenedChildrenSignal = flattenElements(children);
     const original = flattenedChildrenSignal.peek();
 
@@ -32,6 +31,8 @@ export function addJsxChildren(
         parentNode.appendChild(child);
     }
 
+    // ==== LISTENERS ====
+
     const onChange = () => {
         replaceJsxChildren(parentNode, flattenedChildrenSignal.peek());
     };
@@ -41,9 +42,13 @@ export function addJsxChildren(
     // Callback lifetime linked to the parent Node
     addExplicitStrongReference(parentNode, onChange);
 
-    if (parentInDocument) {
+    // ==== MOUNT HANDLERS ====
+
+    if (isInDocument(parentNode)) {
         announceChildrenMountedRecursive(parentNode);
     }
+
+    // ==== CLEANUP ====
 
     return () => {
         for (

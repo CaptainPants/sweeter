@@ -66,6 +66,16 @@ export function ModalEditor(
 
     const { localize } = init.hook(LocalizerHook);
 
+    const content = $calc(
+        () => {
+            return validated(
+                () => {
+                    return $val(next)($val(nextProps))
+                }
+            );
+        }
+    );
+
     return $calc(() => (
         <>
             <EditButton
@@ -83,7 +93,7 @@ export function ModalEditor(
                 onCommit={onCommit}
                 onClose={onCancel}
             >
-                {validated(() => $val(next)($val(nextProps)))}
+                {content}
             </Modal>
         </>
     ));

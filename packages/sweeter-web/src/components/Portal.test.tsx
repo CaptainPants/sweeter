@@ -15,7 +15,7 @@ import {
 } from '../index.js';
 
 afterEach(() => {
-    document.getElementsByTagName('html')[0]!.innerHTML = ''; 
+    document.getElementsByTagName('html')[0]!.innerHTML = '';
 });
 
 it('Portal element content is added', () => {

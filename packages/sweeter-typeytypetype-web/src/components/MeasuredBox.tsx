@@ -19,10 +19,20 @@ export type MeasuredBoxProps = PropertiesMightBeSignals<{
 
     class?: ElementCssClasses;
     style?: ElementCssStyles;
+
+    debounceTimeout?: number | undefined;
 }>;
 
+const defaultTimeout = 250;
+
 export const MeasuredBox: Component<MeasuredBoxProps> = (
-    { children, onInitialLayout, onLayout, ...passthrugh },
+    {
+        children,
+        onInitialLayout,
+        onLayout,
+        debounceTimeout = defaultTimeout,
+        ...passthrugh
+    },
     init,
 ) => {
     const elementSignal = $mutable<HTMLDivElement | undefined>(undefined);
@@ -32,8 +42,8 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
     };
 
     init.subscribeToChanges(
-        [elementSignal],
-        ([element]) => {
+        [elementSignal, debounceTimeout],
+        ([element, debounceTimeout]) => {
             if (!element) return;
 
             let first = true;
@@ -43,7 +53,7 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
             $peek(onInitialLayout)(size.width, size.height);
 
             const debouncedCallback = debounce(
-                1000,
+                debounceTimeout ?? defaultTimeout,
                 (entry: ResizeObserverEntry) => {
                     const { width, height } = entry.contentRect;
                     $peek(onLayout)(width, height);

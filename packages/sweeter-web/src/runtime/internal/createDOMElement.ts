@@ -1,5 +1,6 @@
 import {
     Context,
+    dev,
     type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/sweeter-core';
 import { bindDOMMiscProps } from './bindDOMMiscProps.js';
@@ -7,6 +8,7 @@ import { addJsxChildren } from './addJsxChildren.js';
 import { type WebRuntime } from '../types.js';
 import { bindDOMClassProp } from '../../styles/internal/bindDOMClassProp.js';
 import { bindDOMStyleProp } from '../../styles/internal/bindDOMStyleProp.js';
+import { addMountedCallback } from './mounting.js';
 
 export function createDOMElement<TElementTypeString extends string>(
     type: TElementTypeString,
@@ -36,6 +38,19 @@ export function createDOMElement<TElementTypeString extends string>(
 
     if (props.style) {
         bindDOMStyleProp(ele, props.style);
+    }
+
+    if (dev.enabled) {
+        ele.dataset['isMounted'] = '0';
+
+        const contextSnapshot = Context.createSnapshot();
+        addMountedCallback(contextSnapshot, ele, () => {
+            ele.dataset['isMounted'] = '1';
+
+            return () => {
+                ele.dataset['isMounted'] = '0';
+            }
+        });
     }
 
     return ele;

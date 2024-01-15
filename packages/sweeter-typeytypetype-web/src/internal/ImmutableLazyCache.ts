@@ -19,6 +19,7 @@ export class ImmutableLazyCache<
             found = {
                 val: this.#factory(key, ...additional),
             };
+            this.#values.set(key, found);
         }
 
         return found.val;

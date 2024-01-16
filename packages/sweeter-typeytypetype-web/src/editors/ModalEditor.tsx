@@ -30,7 +30,7 @@ export function ModalEditor(
 
     // Reset snapshot if incoming version has changed
     init.subscribeToChanges([model], ([model]) => {
-        modelSnapshot.update(model);
+        modelSnapshot.value = model;
     });
 
     const { validated, isValid } = init.hook(ValidationContainerHook);
@@ -40,7 +40,7 @@ export function ModalEditor(
             indent: 0,
             model: modelSnapshot,
             replace: async (replacement: Model<unknown>): Promise<void> => {
-                modelSnapshot.update(replacement);
+                modelSnapshot.value = replacement;
             },
             isRoot: true,
         });
@@ -55,11 +55,14 @@ export function ModalEditor(
         // async
         await $peek(replace)(modelSnapshot.value);
 
-        isOpen.update(false);
+        isOpen.value = false;
     };
 
     const onCancel = (): void => {
-        isOpen.update(false);
+        isOpen.value = false;
+
+        // Reset va;ie
+        modelSnapshot.value = $peek(model);
     };
 
     const { EditButton, Modal } = init.getContext(EditorRootContext);
@@ -78,7 +81,7 @@ export function ModalEditor(
                 key="button"
                 text={`${localize('Edit')} ${propertyDisplayName ?? 'unknown'}`}
                 onClick={() => {
-                    isOpen.update(true);
+                    isOpen.value = true;
                 }}
             />
             <Modal

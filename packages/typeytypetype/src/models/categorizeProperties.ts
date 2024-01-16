@@ -1,50 +1,56 @@
-import { type PropertyModel } from './PropertyModel.js';
+import { type PropertyDefinition, type RigidObjectType } from '../index.js';
 import { sortProperties } from './sortProperties.js';
 
-function groupBy<T>(
-    properties: T[],
-    getKey: (item: T) => string,
-): Map<string, { key: string; items: T[] }> {
-    const map = new Map<string, { key: string; items: T[] }>();
-
-    for (const item of properties) {
-        const key = getKey(item);
-
-        let match = map.get(key);
-        if (match === undefined) {
-            match = { key, items: [] };
-            map.set(key, match);
-        }
-
-        match.items.push(item);
-    }
-
-    return map;
+export interface CategorizedPropertyDefinition {
+    name: string;
+    order?: number;
+    definition: PropertyDefinition<unknown>;
 }
 
 /**
- * This function calls local values evaluation for the '$Visible' property, which is allowed to use signals - as such you should wrap any calls in a computed signal.
  * @param model
- * @param context
+ * @returns
+ */
+export function categorizeProperties(
+    type: RigidObjectType<Record<string, unknown>>,
+): Array<{ category: string; properties: CategorizedPropertyDefinition[] }>;
+
+/**
+ * @param model
  * @param transform
  * @returns
  */
-export function categorizeProperties<TProperty>(
-    properties: Array<PropertyModel<unknown>>,
-    transform: (value: PropertyModel<unknown>) => TProperty,
-): Array<{ category: string; properties: TProperty[] }> {
-    const map = groupBy(
-        properties,
-        (item) => item.definition.category ?? 'Misc',
-    );
+export function categorizeProperties<TPropertyResult>(
+    type: RigidObjectType<Record<string, unknown>>,
+    transform?: (property: CategorizedPropertyDefinition) => TPropertyResult,
+): Array<{ category: string; properties: TPropertyResult[] }>;
 
-    const keys = [...map.keys()];
+export function categorizeProperties(
+    type: RigidObjectType<Record<string, unknown>>,
+    transform?: (property: CategorizedPropertyDefinition) => unknown,
+): Array<{ category: string; properties: unknown[] }> {
+    const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();
+
+    for (const [name, property] of Object.entries(type.propertyDefinitions)) {
+        const category = property.category ?? 'Misc';
+
+        let list = categoryMap.get(category);
+        if (!list) {
+            list = [];
+            categoryMap.set(category, list);
+        }
+
+        list.push({ name, order: 0, definition: property });
+    }
+
+    const keys = [...categoryMap.keys()];
     keys.sort();
-    return keys.map((x) => {
-        const items = map.get(x)!.items;
-        const sorted = sortProperties(items);
-        const mapped = sorted.map((x) => transform(x));
 
-        return { category: x, properties: mapped };
+    return keys.map((categoryName) => {
+        const items = categoryMap.get(categoryName)!;
+        const sorted = sortProperties(items);
+        const mapped = sorted.map((x) => (transform ? transform(x) : x));
+
+        return { category: categoryName, properties: mapped };
     });
 }

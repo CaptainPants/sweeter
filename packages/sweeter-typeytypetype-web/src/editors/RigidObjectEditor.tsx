@@ -1,5 +1,6 @@
 import {
     $calc,
+    $if,
     $peek,
     $val,
     type ComponentInit,
@@ -10,19 +11,19 @@ import {
     type Model,
     type ObjectModel,
     type PropertyModel,
-    StandardLocalValues,
     asRigidObject,
     cast,
     categorizeProperties,
-    type PropertyDefinition,
+    type RigidObjectType,
+    StandardLocalValues,
 } from '@captainpants/typeytypetype';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
 import { type EditorProps } from '../types.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { PropertyEditorPart } from './PropertyEditorPart.js';
-import { ImmutableLazyCache } from '../internal/ImmutableLazyCache.js';
 import { Row, Column, Label } from '@captainpants/sweeter-gummybear';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 export function RigidObjectEditor(
     { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
@@ -36,7 +37,7 @@ export function RigidObjectEditor(
     const { indentWidth } = init.getContext(EditorSizesContext);
 
     const baseId = init.nextId();
-
+    asRigidObject;
     const { draft } = init.hook(
         DraftHook<
             ObjectModel<Record<string, unknown>>,
@@ -79,62 +80,136 @@ export function RigidObjectEditor(
         local,
     };
 
+    // TODO: this is ugly, can we get the models to have the Rigid/Map type and avoid this?
     const owner = $calc(() => draft.value.value);
 
-    // Keep the PropertyEditorPart instances for each property that hasn't changed
-    // we might even want to consider doing this based on property name, as then
-    // we can just update based on the value of the property changing
-    const propertyContent = new ImmutableLazyCache(
-        (_key: PropertyDefinition<unknown>, name: string, id: string) => {
-            // note that _key is the actual WeakMap key, but it doesn't hold the name of the property so it is passed through separately
-
-            return (
-                <PropertyEditorPart
-                    id={id}
-                    owner={owner}
-                    propertyModel={$calc(
-                        // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
-                        // No other signals are referenced
-                        () => draft.value.getPropertyModel(name)!,
-                    )}
-                    updateValue={updatePropertyValue}
-                    indent={indent}
-                    ownerIdPath={idPath}
-                />
-            );
-        },
+    const type = $calc(
+        () =>
+            draft.value.type as unknown as RigidObjectType<
+                Record<string, unknown>
+            >,
     );
 
-    const categorizedProperties = $calc(() => {
-        const properties = draft.value.getProperties().filter(
-            (propertyModel) =>
-                propertyModel.definition.getLocalValue(
-                    StandardLocalValues.Visible,
-                    typedModel.value,
-                    calculationContext,
-                ) !== true, // likely values are notFound and false
+    const content = $calc(() => {
+        // AVOID SUBSCRIBING TO SIGNALS AT ROOT
+        // As it will rebuild the structure completely, and you will lose element focus/selection etc.
+        // We necessarily subscribe to the type signal, as we use its structure to build the editor structure.
+
+        const categorizedProperties = categorizeProperties(
+            // SIGNAL HERE
+            type.value,
+            (property) => {
+                const id = baseId + '_' + property.name;
+
+                return {
+                    property: property,
+                    id,
+                };
+            },
         );
 
-        return categorizeProperties(properties, (propertyModel) => {
-            const id = baseId + '_' + propertyModel.name;
+        const anyCategories = categorizedProperties.length > 0;
 
-            return {
-                property: propertyModel,
-                content: propertyContent.get(
-                    $val(propertyModel).definition,
-                    propertyModel.name,
-                    id,
-                ),
-                id,
-            };
-        });
+        const content = categorizedProperties.map(
+            ({ category, properties }, categoryIndex) => {
+
+                const propertyVisiblePerProperty = $calc(() => {
+                    const individualVisibility = properties.map(
+                        ({ property }) => {
+                            const propertyModel = draft.value.getPropertyModel(
+                                property.name,
+                            );
+                            assertNotNullOrUndefined(propertyModel);
+
+                            return (
+                                propertyModel.definition.getLocalValue(
+                                    StandardLocalValues.Visible,
+                                    typedModel.value,
+                                    calculationContext,
+                                ) !== true
+                            ); // likely values are notFound and false
+                        },
+                    );
+
+                    return individualVisibility;
+                });
+
+                const anyVisibleInCategory = $calc(() =>
+                    propertyVisiblePerProperty.value.some((x) => x),
+                );
+
+                // If no properties in the category are visible the whole category should be hidden
+                return $if(anyVisibleInCategory, () => (
+                    <div class={styles.category} key={`cat-${categoryIndex}`}>
+                        {anyCategories ? (
+                            <Row>
+                                <Column xl="auto">
+                                    <Label
+                                        style={{
+                                            'font-weight': 'bold',
+                                        }}
+                                        class={styles.categoryHeader}
+                                        fillWidth
+                                    >
+                                        {category}
+                                    </Label>
+                                </Column>
+                            </Row>
+                        ) : undefined}
+                        {properties.map(({ property, id }, index) => {
+                            return $if(
+                                $calc(
+                                    () =>
+                                        propertyVisiblePerProperty.value[
+                                            index
+                                        ] ?? false,
+                                ),
+                                () => (
+                                    <Row
+                                        class={styles.property}
+                                        key={`prop-${property.name}`}
+                                    >
+                                        <Column xs={4}>
+                                            <Label for={id}>
+                                                {property.definition
+                                                    .displayName ??
+                                                    property.name}
+                                            </Label>
+                                        </Column>
+                                        <Column xs={8}>
+                                            <PropertyEditorPart
+                                                id={id}
+                                                owner={owner}
+                                                propertyModel={$calc(
+                                                    // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
+                                                    // No other signals are referenced
+                                                    () =>
+                                                        draft.value.getPropertyModel(
+                                                            property.name,
+                                                        )!,
+                                                )}
+                                                updateValue={
+                                                    updatePropertyValue
+                                                }
+                                                indent={indent}
+                                                ownerIdPath={idPath}
+                                            />
+                                        </Column>
+                                    </Row>
+                                ),
+                            );
+                        })}
+                    </div>
+                ));
+            },
+        );
+
+        return content;
     });
 
     const addIndent = !isRoot;
 
     return $calc(() => {
-        const anyCategories = categorizedProperties.value.length > 0;
-
         return (
             <div class={styles.editorOuter}>
                 <div class={styles.editorIndentContainer}>
@@ -146,59 +221,7 @@ export function RigidObjectEditor(
                             &gt;
                         </div>
                     )}
-                    <div class={styles.editorContainer}>
-                        {categorizedProperties.value.map(
-                            ({ category, properties }, categoryIndex) => {
-                                return (
-                                    <div
-                                        class={styles.category}
-                                        key={`cat-${categoryIndex}`}
-                                    >
-                                        {anyCategories ? (
-                                            <Row>
-                                                <Column xl="auto">
-                                                    <Label
-                                                        style={{
-                                                            'font-weight':
-                                                                'bold',
-                                                        }}
-                                                        class={
-                                                            styles.categoryHeader
-                                                        }
-                                                        fillWidth
-                                                    >
-                                                        {category}
-                                                    </Label>
-                                                </Column>
-                                            </Row>
-                                        ) : undefined}
-                                        {properties.map(
-                                            ({ property, content, id }) => {
-                                                return (
-                                                    <Row
-                                                        class={styles.property}
-                                                        key={`prop-${property.name}`}
-                                                    >
-                                                        <Column xs={4}>
-                                                            <Label for={id}>
-                                                                {property
-                                                                    .definition
-                                                                    .displayName ??
-                                                                    property.name}
-                                                            </Label>
-                                                        </Column>
-                                                        <Column xs={8}>
-                                                            {content}
-                                                        </Column>
-                                                    </Row>
-                                                );
-                                            },
-                                        )}
-                                    </div>
-                                );
-                            },
-                        )}
-                    </div>
+                    <div class={styles.editorContainer}>{content}</div>
                 </div>
             </div>
         );

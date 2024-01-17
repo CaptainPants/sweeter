@@ -108,8 +108,20 @@ export function getRawStackTrace(): string {
     return new Error().stack ?? '<no stack trace found>';
 }
 
+const defaults = {};
+
+export interface StackTraceOptions {
+    /**
+     * How many stack frames to skip off the top, useful to exclude irrelevant frames like e.g. a utility function that actually creates the StackTrace, or a base class constructor.
+     */
+    skipFrames?: number;
+    context?: string;
+    previous?: StackTrace;
+}
+
 export class StackTrace {
-    constructor(context?: string, previous?: StackTrace) {
+    constructor({ skipFrames, context, previous }: StackTraceOptions = defaults) {
+        this.skipFrames = skipFrames ?? 0;
         this.context = context;
         this.previous = previous;
 
@@ -118,22 +130,24 @@ export class StackTrace {
 
     #error: Error;
 
+    readonly skipFrames: number;
     readonly context?: string | undefined;
     readonly previous?: StackTrace | undefined;
 
-    getNice() {
+    getNice(padding = '') {
         const res: string[] = [];
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let current: StackTrace | undefined = this;
         while (current) {
-            res.push(this.format(current));
+            res.push(this.format(current, padding));
             current = current.previous;
         }
 
-        return res.join('\n----\nFROM\n----\n');
+        // Each line of the trace has a newline char at the end, so omit the leading \n
+        return res.join('----\nFROM\n----\n');
     }
 
-    format(current: StackTrace) {
+    format(current: StackTrace, padding = '') {
         const raw = current.#error.stack;
         if (!raw) {
             return (
@@ -153,7 +167,8 @@ export class StackTrace {
             parts.push('\n');
         }
 
-        for (const match of raw.matchAll(regex)) {
+        const matches = [...raw.matchAll(regex)].slice(1 + this.skipFrames);
+        for (const match of matches) {
             if (!match.groups) continue;
 
             const func = normalizeFunctionName(match.groups['func']);
@@ -166,6 +181,7 @@ export class StackTrace {
                 continue;
             }
 
+            parts.push(padding);
             parts.push(func);
             parts.push(' ');
             parts.push(location);
@@ -196,6 +212,7 @@ export class StackTrace {
             current = current.previous;
         }
 
-        return res.join('\n----\nFROM\n----\n');
+        // Each line of the trace has a newline char at the end, so omit the leading \n
+        return res.join('----\nFROM\n----\n');
     }
 }

@@ -14,7 +14,7 @@ export type ListenerSetCallback<T> = SignalListener<T> & {
 
 export class ListenerSet<T> {
     constructor() {
-        if (dev.enabled) {
+        if (dev.isEnabled) {
             this.#debugStackTraces = new WeakMap();
         }
     }
@@ -46,10 +46,10 @@ export class ListenerSet<T> {
             this.#listenerRefs.add(weakRef);
         }
 
-        if (dev.enabled) {
+        if (dev.isEnabled) {
             this.#debugStackTraces?.set(
                 listener,
-                new StackTrace('Generated from ListenerSet.add'),
+                new StackTrace({ context: 'Generated from ListenerSet.add' }),
             );
         }
     }
@@ -85,19 +85,25 @@ export class ListenerSet<T> {
             .map((x) => x?.name ?? '?')
             .join(', ')}})`;
 
-        return topLine + (dev.enabled ? '\n\n' + this.getDebugDetail() : '');
+        return topLine + (dev.isEnabled ? '\n\n' + this.getDebugDetail() : '');
     }
 
     /**
      * This is intended for debug only. Retaining references to the results of this call will prevent garbage collection.
      * @returns
      */
-    public getAllListeners(): ListenerSetCallback<T>[] {
+    public debugGetAllListeners(): ListenerSetDebugItem<T>[] {
         return (
             [...this.#listenerRefs]
                 .map((x) => (x instanceof WeakRef ? x.deref() : x))
                 // Some derefed items may have been garbage collected
                 .filter((x): x is ListenerSetCallback<T> => Boolean(x))
+                .map((x) => ({
+                    listener: x,
+                    stackTrace: this.#debugStackTraces
+                        ? this.#debugStackTraces.get(x)
+                        : undefined,
+                }))
         );
     }
 
@@ -106,12 +112,13 @@ export class ListenerSet<T> {
         // possibly can truncate call stacks to make it reasable
         // or output as JSON so we can do work on the stack trace
         // outside of the debugger
-        return this.getAllListeners()
-            .map((listener, i) => {
+
+        // This will not include stack traces if dev.isEnabled == false
+        return this.debugGetAllListeners()
+            .map((item, i) => {
                 const stackTrace =
-                    this.#debugStackTraces?.get(listener)?.getNice() ??
-                    '<no stack trace>';
-                return `== Listener ${i} ==\n${stackTrace}\n== END Listener ${i} ==`;
+                    item.addedStackTrace?.getNice() ?? '<no stack trace>\n';
+                return `== Listener ${i} ==\n${stackTrace}== END Listener ${i} ==`;
             })
             .join('\n\n');
     }
@@ -159,4 +166,9 @@ export class ListenerSet<T> {
     public clear() {
         this.#listenerRefs.clear();
     }
+}
+
+export interface ListenerSetDebugItem<T> {
+    listener: ListenerSetCallback<T>;
+    addedStackTrace?: StackTrace | undefined;
 }

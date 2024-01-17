@@ -17,7 +17,7 @@ export function createMiddlewarePipeline(
         };
     }
 
-    if (dev.enabled) {
+    if (dev.isEnabled) {
         const next = callback;
         callback = (type, props) => {
             const stacktrace = new StackTrace();

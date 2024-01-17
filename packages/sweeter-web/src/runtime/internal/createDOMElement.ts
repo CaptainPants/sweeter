@@ -40,7 +40,7 @@ export function createDOMElement<TElementTypeString extends string>(
         bindDOMStyleProp(ele, props.style);
     }
 
-    if (dev.enabled) {
+    if (dev.isEnabled) {
         ele.dataset['isMounted'] = '0';
 
         const contextSnapshot = Context.createSnapshot();

@@ -13,7 +13,7 @@ function monitorOperation(
     timeout: number,
     content?: () => string | undefined,
 ) {
-    if (!dev.enabled) {
+    if (!dev.isEnabled) {
         return noop;
     }
 
@@ -74,7 +74,7 @@ let globalInterval: ReturnType<typeof setInterval> | undefined;
  * Developer tools object.
  */
 const dev = {
-    get enabled() {
+    get isEnabled() {
         return globalEnabled;
     },
     /**

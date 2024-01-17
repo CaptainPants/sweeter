@@ -53,6 +53,8 @@ export interface Signal<T> {
     readonly [signalMarker]: true;
 
     readonly createdAtStack?: StackTrace;
+
+    debugGetListenerTree(): string;
 }
 
 export interface WritableSignal<T> {

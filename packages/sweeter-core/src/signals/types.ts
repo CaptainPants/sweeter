@@ -54,7 +54,7 @@ export interface Signal<T> {
 
     readonly createdAtStack?: StackTrace;
 
-    debugGetListenerTree(): string;
+    debugGetListenerTree(): DebugDependencyNode;
 }
 
 export interface WritableSignal<T> {
@@ -85,4 +85,15 @@ export interface CalculatedSignalOptions {
      * This was originally implemented for the For component.
      */
     release?: AbortSignal;
+}
+
+
+export type DebugDependencyNode = {
+    type: 'signal',
+    children: DebugDependencyNode[],
+    signalCreatedAtStack: string[] | undefined
+} | {
+    type: 'listener',
+    listener: () => void,
+    addedAtStack: string[]
 }

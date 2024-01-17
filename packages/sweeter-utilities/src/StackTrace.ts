@@ -116,14 +116,19 @@ export interface StackTraceOptions {
      */
     skipFrames?: number;
     context?: string;
-    previous?: StackTrace;
 }
 
+export interface NiceFormatOptions {
+    truncate?: number | undefined;
+    padding?: string | undefined;
+}
+
+const defaultOptions = {};
+
 export class StackTrace {
-    constructor({ skipFrames, context, previous }: StackTraceOptions = defaults) {
+    constructor({ skipFrames, context }: StackTraceOptions = defaults) {
         this.skipFrames = skipFrames ?? 0;
         this.context = context;
-        this.previous = previous;
 
         this.#error = new Error();
     }
@@ -134,24 +139,11 @@ export class StackTrace {
     readonly context?: string | undefined;
     readonly previous?: StackTrace | undefined;
 
-    getNice(padding = '') {
-        const res: string[] = [];
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let current: StackTrace | undefined = this;
-        while (current) {
-            res.push(this.format(current, padding));
-            current = current.previous;
-        }
-
-        // Each line of the trace has a newline char at the end, so omit the leading \n
-        return res.join('----\nFROM\n----\n');
-    }
-
-    format(current: StackTrace, padding = '') {
-        const raw = current.#error.stack;
+    getNice({ padding, truncate }: NiceFormatOptions = defaultOptions) {
+        const raw = this.#error.stack;
         if (!raw) {
             return (
-                (current.context ? current.context + '\n' : '') +
+                (this.context ? this.context + '\n' : '') +
                 '<no stack trace found>'
             );
         }
@@ -162,24 +154,25 @@ export class StackTrace {
 
         const parts: (string | undefined)[] = [];
 
-        if (current.context) {
-            parts.push(current.context);
+        if (this.context) {
+            parts.push(this.context);
             parts.push('\n');
         }
 
         const matches = [...raw.matchAll(regex)].slice(1 + this.skipFrames);
+        let counter = 0;
         for (const match of matches) {
             if (!match.groups) continue;
+
+            if (truncate !== undefined && counter > truncate) {
+                break;
+            }
 
             const func = normalizeFunctionName(match.groups['func']);
             const location =
                 match.groups['location'] ?? match.groups['location_alt'];
             const row = match.groups['row'];
             const col = match.groups['col'];
-
-            if (func === 'getNiceStackTrace') {
-                continue;
-            }
 
             parts.push(padding);
             parts.push(func);
@@ -190,29 +183,14 @@ export class StackTrace {
             parts.push(' col: ');
             parts.push(col);
             parts.push(')\n');
+
+            ++counter;
         }
 
         return parts.join('');
     }
 
     get raw(): string | undefined {
-        if (!this.#error.stack) {
-            return undefined;
-        }
-
-        const res: string[] = [];
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let current: StackTrace | undefined = this;
-        while (current) {
-            if (current.context) {
-                res.push(current.context);
-                res.push('\n');
-            }
-            res.push(current.#error.stack ?? '<no stack trace>');
-            current = current.previous;
-        }
-
-        // Each line of the trace has a newline char at the end, so omit the leading \n
-        return res.join('----\nFROM\n----\n');
+        return this.#error.stack ?? '<no stack trace found>';
     }
 }

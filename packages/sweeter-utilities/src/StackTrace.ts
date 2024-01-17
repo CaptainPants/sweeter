@@ -109,24 +109,48 @@ export function getRawStackTrace(): string {
 }
 
 export class StackTrace {
-    constructor() {
+    constructor(context?: string, previous?: StackTrace) {
+        this.context = context;
+        this.previous = previous;
+
         this.#error = new Error();
     }
 
     #error: Error;
 
+    readonly context?: string | undefined;
+    readonly previous?: StackTrace | undefined;
+
     getNice() {
-        if (!this.#error.stack) {
-            return '<no stack trace found>';
+        const res: string[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let current: StackTrace | undefined = this;
+        while (current) {
+            res.push(this.format(current));
+            current = current.previous;
         }
 
-        const chromey = this.#error.stack.startsWith('Error') ?? false;
+        return res.join('\n----\nFROM\n----\n');
+    }
+
+    format(current: StackTrace) {
+        const raw = current.#error.stack;
+        if (!raw) {
+            return (current.context ? current.context + '\n' : '') + '<no stack trace found>';
+        }
+
+        const chromey = raw.startsWith('Error') ?? false;
 
         const regex = chromey ? chromeRegex : firefoxRegex;
 
         const parts: (string | undefined)[] = [];
+        
+        if (current.context) {
+            parts.push(current.context);
+            parts.push('\n');
+        }
 
-        for (const match of this.#error.stack.matchAll(regex)) {
+        for (const match of raw.matchAll(regex)) {
             if (!match.groups) continue;
 
             const func = normalizeFunctionName(match.groups['func']);
@@ -152,7 +176,23 @@ export class StackTrace {
         return parts.join('');
     }
 
-    get raw() {
-        return this.#error.stack ?? '<no stack trace found>';
+    get raw(): string | undefined {
+        if (!this.#error.stack) {
+            return undefined;
+        }
+
+        const res: string[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let current: StackTrace | undefined = this;
+        while (current) {
+            if (current.context) {
+                res.push(current.context);
+                res.push('\n');
+            }
+            res.push(current.#error.stack ?? '<no stack trace>');
+            current = current.previous;
+        }
+
+        return res.join('\n----\nFROM\n----\n');
     }
 }

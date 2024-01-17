@@ -112,7 +112,6 @@ export function RigidObjectEditor(
 
         const content = categorizedProperties.map(
             ({ category, properties }, categoryIndex) => {
-
                 const propertyVisiblePerProperty = $calc(() => {
                     const individualVisibility = properties.map(
                         ({ property }) => {

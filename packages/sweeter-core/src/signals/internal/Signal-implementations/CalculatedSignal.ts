@@ -9,6 +9,7 @@ import {
     type CalculatedSignalOptions,
 } from '../../types.js';
 import { finishCalculation, startCalculation } from '../calculationDeferral.js';
+import { type ListenerSetCallback } from '../ListenerSet.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
     const result = (): SignalState<T> => {
@@ -49,6 +50,9 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
             this.#recalculate();
         };
+        // For building debug tree. The 'as' just gets us type safety for the property.
+        (calculatedSignalListener as ListenerSetCallback<T>).updateFor = this;
+
         this.#dependencyListener = calculatedSignalListener;
 
         this.#wrappedCalculation = wrapped;

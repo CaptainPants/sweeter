@@ -31,7 +31,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     #state: SignalState<T>;
-    #listeners = new ListenerSet<SignalListener<T>>();
+    #listeners = new ListenerSet<T>();
 
     public readonly [signalMarker] = true;
 

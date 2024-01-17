@@ -136,7 +136,10 @@ export class StackTrace {
     format(current: StackTrace) {
         const raw = current.#error.stack;
         if (!raw) {
-            return (current.context ? current.context + '\n' : '') + '<no stack trace found>';
+            return (
+                (current.context ? current.context + '\n' : '') +
+                '<no stack trace found>'
+            );
         }
 
         const chromey = raw.startsWith('Error') ?? false;
@@ -144,7 +147,7 @@ export class StackTrace {
         const regex = chromey ? chromeRegex : firefoxRegex;
 
         const parts: (string | undefined)[] = [];
-        
+
         if (current.context) {
             parts.push(current.context);
             parts.push('\n');

@@ -61,7 +61,7 @@ export function ModalEditor(
     const onCancel = (): void => {
         isOpen.value = false;
 
-        // Reset va;ie
+        // Reset value
         modelSnapshot.value = $peek(model);
     };
 
@@ -71,7 +71,7 @@ export function ModalEditor(
 
     const content = $calc(() => {
         return validated(() => {
-            return $val(next)($val(nextProps));
+            return $val(next)(nextProps.value);
         });
     });
 

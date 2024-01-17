@@ -90,7 +90,7 @@ export interface CalculatedSignalOptions {
 
 export type DebugDependencyNode = {
     type: 'signal',
-    children: DebugDependencyNode[],
+    dependents: DebugDependencyNode[],
     signalCreatedAtStack: string[] | undefined
 } | {
     type: 'listener',

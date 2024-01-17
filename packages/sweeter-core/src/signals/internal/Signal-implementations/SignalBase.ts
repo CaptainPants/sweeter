@@ -167,9 +167,9 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     debugGetListenerTree(): DebugDependencyNode {
-        const truncate = 6;
+        const truncateStackTraces = 18;
 
-        const children = this.#listeners.debugGetAllListeners().map(
+        const dependents = this.#listeners.debugGetAllListeners().map(
             child => {
                 // If its a signal:
                 if (child.listener.updateFor) {
@@ -180,16 +180,15 @@ export abstract class SignalBase<T> implements Signal<T> {
                 // when it was added (and its name).
                 return {
                     type: 'listener',
-                    addedAtStack: child.addedStackTrace?.getNice({ truncate }).split('\n'),
+                    addedAtStack: child.addedStackTrace?.getNice({ truncate: truncateStackTraces }).split('\n'),
                 } as DebugDependencyNode;
             }
         );
-        children.pop();
 
         return {
             type: 'signal',
-            signalCreatedAtStack: this.createdAtStack?.getNice({ truncate }).split('\n'), 
-            children
+            signalCreatedAtStack: this.createdAtStack?.getNice({ truncate: truncateStackTraces }).split('\n'), 
+            dependents
         };
     }
 

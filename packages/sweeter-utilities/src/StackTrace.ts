@@ -140,6 +140,8 @@ export class StackTrace {
     readonly previous?: StackTrace | undefined;
 
     getNice({ padding, truncate }: NiceFormatOptions = defaultOptions) {
+        padding ??= '';
+
         const raw = this.#error.stack;
         if (!raw) {
             return (
@@ -152,11 +154,10 @@ export class StackTrace {
 
         const regex = chromey ? chromeRegex : firefoxRegex;
 
-        const parts: (string | undefined)[] = [];
+        const rows: string[] = [];
 
         if (this.context) {
-            parts.push(this.context);
-            parts.push('\n');
+            rows.push(this.context);
         }
 
         const matches = [...raw.matchAll(regex)].slice(1 + this.skipFrames);
@@ -174,20 +175,12 @@ export class StackTrace {
             const row = match.groups['row'];
             const col = match.groups['col'];
 
-            parts.push(padding);
-            parts.push(func);
-            parts.push(' ');
-            parts.push(location);
-            parts.push(' (row: ');
-            parts.push(row);
-            parts.push(' col: ');
-            parts.push(col);
-            parts.push(')\n');
+            rows.push(`${padding}${func} ${location} (row: ${row} col: ${col})`);
 
             ++counter;
         }
 
-        return parts.join('');
+        return rows.join('\n');
     }
 
     get raw(): string | undefined {

@@ -95,15 +95,20 @@ export class ListenerSet<T> {
     public debugGetAllListeners(): ListenerSetDebugItem<T>[] {
         return (
             [...this.#listenerRefs]
-                .map((x) => (x instanceof WeakRef ? x.deref() : x))
+                .map((listener) => {
+                    const derefed = (listener instanceof WeakRef ? listener.deref() : listener);
+                    if (!derefed) { // If its been collected
+                        return undefined;
+                    }
+
+                    const res: ListenerSetDebugItem<T> = {
+                        listener: derefed,
+                        addedStackTrace: this.#debugStackTraces?.get(derefed)
+                    }
+                    return res;
+                })
                 // Some derefed items may have been garbage collected
-                .filter((x): x is ListenerSetCallback<T> => Boolean(x))
-                .map((x) => ({
-                    listener: x,
-                    stackTrace: this.#debugStackTraces
-                        ? this.#debugStackTraces.get(x)
-                        : undefined,
-                }))
+                .filter((x): x is ListenerSetDebugItem<T> => Boolean(x))
         );
     }
 

@@ -49,7 +49,7 @@ export interface ComponentInit {
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void | (() => void),
-        invokeOnSubscribe?: boolean,
+        invokeOnSubscribe: boolean,
     ): void;
     /**
      * Subscribe to signals immediately. Note that because this isn't linked to component lifecycle, there is no option for a cleanup function.

@@ -37,7 +37,7 @@ export function RigidObjectEditor(
     const { indentWidth } = init.getContext(EditorSizesContext);
 
     const baseId = init.nextId();
-    asRigidObject;
+    
     const { draft } = init.hook(
         DraftHook<
             ObjectModel<Record<string, unknown>>,

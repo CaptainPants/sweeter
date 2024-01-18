@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Fallback is shown 1`] = `"<div>FALLBACK</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChanges--></div>"`;
+exports[`Fallback is shown 1`] = `"<div>FALLBACK</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChangesWhileMounted--></div>"`;
 
-exports[`Fallback is shown and then content once loaded 1`] = `"<div>FALLBACK</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChanges--></div>"`;
+exports[`Fallback is shown and then content once loaded 1`] = `"<div>FALLBACK</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChangesWhileMounted--></div>"`;
 
-exports[`Fallback is shown and then content once loaded 2`] = `"27<!--Hooks(Async): subscribeToChanges-->"`;
+exports[`Fallback is shown and then content once loaded 2`] = `"27<!--Hooks(Async): subscribeToChangesWhileMounted-->"`;

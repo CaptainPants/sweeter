@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Portal element content is added 1`] = `"<!--Hooks(Portal): subscribeToChanges-->"`;
+exports[`Portal element content is added 1`] = `"<!--Hooks(Portal): subscribeToChangesWhileMounted-->"`;
 
 exports[`Portal element content is added 2`] = `"<div id=\\"host1\\"><div>CONTENT</div></div>"`;
 
@@ -14,7 +14,7 @@ exports[`Portal elements unmount correctly (css class ref) 1`] = `
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly (css class ref) 2`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 2`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): subscribeToChangesWhileMounted--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly (css class ref) 3`] = `"<head></head>"`;
 
@@ -28,7 +28,7 @@ exports[`Portal elements unmount correctly (css class ref) 5`] = `
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly (css class ref) 6`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 6`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): subscribeToChangesWhileMounted--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly (css class ref) 7`] = `"<head></head>"`;
 
@@ -42,7 +42,7 @@ div {
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly 2`] = `"<body><div id=\\"host2\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly 2`] = `"<body><div id=\\"host2\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChangesWhileMounted, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChangesWhileMounted--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly 3`] = `"<head></head>"`;
 
@@ -56,7 +56,7 @@ div {
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly 6`] = `"<body><div id=\\"host2\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChanges, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChanges--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly 6`] = `"<body><div id=\\"host2\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): subscribeToChangesWhileMounted, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): subscribeToChangesWhileMounted--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly 7`] = `"<head></head>"`;
 

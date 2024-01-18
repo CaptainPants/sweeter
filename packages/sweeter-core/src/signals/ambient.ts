@@ -9,6 +9,11 @@ export function announceSignalUsage(signal: Signal<unknown>): void {
     _ambientUsageListener?.(signal);
 }
 
+/**
+ * Disables tracking of signals that are referenced in the callback.
+ * @param callback
+ * @returns
+ */
 export function untrack<T>(callback: () => T): T {
     return callAndInvokeListenerForEachDependency(callback, () => {}, false);
 }

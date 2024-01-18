@@ -1,5 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`example 1 1`] = `"<div>LOADING...</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChanges--></div>"`;
+exports[`example 1 1`] = `"<div>LOADING...</div><div style=\\"display: none;\\"><!--Hooks(Async): subscribeToChangesWhileMounted--></div>"`;
 
-exports[`example 1 2`] = `"<div>RESULT: RESOLVED!</div><!--Hooks(Async): subscribeToChanges-->"`;
+exports[`example 1 2`] = `"<div>RESULT: RESOLVED!</div><!--Hooks(Async): subscribeToChangesWhileMounted-->"`;

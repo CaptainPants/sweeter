@@ -37,7 +37,7 @@ export class DraftHook<TModel, TDraft> {
         this.#convertOut = options.convertOut;
         this.#validate = options.validate;
 
-        init.subscribeToChangesImmediate([this.model], () => {
+        init.subscribeToChanges([this.model], () => {
             // TODO: There is a circular reference here I think.. actual -> draft -> actual
             this.#reset();
         });

@@ -85,7 +85,7 @@ export function Async<T>(
         }
     }
 
-    init.subscribeToChanges(
+    init.subscribeToChangesWhileMounted(
         [callback],
         function Async_subscribeToChanges([callback]) {
             const abortController = new AbortController();

@@ -41,7 +41,7 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
         elementSignal.update(element);
     };
 
-    init.subscribeToChanges(
+    init.subscribeToChangesWhileMounted(
         [elementSignal, debounceTimeout],
         ([element, debounceTimeout]) => {
             if (!element) return;

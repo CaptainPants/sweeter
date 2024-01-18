@@ -3,3 +3,5 @@
 exports[`onMount 1`] = `"<div class=\\"error\\">Error: Error thrown on mount</div>"`;
 
 exports[`subscribeToChanges 1`] = `"<div class=\\"error\\">Error: Error thrown on subscribeToChanges</div>"`;
+
+exports[`subscribeToChangesWhileMounted 1`] = `"<div class=\\"error\\">Error: Error thrown on subscribeToChanges</div>"`;

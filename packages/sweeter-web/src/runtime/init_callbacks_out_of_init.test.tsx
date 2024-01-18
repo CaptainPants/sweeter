@@ -98,7 +98,9 @@ it('subscribeToChanges', async () => {
         >
             {() => (
                 <Caller
-                    callback={(init) => init.subscribeToChanges([], () => {})}
+                    callback={(init) =>
+                        init.subscribeToChangesWhileMounted([], () => {})
+                    }
                     handleError={deferred.resolve}
                 />
             )}

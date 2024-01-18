@@ -45,7 +45,7 @@ export interface ComponentInit {
      * @param callback Call this method any time one of the dependencies changes
      * @param invokeOnSubscribe (Default to true) invokes the callback immediately if true
      */
-    subscribeToChanges<TArgs extends readonly unknown[]>(
+    subscribeToChangesWhileMounted<TArgs extends readonly unknown[]>(
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void | (() => void),
@@ -55,13 +55,13 @@ export interface ComponentInit {
      * Subscribe to signals immediately. Note that because this isn't linked to component lifecycle, there is no option for a cleanup function.
      * @param dependencies Subscribe to each of these dependencies
      * @param callback Call this method any time one of the dependencies changes
-     * @param invokeOnSubscribe (Default to true) invokes the callback immediately if true
+     * @param invokeImmediately (Default to true) invokes the callback immediately if true
      */
-    subscribeToChangesImmediate<TArgs extends readonly unknown[]>(
+    subscribeToChanges<TArgs extends readonly unknown[]>(
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void,
-        invokeOnSubscribe?: boolean,
+        invokeImmediately?: boolean,
     ): void;
     getContext<T>(context: Context<T>): T;
     nextId(basis?: string): string;

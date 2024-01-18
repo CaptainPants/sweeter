@@ -29,7 +29,7 @@ export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
 
     const flattened = flatten(stylesheet);
 
-    init.subscribeToChanges(
+    init.subscribeToChangesWhileMounted(
         [flattened],
         ([thisTime]) => {
             if (previousTime) {

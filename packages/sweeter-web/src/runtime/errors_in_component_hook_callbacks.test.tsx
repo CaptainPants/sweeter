@@ -27,7 +27,7 @@ it('onMount', () => {
 });
 
 const SubscribeToChangesThrows: Component = (_, init) => {
-    init.subscribeToChanges(
+    init.subscribeToChangesWhileMounted(
         [1],
         ([_]) => {
             throw new Error('Error thrown on subscribeToChanges');
@@ -44,6 +44,32 @@ it('subscribeToChanges', () => {
             renderError={(err) => <div class="error">{String(err)}</div>}
         >
             {() => <SubscribeToChangesThrows />}
+        </ErrorBoundary>
+    ));
+
+    expect(res.getHTML()).toMatchSnapshot();
+
+    res.dispose();
+});
+
+const SubscribeToChangesWhileMountedThrows: Component = (_, init) => {
+    init.subscribeToChangesWhileMounted(
+        [1],
+        ([_]) => {
+            throw new Error('Error thrown on subscribeToChanges');
+        },
+        true,
+    );
+
+    return <></>;
+};
+
+it('subscribeToChangesWhileMounted', () => {
+    const res = testRender(() => (
+        <ErrorBoundary
+            renderError={(err) => <div class="error">{String(err)}</div>}
+        >
+            {() => <SubscribeToChangesWhileMountedThrows />}
         </ErrorBoundary>
     ));
 

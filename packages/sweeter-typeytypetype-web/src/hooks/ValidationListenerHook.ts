@@ -19,7 +19,7 @@ export function ValidationListenerHook(
         return () => unregister(listener);
     });
 
-    init.subscribeToChanges(
+    init.subscribeToChangesWhileMounted(
         [valid],
         ([valid]) => {
             // If this is a new control OR the valid value changed

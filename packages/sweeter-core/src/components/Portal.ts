@@ -14,7 +14,7 @@ export type PortalProps = PropertiesMightBeSignals<{
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
     const runtime = init.runtime;
 
-    init.subscribeToChanges(
+    init.subscribeToChangesWhileMounted(
         [target, children],
         ([target, children]) => {
             return runtime.createNestedRoot(

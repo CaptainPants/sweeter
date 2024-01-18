@@ -83,7 +83,7 @@ export function For<T>(
                         );
 
                         elementCache.push({
-                            // We use init.subscribeToChanges([renderItem]) earlier, so $peek to avoid subscribing at multiple levels
+                            // We use init.subscribeToChangesWhileMounted([renderItem]) earlier, so $peek to avoid subscribing at multiple levels
                             element: $peek(renderItem)(elementSignal, index),
                             orphan: release,
                         });

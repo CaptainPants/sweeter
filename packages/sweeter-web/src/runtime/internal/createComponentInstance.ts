@@ -75,7 +75,7 @@ function createComponentInstanceInit<
                 callback,
             );
         },
-        subscribeToChanges<TArgs extends readonly unknown[]>(
+        subscribeToChangesWhileMounted<TArgs extends readonly unknown[]>(
             dependencies: [...TArgs],
             callback: (args: UnsignalAll<TArgs>) => void | (() => void),
             invokeOnSubscribe = false,
@@ -88,7 +88,7 @@ function createComponentInstanceInit<
 
             addMountedCallback(
                 contextSnapshot,
-                getOrCreateMagicComment('subscribeToChanges'),
+                getOrCreateMagicComment('subscribeToChangesWhileMounted'),
                 function subscribeChanges_onMount() {
                     return subscribeToChanges(
                         dependencies,
@@ -98,10 +98,10 @@ function createComponentInstanceInit<
                 },
             );
         },
-        subscribeToChangesImmediate<TArgs extends readonly unknown[]>(
+        subscribeToChanges<TArgs extends readonly unknown[]>(
             dependencies: [...TArgs],
             callback: (args: UnsignalAll<TArgs>) => void,
-            invokeOnSubscribe = false,
+            invokeImmediately = false,
         ) {
             if (!init.isValid) {
                 throw new Error(
@@ -110,7 +110,7 @@ function createComponentInstanceInit<
             }
 
             addExplicitStrongReference(
-                getOrCreateMagicComment('subscribeToChangesImmediate'),
+                getOrCreateMagicComment('subscribeToChanges'),
                 callback,
             );
 
@@ -118,7 +118,7 @@ function createComponentInstanceInit<
                 subscribeToChanges(
                     dependencies,
                     callback,
-                    invokeOnSubscribe,
+                    invokeImmediately,
                     // Weakly subscribe -- lifetime managed by magic comment
                     false,
                 );

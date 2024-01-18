@@ -175,7 +175,9 @@ export class StackTrace {
             const row = match.groups['row'];
             const col = match.groups['col'];
 
-            rows.push(`${padding}${func} ${location} (row: ${row} col: ${col})`);
+            rows.push(
+                `${padding}${func} ${location} (row: ${row} col: ${col})`,
+            );
 
             ++counter;
         }

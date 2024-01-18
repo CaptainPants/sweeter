@@ -2,8 +2,8 @@ import {
     subscribeToChanges,
     Context,
     initializeHook,
-} from '@captainpants/sweeter-core';
-import {
+    addExplicitStrongReference,
+    untrack,
     type ComponentTypeConstraint,
     type UnsignalAll,
     type ComponentInit,
@@ -97,6 +97,32 @@ function createComponentInstanceInit<
                     );
                 },
             );
+        },
+        subscribeToChangesImmediate<TArgs extends readonly unknown[]>(
+            dependencies: [...TArgs],
+            callback: (args: UnsignalAll<TArgs>) => void,
+            invokeOnSubscribe = false,
+        ) {
+            if (!init.isValid) {
+                throw new Error(
+                    'subscribeToChanges must only be called during init phase.',
+                );
+            }
+
+            addExplicitStrongReference(
+                getOrCreateMagicComment('subscribeToChangesImmediate'),
+                callback,
+            );
+
+            untrack(() => {
+                subscribeToChanges(
+                    dependencies,
+                    callback,
+                    invokeOnSubscribe,
+                    // Weakly subscribe -- lifetime managed by magic comment
+                    false,
+                );
+            });
         },
         nextId(basis?: string) {
             return webRuntime.nextId(basis);

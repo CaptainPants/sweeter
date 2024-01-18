@@ -21,6 +21,7 @@ interface ChangeAnnouncerStackNode {
 }
 
 let develChangeAnnouncerStack: ChangeAnnouncerStackNode | undefined;
+let signalCounter = 0;
 
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
@@ -35,6 +36,8 @@ export abstract class SignalBase<T> implements Signal<T> {
     #listeners = new ListenerSet<T>();
 
     public readonly [signalMarker] = true;
+
+    public readonly id: number = ++signalCounter;
 
     public readonly createdAtStack?: StackTrace;
 
@@ -167,28 +170,34 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     debugGetListenerTree(): DebugDependencyNode {
-        const truncateStackTraces = 18;
+        const truncateStackTraces = 30;
 
-        const dependents = this.#listeners.debugGetAllListeners().map(
-            child => {
+        const dependents = this.#listeners
+            .debugGetAllListeners()
+            .map((child) => {
                 // If its a signal:
                 if (child.listener.updateFor) {
                     return child.listener.updateFor.debugGetListenerTree();
                 }
-                
+
                 // Otherwise its just a function, and all we can do is capture the stack trace from
                 // when it was added (and its name).
                 return {
                     type: 'listener',
-                    addedAtStack: child.addedStackTrace?.getNice({ truncate: truncateStackTraces }).split('\n'),
+                    addedAtStack: child.addedStackTrace
+                        ?.getNice({ truncate: truncateStackTraces })
+                        .split('\n'),
                 } as DebugDependencyNode;
-            }
-        );
+            });
 
         return {
             type: 'signal',
-            signalCreatedAtStack: this.createdAtStack?.getNice({ truncate: truncateStackTraces }).split('\n'), 
-            dependents
+            signalId: this.id,
+            state: this.peekState(),
+            signalCreatedAtStack: this.createdAtStack
+                ?.getNice({ truncate: truncateStackTraces })
+                .split('\n'),
+            dependents,
         };
     }
 

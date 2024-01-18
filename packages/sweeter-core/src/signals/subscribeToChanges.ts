@@ -15,6 +15,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
     dependencies: [...TArgs],
     callback: (values: UnsignalAll<TArgs>) => void | (() => void),
     invokeImmediate = false,
+    strong = true,
 ): () => void {
     let lastCleanup: void | (() => void);
 
@@ -33,7 +34,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
         for (const item of dependencies) {
             if (isSignal(item)) {
                 // Note that this is a strong reference, we need to be careful to unsubscribe later
-                unlisten.push(item.listen(innerCallback, true));
+                unlisten.push(item.listen(innerCallback, strong));
             }
         }
     } catch (ex) {

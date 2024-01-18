@@ -96,15 +96,19 @@ export class ListenerSet<T> {
         return (
             [...this.#listenerRefs]
                 .map((listener) => {
-                    const derefed = (listener instanceof WeakRef ? listener.deref() : listener);
-                    if (!derefed) { // If its been collected
+                    const derefed =
+                        listener instanceof WeakRef
+                            ? listener.deref()
+                            : listener;
+                    if (!derefed) {
+                        // If its been collected
                         return undefined;
                     }
 
                     const res: ListenerSetDebugItem<T> = {
                         listener: derefed,
-                        addedStackTrace: this.#debugStackTraces?.get(derefed)
-                    }
+                        addedStackTrace: this.#debugStackTraces?.get(derefed),
+                    };
                     return res;
                 })
                 // Some derefed items may have been garbage collected

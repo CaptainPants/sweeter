@@ -59,10 +59,10 @@ export function ModalEditor(
     };
 
     const onCancel = (): void => {
-        isOpen.value = false;
-
         // Reset value
         modelSnapshot.value = $peek(model);
+
+        isOpen.value = false;
     };
 
     const { EditButton, Modal } = init.getContext(EditorRootContext);

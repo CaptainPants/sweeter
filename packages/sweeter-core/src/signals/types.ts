@@ -20,7 +20,15 @@ export interface Signal<T> {
      */
     readonly value: T;
 
+    /**
+     *
+     */
     readonly [signalMarker]: true;
+
+    /**
+     * Globally unique id of signal, used only for debugging.
+     */
+    id: number;
 
     /**
      * Get the current value of the signal without subscribing for updates.
@@ -87,13 +95,16 @@ export interface CalculatedSignalOptions {
     release?: AbortSignal;
 }
 
-
-export type DebugDependencyNode = {
-    type: 'signal',
-    dependents: DebugDependencyNode[],
-    signalCreatedAtStack: string[] | undefined
-} | {
-    type: 'listener',
-    listener: () => void,
-    addedAtStack: string[]
-}
+export type DebugDependencyNode =
+    | {
+          type: 'signal';
+          signalId: number;
+          state: unknown;
+          dependents: DebugDependencyNode[];
+          signalCreatedAtStack: string[] | undefined;
+      }
+    | {
+          type: 'listener';
+          listener: () => void;
+          addedAtStack: string[];
+      };

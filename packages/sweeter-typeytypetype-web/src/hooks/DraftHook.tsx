@@ -36,7 +36,7 @@ export function DraftHook<TModel, TDraft>(
     const validationErrors = $mutable<ValidationSingleResult[] | null>(null);
     const validationErrorsReadonly = $readonly(validationErrors);
 
-    init.trackSignals([modelConverted], ([latestFromModel]) => {
+    init.onSignalChange([modelConverted], ([latestFromModel]) => {
         draft.update(latestFromModel);
     });
 
@@ -44,7 +44,7 @@ export function DraftHook<TModel, TDraft>(
     const isValidating = $readonly(asyncRunner.running);
 
     init.onSignalChange([draft], ([draft]) => {
-        if (draft == modelConverted.peek()) {
+        if (draft === modelConverted.peek()) {
             return; // If the draft matches our current view of the incoming model, then don't try to update back up the tree
         }
 

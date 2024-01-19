@@ -37,15 +37,14 @@ export class DraftHook<TModel, TDraft> {
         this.#convertOut = options.convertOut;
         this.#validate = options.validate;
 
-        init.subscribeToChanges([this.model], () => {
-            // TODO: There is a circular reference here I think.. actual -> draft -> actual
+        init.onSignalChange([this.model], () => {
             this.#reset();
         });
 
         const asyncRunner = init.hook(AsyncRunnerHook);
         this.isValidating = $readonly(asyncRunner.running);
 
-        init.subscribeToChanges([this.draft], ([draft]) => {
+        init.onSignalChange([this.draft], ([draft]) => {
             // Should this be debounced?
             asyncRunner.run(async (signal) => {
                 this.#update(signal, draft);

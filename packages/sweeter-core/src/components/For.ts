@@ -39,7 +39,7 @@ export function For<T>(
     }[] = [];
 
     // Clear the cache if the render function changes
-    init.subscribeToChanges([renderItem], () => {
+    init.onSignalChange([renderItem], () => {
         elementCache.length = 0;
     });
 
@@ -83,7 +83,7 @@ export function For<T>(
                         );
 
                         elementCache.push({
-                            // We use init.subscribeToChangesWhileMounted([renderItem]) earlier, so $peek to avoid subscribing at multiple levels
+                            // We use init.onSignalChange([renderItem]) earlier, so $peek to avoid subscribing at multiple levels
                             element: $peek(renderItem)(elementSignal, index),
                             orphan: release,
                         });

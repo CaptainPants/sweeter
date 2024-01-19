@@ -75,42 +75,42 @@ function createComponentInstanceInit<
                 callback,
             );
         },
-        subscribeToChangesWhileMounted<TArgs extends readonly unknown[]>(
+        trackSignals<TArgs extends readonly unknown[]>(
             dependencies: [...TArgs],
             callback: (args: UnsignalAll<TArgs>) => void | (() => void),
-            invokeOnSubscribe = false,
         ) {
             if (!init.isValid) {
                 throw new Error(
-                    'subscribeToChanges must only be called during init phase.',
+                    'trackSignals must only be called during init phase.',
                 );
             }
 
             addMountedCallback(
                 contextSnapshot,
-                getOrCreateMagicComment('subscribeToChangesWhileMounted'),
+                getOrCreateMagicComment('trackSignals'),
                 function subscribeChanges_onMount() {
                     return subscribeToChanges(
                         dependencies,
                         callback,
-                        invokeOnSubscribe,
+                        // invoke immediately
+                        true,
                     );
                 },
             );
         },
-        subscribeToChanges<TArgs extends readonly unknown[]>(
+        onSignalChange<TArgs extends readonly unknown[]>(
             dependencies: [...TArgs],
             callback: (args: UnsignalAll<TArgs>) => void,
             invokeImmediately = false,
         ) {
             if (!init.isValid) {
                 throw new Error(
-                    'subscribeToChanges must only be called during init phase.',
+                    'onSignalChange must only be called during init phase.',
                 );
             }
 
             addExplicitStrongReference(
-                getOrCreateMagicComment('subscribeToChanges'),
+                getOrCreateMagicComment('onSignalChange'),
                 callback,
             );
 

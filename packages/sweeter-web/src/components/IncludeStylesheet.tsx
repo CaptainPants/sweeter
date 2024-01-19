@@ -29,29 +29,25 @@ export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
 
     const flattened = flatten(stylesheet);
 
-    init.subscribeToChangesWhileMounted(
-        [flattened],
-        ([thisTime]) => {
-            if (previousTime) {
-                const added = arrayExcept(thisTime, previousTime);
-                const removed = arrayExcept(previousTime, thisTime);
+    init.trackSignals([flattened], ([thisTime]) => {
+        if (previousTime) {
+            const added = arrayExcept(thisTime, previousTime);
+            const removed = arrayExcept(previousTime, thisTime);
 
-                for (const addedItem of added) {
-                    webRuntime.addStylesheet(addedItem);
-                }
-                for (const removedItem of removed) {
-                    webRuntime.removeStylesheet(removedItem);
-                }
-            } else {
-                for (const addedItem of thisTime) {
-                    webRuntime.addStylesheet(addedItem);
-                }
+            for (const addedItem of added) {
+                webRuntime.addStylesheet(addedItem);
             }
+            for (const removedItem of removed) {
+                webRuntime.removeStylesheet(removedItem);
+            }
+        } else {
+            for (const addedItem of thisTime) {
+                webRuntime.addStylesheet(addedItem);
+            }
+        }
 
-            previousTime = thisTime;
-        },
-        true,
-    );
+        previousTime = thisTime;
+    });
 
     init.onUnMount(() => {
         if (previousTime) {

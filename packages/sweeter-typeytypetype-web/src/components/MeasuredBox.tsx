@@ -41,7 +41,7 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
         elementSignal.update(element);
     };
 
-    init.subscribeToChangesWhileMounted(
+    init.trackSignals(
         [elementSignal, debounceTimeout],
         ([element, debounceTimeout]) => {
             if (!element) return;
@@ -79,7 +79,6 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
                 debouncedCallback.cancel();
             };
         },
-        true,
     );
 
     return (

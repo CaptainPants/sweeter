@@ -19,15 +19,11 @@ export function ValidationListenerHook(
         return () => unregister(listener);
     });
 
-    init.subscribeToChangesWhileMounted(
-        [valid],
-        ([valid]) => {
-            // If this is a new control OR the valid value changed
-            if (wasValid === null || wasValid !== valid) {
-                validityChanged(listener, valid);
-            }
-            wasValid = valid;
-        },
-        true,
-    );
+    init.trackSignals([valid], ([valid]) => {
+        // If this is a new control OR the valid value changed
+        if (wasValid === null || wasValid !== valid) {
+            validityChanged(listener, valid);
+        }
+        wasValid = valid;
+    });
 }

@@ -29,7 +29,7 @@ export function ModalEditor(
     const modelSnapshot = $mutable($peek(model));
 
     // Reset snapshot if incoming version has changed
-    init.subscribeToChanges([model], ([model]) => {
+    init.trackSignals([model], ([model]) => {
         modelSnapshot.value = model;
     });
 

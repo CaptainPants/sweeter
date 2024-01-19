@@ -98,9 +98,7 @@ it('subscribeToChanges', async () => {
         >
             {() => (
                 <Caller
-                    callback={(init) =>
-                        init.subscribeToChangesWhileMounted([], () => {}, false)
-                    }
+                    callback={(init) => init.trackSignals([], () => {})}
                     handleError={deferred.resolve}
                 />
             )}
@@ -111,7 +109,7 @@ it('subscribeToChanges', async () => {
 
     expect(err).toHaveProperty(
         'message',
-        'subscribeToChanges must only be called during init phase.',
+        'trackSignals must only be called during init phase.',
     );
 
     res.dispose();

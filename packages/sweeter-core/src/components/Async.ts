@@ -85,7 +85,7 @@ export function Async<T>(
         }
     }
 
-    init.subscribeToChangesWhileMounted(
+    init.trackSignals(
         [callback],
         function Async_subscribeToChanges([callback]) {
             const abortController = new AbortController();
@@ -95,7 +95,6 @@ export function Async<T>(
                 abortController.abort();
             };
         },
-        true,
     );
 
     return $calc(() => {

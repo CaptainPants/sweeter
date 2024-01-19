@@ -40,24 +40,23 @@ export interface ComponentInit {
     onMount(callback: () => (() => void) | void): void;
     onUnMount(callback: () => void): void;
     /**
-     * Subscribe to signals (while mounted).
+     * Subscribe to signals while mounted, with optional cleanup functions called before the next callback / unmount. The subscription is cancelled while unmounted.
      * @param dependencies Subscribe to each of these dependencies
      * @param callback Call this method any time one of the dependencies changes
      * @param invokeOnSubscribe (Default to true) invokes the callback immediately if true
      */
-    subscribeToChangesWhileMounted<TArgs extends readonly unknown[]>(
+    trackSignals<TArgs extends readonly unknown[]>(
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void | (() => void),
-        invokeOnSubscribe: boolean,
     ): void;
     /**
-     * Subscribe to signals immediately. Note that because this isn't linked to component lifecycle, there is no option for a cleanup function.
+     * Subscribe to signals.
      * @param dependencies Subscribe to each of these dependencies
      * @param callback Call this method any time one of the dependencies changes
      * @param invokeImmediately (Default to true) invokes the callback immediately if true
      */
-    subscribeToChanges<TArgs extends readonly unknown[]>(
+    onSignalChange<TArgs extends readonly unknown[]>(
         // the [...TArgs] causes inference as a tuple more often (although not for literal types)
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void,

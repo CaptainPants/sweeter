@@ -1,10 +1,10 @@
 import {
-    type ReadWriteSignal,
     type ComponentInit,
     type Signal,
     $mutable,
     $readonly,
     AsyncRunnerHook,
+    $calc,
 } from '@captainpants/sweeter-core';
 import { type Maybe } from '@captainpants/sweeter-utilities';
 import { type ValidationSingleResult } from '@captainpants/typeytypetype';
@@ -20,82 +20,63 @@ export interface DraftHookOptions<TModel, TDraft> {
     onValid?: (value: TModel) => Promise<void>;
 }
 
-export class DraftHook<TModel, TDraft> {
-    constructor(
-        init: ComponentInit,
-        options: DraftHookOptions<TModel, TDraft>,
-    ) {
-        this.model = options.model;
-        this.draft = $mutable<TDraft>(options.convertIn(this.model.peek()));
+export function DraftHook<TModel, TDraft>(
+    init: ComponentInit,
+    {
+        convertIn,
+        convertOut,
+        model,
+        validate,
+        onValid,
+    }: DraftHookOptions<TModel, TDraft>,
+) {
+    const modelConverted = $calc(() => convertIn(model.value));
+    const draft = $mutable<TDraft>(modelConverted.peek());
 
-        this.#validationErrors = $mutable<ValidationSingleResult[] | null>(
-            null,
-        );
-        this.validationErrors = $readonly(this.#validationErrors);
+    const validationErrors = $mutable<ValidationSingleResult[] | null>(null);
+    const validationErrorsReadonly = $readonly(validationErrors);
 
-        this.#convertIn = options.convertIn;
-        this.#convertOut = options.convertOut;
-        this.#validate = options.validate;
+    init.trackSignals([modelConverted], ([latestFromModel]) => {
+        draft.update(latestFromModel);
+    });
 
-        init.onSignalChange([this.model], () => {
-            this.#reset();
-        });
+    const asyncRunner = init.hook(AsyncRunnerHook);
+    const isValidating = $readonly(asyncRunner.running);
 
-        const asyncRunner = init.hook(AsyncRunnerHook);
-        this.isValidating = $readonly(asyncRunner.running);
+    init.onSignalChange([draft], ([draft]) => {
+        if (draft == modelConverted.peek()) {
+            return; // If the draft matches our current view of the incoming model, then don't try to update back up the tree
+        }
 
-        init.onSignalChange([this.draft], ([draft]) => {
-            // Should this be debounced?
-            asyncRunner.run(async (signal) => {
-                this.#update(signal, draft);
-            });
-        });
+        // Should this be debounced?
+        asyncRunner.run(async (abort) => {
+            const convertResult = convertOut(draft);
 
-        this.#onValid = options.onValid;
-    }
+            // Failed conversion out, treated as a validation failure
+            if (!convertResult.success) {
+                validationErrors.update(
+                    convertResult.error.map((x) => ({ message: x })),
+                );
+                return;
+            }
 
-    readonly model: Signal<TModel>;
-    readonly draft: ReadWriteSignal<TDraft>;
-    readonly validationErrors: Signal<ValidationSingleResult[] | null>;
-    readonly isValidating: Signal<boolean>;
+            const converted = convertResult.result;
 
-    readonly #validationErrors: ReadWriteSignal<
-        ValidationSingleResult[] | null
-    >;
+            const validationFailures = await validate(converted, abort);
 
-    #convertIn: (model: TModel) => TDraft;
-    #convertOut: (draft: TDraft) => Maybe<TModel, string[]>;
-    #validate: (
-        value: TModel,
-        signal: AbortSignal,
-    ) => Promise<ValidationSingleResult[] | null>;
-    #onValid?: ((value: TModel) => void) | undefined;
-
-    #reset(): void {
-        this.draft.update(this.#convertIn(this.model.value));
-    }
-
-    async #update(abortSignal: AbortSignal, draft: TDraft) {
-        const convertResult = this.#convertOut(draft);
-
-        // Failed conversion out, treated as a validation failure
-        if (!convertResult.success) {
-            this.#validationErrors.update(
-                convertResult.error.map((x) => ({ message: x })),
+            validationErrors.update(
+                validationFailures ? null : validationFailures,
             );
-            return;
-        }
 
-        const converted = convertResult.result;
+            if (validationFailures == null) {
+                onValid?.(converted);
+            }
+        });
+    });
 
-        const validationFailures = await this.#validate(converted, abortSignal);
-
-        this.#validationErrors.update(
-            validationFailures ? null : validationFailures,
-        );
-
-        if (validationFailures == null) {
-            this.#onValid?.(converted);
-        }
-    }
+    return {
+        draft,
+        validationErrors: validationErrorsReadonly,
+        isValidating: isValidating,
+    };
 }

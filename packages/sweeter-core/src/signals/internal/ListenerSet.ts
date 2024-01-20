@@ -9,7 +9,7 @@ import { type Signal, dev, type SignalListener } from '../../index.js';
 const weakRefCache = new WeakMap<object, WeakRef<object>>();
 
 export type ListenerSetCallback<T> = SignalListener<T> & {
-    updateFor?: Signal<unknown>;
+    debugListenerForSignal?: Signal<unknown>;
 };
 
 export class ListenerSet<T> {
@@ -117,7 +117,7 @@ export class ListenerSet<T> {
     }
 
     public getDebugDetail(): string {
-        // TODO: output the .updateFor tree for each listener
+        // TODO: output the .debugListenerForSignal tree for each listener
         // possibly can truncate call stacks to make it reasable
         // or output as JSON so we can do work on the stack trace
         // outside of the debugger
@@ -151,7 +151,9 @@ export class ListenerSet<T> {
      * @param args
      */
     public announce(...args: Parameters<ListenerSetCallback<T>>) {
-        for (const ref of this.#listenerRefs) {
+        const listeners = this.#listenerRefs;
+        
+        for (const ref of listeners) {
             const listener = ref instanceof WeakRef ? ref.deref() : ref;
 
             if (listener) {

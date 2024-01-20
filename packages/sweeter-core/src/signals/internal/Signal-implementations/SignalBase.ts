@@ -176,8 +176,8 @@ export abstract class SignalBase<T> implements Signal<T> {
             .debugGetAllListeners()
             .map((child) => {
                 // If its a signal:
-                if (child.listener.updateFor) {
-                    return child.listener.updateFor.debugGetListenerTree();
+                if (child.listener.debugListenerForSignal) {
+                    return child.listener.debugListenerForSignal.debugGetListenerTree();
                 }
 
                 // Otherwise its just a function, and all we can do is capture the stack trace from

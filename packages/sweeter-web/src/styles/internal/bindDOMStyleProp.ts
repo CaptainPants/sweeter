@@ -32,7 +32,7 @@ export function bindDOMStyleProp(
     });
 
     signal.listen(() => {
-        node.setAttribute('style', signal.value);
+        node.setAttribute('style', signal.peek());
     }, false);
 
     node.setAttribute('style', signal.peek());

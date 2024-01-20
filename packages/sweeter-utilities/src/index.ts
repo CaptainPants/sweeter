@@ -1,6 +1,7 @@
 export * from './typedefs/DOMException.js';
 
 export * from './arrayExcept.js';
+export * from './arrayRemove.js';
 export * from './assertNotNullOrUndefined.js';
 export * from './debounce.js';
 export * from './descend.js';

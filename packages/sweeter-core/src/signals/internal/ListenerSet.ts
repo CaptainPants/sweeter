@@ -46,7 +46,7 @@ export class ListenerSet<T> {
             this.#listenerRefs.add(weakRef);
         }
 
-        if (dev.isEnabled) {
+        if (dev.flag('signalStacks')) {
             this.#debugStackTraces?.set(
                 listener,
                 new StackTrace({ context: 'Generated from ListenerSet.add' }),
@@ -122,7 +122,7 @@ export class ListenerSet<T> {
         // or output as JSON so we can do work on the stack trace
         // outside of the debugger
 
-        // This will not include stack traces if dev.isEnabled == false
+        // This will not include stack traces if !dev.flag('signalStacks')
         return this.debugGetAllListeners()
             .map((item, i) => {
                 const stackTrace =

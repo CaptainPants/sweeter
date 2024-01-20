@@ -68,5 +68,16 @@ declare global {
          * '{library-name}': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
          */
         interface RuntimeRootHostElementTypes {}
+
+        interface DebugFlags {
+            all: boolean;
+
+            signalStacks: boolean;
+
+            monitorOperations: boolean;
+            monitorInvokesDebugger: boolean;
+
+            componentMounting: boolean;
+        }
     }
 }

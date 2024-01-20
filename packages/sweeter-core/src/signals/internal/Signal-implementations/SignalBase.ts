@@ -27,7 +27,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
         this.#state = state;
 
-        if (dev.isEnabled) {
+        if (dev.flag('signalStacks')) {
             this.createdAtStack = new StackTrace({ skipFrames: 1 });
         }
     }

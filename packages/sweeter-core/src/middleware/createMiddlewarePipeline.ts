@@ -17,7 +17,7 @@ export function createMiddlewarePipeline(
         };
     }
 
-    if (dev.isEnabled) {
+    if (dev.flag('monitorOperations')) {
         const next = callback;
         callback = (type, props) => {
             const stacktrace = new StackTrace();

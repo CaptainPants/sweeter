@@ -53,7 +53,7 @@ function ping() {
                 }ms): ${current.name} \n${current.content?.()}`,
             );
 
-            if (globalDebugger) {
+            if (globalEnabledFlags?.monitorOperations) {
                 // eslint-disable-next-line no-debugger
                 debugger;
             }
@@ -66,34 +66,42 @@ function ping() {
     }
 }
 
-let globalEnabled = false;
-let globalDebugger = false;
+let globalEnabledFlags: DebugFlags | undefined;
 let globalInterval: ReturnType<typeof setInterval> | undefined;
+
+export type DebugFlags = Partial<SweeterExtensionPoints.DebugFlags> &
+    Record<string, boolean>;
 
 /**
  * Developer tools object.
  */
 const dev = {
     get isEnabled() {
-        return globalEnabled;
+        return globalEnabledFlags;
+    },
+    flag<TKey extends keyof DebugFlags>(flag: TKey): boolean {
+        return globalEnabledFlags?.all ?? globalEnabledFlags?.[flag] ?? false;
     },
     /**
      * Enable/disable developer tooling.
-     * @param enabled Turn on developer tooling.
-     * @param invokeDebugger Use the debugger keyword to trigger a breakpoint when there is a monitoring error.
+     * @param flags
      */
-    enable(enabled: boolean, invokeDebugger: boolean = false) {
+    enable(flags: DebugFlags) {
+        dev.disable();
+
+        globalEnabledFlags = flags;
+
+        if (flags.monitorOperations) {
+            globalInterval = setInterval(ping, 1000);
+        }
+    },
+    disable: () => {
         if (globalInterval) {
             clearInterval(globalInterval);
             globalInterval = undefined;
         }
 
-        globalEnabled = enabled;
-        globalDebugger = invokeDebugger;
-
-        if (enabled) {
-            globalInterval = setInterval(ping, 1000);
-        }
+        globalEnabledFlags = undefined;
     },
     monitorOperation,
     ping,

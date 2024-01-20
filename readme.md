@@ -1,0 +1,56 @@
+
+# Sweeter
+This is an experimental UI project built on principles learnt from React and SolidJS.
+
+A simple example component:
+```jsx
+const Example: Component = (_, init) => {
+    const example = $mutable('');
+
+    const asyncRunner = init.hook(AsyncRunnerHook);
+
+    const id = init.nextId();
+
+    init.onMount(() => {
+        example.value = 'test';
+    });
+
+    return <>
+        <label for={id}>
+        <input id={id} type="text" bind:value={value} title={$calc(() => 'This is a title: ' + example.value)} />
+        <br />
+        <button onClick={() => asyncRunner.invoke(() => doSomething())}></button>
+    </>
+};
+```
+
+A few things you might note:
+1. Sigil ($) prefixed functions are special Sweeter building blocks.
+2. The init parameter that gives access to what in other frameworks are called 'hooks' - these are methods that only work during initial wireup that give access to attaching lifecycle methods.
+3. init.hook is used to instantiate 'hooks' - which are components that have access to the component lifecycle to provide some functionality. They may also create their own hook instances.
+
+# Why not use X
+As with many projects, the main answer is: because I felt like giving it a go.
+
+## React
+React has proven some powerful UI paradigms, and is an amazing framework.
+
+Challenges:
+1. Performance issues in certain cases that make a more granular reactive approach desirable
+
+## Solid JS
+Solid JS is a very good proof of concept.
+
+A couple of things that I don't love about SolidJS
+1. Limited out of the box functionality with a limited community
+2. I don't love having an additional preprocessor and magic to 'hide' calculated signals created during component creation.
+3. Some limitations are imposed by the two way relationship between signals and their dependents
+
+# Principles:
+1. Limit dependencies as much as possible
+2. Include everything you need for a basic SPA application
+3. Do not do 'magic' - everything should be typescript with JSX, and therefore be relatively easy to understand for newcomers
+4. Do not target 'old' browsers: we will not support IE11, or out of date mobile browsers
+
+## Modern technology
+Sweeter relies on WeakRef which is only supported in quite recent browsers. The hope is that this becomes less of a limitation over time. For my personal usage I intend to use Sweeter in desktop applications inside WebView2 and similar components where this is less of an issue.

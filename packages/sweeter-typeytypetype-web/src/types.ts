@@ -73,7 +73,7 @@ export type ModalComponentType = Component<ModalProps>;
 
 export type EditButtonProps = PropertiesMightBeSignals<{
     onClick: () => void;
-    text?: string;
+    text?: JSX.Element;
 }>;
 
 export type EditButtonComponentType = Component<EditButtonProps>;

@@ -28,6 +28,8 @@ export function ModalEditor(
 
     const modelSnapshot = $mutable($peek(model));
 
+    const isRoot = passthrough.isRoot;
+
     // Reset snapshot if incoming version has changed
     init.trackSignals([model], ([model]) => {
         modelSnapshot.value = model;
@@ -79,7 +81,16 @@ export function ModalEditor(
         <>
             <EditButton
                 key="button"
-                text={`${localize('Edit')} ${propertyDisplayName ?? 'unknown'}`}
+                text={
+                    <>
+                        {localize('Edit')}{' '}
+                        {$calc(() =>
+                            $val(isRoot)
+                                ? 'root'
+                                : propertyDisplayName ?? 'unknown',
+                        )}
+                    </>
+                }
                 onClick={() => {
                     isOpen.value = true;
                 }}

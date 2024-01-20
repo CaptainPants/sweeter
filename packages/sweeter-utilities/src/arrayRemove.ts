@@ -1,4 +1,3 @@
-
 export function arrayRemove<T>(items: T[], value: T) {
     let found = items.indexOf(value);
     while (found >= 0) {

@@ -2,7 +2,10 @@ import { isSignal } from './isSignal.js';
 import { $valEach } from './$val.js';
 import { type UnsignalAll } from './types.js';
 import { popAndCallAll } from '../internal/popAndCallAll.js';
-import { addExplicitStrongReference, removeExplicitStrongReference } from '../addExplicitStrongReference.js';
+import {
+    addExplicitStrongReference,
+    removeExplicitStrongReference,
+} from '../addExplicitStrongReference.js';
 
 /**
  * Subscribe to multiple signals, with a callback to remove that subscription.
@@ -20,7 +23,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
 ): () => void {
     let lastCleanup: void | (() => void);
 
-    // The lifetime of this method has to be at minimum as long as callback, 
+    // The lifetime of this method has to be at minimum as long as callback,
     // so we add an explicit reference between them.
     const innerCallback = () => {
         if (lastCleanup) {

@@ -51,7 +51,9 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             this.#recalculate();
         };
         // For building debug tree. The 'as' just gets us type safety for the property.
-        (calculatedSignalListener as ListenerSetCallback<T>).debugListenerForSignal = this;
+        (
+            calculatedSignalListener as ListenerSetCallback<T>
+        ).debugListenerForSignal = this;
 
         this.#dependencyListener = calculatedSignalListener;
 

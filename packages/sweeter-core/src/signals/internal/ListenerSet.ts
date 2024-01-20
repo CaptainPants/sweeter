@@ -152,7 +152,7 @@ export class ListenerSet<T> {
      */
     public announce(...args: Parameters<ListenerSetCallback<T>>) {
         const listeners = this.#listenerRefs;
-        
+
         for (const ref of listeners) {
             const listener = ref instanceof WeakRef ? ref.deref() : ref;
 

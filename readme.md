@@ -2,38 +2,50 @@
 # Sweeter
 This is an experimental UI project built on principles learnt from React and SolidJS.
 
-A simple example component:
-```jsx
-const Example: Component = (_, init) => {
-    const example = $mutable('');
+An example component that shows a few assorted functions:
+```tsx
+// MightBeSignals<T> enables all the properties in the provided type to either be a constant OR a signal
+// we then use $val or $peek to access those values within the component.
+export type ExampleProps = MightBeSignals<{
+    url: string;
+}>;
+
+const Example: Component<ExampleProps> = ({ url }, init) => {
+    const textValue   = $mutable('initial value');
+    const serverValue = $mutable<unknown>(null);
 
     const asyncRunner = init.hook(AsyncRunnerHook);
 
     const id = init.idGenerator.next();
 
     init.onMount(() => {
-        example.value = 'test';
+        // When component is added
+        example.value = 'updated on mount';
 
         return () => {
             // Runs on unmount
         };
     });
 
-    const load = async (): Promise<void> => {
-        const data = await fetch('http://localhost/test/json');
+    const asyncAction = async (): Promise<void> => {
+        // $peek reads a signal/constant without subscribing to changes, useful 
+        // when reading the current state of a signal within a callback
+        const data = await fetch($peek(url));
+
+        serverValue.value = data;
     }
 
     return <>
-        <label for={id}>This is a field:</abel>
+        <label for={id}>This is a field:</label>
         <input 
             id={id} 
             type="text" 
-            bind:value={value} 
+            bind:value={textValue} 
             title={$calc(() => 'This is a title: ' + example.value)} />
         <br />
         <button 
             disabled={asyncRunner.running} 
-            onClick={() => asyncRunner.run(load)}>Load</button>
+            onClick={() => asyncRunner.run(asyncAction)}>Load</button>
     </>
 };
 ```
@@ -42,6 +54,7 @@ A few things you might note:
 1. Sigil ($) prefixed functions are special Sweeter building blocks.
 2. The init parameter that gives access to what in other frameworks are called 'hooks' - these are methods that only work during initial wireup that give access to attaching lifecycle methods.
 3. init.hook is used to instantiate 'hooks' - which are components that have access to the component lifecycle to provide some functionality. They may also create their own hook instances.
+4. Components can be mounted, unmounted and remounted - make sure to take that into account when authoring your components. Suspense will mount the component in its incomplete state 'offscreen'.
 
 # Why not use X
 As with many projects, the main answer is: because I felt like giving it a go.

@@ -58,7 +58,7 @@ import { $mutable, $elementOf } from '@captainpants/sweeter-core';
 
 const root = $mutable([1, 2, 3]);
 
-const property = elementOf(root, 1);
+const property = $elementOf(root, 1);
 
 property.value = -2; // This will be reflected back to the original 'root' signal, updating its value to [1, -2, 3]
 ```
@@ -133,5 +133,5 @@ const mutable = $mutableFromCallbacks(
     }
 );
 
-mutable.value = 5; // updates a.value = 2 - 5, so mutable.value ==
+mutable.value = 5; // updates a.value = 5 - 2, so mutable.value == 2
 ```

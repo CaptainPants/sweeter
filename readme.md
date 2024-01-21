@@ -7,16 +7,26 @@ An example component that shows a few assorted functions:
 // MightBeSignals<T> enables all the properties in the provided type to either be a constant OR a signal
 // we then use $val or $peek to access those values within the component.
 export type ExampleProps = MightBeSignals<{
+    // In the type ExampleProps this will be `url: string | Signal<string>`
     url: string;
 }>;
 
 const Example: Component<ExampleProps> = ({ url }, init) => {
+    // These are basic mutable signals (type: ReadWriteSignal<T>)
     const textValue   = $mutable('initial value');
     const serverValue = $mutable<unknown>(null);
 
+    // You can also have a calculated signal
+    const textValueWithSuffix = $calc(() => textValue.value + ' + suffix');
+
+    // AsyncRunnerHook does 2 things: 1) it provides a Signal<boolean> asyncRunner.running to make 
+    // visible when the runner is currently executing a callback, and 2) optionally cancel an 
+    // execution in progress by aborting the AbortSignal provided as the first argument to the 
+    // callback passed in asyncRunner.run
     const asyncRunner = init.hook(AsyncRunnerHook);
 
-    const id = init.idGenerator.next();
+    // Generate a sequential id, optionally with a 'basis'
+    const id = init.idGenerator.next('textValue');
 
     init.onMount(() => {
         // When component is added
@@ -27,21 +37,34 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
         };
     });
 
-    const asyncAction = async (): Promise<void> => {
+    // The AbortSignal parameter is provided by the AsyncRunnerHook to allow it to cancel execution
+    // in progress.
+    const asyncAction = async (signal: AbortSignal): Promise<void> => {
         // $peek reads a signal/constant without subscribing to changes, useful 
         // when reading the current state of a signal within a callback
-        const data = await fetch($peek(url));
+        const data = await fetch($peek(url), { signal: abort });
 
+        // Assign value to the signal
         serverValue.value = data;
+        // OR
+        serverValue.update(data);
+        // The .value version is nicer but isn't part of the ReadWriteSignal interface due to some 
+        // challenges in the type-system
     }
 
+    // Note the bind:value is a 2-way binding of a mutable signal to a compatible
+    // property. Out of the box this only works for the value properties of form
+    // elements (bind:value and bind:checked).
     return <>
         <label for={id}>This is a field:</label>
         <input 
             id={id} 
             type="text" 
-            bind:value={textValue} 
-            title={$calc(() => 'This is a title: ' + example.value)} />
+            bind:value={textValue} />
+        <br />
+        Current value: {textValue}<br />
+        Added a suffix {textValueWithSuffix}<br />
+        Or inline {$calc(() => textValue.value + ' + suffix')}<br />
         <br />
         <button 
             disabled={asyncRunner.running} 

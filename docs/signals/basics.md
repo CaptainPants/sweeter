@@ -10,6 +10,8 @@ This creates a basic `ReadWriteSignal<T>` instance.
 
 Example:
 ```tsx
+import { $mutable } from '@captainpants/sweeter-core';
+
 const mutable = $mutable<string | null>(null);
 
 mutable.value = 'example';
@@ -22,6 +24,8 @@ This creates a `Signal<T>` that is derived from others via a derivation function
 
 Example:
 ```tsx
+import { $mutable, $calc } from '@captainpants/sweeter-core';
+
 const a = $mutable(1);
 const b = $mutable(2);
 
@@ -34,6 +38,8 @@ a.value = 3; // This will trigger any subscribers to c to be updated with the ne
 This creates a new signal based on accessing a property of the current value of an existing signal. If the signal is writable, updates to the created signal will propagate back to the original.
 
 ```tsx
+import { $mutable, $propertyOf } from '@captainpants/sweeter-core';
+
 const root = $mutable({
     test: 1
 });
@@ -48,9 +54,11 @@ property.value = 2; // This will be reflected back to the original 'root' signal
 This creates a new signal based on accessing an element of the current value of an existing signal. If the signal is writable, updates to the created signal will propagate back to the original.
 
 ```tsx
+import { $mutable, $elementOf } from '@captainpants/sweeter-core';
+
 const root = $mutable([1, 2, 3]);
 
-const property = $propertyOf(root, 1);
+const property = elementOf(root, 1);
 
 property.value = -2; // This will be reflected back to the original 'root' signal, updating its value to [1, -2, 3]
 ```
@@ -60,6 +68,8 @@ This creates a readonly signal from a `ReadWriteSignal<T>`.
 
 Example:
 ```tsx
+import { $mutable, $readonly } from '@captainpants/sweeter-core';
+
 const mutable  = $mutable(1);
 
 const readonly = $readonly(mutable);
@@ -71,6 +81,8 @@ This creates a readonly signal whose value never changes.
 
 Example:
 ```tsx
+import { $constant } from '@captainpants/sweeter-core';
+
 const constant = $constant(1);
 ```
 
@@ -79,6 +91,8 @@ This creates a signal that is readonly, but can be updated by the holder of a re
 
 Example:
 ```tsx
+import { SignalController, $controlled } from '@captainpants/sweeter-core';
+
 const controller = new SignalController<number>();
 
 const signal = $controlled(controller);
@@ -90,6 +104,8 @@ controller.update({ mode: 'SUCCESS', value: 1 })
 This creates a readonly alias to a signal that is updated asynchronously (the default mechanism being queueMicrotask).
 
 ```tsx
+import { $mutable, $deferred } from '@captainpants/sweeter-core';
+
 const mutable  = $mutable(1);
 const deferred = $deferred(mutable);
 
@@ -105,6 +121,8 @@ This is a lot like `$calc`, but is a `ReadWriteSignal<T>`. Writes to this signal
 
 Example:
 ```tsx
+import { $mutable, $mutableFromCallbacks } from '@captainpants/sweeter-core';
+
 const a = $mutable(1);
 const b = $mutable(2);
 

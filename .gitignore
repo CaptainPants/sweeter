@@ -3,7 +3,7 @@ node_modules
 
 # build output
 build
-docs
+docs/generated
 
 # error logs from yarn
 yarn-error.log

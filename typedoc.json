@@ -6,5 +6,5 @@
         "packages/typeytypetype"
     ],
     "entryPointStrategy": "packages",
-    "out": "docs"
+    "out": "docs/generated"
 }

@@ -1,0 +1,4 @@
+
+- startBatch / batch
+- deferForBatchEnd
+- isBatching

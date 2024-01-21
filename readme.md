@@ -2,6 +2,8 @@
 # Sweeter
 This is an experimental UI project built on principles learnt from React and SolidJS.
 
+See [here](docs/index.md) for more documentation.
+
 An example component that shows a few assorted functions:
 ```tsx
 // MightBeSignals<T> enables all the properties in the provided type to either be a constant OR a signal

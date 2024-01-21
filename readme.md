@@ -36,13 +36,16 @@ As with many projects, the main answer is: because I felt like giving it a go.
 React has proven some powerful UI paradigms, and is an amazing framework.
 
 Challenges:
-1. Performance issues in certain cases that make a more granular reactive approach desirable
+1. Slow improvement release cadence (18 months since last release as of Jan 2024)
+2. Enhancement focus on SSR and technologies more suited to server side Node / NextJS
+3. Pushing core functionality (Suspence data loading) to 3rd party components
+4. Performance issues in some spaces
 
 ## Solid JS
 Solid JS is a very good proof of concept.
 
 A couple of things that I don't love about SolidJS
-1. Limited out of the box functionality with a limited community
+1. Limited out of the box functionality with a limited but growing community
 2. I don't love having an additional preprocessor and magic to 'hide' calculated signals created during component creation.
 3. Some limitations are imposed by the two way relationship between signals and their dependents
 
@@ -51,6 +54,9 @@ A couple of things that I don't love about SolidJS
 2. Include everything you need for a basic SPA application
 3. Do not do 'magic' - everything should be typescript with JSX, and therefore be relatively easy to understand for newcomers
 4. Do not target 'old' browsers: we will not support IE11, or out of date mobile browsers
+5. Include debugging tools
+6. Be open and extensible
+7. Contribute lessons learned back to the community - E.g. how typescript JSX works documentation is a bit garbage and we can help improve that
 
 ## Modern technology
 Sweeter relies on WeakRef which is only supported in quite recent browsers. The hope is that this becomes less of a limitation over time. For my personal usage I intend to use Sweeter in desktop applications inside WebView2 and similar components where this is less of an issue.

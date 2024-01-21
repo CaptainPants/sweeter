@@ -10,7 +10,7 @@ export const WithId: Component<WithIdProps> = (
     { basis, children }: WithIdProps,
     init: ComponentInit,
 ): JSX.Element => {
-    const id = init.nextId(basis);
+    const id = init.idGenerator.next(basis);
 
     return children(id);
 };

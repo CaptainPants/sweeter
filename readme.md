@@ -13,13 +13,27 @@ const Example: Component = (_, init) => {
 
     init.onMount(() => {
         example.value = 'test';
+
+        return () => {
+            // Runs on unmount
+        };
     });
 
+    const load = async (): Promise<void> => {
+        const data = await fetch('http://localhost/test/json');
+    }
+
     return <>
-        <label for={id}>
-        <input id={id} type="text" bind:value={value} title={$calc(() => 'This is a title: ' + example.value)} />
+        <label for={id}>This is a field:</abel>
+        <input 
+            id={id} 
+            type="text" 
+            bind:value={value} 
+            title={$calc(() => 'This is a title: ' + example.value)} />
         <br />
-        <button onClick={() => asyncRunner.invoke(() => doSomething())}></button>
+        <button 
+            disabled={asyncRunner.running} 
+            onClick={() => asyncRunner.run(load)}>Load</button>
     </>
 };
 ```

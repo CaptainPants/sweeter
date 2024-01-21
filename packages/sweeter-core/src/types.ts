@@ -28,6 +28,10 @@ export type HookInitializer<TArgs extends readonly unknown[], TResult> =
     | HookFactory<TArgs, TResult>
     | HookConstructor<TArgs, TResult>;
 
+export interface IdGenerator {
+    next: (basis?: string) => string;
+}
+
 /**
  * Object passed to Component functions for initialization. Gives access to mount/unmo0unt callbacks, as well as subscribeToChanges for subscribing to signals with automatic cleanup.
  */
@@ -67,7 +71,8 @@ export interface ComponentInit {
         invokeImmediately?: boolean,
     ): void;
     getContext<T>(context: Context<T>): T;
-    nextId(basis?: string): string;
+
+    readonly idGenerator: IdGenerator;
 
     readonly runtime: Runtime;
 

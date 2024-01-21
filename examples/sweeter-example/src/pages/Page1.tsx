@@ -31,19 +31,19 @@ export function Page1(props: {}, init: ComponentInit): JSX.Element {
     const modalOpen = $propertyOf(state, 'modalOpen');
 
     const ids = {
-        textMutable1: init.nextId(),
-        textMutable2: init.nextId(),
-        textNonMutable: init.nextId(),
-        textDisabled: init.nextId(),
-        textReadonly: init.nextId(),
+        textMutable1: init.idGenerator.next(),
+        textMutable2: init.idGenerator.next(),
+        textNonMutable: init.idGenerator.next(),
+        textDisabled: init.idGenerator.next(),
+        textReadonly: init.idGenerator.next(),
 
-        select: init.nextId(),
-        selectDisabled: init.nextId(),
-        checkbox: init.nextId(),
-        checkboxDisabled: init.nextId(),
+        select: init.idGenerator.next(),
+        selectDisabled: init.idGenerator.next(),
+        checkbox: init.idGenerator.next(),
+        checkboxDisabled: init.idGenerator.next(),
 
-        radiobuttons: init.nextId(),
-        buttons: init.nextId(),
+        radiobuttons: init.idGenerator.next(),
+        buttons: init.idGenerator.next(),
     } as const;
 
     return (

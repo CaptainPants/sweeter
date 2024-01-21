@@ -8,6 +8,7 @@ import {
     type UnsignalAll,
     type ComponentInit,
     type PropsWithIntrinsicAttributesFor,
+    type IdGenerator,
 } from '@captainpants/sweeter-core';
 import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
@@ -36,6 +37,8 @@ function createComponentInstanceInit<
         }
         return hooks;
     }
+
+    let idGenerator: IdGenerator | undefined;
 
     const init: ExtendedComponentInit = {
         isValid: true,
@@ -124,8 +127,18 @@ function createComponentInstanceInit<
                 );
             });
         },
-        nextId(basis?: string) {
-            return webRuntime.nextId(basis);
+        get idGenerator(): IdGenerator {
+            if (!init.isValid) {
+                throw new Error(
+                    'idGenerator must only be called during init phase. You can store the result for later use.',
+                );
+            }
+
+            return (idGenerator ??= {
+                next: (basis?: string) => {
+                    return webRuntime.nextId(basis);
+                },
+            });
         },
 
         // Not sure if this is really a valuable component in init as you can call Context.current

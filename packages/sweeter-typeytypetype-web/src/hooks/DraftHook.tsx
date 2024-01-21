@@ -41,7 +41,6 @@ export function DraftHook<TModel, TDraft>(
     });
 
     const asyncRunner = init.hook(AsyncRunnerHook);
-    const isValidating = $readonly(asyncRunner.running);
 
     init.onSignalChange([draft], ([draft]) => {
         if (draft === modelConverted.peek()) {
@@ -77,6 +76,6 @@ export function DraftHook<TModel, TDraft>(
     return {
         draft,
         validationErrors: validationErrorsReadonly,
-        isValidating: isValidating,
+        isValidating: asyncRunner.running,
     };
 }

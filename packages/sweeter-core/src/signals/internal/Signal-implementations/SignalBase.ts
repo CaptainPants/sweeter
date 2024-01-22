@@ -7,6 +7,7 @@ import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
 import { signalMarker } from '../markers.js';
 import {
+    type InitializedSignalState,
     type DebugDependencyNode,
     type Signal,
     type SignalListener,
@@ -50,9 +51,11 @@ export abstract class SignalBase<T> implements Signal<T> {
         return getSignalValueFromState(this.peekState());
     }
 
-    public peekState(): SignalState<T> {
+    public peekState(): InitializedSignalState<T> {
         this.#ensureInited();
         this._peeking();
+        if (this.#state.mode === 'INITIALISING')
+            throw new TypeError('Expected signal to be initialized.');
         return this.#state;
     }
 

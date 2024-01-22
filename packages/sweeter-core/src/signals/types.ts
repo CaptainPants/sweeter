@@ -4,10 +4,13 @@ import {
     type writableSignalMarker,
 } from './internal/markers.js';
 
-export type SignalState<T> =
-    | { readonly mode: 'INITIALISING' }
+export type InitializedSignalState<T> =
     | { readonly mode: 'SUCCESS'; readonly value: T }
     | { readonly mode: 'ERROR'; readonly error: unknown };
+
+export type SignalState<T> =
+    | { readonly mode: 'INITIALISING' }
+    | InitializedSignalState<T>;
 
 export type SignalListener<T> = (
     previous: SignalState<T>,
@@ -16,38 +19,36 @@ export type SignalListener<T> = (
 
 export interface Signal<T> {
     /**
-     * Get the current value of the signal and subscribe for updates.
+     * Get the current value of the signal and subscribe for updates. If the result of the signal
+     * is an exception, it is rethrown.
      */
     readonly value: T;
 
     /**
-     *
-     */
-    readonly [signalMarker]: true;
-
-    /**
-     * Globally unique id of signal, used only for debugging.
-     */
-    id: number;
-
-    /**
-     * Get the current value of the signal without subscribing for updates.
+     * Get the current value of the signal without subscribing for updates. If the result of the signal
+     * is an exception, it is rethrown.
      */
     peek(): T;
 
-    peekState(): SignalState<T>;
+    /**
+     * Gets the current state of the signal, which might be an exception.
+     */
+    peekState(): InitializedSignalState<T>;
 
+    /**
+     * Use this to check if a signal has been initialized. This can be useful in a $calc that references itself.
+     */
     readonly inited: boolean;
 
     /**
-     * Add a callback to be invoked when the signal changes. This can optionally be a weak reference.
+     * Add a callback to be invoked when the signal's value changes. This can optionally be a weak reference.
      * @param listener
      * @param strong default: true
      */
     listen(listener: SignalListener<T>, strong?: boolean): () => void;
 
     /**
-     *
+     * Remove a callback that has previously been registered.
      * @param listener
      * @param strong default: true
      */
@@ -58,10 +59,24 @@ export interface Signal<T> {
      */
     clearListeners(): void;
 
+    // == DEBUGGING ==
+
+    /**
+     * Globally unique id of signal, used only for debugging.
+     */
+    id: number;
+
     readonly [signalMarker]: true;
 
+    /**
+     * If enabled, this will contain a stack trace created in the constructor of the signature, allowing 
+     * you to work out where the signal was created.
+     */
     readonly createdAtStack?: StackTrace;
 
+    /**
+     * Gets a JSON tree of dependents of the current signal.
+    */
     debugGetListenerTree(): DebugDependencyNode;
 }
 

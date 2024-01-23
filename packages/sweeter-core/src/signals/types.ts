@@ -69,14 +69,14 @@ export interface Signal<T> {
     readonly [signalMarker]: true;
 
     /**
-     * If enabled, this will contain a stack trace created in the constructor of the signature, allowing 
+     * If enabled, this will contain a stack trace created in the constructor of the signature, allowing
      * you to work out where the signal was created.
      */
     readonly createdAtStack?: StackTrace;
 
     /**
      * Gets a JSON tree of dependents of the current signal.
-    */
+     */
     debugGetListenerTree(): DebugDependencyNode;
 }
 

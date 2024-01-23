@@ -64,7 +64,7 @@ export interface Signal<T> {
     /**
      * Globally unique id of signal, used only for debugging.
      */
-    id: number;
+    readonly id: number;
 
     readonly [signalMarker]: true;
 

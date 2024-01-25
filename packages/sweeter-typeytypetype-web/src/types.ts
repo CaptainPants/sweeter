@@ -42,18 +42,6 @@ export type EditorHostProps = EditorLikeProps;
 
 export type EditorComponentType = Component<EditorProps>;
 
-export type LocalizationTemplateCallback = (key: string) => string;
-
-export interface Localizer {
-    localize: {
-        (key: string, args?: unknown[]): string;
-        <TNully extends null | undefined>(
-            key?: string | TNully,
-            args?: unknown[],
-        ): string | TNully;
-    };
-}
-
 /**
  * Abstraction around different modal implementations
  */

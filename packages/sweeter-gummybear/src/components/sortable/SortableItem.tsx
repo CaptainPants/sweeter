@@ -6,7 +6,7 @@ import {
 } from '@captainpants/sweeter-core';
 
 export type SortableItemProps = PropertiesMightBeSignals<{
-    children?: () => JSX.Element;
+    children?: JSX.Element;
 }>;
 
 export const SortableItem: Component<SortableItemProps> = ({ children }) => {
@@ -15,8 +15,6 @@ export const SortableItem: Component<SortableItemProps> = ({ children }) => {
     let _ref: HTMLDivElement | undefined;
 
     return (
-        <div ref={(value) => (_ref = value)}>
-            {$calc(() => $val(children)?.())}
-        </div>
+        <div ref={(value) => (_ref = value)}>{$calc(() => $val(children))}</div>
     );
 };

@@ -8,6 +8,7 @@ import { SortableListContext } from './internal/SortableListContext.js';
 
 export type SortableListProps = PropertiesMightBeSignals<{
     children?: () => JSX.Element;
+    onSortEnd?: (fromIndex: number, toIndex: number) => void;
 }>;
 
 export const SortableList: Component<SortableListProps> = ({ children }) => {

@@ -10,3 +10,4 @@ export * from './hasOwnProperty.js';
 export * from './isAbortError.js';
 export * from './Maybe.js';
 export * from './StackTrace.js';
+export * from './interpolatePlaceholders.js';

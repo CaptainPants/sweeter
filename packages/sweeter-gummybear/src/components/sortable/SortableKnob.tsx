@@ -1,18 +1,22 @@
 import {
-    $calc,
-    $val,
     type Component,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type TypedEvent } from '@captainpants/sweeter-web';
+import {
+    type ElementCssClasses,
+    type ElementCssStyles,
+    type TypedEvent,
+} from '@captainpants/sweeter-web';
 import { SortableListContext } from './internal/SortableListContext.js';
 
 export type SortableKnobProps = PropertiesMightBeSignals<{
+    class?: ElementCssClasses;
+    style?: ElementCssStyles;
     children?: JSX.Element;
 }>;
 
 export const SortableKnob: Component<SortableKnobProps> = (
-    { children },
+    { children, class: classNames, style },
     init,
 ) => {
     const _context = init.getContext(SortableListContext);
@@ -24,5 +28,9 @@ export const SortableKnob: Component<SortableKnobProps> = (
         // Triggers dragging, and probably registers a document handler
     }
 
-    return <div onmousedown={onMouseDown}>{$calc(() => $val(children))}</div>;
+    return (
+        <div onmousedown={onMouseDown} class={classNames} style={style}>
+            {children}
+        </div>
+    );
 };

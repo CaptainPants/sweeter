@@ -76,7 +76,7 @@ export function ArrayEditor(
         const copy = await draft
             .peek()
             .spliceElements(
-                typedModel.peek().value.length,
+                draft.peek().value.length,
                 0,
                 [type.createDefault()],
                 false,
@@ -113,35 +113,26 @@ export function ArrayEditor(
         void move(oldIndex, newIndex);
     };
 
-    const elements = $calc(() => {
-        return draft.value.getElements().map((elementModel, index) => ({
-            elementModel,
-            render: (key?: string) => (
-                <ElementEditorPart
-                    key={key}
-                    index={index}
-                    elementModel={elementModel}
-                    updateElement={updateElementValue}
-                    indent={indent}
-                    ownerIdPath={idPath}
-                />
-            ),
-        }));
-    });
-
-    return $calc(() => {
-        return (
-            <>
-                <SortableList onSortEnd={onSortEnd}>
-                    {() =>
-                        $foreach(elements, (item, index) => (
+    return (
+        <>
+            <SortableList onSortEnd={onSortEnd}>
+                {() =>
+                    $foreach(
+                        $calc(() => draft.value.getElements()),
+                        (item, index) => (
                             <SortableItem key={`item-${index}`}>
                                 <div class={css.item}>
                                     <SortableKnob>
                                         <div class={css.sortableKnob} />
                                     </SortableKnob>
                                     <div class={css.itemInputArea}>
-                                        {$calc(() => item.value.render())}
+                                        <ElementEditorPart
+                                            index={index}
+                                            elementModel={item}
+                                            updateElement={updateElementValue}
+                                            indent={indent}
+                                            ownerIdPath={idPath}
+                                        />
                                     </div>
                                     <div
                                         class={css.deleteIcon}
@@ -153,40 +144,40 @@ export function ArrayEditor(
                                     />
                                 </div>
                             </SortableItem>
-                        ))
-                    }
-                </SortableList>
-                {$if(
-                    $calc(() => (validationErrors.value?.length ?? 0) > 0),
-                    () => (
-                        <div>
-                            <ValidationDisplay errors={validationErrors} />
-                        </div>
-                    ),
+                        ),
+                    )
+                }
+            </SortableList>
+            {$if(
+                $calc(() => (validationErrors.value?.length ?? 0) > 0),
+                () => (
+                    <div>
+                        <ValidationDisplay errors={validationErrors} />
+                    </div>
+                ),
+            )}
+            <div>
+                {$calc(() =>
+                    allowedTypes.value.map((allowedType, index) => {
+                        return (
+                            <Button
+                                key={`add-${index}`}
+                                onclick={() => {
+                                    void add(allowedType);
+                                }}
+                            >
+                                {allowedTypes.value.length === 1
+                                    ? localize('Add')
+                                    : localize('Add {0}', [
+                                          allowedType.getBestDisplayName(),
+                                      ])}
+                            </Button>
+                        );
+                    }),
                 )}
-                <div>
-                    {$calc(() =>
-                        allowedTypes.value.map((allowedType, index) => {
-                            return (
-                                <Button
-                                    key={`add-${index}`}
-                                    onclick={() => {
-                                        void add(allowedType);
-                                    }}
-                                >
-                                    {allowedTypes.value.length === 1
-                                        ? localize('Add')
-                                        : localize('Add {0}', [
-                                              allowedType.getBestDisplayName(),
-                                          ])}
-                                </Button>
-                            );
-                        }),
-                    )}
-                </div>
-            </>
-        );
-    });
+            </div>
+        </>
+    );
 }
 
 const css = {

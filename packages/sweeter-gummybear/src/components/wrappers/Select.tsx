@@ -28,7 +28,7 @@ export type SelectProps = PropertiesMightBeSignals<{
     fillWidth?: boolean | undefined;
     invalid?: boolean | undefined;
 
-    id?: string;
+    id?: string | undefined;
 
     value?: string | undefined;
 

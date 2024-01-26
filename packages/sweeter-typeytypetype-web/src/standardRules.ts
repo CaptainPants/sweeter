@@ -2,6 +2,7 @@ import { createDefaultRulesSet } from './createDefaultRulesSet.js';
 import { ArrayEditor } from './editors/ArrayEditor.js';
 import { RigidObjectEditor } from './editors/RigidObjectEditor.js';
 import { TextEditor } from './editors/TextEditor.js';
+import { UnionEditor } from './editors/UnionEditor.js';
 import { ConstantEditor, NumberEditor, BooleanEditor } from './index.js';
 
 export const standardRules = createDefaultRulesSet({
@@ -11,6 +12,6 @@ export const standardRules = createDefaultRulesSet({
     number: NumberEditor,
     boolean: BooleanEditor,
     array: ArrayEditor,
-    // union: MuiUnionEditor,
+    union: UnionEditor,
     constant: ConstantEditor,
 });

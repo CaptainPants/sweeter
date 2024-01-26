@@ -31,15 +31,15 @@ export function $peek<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.peek() : value;
 }
 
-export function $valEach<TArgs extends readonly unknown[]>(
+export function $valElements<TArgs extends readonly unknown[]>(
     values: [...TArgs],
 ): UnsignalAll<[...TArgs]> {
     return values.map((x) => $val(x)) as UnsignalAll<[...TArgs]>;
 }
 
-export function $valObjectValues<
-    TObj extends Readonly<Record<string, unknown>>,
->(source: TObj): UnsignalAll<TObj> {
+export function $valProperties<TObj extends Readonly<Record<string, unknown>>>(
+    source: TObj,
+): UnsignalAll<TObj> {
     const result = {} as Record<string, unknown>;
 
     for (const key of Object.keys(source)) {

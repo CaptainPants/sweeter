@@ -1,5 +1,5 @@
 import { isSignal } from './isSignal.js';
-import { $valEach } from './$val.js';
+import { $valElements } from './$val.js';
 import { type UnsignalAll } from './types.js';
 import { popAndCallAll } from '../internal/popAndCallAll.js';
 import {
@@ -31,7 +31,7 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
         }
 
         // callback can return a cleanup method to be called next change.
-        lastCleanup = callback($valEach(dependencies));
+        lastCleanup = callback($valElements(dependencies));
     };
     addExplicitStrongReference(callback, innerCallback);
 

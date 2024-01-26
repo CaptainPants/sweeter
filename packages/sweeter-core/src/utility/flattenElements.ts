@@ -2,8 +2,14 @@ import { type Signal, isSignal, $calc } from '../signals/index.js';
 
 export type FlattenedElement = Exclude<
     JSX.Element,
-    JSX.Element[] | null | undefined | Signal<JSX.Element> | boolean
+    readonly JSX.Element[] | null | undefined | Signal<JSX.Element> | boolean
 >;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isArray(item: unknown): item is readonly any[] {
+    // Annoyingly Array.isArray is not using readonly
+    return Array.isArray(item);
+}
 
 /**
  * Flattens nested arrays and calls .value on signals. Removes null and undefined
@@ -28,7 +34,7 @@ function flattenImplementation(
         return;
     }
 
-    if (Array.isArray(children)) {
+    if (isArray(children)) {
         children.forEach((inner) => {
             flattenImplementation(inner, output);
         });

@@ -57,7 +57,7 @@ declare global {
          * '{library-name}': BackendSpecificJSXElement1 | BackendSpecificJSXElement2;
          */
         interface IntrinsicElementTypes {
-            'wireyui-core': number | string | boolean | null | undefined;
+            'sweeter-core': number | string | boolean | null | undefined;
         }
 
         /**

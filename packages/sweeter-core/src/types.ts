@@ -4,7 +4,10 @@ import { type Signal, type UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;
 
-export type JSXElement = IntrinsicElement | Signal<JSXElement> | JSXElement[];
+export type JSXElement =
+    | IntrinsicElement
+    | Signal<JSXElement>
+    | readonly JSXElement[];
 
 export type JSXIntrinsicElements = {
     [Key in SweeterExtensionPoints.IntrinsicElementNames[keyof SweeterExtensionPoints.IntrinsicElementNames] &

@@ -10,7 +10,7 @@ import {
     $calc,
     $peek,
     $val,
-    $valObjectValues,
+    $valProperties,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 
@@ -125,7 +125,7 @@ export function EditorHost(
     return $calc(() => {
         const args: RenderNextFunctionArgs = Object.assign(
             {},
-            $valObjectValues(passThroughToRenderProps),
+            $valProperties(passThroughToRenderProps),
             {
                 model,
                 local,

@@ -6,7 +6,7 @@ import {
     $mutable,
     $peek,
     $val,
-    $valObjectValues,
+    $valProperties,
     LocalizerHook,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
@@ -38,7 +38,7 @@ export function ModalEditor(
     const { validated, isValid } = init.hook(ValidationContainerHook);
 
     const nextProps = $calc(() => {
-        return Object.assign({}, $valObjectValues(passthrough), {
+        return Object.assign({}, $valProperties(passthrough), {
             indent: 0,
             model: modelSnapshot,
             replace: async (replacement: Model<unknown>): Promise<void> => {

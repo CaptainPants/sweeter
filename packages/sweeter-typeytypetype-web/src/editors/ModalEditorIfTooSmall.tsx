@@ -26,8 +26,9 @@ export function ModalEditorIfTooSmall(
         const minWidthResolved = $val(minWidth);
 
         return (
+            // minWidgthResolved === undefined is not a sensible condition, but if it is the case then we never use a modal
             minWidthResolved !== undefined &&
-            measuredWidth.value > minWidthResolved
+            measuredWidth.value <= minWidthResolved
         );
     });
 

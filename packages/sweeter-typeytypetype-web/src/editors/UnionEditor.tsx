@@ -7,7 +7,7 @@ import {
     asUnion,
     cast,
 } from '@captainpants/typeytypetype';
-import { $calc, $if, $peek, $val } from '@captainpants/sweeter-core';
+import { $calc, $if, $mutableFromCallbacks, $peek, $val } from '@captainpants/sweeter-core';
 import { EditorHost } from '../index.js';
 import { idPaths } from '../idPaths.js';
 
@@ -23,6 +23,7 @@ export function UnionEditor({
     const type = $calc(() => typedModel.value.type);
 
     const alternatives = $calc(() =>
+        // Only depends on 'type' signal
         type.value.types.map((alternative) => {
             return {
                 label: alternative.displayName ?? alternative.name ?? 'unknown',
@@ -32,6 +33,7 @@ export function UnionEditor({
     );
 
     const selectOptions = $calc(() => {
+        // Only depends on 'alternatives' signal
         return alternatives.value.map((x, index) => ({
             text: x.label,
             value: String(index),
@@ -60,18 +62,22 @@ export function UnionEditor({
 
     const typeIndex = $calc(() => type.value.getTypeIndexForValue(model.value));
 
+    const typeValue = $mutableFromCallbacks(
+        () => typeIndex.value.toString(),
+        (value) => {
+            const index = Number(value);
+            const type = alternatives.peek()[index]?.type;
+            if (!type) return;
+            void changeType(type);
+        }
+    );
+
     return (
         <div>
             <div>
                 <Select
                     id={idPath}
-                    value={$calc(() => typeIndex.value.toString())}
-                    onInput={(evt) => {
-                        const index = Number(evt.target?.value);
-                        const type = alternatives.peek()[index]?.type;
-                        if (!type) return;
-                        void changeType(type);
-                    }}
+                    bind:value={typeValue}
                     options={selectOptions}
                 />
             </div>

@@ -36,7 +36,9 @@ export function $map<T, U>(
         elementCache.length = 0;
     };
 
-    items.listen(resetCache, false);
+    if (isSignal(map)) {
+        map.listen(resetCache, false);
+    }
 
     // items is a signal, we need to keep track of a signal for every item
     // including if it changes lengths to dispose/orphan signals that no longer

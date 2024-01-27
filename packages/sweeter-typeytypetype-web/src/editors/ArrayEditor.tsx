@@ -109,18 +109,14 @@ export function ArrayEditor(
 
     const { localize } = init.hook(LocalizerHook);
 
-    const onSortEnd = (oldIndex: number, newIndex: number) => {
-        void move(oldIndex, newIndex);
-    };
-
     return (
         <>
-            <SortableList onSortEnd={onSortEnd}>
+            <SortableList onSortEnd={move}>
                 {() =>
                     $foreach(
                         $calc(() => draft.value.getElements()),
-                        (item, index) => (
-                            <SortableItem key={`item-${index}`}>
+                        (item, index) => {
+                            return <SortableItem>
                                 <div class={css.item}>
                                     <SortableKnob>
                                         <div class={css.sortableKnob} />
@@ -144,7 +140,7 @@ export function ArrayEditor(
                                     />
                                 </div>
                             </SortableItem>
-                        ),
+                        },
                     )
                 }
             </SortableList>

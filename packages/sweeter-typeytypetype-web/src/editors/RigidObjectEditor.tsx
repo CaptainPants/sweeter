@@ -36,7 +36,7 @@ export function RigidObjectEditor(
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
 
-    const baseId = init.idGenerator.next();
+    const idGenerator = init.idGenerator;
 
     const { draft } = init.hook(
         DraftHook<
@@ -99,7 +99,7 @@ export function RigidObjectEditor(
             // SIGNAL HERE
             type.value,
             (property) => {
-                const id = baseId + '_' + property.name;
+                const id = idGenerator.next(property.name);
 
                 return {
                     property: property,
@@ -155,6 +155,8 @@ export function RigidObjectEditor(
                                 </Column>
                             </Row>
                         ) : undefined}
+                        {/* Note that properties is based on the definition and not the model,
+                            so will not be re-calculated when the model is updated. */}
                         {properties.map(({ property, id }, index) => {
                             return $if(
                                 $calc(
@@ -229,7 +231,7 @@ export function RigidObjectEditor(
 
 const styles = {
     editorOuter: new GlobalCssClass({
-        className: 'editorOuter',
+        className: 'RigidObjectEditor-EditorOuter',
         content: stylesheet`
             display: flex;
             flex-direction: column;
@@ -237,20 +239,20 @@ const styles = {
         `,
     }),
     editorPropertyDisplayName: new GlobalCssClass({
-        className: 'editorPropertyDisplayName',
+        className: 'RigidObjectEditor-EditorPropertyDisplayName',
         content: stylesheet`
             line-height: 2;
         `,
     }),
     editorIndentContainer: new GlobalCssClass({
-        className: 'editorIndentContainer',
+        className: 'RigidObjectEditor-EditorIndentContainer',
         content: stylesheet`
             display: flex;
             flex-direction: row;
         `,
     }),
     editorIndent: new GlobalCssClass({
-        className: 'editorIndent',
+        className: 'RigidObjectEditor-EditorIndent',
         content: stylesheet`
             padding-top: 14;
             padding-left: 8;
@@ -260,13 +262,13 @@ const styles = {
         `,
     }),
     editorContainer: new GlobalCssClass({
-        className: 'editorContainer',
+        className: 'RigidObjectEditor-EditorContainer',
         content: stylesheet`
             flex: 1;
         `,
     }),
     categoryHeader: new GlobalCssClass({
-        className: 'categoryHeader',
+        className: 'RigidObjectEditor-CategoryHeader',
         content: stylesheet` 
             font-weight: 'bold';
             line-height: 2;

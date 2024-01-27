@@ -7,7 +7,13 @@ import {
     asUnion,
     cast,
 } from '@captainpants/typeytypetype';
-import { $calc, $if, $mutableFromCallbacks, $peek, $val } from '@captainpants/sweeter-core';
+import {
+    $calc,
+    $if,
+    $mutableFromCallbacks,
+    $peek,
+    $val,
+} from '@captainpants/sweeter-core';
 import { EditorHost } from '../index.js';
 import { idPaths } from '../idPaths.js';
 
@@ -69,7 +75,7 @@ export function UnionEditor({
             const type = alternatives.peek()[index]?.type;
             if (!type) return;
             void changeType(type);
-        }
+        },
     );
 
     return (

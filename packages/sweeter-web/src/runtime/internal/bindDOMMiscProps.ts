@@ -63,22 +63,11 @@ const bindableMap = new Map<string, MutableMapping>([
  */
 const specialHandlingProps = ['children', 'ref', 'class', 'style'];
 
-/**
- * These attributes if set will make their elements readonly (or disabled) as it
- * implies they should always show the current value of the bound signal/constant.
- *
- * Alternatively if you use the bind:${name} version the elements will write back
- * updates and therefore not be readonly.
- */
-const causesReadonlyIfOneWayBound = ['checked', 'value'];
-
 export function bindDOMMiscProps<TElementType extends string>(
     node: Node,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
     runtime: WebRuntime,
 ): void {
-    let forcedToBeReadonly = false; // Note that readonly is only valid on input and textarea, whereas disabled is valid on select
-
     for (const propKey of Object.getOwnPropertyNames(props)) {
         if (specialHandlingProps.includes(propKey)) {
             continue;
@@ -154,10 +143,6 @@ export function bindDOMMiscProps<TElementType extends string>(
                 node.addEventListener(eventName, value as EventListener);
             }
         } else {
-            if (causesReadonlyIfOneWayBound.includes(mappedPropKey)) {
-                forcedToBeReadonly = true;
-            }
-
             // ==== NORMAL SIGNAL BINDING ====
             if (isSignal(value)) {
                 (node as unknown as Untyped)[mappedPropKey] = value.peek();
@@ -174,19 +159,6 @@ export function bindDOMMiscProps<TElementType extends string>(
                 addExplicitStrongReference(node, changeCallback);
             } else {
                 (node as unknown as Untyped)[mappedPropKey] = value;
-            }
-        }
-
-        // They may already be readonly or disabled, this happens last as an override
-        // Not sure if this behaviour should be optional
-        if (forcedToBeReadonly) {
-            if (
-                node instanceof HTMLInputElement ||
-                node instanceof HTMLTextAreaElement
-            ) {
-                node.readOnly = true;
-            } else if (node instanceof HTMLSelectElement) {
-                node.disabled = true; // Need to decide if this is appropriate
             }
         }
     }

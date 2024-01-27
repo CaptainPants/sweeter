@@ -117,7 +117,7 @@ export type ObjectModel<TObject extends Record<string, unknown>> = ModelBase<
 export interface UnionModelProperties<TUnion> {
     as: <TAs>(type: Type<TAs>) => Model<TAs> | null;
 
-    getDirectltResolved: () => Model<unknown>;
+    getDirectlyResolved: () => Model<unknown>;
 
     getRecursivelyResolved: () => SpreadModel<TUnion>;
 

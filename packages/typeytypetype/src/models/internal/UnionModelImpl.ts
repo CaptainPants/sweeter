@@ -47,7 +47,7 @@ export class UnionModelImpl<TUnion>
 
     #resolved: Model<unknown>;
 
-    public getDirectltResolved(): Model<unknown> {
+    public getDirectlyResolved(): Model<unknown> {
         return this.#resolved;
     }
 

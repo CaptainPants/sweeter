@@ -55,7 +55,7 @@ export function UnionEditor({
         await $peek(replace)(defaultModel);
     };
 
-    const resolved = $calc(() => typedModel.value.getDirectltResolved());
+    const resolved = $calc(() => typedModel.value.getDirectlyResolved());
 
     const replaceResolved = async (
         newResolvedModel: Model<unknown>,
@@ -66,7 +66,9 @@ export function UnionEditor({
         await $peek(replace)(defaultModel);
     };
 
-    const typeIndex = $calc(() => type.value.getTypeIndexForValue(model.value));
+    const typeIndex = $calc(() =>
+        type.value.getTypeIndexForValue(typedModel.value.value),
+    );
 
     const typeValue = $mutableFromCallbacks(
         () => typeIndex.value.toString(),

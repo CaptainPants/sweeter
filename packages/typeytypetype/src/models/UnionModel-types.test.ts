@@ -35,7 +35,7 @@ test('union', async () => {
         1 | 2 | string
     > = true;
 
-    const resolved = model.getDirectltResolved();
+    const resolved = model.getDirectlyResolved();
 
     expect(resolved.type).toStrictEqual(nested);
     expect(resolved.value).toStrictEqual(1);

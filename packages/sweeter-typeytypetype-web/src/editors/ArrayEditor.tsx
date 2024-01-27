@@ -116,30 +116,34 @@ export function ArrayEditor(
                     $foreach(
                         $calc(() => draft.value.getElements()),
                         (item, index) => {
-                            return <SortableItem>
-                                <div class={css.item}>
-                                    <SortableKnob>
-                                        <div class={css.sortableKnob} />
-                                    </SortableKnob>
-                                    <div class={css.itemInputArea}>
-                                        <ElementEditorPart
-                                            index={index}
-                                            elementModel={item}
-                                            updateElement={updateElementValue}
-                                            indent={indent}
-                                            ownerIdPath={idPath}
+                            return (
+                                <SortableItem>
+                                    <div class={css.item}>
+                                        <SortableKnob>
+                                            <div class={css.sortableKnob} />
+                                        </SortableKnob>
+                                        <div class={css.itemInputArea}>
+                                            <ElementEditorPart
+                                                index={index}
+                                                elementModel={item}
+                                                updateElement={
+                                                    updateElementValue
+                                                }
+                                                indent={indent}
+                                                ownerIdPath={idPath}
+                                            />
+                                        </div>
+                                        <div
+                                            class={css.deleteIcon}
+                                            onclick={(evt) => {
+                                                if (evt.button === 0) {
+                                                    void remove(index);
+                                                }
+                                            }}
                                         />
                                     </div>
-                                    <div
-                                        class={css.deleteIcon}
-                                        onclick={(evt) => {
-                                            if (evt.button === 0) {
-                                                void remove(index);
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            </SortableItem>
+                                </SortableItem>
+                            );
                         },
                     )
                 }

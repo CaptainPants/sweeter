@@ -67,7 +67,7 @@ export const MapObjectEditor: Component<EditorProps> = (
     const owner = $calc(() => draft.value.value);
 
     // TODO: this will rebuild every time the model is updated which is BAD
-    // need to implement an alternative to $map that does an object-identity
+    // need to implement an alternative to $mapByIndex that does an object-identity
     // approach (vs the existing one that is based on index). Wouldn't hurt
     // to throw in a object property key based one as well..
     const content = $calc(() => {

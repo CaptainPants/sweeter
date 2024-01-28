@@ -11,7 +11,7 @@ import {
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
 
-export function $map<T, U>(
+export function $mapByIndex<T, U>(
     items: MightBeSignal<readonly T[]>,
     map: MightBeSignal<(item: Signal<T>, index: number) => U>,
 ): Signal<readonly U[]> {

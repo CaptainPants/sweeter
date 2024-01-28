@@ -4,7 +4,7 @@
  * @param b
  * @returns
  */
-export function arrayExcept<T>(a: T[], b: T[]): T[] {
+export function arrayExcept<T>(a: readonly T[], b: readonly T[]): T[] {
     if (b.length > 10) {
         const bSet = new Set(b);
         return a.filter((x) => !bSet.has(x));

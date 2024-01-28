@@ -1,5 +1,5 @@
 import { getRuntime } from '../index.js';
-import { $map } from '../signals/$map.js';
+import { $mapByIndex } from '../signals/$mapByIndex.js';
 import { type Signal } from '../signals/types.js';
 import {
     type MightBeSignal,
@@ -17,7 +17,7 @@ export function For<T>({
     each: items,
     children: renderItem,
 }: ForProps<T>): JSX.Element {
-    return $map(items, renderItem);
+    return $mapByIndex(items, renderItem);
 }
 
 export function $foreach<T>(

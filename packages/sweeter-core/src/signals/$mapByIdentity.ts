@@ -13,7 +13,7 @@ import {
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
 
-export function $mapByIndexByIdentity<T, U>(
+export function $mapByIdentity<T, U>(
     items: MightBeSignal<readonly T[]>,
     map: MightBeSignal<(item: T, index: Signal<number>) => U>,
     orderBy: (obj: U) => string | number,

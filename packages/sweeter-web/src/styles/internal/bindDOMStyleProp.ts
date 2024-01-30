@@ -43,7 +43,8 @@ export function bindDOMStyleProp(
             for (const key of Object.getOwnPropertyNames(stylesValue)) {
                 const rawValue = stylesValue[key as keyof ElementCssStyles] as
                     | string
-                    | Signal<string>
+                    | number
+                    | Signal<string | number>
                     | undefined;
 
                 if (rawValue) {
@@ -51,14 +52,12 @@ export function bindDOMStyleProp(
 
                     // Add px if needed
                     if (typeof value === 'number') {
-                        const suffix = suffixes[key];
+                        const suffix = suffixes[key] ?? ''; // If the result is undefined, happily this will append a '' to the number - which just converts it to sa string
 
-                        if (suffix) {
-                            value = value + suffix;
-                        }
+                        value = value + suffix;
                     }
 
-                    result.push(key, ': ', $val(rawValue), ';');
+                    result.push(key, ': ', value, ';');
                 }
             }
         }

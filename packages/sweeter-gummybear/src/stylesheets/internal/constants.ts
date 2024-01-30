@@ -48,3 +48,15 @@ export const columnWidthNames = [
 
 export const breakpointNames = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 export const breakpointSizes = [undefined, 576, 720, 960, 1200] as const;
+
+export type BreakpointSizeName = Exclude<
+    (typeof breakpointNames)[number],
+    'xs'
+>;
+
+export const breakpointNameToSizeMap = {
+    sm: breakpointSizes[1],
+    md: breakpointSizes[2],
+    lg: breakpointSizes[3],
+    xl: breakpointSizes[4],
+} satisfies Record<BreakpointSizeName, number>;

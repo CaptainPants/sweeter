@@ -1,14 +1,23 @@
 import {
+    isSignal,
     type Component,
     type IntrinsicElementAttributes,
     type PropertiesMightBeSignals,
+    $calc,
 } from '@captainpants/sweeter-core';
-import { row } from '../../stylesheets/grid.js';
+import {
+    breakpointNameToSizeMap,
+    type BreakpointSizeName,
+} from '../../stylesheets/internal/constants.js';
+import { GlobalCssClass, type ElementCssStyles, stylesheet } from '@captainpants/sweeter-web';
+import { combineStyles } from '../../internal/combineStyles.js';
 
 export type ContainerProps = PropertiesMightBeSignals<{
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
+
+    size?: BreakpointSizeName | undefined;
 }> & {
     passthrough?: IntrinsicElementAttributes<'div'>;
 };
@@ -16,15 +25,38 @@ export type ContainerProps = PropertiesMightBeSignals<{
 export const Container: Component<ContainerProps> = ({
     id,
     children,
-    passthrough: { class: classFromPassthroughProps, ...passthroughProps } = {},
+    size,
+    passthrough: {
+        class: classFromPassthroughProps,
+        style: styleFromPassthroughProps,
+        ...passthroughProps
+    } = {},
 }) => {
+    const style: ElementCssStyles = {
+        width: isSignal(size)
+            ? $calc(() =>
+                  size.value
+                      ? `${breakpointNameToSizeMap[size.value]}px`
+                      : undefined,
+              )
+            : size ? `${breakpointNameToSizeMap[size]}px` : undefined,
+    };
+
     return (
         <div
             id={id}
-            class={[classFromPassthroughProps, row]}
+            class={[classFromPassthroughProps, css]}
+            style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         >
             {children}
         </div>
     );
 };
+
+const css = new GlobalCssClass({
+    className: 'container',
+    content: stylesheet`
+        margin: 0 auto;
+    `
+});

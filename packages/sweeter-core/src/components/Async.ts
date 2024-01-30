@@ -107,8 +107,17 @@ export function Async<T>(
     });
 }
 
+/**
+ *
+ * @param loadData
+ * @param render
+ * @returns
+ */
 export function $async<T>(
     loadData: MightBeSignal<(abort: AbortSignal) => Promise<T>>,
+    /**
+     * Note that this is called inside a $calc, so signals can be subscribed without additionally wrapping in another $calc.
+     */
     render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
 ): JSX.Element {
     return getRuntime().jsx(Async<T>, { loadData, children: render });

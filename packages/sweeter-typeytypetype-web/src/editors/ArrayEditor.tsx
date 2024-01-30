@@ -25,6 +25,7 @@ import {
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 
 export function ArrayEditor(
     {
@@ -109,6 +110,8 @@ export function ArrayEditor(
 
     const { localize } = init.hook(LocalizerHook);
 
+    const { DragHandle, Delete } = init.getContext(IconProviderContext);
+
     return (
         <>
             <SortableList onSortEnd={move}>
@@ -120,7 +123,9 @@ export function ArrayEditor(
                                 <SortableItem>
                                     <div class={css.item}>
                                         <SortableKnob>
-                                            <div class={css.sortableKnob} />
+                                            <div class={css.sortableKnob}>
+                                                <DragHandle />
+                                            </div>
                                         </SortableKnob>
                                         <div class={css.itemInputArea}>
                                             <ElementEditorPart
@@ -140,7 +145,9 @@ export function ArrayEditor(
                                                     void remove(index);
                                                 }
                                             }}
-                                        />
+                                        >
+                                            <Delete />
+                                        </div>
                                     </div>
                                 </SortableItem>
                             );
@@ -205,7 +212,7 @@ const css = {
     sortableKnob: new GlobalCssClass({
         className: 'ArrayEditor-SortableKnob',
         content: stylesheet`
-            cursor: move,
+            cursor: move;
             margin: 12;
         `,
     }),

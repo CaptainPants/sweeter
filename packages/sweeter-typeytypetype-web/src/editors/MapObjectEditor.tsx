@@ -1,4 +1,10 @@
-import { $calc, $peek, $val, type Component } from '@captainpants/sweeter-core';
+import {
+    $calc,
+    $if,
+    $peek,
+    $val,
+    type Component,
+} from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
 import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
@@ -10,6 +16,7 @@ import {
     cast,
     sortProperties,
 } from '@captainpants/typeytypetype';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {
@@ -23,8 +30,6 @@ export const MapObjectEditor: Component<EditorProps> = (
     init,
 ): JSX.Element => {
     const typedModel = $calc(() => cast($val(model), asMap));
-
-    const addIndent = !isRoot;
 
     const { indentWidth } = init.getContext(EditorSizesContext);
 
@@ -94,24 +99,33 @@ export const MapObjectEditor: Component<EditorProps> = (
         ));
     });
 
-    return (
-        <div class={styles.editorOuter}>
-            {propertyDisplayName && (
-                <div class={styles.editorPropertyDisplayName}>
-                    {propertyDisplayName}
-                </div>
-            )}
-            <div class={styles.editorIndentContainer}>
-                {addIndent && (
-                    <div
-                        class={styles.editorIndent}
-                        style={{ width: indentWidth }}
-                    />
+    const { Child } = init.getContext(IconProviderContext);
+
+    return $calc(() => {
+        return (
+            <div class={styles.editorOuter}>
+                {propertyDisplayName && (
+                    <div class={styles.editorPropertyDisplayName}>
+                        {propertyDisplayName}
+                    </div>
                 )}
-                <div class={styles.editorContainer}>{content}</div>
+                <div class={styles.editorIndentContainer}>
+                    {$if(
+                        $calc(() => !$val(isRoot)),
+                        () => (
+                            <div
+                                class={styles.editorIndent}
+                                style={{ width: indentWidth }}
+                            >
+                                <Child />
+                            </div>
+                        ),
+                    )}
+                    <div class={styles.editorContainer}>{content}</div>
+                </div>
             </div>
-        </div>
-    );
+        );
+    });
 };
 
 const styles = {

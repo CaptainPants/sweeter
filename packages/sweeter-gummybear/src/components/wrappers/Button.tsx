@@ -74,7 +74,12 @@ export const Button: Component<ButtonProps> = ({
             id={id}
             onclick={combineEventHandlers(onclick, onclickFromPassthroughProps)}
             disabled={disabled}
-            class={[classFromPassthroughProps, classesFromProps, button]}
+            class={[
+                classFromPassthroughProps,
+                classesFromProps,
+                button,
+                classProp,
+            ]}
             style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         >

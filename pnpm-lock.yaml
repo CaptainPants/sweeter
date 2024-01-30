@@ -177,6 +177,10 @@ importers:
       tinycolor2:
         specifier: ^1.6.0
         version: 1.6.0
+    optionalDependencies:
+      lucide:
+        specifier: ^0.319.0
+        version: 0.319.0
 
   packages/sweeter-utilities: {}
 
@@ -4375,6 +4379,12 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
     dev: true
+
+  /lucide@0.319.0:
+    resolution: {integrity: sha512-X1u/ttDY7V/mqDc626McNtnaQXzxWcUJs8O1k13vtW64R7xDS7FhGbqGnG8XmJsfJ12Z4qXu/C6rOWBhCqwhVw==}
+    requiresBuild: true
+    dev: false
+    optional: true
 
   /lunr@2.3.9:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}

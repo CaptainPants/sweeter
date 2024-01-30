@@ -39,5 +39,8 @@
         "@captainpants/typeytypetype": "workspace:^",
         "@popperjs/core": "^2.11.8",
         "tinycolor2": "^1.6.0"
+    },
+    "optionalDependencies": {
+        "lucide": "^0.319.0"
     }
 }

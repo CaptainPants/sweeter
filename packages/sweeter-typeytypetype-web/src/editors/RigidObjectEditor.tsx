@@ -24,6 +24,7 @@ import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { PropertyEditorPart } from './PropertyEditorPart.js';
 import { Row, Column, Label } from '@captainpants/sweeter-gummybear';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 
 export function RigidObjectEditor(
     { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
@@ -90,6 +91,8 @@ export function RigidObjectEditor(
             >,
     );
 
+    const { Child } = init.getContext(IconProviderContext);
+
     const content = $calc(() => {
         // AVOID SUBSCRIBING TO SIGNALS AT ROOT
         // As it will rebuild the structure completely, and you will lose element focus/selection etc.
@@ -125,7 +128,7 @@ export function RigidObjectEditor(
                                     StandardLocalValues.Visible,
                                     typedModel.value,
                                     calculationContext,
-                                ) !== true
+                                ) !== false
                             ); // likely values are notFound and false
                         },
                     );
@@ -163,7 +166,7 @@ export function RigidObjectEditor(
                                     () =>
                                         propertyVisiblePerProperty.value[
                                             index
-                                        ] ?? false,
+                                        ] ?? true,
                                 ),
                                 () => (
                                     <Row
@@ -208,19 +211,20 @@ export function RigidObjectEditor(
         return content;
     });
 
-    const addIndent = !isRoot;
-
     return $calc(() => {
         return (
             <div class={styles.editorOuter}>
                 <div class={styles.editorIndentContainer}>
-                    {addIndent && (
-                        <div
-                            class={styles.editorIndent}
-                            style={{ width: indentWidth }}
-                        >
-                            &gt;
-                        </div>
+                    {$if(
+                        $calc(() => !$val(isRoot)),
+                        () => (
+                            <div
+                                class={styles.editorIndent}
+                                style={{ width: `${indentWidth}px` }}
+                            >
+                                <Child />
+                            </div>
+                        ),
                     )}
                     <div class={styles.editorContainer}>{content}</div>
                 </div>
@@ -241,7 +245,6 @@ const styles = {
     editorPropertyDisplayName: new GlobalCssClass({
         className: 'RigidObjectEditor-EditorPropertyDisplayName',
         content: stylesheet`
-            line-height: 2;
         `,
     }),
     editorIndentContainer: new GlobalCssClass({
@@ -254,8 +257,8 @@ const styles = {
     editorIndent: new GlobalCssClass({
         className: 'RigidObjectEditor-EditorIndent',
         content: stylesheet`
-            padding-top: 14;
-            padding-left: 8;
+            padding-top: 14px;
+            padding-left: 8px;
             svg: {
                 opacity: 0.25;
             }

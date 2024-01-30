@@ -42,8 +42,12 @@ export function ModalEditorIfTooSmall(
 
     return (
         <MeasuredBox
-            onInitialLayout={(w) => (measuredWidth.value = w)}
-            onLayout={(w) => (measuredWidth.value = w)}
+            onInitialLayout={(w) => {
+                measuredWidth.value = w;
+            }}
+            onLayout={(w) => {
+                measuredWidth.value = w;
+            }}
         >
             {content}
         </MeasuredBox>

@@ -39,7 +39,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                 <>
                     <IncludeThemeStylesheets />
                     <h1>Simple Example</h1>
-                    <Container>
+                    <Container size="lg">
                         <WithId>
                             {(id) => (
                                 <Row>
@@ -61,26 +61,26 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                 </Row>
                             )}
                         </WithId>
-                    </Container>
-                    {$async(type, (model) => {
-                        return $calc(() => {
-                            // This is a little fruity - we're returning a mutable signal
-                            // that can be updated by UI elements.
-                            const state = $mutable(model.value);
-                            console.log('State reset');
+                        {$async(type, (model) => {
+                            return $calc(() => {
+                                // This is a little fruity - we're returning a mutable signal
+                                // that can be updated by UI elements.
+                                const state = $mutable(model.value);
+                                console.log('State reset');
 
-                            return (
-                                <EditorRoot<unknown>
-                                    model={state}
-                                    replace={(newValue) => {
-                                        state.value = newValue;
-                                        console.log('Updated ', newValue);
-                                        return Promise.resolve(void 0);
-                                    }}
-                                />
-                            );
-                        });
-                    })}
+                                return (
+                                    <EditorRoot<unknown>
+                                        model={state}
+                                        replace={(newValue) => {
+                                            state.value = newValue;
+                                            console.log('Updated ', newValue);
+                                            return Promise.resolve(void 0);
+                                        }}
+                                    />
+                                );
+                            });
+                        })}
+                    </Container>
                 </>
             )}
         </Suspense>

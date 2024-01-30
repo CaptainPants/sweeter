@@ -33,7 +33,7 @@ export type ColumnProps = PropertiesMightBeSignals<{
 
 const mappedClasses = [
     columns.xs,
-    columns.xs,
+    columns.sm,
     columns.md,
     columns.lg,
     columns.xl,

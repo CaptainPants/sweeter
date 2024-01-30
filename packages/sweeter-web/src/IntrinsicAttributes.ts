@@ -9,6 +9,7 @@ import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 import { type StandardPropertiesHyphen } from 'csstype';
 import { type AbstractGlobalCssClass } from './styles/index.js';
 import { type ThreeValueBoolean } from './indeterminate.js';
+import { type SpecialNumericPropertyName } from './styles/internal/translateNumericPropertyValue.js';
 
 // ==== EVENTS
 
@@ -48,8 +49,14 @@ type EventHandlerProperties<TElement extends Element> = {
 
 // ==== CSS
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type StyleProperties = StandardPropertiesHyphen<number | (string & {})>;
+export type StyleProperties = Omit<
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    StandardPropertiesHyphen<string & {}>,
+    SpecialNumericPropertyName
+> & {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    [Key in SpecialNumericPropertyName]?: (string & {}) | number | undefined;
+};
 
 export type ElementCssStyles = {
     [Key in keyof StyleProperties]:

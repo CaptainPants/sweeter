@@ -6,17 +6,24 @@ import {
 } from '@captainpants/sweeter-core';
 import { type ElementCssStyles } from '../../IntrinsicAttributes.js';
 
-function allSizes(prop: string, prefix: string = prop + '-', suffix: string = '') {
-    return [prop, prefix + 'top' + suffix, prefix + 'right' + suffix, prefix + 'bottom' + suffix, prefix + 'left' + suffix];
+function allSizes(
+    prop: string,
+    prefix: string = prop + '-',
+    suffix: string = '',
+) {
+    return [
+        prop,
+        prefix + 'top' + suffix,
+        prefix + 'right' + suffix,
+        prefix + 'bottom' + suffix,
+        prefix + 'left' + suffix,
+    ];
 }
 
-const pxProperties = [
-    'width', 
-    'height',
-]
-.concat(allSizes('padding'))
-.concat(allSizes('margin'))
-.concat(allSizes('border-width', 'border-', '-width'));
+const pxProperties = ['width', 'height']
+    .concat(allSizes('padding'))
+    .concat(allSizes('margin'))
+    .concat(allSizes('border-width', 'border-', '-width'));
 
 const suffixes: Record<string, string> = {};
 for (const item of pxProperties) {
@@ -45,7 +52,7 @@ export function bindDOMStyleProp(
                     // Add px if needed
                     if (typeof value === 'number') {
                         const suffix = suffixes[key];
-                        
+
                         if (suffix) {
                             value = value + suffix;
                         }

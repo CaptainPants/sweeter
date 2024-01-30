@@ -9,7 +9,11 @@ import {
     breakpointNameToSizeMap,
     type BreakpointSizeName,
 } from '../../stylesheets/internal/constants.js';
-import { GlobalCssClass, type ElementCssStyles, stylesheet } from '@captainpants/sweeter-web';
+import {
+    GlobalCssClass,
+    type ElementCssStyles,
+    stylesheet,
+} from '@captainpants/sweeter-web';
 import { combineStyles } from '../../internal/combineStyles.js';
 
 export type ContainerProps = PropertiesMightBeSignals<{
@@ -39,7 +43,9 @@ export const Container: Component<ContainerProps> = ({
                       ? `${breakpointNameToSizeMap[size.value]}px`
                       : undefined,
               )
-            : size ? `${breakpointNameToSizeMap[size]}px` : undefined,
+            : typeof size !== 'undefined'
+              ? `${breakpointNameToSizeMap[size]}px`
+              : undefined,
     };
 
     return (
@@ -58,5 +64,5 @@ const css = new GlobalCssClass({
     className: 'container',
     content: stylesheet`
         margin: 0 auto;
-    `
+    `,
 });

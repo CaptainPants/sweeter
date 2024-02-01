@@ -15,7 +15,7 @@ export function callAgainstErrorBoundary<T>(
         if (isCalculationRunning()) {
             throw ex;
         } else {
-            contextSnapshot(ErrorBoundaryContext).error(ex);
+            contextSnapshot(ErrorBoundaryContext).reportError(ex);
             return ifError;
         }
     }

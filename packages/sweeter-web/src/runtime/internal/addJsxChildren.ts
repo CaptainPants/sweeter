@@ -1,4 +1,6 @@
 import {
+    type ContextSnapshot,
+    ErrorBoundaryContext,
     addExplicitStrongReference,
     flattenElements,
 } from '@captainpants/sweeter-core';
@@ -12,6 +14,7 @@ import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
 
 export function addJsxChildren(
+    getContext: ContextSnapshot,
     parentNode: Node,
     children: JSX.Element,
     webRuntime: WebRuntime,
@@ -34,7 +37,11 @@ export function addJsxChildren(
     // ==== LISTENERS ====
 
     const onChange = () => {
-        replaceJsxChildren(parentNode, flattenedChildrenSignal.peek());
+        try {
+            replaceJsxChildren(parentNode, flattenedChildrenSignal.peek());
+        } catch (err) {
+            getContext(ErrorBoundaryContext).reportError(err);
+        }
     };
 
     flattenedChildrenSignal.listen(onChange, false);

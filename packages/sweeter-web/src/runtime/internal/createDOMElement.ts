@@ -17,8 +17,10 @@ export function createDOMElement<TElementTypeString extends string>(
 ): HTMLElement | SVGElement {
     const ele = document.createElement(type);
 
+    const contextSnapshot = Context.createSnapshot();
+
     // This has to be before bindDOMMiscProps as value for HTMLSelectElement is dependent on the child element 'option's
-    addJsxChildren(ele, props.children, webRuntime);
+    addJsxChildren(contextSnapshot, ele, props.children, webRuntime);
 
     // Assign attributes and set up signals
     bindDOMMiscProps(ele, props, webRuntime);
@@ -32,7 +34,6 @@ export function createDOMElement<TElementTypeString extends string>(
     }
 
     if (props.class) {
-        const contextSnapshot = Context.createSnapshot();
         bindDOMClassProp(contextSnapshot, ele, props.class, webRuntime);
     }
 

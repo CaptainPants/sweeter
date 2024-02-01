@@ -11,6 +11,7 @@ import {
     createMiddlewarePipeline,
     type JSXMiddlewareCallback,
     type Signal,
+    Context,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { jsx } from './jsx.js';
@@ -41,7 +42,7 @@ export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
     const runtime = new WebRuntimeImplementation(options);
     ErrorBoundaryContext.invokeWith(
         {
-            error: (err) => {
+            reportError: (err) => {
                 if (options.topLevelError) {
                     options.topLevelError(err);
                     return;
@@ -172,7 +173,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
                         throw new TypeError(`Unexpected type ${type}`);
                 }
             } catch (ex) {
-                ErrorBoundaryContext.getCurrent().error(ex);
+                ErrorBoundaryContext.getCurrent().reportError(ex);
                 return 'Error processing...';
             }
         });
@@ -201,7 +202,9 @@ function createNestedRoot(
 ) {
     const content = render();
 
-    const unmount = addJsxChildren(target, content, webRuntime);
+    const getContext = Context.createSnapshot();
+
+    const unmount = addJsxChildren(getContext, target, content, webRuntime);
 
     // Allow callers to be lazy and call the returned callback multiple times
     let unmounted = false;

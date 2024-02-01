@@ -22,7 +22,7 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
 
     return ErrorBoundaryContext.invokeWith(
         {
-            error(err) {
+            reportError(err) {
                 // If this error occurs during a 'calculation', the result of the calculation should be an error.
                 if (isCalculationRunning()) {
                     console.error("This shouldn't happen");

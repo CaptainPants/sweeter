@@ -1,4 +1,3 @@
-import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -7,9 +6,10 @@ export default defineConfig({
         minify: false,
         rollupOptions: {
         },
+        target: "ESNext",
         watch: {
             include: []
-        }
+        },
     },
     test: {
         environmentMatchGlobs: [

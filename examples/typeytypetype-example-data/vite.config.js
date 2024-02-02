@@ -19,6 +19,7 @@ export default defineConfig({
             // into your library
             external: [/@captainpants\/.+/],
         },
+        target: "ESNext",
     },
     plugins: [dts({ clearPureImport: false })]
 });

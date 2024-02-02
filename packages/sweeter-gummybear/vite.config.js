@@ -17,7 +17,8 @@ export default defineConfig({
             // make sure to externalize deps that shouldn't be bundled
             // into your library
             external: [/@captainpants\/.+/],
-        }
+        },
+        target: "ESNext",
     },
     plugins: [dts()],
     test: {

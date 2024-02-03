@@ -1,4 +1,5 @@
 let calculationCount = 0;
+let runningCallbacks = false;
 
 let callbacks: (() => void)[] = [];
 
@@ -13,20 +14,31 @@ export function startCalculation() {
 export function finishCalculation() {
     --calculationCount;
 
-    if (calculationCount === 0 && callbacks.length > 0) {
-        const old = callbacks;
-        callbacks = [];
+    // We might have called startCalculation within one of these callbacks, so make sure if we're already processing the list
+    // we don't start again..
+    if (runningCallbacks) {
+        return;
+    }
 
-        for (const callback of old) {
-            try {
-                callback();
-            } catch (ex) {
-                console.warn(
-                    'Error swallowed while invoking callback',
-                    callback,
-                    ex,
-                );
+    if (calculationCount === 0 && callbacks.length > 0) {
+        // Iterate with i so that if we add callbacks on later
+        runningCallbacks = true;
+        try {
+            for (let i = 0; i < callbacks.length; ++i) {
+                const callback = callbacks[i];
+                try {
+                    callback!();
+                } catch (ex) {
+                    console.warn(
+                        'Error swallowed while invoking callback',
+                        callback,
+                        ex,
+                    );
+                }
             }
+        } finally {
+            runningCallbacks = false;
+            callbacks = [];
         }
     }
 }
@@ -37,7 +49,7 @@ export function finishCalculation() {
  * @returns
  */
 export function afterCalculationsComplete(callback: () => void) {
-    if (isCalculationRunning()) {
+    if (runningCallbacks || isCalculationRunning()) {
         callbacks.push(callback);
         return;
     }

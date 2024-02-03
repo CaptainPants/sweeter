@@ -132,7 +132,7 @@ export function announceChildrenMountedRecursive(node: Node) {
 
 /**
  * Note that this runs inside a afterCalculationsComplete.
- * @param node 
+ * @param node
  */
 export function announceMountedRecursive(node: Node): void {
     // reverse order
@@ -150,7 +150,7 @@ export function announceMountedRecursive(node: Node): void {
 
 /**
  * Note that this runs inside a afterCalculationsComplete.
- * @param node 
+ * @param node
  */
 export function announceUnMountedRecursive(node: Node): void {
     if (isMounted.has(node)) {

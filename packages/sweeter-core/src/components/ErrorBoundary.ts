@@ -1,16 +1,17 @@
-import {
-    $calc,
-    $mutable,
-    $val,
-    isCalculationRunning,
-} from '../signals/index.js';
+import { flattenElements } from '../index.js';
+import { $calc, $val, isSignal, type Signal } from '../signals/index.js';
 import { type Component, type PropertiesMightBeSignals } from '../types.js';
-import { ErrorBoundaryContext } from './ErrorBoundaryContext.js';
 
 export type ErrorBoundaryProps = PropertiesMightBeSignals<{
-    children: () => JSX.Element;
     renderError: (error: unknown) => JSX.Element;
-}>;
+}> & {
+    /**
+     * We don't take a constant as that defeats the purpose of an ErrorBoundary, but it can be the result of a function call or a signal.
+     *
+     * Note that a function here will be wrapped in a $calc.
+     */
+    children: (() => JSX.Element) | Signal<JSX.Element>;
+};
 
 // TODO: how to clear the error boundary??
 
@@ -18,46 +19,28 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
     renderError,
     children,
 }) => {
-    const error = $mutable<undefined | { error: unknown }>(undefined);
+    const childrenSignal = isSignal(children) ? children : $calc(children);
 
-    return ErrorBoundaryContext.invokeWith(
-        {
-            reportError(err) {
-                // If this error occurs during a 'calculation', the result of the calculation should be an error.
-                if (isCalculationRunning()) {
-                    console.error("This shouldn't happen");
-                    throw err;
-                } else {
-                    error.value = { error: err };
-                }
-            },
-        },
-        () => {
-            const errorBoundaryCalculation = () => {
-                // TODO: having two paths here seems weird
-                // but having a side effect from calling renderError
-                // would also be gross
-                if (error.value) {
-                    return $val(renderError)(error.value.error);
-                }
+    // Calls .value on any signals, which should cause the catch to trigger
+    const flattennedChildrenSignal = $calc(() => {
+        const flattened = flattenElements(childrenSignal);
+        return flattened.value;
+    });
 
-                try {
-                    const res = $val(children)();
-                    // If the result is a signal we need to subscribe
-                    // and get its value - so that any errors stored
-                    // in a calculated signal are caught by this try/
-                    // catch.
-                    return $val(res);
-                } catch (ex) {
-                    // This would only happen if the method itself
-                    // throws, as the rendering functions should be
-                    // invoking the boundary directory using
-                    // ErrorBoundaryContext
-                    return $val(renderError)(ex);
-                }
-            };
+    const errorBoundaryCalculation = () => {
+        // Doing this so that the result of the signal is an error if any child signals are errors
 
-            return $calc(errorBoundaryCalculation);
-        },
-    );
+        try {
+            // If the result is a signal we need to subscribe
+            // and get its value - so that any errors stored
+            // in a calculated signal are caught by this try/
+            // catch.
+            const result = flattennedChildrenSignal.value;
+            return result;
+        } catch (ex) {
+            return $val(renderError)(ex);
+        }
+    };
+
+    return $calc(errorBoundaryCalculation);
 };

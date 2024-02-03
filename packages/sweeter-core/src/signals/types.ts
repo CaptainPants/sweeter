@@ -4,13 +4,10 @@ import {
     type writableSignalMarker,
 } from './internal/markers.js';
 
-export type InitializedSignalState<T> =
-    | { readonly mode: 'SUCCESS'; readonly value: T }
-    | { readonly mode: 'ERROR'; readonly error: unknown };
-
 export type SignalState<T> =
     | { readonly mode: 'INITIALISING' }
-    | InitializedSignalState<T>;
+    | { readonly mode: 'SUCCESS'; readonly value: T }
+    | { readonly mode: 'ERROR'; readonly error: unknown };
 
 export type SignalListener<T> = (
     previous: SignalState<T>,
@@ -32,8 +29,9 @@ export interface Signal<T> {
 
     /**
      * Gets the current state of the signal, which might be an exception.
+     * @param ensureInit defaults to true - ensure that the signal is inialized
      */
-    peekState(): InitializedSignalState<T>;
+    peekState(ensureInit?: boolean): SignalState<T>;
 
     /**
      * Use this to check if a signal has been initialized. This can be useful in a $calc that references itself.
@@ -41,18 +39,28 @@ export interface Signal<T> {
     readonly inited: boolean;
 
     /**
-     * Add a callback to be invoked when the signal's value changes. This can optionally be a weak reference.
+     * Add a callback to be invoked when the signal's value changes.
      * @param listener
-     * @param strong default: true
      */
-    listen(listener: SignalListener<T>, strong?: boolean): () => void;
+    listen(listener: SignalListener<T>): () => void;
+
+    /**
+     * Add a callback to be invoked when the signal's value changes. The reference to listener is held via WeakRef.
+     * @param listener
+     */
+    listenWeak(listener: SignalListener<T>): () => void;
 
     /**
      * Remove a callback that has previously been registered.
      * @param listener
-     * @param strong default: true
      */
-    unlisten(listener: SignalListener<T>, strong?: boolean): void;
+    unlisten(listener: SignalListener<T>): void;
+
+    /**
+     * Remove a callback that has previously been registered.
+     * @param listener
+     */
+    unlistenWeak(listener: SignalListener<T>): void;
 
     /**
      * Remove all listeners.

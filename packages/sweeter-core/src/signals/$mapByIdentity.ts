@@ -36,15 +36,6 @@ export function $mapByIdentity<T, U>(
         }
     >();
 
-    // Clear the cache if the map function changes
-    const resetCache = () => {
-        elementCache.clear();
-    };
-
-    if (isSignal(map)) {
-        map.listen(resetCache, false);
-    }
-
     // items is a signal, we need to keep track of a signal for every item
     // including if it changes lengths to dispose/orphan signals that no longer
     // point to a valid index, and add new signals when necessary.
@@ -102,6 +93,15 @@ export function $mapByIdentity<T, U>(
 
         return result;
     });
+
+    // Clear the cache if the map function changes
+    const resetCache = () => {
+        elementCache.clear();
+    };
+
+    if (isSignal(map)) {
+        map.listenWeak(resetCache);
+    }
 
     // keep mapChange alive (and therefore receiving updates) as long as the result signal is alive
     addExplicitStrongReference(resultSignal, resetCache);

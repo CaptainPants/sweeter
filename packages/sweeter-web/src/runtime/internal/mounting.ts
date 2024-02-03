@@ -1,5 +1,8 @@
-import { type ContextSnapshot } from '@captainpants/sweeter-core';
-import { callAgainstErrorBoundary } from './callAgainstErrorBoundary.js';
+import {
+    ComponentFaultContext,
+    afterCalculationsComplete,
+    type ContextSnapshot,
+} from '@captainpants/sweeter-core';
 
 function callbacks<T extends object>(name: string) {
     const map = new WeakMap<T, (() => void)[]>();
@@ -68,21 +71,24 @@ const isMounted = new WeakSet<Node>();
  * @param callback
  */
 export function addMountedCallback(
-    contextSnapshot: ContextSnapshot,
+    getContext: ContextSnapshot,
     node: Node,
     callback: () => (() => void) | void,
 ): () => void {
     const inner = () => {
-        const cleanup = callAgainstErrorBoundary(
-            contextSnapshot,
-            callback,
-            undefined,
-        );
+        let cleanup: (() => void) | void;
+        try {
+            cleanup = callback();
+        } catch (err) {
+            const faultContext = getContext(ComponentFaultContext);
+            faultContext.reportFaulted(err);
+            return;
+        }
 
         if (cleanup) {
             // TODO: we could add these to a set and remove them if the mount callback has been called,
             // but in practice we're not using the result of addMountedCallback anyway
-            addUnMountedCallback(contextSnapshot, node, cleanup);
+            addUnMountedCallback(getContext, node, cleanup);
         }
     };
     mountedCallbacks.add(node, inner);
@@ -97,12 +103,18 @@ export function addMountedCallback(
  * @param callback
  */
 export function addUnMountedCallback(
-    contextSnapshot: ContextSnapshot,
+    getContext: ContextSnapshot,
     node: Node,
     callback: () => void,
 ): () => void {
-    const inner = () =>
-        callAgainstErrorBoundary(contextSnapshot, callback, undefined);
+    const inner = () => {
+        try {
+            callback();
+        } catch (err) {
+            const faultContext = getContext(ComponentFaultContext);
+            faultContext.reportFaulted(err);
+        }
+    };
     unMountedCallbacks.add(node, inner);
     return () => unMountedCallbacks.remove(node, inner);
 }
@@ -118,25 +130,38 @@ export function announceChildrenMountedRecursive(node: Node) {
     }
 }
 
-// TODO: we can make this stack-based to avoid recursion
+/**
+ * Note that this runs inside a afterCalculationsComplete.
+ * @param node 
+ */
 export function announceMountedRecursive(node: Node): void {
     // reverse order
+    // TODO: we can make this stack-based to avoid recursion
     announceChildrenMountedRecursive(node);
 
     // Call callbacks on current
     if (!isMounted.has(node)) {
-        mountedCallbacks.execute(node);
+        afterCalculationsComplete(() => {
+            mountedCallbacks.execute(node);
+        });
         isMounted.add(node);
     }
 }
 
+/**
+ * Note that this runs inside a afterCalculationsComplete.
+ * @param node 
+ */
 export function announceUnMountedRecursive(node: Node): void {
     if (isMounted.has(node)) {
-        unMountedCallbacks.execute(node);
+        afterCalculationsComplete(() => {
+            unMountedCallbacks.execute(node);
+        });
         isMounted.delete(node);
     }
 
-    // reverse order
+    // Reverse order
+    // TODO: we can make this stack-based to avoid recursion
     for (
         let current = node.lastChild;
         current;

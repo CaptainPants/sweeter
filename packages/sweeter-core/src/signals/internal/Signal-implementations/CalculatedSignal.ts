@@ -58,6 +58,8 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         this.#dependencyListener = calculatedSignalListener;
 
         this.#wrappedCalculation = wrapped;
+
+        // Initially no dependencies, until .value/.peekState(true) is invoked and causes deps to be filled
         this.#dependencies = new Set();
 
         options?.release?.addEventListener('abort', () => {
@@ -66,8 +68,6 @@ export class CalculatedSignal<T> extends SignalBase<T> {
             this.#dependencies = new Set();
             this.#detachAll();
         });
-
-        this.#attach();
     }
 
     #capturedContext: SavedExecutionContext;
@@ -151,7 +151,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     #attach() {
         for (const dep of this.#dependencies) {
             // Holds a weak reference back to this signal
-            dep.listen(this.#dependencyListener, /* strong: */ false);
+            dep.listenWeak(this.#dependencyListener);
         }
     }
 
@@ -159,10 +159,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         for (const dep of this.#dependencies) {
             if (!set.has(dep)) {
                 // Holds a weak reference back to this signal
-                dep.unlisten(
-                    this.#dependencyListener,
-                    false /* strong: false */,
-                );
+                dep.unlistenWeak(this.#dependencyListener);
             }
         }
     }
@@ -170,7 +167,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
     #detachAll() {
         for (const dep of this.#dependencies) {
             // Holds a weak reference back to this signal
-            dep.unlisten(this.#dependencyListener, false /* strong: false */);
+            dep.unlistenWeak(this.#dependencyListener);
         }
     }
 }

@@ -1,8 +1,11 @@
 import {
     type ContextSnapshot,
-    ErrorBoundaryContext,
     addExplicitStrongReference,
     flattenElements,
+    ComponentFaultContext,
+    type SignalState,
+    getSignalValueFromState,
+    type FlattenedElement,
 } from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
@@ -36,22 +39,28 @@ export function addJsxChildren(
 
     // ==== LISTENERS ====
 
-    const onChange = () => {
+    const onChange = (
+        _: SignalState<FlattenedElement[]>,
+        newState: SignalState<FlattenedElement[]>,
+    ) => {
         try {
-            replaceJsxChildren(parentNode, flattenedChildrenSignal.peek());
+            const updatedChildren = getSignalValueFromState(newState); // newState might be an error state
+            replaceJsxChildren(parentNode, updatedChildren);
         } catch (err) {
-            getContext(ErrorBoundaryContext).reportError(err);
+            const faultContext = getContext(ComponentFaultContext);
+            faultContext.reportFaulted(err);
         }
     };
 
-    flattenedChildrenSignal.listen(onChange, false);
+    flattenedChildrenSignal.listen(onChange /* strong reference */);
 
     // Callback lifetime linked to the parent Node
-    addExplicitStrongReference(parentNode, onChange);
+    addExplicitStrongReference(parentNode, flattenedChildrenSignal);
 
     // ==== MOUNT HANDLERS ====
 
     if (isInDocument(parentNode)) {
+        // TODO: this could cause elements to become unmounted - will that explode things?
         announceChildrenMountedRecursive(parentNode);
     }
 

@@ -28,18 +28,6 @@ export function $mapByIndex<T, U>(
         detacher: AbortController;
     }[] = [];
 
-    // Clear the cache if the map function changes
-    const resetCache = () => {
-        for (const item of elementCache) {
-            item.detacher.abort();
-        }
-        elementCache.length = 0;
-    };
-
-    if (isSignal(map)) {
-        map.listen(resetCache, false);
-    }
-
     // items is a signal, we need to keep track of a signal for every item
     // including if it changes lengths to dispose/orphan signals that no longer
     // point to a valid index, and add new signals when necessary.
@@ -91,6 +79,18 @@ export function $mapByIndex<T, U>(
 
         return elementCache.map((x) => x.mappedElement);
     });
+
+    // Clear the cache if the map function changes
+    const resetCache = () => {
+        for (const item of elementCache) {
+            item.detacher.abort();
+        }
+        elementCache.length = 0;
+    };
+
+    if (isSignal(map)) {
+        map.listenWeak(resetCache);
+    }
 
     // keep mapChange alive (and therefore receiving updates) as long as the result signal is alive
     addExplicitStrongReference(resultSignal, resetCache);

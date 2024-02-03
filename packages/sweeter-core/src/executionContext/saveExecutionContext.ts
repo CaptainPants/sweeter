@@ -13,7 +13,8 @@ export function saveExecutionContext(): SavedExecutionContext {
 
     for (const item of allExecutionContextVariables) {
         const saved = item.current;
-        restoreList.push(() => item.replace(saved));
+        const saveExecutionContext_revert = () => item.replace(saved);
+        restoreList.push(saveExecutionContext_revert);
     }
 
     function restoreAll() {

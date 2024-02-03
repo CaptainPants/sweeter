@@ -22,9 +22,10 @@ export class DeferredSignal<T> extends SignalBase<T> {
 
             this.#recalculate();
         };
+        // This will live as long as the containing signal lives
         this.#dependencyListener = deferredSignalListener;
 
-        this.#inner.listen(this.#dependencyListener, false);
+        this.#inner.listenWeak(this.#dependencyListener);
     }
 
     #dirty: boolean = false;

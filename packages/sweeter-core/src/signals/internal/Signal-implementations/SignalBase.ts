@@ -7,7 +7,6 @@ import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
 import { signalMarker } from '../markers.js';
 import {
-    type InitializedSignalState,
     type DebugDependencyNode,
     type Signal,
     type SignalListener,
@@ -51,11 +50,14 @@ export abstract class SignalBase<T> implements Signal<T> {
         return getSignalValueFromState(this.peekState());
     }
 
-    public peekState(): InitializedSignalState<T> {
-        this.#ensureInited();
+    public peekState(ensureInit = true): SignalState<T> {
+        if (ensureInit) {
+            this.#ensureInited();
+        }
         this._peeking();
-        if (this.#state.mode === 'INITIALISING')
+        if (ensureInit && this.#state.mode === 'INITIALISING') {
             throw new TypeError('Expected signal to be initialized.');
+        }
         return this.#state;
     }
 
@@ -135,18 +137,32 @@ export abstract class SignalBase<T> implements Signal<T> {
         afterCalculationsComplete(SignalBase_announceChange);
     }
 
-    public listen(listener: SignalListener<T>, strong = true): () => void {
+    public listen(listener: SignalListener<T>): () => void {
         this.#ensureInited();
 
-        this.#listeners.add(listener, strong);
+        this.#listeners.add(listener, true);
 
         return () => {
-            this.unlisten(listener, strong);
+            this.unlisten(listener);
         };
     }
 
-    public unlisten(listener: SignalListener<T>, strong = true): void {
-        this.#listeners.remove(listener, strong);
+    public listenWeak(listener: SignalListener<T>): () => void {
+        this.#ensureInited();
+
+        this.#listeners.add(listener, false);
+
+        return () => {
+            this.unlistenWeak(listener);
+        };
+    }
+
+    public unlisten(listener: SignalListener<T>): void {
+        this.#listeners.remove(listener, true);
+    }
+
+    public unlistenWeak(listener: SignalListener<T>): void {
+        this.#listeners.remove(listener, false);
     }
 
     public clearListeners(): void {
@@ -196,7 +212,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         return {
             type: 'signal',
             signalId: this.id,
-            state: this.peekState(),
+            state: this.peekState(false),
             signalCreatedAtStack: this.createdAtStack
                 ?.getNice({ truncate: truncateStackTraces })
                 .split('\n'),

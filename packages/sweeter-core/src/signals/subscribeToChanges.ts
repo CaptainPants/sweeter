@@ -12,6 +12,7 @@ import {
  * @param dependencies A list of signals, for which when any change the callback will be invoked. For convenience when using with props, values other than signals will be ignored.
  * @param callback
  * @param invokeImmediate
+ * @param strong
  * @returns
  */
 export function subscribeToChanges<TArgs extends readonly unknown[]>(
@@ -41,7 +42,11 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
         for (const item of dependencies) {
             if (isSignal(item)) {
                 // Note that this is a strong reference, we need to be careful to unsubscribe later
-                unlisten.push(item.listen(innerCallback, strong));
+                unlisten.push(
+                    strong
+                        ? item.listen(innerCallback)
+                        : item.listenWeak(innerCallback),
+                );
             }
         }
     } catch (ex) {

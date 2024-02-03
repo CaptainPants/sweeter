@@ -11,6 +11,10 @@ function isArray(item: unknown): item is readonly any[] {
     return Array.isArray(item);
 }
 
+function shallowEqualArray<T>(a: readonly T[], b: readonly T[]) {
+    return a.length === b.length && a.every((item, index) => item === b[index]);
+}
+
 /**
  * Flattens nested arrays and calls .value on signals. Removes null and undefined
  * @param children
@@ -19,14 +23,25 @@ function isArray(item: unknown): item is readonly any[] {
 export function flattenElements(
     children: JSX.Element,
 ): Signal<FlattenedElement[]> {
-    return $calc(() => {
-        const res: FlattenedElement[] = [];
-        flattenImplementation(children, res);
-        return res;
-    });
+    // cache the last value and return it if every element is the same
+    let previous: FlattenedElement[] | undefined = undefined;
+
+    const flattenElements_calc = () => {
+        const next: FlattenedElement[] = [];
+
+        flattenElementImplementation(children, next);
+
+        if (previous && shallowEqualArray(previous, next)) {
+            return previous;
+        }
+
+        return (previous = next);
+    };
+    const result = $calc(flattenElements_calc);
+    return result;
 }
 
-function flattenImplementation(
+function flattenElementImplementation(
     children: JSX.Element,
     output: FlattenedElement[],
 ): void {
@@ -36,11 +51,11 @@ function flattenImplementation(
 
     if (isArray(children)) {
         children.forEach((inner) => {
-            flattenImplementation(inner, output);
+            flattenElementImplementation(inner, output);
         });
     } else if (isSignal(children)) {
         // Note that this can be recursive if the result is a signal
-        flattenImplementation(children.value, output);
+        flattenElementImplementation(children.value, output);
     } else if (typeof children === 'boolean') {
         return; // So that && an || expressions can be used a la React
     } else {

@@ -41,7 +41,7 @@ export function bindDOMStyleProp(
 
     signal.listen(() => {
         node.setAttribute('style', signal.peek());
-    }, false);
+    });
 
     node.setAttribute('style', signal.peek());
 

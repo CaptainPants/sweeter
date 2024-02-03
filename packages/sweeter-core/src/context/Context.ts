@@ -69,9 +69,11 @@ export class Context<T> {
      */
     static createSnapshot(): <T>(context: Context<T>) => T {
         const snapshot = contextStack.current;
-        return (context) => {
+        const result = <T>(context: Context<T>) => {
             return findContext(snapshot, context);
         };
+        result.snapshot = snapshot;
+        return result;
     }
 }
 

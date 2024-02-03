@@ -122,7 +122,7 @@ export function bindDOMMiscProps<TElementType extends string>(
             // Add a weak listener (so that it will be cleaned up when no references held)
             // we will add a strong reference to the DOM element (via WeakMap) to prevent
             // cleanup until the DOM element is no longer reachable
-            value.listen(changeCallback, false);
+            value.listenWeak(changeCallback);
 
             addExplicitStrongReference(node, changeCallback);
         } else if (mappedPropKey.startsWith('on')) {
@@ -154,7 +154,7 @@ export function bindDOMMiscProps<TElementType extends string>(
                 // Add a weak listener (so that it will be cleaned up when no references held)
                 // we will add a strong reference to the DOM element (via WeakMap) to prevent
                 // cleanup until the DOM element is no longer reachable
-                value.listen(changeCallback, false);
+                value.listenWeak(changeCallback);
 
                 addExplicitStrongReference(node, changeCallback);
             } else {

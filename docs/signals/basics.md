@@ -44,18 +44,28 @@ export interface Signal<T> {
     readonly inited: boolean;
 
     /**
-     * Add a callback to be invoked when the signal's value changes. This can optionally be a weak reference.
+     * Add a callback to be invoked when the signal's value changes. 
      * @param listener
-     * @param strong default: true
      */
-    listen(listener: SignalListener<T>, strong?: boolean): () => void;
+    listen(listener: SignalListener<T>): () => void;
+
+    /**
+     * Add a callback to be invoked when the signal's value changes. The reference to listener is held via WeakRef.
+     * @param listener
+     */
+    listenWeak(listener: SignalListener<T>): () => void;
 
     /**
      * Remove a callback that has previously been registered.
      * @param listener
-     * @param strong default: true
      */
-    unlisten(listener: SignalListener<T>, strong?: boolean): void;
+    unlisten(listener: SignalListener<T>): void;
+
+    /**
+     * Remove a callback that has previously been registered.
+     * @param listener
+     */
+    unlistenWeak(listener: SignalListener<T>): void;
 
     /**
      * Remove all listeners.

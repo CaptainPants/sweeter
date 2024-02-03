@@ -35,7 +35,12 @@ export function createMiddlewarePipeline(
         };
     }
 
-    return (type, props) => {
+    const createMiddlewarePipeline_end: JSXMiddlewareCallback = (
+        type,
+        props,
+    ) => {
         return callback(type, props);
     };
+
+    return createMiddlewarePipeline_end;
 }

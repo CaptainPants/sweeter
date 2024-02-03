@@ -6,12 +6,12 @@ import {
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXResultForComponentOrElementType,
     trackingIsAnError,
-    ErrorBoundaryContext,
     type JSXMiddleware,
     createMiddlewarePipeline,
     type JSXMiddlewareCallback,
     type Signal,
     Context,
+    ComponentFaultContext,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { jsx } from './jsx.js';
@@ -40,21 +40,7 @@ export interface WebRuntimeOptions {
 
 export function createWebRuntime(options: WebRuntimeOptions): WebRuntime {
     const runtime = new WebRuntimeImplementation(options);
-    ErrorBoundaryContext.invokeWith(
-        {
-            reportError: (err) => {
-                if (options.topLevelError) {
-                    options.topLevelError(err);
-                    return;
-                }
-
-                console.error('Error reported with no ErrorBoundary', err);
-            },
-        },
-        () => {
-            runtime.createRoot(options.root, options.render);
-        },
-    );
+    runtime.createRoot(options.root, options.render);
     return runtime;
 }
 
@@ -124,6 +110,10 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         return createNestedRoot(target, render, this);
     }
 
+    topLevelError(err: unknown) {
+        console.error('Error escaped', err);
+    }
+
     renderOffscreen(content: JSX.Element): JSX.Element {
         return jsx('div', {
             style: { display: 'none' },
@@ -149,32 +139,27 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         // and that these might update signals. We also don't want to accidentally subscribe to these
         // signals -- hence untrack the actual render
         const result = trackingIsAnError(() => {
-            try {
-                switch (typeof type) {
-                    case 'function': {
-                        // Component function
-                        return createComponentInstance(type, props, this);
-                    }
-
-                    case 'string': {
-                        // intrinsic
-                        const element = createDOMElement(
-                            type,
-                            props as PropsWithIntrinsicAttributesFor<
-                                TComponentType & string
-                            >,
-                            this,
-                        );
-
-                        return element;
-                    }
-
-                    default:
-                        throw new TypeError(`Unexpected type ${type}`);
+            switch (typeof type) {
+                case 'function': {
+                    // Component function
+                    return createComponentInstance(type, props, this);
                 }
-            } catch (ex) {
-                ErrorBoundaryContext.getCurrent().reportError(ex);
-                return 'Error processing...';
+
+                case 'string': {
+                    // intrinsic
+                    const element = createDOMElement(
+                        type,
+                        props as PropsWithIntrinsicAttributesFor<
+                            TComponentType & string
+                        >,
+                        this,
+                    );
+
+                    return element;
+                }
+
+                default:
+                    throw new TypeError(`Unexpected type ${type}`);
             }
         });
 
@@ -198,21 +183,30 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 function createNestedRoot(
     target: RuntimeRootHostElement,
     render: () => JSX.Element,
-    webRuntime: WebRuntime,
+    webRuntime: WebRuntimeImplementation,
 ) {
-    const content = render();
+    const cleanup = ComponentFaultContext.replace({
+        reportFaulted: (err) => {
+            webRuntime.topLevelError(err);
+        },
+    });
+    try {
+        const content = render();
 
-    const getContext = Context.createSnapshot();
+        const getContext = Context.createSnapshot();
 
-    const unmount = addJsxChildren(getContext, target, content, webRuntime);
+        const unmount = addJsxChildren(getContext, target, content, webRuntime);
 
-    // Allow callers to be lazy and call the returned callback multiple times
-    let unmounted = false;
+        // Allow callers to be lazy and call the returned callback multiple times
+        let unmounted = false;
 
-    return () => {
-        if (!unmounted) {
-            unmounted = true;
-            unmount();
-        }
-    };
+        return () => {
+            if (!unmounted) {
+                unmounted = true;
+                unmount();
+            }
+        };
+    } finally {
+        cleanup();
+    }
 }

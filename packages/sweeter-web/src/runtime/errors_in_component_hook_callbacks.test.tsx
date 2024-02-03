@@ -17,7 +17,9 @@ it('onMount', () => {
         <ErrorBoundary
             renderError={(err) => <div class="error">{String(err)}</div>}
         >
-            {() => <OnMountThrows />}
+            {() => {
+                return <OnMountThrows />;
+            }}
         </ErrorBoundary>
     ));
 
@@ -40,32 +42,6 @@ it('trackSignals', () => {
             renderError={(err) => <div class="error">{String(err)}</div>}
         >
             {() => <TrackSignalsThrows />}
-        </ErrorBoundary>
-    ));
-
-    expect(res.getHTML()).toMatchSnapshot();
-
-    res.dispose();
-});
-
-const OnSignalChangeThrows: Component = (_, init) => {
-    init.onSignalChange(
-        [1],
-        ([_]) => {
-            throw new Error('Error thrown on onSignalChange');
-        },
-        true,
-    );
-
-    return <></>;
-};
-
-it('onSignalChange', () => {
-    const res = testRender(() => (
-        <ErrorBoundary
-            renderError={(err) => <div class="error">{String(err)}</div>}
-        >
-            {() => <OnSignalChangeThrows />}
         </ErrorBoundary>
     ));
 

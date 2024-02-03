@@ -1,6 +1,6 @@
 import { type SignalController } from './SignalController.js';
 import { ControlledSignal } from './internal/Signal-implementations.js';
-import { type Signal } from './types.js';
+import { type SignalState, type Signal } from './types.js';
 
 /**
  * Provides a readonly Signal, that can be controlled by using the provided Controller instance. This allows for cases where a Signal is passed to a callback as read only,
@@ -8,6 +8,9 @@ import { type Signal } from './types.js';
  * @param controller
  * @returns
  */
-export function $controlled<T>(controller: SignalController<T>): Signal<T> {
-    return new ControlledSignal(controller);
+export function $controlled<T>(
+    controller: SignalController<T>,
+    startingState?: SignalState<T>,
+): Signal<T> {
+    return new ControlledSignal(controller, startingState);
 }

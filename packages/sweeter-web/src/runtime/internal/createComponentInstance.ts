@@ -9,6 +9,10 @@ import {
     type ComponentInit,
     type PropsWithIntrinsicAttributesFor,
     type IdGenerator,
+    SignalController,
+    $controlled,
+    ComponentFaultContext,
+    type Signal,
 } from '@captainpants/sweeter-core';
 import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
@@ -23,7 +27,7 @@ function createComponentInstanceInit<
     TComponentType extends ComponentTypeConstraint,
 >(Component: TComponentType, webRuntime: WebRuntime): ExtendedComponentInit {
     // Use this to get the error context within callbacks
-    const contextSnapshot = Context.createSnapshot();
+    const getContext = Context.createSnapshot();
 
     function getOrCreateMagicComment(reason: string): Comment {
         let hooks = init[hookInitSymbol];
@@ -62,8 +66,7 @@ function createComponentInstanceInit<
 
             const hooks = getOrCreateMagicComment('onMount');
 
-            // This calls callAgainstErrorBoundary around callback and its resulting callback
-            addMountedCallback(contextSnapshot, hooks, callback);
+            addMountedCallback(getContext, hooks, callback);
         },
         onUnMount(callback: () => void) {
             if (!init.isValid) {
@@ -73,7 +76,7 @@ function createComponentInstanceInit<
             }
 
             addUnMountedCallback(
-                contextSnapshot,
+                getContext,
                 getOrCreateMagicComment('onUnMount'),
                 callback,
             );
@@ -89,7 +92,7 @@ function createComponentInstanceInit<
             }
 
             addMountedCallback(
-                contextSnapshot,
+                getContext,
                 getOrCreateMagicComment('trackSignals'),
                 function subscribeChanges_onMount() {
                     return subscribeToChanges(
@@ -104,7 +107,7 @@ function createComponentInstanceInit<
         onSignalChange<TArgs extends readonly unknown[]>(
             dependencies: [...TArgs],
             callback: (args: UnsignalAll<TArgs>) => void,
-            invokeImmediately = false,
+            invokeImmediately: boolean | undefined,
         ) {
             if (!init.isValid) {
                 throw new Error(
@@ -166,19 +169,42 @@ export function createComponentInstance<
     Component: TComponentType,
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
-): JSX.Element {
-    const init = createComponentInstanceInit(Component, webRuntime);
+): Signal<JSX.Element> {
+    const resultController = new SignalController<JSX.Element>();
 
-    const res = Component(props, init);
+    const result = ComponentFaultContext.invokeWith(
+        {
+            reportFaulted(err) {
+                // This might be undefined
+                console.log(result);
+                resultController.update({ mode: 'ERROR', error: err });
+            },
+        },
+        () => {
+            const init = createComponentInstanceInit(Component, webRuntime);
 
-    // Makes all init calls throw from now on
-    init.isValid = false;
+            const componentContent = Component(props, init);
 
-    const hookElement = init[hookInitSymbol];
+            // Makes all init calls throw from now on
+            init.isValid = false;
 
-    if (hookElement) {
-        return [res, hookElement];
-    }
-    // shortcut if we don't need to add in markers for mount callbacks.
-    return res;
+            const hookElement = init[hookInitSymbol];
+
+            // shortcut if we don't need to add in markers for mount callbacks.
+            if (hookElement) {
+                return $controlled(resultController, {
+                    mode: 'SUCCESS',
+                    value: [componentContent, hookElement],
+                });
+            } else {
+                // shortcut if we don't need to add in markers for mount callbacks.
+                return $controlled(resultController, {
+                    mode: 'SUCCESS',
+                    value: componentContent,
+                });
+            }
+        },
+    );
+
+    return result;
 }

@@ -20,9 +20,11 @@ export class ExecutionContextVariable<T> {
 
         this.current = value;
 
-        return () => {
+        const ExecutionContextVariable_replace_revert = () => {
             this.current = saved;
         };
+
+        return ExecutionContextVariable_replace_revert;
     }
 
     invokeWith<TCallbackResult>(

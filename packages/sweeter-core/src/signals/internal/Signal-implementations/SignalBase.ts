@@ -2,7 +2,6 @@ import {
     getSignalValueFromState,
     isEqualSignalState,
 } from '../../SignalState-support.js';
-import { afterCalculationsComplete } from '../../calculationDeferral-reexports.js';
 import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
 import { signalMarker } from '../markers.js';
@@ -106,35 +105,30 @@ export abstract class SignalBase<T> implements Signal<T> {
             return;
         }
 
-        let SignalBase_announceChange = () => {
-            this.#listeners.announce(previous, next);
-        };
-
         if (dev.isEnabled) {
-            SignalBase_announceChange = () => {
-                const saved = develChangeAnnouncerStack;
-                develChangeAnnouncerStack = {
-                    signal: this,
-                    previous: develChangeAnnouncerStack,
-                };
-
-                const reverse = dev.monitorOperation(
-                    'Signal change announcement',
-                    1000,
-                    () => this.#getPanicContent(),
-                );
-                try {
-                    this.#listeners.announce(previous, next);
-                } finally {
-                    reverse();
-                    develChangeAnnouncerStack = saved;
-                }
+            const saved = develChangeAnnouncerStack;
+            develChangeAnnouncerStack = {
+                signal: this,
+                previous: develChangeAnnouncerStack,
             };
+
+            const reverse = dev.monitorOperation(
+                'Signal change announcement',
+                1000,
+                () => this.#getPanicContent(),
+            );
+            try {
+                this.#listeners.announce(previous, next);
+            } finally {
+                reverse();
+                develChangeAnnouncerStack = saved;
+            }
+            return;
         }
 
         // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
         // also prevents all kinds of cases that aren't allowed like updating a mutable signal within a recalculation
-        afterCalculationsComplete(SignalBase_announceChange);
+        this.#listeners.announce(previous, next);
     }
 
     public listen(listener: SignalListener<T>): () => void {

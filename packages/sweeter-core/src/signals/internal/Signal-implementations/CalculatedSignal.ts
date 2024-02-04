@@ -8,8 +8,11 @@ import {
     type Signal,
     type CalculatedSignalOptions,
 } from '../../types.js';
-import { finishCalculation, startCalculation } from '../calculationDeferral.js';
 import { type ListenerSetCallback } from '../ListenerSet.js';
+import {
+    finishCalculation,
+    startCalculation,
+} from '../../calculationDeferral.js';
 
 function wrap<T>(callback: () => T): () => SignalState<T> {
     const result = (): SignalState<T> => {

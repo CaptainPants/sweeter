@@ -7,7 +7,7 @@ export * from './$elementOf.js';
 export * from './$controlled.js';
 
 export * from './ambient.js';
-export * from './calculationDeferral-reexports.js';
+export * from './calculationDeferral.js';
 export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';

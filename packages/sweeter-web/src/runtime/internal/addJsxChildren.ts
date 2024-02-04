@@ -6,6 +6,7 @@ import {
     type SignalState,
     getSignalValueFromState,
     type FlattenedElement,
+    afterCalculationsComplete,
 } from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
@@ -43,13 +44,15 @@ export function addJsxChildren(
         _: SignalState<FlattenedElement[]>,
         newState: SignalState<FlattenedElement[]>,
     ) => {
-        try {
-            const updatedChildren = getSignalValueFromState(newState); // newState might be an error state
-            replaceJsxChildren(parentNode, updatedChildren);
-        } catch (err) {
-            const faultContext = getContext(ComponentFaultContext);
-            faultContext.reportFaulted(err);
-        }
+        afterCalculationsComplete(() => {
+            try {
+                const updatedChildren = getSignalValueFromState(newState); // newState might be an error state
+                replaceJsxChildren(parentNode, updatedChildren);
+            } catch (err) {
+                const faultContext = getContext(ComponentFaultContext);
+                faultContext.reportFaulted(err);
+            }
+        });
     };
 
     flattenedChildrenSignal.listen(onChange /* strong reference */);

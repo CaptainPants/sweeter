@@ -17,7 +17,6 @@ import {
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
 import {
-    Button,
     SortableItem,
     SortableKnob,
     SortableList,
@@ -26,6 +25,7 @@ import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { IconButton } from '../components/IconButton.js';
 
 export function ArrayEditor(
     {
@@ -166,20 +166,8 @@ export function ArrayEditor(
             <div>
                 {$calc(() =>
                     allowedTypes.value.map((allowedType, index) => {
-                        return (
-                            <Button
-                                key={`add-${index}`}
-                                onclick={() => {
-                                    void add(allowedType);
-                                }}
-                            >
-                                {allowedTypes.value.length === 1
-                                    ? localize('Add')
-                                    : localize('Add {0}', [
-                                          allowedType.getBestDisplayName(),
-                                      ])}
-                            </Button>
-                        );
+                        const title = allowedTypes.value.length === 1 ? localize('Add') :  localize('Add {0}', [allowedType.getBestDisplayName()]);
+                        return <IconButton icon="Add" text={title} onClick={() => { void add(allowedType); }} /> 
                     }),
                 )}
             </div>
@@ -222,5 +210,5 @@ const css = {
             cursor: pointer;
             margin: 12;
         `,
-    }),
+    })
 } as const;

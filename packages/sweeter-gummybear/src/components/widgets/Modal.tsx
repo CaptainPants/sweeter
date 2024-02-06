@@ -4,7 +4,7 @@ import {
     $calc,
     $val,
     type PropertiesMightBeSignals,
-    $resolve,
+    $children,
 } from '@captainpants/sweeter-core';
 
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
@@ -168,7 +168,7 @@ export const Modal: Component<ModalProps> = (
                         <div class={classes.window}>
                             <div class={classes.header}>
                                 <div class={classes.title}>
-                                    {$resolve(title)}
+                                    {$children(title)}
                                 </div>
                                 <div
                                     onclick={onClose}
@@ -177,8 +177,8 @@ export const Modal: Component<ModalProps> = (
                                     ×
                                 </div>
                             </div>
-                            <div class={classes.body}>{$resolve(children)}</div>
-                            <div class={classes.footer}>{$resolve(footer)}</div>
+                            <div class={classes.body}>{$children(children)}</div>
+                            <div class={classes.footer}>{$children(footer)}</div>
                         </div>
                         <div class={classes.verticalSpacer} />
                     </div>

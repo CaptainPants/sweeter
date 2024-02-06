@@ -63,7 +63,7 @@ export const Button: Component<ButtonProps> = ({
                 disabled: $val(disabled),
                 fillWidth: $val(fillWidth),
             },
-            $val(variant),
+            $val(variant) ?? 'secondary',
         );
 
         return result;

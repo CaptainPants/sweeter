@@ -5,15 +5,11 @@ import {
 import { themeBase } from '../stylesheets/base.js';
 import { reset } from '../stylesheets/reset.js';
 import { themeStructure, type ThemeOptions } from './themeStructure.js';
-import { type Component } from '@captainpants/sweeter-core';
 import {
     type ThemeOptionDefinition,
     type ThemeOptionOrGroupDefinition,
 } from '../types.js';
-
-export interface Theme {
-    IncludeThemeStylesheets: Component;
-}
+import { type Theme } from './types.js';
 
 export function createTheme(options: ThemeOptions): Theme {
     const propertiesCss: string[] = [];

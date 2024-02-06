@@ -59,13 +59,6 @@ export type ModalProps = PropertiesMightBeSignals<{
 
 export type ModalComponentType = Component<ModalProps>;
 
-export type EditButtonProps = PropertiesMightBeSignals<{
-    onClick: () => void;
-    text?: JSX.Element;
-}>;
-
-export type EditButtonComponentType = Component<EditButtonProps>;
-
 export interface ValidationListener {
     isValid: () => boolean;
 }

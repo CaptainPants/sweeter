@@ -12,6 +12,8 @@ import {
 } from '@captainpants/sweeter-core';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { IconButton } from '../index.js';
 
 export function ModalEditor(
     {
@@ -67,7 +69,7 @@ export function ModalEditor(
         isOpen.value = false;
     };
 
-    const { EditButton, Modal } = init.getContext(EditorRootContext);
+    const { Modal } = init.getContext(EditorRootContext);
 
     const { localize } = init.hook(LocalizerHook);
 
@@ -77,24 +79,11 @@ export function ModalEditor(
         });
     });
 
-    return $calc(() => (
-        <>
-            <EditButton
-                key="button"
-                text={
-                    <>
-                        {localize('Edit')}{' '}
-                        {$calc(() =>
-                            $val(isRoot)
-                                ? 'root'
-                                : propertyDisplayName ?? 'unknown',
-                        )}
-                    </>
-                }
-                onClick={() => {
-                    isOpen.value = true;
-                }}
-            />
+    const title = $calc(() => localize('Edit') + ' ' + ($val(isRoot) ? 'root' : propertyDisplayName ?? 'unknown'));
+
+    return $calc(() => {
+        return <>
+            <IconButton icon="Edit" text={title} onClick={() => { isOpen.value = true; }} /> 
             <Modal
                 key="dialog"
                 isOpen={isOpen}
@@ -106,5 +95,5 @@ export function ModalEditor(
                 {content}
             </Modal>
         </>
-    ));
+    });
 }

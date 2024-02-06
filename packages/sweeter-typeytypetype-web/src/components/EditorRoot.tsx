@@ -72,9 +72,6 @@ export function EditorRoot<T>({
     return $calc(() => {
         const hostContext: EditorRootContextType = {
             settings: $val(settings) ?? defaultSettings,
-            EditButton: (props) => {
-                return <Button onclick={props.onClick}>{props.text}</Button>;
-            },
             Modal: ({
                 isOpen,
                 onClose,

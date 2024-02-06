@@ -2,9 +2,15 @@ import {
     type PropertiesMightBeSignals,
     type Component,
 } from '@captainpants/sweeter-core';
+import {
+    type ElementCssClasses,
+    type ElementCssStyles,
+} from '@captainpants/sweeter-web';
 
 export type IconProps = PropertiesMightBeSignals<{
-    hoverable?: boolean;
+    hoverable?: boolean | undefined;
+    style?: ElementCssStyles | undefined;
+    class?: ElementCssClasses | undefined;
 }>;
 
 export interface IconSet {

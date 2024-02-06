@@ -95,7 +95,7 @@ export function UnionEditor({
                     <EditorHost
                         model={resolved}
                         replace={replaceResolved}
-                        indent={$calc(() => $val(indent) + 1)}
+                        indent={indent}
                         idPath={$calc(() =>
                             idPaths.union($val(idPath), typeIndex.value),
                         )}

@@ -22,15 +22,19 @@ import {
 } from '@captainpants/sweeter-web';
 
 function createIconComponent(icon: IconNode): Component<IconProps> {
-    return ({ hoverable }) => {
+    return ({ hoverable, style, class: classProp }) => {
         const svg = createElement(icon);
 
-        const classes: ElementCssClasses[] = [css.iconContainer];
+        const classes: ElementCssClasses[] = [classProp, css.iconContainer];
         if (hoverable) {
             classes.push($calc(() => ($val(hoverable) ? css.hoverable : null)));
         }
 
-        return <div class={classes}>{svg}</div>;
+        return (
+            <div class={classes} style={style}>
+                {svg}
+            </div>
+        );
     };
 }
 
@@ -57,6 +61,10 @@ const css = {
                 :hover { 
                     color: #777777;
                 }
+            }
+
+            > * {
+                transition: color .15s ease-in-out;
             }
         `,
     }),

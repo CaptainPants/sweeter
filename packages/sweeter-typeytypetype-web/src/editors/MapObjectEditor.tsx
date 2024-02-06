@@ -17,6 +17,7 @@ import {
     sortProperties,
 } from '@captainpants/typeytypetype';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { Box } from '../../../sweeter-gummybear/build/index.js';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {
@@ -32,9 +33,7 @@ export const MapObjectEditor: Component<EditorProps> = (
     const typedModel = $calc(() => cast($val(model), asMap));
 
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $calc(() =>
-        $val(isRoot) ? $val(indent) : $val(indent) + 1,
-    );
+    const childIndent = $calc(() => $val(indent) + 1);
 
     const idGenerator = init.idGenerator;
 
@@ -106,7 +105,7 @@ export const MapObjectEditor: Component<EditorProps> = (
 
     return $calc(() => {
         return (
-            <div class={styles.editorOuter}>
+            <Box level={indent} class={styles.editorOuter}>
                 {propertyDisplayName && (
                     <div class={styles.editorPropertyDisplayName}>
                         {propertyDisplayName}
@@ -126,7 +125,7 @@ export const MapObjectEditor: Component<EditorProps> = (
                     )}
                     <div class={styles.editorContainer}>{content}</div>
                 </div>
-            </div>
+            </Box>
         );
     });
 };

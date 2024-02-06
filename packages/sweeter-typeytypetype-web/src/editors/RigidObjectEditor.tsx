@@ -36,9 +36,7 @@ export function RigidObjectEditor(
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $calc(() =>
-        $val(isRoot) ? $val(indent) : $val(indent) + 1,
-    );
+    const childIndent = $calc(() => $val(indent) + 1);
 
     const idGenerator = init.idGenerator;
 
@@ -216,7 +214,7 @@ export function RigidObjectEditor(
 
     return $calc(() => {
         return (
-            <Box level={$calc(() => $val(indent))} class={styles.editorOuter}>
+            <Box level={indent} class={styles.editorOuter}>
                 <div class={styles.editorIndentContainer}>
                     {$if(
                         $calc(() => !$val(isRoot)),

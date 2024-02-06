@@ -7,6 +7,7 @@ import * as grid from './grid.js';
 export { grid };
 
 export * from './button.js';
+export * from './box.js';
 
 export * from './reset.js';
 export * from './utility.js';

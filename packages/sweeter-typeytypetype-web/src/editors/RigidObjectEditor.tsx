@@ -22,7 +22,7 @@ import { DraftHook } from '../hooks/DraftHook.js';
 import { type EditorProps } from '../types.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { PropertyEditorPart } from './PropertyEditorPart.js';
-import { Row, Column, Label } from '@captainpants/sweeter-gummybear';
+import { Row, Column, Label, Box } from '@captainpants/sweeter-gummybear';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 
@@ -36,6 +36,7 @@ export function RigidObjectEditor(
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
+    const childIndent = $calc(() => $val(isRoot) ? $val(indent) : $val(indent) + 1);
 
     const idGenerator = init.idGenerator;
 
@@ -195,7 +196,7 @@ export function RigidObjectEditor(
                                                 updateValue={
                                                     updatePropertyValue
                                                 }
-                                                indent={indent}
+                                                indent={childIndent}
                                                 ownerIdPath={idPath}
                                             />
                                         </Column>
@@ -213,7 +214,7 @@ export function RigidObjectEditor(
 
     return $calc(() => {
         return (
-            <div class={styles.editorOuter}>
+            <Box level={$calc(() => $val(indent))} class={styles.editorOuter}>
                 <div class={styles.editorIndentContainer}>
                     {$if(
                         $calc(() => !$val(isRoot)),
@@ -228,7 +229,7 @@ export function RigidObjectEditor(
                     )}
                     <div class={styles.editorContainer}>{content}</div>
                 </div>
-            </div>
+            </Box>
         );
     });
 }

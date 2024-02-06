@@ -1,6 +1,11 @@
-import { type Component } from '@captainpants/sweeter-core';
+import {
+    type PropertiesMightBeSignals,
+    type Component,
+} from '@captainpants/sweeter-core';
 
-export interface IconProps {}
+export type IconProps = PropertiesMightBeSignals<{
+    hoverable?: boolean;
+}>;
 
 export interface IconSet {
     Child: Component<IconProps>;

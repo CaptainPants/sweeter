@@ -146,7 +146,7 @@ export function ArrayEditor(
                                                 }
                                             }}
                                         >
-                                            <Delete />
+                                            <Delete hoverable />
                                         </div>
                                     </div>
                                 </SortableItem>

@@ -1,4 +1,9 @@
-import { Context } from '@captainpants/sweeter-core';
+import {
+    type Component,
+    Context,
+    $calc,
+    $val,
+} from '@captainpants/sweeter-core';
 
 import {
     ArrowDownRight,
@@ -10,17 +15,49 @@ import {
     ListPlus,
 } from 'lucide';
 import { type IconProps, type IconSet } from '../types.js';
+import {
+    type ElementCssClasses,
+    GlobalCssClass,
+    stylesheet,
+} from '@captainpants/sweeter-web';
 
-function createAndSetupElement(icon: IconNode, props: IconProps) {
-    const result = createElement(icon);
-    // This function currently is a simple wrapper around lucides createElement - but the idea is to later add any formatting/theming we might need.
-    return result;
+function createIconComponent(icon: IconNode): Component<IconProps> {
+    return ({ hoverable }) => {
+        const svg = createElement(icon);
+
+        const classes: ElementCssClasses[] = [css.iconContainer];
+        if (hoverable) {
+            classes.push($calc(() => ($val(hoverable) ? css.hoverable : null)));
+        }
+
+        return <div class={classes}>{svg}</div>;
+    };
 }
 
 export const IconProviderContext = new Context<IconSet>('IconProviderContext', {
-    Child: (props) => createAndSetupElement(ArrowDownRight, props),
-    DragHandle: (props) => createAndSetupElement(Grip, props),
-    Delete: (props) => createAndSetupElement(Trash2, props),
-    Edit: (props) => createAndSetupElement(Pencil, props),
-    Add: (props) => createAndSetupElement(ListPlus, props),
+    Child: createIconComponent(ArrowDownRight),
+    DragHandle: createIconComponent(Grip),
+    Delete: createIconComponent(Trash2),
+    Edit: createIconComponent(Pencil),
+    Add: createIconComponent(ListPlus),
 });
+
+const hoverable = new GlobalCssClass({
+    className: 'is-hoverable',
+});
+
+const css = {
+    hoverable,
+    iconContainer: new GlobalCssClass({
+        className: 'IconContainer',
+        content: stylesheet`
+            &.${hoverable} {
+                cursor: pointer;
+
+                :hover { 
+                    color: #777777;
+                }
+            }
+        `,
+    }),
+};

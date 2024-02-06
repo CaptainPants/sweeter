@@ -12,7 +12,6 @@ import {
 } from '@captainpants/sweeter-core';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
-import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { IconButton } from '../index.js';
 
 export function ModalEditor(
@@ -79,21 +78,34 @@ export function ModalEditor(
         });
     });
 
-    const title = $calc(() => localize('Edit') + ' ' + ($val(isRoot) ? 'root' : propertyDisplayName ?? 'unknown'));
+    const title = $calc(
+        () =>
+            localize('Edit') +
+            ' ' +
+            ($val(isRoot) ? 'root' : propertyDisplayName ?? 'unknown'),
+    );
 
     return $calc(() => {
-        return <>
-            <IconButton icon="Edit" text={title} onClick={() => { isOpen.value = true; }} /> 
-            <Modal
-                key="dialog"
-                isOpen={isOpen}
-                title={propertyDisplayName}
-                commitEnabled={isValid}
-                onCommit={onCommit}
-                onClose={onCancel}
-            >
-                {content}
-            </Modal>
-        </>
+        return (
+            <>
+                <IconButton
+                    icon="Edit"
+                    text={title}
+                    onClick={() => {
+                        isOpen.value = true;
+                    }}
+                />
+                <Modal
+                    key="dialog"
+                    isOpen={isOpen}
+                    title={propertyDisplayName}
+                    commitEnabled={isValid}
+                    onCommit={onCommit}
+                    onClose={onCancel}
+                >
+                    {content}
+                </Modal>
+            </>
+        );
     });
 }

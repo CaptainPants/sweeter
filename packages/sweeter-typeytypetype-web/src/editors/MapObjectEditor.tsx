@@ -32,7 +32,9 @@ export const MapObjectEditor: Component<EditorProps> = (
     const typedModel = $calc(() => cast($val(model), asMap));
 
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $calc(() => $val(isRoot) ? $val(indent) : $val(indent) + 1);
+    const childIndent = $calc(() =>
+        $val(isRoot) ? $val(indent) : $val(indent) + 1,
+    );
 
     const idGenerator = init.idGenerator;
 

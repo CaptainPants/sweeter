@@ -166,8 +166,21 @@ export function ArrayEditor(
             <div>
                 {$calc(() =>
                     allowedTypes.value.map((allowedType, index) => {
-                        const title = allowedTypes.value.length === 1 ? localize('Add') :  localize('Add {0}', [allowedType.getBestDisplayName()]);
-                        return <IconButton icon="Add" text={title} onClick={() => { void add(allowedType); }} /> 
+                        const title =
+                            allowedTypes.value.length === 1
+                                ? localize('Add')
+                                : localize('Add {0}', [
+                                      allowedType.getBestDisplayName(),
+                                  ]);
+                        return (
+                            <IconButton
+                                icon="Add"
+                                text={title}
+                                onClick={() => {
+                                    void add(allowedType);
+                                }}
+                            />
+                        );
                     }),
                 )}
             </div>
@@ -210,5 +223,5 @@ const css = {
             cursor: pointer;
             margin: 12;
         `,
-    })
+    }),
 } as const;

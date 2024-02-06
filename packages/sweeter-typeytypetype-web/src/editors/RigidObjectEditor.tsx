@@ -36,7 +36,9 @@ export function RigidObjectEditor(
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $calc(() => $val(isRoot) ? $val(indent) : $val(indent) + 1);
+    const childIndent = $calc(() =>
+        $val(isRoot) ? $val(indent) : $val(indent) + 1,
+    );
 
     const idGenerator = init.idGenerator;
 

@@ -177,8 +177,12 @@ export const Modal: Component<ModalProps> = (
                                     ×
                                 </div>
                             </div>
-                            <div class={classes.body}>{$children(children)}</div>
-                            <div class={classes.footer}>{$children(footer)}</div>
+                            <div class={classes.body}>
+                                {$children(children)}
+                            </div>
+                            <div class={classes.footer}>
+                                {$children(footer)}
+                            </div>
                         </div>
                         <div class={classes.verticalSpacer} />
                     </div>

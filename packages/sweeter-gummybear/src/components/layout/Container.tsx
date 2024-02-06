@@ -37,7 +37,7 @@ export const Container: Component<ContainerProps> = ({
     } = {},
 }) => {
     const style: ElementCssStyles = {
-        width: isSignal(size)
+        "max-width": isSignal(size)
             ? $calc(() =>
                   size.value
                       ? `${breakpointNameToSizeMap[size.value]}px`

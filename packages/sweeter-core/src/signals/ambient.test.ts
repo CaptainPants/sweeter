@@ -15,7 +15,7 @@ it('CalculatedSignal listeners invoked with correct value after update', () => {
     }
 
     const { result, dependencies } = res;
-    
+
     expect(result).toEqual(3);
     expect(dependencies).toEqual(new Set([mutableSignal1, mutableSignal2]));
 });

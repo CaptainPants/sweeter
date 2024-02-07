@@ -1,6 +1,6 @@
 import { TextArea } from '@captainpants/sweeter-gummybear';
 import { type EditorProps } from '../types.js';
-import { $calc, $lastGood, $val } from '@captainpants/sweeter-core';
+import { $lastGood, $val } from '@captainpants/sweeter-core';
 
 export function ConstantEditor({ model }: Readonly<EditorProps>): JSX.Element {
     return (

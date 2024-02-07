@@ -1,7 +1,10 @@
 import { type SavedExecutionContext } from '../../../executionContext/saveExecutionContext.js';
 import { saveExecutionContext } from '../../../executionContext/saveExecutionContext.js';
 import { SignalBase } from './SignalBase.js';
-import { CallAndReturnDependenciesResult, callAndReturnDependencies } from '../../ambient.js';
+import {
+    type CallAndReturnDependenciesResult,
+    callAndReturnDependencies,
+} from '../../ambient.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
 import {
     type SignalState,
@@ -16,10 +19,12 @@ import {
 
 export class CalculatedSignal<T> extends SignalBase<T> {
     constructor(calculation: () => T, options?: CalculatedSignalOptions) {
+        // Capture execution context before we do anything else
         const savedContext = saveExecutionContext();
 
         super({ mode: 'INITIALISING' });
 
+        // We can't use this. before calling super, so this is separated from the saveExecutionContext() call
         this.#capturedContext = savedContext;
 
         // Giving the function a name for debugging purposes
@@ -89,13 +94,12 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         if (result.succeeded) {
             return {
                 mode: 'SUCCESS',
-                value: result.result
+                value: result.result,
             };
-        }
-        else {
+        } else {
             return {
                 mode: 'ERROR',
-                error: result.error
+                error: result.error,
             };
         }
     }
@@ -116,7 +120,10 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         try {
             const revert = this.#capturedContext.restore();
             try {
-                const result = callAndReturnDependencies(this.#calculation, true);
+                const result = callAndReturnDependencies(
+                    this.#calculation,
+                    true,
+                );
 
                 const nextState = this.#deriveState(result);
                 const nextDependencies = result.dependencies;

@@ -38,15 +38,17 @@ export function announceMutatingSignal(signal: Signal<unknown>) {
     }
 }
 
-export type CallAndReturnDependenciesResult<T> = {
-    succeeded: true;
-    result: T;
-    dependencies: Set<Signal<unknown>>;
-} | {
-    succeeded: false;
-    error: unknown;
-    dependencies: Set<Signal<unknown>>;
-}
+export type CallAndReturnDependenciesResult<T> =
+    | {
+          succeeded: true;
+          result: T;
+          dependencies: Set<Signal<unknown>>;
+      }
+    | {
+          succeeded: false;
+          error: unknown;
+          dependencies: Set<Signal<unknown>>;
+      };
 
 export function callAndReturnDependencies<T>(
     callback: () => T,
@@ -68,14 +70,13 @@ export function callAndReturnDependencies<T>(
         return {
             succeeded: true,
             result: result,
-            dependencies: dependencies
+            dependencies: dependencies,
         };
-    }
-    catch (err) {
-        return { 
+    } catch (err) {
+        return {
             succeeded: false,
-            error: err, 
-            dependencies
+            error: err,
+            dependencies,
         };
     }
 }

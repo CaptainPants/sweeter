@@ -1,4 +1,4 @@
-import { $mutable } from './$mutable.js'
+import { $mutable } from './$mutable.js';
 import { $lastGood } from './$lastGood.js';
 
 it('General', () => {
@@ -12,14 +12,14 @@ it('General', () => {
         return result.value;
     });
 
-    expect(signal.peek()).toStrictEqual("alpha");
+    expect(signal.peek()).toStrictEqual('alpha');
 
     throws.value = true; // the calculation is now throwing each time, so returns 'alpha' as the most recent valid value
     result.value = 'beta';
 
-    expect(signal.peek()).toStrictEqual("alpha");
+    expect(signal.peek()).toStrictEqual('alpha');
 
     throws.value = false;
 
-    expect(signal.peek()).toStrictEqual("beta");
+    expect(signal.peek()).toStrictEqual('beta');
 });

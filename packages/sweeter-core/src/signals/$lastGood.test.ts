@@ -1,11 +1,11 @@
 import { $mutable } from './$mutable.js'
-import { $lastValid } from './$lastValid.js';
+import { $lastGood } from './$lastGood.js';
 
 it('General', () => {
     const throws = $mutable(false);
     const result = $mutable('alpha');
 
-    const signal = $lastValid(() => {
+    const signal = $lastGood(() => {
         if (throws.value) {
             throw new Error('Throws');
         }

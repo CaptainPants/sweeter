@@ -38,26 +38,46 @@ export function announceMutatingSignal(signal: Signal<unknown>) {
     }
 }
 
+export type CallAndReturnDependenciesResult<T> = {
+    succeeded: true;
+    result: T;
+    dependencies: Set<Signal<unknown>>;
+} | {
+    succeeded: false;
+    error: unknown;
+    dependencies: Set<Signal<unknown>>;
+}
+
 export function callAndReturnDependencies<T>(
     callback: () => T,
     readonly: boolean,
-): {
-    result: T;
-    dependencies: Set<Signal<unknown>>;
-} {
+): CallAndReturnDependenciesResult<T> {
     const dependencies = new Set<Signal<unknown>>();
 
     const listener = (signal: Signal<unknown>) => {
         dependencies.add(signal);
     };
 
-    const result = callAndInvokeListenerForEachDependency(
-        callback,
-        listener,
-        readonly,
-    );
+    try {
+        const result = callAndInvokeListenerForEachDependency(
+            callback,
+            listener,
+            readonly,
+        );
 
-    return { result, dependencies };
+        return {
+            succeeded: true,
+            result: result,
+            dependencies: dependencies
+        };
+    }
+    catch (err) {
+        return { 
+            succeeded: false,
+            error: err, 
+            dependencies
+        };
+    }
 }
 
 export function callAndInvokeListenerForEachDependency<T>(

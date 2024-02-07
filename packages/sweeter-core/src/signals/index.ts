@@ -3,7 +3,7 @@ export * from './$defer.js';
 export * from './$controlled.js';
 export * from './$constant.js';
 export * from './$elementOf.js';
-export * from './$lastValid.js';
+export * from './$lastGood.js';
 export * from './$mutable.js';
 export * from './$mutableFromCallbacks.js';
 export * from './$propertyOf.js';

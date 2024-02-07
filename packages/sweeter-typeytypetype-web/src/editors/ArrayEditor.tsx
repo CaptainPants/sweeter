@@ -14,7 +14,7 @@ import {
     type ComponentInit,
     $foreach,
     $if,
-    $lastValid,
+    $lastGood,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
 import {
@@ -38,7 +38,7 @@ export function ArrayEditor(
     }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
-    const typedModel = $lastValid(() => {
+    const typedModel = $lastGood(() => {
         return cast($val(model), asArray);
     });
 

@@ -1,7 +1,7 @@
 import {
     $calc,
     $if,
-    $lastValid,
+    $lastGood,
     $peek,
     $val,
     type Component,
@@ -31,7 +31,7 @@ export const MapObjectEditor: Component<EditorProps> = (
     }: Readonly<EditorProps>,
     init,
 ): JSX.Element => {
-    const typedModel = $lastValid(() => cast($val(model), asMap));
+    const typedModel = $lastGood(() => cast($val(model), asMap));
 
     const { indentWidth } = init.getContext(EditorSizesContext);
     const childIndent = $calc(() => $val(indent) + 1);

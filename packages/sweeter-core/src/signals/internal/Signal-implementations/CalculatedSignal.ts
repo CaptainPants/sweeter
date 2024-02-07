@@ -1,7 +1,7 @@
 import { type SavedExecutionContext } from '../../../executionContext/saveExecutionContext.js';
 import { saveExecutionContext } from '../../../executionContext/saveExecutionContext.js';
 import { SignalBase } from './SignalBase.js';
-import { callAndReturnDependencies } from '../../ambient.js';
+import { CallAndReturnDependenciesResult, callAndReturnDependencies } from '../../ambient.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
 import {
     type SignalState,
@@ -14,30 +14,9 @@ import {
     startCalculation,
 } from '../../calculationDeferral.js';
 
-function wrap<T>(callback: () => T): () => SignalState<T> {
-    const result = (): SignalState<T> => {
-        try {
-            const result = callback();
-            return { mode: 'SUCCESS', value: result };
-        } catch (ex) {
-            return { mode: 'ERROR', error: ex };
-        }
-    };
-
-    // Note: this doesn't actually help in stack traces, but can be useful in inspecting
-    // the related signal to track it back to its source.
-    Object.defineProperty(result, 'name', {
-        value: `wrapped(${callback.name})`,
-    });
-
-    return result;
-}
-
 export class CalculatedSignal<T> extends SignalBase<T> {
     constructor(calculation: () => T, options?: CalculatedSignalOptions) {
         const savedContext = saveExecutionContext();
-
-        const wrapped = wrap(calculation);
 
         super({ mode: 'INITIALISING' });
 
@@ -60,7 +39,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
         this.#dependencyListener = calculatedSignalListener;
 
-        this.#wrappedCalculation = wrapped;
+        this.#calculation = calculation;
 
         // Initially no dependencies, until .value/.peekState(true) is invoked and causes deps to be filled
         this.#dependencies = new Set();
@@ -75,7 +54,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #capturedContext: SavedExecutionContext;
 
-    #wrappedCalculation: () => SignalState<T>;
+    #calculation: () => T;
 
     // Not included by default to represent 'false' so we don't need to add the actual property until we need to
     #released?: boolean;
@@ -106,6 +85,21 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         this.#recalculate();
     }
 
+    #deriveState(result: CallAndReturnDependenciesResult<T>): SignalState<T> {
+        if (result.succeeded) {
+            return {
+                mode: 'SUCCESS',
+                value: result.result
+            };
+        }
+        else {
+            return {
+                mode: 'ERROR',
+                error: result.error
+            };
+        }
+    }
+
     #recalculate() {
         // if already initialized and has been orphaned then end here.
         if (this.inited && this.#released) {
@@ -122,11 +116,14 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         try {
             const revert = this.#capturedContext.restore();
             try {
-                const { result, dependencies: nextDependencies } =
-                    callAndReturnDependencies(this.#wrappedCalculation, true);
+                const result = callAndReturnDependencies(this.#calculation, true);
+
+                const nextState = this.#deriveState(result);
+                const nextDependencies = result.dependencies;
 
                 this.#detachExcept(nextDependencies);
 
+                // Not sure why this if is here
                 if (!this.#released) {
                     // Call in this order
                     this.#dependencies = nextDependencies;
@@ -134,7 +131,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
                 }
 
                 this.#dirty = false;
-                this._updateAndAnnounce(result);
+                this._updateAndAnnounce(nextState);
             } finally {
                 revert();
             }

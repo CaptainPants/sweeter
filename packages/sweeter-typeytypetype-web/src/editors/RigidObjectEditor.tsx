@@ -1,6 +1,7 @@
 import {
     $calc,
     $if,
+    $lastValid,
     $peek,
     $val,
     type ComponentInit,
@@ -30,7 +31,7 @@ export function RigidObjectEditor(
     { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
-    const typedModel = $calc(() => {
+    const typedModel = $lastValid(() => {
         return cast($val(model), asRigidObject);
     });
 

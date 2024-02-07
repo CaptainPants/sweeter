@@ -8,6 +8,7 @@ import {
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $calc,
+    $lastValid,
     $peek,
     $val,
     type ComponentInit,
@@ -20,7 +21,7 @@ export function BooleanEditor(
     { model, replace, propertyDisplayName, idPath }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
-    const typedModel = $calc(() => {
+    const typedModel = $lastValid(() => {
         return cast($val(model), asBoolean);
     });
 

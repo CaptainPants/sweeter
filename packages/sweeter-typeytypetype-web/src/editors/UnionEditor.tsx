@@ -10,6 +10,7 @@ import {
 import {
     $calc,
     $if,
+    $lastValid,
     $mutableFromCallbacks,
     $peek,
     $val,
@@ -24,7 +25,7 @@ export function UnionEditor({
     idPath,
     indent,
 }: Readonly<EditorProps>): JSX.Element {
-    const typedModel = $calc(() => cast($val(model), asUnion));
+    const typedModel = $lastValid(() => cast($val(model), asUnion));
 
     const type = $calc(() => typedModel.value.type);
 

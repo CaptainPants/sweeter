@@ -1,6 +1,6 @@
 import { TextArea } from '@captainpants/sweeter-gummybear';
 import { type EditorProps } from '../types.js';
-import { $calc, $val } from '@captainpants/sweeter-core';
+import { $calc, $lastValid, $val } from '@captainpants/sweeter-core';
 
 export function ConstantEditor({ model }: Readonly<EditorProps>): JSX.Element {
     return (
@@ -8,7 +8,7 @@ export function ConstantEditor({ model }: Readonly<EditorProps>): JSX.Element {
             disabled
             fillWidth
             readOnly
-            value={$calc(() => String($val(model).value))}
+            value={$lastValid(() => String($val(model).value))}
         />
     );
 }

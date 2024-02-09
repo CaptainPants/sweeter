@@ -18,11 +18,7 @@ export const SortableKnob: Component<SortableKnobProps> = (
     init,
 ) => {
     return (
-        <div
-            class={classNames}
-            style={style}
-            data-is-knob="true"
-        >
+        <div class={classNames} style={style} data-is-knob="true">
             {children}
         </div>
     );

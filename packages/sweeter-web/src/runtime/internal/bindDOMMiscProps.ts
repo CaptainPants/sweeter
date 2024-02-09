@@ -142,8 +142,7 @@ export function bindDOMMiscProps<TElementType extends string>(
                 // More direct path if not a signal
                 node.addEventListener(eventName, value as EventListener);
             }
-        }
-        else if (mappedPropKey.startsWith('data-')) {
+        } else if (mappedPropKey.startsWith('data-')) {
             // ==== data- (and possibly other attr based) bindings ====
             if (isSignal(value)) {
                 assignDataAttribute(node, mappedPropKey, value.peek());
@@ -183,11 +182,14 @@ export function bindDOMMiscProps<TElementType extends string>(
     }
 }
 
-function assignDataAttribute(ele: HTMLElement | SVGElement, name: string, value: unknown) {
+function assignDataAttribute(
+    ele: HTMLElement | SVGElement,
+    name: string,
+    value: unknown,
+) {
     if (typeof value === 'string') {
         ele.setAttribute(name, value);
-    }
-    else {
+    } else {
         ele.removeAttribute(name);
     }
 }

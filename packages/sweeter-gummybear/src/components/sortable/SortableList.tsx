@@ -20,12 +20,10 @@ export type SortableListProps = PropertiesMightBeSignals<{
     onSortEnd?: (fromIndex: number, toIndex: number) => void;
 }>;
 
-export const SortableList: Component<SortableListProps> = ({
-    children,
-    style: styleProp,
-    class: classNames,
-    onSortEnd
-}, init) => {
+export const SortableList: Component<SortableListProps> = (
+    { children, style: styleProp, class: classNames, onSortEnd },
+    init,
+) => {
     const style = $calc<ElementCssStyles>(() => {
         const result = $val(styleProp) ?? {};
 
@@ -36,26 +34,23 @@ export const SortableList: Component<SortableListProps> = ({
 
     let ref: HTMLDivElement | undefined;
 
-    init.onMount(
-        () => {
-            assertNotNullOrUndefined(ref);
+    init.onMount(() => {
+        assertNotNullOrUndefined(ref);
 
-            const sortable = Sortable.create(ref,{
-                handle: '[data-is-knob]', // knobs not working so disabled
-                onEnd(evt) {
-                    assertNotNullOrUndefined(evt.oldIndex);
-                    assertNotNullOrUndefined(evt.newIndex);
+        const sortable = Sortable.create(ref, {
+            handle: '[data-is-knob]', // knobs not working so disabled
+            onEnd(evt) {
+                assertNotNullOrUndefined(evt.oldIndex);
+                assertNotNullOrUndefined(evt.newIndex);
 
-                    $peek(onSortEnd)?.(evt.oldIndex, evt.newIndex);
-                }
-            });
+                $peek(onSortEnd)?.(evt.oldIndex, evt.newIndex);
+            },
+        });
 
-
-            return () => {
-                sortable.destroy();
-            }
-        }
-    );
+        return () => {
+            sortable.destroy();
+        };
+    });
 
     return (
         <div ref={(value) => (ref = value)} style={style} class={classNames}>

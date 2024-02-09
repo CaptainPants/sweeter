@@ -64,7 +64,7 @@ const bindableMap = new Map<string, MutableMapping>([
 const specialHandlingProps = ['children', 'ref', 'class', 'style'];
 
 export function bindDOMMiscProps<TElementType extends string>(
-    node: Node,
+    node: SVGElement | HTMLElement,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
     runtime: WebRuntime,
 ): void {
@@ -142,6 +142,25 @@ export function bindDOMMiscProps<TElementType extends string>(
                 // More direct path if not a signal
                 node.addEventListener(eventName, value as EventListener);
             }
+        }
+        else if (mappedPropKey.startsWith('data-')) {
+            // ==== data- (and possibly other attr based) bindings ====
+            if (isSignal(value)) {
+                assignDataAttribute(node, mappedPropKey, value.peek());
+
+                const changeCallback = () => {
+                    assignDataAttribute(node, mappedPropKey, value.peek());
+                };
+
+                // Add a weak listener (so that it will be cleaned up when no references held)
+                // we will add a strong reference to the DOM element (via WeakMap) to prevent
+                // cleanup until the DOM element is no longer reachable
+                value.listenWeak(changeCallback);
+
+                addExplicitStrongReference(node, changeCallback);
+            } else {
+                assignDataAttribute(node, mappedPropKey, value);
+            }
         } else {
             // ==== NORMAL SIGNAL BINDING ====
             if (isSignal(value)) {
@@ -161,5 +180,14 @@ export function bindDOMMiscProps<TElementType extends string>(
                 (node as unknown as Untyped)[mappedPropKey] = value;
             }
         }
+    }
+}
+
+function assignDataAttribute(ele: HTMLElement | SVGElement, name: string, value: unknown) {
+    if (typeof value === 'string') {
+        ele.setAttribute(name, value);
+    }
+    else {
+        ele.removeAttribute(name);
     }
 }

@@ -41,7 +41,7 @@ export const SortableList: Component<SortableListProps> = ({
             assertNotNullOrUndefined(ref);
 
             const sortable = Sortable.create(ref,{
-                //handle: '[data-is-handle]' // knobs not working so disabled
+                handle: '[data-is-knob]', // knobs not working so disabled
                 onEnd(evt) {
                     assertNotNullOrUndefined(evt.oldIndex);
                     assertNotNullOrUndefined(evt.newIndex);

@@ -84,6 +84,8 @@ type AllElementAttributes<TElement> = {
     children?: JSX.Element | undefined;
 
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;
+} & {
+    [Key in `data-${string}`]: string;
 };
 
 type HasFormControlValueAttribute = {

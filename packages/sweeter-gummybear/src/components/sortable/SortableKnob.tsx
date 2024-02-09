@@ -29,7 +29,12 @@ export const SortableKnob: Component<SortableKnobProps> = (
     }
 
     return (
-        <div onmousedown={onMouseDown} class={classNames} style={style}>
+        <div
+            onmousedown={onMouseDown}
+            class={classNames}
+            style={style}
+            data-is-knob="true"
+        >
             {children}
         </div>
     );

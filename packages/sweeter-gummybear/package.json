@@ -36,6 +36,10 @@
         "@captainpants/sweeter-utilities": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
         "@popperjs/core": "^2.11.8",
+        "sortablejs": "^1.15.2",
         "tinycolor2": "^1.6.0"
+    },
+    "devDependencies": {
+        "@types/sortablejs": "^1.15.7"
     }
 }

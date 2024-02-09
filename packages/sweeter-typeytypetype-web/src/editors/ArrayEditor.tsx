@@ -17,11 +17,7 @@ import {
     $lastGood,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
-import {
-    SortableItem,
-    SortableKnob,
-    SortableList,
-} from '@captainpants/sweeter-gummybear';
+import { SortableKnob, SortableList } from '@captainpants/sweeter-gummybear';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
@@ -121,36 +117,32 @@ export function ArrayEditor(
                         $calc(() => draft.value.getElements()),
                         (item, index) => {
                             return (
-                                <SortableItem>
-                                    <div class={css.item}>
-                                        <SortableKnob>
-                                            <div class={css.sortableKnob}>
-                                                <DragHandle />
-                                            </div>
-                                        </SortableKnob>
-                                        <div class={css.itemInputArea}>
-                                            <ElementEditorPart
-                                                index={index}
-                                                elementModel={item}
-                                                updateElement={
-                                                    updateElementValue
-                                                }
-                                                indent={indent}
-                                                ownerIdPath={idPath}
-                                            />
+                                <div class={css.item}>
+                                    <SortableKnob>
+                                        <div class={css.sortableKnob}>
+                                            <DragHandle />
                                         </div>
-                                        <div
-                                            class={css.deleteIcon}
-                                            onclick={(evt) => {
-                                                if (evt.button === 0) {
-                                                    void remove(index);
-                                                }
-                                            }}
-                                        >
-                                            <Delete hoverable />
-                                        </div>
+                                    </SortableKnob>
+                                    <div class={css.itemInputArea}>
+                                        <ElementEditorPart
+                                            index={index}
+                                            elementModel={item}
+                                            updateElement={updateElementValue}
+                                            indent={indent}
+                                            ownerIdPath={idPath}
+                                        />
                                     </div>
-                                </SortableItem>
+                                    <div
+                                        class={css.deleteIcon}
+                                        onclick={(evt) => {
+                                            if (evt.button === 0) {
+                                                void remove(index);
+                                            }
+                                        }}
+                                    >
+                                        <Delete hoverable />
+                                    </div>
+                                </div>
                             );
                         },
                     )

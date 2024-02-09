@@ -1,5 +1,6 @@
 import {
     $calc,
+    $peek,
     $val,
     type Component,
     type PropertiesMightBeSignals,
@@ -9,6 +10,8 @@ import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
+import Sortable from 'sortablejs';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 export type SortableListProps = PropertiesMightBeSignals<{
     class?: ElementCssClasses;
@@ -19,14 +22,43 @@ export type SortableListProps = PropertiesMightBeSignals<{
 
 export const SortableList: Component<SortableListProps> = ({
     children,
-    style,
+    style: styleProp,
     class: classNames,
-}) => {
-    let _ref: HTMLDivElement | undefined;
+    onSortEnd
+}, init) => {
+    const style = $calc<ElementCssStyles>(() => {
+        const result = $val(styleProp) ?? {};
+
+        result.position = 'relative';
+
+        return result;
+    });
+
+    let ref: HTMLDivElement | undefined;
+
+    init.onMount(
+        () => {
+            assertNotNullOrUndefined(ref);
+
+            const sortable = Sortable.create(ref,{
+                //handle: '[data-is-handle]' // knobs not working so disabled
+                onEnd(evt) {
+                    assertNotNullOrUndefined(evt.oldIndex);
+                    assertNotNullOrUndefined(evt.newIndex);
+
+                    $peek(onSortEnd)?.(evt.oldIndex, evt.newIndex);
+                }
+            });
+
+
+            return () => {
+                sortable.destroy();
+            }
+        }
+    );
 
     return (
-        <div ref={(value) => (_ref = value)} style={style} class={classNames}>
-            TODO: implement sorting
+        <div ref={(value) => (ref = value)} style={style} class={classNames}>
             {SortableListContext.invokeWith(
                 {
                     // placeholder

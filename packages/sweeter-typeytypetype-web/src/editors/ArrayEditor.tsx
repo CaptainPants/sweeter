@@ -17,7 +17,7 @@ import {
     $lastGood,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
-import { SortableKnob, SortableList } from '@captainpants/sweeter-gummybear';
+import { SortableHandle, SortableList } from '@captainpants/sweeter-gummybear';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
@@ -45,7 +45,9 @@ export function ArrayEditor(
             onValid: async (validated) => {
                 await $peek(replace)(validated);
             },
-            convertIn: (model) => model,
+            convertIn: (model) => {
+                return model;
+            },
             convertOut: (draft) => ({
                 success: true,
                 result: draft,
@@ -112,41 +114,39 @@ export function ArrayEditor(
     return (
         <>
             <SortableList onSortEnd={move}>
-                {() =>
-                    $foreach(
-                        $calc(() => draft.value.getElements()),
-                        (item, index) => {
-                            return (
-                                <div class={css.item}>
-                                    <SortableKnob>
-                                        <div class={css.sortableKnob}>
-                                            <DragHandle />
-                                        </div>
-                                    </SortableKnob>
-                                    <div class={css.itemInputArea}>
-                                        <ElementEditorPart
-                                            index={index}
-                                            elementModel={item}
-                                            updateElement={updateElementValue}
-                                            indent={indent}
-                                            ownerIdPath={idPath}
-                                        />
+                {$foreach(
+                    $calc(() => draft.value.getElements()),
+                    (item, index) => {
+                        return (
+                            <div class={css.item}>
+                                <SortableHandle>
+                                    <div class={css.SortableHandle}>
+                                        <DragHandle />
                                     </div>
-                                    <div
-                                        class={css.deleteIcon}
-                                        onclick={(evt) => {
-                                            if (evt.button === 0) {
-                                                void remove(index);
-                                            }
-                                        }}
-                                    >
-                                        <Delete hoverable />
-                                    </div>
+                                </SortableHandle>
+                                <div class={css.itemInputArea}>
+                                    <ElementEditorPart
+                                        index={index}
+                                        elementModel={item}
+                                        updateElement={updateElementValue}
+                                        indent={indent}
+                                        ownerIdPath={idPath}
+                                    />
                                 </div>
-                            );
-                        },
-                    )
-                }
+                                <div
+                                    class={css.deleteIcon}
+                                    onclick={(evt) => {
+                                        if (evt.button === 0) {
+                                            void remove(index);
+                                        }
+                                    }}
+                                >
+                                    <Delete hoverable />
+                                </div>
+                            </div>
+                        );
+                    },
+                )}
             </SortableList>
             {$if(
                 $calc(() => (validationErrors.value?.length ?? 0) > 0),
@@ -203,8 +203,8 @@ const css = {
             flex: 1;
         `,
     }),
-    sortableKnob: new GlobalCssClass({
-        className: 'ArrayEditor-SortableKnob',
+    SortableHandle: new GlobalCssClass({
+        className: 'ArrayEditor-SortableHandle',
         content: stylesheet`
             cursor: move;
             margin: 12;

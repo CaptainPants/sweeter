@@ -7,13 +7,13 @@ import {
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
 
-export type SortableKnobProps = PropertiesMightBeSignals<{
+export type SortableHandleProps = PropertiesMightBeSignals<{
     class?: ElementCssClasses;
     style?: ElementCssStyles;
     children?: JSX.Element;
 }>;
 
-export const SortableKnob: Component<SortableKnobProps> = (
+export const SortableHandle: Component<SortableHandleProps> = (
     { children, class: classNames, style },
     init,
 ) => {

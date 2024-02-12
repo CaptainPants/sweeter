@@ -13,8 +13,6 @@ export type ErrorBoundaryProps = PropertiesMightBeSignals<{
     children: (() => JSX.Element) | Signal<JSX.Element>;
 };
 
-// TODO: how to clear the error boundary??
-
 export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
     renderError,
     children,

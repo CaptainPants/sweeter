@@ -48,5 +48,3 @@ it('ErrorBoundary displays error when error thrown during render (signal)', () =
 
     res.dispose();
 });
-
-// TODO: clearing an error boundary?

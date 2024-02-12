@@ -86,8 +86,6 @@ export function addMountedCallback(
         }
 
         if (cleanup) {
-            // TODO: we could add these to a set and remove them if the mount callback has been called,
-            // but in practice we're not using the result of addMountedCallback anyway
             addUnMountedCallback(getContext, node, cleanup);
         }
     };

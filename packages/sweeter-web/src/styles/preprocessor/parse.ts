@@ -306,7 +306,7 @@ class Parser {
             const endOfPropertyName = startOfIdentifierIndex + len;
             this.#index = endOfPropertyName;
 
-            // TODO: not sure if comments are allowed between property and colon, but they PROBABLY are?
+            // Not sure if comments are allowed between property and colon, but they PROBABLY are?
             this.#skipWhitespaceAndComments();
 
             // If there is a following colon then this IS a property
@@ -474,7 +474,7 @@ class Parser {
      * Then move to the next character, skipping any comments.
      */
     #expect(code: number): void {
-        // TODO: not sure if this is needed
+        // Not sure if this is needed
         this.#skipComments();
 
         if (this.#input.charCodeAt(this.#index) !== code) {

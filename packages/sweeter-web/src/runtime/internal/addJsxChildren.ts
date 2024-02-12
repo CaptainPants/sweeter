@@ -63,7 +63,7 @@ export function addJsxChildren(
     // ==== MOUNT HANDLERS ====
 
     if (isInDocument(parentNode)) {
-        // TODO: this could cause elements to become unmounted - will that explode things?
+        // Note that these functions use afterCalculationsComplete so won't cause the nodelist to change
         announceChildrenMountedRecursive(parentNode);
     }
 
@@ -76,6 +76,7 @@ export function addJsxChildren(
             current = parentNode.lastChild
         ) {
             current.remove();
+            // Note that these functions use afterCalculationsComplete so won't cause the nodelist to change
             announceUnMountedRecursive(current);
         }
     };

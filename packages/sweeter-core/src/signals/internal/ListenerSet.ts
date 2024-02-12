@@ -117,11 +117,6 @@ export class ListenerSet<T> {
     }
 
     public getDebugDetail(): string {
-        // TODO: output the .debugListenerForSignal tree for each listener
-        // possibly can truncate call stacks to make it reasable
-        // or output as JSON so we can do work on the stack trace
-        // outside of the debugger
-
         // This will not include stack traces if !dev.flag('signalStacks')
         return this.debugGetAllListeners()
             .map((item, i) => {

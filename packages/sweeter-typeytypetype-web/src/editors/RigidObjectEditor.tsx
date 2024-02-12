@@ -83,11 +83,11 @@ export function RigidObjectEditor(
         local,
     };
 
-    // TODO: this is ugly, can we get the models to have the Rigid/Map type and avoid this?
     const owner = $calc(() => draft.value.value);
 
     const type = $calc(
         () =>
+            // TODO: this 'as' is ugly, can we get the models to have the Rigid/Map type and avoid this?
             draft.value.type as unknown as RigidObjectType<
                 Record<string, unknown>
             >,

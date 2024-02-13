@@ -1,5 +1,3 @@
-import { ObjectType } from '../types/ObjectType.js';
-
 import { ArrayType } from './ArrayType.js';
 import {
     BooleanConstantType,
@@ -14,12 +12,6 @@ import { RigidObjectType } from './RigidObjectType.js';
 import { StringType } from './StringType.js';
 import { type Type } from './Type.js';
 import { UnionType } from './UnionType.js';
-
-export function isObjectType(
-    type: Type<unknown>,
-): type is ObjectType<Record<string, unknown>> {
-    return type instanceof ObjectType;
-}
 
 export function isRigidObjectType(
     type: Type<unknown>,

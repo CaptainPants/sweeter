@@ -5,7 +5,6 @@ import {
     isNullType,
     isNumberConstantType,
     isNumberType,
-    isObjectType,
     isRigidObjectType,
     isStringConstantType,
     isStringType,
@@ -15,18 +14,19 @@ import {
 
 import { isModel } from './isModel.js';
 import {
+    type MapObjectModel,
     type ArrayModel,
     type BooleanConstantModel,
     type Model,
     type NullModel,
     type NumberConstantModel,
     type NumberModel,
-    type ObjectModel,
-    type SpreadModel,
     type StringConstantModel,
     type StringModel,
     type UndefinedModel,
     type UnionModel,
+    type RigidObjectModel,
+    type AnyModelConstraint,
 } from './Model.js';
 
 export function cast<TToModel, TFromType>(
@@ -47,23 +47,16 @@ export function asUnion<TFrom>(
     return isUnionType(model.type) ? (model as any) : undefined;
 }
 
-export function asObject<TFrom>(
-    model: Model<TFrom>,
-): ObjectModel<Record<string, unknown>> | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isObjectType(model.type) ? (model as any) : undefined;
-}
-
 export function asRigidObject<TFrom>(
     model: Model<TFrom>,
-): ObjectModel<Record<string, unknown>> | undefined {
+): RigidObjectModel<Record<string, unknown>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isRigidObjectType(model.type) ? (model as any) : undefined;
 }
 
 export function asMap<TFrom>(
     model: Model<TFrom>,
-): ObjectModel<Record<string, unknown>> | undefined {
+): MapObjectModel<Record<string, unknown>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isMapObjectType(model.type) ? (model as any) : undefined;
 }
@@ -134,8 +127,8 @@ export function asUndefinedConstant<TFrom>(
  * Slightly ugly overload to allow for unions of model types, and therefore relatively easy access to casting these to other types.
  * @param model
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function asUnknown<TModel extends SpreadModel<any>>(
+
+export function asUnknown<TModel extends AnyModelConstraint>(
     model: TModel,
 ): Model<unknown>;
 export function asUnknown<T>(model: Model<T>): Model<unknown>;

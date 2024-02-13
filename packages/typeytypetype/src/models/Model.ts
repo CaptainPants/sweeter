@@ -1,5 +1,5 @@
+import { type MapObjectType, type RigidObjectType } from '../index.js';
 import { type IsUnion } from '../internal/unions.js';
-import { type GetExpandoType } from '../internal/utilityTypes.js';
 import { type ArrayType } from '../types/ArrayType.js';
 import {
     type BooleanConstantType,
@@ -9,7 +9,6 @@ import {
     type UndefinedConstantType,
 } from '../types/ConstantTypes.js';
 import { type NumberType } from '../types/NumberType.js';
-import { type ObjectType } from '../types/ObjectType.js';
 import { type StringType } from '../types/StringType.js';
 import { type Type } from '../types/Type.js';
 import { type UnionType } from '../types/UnionType.js';
@@ -85,34 +84,33 @@ export type PropertyModelFor<TObject, TKey extends keyof TObject> =
     | PropertyModel<TObject[TKey]>
     | (string extends keyof TObject ? undefined : never);
 
-export interface ObjectModelProperties<
-    TObject extends Record<string, unknown>,
-> {
-    getExpandoPropertyType: () => Type<GetExpandoType<TObject>> | undefined;
-
-    getPropertyModel: <TKey extends keyof TObject & string>(
+export interface RigidObjectModel<TObject extends Record<string, unknown>>
+    extends ModelBase<Readonly<TObject>, RigidObjectType<TObject>> {
+    getPropertyModel<TKey extends keyof TObject & string>(
         key: TKey,
-    ) => PropertyModelFor<TObject, TKey>;
+    ): PropertyModelFor<TObject, TKey>;
 
-    getProperties: () => Array<PropertyModel<unknown>>;
+    getProperties(): Array<PropertyModel<unknown>>;
 
-    setPropertyValue: <TKey extends keyof TObject & string>(
+    setPropertyValue<TKey extends keyof TObject & string>(
         key: TKey,
         value: unknown,
         triggerValidation?: boolean,
-    ) => Promise<this>;
-
-    deleteProperty: <TKey extends keyof TObject & string>(
-        key: TKey,
-        validate?: boolean,
-    ) => Promise<this>;
+    ): Promise<this>;
 }
 
-export type ObjectModel<TObject extends Record<string, unknown>> = ModelBase<
-    Readonly<TObject>,
-    ObjectType<TObject>
-> &
-    ObjectModelProperties<TObject>;
+export interface MapObjectModel<TValue>
+    extends ModelBase<Readonly<TValue>, MapObjectType<TValue>> {
+    getExpandoPropertyType(): Type<Record<string, TValue>> | undefined;
+
+    setPropertyValue(
+        key: string,
+        value: unknown,
+        triggerValidation?: boolean,
+    ): Promise<this>;
+
+    deleteProperty(key: string, validate?: boolean): Promise<this>;
+}
 
 export interface UnionModelProperties<TUnion> {
     as: <TAs>(type: Type<TAs>) => Model<TAs> | null;
@@ -139,8 +137,29 @@ export interface RealUnknownModel extends ModelBase<unknown, UnknownType> {}
 
 export type UnknownModel =
     | ArrayModel<unknown>
-    | ObjectModel<Record<string, unknown>>
+    | MapObjectModel<unknown>
+    | RigidObjectModel<Record<string, unknown>>
     | UnionModel<unknown>
+    | StringModel
+    | StringConstantModel<string>
+    | NumberModel
+    | NumberConstantModel<number>
+    // Note that BooleanModel is actually UnionModel<true | false>
+    | BooleanConstantModel<true>
+    | BooleanConstantModel<false>
+    | NullModel
+    | UndefinedModel
+    | RealUnknownModel;
+
+export type AnyModelConstraint =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | ArrayModel<any>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | MapObjectModel<any>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | RigidObjectModel<any>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | UnionModel<any>
     | StringModel
     | StringConstantModel<string>
     | NumberModel
@@ -156,8 +175,11 @@ export type Model<T> = IsUnion<T> extends true
     ? UnionModel<T>
     : T extends Array<infer TElement>
       ? ArrayModel<TElement>
-      : T extends Record<string, unknown>
-        ? ObjectModel<T>
+      : T extends Record<string, infer InferredValue>
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          Record<string, any> extends T
+            ? MapObjectModel<InferredValue>
+            : RigidObjectModel<T>
         : T extends string
           ? string extends T
               ? StringModel

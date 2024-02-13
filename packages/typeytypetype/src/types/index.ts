@@ -8,7 +8,6 @@ export * from './internal/types.js';
 export * from './is.js';
 export * from './MapObjectType.js';
 export * from './NumberType.js';
-export * from './ObjectType.js';
 export * from './PropertyDefinition.js';
 export * from './RigidObjectType.js';
 export * from './StringType.js';

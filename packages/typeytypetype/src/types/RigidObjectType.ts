@@ -4,12 +4,12 @@ import {
     hasOwnProperty,
 } from '@captainpants/sweeter-utilities';
 import { type PropertyDefinitions } from './internal/types.js';
-import { ObjectType } from './ObjectType.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';
+import { BaseType } from './BaseType.js';
 
 export class RigidObjectType<
     TObject extends Record<string, unknown>,
-> extends ObjectType<TObject> {
+> extends BaseType<TObject> {
     public constructor(propertyDefinitions: PropertyDefinitions<TObject>) {
         super();
         this.propertyDefinitions = propertyDefinitions;
@@ -17,7 +17,7 @@ export class RigidObjectType<
 
     public readonly propertyDefinitions: PropertyDefinitions<TObject>;
 
-    public override doMatches(
+    public doMatches(
         value: unknown,
         deep: boolean,
         depth: number,
@@ -61,7 +61,7 @@ export class RigidObjectType<
         return fixedPropertiesFailureIndex < 0;
     }
 
-    public override toTypeString(depth: number = descend.defaultDepth): string {
+    public toTypeString(depth: number = descend.defaultDepth): string {
         return (
             '{\n' +
             Object.entries(this.propertyDefinitions)
@@ -76,11 +76,11 @@ export class RigidObjectType<
         );
     }
 
-    public override getFixedPropertyNames(): string[] {
+    public getFixedPropertyNames(): string[] {
         return Object.keys(this.propertyDefinitions);
     }
 
-    public override staticGetPropertyDefinition<Key extends string>(
+    public staticGetPropertyDefinition<Key extends string>(
         key: Key,
     ): PropertyDefinition<TObject[Key]> | null {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
@@ -91,7 +91,7 @@ export class RigidObjectType<
         return null;
     }
 
-    public override doCreateDefault(depth: number): TObject {
+    public doCreateDefault(depth: number): TObject {
         const res: Record<string, unknown> = {};
         // Object.keys avoids prototype polution
         for (const propName of Object.keys(this.propertyDefinitions)) {

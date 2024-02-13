@@ -11,11 +11,11 @@ import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { DraftHook, PropertyEditorPart } from '../index.js';
 import {
-    type ObjectModel,
     type PropertyModel,
     asMap,
     cast,
     sortProperties,
+    MapObjectModel,
 } from '@captainpants/typeytypetype';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { Box } from '../../../sweeter-gummybear/build/index.js';
@@ -40,8 +40,8 @@ export const MapObjectEditor: Component<EditorProps> = (
 
     const { draft } = init.hook(
         DraftHook<
-            ObjectModel<Record<string, unknown>>,
-            ObjectModel<Record<string, unknown>>
+            MapObjectModel<Record<string, unknown>>,
+            MapObjectModel<Record<string, unknown>>
         >,
         {
             model: typedModel,
@@ -85,14 +85,15 @@ export const MapObjectEditor: Component<EditorProps> = (
             property: propertyModel,
             render: () => {
                 return (
-                    <PropertyEditorPart
-                        id={idGenerator.next(propertyModel.name)}
-                        owner={owner}
-                        propertyModel={propertyModel}
-                        updateValue={updatePropertyValue}
-                        indent={childIndent}
-                        ownerIdPath={idPath}
-                    />
+                    // <PropertyEditorPart
+                    //     id={idGenerator.next(propertyModel.name)}
+                    //     owner={owner}
+                    //     propertyModel={propertyModel}
+                    //     updateValue={updatePropertyValue}
+                    //     indent={childIndent}
+                    //     ownerIdPath={idPath}
+                    // />
+                    <div>TODO: property editor</div>
                 );
             },
         }));

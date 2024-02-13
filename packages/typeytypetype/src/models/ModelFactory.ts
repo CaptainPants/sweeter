@@ -1,5 +1,4 @@
 import { descend } from '@captainpants/sweeter-utilities';
-import { AbstractObjectType } from '../types/AbstractObjectType.js';
 import { ArrayType } from '../types/ArrayType.js';
 import {
     BooleanConstantType,
@@ -13,17 +12,17 @@ import {
     type Type,
     UndefinedConstantType,
 } from '../types/index.js';
-import { type ObjectType } from '../types/ObjectType.js';
 import { UnionType } from '../types/UnionType.js';
 import { UnknownType } from '../types/UnknownType.js';
 
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
-import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
 import { type Model } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
+import { RigidObjectImpl } from './internal/RigidObjectImpl.js';
+import { MapObjectImpl } from './internal/MapObjectImpl.js';
 
 export interface CreateModelArgs<T> {
     value: unknown;
@@ -81,10 +80,10 @@ const defaults: Array<
         RigidObjectType,
         (value, type, parentInfo, depth) =>
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ObjectModelImpl.createFromValue<any>(
+            RigidObjectImpl.createFromValue<any>(
                 value,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                type as ObjectType<any>,
+                type as RigidObjectType<any>,
                 parentInfo,
                 depth,
             ),
@@ -93,10 +92,10 @@ const defaults: Array<
         MapObjectType,
         (value, type, parentInfo, depth) =>
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ObjectModelImpl.createFromValue<any>(
-                value,
+            MapObjectImpl.createFromValue<any>(
+                value as Record<string, unknown>,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                type as ObjectType<any>,
+                type as MapObjectType<any>,
                 parentInfo,
                 depth,
             ),
@@ -181,18 +180,6 @@ const defaults: Array<
                 value as undefined,
                 type as UndefinedConstantType,
                 parentInfo,
-            ),
-    ],
-    [
-        AbstractObjectType,
-        (value, type, parentInfo, depth) =>
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ObjectModelImpl.createFromValue<any>(
-                value,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                type as ObjectType<any>,
-                parentInfo,
-                depth,
             ),
     ],
     [

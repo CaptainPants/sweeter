@@ -10,13 +10,12 @@ import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import {
     type ContextualValueCalculationContext,
     type Model,
-    type ObjectModel,
     type PropertyModel,
     asRigidObject,
     cast,
     categorizeProperties,
-    type RigidObjectType,
     StandardLocalValues,
+    type RigidObjectModel,
 } from '@captainpants/typeytypetype';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -43,8 +42,8 @@ export function RigidObjectEditor(
 
     const { draft } = init.hook(
         DraftHook<
-            ObjectModel<Record<string, unknown>>,
-            ObjectModel<Record<string, unknown>>
+            RigidObjectModel<Record<string, unknown>>,
+            RigidObjectModel<Record<string, unknown>>
         >,
         {
             model: typedModel,
@@ -86,11 +85,7 @@ export function RigidObjectEditor(
     const owner = $calc(() => draft.value.value);
 
     const type = $calc(
-        () =>
-            // TODO: this 'as' is ugly, can we get the models to have the Rigid/Map type and avoid this?
-            draft.value.type as unknown as RigidObjectType<
-                Record<string, unknown>
-            >,
+        () => draft.value.type,
     );
 
     const { Child } = init.getContext(IconProviderContext);

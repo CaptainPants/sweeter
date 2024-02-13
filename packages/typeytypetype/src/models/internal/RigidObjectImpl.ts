@@ -1,10 +1,9 @@
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { type GetExpandoType } from '../../internal/utilityTypes.js';
-import { type ObjectType } from '../../types/ObjectType.js';
 import { PropertyDefinition } from '../../types/PropertyDefinition.js';
 import { type Type } from '../../types/Type.js';
 import { Types } from '../../types/Types.js';
-import { type ObjectModel, type PropertyModelFor } from '../Model.js';
+import { type PropertyModelFor } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 import { type PropertyModel } from '../PropertyModel.js';
@@ -12,17 +11,17 @@ import { type PropertyModel } from '../PropertyModel.js';
 import { ModelImpl } from './ModelImpl.js';
 import { PropertyModelImpl } from './PropertyModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
+import { type RigidObjectType } from '../../index.js';
 
-export class ObjectModelImpl<TObject extends Record<string, unknown>>
-    extends ModelImpl<TObject, ObjectType<TObject>>
-    implements ObjectModel<TObject>
-{
+export class RigidObjectImpl<
+    TObject extends Record<string, unknown>,
+> extends ModelImpl<TObject, RigidObjectType<TObject>> {
     public static createFromValue<TObject extends Record<string, unknown>>(
         value: TObject,
-        type: ObjectType<TObject>,
+        type: RigidObjectType<TObject>,
         parentInfo: ParentTypeInfo | null,
         depth: number,
-    ): ObjectModelImpl<TObject> {
+    ): RigidObjectImpl<TObject> {
         const propertyModels: Record<string, PropertyModel<unknown>> = {};
 
         // Object.keys lets us avoid prototype pollution
@@ -51,7 +50,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             );
         }
 
-        return new ObjectModelImpl<TObject>(
+        return new RigidObjectImpl<TObject>(
             value,
             propertyModels,
             type,
@@ -62,7 +61,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     public constructor(
         value: TObject,
         propertyModels: Record<string, PropertyModel<unknown>>,
-        type: ObjectType<TObject>,
+        type: RigidObjectType<TObject>,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, 'object');
@@ -134,38 +133,8 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
                 adopted,
             ) as PropertyModel<unknown>,
         };
-        const result = new ObjectModelImpl<TObject>(
+        const result = new RigidObjectImpl<TObject>(
             copy as TObject,
-            propertyModels,
-            this.type,
-            this.parentInfo,
-        );
-
-        return result as this;
-    }
-
-    public async deleteProperty(
-        key: string,
-        validate: boolean = true,
-    ): Promise<this> {
-        if (!this.type.supportsDelete()) {
-            throw new TypeError('Delete not supported.');
-        }
-
-        const copy = { ...this.value };
-
-        delete copy[key];
-
-        if (validate) {
-            await this.type.validateAndThrow(copy, { deep: false });
-        }
-
-        const propertyModels = { ...this.#propertyModels };
-
-        delete propertyModels[key];
-
-        const result = new ObjectModelImpl<TObject>(
-            copy,
             propertyModels,
             this.type,
             this.parentInfo,

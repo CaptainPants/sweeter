@@ -13,7 +13,7 @@ test('map-object', async () => {
 
     const model = await ModelFactory.createModel({ value, type });
 
-    const updated = await model.setPropertyValue('c', 3);
+    const updated = await model.setProperty('c', 3);
 
     expect(updated.value).toStrictEqual({ a: 1, b: 2, c: 3 });
 });

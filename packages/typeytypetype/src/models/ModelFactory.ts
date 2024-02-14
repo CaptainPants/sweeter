@@ -19,7 +19,7 @@ import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
-import { type Model } from './Model.js';
+import { type ReadonlyRecord, type Model } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
 import { RigidObjectImpl } from './internal/RigidObjectImpl.js';
 import { MapObjectImpl } from './internal/MapObjectImpl.js';
@@ -93,7 +93,7 @@ const defaults: Array<
         (value, type, parentInfo, depth) =>
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             MapObjectImpl.createFromValue<any>(
-                value as Record<string, unknown>,
+                value as ReadonlyRecord<string, unknown>,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 type as MapObjectType<any>,
                 parentInfo,

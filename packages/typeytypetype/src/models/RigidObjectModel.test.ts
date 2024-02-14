@@ -18,7 +18,7 @@ test('rigid-object', async () => {
     const model = await ModelFactory.createModel({ value, type });
 
     // Act
-    const updated = await model.setPropertyValue('num', 2);
+    const updated = await model.setProperty('num', 2);
 
     // Assert
     expect(updated.value).toStrictEqual({ num: 2, str: 'banana' });

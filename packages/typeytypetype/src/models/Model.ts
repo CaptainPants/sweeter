@@ -50,7 +50,8 @@ export interface NullModel extends SimpleModel<null, NullConstantType> {}
 export interface UndefinedModel
     extends SimpleModel<undefined, UndefinedConstantType> {}
 
-export interface ArrayModelProperties<TElement> {
+export interface ArrayModel<TElement>
+    extends ModelBase<readonly TElement[], ArrayType<TElement>> {
     getElementType: () => Type<TElement>;
 
     getElement: (index: number) => Model<TElement> | undefined;
@@ -71,12 +72,6 @@ export interface ArrayModelProperties<TElement> {
     ) => Promise<this>;
 }
 
-export type ArrayModel<TElement> = ModelBase<
-    readonly TElement[],
-    ArrayType<TElement>
-> &
-    ArrayModelProperties<TElement>;
-
 /**
  * Type of property modes expected from an object. Adds in undefined for Record<string, unknown> models.
  */
@@ -86,30 +81,43 @@ export type PropertyModelFor<TObject, TKey extends keyof TObject> =
 
 export interface RigidObjectModel<TObject extends Record<string, unknown>>
     extends ModelBase<Readonly<TObject>, RigidObjectType<TObject>> {
-    getPropertyModel<TKey extends keyof TObject & string>(
+    getProperty<TKey extends keyof TObject & string>(
         key: TKey,
     ): PropertyModelFor<TObject, TKey>;
 
     getProperties(): Array<PropertyModel<unknown>>;
 
-    setPropertyValue<TKey extends keyof TObject & string>(
+    setProperty<TKey extends keyof TObject & string>(
         key: TKey,
         value: unknown,
         triggerValidation?: boolean,
     ): Promise<this>;
 }
 
+export type ReadonlyRecord<
+    TKey extends string | number | symbol,
+    TValue,
+> = Readonly<Record<TKey, TValue>>;
+export type MapObjectEntry<TValue> = readonly [
+    name: string,
+    model: Model<TValue>,
+];
+
 export interface MapObjectModel<TValue>
     extends ModelBase<Readonly<TValue>, MapObjectType<TValue>> {
-    getExpandoPropertyType(): Type<Record<string, TValue>> | undefined;
+    getItemType(): Type<Record<string, TValue>> | undefined;
 
-    setPropertyValue(
+    setProperty(
         key: string,
         value: unknown,
         triggerValidation?: boolean,
     ): Promise<this>;
 
+    getProperty(key: string): Model<unknown> | undefined;
+
     deleteProperty(key: string, validate?: boolean): Promise<this>;
+
+    getEntries(): readonly MapObjectEntry<TValue>[];
 }
 
 export interface UnionModelProperties<TUnion> {

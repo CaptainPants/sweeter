@@ -56,7 +56,7 @@ export function asRigidObject<TFrom>(
 
 export function asMap<TFrom>(
     model: Model<TFrom>,
-): MapObjectModel<Record<string, unknown>> | undefined {
+): MapObjectModel<unknown> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isMapObjectType(model.type) ? (model as any) : undefined;
 }

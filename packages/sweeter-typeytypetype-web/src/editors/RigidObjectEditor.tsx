@@ -72,7 +72,7 @@ export function RigidObjectEditor(
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .setPropertyValue(propertyModel.name, value, true);
+            .setProperty(propertyModel.name, value, true);
 
         draft.update(newDraft);
     };
@@ -84,9 +84,7 @@ export function RigidObjectEditor(
 
     const owner = $calc(() => draft.value.value);
 
-    const type = $calc(
-        () => draft.value.type,
-    );
+    const type = $calc(() => draft.value.type);
 
     const { Child } = init.getContext(IconProviderContext);
 
@@ -115,7 +113,7 @@ export function RigidObjectEditor(
                 const propertyVisiblePerProperty = $calc(() => {
                     const individualVisibility = properties.map(
                         ({ property }) => {
-                            const propertyModel = draft.value.getPropertyModel(
+                            const propertyModel = draft.value.getProperty(
                                 property.name,
                             );
                             assertNotNullOrUndefined(propertyModel);
@@ -185,7 +183,7 @@ export function RigidObjectEditor(
                                                     // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
                                                     // No other signals are referenced
                                                     () =>
-                                                        draft.value.getPropertyModel(
+                                                        draft.value.getProperty(
                                                             property.name,
                                                         )!,
                                                 )}

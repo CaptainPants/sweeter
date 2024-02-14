@@ -9,16 +9,16 @@ import {
 import { type EditorProps } from '../types.js';
 import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { DraftHook, PropertyEditorPart } from '../index.js';
+import { DraftHook } from '../index.js';
 import {
-    type PropertyModel,
     asMap,
     cast,
-    sortProperties,
-    MapObjectModel,
+    type MapObjectModel,
+    type Model,
 } from '@captainpants/typeytypetype';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { Box } from '../../../sweeter-gummybear/build/index.js';
+import { MapElementEditorPart } from './MapElementEditorPart.js';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {
@@ -39,10 +39,7 @@ export const MapObjectEditor: Component<EditorProps> = (
     const idGenerator = init.idGenerator;
 
     const { draft } = init.hook(
-        DraftHook<
-            MapObjectModel<Record<string, unknown>>,
-            MapObjectModel<Record<string, unknown>>
-        >,
+        DraftHook<MapObjectModel<unknown>, MapObjectModel<unknown>>,
         {
             model: typedModel,
             convertIn: (model) => model,
@@ -62,38 +59,32 @@ export const MapObjectEditor: Component<EditorProps> = (
     );
 
     const updatePropertyValue = async (
-        propertyModel: PropertyModel<unknown>,
-        value: unknown,
+        name: string,
+        propertyModel: Model<unknown>,
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .setPropertyValue(propertyModel.name, value, true);
+            .setProperty(name, propertyModel, true);
 
         draft.update(newDraft);
     };
 
-    const owner = $calc(() => draft.value.value);
-
-    // TODO: this will rebuild every time the model is updated which is BAD
-    // need to implement an alternative to $mapByIndex that does an object-identity
-    // approach (vs the existing one that is based on index). Wouldn't hurt
-    // to throw in a object property key based one as well..
     const content = $calc(() => {
-        const sorted = sortProperties(draft.value.getProperties());
+        const entries = draft.value.getEntries();
 
-        const mappedProperties = sorted.map((propertyModel) => ({
-            property: propertyModel,
+        // TODO: rename and delete buttons
+        const mappedProperties = entries.map(([name, value]) => ({
+            property: value,
             render: () => {
                 return (
-                    // <PropertyEditorPart
-                    //     id={idGenerator.next(propertyModel.name)}
-                    //     owner={owner}
-                    //     propertyModel={propertyModel}
-                    //     updateValue={updatePropertyValue}
-                    //     indent={childIndent}
-                    //     ownerIdPath={idPath}
-                    // />
-                    <div>TODO: property editor</div>
+                    <MapElementEditorPart
+                        id={idGenerator.next(name)}
+                        propertyName={name}
+                        elementModel={value}
+                        updateElement={updatePropertyValue}
+                        indent={childIndent}
+                        ownerIdPath={idPath}
+                    />
                 );
             },
         }));
@@ -105,6 +96,7 @@ export const MapObjectEditor: Component<EditorProps> = (
 
     const { Child } = init.getContext(IconProviderContext);
 
+    // TODO: add button
     return $calc(() => {
         return (
             <Box level={indent} class={styles.editorOuter}>

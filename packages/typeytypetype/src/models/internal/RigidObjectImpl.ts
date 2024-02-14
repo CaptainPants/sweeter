@@ -1,7 +1,5 @@
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
-import { type GetExpandoType } from '../../internal/utilityTypes.js';
 import { PropertyDefinition } from '../../types/PropertyDefinition.js';
-import { type Type } from '../../types/Type.js';
 import { Types } from '../../types/Types.js';
 import { type PropertyModelFor } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
@@ -71,11 +69,7 @@ export class RigidObjectImpl<
 
     #propertyModels: Record<string, PropertyModel<unknown>>;
 
-    public getExpandoPropertyType(): Type<GetExpandoType<TObject>> | undefined {
-        return this.getExpandoPropertyType();
-    }
-
-    public getPropertyModel<TKey extends keyof TObject & string>(
+    public getProperty<TKey extends keyof TObject & string>(
         key: TKey,
     ): PropertyModelFor<TObject, TKey> {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
@@ -83,16 +77,15 @@ export class RigidObjectImpl<
             const result = this.#propertyModels[key];
             return result as PropertyModelFor<TObject, TKey>;
         }
-        // This is a bit filthy but we want to support Record<string, unknown> indexing
-        // on properties that are not set
-        return undefined as PropertyModelFor<TObject, TKey>;
+
+        throw new TypeError();
     }
 
     public getProperties(): Array<PropertyModel<unknown>> {
         return Object.values(this.#propertyModels);
     }
 
-    public async setPropertyValue(
+    public async setProperty(
         key: string,
         value: unknown,
         validate: boolean = true,

@@ -31,7 +31,7 @@ test('Something', async () => {
         Types.object({ type: Types.prop(Types.constant('b')) }),
     );
 
-    const type = retyped.getPropertyModel('type');
+    const type = retyped.getProperty('type');
     const assertType1: TypeMatchAssert<typeof type, PropertyModel<'b'>> = true;
 
     expect(type.valueModel.value).toStrictEqual('b');

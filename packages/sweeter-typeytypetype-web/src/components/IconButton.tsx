@@ -22,29 +22,28 @@ export type IconButtonProps = PropertiesMightBeSignals<{
 }>;
 
 export const IconButton: Component<IconButtonProps> = (
-    { hoverable, text, icon, onLeftClick: onClick },
+    { hoverable, text, icon, onLeftClick },
     init,
 ) => {
     const icons = init.getContext(IconProviderContext);
 
-    return $calc(() => {
-        const iconValue = $val(icon);
-        const Icon = icons[iconValue];
+    const callback = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
+        const onClickResolved = $peek(onLeftClick);
+        if (onClickResolved && evt.button === 0) {
+            onClickResolved?.();
+        }
+    };
 
-        const callback = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
-            const onClickResolved = $peek(onClick);
-            if (onClickResolved && evt.button === 0) {
-                onClickResolved?.();
-            }
-        };
-
-        return (
-            <Button class={css.addButton} onclick={callback} outline>
-                <Icon hoverable={hoverable} />
-                <div>{text}</div>
-            </Button>
-        );
-    });
+    return (
+        <Button class={css.addButton} onclick={callback} outline>
+            {$calc(() => {
+                const iconValue = $val(icon);
+                const Icon = icons[iconValue];
+                return <Icon hoverable={hoverable} />;
+            })}
+            <div>{text}</div>
+        </Button>
+    );
 };
 
 const css = {

@@ -105,7 +105,7 @@ export type MapObjectEntry<TValue> = readonly [
 
 export interface MapObjectModel<TValue>
     extends ModelBase<Readonly<TValue>, MapObjectType<TValue>> {
-    getItemType(): Type<Record<string, TValue>> | undefined;
+    getItemType(): Type<Record<string, TValue>>;
 
     setProperty(
         key: string,

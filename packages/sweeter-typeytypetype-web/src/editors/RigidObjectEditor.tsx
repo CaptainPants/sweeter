@@ -100,7 +100,7 @@ export function RigidObjectEditor(
                 const id = idGenerator.next(property.name);
 
                 return {
-                    property: property,
+                    property,
                     id,
                 };
             },
@@ -137,7 +137,7 @@ export function RigidObjectEditor(
 
                 // If no properties in the category are visible the whole category should be hidden
                 return $if(anyVisibleInCategory, () => (
-                    <div class={styles.category} key={`cat-${categoryIndex}`}>
+                    <div class={css.category} key={`cat-${categoryIndex}`}>
                         {anyCategories ? (
                             <Row>
                                 <Column xl="auto">
@@ -145,7 +145,7 @@ export function RigidObjectEditor(
                                         style={{
                                             'font-weight': 'bold',
                                         }}
-                                        class={styles.categoryHeader}
+                                        class={css.categoryHeader}
                                         fillWidth
                                     >
                                         {category}
@@ -165,7 +165,7 @@ export function RigidObjectEditor(
                                 ),
                                 () => (
                                     <Row
-                                        class={styles.property}
+                                        class={css.property}
                                         key={`prop-${property.name}`}
                                     >
                                         <Column xs={4}>
@@ -206,29 +206,27 @@ export function RigidObjectEditor(
         return content;
     });
 
-    return $calc(() => {
-        return (
-            <Box level={indent} class={styles.editorOuter}>
-                <div class={styles.editorIndentContainer}>
-                    {$if(
-                        $calc(() => !$val(isRoot)),
-                        () => (
-                            <div
-                                class={styles.editorIndent}
-                                style={{ width: `${indentWidth}px` }}
-                            >
-                                <Child />
-                            </div>
-                        ),
-                    )}
-                    <div class={styles.editorContainer}>{content}</div>
-                </div>
-            </Box>
-        );
-    });
+    return (
+        <Box level={indent} class={css.editorOuter}>
+            <div class={css.editorIndentContainer}>
+                {$if(
+                    $calc(() => !$val(isRoot)),
+                    () => (
+                        <div
+                            class={css.editorIndent}
+                            style={{ width: `${indentWidth}px` }}
+                        >
+                            <Child />
+                        </div>
+                    ),
+                )}
+                <div class={css.editorContainer}>{content}</div>
+            </div>
+        </Box>
+    );
 }
 
-const styles = {
+const css = {
     editorOuter: new GlobalCssClass({
         className: 'RigidObjectEditor-EditorOuter',
         content: stylesheet`

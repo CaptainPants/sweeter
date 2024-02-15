@@ -38,13 +38,18 @@ function createIconComponent(icon: IconNode): Component<IconProps> {
     };
 }
 
-export const IconProviderContext = new Context<IconSet>('IconProviderContext', {
+export const defaultIconSet: IconSet = {
     Child: createIconComponent(ArrowDownRight),
     DragHandle: createIconComponent(Grip),
     Delete: createIconComponent(Trash2),
     Edit: createIconComponent(Pencil),
     Add: createIconComponent(ListPlus),
-});
+};
+
+export const IconProviderContext = new Context<IconSet>(
+    'IconProviderContext',
+    defaultIconSet,
+);
 
 const hoverable = new GlobalCssClass({
     className: 'is-hoverable',

@@ -91,7 +91,7 @@ export function ModalEditor(
                 <IconButton
                     icon="Edit"
                     text={title}
-                    onClick={() => {
+                    onLeftClick={() => {
                         isOpen.value = true;
                     }}
                 />

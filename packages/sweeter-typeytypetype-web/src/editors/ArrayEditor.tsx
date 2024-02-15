@@ -169,7 +169,7 @@ export function ArrayEditor(
                             <IconButton
                                 icon="Add"
                                 text={title}
-                                onClick={() => {
+                                onLeftClick={() => {
                                     void add(allowedType);
                                 }}
                             />

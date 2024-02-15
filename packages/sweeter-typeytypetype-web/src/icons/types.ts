@@ -14,9 +14,9 @@ export type IconProps = PropertiesMightBeSignals<{
 }>;
 
 export interface IconSet {
-    Child: Component<IconProps>;
-    DragHandle: Component<IconProps>;
-    Delete: Component<IconProps>;
-    Edit: Component<IconProps>;
-    Add: Component<IconProps>;
+    readonly Child: Component<IconProps>;
+    readonly DragHandle: Component<IconProps>;
+    readonly Delete: Component<IconProps>;
+    readonly Edit: Component<IconProps>;
+    readonly Add: Component<IconProps>;
 }

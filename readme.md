@@ -92,12 +92,14 @@ Positives:
 2. Proved a nice easy to use, reasonably performant, declarative paradigm to modern reactive web UI
 3. Huge community
 4. Lots of job opportunity
+5. Hooks are a very interesting approach to bundling reusable functionality
 
 Challenges:
 1. Slow improvement release cadence (18 months since last release as of Jan 2024)
 2. Enhancement focus on SSR and technologies more suited to server side Node / NextJS
 3. Pushing core functionality (Suspence data loading) to 3rd party components
 4. Performance issues in some spaces
+5. Hooks break the React rule of sticking to idiomatic JavaScript
 
 ## Solid JS
 Solid JS is a very good proof of concept.

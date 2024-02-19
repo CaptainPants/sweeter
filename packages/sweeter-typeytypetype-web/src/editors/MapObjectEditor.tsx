@@ -6,6 +6,7 @@ import {
     $val,
     LocalizerHook,
     type Component,
+    $mutable,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
 import { EditorSizesContext } from '../context/EditorSizesContext.js';
@@ -15,6 +16,7 @@ import {
     asMap,
     cast,
     isUnionType,
+    type Type,
     type MapObjectModel,
     type Model,
 } from '@captainpants/typeytypetype';
@@ -26,6 +28,7 @@ import {
     Row,
 } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
+import { MapObjectEditorAddModal } from './MapObjectEditorAddModal.js';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {
@@ -90,6 +93,8 @@ export const MapObjectEditor: Component<EditorProps> = (
         draft.update(newDraft);
     };
 
+    const onAdd = (name: string, type: Type<unknown>) => {};
+
     const remove = async (name: string): Promise<void> => {
         const copy = await draft.peek().deleteProperty(name);
 
@@ -139,7 +144,6 @@ export const MapObjectEditor: Component<EditorProps> = (
         ));
     });
 
-    // TODO: add button
     return (
         <Box level={indent} class={css.editorOuter}>
             {propertyDisplayName && (
@@ -169,14 +173,37 @@ export const MapObjectEditor: Component<EditorProps> = (
                                     : localize('Add {0}', [
                                           allowedType.getBestDisplayName(),
                                       ]);
+
+                            const isOpen = $mutable(false);
+
+                            const validate = async (name: string) => {
+                                const property = draft.value.getProperty(name);
+                                if (property !== undefined) {
+                                    return 'Property is already defined';
+                                }
+
+                                return null;
+                            };
+
                             return (
-                                <IconButton
-                                    icon="Add"
-                                    text={title}
-                                    onLeftClick={() => {
-                                        // TODO: open a popoup to collect the key of the new item
-                                    }}
-                                />
+                                <>
+                                    <MapObjectEditorAddModal
+                                        isOpen={isOpen}
+                                        type={allowedType}
+                                        validate={validate}
+                                        onCancelled={() =>
+                                            (isOpen.value = false)
+                                        }
+                                        onFinished={onAdd}
+                                    />
+                                    <IconButton
+                                        icon="Add"
+                                        text={title}
+                                        onLeftClick={() => {
+                                            isOpen.value = true;
+                                        }}
+                                    />
+                                </>
                             );
                         }),
                     )}

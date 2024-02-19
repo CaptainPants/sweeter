@@ -56,8 +56,9 @@ export const MapObjectEditorAddModal: Component<
 
             const validationResult = await $peek(validate)($peek(name));
 
+            failedValidationMessage.value = validationResult;
+            
             if (validationResult) {
-                failedValidationMessage.value = validationResult;
                 return;
             }
 

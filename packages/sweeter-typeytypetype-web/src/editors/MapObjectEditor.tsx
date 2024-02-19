@@ -93,7 +93,15 @@ export const MapObjectEditor: Component<EditorProps> = (
         draft.update(newDraft);
     };
 
-    const onAdd = (name: string, type: Type<unknown>) => {};
+    const onAdd = async (name: string, type: Type<unknown>) => {
+        const propertyModel = type.createDefault();
+
+        const newDraft = await draft
+            .peek()
+            .setProperty(name, propertyModel, true);
+
+        draft.update(newDraft);
+    };
 
     const remove = async (name: string): Promise<void> => {
         const copy = await draft.peek().deleteProperty(name);

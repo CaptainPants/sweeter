@@ -25,7 +25,7 @@ export type MapObjectEditorAddModalProps = PropertiesMightBeSignals<{
     validate: (name: string) => Promise<string | null>;
 
     onCancelled: () => void;
-    onFinished: (name: string, type: Type<unknown>) => void;
+    onFinished: (name: string, type: Type<unknown>) => Promise<void>;
 }>;
 
 export const MapObjectEditorAddModal: Component<
@@ -57,12 +57,12 @@ export const MapObjectEditorAddModal: Component<
             const validationResult = await $peek(validate)($peek(name));
 
             failedValidationMessage.value = validationResult;
-            
+
             if (validationResult) {
                 return;
             }
 
-            $peek(onFinished)(name.peek(), $peek(type));
+            await $peek(onFinished)(name.peek(), $peek(type));
         }
     };
 
@@ -74,7 +74,7 @@ export const MapObjectEditorAddModal: Component<
                         <Row>
                             <Column sm={4}>Name</Column>
                             <Column sm={8}>
-                                <Input type="text" value={name} fillWidth />
+                                <Input type="text" bind:value={name} fillWidth />
                             </Column>
                         </Row>
                         <Row>

@@ -29,6 +29,7 @@ import {
 } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { MapObjectEditorAddModal } from './MapObjectEditorAddModal.js';
+import { MapObjectEditorRenameModal } from './MapObjectEditorRenameModal.js';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {
@@ -109,6 +110,12 @@ export const MapObjectEditor: Component<EditorProps> = (
         draft.update(copy);
     };
 
+    const renameKey = $mutable<string | null>(null);
+
+    const startRename = (name: string) => {
+        renameKey.value = name;
+    };
+
     const content = $calc(() => {
         const entries = draft.value.getEntries();
 
@@ -122,6 +129,10 @@ export const MapObjectEditor: Component<EditorProps> = (
                     <Row>
                         <Column>
                             <Label for={id}>{name}</Label>
+                            <IconButton
+                                icon="Edit"
+                                onLeftClick={() => startRename(name)}
+                            />
                         </Column>
                         <Column>
                             <MapElementEditorPart
@@ -160,6 +171,23 @@ export const MapObjectEditor: Component<EditorProps> = (
                 </div>
             )}
             <div class={css.editorIndentContainer}>
+                {$calc(() => {
+                    if (renameKey.value) {
+                        const visible = $mutable(true);
+
+                        // TODO: rename
+                        return (
+                            <MapObjectEditorRenameModal
+                                from={renameKey.value}
+                                isOpen={visible}
+                                validate={(from, to) => Promise.resolve(null)}
+                                onCancelled={() => {}}
+                                onFinished={(from, to) => Promise.resolve()}
+                            />
+                        );
+                    }
+                    return null;
+                })}
                 {$if(
                     $calc(() => !$val(isRoot)),
                     () => (

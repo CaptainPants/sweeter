@@ -2,7 +2,6 @@ import {
     type PropertiesMightBeSignals,
     type Component,
     $calc,
-    $val,
     $mutable,
     $peek,
 } from '@captainpants/sweeter-core';
@@ -15,29 +14,26 @@ import {
     Row,
 } from '@captainpants/sweeter-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
-import { type Type } from '@captainpants/typeytypetype';
 
-export type MapObjectEditorAddModalProps = PropertiesMightBeSignals<{
+export type MapObjectEditorRenameModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;
 
-    type: Type<unknown>;
+    from: string;
 
-    validate: (name: string) => Promise<string | null>;
+    validate: (from: string, to: string) => Promise<string | null>;
 
     onCancelled: () => void;
-    onFinished: (name: string, type: Type<unknown>) => Promise<void>;
+    onFinished: (from: string, to: string) => Promise<void>;
 }>;
 
-export const MapObjectEditorAddModal: Component<
-    MapObjectEditorAddModalProps
-> = ({ isOpen, type, validate, onCancelled, onFinished }, init) => {
+export const MapObjectEditorRenameModal: Component<
+    MapObjectEditorRenameModalProps
+> = ({ isOpen, from, validate, onCancelled, onFinished }, init) => {
     const title = $calc(() => {
-        const typeResolved = $val(type);
-        const title = typeResolved.displayName ?? typeResolved.name;
-        return title;
+        return `Renaming '${from}'`;
     });
 
-    const name = $mutable('');
+    const to = $mutable('');
     const failedValidationMessage = $mutable<null | string>(null);
 
     const onCancel = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
@@ -45,7 +41,7 @@ export const MapObjectEditorAddModal: Component<
             evt.preventDefault();
 
             // Reset
-            name.value = '';
+            to.value = $peek(from);
             failedValidationMessage.value = null;
 
             $peek(onCancelled)();
@@ -56,7 +52,10 @@ export const MapObjectEditorAddModal: Component<
         if (evt.button === 0) {
             evt.preventDefault();
 
-            const validationResult = await $peek(validate)($peek(name));
+            const validationResult = await $peek(validate)(
+                $peek(from),
+                to.peek(),
+            );
 
             failedValidationMessage.value = validationResult;
 
@@ -64,24 +63,32 @@ export const MapObjectEditorAddModal: Component<
                 return;
             }
 
-            await $peek(onFinished)(name.peek(), $peek(type));
+            await $peek(onFinished)($peek(from), to.peek());
         }
     };
 
     // TODO: autofocus
+    // TODO: binding to <input />.value still allows user input, despite the signal being not being updated..
     return (
         <Modal isOpen={isOpen} title={title}>
             {() => {
                 return (
                     <Container>
                         <Row>
-                            <Column sm={4}>Name</Column>
+                            <Column sm={4}>From</Column>
                             <Column sm={8}>
                                 <Input
                                     type="text"
-                                    bind:value={name}
+                                    value={from}
+                                    readOnly
                                     fillWidth
                                 />
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={4}>To</Column>
+                            <Column sm={8}>
+                                <Input type="text" bind:value={to} fillWidth />
                             </Column>
                         </Row>
                         <Row>

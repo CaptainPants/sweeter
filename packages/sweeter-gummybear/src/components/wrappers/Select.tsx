@@ -31,6 +31,8 @@ export type SelectProps = PropertiesMightBeSignals<{
     id?: string | undefined;
 
     value?: string | undefined;
+    autofocus?: boolean | undefined;
+    tabindex?: number | undefined;
 
     class?: ElementCssClasses | undefined;
     style?: ElementCssStyles | undefined;
@@ -53,6 +55,8 @@ export const Select: Component<SelectProps> = ({
     id,
     value,
     'bind:value': bindValue,
+    tabindex,
+    autofocus,
     class: classProp,
     style,
     onInput,
@@ -93,6 +97,8 @@ export const Select: Component<SelectProps> = ({
             value={value}
             bind:value={bindValue}
             disabled={disabled}
+            tabindex={tabindex}
+            autofocus={autofocus}
             class={[
                 classProp,
                 classFromPassthroughProps,

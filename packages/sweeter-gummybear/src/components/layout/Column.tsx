@@ -75,7 +75,7 @@ export const Column: Component<ColumnProps> = ({
     return (
         <div
             id={id}
-            class={[classFromPassthroughProps, classesFromProps, classProp]}
+            class={[classesFromProps, classFromPassthroughProps, classProp]}
             style={style}
             {...passthroughProps}
         >

@@ -28,7 +28,8 @@ export type CheckBoxProps = PropertiesMightBeSignals<{
     id?: string | undefined;
 
     checked?: ThreeValueBoolean | undefined;
-    placeholder?: string | undefined;
+    autofocus?: boolean | undefined;
+    tabindex?: number | undefined;
 
     class?: ElementCssClasses | undefined;
     style?: ElementCssStyles | undefined;
@@ -49,7 +50,8 @@ export const CheckBox: Component<CheckBoxProps> = ({
     id,
     checked,
     'bind:checked': bindChecked,
-    placeholder,
+    autofocus,
+    tabindex,
     class: classProp,
     style,
     onInput,
@@ -84,7 +86,8 @@ export const CheckBox: Component<CheckBoxProps> = ({
             bind:checked={bindChecked}
             disabled={disabled}
             readonly={readOnly}
-            placeholder={placeholder}
+            autofocus={autofocus}
+            tabindex={tabindex}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
             class={[
                 classProp,

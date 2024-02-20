@@ -31,6 +31,8 @@ export type InputProps = PropertiesMightBeSignals<{
 
     value?: string | undefined;
     placeholder?: string | undefined;
+    autofocus?: boolean | undefined;
+    tabindex?: number | undefined;
 
     class?: ElementCssClasses | undefined;
     style?: ElementCssStyles | undefined;
@@ -53,6 +55,8 @@ export const Input: Component<InputProps> = ({
     value,
     'bind:value': bindValue,
     placeholder,
+    autofocus,
+    tabindex,
     onInput,
     class: classProp,
     style,
@@ -88,6 +92,8 @@ export const Input: Component<InputProps> = ({
             disabled={disabled}
             readonly={readOnly}
             placeholder={placeholder}
+            autofocus={autofocus}
+            tabindex={tabindex}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
             class={[
                 classProp,

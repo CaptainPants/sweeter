@@ -27,6 +27,8 @@ export type TextAreaProps = PropertiesMightBeSignals<{
 
     value?: string | undefined;
     placeholder?: string | undefined;
+    autofocus?: boolean | undefined;
+    tabindex?: number | undefined;
 
     class?: ElementCssClasses | undefined;
     style?: ElementCssStyles | undefined;
@@ -50,6 +52,8 @@ export const TextArea: Component<TextAreaProps> = ({
     value,
     'bind:value': bindValue,
     placeholder,
+    tabindex,
+    autofocus,
     class: classProp,
     style,
     onInput,
@@ -84,8 +88,15 @@ export const TextArea: Component<TextAreaProps> = ({
             disabled={disabled}
             readonly={readOnly}
             placeholder={placeholder}
+            tabindex={tabindex}
+            autofocus={autofocus}
             oninput={combineEventHandlers(onInput, oninputFromPassthroughProps)}
-            class={[classFromPassthroughProps, classesFromProps, forms.input]}
+            class={[
+                classesFromProps,
+                forms.input,
+                classFromPassthroughProps,
+                classProp,
+            ]}
             style={combineStyles(style, styleFromPassthroughProps)}
             {...passthroughProps}
         />

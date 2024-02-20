@@ -84,6 +84,9 @@ type AllElementAttributes<TElement> = {
     children?: JSX.Element | undefined;
 
     ref?: ((value: TElement) => void) | WritableSignal<TElement>;
+
+    autofocus?: boolean | undefined;
+    tabindex?: number | undefined;
 } & {
     [Key in `data-${string}`]: string;
 };

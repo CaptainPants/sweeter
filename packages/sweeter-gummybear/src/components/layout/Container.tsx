@@ -13,6 +13,7 @@ import {
     GlobalCssClass,
     type ElementCssStyles,
     stylesheet,
+    type ElementCssClasses,
 } from '@captainpants/sweeter-web';
 import { combineStyles } from '../../internal/combineStyles.js';
 
@@ -22,6 +23,9 @@ export type ContainerProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
 
     size?: BreakpointSizeName | undefined;
+
+    style?: ElementCssStyles | undefined;
+    class?: ElementCssClasses | undefined;
 }> & {
     passthrough?: IntrinsicElementAttributes<'div'>;
 };
@@ -30,13 +34,15 @@ export const Container: Component<ContainerProps> = ({
     id,
     children,
     size,
+    class: classProp,
+    style,
     passthrough: {
         class: classFromPassthroughProps,
         style: styleFromPassthroughProps,
         ...passthroughProps
     } = {},
 }) => {
-    const style: ElementCssStyles = {
+    const sizeStyle: ElementCssStyles = {
         'max-width': isSignal(size)
             ? $calc(() =>
                   size.value
@@ -51,8 +57,8 @@ export const Container: Component<ContainerProps> = ({
     return (
         <div
             id={id}
-            class={[classFromPassthroughProps, css]}
-            style={combineStyles(style, styleFromPassthroughProps)}
+            class={[css, classFromPassthroughProps, classProp]}
+            style={combineStyles(sizeStyle, style, styleFromPassthroughProps)}
             {...passthroughProps}
         >
             {children}

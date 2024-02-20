@@ -60,7 +60,7 @@ function callbacks<T extends object>(name: string) {
 
 const mountedCallbacks = callbacks<Node>('mounted');
 const unMountedCallbacks = callbacks<Node>('unmounted');
-const isMounted = new WeakSet<Node>();
+const isMountedMap = new WeakSet<Node>();
 
 /**
  * Add a callback to be called when the node is added to the document.
@@ -138,11 +138,11 @@ export function announceMountedRecursive(node: Node): void {
     announceChildrenMountedRecursive(node);
 
     // Call callbacks on current
-    if (!isMounted.has(node)) {
+    if (!isMountedMap.has(node)) {
         afterCalculationsComplete(() => {
             mountedCallbacks.execute(node);
         });
-        isMounted.add(node);
+        isMountedMap.add(node);
     }
 }
 
@@ -151,11 +151,11 @@ export function announceMountedRecursive(node: Node): void {
  * @param node
  */
 export function announceUnMountedRecursive(node: Node): void {
-    if (isMounted.has(node)) {
+    if (isMountedMap.has(node)) {
         afterCalculationsComplete(() => {
             unMountedCallbacks.execute(node);
         });
-        isMounted.delete(node);
+        isMountedMap.delete(node);
     }
 
     // Reverse order
@@ -167,4 +167,8 @@ export function announceUnMountedRecursive(node: Node): void {
     ) {
         announceUnMountedRecursive(current);
     }
+}
+
+export function isMounted(node: Node) {
+    return isMountedMap.has(node);
 }

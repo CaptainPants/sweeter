@@ -62,7 +62,6 @@ export function BooleanEditor(
                 fillWidth
                 bind:checked={draft}
                 invalid={invalid}
-                placeholder={propertyDisplayName}
             />
             <ValidationDisplay errors={validationErrors} />
         </>

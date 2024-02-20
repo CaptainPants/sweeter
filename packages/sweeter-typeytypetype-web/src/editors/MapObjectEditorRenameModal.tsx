@@ -41,7 +41,7 @@ export const MapObjectEditorRenameModal: Component<
             evt.preventDefault();
 
             // Reset
-            to.value = $peek(from);
+            to.value = '';
             failedValidationMessage.value = null;
 
             $peek(onCancelled)();
@@ -88,7 +88,12 @@ export const MapObjectEditorRenameModal: Component<
                         <Row>
                             <Column sm={4}>To</Column>
                             <Column sm={8}>
-                                <Input type="text" bind:value={to} fillWidth />
+                                <Input
+                                    type="text"
+                                    bind:value={to}
+                                    fillWidth
+                                    autofocus
+                                />
                             </Column>
                         </Row>
                         <Row>

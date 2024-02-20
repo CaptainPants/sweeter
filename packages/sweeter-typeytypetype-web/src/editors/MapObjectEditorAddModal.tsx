@@ -40,16 +40,20 @@ export const MapObjectEditorAddModal: Component<
     const name = $mutable('');
     const failedValidationMessage = $mutable<null | string>(null);
 
-    const onCancel = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
+    const onCancelClick = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
         if (evt.button === 0) {
             evt.preventDefault();
 
-            // Reset
-            name.value = '';
-            failedValidationMessage.value = null;
-
-            $peek(onCancelled)();
+           onCancel();
         }
+    };
+
+    const onCancel = () => {
+        // Reset
+        name.value = '';
+        failedValidationMessage.value = null;
+
+        $peek(onCancelled)();
     };
 
     const onOK = async (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
@@ -70,7 +74,7 @@ export const MapObjectEditorAddModal: Component<
 
     // TODO: autofocus
     return (
-        <Modal isOpen={isOpen} title={title}>
+        <Modal isOpen={isOpen} title={title} onClose={onCancel}>
             {() => {
                 return (
                     <Container>
@@ -81,13 +85,14 @@ export const MapObjectEditorAddModal: Component<
                                     type="text"
                                     bind:value={name}
                                     fillWidth
+                                    autofocus
                                 />
                             </Column>
                         </Row>
                         <Row>
                             <Column sm={4}></Column>
                             <Column sm={8}>
-                                <Button onclick={onCancel}>Cancel</Button>
+                                <Button onclick={onCancelClick}>Cancel</Button>
                                 <Button variant="primary" onclick={onOK}>
                                     OK
                                 </Button>

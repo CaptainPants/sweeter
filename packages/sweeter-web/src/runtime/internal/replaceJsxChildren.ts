@@ -2,10 +2,10 @@ import { type FlattenedElement } from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
     announceUnMountedRecursive,
+    isMounted,
 } from './mounting.js';
 import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 import { isText } from './utility/isText.js';
-import { isInDocument } from './utility/isInDocument.js';
 
 export function replaceJsxChildren(
     parentNode: Node,
@@ -53,16 +53,18 @@ export function replaceJsxChildren(
 
     const removeNodeAndLaterSiblings = parentNode.childNodes[insertBeforeIndex];
 
+    const parentMounted = isMounted(parentNode);
+
     // This items are being removed
     // Note that descendents are handled by the call to addJsxChildren that added them to their parent
     removeSelfAndLaterSiblings(removeNodeAndLaterSiblings, (removed) => {
         // This should do onUnMount recursively
-        if (!isInDocument(removed)) {
+        if (parentMounted) {
             announceUnMountedRecursive(removed);
         }
     });
 
-    if (isInDocument(parentNode)) {
+    if (parentMounted) {
         announceChildrenMountedRecursive(parentNode);
     }
 }

@@ -11,9 +11,9 @@ import {
 import {
     announceChildrenMountedRecursive,
     announceUnMountedRecursive,
+    isMounted,
 } from './mounting.js';
 import { isText } from './utility/isText.js';
-import { isInDocument } from './utility/isInDocument.js';
 import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
 
@@ -62,7 +62,7 @@ export function addJsxChildren(
 
     // ==== MOUNT HANDLERS ====
 
-    if (isInDocument(parentNode)) {
+    if (isMounted(parentNode)) {
         // Note that these functions use afterCalculationsComplete so won't cause the nodelist to change
         announceChildrenMountedRecursive(parentNode);
     }

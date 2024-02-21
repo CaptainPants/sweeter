@@ -23,6 +23,10 @@ import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
 import { type WebRuntime } from './types.js';
 import { createLocationSignal } from './internal/createLocationSignal.js';
 import { StylesheetManager } from '../styles/internal/StylesheetManager.js';
+import {
+    announceMountedRecursive,
+    announceUnMountedRecursive,
+} from './internal/mounting.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -195,6 +199,8 @@ function createNestedRoot(
 
         const getContext = Context.createSnapshot();
 
+        announceMountedRecursive(target);
+
         const unmount = addJsxChildren(getContext, target, content, webRuntime);
 
         // Allow callers to be lazy and call the returned callback multiple times
@@ -203,7 +209,12 @@ function createNestedRoot(
         return () => {
             if (!unmounted) {
                 unmounted = true;
+
+                // unmount children
                 unmount();
+
+                // This will mostly unmount the parent
+                announceUnMountedRecursive(target);
             }
         };
     } finally {

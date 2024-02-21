@@ -15,15 +15,15 @@ export type ShowProps = PropertiesMightBeSignals<{
 
     /**
      * Content to render if condition is met.
-     * 
+     *
      * This is invoked inside a $calc.
-     * @returns 
+     * @returns
      */
     children: () => JSX.Element;
 
     /**
      * Content to render if condition is not met.
-     * 
+     *
      * This is invoked inside a $calc.
      */
     otherwise?: (() => JSX.Element) | undefined;
@@ -55,7 +55,7 @@ export const Show: Component<ShowProps> = ({
  * @param condition Condition, used to decide whether or not to render 'children'.
  * @param ifTrue Content to render if condition is met. This is invoked inside a $calc.
  * @param otherwise Content to render if condition is not met. This is invoked inside a $calc.
- * @returns 
+ * @returns
  */
 export function $if(
     condition: MightBeSignal<boolean>,

@@ -43,7 +43,11 @@ export const complex = Types.object({
                 first: Types.prop(Types.string()).withDisplayName('First name'),
                 last: Types.prop(Types.string()).withDisplayName('Last name'),
             }),
-        ),
+        ).withDefault(() => {
+            return {
+                test: { first: 'John', last: 'Smith' }
+            };
+        }),
     ).withDisplayName('Map'),
     constUnion: Types.prop(
         Types.union(

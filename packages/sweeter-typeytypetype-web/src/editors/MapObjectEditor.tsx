@@ -23,9 +23,7 @@ import {
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import {
     Box,
-    Column,
     Label,
-    Row,
 } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { MapObjectEditorAddModal } from './MapObjectEditorAddModal.js';
@@ -104,6 +102,14 @@ export const MapObjectEditor: Component<EditorProps> = (
         draft.update(newDraft);
     };
 
+    const onMoveProperty = async (from: string, to: string) => {
+        const newDraft = await draft
+            .peek()
+            .moveProperty(from, to, true);
+
+        draft.update(newDraft);
+    }
+
     const remove = async (name: string): Promise<void> => {
         const copy = await draft.peek().deleteProperty(name);
 
@@ -126,15 +132,15 @@ export const MapObjectEditor: Component<EditorProps> = (
                 const id = idGenerator.next(name);
 
                 return (
-                    <Row>
-                        <Column>
+                    <div>
+                        <div class={css.propertyName}>
                             <Label for={id}>{name}</Label>
                             <IconButton
                                 icon="Edit"
                                 onLeftClick={() => startRename(name)}
                             />
-                        </Column>
-                        <Column>
+                        </div>
+                        <div>
                             <MapElementEditorPart
                                 id={idGenerator.next(name)}
                                 propertyName={name}
@@ -143,8 +149,8 @@ export const MapObjectEditor: Component<EditorProps> = (
                                 indent={childIndent}
                                 ownerIdPath={idPath}
                             />
-                        </Column>
-                        <Column>
+                        </div>
+                        <div class={css.deleteButtonRow}>
                             <IconButton
                                 icon="Delete"
                                 hoverable
@@ -152,8 +158,8 @@ export const MapObjectEditor: Component<EditorProps> = (
                                     void remove(name);
                                 }}
                             />
-                        </Column>
-                    </Row>
+                        </div>
+                    </div>
                 );
             },
         }));
@@ -165,24 +171,34 @@ export const MapObjectEditor: Component<EditorProps> = (
 
     return (
         <Box level={indent} class={css.editorOuter}>
-            {propertyDisplayName && (
-                <div class={css.editorPropertyDisplayName}>
-                    {propertyDisplayName}
-                </div>
-            )}
             <div class={css.editorIndentContainer}>
                 {$calc(() => {
                     if (renameKey.value) {
                         const visible = $mutable(true);
 
-                        // TODO: rename
+                        // Note that a self to self doesn't do a 
+                        // validate but does trigger onFinished
+                        const validate = async (to: string) => {
+                            const property = draft.value.getProperty(to);
+                            if (property !== undefined) {
+                                return 'Property is already defined';
+                            }
+
+                            return null;
+                        };
+
                         return (
                             <MapObjectEditorRenameModal
                                 from={renameKey.value}
                                 isOpen={visible}
-                                validate={(from, to) => Promise.resolve(null)}
-                                onCancelled={() => {}}
-                                onFinished={(from, to) => Promise.resolve()}
+                                validate={(_from, to) => validate(to)}
+                                onCancelled={() => {
+                                    renameKey.value = null;
+                                }}
+                                onFinished={async (from, to) => {
+                                    await onMoveProperty(from, to);
+                                    renameKey.value = null;
+                                }}
                             />
                         );
                     }
@@ -199,50 +215,52 @@ export const MapObjectEditor: Component<EditorProps> = (
                         </div>
                     ),
                 )}
-                <div class={css.editorContainer}>{content}</div>
                 <div>
-                    {$calc(() =>
-                        allowedTypes.value.map((allowedType, index) => {
-                            const title =
-                                allowedTypes.value.length === 1
-                                    ? localize('Add')
-                                    : localize('Add {0}', [
-                                          allowedType.getBestDisplayName(),
-                                      ]);
+                    <div class={css.editorContainer}>{content}</div>
+                    <div>
+                        {$calc(() =>
+                            allowedTypes.value.map((allowedType, index) => {
+                                const title =
+                                    allowedTypes.value.length === 1
+                                        ? localize('Add')
+                                        : localize('Add {0}', [
+                                            allowedType.getBestDisplayName(),
+                                        ]);
 
-                            const isOpen = $mutable(false);
+                                const isOpen = $mutable(false);
 
-                            const validate = async (name: string) => {
-                                const property = draft.value.getProperty(name);
-                                if (property !== undefined) {
-                                    return 'Property is already defined';
-                                }
+                                const validate = async (name: string) => {
+                                    const property = draft.value.getProperty(name);
+                                    if (property !== undefined) {
+                                        return 'Property is already defined';
+                                    }
 
-                                return null;
-                            };
+                                    return null;
+                                };
 
-                            return (
-                                <>
-                                    <MapObjectEditorAddModal
-                                        isOpen={isOpen}
-                                        type={allowedType}
-                                        validate={validate}
-                                        onCancelled={() =>
-                                            (isOpen.value = false)
-                                        }
-                                        onFinished={onAdd}
-                                    />
-                                    <IconButton
-                                        icon="Add"
-                                        text={title}
-                                        onLeftClick={() => {
-                                            isOpen.value = true;
-                                        }}
-                                    />
-                                </>
-                            );
-                        }),
-                    )}
+                                return (
+                                    <>
+                                        <MapObjectEditorAddModal
+                                            isOpen={isOpen}
+                                            type={allowedType}
+                                            validate={validate}
+                                            onCancelled={() =>
+                                                (isOpen.value = false)
+                                            }
+                                            onFinished={onAdd}
+                                        />
+                                        <IconButton
+                                            icon="Add"
+                                            text={title}
+                                            onLeftClick={() => {
+                                                isOpen.value = true;
+                                            }}
+                                        />
+                                    </>
+                                );
+                            }),
+                        )}
+                    </div>
                 </div>
             </div>
         </Box>
@@ -258,12 +276,6 @@ const css = {
             margin: 10px 0 10px 0;
         `,
     }),
-    editorPropertyDisplayName: new GlobalCssClass({
-        className: 'MapObjectEditor-EditorPropertyDisplayName',
-        content: stylesheet`
-            line-height: 2;
-        `,
-    }),
     editorIndentContainer: new GlobalCssClass({
         className: 'MapObjectEditor-EditorIndentContainer',
         content: stylesheet`
@@ -272,7 +284,7 @@ const css = {
         `,
     }),
     editorIndent: new GlobalCssClass({
-        className: 'MapObjectEditor-EditorIndentContainer',
+        className: 'MapObjectEditor-EditorIndent',
     }),
     editorContainer: new GlobalCssClass({
         className: 'MapObjectEditor-EditorContainer',
@@ -284,4 +296,19 @@ const css = {
     property: new GlobalCssClass({
         className: 'MapObjectEditor-Property',
     }),
+    propertyName: new GlobalCssClass({
+        className: 'MapObjectEditor-PropertyName',
+        content: stylesheet`
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        `,
+    }),
+    deleteButtonRow: new GlobalCssClass({
+        className: 'MapObjectEditor-DeleteButtonRow',
+        content: stylesheet`
+             display: flex;
+             flex-direction: row-reverse;
+        `
+    })
 };

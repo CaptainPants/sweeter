@@ -44,7 +44,7 @@ export const MapObjectEditorAddModal: Component<
         if (evt.button === 0) {
             evt.preventDefault();
 
-           onCancel();
+            onCancel();
         }
     };
 

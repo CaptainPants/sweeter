@@ -114,6 +114,37 @@ export class MapObjectImpl<TValue> extends ModelImpl<
         return undefined;
     }
 
+    public async moveProperty(
+        from: string, 
+        to: string,
+        validate: boolean = true,
+    ): Promise<this> {
+        const copy = {
+            ...this.value,
+            [to]: this.value[from]!
+        };
+        delete copy[from];
+
+        if (validate) {
+            await this.type.validateAndThrow(copy, { deep: false });
+        }
+
+        const propertyModels = {
+            ...this.#propertyModels,
+            [to]: this.#propertyModels[from]!
+        };
+        delete propertyModels[from];
+
+        const result = new MapObjectImpl<TValue>(
+            copy,
+            propertyModels,
+            this.type,
+            this.parentInfo,
+        );
+
+        return result as this;
+    }
+
     public async deleteProperty(
         key: string,
         validate: boolean = true,

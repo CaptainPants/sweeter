@@ -36,7 +36,7 @@ export const MapObjectEditorRenameModal: Component<
     const to = $mutable('');
     const failedValidationMessage = $mutable<null | string>(null);
 
-    const onCancel = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
+    const onCancelClicked = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
         if (evt.button === 0) {
             evt.preventDefault();
 
@@ -44,23 +44,33 @@ export const MapObjectEditorRenameModal: Component<
             to.value = '';
             failedValidationMessage.value = null;
 
-            $peek(onCancelled)();
+            onCancel();
         }
+    };
+
+    const onCancel = () => {
+        // Reset
+        to.value = '';
+        failedValidationMessage.value = null;
+
+        $peek(onCancelled)();
     };
 
     const onOK = async (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
         if (evt.button === 0) {
             evt.preventDefault();
 
-            const validationResult = await $peek(validate)(
-                $peek(from),
-                to.peek(),
-            );
+            if ($peek(from) !== to.peek()) {
+                const validationResult = await $peek(validate)(
+                    $peek(from),
+                    to.peek(),
+                );
 
-            failedValidationMessage.value = validationResult;
+                failedValidationMessage.value = validationResult;
 
-            if (validationResult) {
-                return;
+                if (validationResult) {
+                    return;
+                }
             }
 
             await $peek(onFinished)($peek(from), to.peek());
@@ -70,7 +80,7 @@ export const MapObjectEditorRenameModal: Component<
     // TODO: autofocus
     // TODO: binding to <input />.value still allows user input, despite the signal being not being updated..
     return (
-        <Modal isOpen={isOpen} title={title}>
+        <Modal isOpen={isOpen} title={title} onClose={onCancel}>
             {() => {
                 return (
                     <Container>
@@ -99,7 +109,7 @@ export const MapObjectEditorRenameModal: Component<
                         <Row>
                             <Column sm={4}></Column>
                             <Column sm={8}>
-                                <Button onclick={onCancel}>Cancel</Button>
+                                <Button onclick={onCancelClicked}>Cancel</Button>
                                 <Button variant="primary" onclick={onOK}>
                                     OK
                                 </Button>

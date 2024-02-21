@@ -113,6 +113,9 @@ const classes = {
             flex-shrink: 1;
 
             overflow: auto;
+            
+            // So that outlines at the top of the box aren't chopped off
+            padding-top: 2px;
         `,
     }),
     footer: new GlobalCssClass({

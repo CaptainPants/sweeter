@@ -52,13 +52,20 @@ export function bindDOMClassProp(
                     }
                 }
 
-                ele.className = thisTime
+                const className = thisTime
                     .map((x) =>
                         x instanceof GlobalCssClass
                             ? webRuntime.getPrefixedClassName(x)
                             : x,
                     )
                     .join(' ');
+
+                if (className) {
+                    ele.setAttribute('class', className);
+                }
+                else {
+                    ele.removeAttribute('class');
+                }
 
                 // save (for change detection)
                 previousReferencedClasses = thisTimeReferencedClasses;

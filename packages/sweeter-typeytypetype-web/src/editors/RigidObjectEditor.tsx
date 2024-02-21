@@ -235,11 +235,6 @@ const css = {
             margin: 10px 0 10px 0;
         `,
     }),
-    editorPropertyDisplayName: new GlobalCssClass({
-        className: 'RigidObjectEditor-EditorPropertyDisplayName',
-        content: stylesheet`
-        `,
-    }),
     editorIndentContainer: new GlobalCssClass({
         className: 'RigidObjectEditor-EditorIndentContainer',
         content: stylesheet`

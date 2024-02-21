@@ -117,6 +117,8 @@ export interface MapObjectModel<TValue>
 
     deleteProperty(key: string, validate?: boolean): Promise<this>;
 
+    moveProperty(from: string, to: string, validate?: boolean): Promise<this>;
+
     getEntries(): readonly MapObjectEntry<TValue>[];
 }
 

@@ -40,10 +40,19 @@ export function bindDOMStyleProp(
     });
 
     signal.listen(() => {
-        node.setAttribute('style', signal.peek());
+        const styleValue = signal.peek();
+        if (styleValue) {
+            node.setAttribute('style', styleValue);
+        }
+        else {
+            node.removeAttribute('style');
+        }
     });
 
-    node.setAttribute('style', signal.peek());
+    const styleValue = signal.peek();
+    if (styleValue) {
+        node.setAttribute('style', styleValue);
+    }
 
     addExplicitStrongReference(node, signal);
 }

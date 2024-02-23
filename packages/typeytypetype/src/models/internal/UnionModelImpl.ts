@@ -61,6 +61,11 @@ export class UnionModelImpl<TUnion>
         return resolved as SpreadModel<TUnion>;
     }
 
+    public unknownGetRecursivelyResolved(): Model<unknown> {
+        // Type system can't understand that SpreadModel results in a Model<T> at all times
+        return this.getRecursivelyResolved() as Model<unknown>;
+    }
+
     public getTypes(): ReadonlyArray<Type<unknown>> {
         return this.type.types;
     }

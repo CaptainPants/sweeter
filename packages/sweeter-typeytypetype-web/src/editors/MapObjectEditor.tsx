@@ -21,10 +21,7 @@ import {
     type Model,
 } from '@captainpants/typeytypetype';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
-import {
-    Box,
-    Label,
-} from '../../../sweeter-gummybear/build/index.js';
+import { Box, Label } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { MapObjectEditorAddModal } from './MapObjectEditorAddModal.js';
 import { MapObjectEditorRenameModal } from './MapObjectEditorRenameModal.js';
@@ -103,12 +100,10 @@ export const MapObjectEditor: Component<EditorProps> = (
     };
 
     const onMoveProperty = async (from: string, to: string) => {
-        const newDraft = await draft
-            .peek()
-            .moveProperty(from, to, true);
+        const newDraft = await draft.peek().moveProperty(from, to, true);
 
         draft.update(newDraft);
-    }
+    };
 
     const remove = async (name: string): Promise<void> => {
         const copy = await draft.peek().deleteProperty(name);
@@ -176,7 +171,7 @@ export const MapObjectEditor: Component<EditorProps> = (
                     if (renameKey.value) {
                         const visible = $mutable(true);
 
-                        // Note that a self to self doesn't do a 
+                        // Note that a self to self doesn't do a
                         // validate but does trigger onFinished
                         const validate = async (to: string) => {
                             const property = draft.value.getProperty(to);
@@ -224,13 +219,14 @@ export const MapObjectEditor: Component<EditorProps> = (
                                     allowedTypes.value.length === 1
                                         ? localize('Add')
                                         : localize('Add {0}', [
-                                            allowedType.getBestDisplayName(),
-                                        ]);
+                                              allowedType.getBestDisplayName(),
+                                          ]);
 
                                 const isOpen = $mutable(false);
 
                                 const validate = async (name: string) => {
-                                    const property = draft.value.getProperty(name);
+                                    const property =
+                                        draft.value.getProperty(name);
                                     if (property !== undefined) {
                                         return 'Property is already defined';
                                     }
@@ -309,6 +305,6 @@ const css = {
         content: stylesheet`
              display: flex;
              flex-direction: row-reverse;
-        `
-    })
+        `,
+    }),
 };

@@ -43,8 +43,7 @@ export function bindDOMStyleProp(
         const styleValue = signal.peek();
         if (styleValue) {
             node.setAttribute('style', styleValue);
-        }
-        else {
+        } else {
             node.removeAttribute('style');
         }
     });

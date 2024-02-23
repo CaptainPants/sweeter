@@ -36,7 +36,9 @@ export const MapObjectEditorRenameModal: Component<
     const to = $mutable('');
     const failedValidationMessage = $mutable<null | string>(null);
 
-    const onCancelClicked = (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
+    const onCancelClicked = (
+        evt: TypedEvent<HTMLButtonElement, MouseEvent>,
+    ) => {
         if (evt.button === 0) {
             evt.preventDefault();
 
@@ -109,7 +111,9 @@ export const MapObjectEditorRenameModal: Component<
                         <Row>
                             <Column sm={4}></Column>
                             <Column sm={8}>
-                                <Button onclick={onCancelClicked}>Cancel</Button>
+                                <Button onclick={onCancelClicked}>
+                                    Cancel
+                                </Button>
                                 <Button variant="primary" onclick={onOK}>
                                     OK
                                 </Button>

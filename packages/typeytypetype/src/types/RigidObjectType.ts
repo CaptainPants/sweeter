@@ -6,10 +6,18 @@ import {
 import { type PropertyDefinitions } from './internal/types.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';
 import { BaseType } from './BaseType.js';
+import { type Type } from './Type.js';
 
-export class RigidObjectType<
-    TObject extends Record<string, unknown>,
-> extends BaseType<TObject> {
+export interface UnknownRigidObjectType extends Type<Record<string, unknown>> {
+    getFixedPropertyNames(): string[];
+
+    getPropertyDefinition(key: string): PropertyDefinition<unknown> | undefined;
+}
+
+export class RigidObjectType<TObject extends Record<string, unknown>>
+    extends BaseType<TObject>
+    implements UnknownRigidObjectType
+{
     public constructor(propertyDefinitions: PropertyDefinitions<TObject>) {
         super();
         this.propertyDefinitions = propertyDefinitions;
@@ -80,15 +88,15 @@ export class RigidObjectType<
         return Object.keys(this.propertyDefinitions);
     }
 
-    public staticGetPropertyDefinition<Key extends string>(
+    public getPropertyDefinition<Key extends string>(
         key: Key,
-    ): PropertyDefinition<TObject[Key]> | null {
+    ): PropertyDefinition<TObject[Key]> | undefined {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
         if (hasOwnProperty(this.propertyDefinitions, key)) {
             const propertyDef = this.propertyDefinitions[key];
             return propertyDef;
         }
-        return null;
+        return undefined;
     }
 
     public doCreateDefault(depth: number): TObject {

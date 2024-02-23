@@ -115,13 +115,13 @@ export class MapObjectImpl<TValue> extends ModelImpl<
     }
 
     public async moveProperty(
-        from: string, 
+        from: string,
         to: string,
         validate: boolean = true,
     ): Promise<this> {
         const copy = {
             ...this.value,
-            [to]: this.value[from]!
+            [to]: this.value[from]!,
         };
         delete copy[from];
 
@@ -131,7 +131,7 @@ export class MapObjectImpl<TValue> extends ModelImpl<
 
         const propertyModels = {
             ...this.#propertyModels,
-            [to]: this.#propertyModels[from]!
+            [to]: this.#propertyModels[from]!,
         };
         delete propertyModels[from];
 

@@ -1,19 +1,23 @@
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { PropertyDefinition } from '../../types/PropertyDefinition.js';
 import { Types } from '../../types/Types.js';
-import { type PropertyModelFor } from '../Model.js';
+import { type RigidObjectModel, type PropertyModelFor } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
-import { type PropertyModel } from '../PropertyModel.js';
+import {
+    type UnknownPropertyModel,
+    type PropertyModel,
+} from '../PropertyModel.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { PropertyModelImpl } from './PropertyModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type RigidObjectType } from '../../index.js';
 
-export class RigidObjectImpl<
-    TObject extends Record<string, unknown>,
-> extends ModelImpl<TObject, RigidObjectType<TObject>> {
+export class RigidObjectImpl<TObject extends Record<string, unknown>>
+    extends ModelImpl<TObject, RigidObjectType<TObject>>
+    implements RigidObjectModel<TObject>
+{
     public static createFromValue<TObject extends Record<string, unknown>>(
         value: TObject,
         type: RigidObjectType<TObject>,
@@ -27,7 +31,7 @@ export class RigidObjectImpl<
             // If there is no matching property we treated it as unknown
             // This is basically to support using an object def like { a: number } to match { a: number, other: string }
             const propertyDef =
-                type.staticGetPropertyDefinition(name) ??
+                type.getPropertyDefinition(name) ??
                 new PropertyDefinition(Types.unknown());
 
             const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
@@ -69,6 +73,11 @@ export class RigidObjectImpl<
 
     #propertyModels: Record<string, PropertyModel<unknown>>;
 
+    public unknownGetProperty(key: string): UnknownPropertyModel | undefined {
+        const result = this.getProperty(key as keyof TObject & string);
+        return result;
+    }
+
     public getProperty<TKey extends keyof TObject & string>(
         key: TKey,
     ): PropertyModelFor<TObject, TKey> {
@@ -81,18 +90,32 @@ export class RigidObjectImpl<
         throw new TypeError();
     }
 
-    public getProperties(): Array<PropertyModel<unknown>> {
-        return Object.values(this.#propertyModels);
+    public unknownGetProperties(): Array<UnknownPropertyModel> {
+        return this.getProperties();
     }
 
-    public async setProperty(
+    public getProperties(): Array<PropertyModel<TObject[keyof TObject]>> {
+        return Object.values(this.#propertyModels) as Array<
+            PropertyModel<TObject[keyof TObject]>
+        >;
+    }
+
+    public async setProperty<TKey extends keyof TObject & string>(
+        key: TKey,
+        value: TObject[TKey],
+        validate: boolean = true,
+    ): Promise<this> {
+        return this.unknownSetProperty(key, value, validate);
+    }
+
+    public async unknownSetProperty(
         key: string,
         value: unknown,
         validate: boolean = true,
     ): Promise<this> {
-        const def = this.type.staticGetPropertyDefinition(key);
+        const def = this.type.getPropertyDefinition(key);
 
-        if (def === null) {
+        if (def === undefined) {
             throw new TypeError(
                 `Could not assign to property ${key} as no type found.`,
             );

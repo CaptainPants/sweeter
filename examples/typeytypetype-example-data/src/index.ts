@@ -45,7 +45,7 @@ export const complex = Types.object({
             }),
         ).withDefault(() => {
             return {
-                test: { first: 'John', last: 'Smith' }
+                test: { first: 'John', last: 'Smith' },
             };
         }),
     ).withDisplayName('Map'),

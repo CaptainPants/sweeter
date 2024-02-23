@@ -5,3 +5,7 @@ export type TypeMatchAssert<T, U> = (<V>() => V extends T ? 1 : 2) extends <
 >() => V extends U ? 1 : 2
     ? true
     : { error: 'Types are not equal'; type1: T; type2: U };
+
+export type TypeExtendsAssert<T, U> = [T] extends [U]
+    ? true
+    : { error: `Type type1 does not extend type2`; type1: T; type2: U };

@@ -1,6 +1,12 @@
 import { type PropertyDefinition } from '../types/PropertyDefinition.js';
 
-import { type Model } from './Model.js';
+import { type UnknownModel, type Model } from './Model.js';
+
+export interface UnknownPropertyModel {
+    readonly name: string;
+    readonly definition: PropertyDefinition<unknown>;
+    readonly valueModel: UnknownModel;
+}
 
 export interface PropertyModel<TValue> {
     readonly name: string;

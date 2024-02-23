@@ -62,8 +62,7 @@ export function bindDOMClassProp(
 
                 if (className) {
                     ele.setAttribute('class', className);
-                }
-                else {
+                } else {
                     ele.removeAttribute('class');
                 }
 

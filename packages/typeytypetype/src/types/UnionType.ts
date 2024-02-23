@@ -10,6 +10,26 @@ import { BaseType } from './BaseType.js';
 import { type SpreadUnionType } from './internal/types.js';
 import { type Type } from './Type.js';
 
+export interface UnknownUnionType extends Type<unknown> {
+    /**
+     * This will search only direct child types, of which any could be a union. This must be unknown because we can't split apart possible nested unions.
+     * @param value
+     * @returns
+     */
+    findTypeForValue(value: unknown): Type<unknown> | null;
+
+    /**
+     * In the case of nested unions, this will search for the first matching non-union type
+     * @param value
+     * @returns
+     */
+    findTypeForValueRecursive(value: unknown): Type<unknown> | null;
+
+    getTypeIndexForValue(value: unknown): number;
+
+    forEachType(callback: (type: Type<unknown>) => boolean): void;
+}
+
 export class UnionType<TUnion> extends BaseType<TUnion> {
     public constructor(types: Array<SpreadUnionType<TUnion>>) {
         super();

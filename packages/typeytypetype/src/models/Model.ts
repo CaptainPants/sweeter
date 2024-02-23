@@ -1,4 +1,8 @@
-import { type MapObjectType, type RigidObjectType } from '../index.js';
+import {
+    type UnknownRigidObjectType,
+    type MapObjectType,
+    type RigidObjectType,
+} from '../index.js';
 import { type IsUnion } from '../internal/unions.js';
 import { type ArrayType } from '../types/ArrayType.js';
 import {
@@ -11,7 +15,7 @@ import {
 import { type NumberType } from '../types/NumberType.js';
 import { type StringType } from '../types/StringType.js';
 import { type Type } from '../types/Type.js';
-import { type UnionType } from '../types/UnionType.js';
+import { type UnknownUnionType, type UnionType } from '../types/UnionType.js';
 import { type UnknownType } from '../types/UnknownType.js';
 
 import { type ParentTypeInfo } from './parents.js';
@@ -22,8 +26,6 @@ export interface ModelBase<T, TTypeType extends Type<unknown>> {
     readonly type: TTypeType;
     readonly parentInfo: ParentTypeInfo | null;
     readonly archetype: string;
-
-    asUnknown: () => Model<unknown>;
 }
 
 export interface SimpleModel<T, TType extends Type<unknown>>
@@ -79,17 +81,37 @@ export type PropertyModelFor<TObject, TKey extends keyof TObject> =
     | PropertyModel<TObject[TKey]>
     | (string extends keyof TObject ? undefined : never);
 
+interface UnknownRigidObjectModelMethods {
+    unknownGetProperty(key: string): PropertyModel<unknown> | undefined;
+
+    unknownGetProperties(): Array<PropertyModel<unknown>>;
+
+    unknownSetProperty(
+        key: string,
+        value: unknown,
+        triggerValidation?: boolean,
+    ): Promise<this>;
+}
+
+export interface UnknownRigidObjectModel
+    extends ModelBase<
+            Readonly<Record<string, unknown>>,
+            UnknownRigidObjectType
+        >,
+        UnknownRigidObjectModelMethods {}
+
 export interface RigidObjectModel<TObject extends Record<string, unknown>>
-    extends ModelBase<Readonly<TObject>, RigidObjectType<TObject>> {
+    extends ModelBase<Readonly<TObject>, RigidObjectType<TObject>>,
+        UnknownRigidObjectModelMethods {
     getProperty<TKey extends keyof TObject & string>(
         key: TKey,
     ): PropertyModelFor<TObject, TKey>;
 
-    getProperties(): Array<PropertyModel<unknown>>;
+    getProperties(): Array<PropertyModel<TObject[keyof TObject]>>;
 
     setProperty<TKey extends keyof TObject & string>(
         key: TKey,
-        value: unknown,
+        value: TObject[TKey],
         triggerValidation?: boolean,
     ): Promise<this>;
 }
@@ -122,20 +144,29 @@ export interface MapObjectModel<TValue>
     getEntries(): readonly MapObjectEntry<TValue>[];
 }
 
-export interface UnionModelProperties<TUnion> {
+export interface UnknownUnionModelMethods {
     as: <TAs>(type: Type<TAs>) => Model<TAs> | null;
 
     getDirectlyResolved: () => Model<unknown>;
 
-    getRecursivelyResolved: () => SpreadModel<TUnion>;
+    unknownGetRecursivelyResolved: () => Model<unknown>;
 
     getTypes: () => ReadonlyArray<Type<unknown>>;
 
     replace: (value: unknown, validate?: boolean) => Promise<this>;
 }
 
-export type UnionModel<TUnion> = ModelBase<TUnion, UnionType<TUnion>> &
-    UnionModelProperties<TUnion>;
+export interface UnionModelMethods<TUnion> extends UnknownUnionModelMethods {
+    getRecursivelyResolved: () => SpreadModel<TUnion>;
+}
+
+export interface UnknownUnionModel
+    extends ModelBase<unknown, UnknownUnionType>,
+        UnknownUnionModelMethods {}
+
+export interface UnionModel<TUnion>
+    extends ModelBase<TUnion, UnionType<TUnion>>,
+        UnionModelMethods<TUnion> {}
 
 /**
  * Use conditional to convert Model<T1 | T2> to Model<T1> | Model<T2>
@@ -148,8 +179,8 @@ export interface RealUnknownModel extends ModelBase<unknown, UnknownType> {}
 export type UnknownModel =
     | ArrayModel<unknown>
     | MapObjectModel<unknown>
-    | RigidObjectModel<Record<string, unknown>>
-    | UnionModel<unknown>
+    | UnknownRigidObjectModel
+    | UnknownUnionModel
     | StringModel
     | StringConstantModel<string>
     | NumberModel
@@ -166,8 +197,7 @@ export type AnyModelConstraint =
     | ArrayModel<any>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | MapObjectModel<any>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    | RigidObjectModel<any>
+    | UnknownRigidObjectModel
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | UnionModel<any>
     | StringModel
@@ -186,8 +216,7 @@ export type Model<T> = IsUnion<T> extends true
     : T extends Array<infer TElement>
       ? ArrayModel<TElement>
       : T extends Record<string, infer InferredValue>
-        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          Record<string, any> extends T
+        ? string extends keyof T
             ? MapObjectModel<InferredValue>
             : RigidObjectModel<T>
         : T extends string

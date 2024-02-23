@@ -1,9 +1,6 @@
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { type Type } from '../../types/Type.js';
-import {
-    type MapObjectEntry,
-    type Model,
-} from '../Model.js';
+import { type MapObjectEntry, type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 

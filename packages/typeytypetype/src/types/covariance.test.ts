@@ -2,8 +2,8 @@
  * @file All of the tests in this file are intended as compile time tests to verify the parallel type
  * system is behaving correctly. None of the tests actually do very much when run. Some tests are intended
  * to be illegal and rely on @ts-expect-error to give an error when there is no test on the following line.
- * 
- * On revisiting I don't think most of these tests are useful, so should all be deleted except the 
+ *
+ * On revisiting I don't think most of these tests are useful, so should all be deleted except the
  * 'unknown variants' tests.
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */

@@ -3,7 +3,6 @@ import { type Type } from '../../types/Type.js';
 import {
     type MapObjectEntry,
     type Model,
-    type ReadonlyRecord,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -11,6 +10,7 @@ import { type ParentTypeInfo } from '../parents.js';
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type MapObjectType } from '../../index.js';
+import { type ReadonlyRecord } from '../../types.js';
 
 export class MapObjectImpl<TValue> extends ModelImpl<
     Record<string, TValue>,

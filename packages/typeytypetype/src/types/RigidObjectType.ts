@@ -11,7 +11,7 @@ import { type Type } from './Type.js';
 export interface UnknownRigidObjectType extends Type<Record<string, unknown>> {
     getFixedPropertyNames(): string[];
 
-    getPropertyDefinition(key: string): PropertyDefinition<unknown> | undefined;
+    getPropertyDefinition(key: string): PropertyDefinition<unknown> | null;
 }
 
 export class RigidObjectType<TObject extends Record<string, unknown>>
@@ -90,13 +90,13 @@ export class RigidObjectType<TObject extends Record<string, unknown>>
 
     public getPropertyDefinition<Key extends string>(
         key: Key,
-    ): PropertyDefinition<TObject[Key]> | undefined {
+    ): PropertyDefinition<TObject[Key]> | null {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
         if (hasOwnProperty(this.propertyDefinitions, key)) {
             const propertyDef = this.propertyDefinitions[key];
             return propertyDef;
         }
-        return undefined;
+        return null;
     }
 
     public doCreateDefault(depth: number): TObject {

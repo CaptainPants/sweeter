@@ -116,10 +116,6 @@ export interface RigidObjectModel<TObject extends Record<string, unknown>>
     ): Promise<this>;
 }
 
-export type ReadonlyRecord<
-    TKey extends string | number | symbol,
-    TValue,
-> = Readonly<Record<TKey, TValue>>;
 export type MapObjectEntry<TValue> = readonly [
     name: string,
     model: Model<TValue>,

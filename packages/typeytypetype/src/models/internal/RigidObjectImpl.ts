@@ -115,7 +115,7 @@ export class RigidObjectImpl<TObject extends Record<string, unknown>>
     ): Promise<this> {
         const def = this.type.getPropertyDefinition(key);
 
-        if (def === undefined) {
+        if (def === null) {
             throw new TypeError(
                 `Could not assign to property ${key} as no type found.`,
             );

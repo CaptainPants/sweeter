@@ -10,3 +10,8 @@ export type ValueTypeFromModel<TModel> = TModel extends Model<infer T>
 
 export type Replacer<T> = (value: Model<T>) => Promise<void>;
 export type MultipleReplacer<T> = (value: Array<Model<T>>) => Promise<void>;
+
+export type ReadonlyRecord<
+    TKey extends string | number | symbol,
+    TValue,
+> = Readonly<Record<TKey, TValue>>;

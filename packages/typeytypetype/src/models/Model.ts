@@ -4,7 +4,7 @@ import {
     type RigidObjectType,
 } from '../index.js';
 import { type IsUnion } from '../internal/unions.js';
-import { type ArrayType } from '../types/ArrayType.js';
+import { type UnknownArrayType, type ArrayType } from '../types/ArrayType.js';
 import {
     type BooleanConstantType,
     type NullConstantType,
@@ -16,7 +16,7 @@ import { type NumberType } from '../types/NumberType.js';
 import { type StringType } from '../types/StringType.js';
 import { type Type } from '../types/Type.js';
 import { type UnknownUnionType, type UnionType } from '../types/UnionType.js';
-import { type UnknownType } from '../types/UnknownType.js';
+import { type RealUnknonType } from '../types/UnknownType.js';
 
 import { type ParentTypeInfo } from './parents.js';
 import { type PropertyModel } from './PropertyModel.js';
@@ -52,8 +52,34 @@ export interface NullModel extends SimpleModel<null, NullConstantType> {}
 export interface UndefinedModel
     extends SimpleModel<undefined, UndefinedConstantType> {}
 
+export interface UnknownArrayModelMethods {
+    unknownGetElementType: () => Type<unknown>;
+
+    unknownGetElement: (index: number) => Model<unknown> | undefined;
+
+    unknownGetElements: () => ReadonlyArray<Model<unknown>>;
+
+    unknownSpliceElements: (
+        start: number,
+        deleteCount: number,
+        newElements: ReadonlyArray<unknown | Model<unknown>>,
+        validate?: boolean,
+    ) => Promise<this>;
+
+    moveElement: (
+        from: number,
+        to: number,
+        validate?: boolean,
+    ) => Promise<this>;
+}
+
+export interface UnknownArrayModel
+    extends ModelBase<readonly unknown[], UnknownArrayType>,
+        UnknownArrayModelMethods {}
+
 export interface ArrayModel<TElement>
-    extends ModelBase<readonly TElement[], ArrayType<TElement>> {
+    extends ModelBase<readonly TElement[], ArrayType<TElement>>,
+        UnknownArrayModelMethods {
     getElementType: () => Type<TElement>;
 
     getElement: (index: number) => Model<TElement> | undefined;
@@ -64,12 +90,6 @@ export interface ArrayModel<TElement>
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<TElement | Model<TElement>>,
-        validate?: boolean,
-    ) => Promise<this>;
-
-    moveElement: (
-        from: number,
-        to: number,
         validate?: boolean,
     ) => Promise<this>;
 }
@@ -170,10 +190,10 @@ export interface UnionModel<TUnion>
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
-export interface RealUnknownModel extends ModelBase<unknown, UnknownType> {}
+export interface RealUnknownModel extends ModelBase<unknown, RealUnknonType> {}
 
 export type UnknownModel =
-    | ArrayModel<unknown>
+    | UnknownArrayModel
     | MapObjectModel<unknown>
     | UnknownRigidObjectModel
     | UnknownUnionModel
@@ -189,8 +209,7 @@ export type UnknownModel =
     | RealUnknownModel;
 
 export type AnyModelConstraint =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    | ArrayModel<any>
+    | UnknownArrayModel
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     | MapObjectModel<any>
     | UnknownRigidObjectModel

@@ -1,10 +1,13 @@
-import { type PropertyDefinition, type RigidObjectType } from '../index.js';
+import {
+    type UnknownRigidObjectType,
+    type UnknownPropertyDefinition,
+} from '../index.js';
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {
     name: string;
     order?: number;
-    definition: PropertyDefinition<unknown>;
+    definition: UnknownPropertyDefinition;
 }
 
 /**
@@ -12,7 +15,7 @@ export interface CategorizedPropertyDefinition {
  * @returns
  */
 export function categorizeProperties(
-    type: RigidObjectType<Record<string, unknown>>,
+    type: UnknownRigidObjectType,
 ): Array<{ category: string; properties: CategorizedPropertyDefinition[] }>;
 
 /**
@@ -21,12 +24,12 @@ export function categorizeProperties(
  * @returns
  */
 export function categorizeProperties<TPropertyResult>(
-    type: RigidObjectType<Record<string, unknown>>,
+    type: UnknownRigidObjectType,
     transform?: (property: CategorizedPropertyDefinition) => TPropertyResult,
 ): Array<{ category: string; properties: TPropertyResult[] }>;
 
 export function categorizeProperties(
-    type: RigidObjectType<Record<string, unknown>>,
+    type: UnknownRigidObjectType,
     transform?: (property: CategorizedPropertyDefinition) => unknown,
 ): Array<{ category: string; properties: unknown[] }> {
     const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();

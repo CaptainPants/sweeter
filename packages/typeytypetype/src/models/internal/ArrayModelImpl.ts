@@ -61,18 +61,44 @@ export class ArrayModelImpl<TElement>
         return this.#elementType;
     }
 
+    public unknownGetElementType(): Type<unknown> {
+        return this.#elementType;
+    }
+
     public getElement(index: number): Model<TElement> | undefined {
         return this.#elementModels[index];
+    }
+
+    public unknownGetElement(index: number): Model<unknown> | undefined {
+        return this.getElement(index);
     }
 
     public getElements(): ReadonlyArray<Model<TElement>> {
         return this.#elementModels;
     }
 
+    public unknownGetElements(): ReadonlyArray<Model<unknown>> {
+        return this.#elementModels;
+    }
+
     public async spliceElements(
         start: number,
         deleteCount: number,
-        newElements: readonly unknown[],
+        newElements: ReadonlyArray<TElement | Model<TElement>>,
+        validate: boolean = true,
+    ): Promise<this> {
+        return this.unknownSpliceElements(
+            start,
+            deleteCount,
+            newElements,
+            validate,
+        );
+    }
+
+    public async unknownSpliceElements(
+        start: number,
+        deleteCount: number,
+        newElements: ReadonlyArray<unknown | Model<unknown>>,
         validate: boolean = true,
     ): Promise<this> {
         const eleDefinition = this.getElementType();

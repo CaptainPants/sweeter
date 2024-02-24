@@ -3,7 +3,10 @@ import {
     descend,
     hasOwnProperty,
 } from '@captainpants/sweeter-utilities';
-import { type PropertyDefinitions } from './internal/types.js';
+import {
+    type UnknownPropertyDefinitions,
+    type PropertyDefinitions,
+} from './internal/types.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';
 import { BaseType } from './BaseType.js';
 import { type Type } from './Type.js';
@@ -12,6 +15,8 @@ export interface UnknownRigidObjectType extends Type<Record<string, unknown>> {
     getFixedPropertyNames(): string[];
 
     getPropertyDefinition(key: string): PropertyDefinition<unknown> | null;
+
+    readonly propertyDefinitions: UnknownPropertyDefinitions;
 }
 
 export class RigidObjectType<TObject extends Record<string, unknown>>

@@ -1,5 +1,12 @@
-import { type PropertyDefinition } from '../PropertyDefinition.js';
+import {
+    type UnknownPropertyDefinition,
+    type PropertyDefinition,
+} from '../PropertyDefinition.js';
 import { type Type } from '../Type.js';
+
+export type UnknownPropertyDefinitions = {
+    readonly [Key in string]: UnknownPropertyDefinition;
+};
 
 export type PropertyDefinitions<TObject extends Record<string, unknown>> = {
     readonly [TKey in keyof TObject]: PropertyDefinition<TObject[TKey]>;

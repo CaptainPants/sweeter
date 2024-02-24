@@ -7,7 +7,13 @@ import { type ReadonlySignalLike } from '../ReadonlySignalLike.js';
 
 import { type Type } from './Type.js';
 
-export class PropertyDefinition<TValue> {
+export interface UnknownPropertyDefinition {
+    displayName?: string;
+    category?: string;
+    type?: Type<unknown>;
+}
+
+export class PropertyDefinition<TValue> implements UnknownPropertyDefinition {
     public constructor(type: Type<TValue>) {
         this.type = type;
     }

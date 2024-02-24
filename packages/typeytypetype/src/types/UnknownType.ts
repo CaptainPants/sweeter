@@ -1,5 +1,8 @@
 import { descend } from '@captainpants/sweeter-utilities';
 import { BaseType } from './BaseType.js';
+import { type Type } from './Type.js';
+
+export interface RealUnknonType extends Type<unknown> {}
 
 export class UnknownType extends BaseType<unknown> {
     public constructor() {

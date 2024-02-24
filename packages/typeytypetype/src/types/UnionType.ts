@@ -28,6 +28,8 @@ export interface UnknownUnionType extends Type<unknown> {
     getTypeIndexForValue(value: unknown): number;
 
     forEachType(callback: (type: Type<unknown>) => boolean): void;
+
+    readonly types: ReadonlyArray<Type<unknown>>;
 }
 
 export class UnionType<TUnion> extends BaseType<TUnion> {

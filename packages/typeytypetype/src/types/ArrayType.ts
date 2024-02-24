@@ -8,7 +8,14 @@ import {
 import { BaseType } from './BaseType.js';
 import { type Type } from './Type.js';
 
-export class ArrayType<TElement> extends BaseType<TElement[]> {
+export interface UnknownArrayType extends Type<readonly unknown[]> {
+    readonly elementType: Type<unknown>;
+}
+
+export class ArrayType<TElement>
+    extends BaseType<TElement[]>
+    implements UnknownArrayType
+{
     public constructor(elementType: Type<TElement>) {
         super();
         this.#elementType = elementType;

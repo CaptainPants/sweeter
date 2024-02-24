@@ -15,7 +15,7 @@ import {
     cast,
     categorizeProperties,
     StandardLocalValues,
-    type RigidObjectModel,
+    type UnknownRigidObjectModel,
 } from '@captainpants/typeytypetype';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -41,10 +41,7 @@ export function RigidObjectEditor(
     const idGenerator = init.idGenerator;
 
     const { draft } = init.hook(
-        DraftHook<
-            RigidObjectModel<Record<string, unknown>>,
-            RigidObjectModel<Record<string, unknown>>
-        >,
+        DraftHook<UnknownRigidObjectModel, UnknownRigidObjectModel>,
         {
             model: typedModel,
             convertIn: (model) => model,
@@ -72,7 +69,7 @@ export function RigidObjectEditor(
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .setProperty(propertyModel.name, value, true);
+            .unknownSetProperty(propertyModel.name, value, true);
 
         draft.update(newDraft);
     };
@@ -113,9 +110,8 @@ export function RigidObjectEditor(
                 const propertyVisiblePerProperty = $calc(() => {
                     const individualVisibility = properties.map(
                         ({ property }) => {
-                            const propertyModel = draft.value.getProperty(
-                                property.name,
-                            );
+                            const propertyModel =
+                                draft.value.unknownGetProperty(property.name);
                             assertNotNullOrUndefined(propertyModel);
 
                             return (
@@ -183,7 +179,7 @@ export function RigidObjectEditor(
                                                     // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
                                                     // No other signals are referenced
                                                     () =>
-                                                        draft.value.getProperty(
+                                                        draft.value.unknownGetProperty(
                                                             property.name,
                                                         )!,
                                                 )}

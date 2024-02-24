@@ -1,9 +1,9 @@
 import {
-    type ArrayModel,
     asArray,
     cast,
     type Type,
     isUnionType,
+    type UnknownArrayModel,
 } from '@captainpants/typeytypetype';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
@@ -39,7 +39,7 @@ export function ArrayEditor(
     });
 
     const { draft, validationErrors } = init.hook(
-        DraftHook<ArrayModel<unknown>, ArrayModel<unknown>>,
+        DraftHook<UnknownArrayModel, UnknownArrayModel>,
         {
             model: typedModel,
             onValid: async (validated) => {
@@ -67,7 +67,7 @@ export function ArrayEditor(
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .spliceElements(index, 1, [value], true);
+            .unknownSpliceElements(index, 1, [value], true);
 
         draft.update(newDraft);
     };
@@ -75,7 +75,7 @@ export function ArrayEditor(
     const add = async (type: Type<unknown>): Promise<void> => {
         const copy = await draft
             .peek()
-            .spliceElements(
+            .unknownSpliceElements(
                 draft.peek().value.length,
                 0,
                 [type.createDefault()],
@@ -86,7 +86,9 @@ export function ArrayEditor(
     };
 
     const remove = async (index: number): Promise<void> => {
-        const copy = await draft.peek().spliceElements(index, 1, [], false);
+        const copy = await draft
+            .peek()
+            .unknownSpliceElements(index, 1, [], false);
 
         draft.update(copy);
     };
@@ -98,7 +100,7 @@ export function ArrayEditor(
     };
 
     const allowedTypes = $calc(() => {
-        const elementType = draft.value.getElementType();
+        const elementType = draft.value.unknownGetElementType();
 
         if (isUnionType(elementType)) {
             return elementType.types;
@@ -115,7 +117,7 @@ export function ArrayEditor(
         <>
             <SortableList onSortEnd={move}>
                 {$foreach(
-                    $calc(() => draft.value.getElements()),
+                    $calc(() => draft.value.unknownGetElements()),
                     (item, index) => {
                         return (
                             <div class={css.item}>

@@ -25,63 +25,58 @@ import {
     type UndefinedModel,
     type UnionModel,
     type AnyModelConstraint,
-    type RealUnknownModel,
     type UnknownRigidObjectModel,
     type UnknownUnionModel,
     type UnknownArrayModel,
+    type UnknownModel,
 } from './Model.js';
 
-export function cast<
-    TToModel extends AnyModelConstraint,
-    TFromModel extends AnyModelConstraint,
->(
-    model: TFromModel,
-    as: (model: TFromModel) => TToModel | undefined,
+export function cast<TToModel extends AnyModelConstraint>(
+    model: AnyModelConstraint,
+    as: (model: AnyModelConstraint) => TToModel | undefined,
 ): TToModel {
-    const typed = as(model as unknown as TFromModel);
+    const typed = as(model as unknown as AnyModelConstraint);
     if (!typed) {
         throw new TypeError(`Invalid cast using ${as.name}`);
     }
     return typed;
 }
 
-export function asUnion<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asUnion(
+    model: AnyModelConstraint,
 ): UnknownUnionModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isUnionType(model.type) ? (model as any) : undefined;
 }
 
-export function asRigidObject<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asRigidObject(
+    model: AnyModelConstraint,
 ): UnknownRigidObjectModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isRigidObjectType(model.type) ? (model as any) : undefined;
 }
 
-export function asMap<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asMap(
+    model: AnyModelConstraint,
 ): MapObjectModel<unknown> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isMapObjectType(model.type) ? (model as any) : undefined;
 }
 
-export function asArray<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asArray(
+    model: AnyModelConstraint,
 ): UnknownArrayModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isArrayType(model.type) ? (model as any) : undefined;
 }
 
-export function asNumber<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
-): NumberModel | undefined {
+export function asNumber(model: AnyModelConstraint): NumberModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isNumberType(model.type) ? (model as any) : undefined;
 }
 
-export function asBoolean<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asBoolean(
+    model: AnyModelConstraint,
 ): UnionModel<true | false> | undefined {
     const isUnion =
         isUnionType(model.type) &&
@@ -90,43 +85,41 @@ export function asBoolean<TFromModel extends AnyModelConstraint>(
     return isUnion ? (model as any) : undefined;
 }
 
-export function asString<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
-): StringModel | undefined {
+export function asString(model: AnyModelConstraint): StringModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isStringType(model.type) ? (model as any) : undefined;
 }
 
-export function asNumberConstant<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asNumberConstant(
+    model: AnyModelConstraint,
 ): NumberConstantModel<number> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isNumberConstantType(model.type) ? (model as any) : undefined;
 }
 
-export function asStringConstant<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asStringConstant(
+    model: AnyModelConstraint,
 ): StringConstantModel<string> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isStringConstantType(model.type) ? (model as any) : undefined;
 }
 
-export function asBooleanConstant<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asBooleanConstant(
+    model: AnyModelConstraint,
 ): BooleanConstantModel<boolean> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isBooleanConstantType(model.type) ? (model as any) : undefined;
 }
 
-export function asNullConstant<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asNullConstant(
+    model: AnyModelConstraint,
 ): NullModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isNullType(model.type) ? (model as any) : undefined;
 }
 
-export function asUndefinedConstant<TFromModel extends AnyModelConstraint>(
-    model: TFromModel,
+export function asUndefinedConstant(
+    model: AnyModelConstraint,
 ): UndefinedModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isUndefinedType(model.type) ? (model as any) : undefined;
@@ -137,11 +130,9 @@ export function asUndefinedConstant<TFromModel extends AnyModelConstraint>(
  * @param model
  */
 
-export function asUnknown<TModel extends AnyModelConstraint>(
-    model: TModel,
-): RealUnknownModel;
-export function asUnknown<T>(model: Model<T>): RealUnknownModel;
-export function asUnknown(model: unknown): RealUnknownModel {
+export function asUnknown(model: AnyModelConstraint): UnknownModel;
+export function asUnknown<T>(model: Model<T>): UnknownModel;
+export function asUnknown(model: unknown): UnknownModel {
     if (isModel(model)) {
         return model;
     } else {
@@ -149,8 +140,8 @@ export function asUnknown(model: unknown): RealUnknownModel {
     }
 }
 
-export function asConstant<TFrom>(
-    model: Model<TFrom>,
+export function asConstant(
+    model: AnyModelConstraint,
 ): Model<unknown> | undefined {
     if (
         isStringConstantType(model.type) ||

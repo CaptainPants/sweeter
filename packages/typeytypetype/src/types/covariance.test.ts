@@ -8,6 +8,7 @@
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { UnknownMapObjectType } from './MapObjectType.js';
 import { type UnknownRigidObjectType } from './RigidObjectType.js';
 import { type Type } from './Type.js';
 import { Types } from './Types.js';
@@ -102,4 +103,5 @@ test('unknown variants', () => {
     const example2: UnknownRigidObjectType = Types.object({
         property1: Types.prop(Types.string()),
     });
+    const example3: UnknownMapObjectType = Types.map(Types.string());
 });

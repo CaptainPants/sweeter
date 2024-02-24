@@ -2,6 +2,10 @@ import { descend } from '@captainpants/sweeter-utilities';
 import { type Type } from './Type.js';
 import { BaseType } from './BaseType.js';
 
+export interface UnknownMapObjectType extends Type<Record<string, unknown>> {
+    getExpandoType(): Type<unknown> | undefined;
+}
+
 export class MapObjectType<TValue> extends BaseType<Record<string, TValue>> {
     public constructor(itemType: Type<TValue>) {
         super();

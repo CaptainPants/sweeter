@@ -1,6 +1,11 @@
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { type Type } from '../../types/Type.js';
-import { type MapObjectEntry, type Model } from '../Model.js';
+import {
+    type MapObjectModel,
+    type MapObjectEntry,
+    type Model,
+    type UnknownMapObjectEntry,
+} from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
@@ -9,10 +14,10 @@ import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type MapObjectType } from '../../index.js';
 import { type ReadonlyRecord } from '../../types.js';
 
-export class MapObjectImpl<TValue> extends ModelImpl<
-    Record<string, TValue>,
-    MapObjectType<TValue>
-> {
+export class MapObjectImpl<TValue>
+    extends ModelImpl<Record<string, TValue>, MapObjectType<TValue>>
+    implements MapObjectModel<TValue>
+{
     public static createFromValue<TValue>(
         value: Record<string, TValue>,
         type: MapObjectType<TValue>,
@@ -58,11 +63,15 @@ export class MapObjectImpl<TValue> extends ModelImpl<
 
     #propertyModels: ReadonlyRecord<string, Model<TValue>>;
 
+    public unknownGetItemType(): Type<unknown> {
+        return this.type.itemType;
+    }
+
     public getItemType(): Type<TValue> {
         return this.type.itemType;
     }
 
-    public async setProperty(
+    public async unknownSetProperty(
         key: string,
         value: unknown,
         validate: boolean = true,
@@ -99,6 +108,18 @@ export class MapObjectImpl<TValue> extends ModelImpl<
         );
 
         return result as this;
+    }
+
+    public async setProperty(
+        key: string,
+        value: TValue | Model<TValue>,
+        validate: boolean = true,
+    ): Promise<this> {
+        return this.unknownSetProperty(key, value, validate);
+    }
+
+    public unknownGetProperty(key: string): Model<TValue> | undefined {
+        return this.getProperty(key);
     }
 
     public getProperty(key: string): Model<TValue> | undefined {
@@ -168,6 +189,12 @@ export class MapObjectImpl<TValue> extends ModelImpl<
         );
 
         return result as this;
+    }
+
+    public unknownGetEntries(): readonly UnknownMapObjectEntry[] {
+        return Object.entries(this.#propertyModels).sort(([a], [b]) =>
+            defaultSort(a, b),
+        );
     }
 
     public getEntries(): readonly MapObjectEntry<TValue>[] {

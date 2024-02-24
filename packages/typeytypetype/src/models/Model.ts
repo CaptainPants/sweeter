@@ -2,6 +2,8 @@ import {
     type UnknownRigidObjectType,
     type MapObjectType,
     type RigidObjectType,
+    type UnknownMapObjectType,
+    type ReadonlyRecord,
 } from '../index.js';
 import { type IsUnion } from '../internal/unions.js';
 import { type UnknownArrayType, type ArrayType } from '../types/ArrayType.js';
@@ -136,26 +138,50 @@ export interface RigidObjectModel<TObject extends Record<string, unknown>>
     ): Promise<this>;
 }
 
+export type UnknownMapObjectEntry = readonly [
+    name: string,
+    model: Model<unknown>,
+];
+
 export type MapObjectEntry<TValue> = readonly [
     name: string,
     model: Model<TValue>,
 ];
 
-export interface MapObjectModel<TValue>
-    extends ModelBase<Readonly<TValue>, MapObjectType<TValue>> {
-    getItemType(): Type<Record<string, TValue>>;
+interface UnknownMapObjectModelMethods {
+    unknownGetItemType(): Type<unknown>;
 
-    setProperty(
+    unknownSetProperty(
         key: string,
         value: unknown,
         triggerValidation?: boolean,
     ): Promise<this>;
 
-    getProperty(key: string): Model<unknown> | undefined;
+    unknownGetProperty(key: string): Model<unknown> | undefined;
 
     deleteProperty(key: string, validate?: boolean): Promise<this>;
 
     moveProperty(from: string, to: string, validate?: boolean): Promise<this>;
+
+    unknownGetEntries(): readonly UnknownMapObjectEntry[];
+}
+
+export interface UnknownMapObjectModel
+    extends ModelBase<Readonly<Record<string, unknown>>, UnknownMapObjectType>,
+        UnknownMapObjectModelMethods {}
+
+export interface MapObjectModel<TValue>
+    extends ModelBase<ReadonlyRecord<string, TValue>, MapObjectType<TValue>>,
+        UnknownMapObjectModelMethods {
+    getItemType(): Type<TValue>;
+
+    setProperty(
+        key: string,
+        value: TValue,
+        triggerValidation?: boolean,
+    ): Promise<this>;
+
+    getProperty(key: string): Model<TValue> | undefined;
 
     getEntries(): readonly MapObjectEntry<TValue>[];
 }
@@ -194,7 +220,7 @@ export interface RealUnknownModel extends ModelBase<unknown, RealUnknonType> {}
 
 export type UnknownModel =
     | UnknownArrayModel
-    | MapObjectModel<unknown>
+    | UnknownMapObjectModel
     | UnknownRigidObjectModel
     | UnknownUnionModel
     | StringModel
@@ -210,11 +236,9 @@ export type UnknownModel =
 
 export type AnyModelConstraint =
     | UnknownArrayModel
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    | MapObjectModel<any>
+    | UnknownMapObjectModel
     | UnknownRigidObjectModel
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    | UnionModel<any>
+    | UnknownUnionModel
     | StringModel
     | StringConstantModel<string>
     | NumberModel

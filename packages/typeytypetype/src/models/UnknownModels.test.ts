@@ -11,6 +11,8 @@ import {
     type NullModel,
     type UndefinedModel,
     type RealUnknownModel,
+    type ReadonlyRecord,
+    type UnknownMapObjectModel,
 } from '../index.js';
 
 it('Specific', () => {
@@ -24,6 +26,11 @@ it('Specific', () => {
         UnknownPropertyModel
     > = true;
 
+    const mapObject1: TypeExtendsAssert<
+        Model<ReadonlyRecord<string, string>>,
+        UnknownMapObjectModel
+    > = true;
+
     const union1: TypeExtendsAssert<
         UnionModel<{ test: string }>,
         UnknownUnionModel
@@ -35,27 +42,43 @@ it('Specific', () => {
 });
 
 it('UnknownModel', () => {
-    const a: TypeExtendsAssert<
+    const a1: TypeExtendsAssert<
         Model<{ test: string }>,
         RealUnknownModel
     > = true;
-    const b: TypeExtendsAssert<
+    const a2: TypeExtendsAssert<
         Model<{ test: string }[]>,
         RealUnknownModel
     > = true;
-    const c: TypeExtendsAssert<
-        Model<Record<string, number>>,
+    const a3: TypeExtendsAssert<
+        Model<ReadonlyRecord<string, number>>,
         RealUnknownModel
     > = true;
-    const d: TypeExtendsAssert<Model<'test' | 'run'>, RealUnknownModel> = true;
+    const a4: TypeExtendsAssert<Model<'test' | 'run'>, UnknownModel> = true;
 
-    const e: TypeExtendsAssert<Model<string>, RealUnknownModel> = true;
-    const f: TypeExtendsAssert<Model<number>, RealUnknownModel> = true;
-    const g: TypeExtendsAssert<Model<boolean>, RealUnknownModel> = true;
-    const h: TypeExtendsAssert<UndefinedModel, RealUnknownModel> = true;
-    const i: TypeExtendsAssert<NullModel, RealUnknownModel> = true;
+    const b1: TypeExtendsAssert<Model<{ test: string }>, UnknownModel> = true;
+    const b2: TypeExtendsAssert<Model<{ test: string }[]>, UnknownModel> = true;
+    const b3: TypeExtendsAssert<
+        Model<ReadonlyRecord<string, number>>,
+        UnknownModel
+    > = true;
+    const b4: TypeExtendsAssert<Model<'test' | 'run'>, RealUnknownModel> = true;
 
-    const j: TypeExtendsAssert<Model<'test'>, RealUnknownModel> = true;
-    const k: TypeExtendsAssert<Model<12>, RealUnknownModel> = true;
-    const l: TypeExtendsAssert<Model<true>, RealUnknownModel> = true;
+    const c1: TypeExtendsAssert<Model<string>, RealUnknownModel> = true;
+    const c2: TypeExtendsAssert<Model<number>, RealUnknownModel> = true;
+    const c3: TypeExtendsAssert<Model<boolean>, RealUnknownModel> = true;
+    const c4: TypeExtendsAssert<UndefinedModel, RealUnknownModel> = true;
+    const c5: TypeExtendsAssert<NullModel, RealUnknownModel> = true;
+    const c6: TypeExtendsAssert<Model<'test'>, RealUnknownModel> = true;
+    const c7: TypeExtendsAssert<Model<12>, RealUnknownModel> = true;
+    const c8: TypeExtendsAssert<Model<true>, RealUnknownModel> = true;
+
+    const d1: TypeExtendsAssert<Model<string>, UnknownModel> = true;
+    const d2: TypeExtendsAssert<Model<number>, UnknownModel> = true;
+    const d3: TypeExtendsAssert<Model<boolean>, UnknownModel> = true;
+    const d4: TypeExtendsAssert<UndefinedModel, UnknownModel> = true;
+    const d5: TypeExtendsAssert<NullModel, UnknownModel> = true;
+    const d6: TypeExtendsAssert<Model<'test'>, UnknownModel> = true;
+    const d7: TypeExtendsAssert<Model<12>, UnknownModel> = true;
+    const d8: TypeExtendsAssert<Model<true>, UnknownModel> = true;
 });

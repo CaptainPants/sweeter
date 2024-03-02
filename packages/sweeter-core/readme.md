@@ -1,5 +1,6 @@
 # Sweeter Core
-This package contains the share core of Sweeter. 
+
+This package contains the shared core of Sweeter. 
 
 This includes:
 - Signals

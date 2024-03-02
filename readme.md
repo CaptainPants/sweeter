@@ -6,13 +6,14 @@ See [here](docs/index.md) for more documentation.
 
 An example component that shows a few assorted functions:
 ```tsx
-// MightBeSignals<T> enables all the properties in the provided type to either be a constant OR a signal
+// PropertiesMightBeSignals<T> enables all the properties in the provided type to either be a constant OR a signal
 // we then use $val or $peek to access those values within the component.
-export type ExampleProps = MightBeSignals<{
+export type ExampleProps = PropertiesMightBeSignals<{
     // In the type ExampleProps this will be `url: string | Signal<string>`
     url: string;
 }>;
 
+// Compare to React - a Component is a function that runs only once
 const Example: Component<ExampleProps> = ({ url }, init) => {
     // These are basic mutable signals (type: ReadWriteSignal<T>)
     const textValue   = $mutable('initial value');
@@ -53,6 +54,14 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
         // The .value version is nicer but isn't part of the ReadWriteSignal interface due to some 
         // challenges in the type-system
     }
+    
+
+    // JSX intrinsic elements directly call document.createElement, so the result 
+    // can be manipulated like any other DOM elements. 
+    // There is one gotcha: JSX.Element is a union type of all possible JSX results
+    // so you will need to assert the value to its correct type in order to use it
+    // in a meaningful way.
+    const div = <div />;
 
     // Note the bind:value is a 2-way binding of a mutable signal to a compatible
     // property. Out of the box this only works for the value properties of form

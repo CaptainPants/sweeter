@@ -7,3 +7,5 @@ This includes:
 - Base Components
 - Base Hooks
 - Context
+
+See [here](../../readme.md) for full Sweeter documentation.

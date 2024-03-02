@@ -8,7 +8,7 @@
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { UnknownMapObjectType } from './MapObjectType.js';
+import { type UnknownMapObjectType } from './MapObjectType.js';
 import { type UnknownRigidObjectType } from './RigidObjectType.js';
 import { type Type } from './Type.js';
 import { Types } from './Types.js';

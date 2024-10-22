@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { type TypeMatchAssert } from '../testing.js';
-import { type ValueTypeFromType } from '../types.js';
+import { type ValueTypeFromZodType } from '../types.js';
 
 import { applyTypeToModel } from './applyTypeToModel.js';
 import { ModelFactory } from './ModelFactory.js';
@@ -19,7 +19,7 @@ test('Something', async () => {
         }),
     ]);
 
-    const value: ValueTypeFromType<typeof unionType> = {
+    const value: ValueTypeFromZodType<typeof unionType> = {
         type: 'b',
         otherProperty: 'Something',
     };

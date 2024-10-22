@@ -1,4 +1,4 @@
-import { type ValueTypeFromType } from '../types.js';
+import { type ValueTypeFromZodType } from '../types.js';
 import { Types } from '../metadata/Types.js';
 
 import { ModelFactory } from './ModelFactory.js';
@@ -6,7 +6,7 @@ import { ModelFactory } from './ModelFactory.js';
 test('map-object', async () => {
     const type = Types.map(Types.number());
 
-    const value: ValueTypeFromType<typeof type> = {
+    const value: ValueTypeFromZodType<typeof type> = {
         a: 1,
         b: 2,
     };

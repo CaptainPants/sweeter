@@ -1,15 +1,14 @@
+import { z } from 'zod';
 import { type Model } from './models/Model.js';
-import { type Type } from './metadata/Type.js';
 
-export type ValueTypeFromType<TDefinition> = TDefinition extends Type<infer T>
-    ? T
-    : never;
-export type ValueTypeFromModel<TModel> = TModel extends Model<infer T>
-    ? T
+export type ValueTypeFromZodType<TDefinition extends z.ZodTypeAny> = z.infer<TDefinition>;
+
+export type ValueTypeFromModel<TModel> = TModel extends Model<infer TZodType>
+    ? ValueTypeFromZodType<TZodType>
     : never;
 
-export type Replacer<T> = (value: Model<T>) => Promise<void>;
-export type MultipleReplacer<T> = (value: Array<Model<T>>) => Promise<void>;
+export type Replacer<T extends z.ZodTypeAny> = (value: Model<T>) => Promise<void>;
+export type MultipleReplacer<T extends z.ZodTypeAny> = (value: Array<Model<T>>) => Promise<void>;
 
 export type ReadonlyRecord<TKey extends string | number | symbol, TValue> = {
     readonly [Key in TKey]: TValue;

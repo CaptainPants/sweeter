@@ -6,6 +6,7 @@ import { type IsUnion } from '../internal/unions.js';
 
 import { type ParentTypeInfo } from './parents.js';
 import { type PropertyModel } from './PropertyModel.js';
+import { zodUtilityTypes } from '../utility/zodUtilityTypes.js';
 
 export interface ModelBase<TValue, TZodType extends z.ZodType<unknown>> {
     readonly value: TValue;
@@ -80,12 +81,8 @@ export interface ArrayModel<TElementType extends z.ZodTypeAny>
     ) => Promise<this>;
 }
 
-/**
- * Type of property modes expected from an object. Adds in undefined for Record<string, unknown> models.
- */
-export type PropertyModelFor<TObject, TKey extends keyof TObject> =
-    | PropertyModel<TObject[TKey]>
-    | (string extends keyof TObject ? undefined : never);
+export type TypedPropertyModelFor<TZodObjectType, TKey extends keyof zodUtilityTypes.Shape<TZodObjectType>> =
+    | PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]>;
 
 interface UnknownObjectModelMethods {
     unknownGetProperty(key: string): PropertyModel<unknown> | undefined;
@@ -129,46 +126,33 @@ export type MapObjectEntry<TValue extends z.ZodTypeAny> = readonly [
     model: Model<TValue>,
 ];
 
-namespace ObjectTypeUtils {
-    export type ShapeOf<TZodObjectType> = TZodObjectType extends z.ZodObject<infer S, any, any> ? S : never;
-    export type CatchallPropertyKeyType<TZodObjectType> = TZodObjectType extends z.ZodObject<any, infer S, any> ? S : never;
-    export type CatchallPropertyValueType<TZodObjectType> = TZodObjectType extends z.ZodObject<any, any, infer S> ? S : never;
-    export type PropertyType<Obj, Property extends string> = ShapeOf<Obj> extends ReadonlyRecord<Property, infer S> ? S : never;
-    export type Values<T> = T[keyof T];
-
-    export type ObjectEntryType<TZodObjectType> = readonly [
-        keyof ShapeOf<TZodObjectType> | keyof CatchallPropertyKeyType<TZodObjectType>, 
-        Values<TZodObjectType> | Values<TZodObjectType>
-    ];
-}
-
 export interface ObjectModel<
-    TObject extends z.AnyZodObject
+    TZodObjectType extends z.AnyZodObject
 >
-    extends ModelBase<z.infer<TObject>, TObject>,
+    extends ModelBase<z.infer<TZodObjectType>, TZodObjectType>,
         UnknownObjectModelMethods {
             
-    getCatchallType(): ObjectTypeUtils.CatchallPropertyValueType<TObject>;
+    getCatchallType(): zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>;
 
     setCatchallProperty(
-        key: ObjectTypeUtils.CatchallPropertyKeyType<TObject>,
-        value: ObjectTypeUtils.CatchallPropertyValueType<TObject>,
+        key: zodUtilityTypes.CatchallPropertyKeyType<TZodObjectType>,
+        value: zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>,
         triggerValidation?: boolean,
     ): Promise<this>;
 
-    getCatchallProperty(key: string): Model<ObjectTypeUtils.CatchallPropertyValueType<TObject>> | undefined;
+    getCatchallProperty(key: string): Model<zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>> | undefined;
 
-    getEntries(): ObjectTypeUtils.ObjectEntryType<TObject>[];
+    getEntries(): zodUtilityTypes.ObjectEntryType<TZodObjectType>[];
     
-    getProperty<TKey extends keyof TObject & string>(
+    getProperty<TKey extends zodUtilityTypes.Shape<TZodObjectType>>(
         key: TKey,
-    ): PropertyModelFor<TObject, TKey>;
+    ): TypedPropertyModelFor<TZodObjectType, TKey>;
 
-    getProperties(): Array<PropertyModel<TObject[keyof TObject]>>;
+    getProperties(): Array<PropertyModel<zodUtilityTypes.ValuesOfObject<zodUtilityTypes.Shape<TZodObjectType>>>>;
 
-    setProperty<TKey extends keyof TObject & string>(
+    setProperty<TKey extends keyof TZodObjectType & string>(
         key: TKey,
-        value: TObject[TKey],
+        value: TZodObjectType[TKey],
         triggerValidation?: boolean,
     ): Promise<this>;
 }
@@ -239,7 +223,7 @@ export type Model<TType extends z.ZodTypeAny> = TType extends z.ZodUnion<any>
     ? UnionModel<TType>
     : TType extends z.ZodArray<infer TElementType>
       ? ArrayModel<TElementType>
-      : TType extends z.ZodObject<infer TShape>
+      : TType extends z.AnyZodObject
         ? ObjectModel<TType>
         : TType extends z.ZodLiteral<infer TLiteralType>
             ? TLiteralType extends string ? StringConstantModel<z.ZodLiteral<TLiteralType>> 

@@ -1,4 +1,4 @@
-import { type ValueTypeFromType } from '../types.js';
+import { type ValueTypeFromZodType } from '../types.js';
 import { Types } from '../metadata/Types.js';
 
 import { ModelFactory } from './ModelFactory.js';
@@ -10,7 +10,7 @@ test('rigid-object', async () => {
         str: Types.prop(Types.string()),
     });
 
-    const value: ValueTypeFromType<typeof type> = {
+    const value: ValueTypeFromZodType<typeof type> = {
         num: 1,
         str: 'banana',
     };

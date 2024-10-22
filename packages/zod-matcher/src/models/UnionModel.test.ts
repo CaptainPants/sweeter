@@ -1,4 +1,4 @@
-import { type ValueTypeFromType } from '../types.js';
+import { type ValueTypeFromZodType } from '../types.js';
 import { Types } from '../metadata/Types.js';
 
 import { asRigidObject, asUnknown, cast } from './as.js';
@@ -19,7 +19,7 @@ test('union', async () => {
 
     const type = Types.union(a, b, c);
 
-    const value: ValueTypeFromType<typeof type> = {
+    const value: ValueTypeFromZodType<typeof type> = {
         type: 'hasString',
         string: '$abc245',
     };

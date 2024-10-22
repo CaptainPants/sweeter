@@ -1,5 +1,5 @@
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
-import { type RigidObjectModel, type PropertyModelFor } from '../Model.js';
+import { type RigidObjectModel, type TypedPropertyModelFor } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 import {
@@ -77,11 +77,11 @@ export class RigidObjectImpl<TObject extends Record<string, unknown>>
 
     public getProperty<TKey extends keyof TObject & string>(
         key: TKey,
-    ): PropertyModelFor<TObject, TKey> {
+    ): TypedPropertyModelFor<TObject, TKey> {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
         if (hasOwnProperty(this.#propertyModels, key)) {
             const result = this.#propertyModels[key];
-            return result as PropertyModelFor<TObject, TKey>;
+            return result as TypedPropertyModelFor<TObject, TKey>;
         }
 
         throw new TypeError();

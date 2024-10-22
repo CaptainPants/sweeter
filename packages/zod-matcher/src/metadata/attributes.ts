@@ -1,5 +1,6 @@
 
 import { z } from 'zod';
+import { notFound } from '..';
 
 const weakMap = new WeakMap<z.ZodType, Map<string, unknown>>();
 
@@ -17,9 +18,9 @@ export const attributes = {
     get(schema: z.ZodType, key: string): unknown {
         const map = weakMap.get(schema);
 
-        if (!map) return this.noValue;
+        if (!map) return notFound;
 
-        if (!map.has(key)) return this.noValue;
+        if (!map.has(key)) return notFound;
 
         return map.get(key);
     },
@@ -31,6 +32,5 @@ export const attributes = {
         if (!map.has(key)) return false;
 
         return true;
-    },
-    noValue: Symbol('no value')
+    }
 }

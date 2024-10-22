@@ -1,17 +1,15 @@
 import { literal, z } from 'zod';
-import { isArrayType, isBooleanLiteralType, isNullLiteralType, isNumberLiteralType, isObjectType, isStringLiteralType, isStringType, isUndefinedLiteralType, isUnionType } from '..';
-
-const noValue: unique symbol = Symbol('no value');
+import { isArrayType, isBooleanLiteralType, isNullLiteralType, isNumberLiteralType, isObjectType, isStringLiteralType, isStringType, isUndefinedLiteralType, isUnionType, notFound } from '..';
 
 function create<T extends z.ZodType>(
     check: (schema: z.ZodType) => schema is T, 
     convert: (schema: T, depth: number) => string
-): (schema: z.ZodType, depth: number) => (string | typeof noValue) {
+): (schema: z.ZodType, depth: number) => (string | typeof notFound) {
     return (schema, depth) => {
         if (check(schema)) {
             return convert(schema, depth);
         }
-        return noValue;
+        return notFound;
     }
 }
 

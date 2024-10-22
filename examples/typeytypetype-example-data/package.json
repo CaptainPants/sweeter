@@ -32,6 +32,6 @@
         "pnpm": "8.14.1"
     },
     "dependencies": {
-        "@captainpants/typeytypetype": "workspace:^"
+        "@captainpants/zod-matcher": "workspace:^"
     }
 }

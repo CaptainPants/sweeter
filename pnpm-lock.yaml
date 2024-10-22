@@ -111,24 +111,24 @@ importers:
       '@captainpants/sweeter-gummybear':
         specifier: workspace:^
         version: link:../../packages/sweeter-gummybear
-      '@captainpants/sweeter-typeytypetype-web':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-typeytypetype-web
       '@captainpants/sweeter-web':
         specifier: workspace:^
         version: link:../../packages/sweeter-web
-      '@captainpants/typeytypetype':
+      '@captainpants/sweeter-zod-web':
         specifier: workspace:^
-        version: link:../../packages/typeytypetype
+        version: link:../../packages/sweeter-sweeter-zod
       '@captainpants/typeytypetype-example-data':
         specifier: workspace:^
         version: link:../typeytypetype-example-data
+      '@captainpants/zod-matcher':
+        specifier: workspace:^
+        version: link:../../packages/zod-matcher
 
   examples/typeytypetype-example-data:
     dependencies:
-      '@captainpants/typeytypetype':
+      '@captainpants/zod-matcher':
         specifier: workspace:^
-        version: link:../../packages/typeytypetype
+        version: link:../../packages/zod-matcher
 
   packages/sweeter-core:
     dependencies:
@@ -160,6 +160,34 @@ importers:
       '@types/sortablejs':
         specifier: ^1.15.7
         version: 1.15.7
+
+  packages/sweeter-sweeter-zod:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../sweeter-core
+      '@captainpants/sweeter-gummybear':
+        specifier: workspace:^
+        version: link:../sweeter-gummybear
+      '@captainpants/sweeter-utilities':
+        specifier: workspace:^
+        version: link:../sweeter-utilities
+      '@captainpants/sweeter-web':
+        specifier: workspace:^
+        version: link:../sweeter-web
+      '@captainpants/zod-matcher':
+        specifier: workspace:^
+        version: link:../zod-matcher
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
+      tinycolor2:
+        specifier: ^1.6.0
+        version: 1.6.0
+    optionalDependencies:
+      lucide:
+        specifier: ^0.319.0
+        version: 0.319.0
 
   packages/sweeter-typeytypetype-web:
     dependencies:
@@ -208,6 +236,15 @@ importers:
       '@captainpants/sweeter-utilities':
         specifier: workspace:^
         version: link:../sweeter-utilities
+
+  packages/zod-matcher:
+    dependencies:
+      '@captainpants/sweeter-utilities':
+        specifier: workspace:^
+        version: link:../sweeter-utilities
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
 
 packages:
 
@@ -7001,3 +7038,7 @@ packages:
     optionalDependencies:
       commander: 9.5.0
     dev: true
+
+  /zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+    dev: false

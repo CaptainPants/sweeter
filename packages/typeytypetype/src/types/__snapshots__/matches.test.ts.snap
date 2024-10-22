@@ -1,9 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`object 1`] = `
-"{
-    \\"id\\": number;
-    \\"name\\": string;
-    \\"roles\\": Array<string>;
-}"
-`;

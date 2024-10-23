@@ -1,67 +1,80 @@
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { type Type } from '../../types/Type.js';
 import {
-    type MapObjectModel,
+    ObjectModel,
     type MapObjectEntry,
     type Model,
     type UnknownMapObjectEntry,
+    UnknownModel,
+    FixedPropertyModels,
+    CatchallPropertyModels,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { type MapObjectType } from '../../index.js';
 import { type ReadonlyRecord } from '../../types.js';
+import { ZodObjectDef, z } from 'zod';
 
-export class MapObjectImpl<TValue>
-    extends ModelImpl<Record<string, TValue>, MapObjectType<TValue>>
-    implements MapObjectModel<TValue>
+export class ObjectImpl<TZodType extends z.AnyZodObject>
+    extends ModelImpl<z.infer<TZodType>, TZodType>
+    implements ObjectModel<TZodType>
 {
-    public static createFromValue<TValue>(
-        value: Record<string, TValue>,
-        type: MapObjectType<TValue>,
+    public static createFromValue<TZodType extends z.AnyZodObject>(
+        value: z.infer<TZodType>,
+        schema: TZodType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
-    ): MapObjectImpl<TValue> {
-        const propertyModels: Record<string, Model<TValue>> = {};
+    ): ObjectImpl<TZodType> {
+        const propertyModels: Record<string, UnknownModel> = {};
+
+        const shape = schema.shape as ReadonlyRecord<string | symbol, z.ZodTypeAny>;
 
         // Object.keys lets us avoid prototype pollution
-        for (const name of Object.keys(value)) {
+        for (const [name, keyType] of Object.entries(shape)) {
             const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
-                value: value[name]!,
-                type: type.itemType,
+                value: value[name],
+                type: keyType,
                 parentInfo: {
                     relationship: { type: 'property', property: name },
-                    type,
+                    type: schema,
                     parentInfo,
                 },
                 depth: descend(depth),
             });
 
-            propertyModels[name] = propertyValueModel;
+            (propertyModels as Record<string, UnknownModel>)[name] = propertyValueModel;
+        }
+        
+        if (schema._def.catchall) {
+            
         }
 
-        return new MapObjectImpl<TValue>(
+        return new ObjectImpl<TZodType>(
             value,
-            propertyModels,
-            type,
+            propertyModels as FixedPropertyModels<TZodType>,
+            catchallProperties as CatchallPropertyModels<TZodType>,
+            schema,
             parentInfo,
         );
     }
 
     public constructor(
-        value: Record<string, TValue>,
-        propertyModels: ReadonlyRecord<string, Model<TValue>>,
-        type: MapObjectType<TValue>,
+        value: z.infer<TZodType>,
+        properties: FixedPropertyModels<TZodType>,
+        catchallProperties: CatchallPropertyModels<TZodType>,
+        type: TZodType,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, 'object');
 
-        this.#propertyModels = propertyModels;
+        this.#properties = properties;
+        this.#catchallProperties = catchallProperties;
     }
 
-    #propertyModels: ReadonlyRecord<string, Model<TValue>>;
+    #properties: FixedPropertyModels<TZodType>;
+    #catchallProperties: ReadonlyRecord<string, UnknownModel>;
 
     public unknownGetItemType(): Type<unknown> {
         return this.type.itemType;
@@ -97,10 +110,10 @@ export class MapObjectImpl<TValue>
         }
 
         const propertyModels = {
-            ...this.#propertyModels,
+            ...this.#properties,
             [key]: adopted,
         };
-        const result = new MapObjectImpl<TValue>(
+        const result = new ObjectImpl<TValue>(
             copy,
             propertyModels,
             this.type,
@@ -124,8 +137,8 @@ export class MapObjectImpl<TValue>
 
     public getProperty(key: string): Model<TValue> | undefined {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
-        if (hasOwnProperty(this.#propertyModels, key)) {
-            const result = this.#propertyModels[key];
+        if (hasOwnProperty(this.#properties, key)) {
+            const result = this.#properties[key];
             return result;
         }
 
@@ -148,12 +161,12 @@ export class MapObjectImpl<TValue>
         }
 
         const propertyModels = {
-            ...this.#propertyModels,
-            [to]: this.#propertyModels[from]!,
+            ...this.#properties,
+            [to]: this.#properties[from]!,
         };
         delete propertyModels[from];
 
-        const result = new MapObjectImpl<TValue>(
+        const result = new ObjectImpl<TValue>(
             copy,
             propertyModels,
             this.type,
@@ -177,11 +190,11 @@ export class MapObjectImpl<TValue>
         }
 
         const propertyModels = {
-            ...this.#propertyModels,
+            ...this.#properties,
         };
         delete propertyModels[key];
 
-        const result = new MapObjectImpl<TValue>(
+        const result = new ObjectImpl<TValue>(
             copy,
             propertyModels,
             this.type,
@@ -192,13 +205,13 @@ export class MapObjectImpl<TValue>
     }
 
     public unknownGetEntries(): readonly UnknownMapObjectEntry[] {
-        return Object.entries(this.#propertyModels).sort(([a], [b]) =>
+        return Object.entries(this.#properties).sort(([a], [b]) =>
             defaultSort(a, b),
         );
     }
 
     public getEntries(): readonly MapObjectEntry<TValue>[] {
-        return Object.entries(this.#propertyModels).sort(([a], [b]) =>
+        return Object.entries(this.#properties).sort(([a], [b]) =>
             defaultSort(a, b),
         );
     }

@@ -1,13 +1,16 @@
+
+import { z } from 'zod';
+
 import { descend } from '@captainpants/sweeter-utilities';
+
 import { mapAsync } from '../../internal/mapAsync.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
-import { type ArrayModel, type Model } from '../Model.js';
+import { UnknownModel, type ArrayModel, type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { z } from 'zod';
 
 export class ArrayModelImpl<TElementZodType extends z.ZodType>
     extends ModelImpl<TElementZodType[], z.ZodArray<TElementZodType>>
@@ -20,7 +23,7 @@ export class ArrayModelImpl<TElementZodType extends z.ZodType>
         depth: number,
     ): ArrayModelImpl<TElementZodType> {
         const elementModels = value.map((item, index) =>
-            ModelFactory.createUnvalidatedModelPart({
+            ModelFactory.createUnvalidatedModelPart<TElementZodType>({
                 value: item,
                 type: schema.element,
                 parentInfo: {
@@ -53,10 +56,10 @@ export class ArrayModelImpl<TElementZodType extends z.ZodType>
         this.#elementModels = elementModels;
     }
 
-    #elementType: z.ZodType<TElementZodType>;
+    #elementType: TElementZodType;
     #elementModels: ReadonlyArray<Model<TElementZodType>>;
 
-    public getElementType(): z.ZodType<TElementZodType> {
+    public getElementType(): TElementZodType {
         return this.#elementType;
     }
 
@@ -68,7 +71,7 @@ export class ArrayModelImpl<TElementZodType extends z.ZodType>
         return this.#elementModels[index];
     }
 
-    public unknownGetElement(index: number): Model<unknown> | undefined {
+    public unknownGetElement(index: number): UnknownModel | undefined {
         return this.getElement(index);
     }
 
@@ -76,7 +79,7 @@ export class ArrayModelImpl<TElementZodType extends z.ZodType>
         return this.#elementModels;
     }
 
-    public unknownGetElements(): ReadonlyArray<Model<unknown>> {
+    public unknownGetElements(): ReadonlyArray<UnknownModel> {
         return this.#elementModels;
     }
 
@@ -97,7 +100,7 @@ export class ArrayModelImpl<TElementZodType extends z.ZodType>
     public async unknownSpliceElements(
         start: number,
         deleteCount: number,
-        newElements: ReadonlyArray<unknown | Model<unknown>>,
+        newElements: ReadonlyArray<unknown | UnknownModel>,
         validate: boolean = true,
     ): Promise<this> {
         const eleDefinition = this.getElementType();

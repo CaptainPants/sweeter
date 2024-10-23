@@ -1,15 +1,15 @@
 import { z } from 'zod';
-import { type Model, type ModelBase } from '../Model.js';
+import { type UnknownModel, type Model, type ModelBase } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 export class ModelImpl<
     TValue,
-    TTypeType extends z.ZodType<TValue> = z.ZodType<TValue>,
-> implements ModelBase<TValue, TTypeType>
+    TZodType extends z.ZodTypeAny,
+> implements ModelBase<TValue, TZodType>
 {
     public constructor(
         value: TValue,
-        type: TTypeType,
+        type: TZodType,
         parentInfo: ParentTypeInfo | null,
         archetype: string,
     ) {
@@ -20,11 +20,11 @@ export class ModelImpl<
     }
 
     public readonly value: TValue;
-    public readonly type: TTypeType;
+    public readonly type: TZodType;
     public readonly parentInfo: ParentTypeInfo | null;
     public readonly archetype: string;
 
-    public asUnknown(): Model<unknown> {
-        return this as unknown as Model<unknown>;
+    public asUnknown(): UnknownModel {
+        return this as any;
     }
 }

@@ -22,17 +22,18 @@ export interface SimpleModel<T, TType extends z.ZodType<unknown>>
 
 export interface StringModel extends SimpleModel<string, z.ZodString> {}
 export interface NumberModel extends SimpleModel<number, z.ZodNumber> {}
+export interface BooleanModel extends SimpleModel<boolean, z.ZodBoolean> {}
 
 // Constants
 
 export interface StringConstantModel<TZodLiteralType extends z.ZodLiteral<string>>
-    extends SimpleModel<z.infer<TZodLiteralType>, z.ZodLiteral<TZodLiteralType>> {}
+    extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
 
 export interface NumberConstantModel<TZodLiteralType extends z.ZodLiteral<number>>
-    extends SimpleModel<z.infer<TZodLiteralType>, z.ZodLiteral<TZodLiteralType>> {}
+    extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
 
 export interface BooleanConstantModel<TZodLiteralType extends z.ZodLiteral<boolean>>
-    extends SimpleModel<z.infer<TZodLiteralType>, z.ZodLiteral<TZodLiteralType>> {}
+    extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
 
 export interface NullModel extends SimpleModel<null, z.ZodNull> {}
 
@@ -61,7 +62,7 @@ export interface UnknownArrayModelMethods {
 }
 
 export interface UnknownArrayModel
-    extends ModelBase<readonly unknown[], z.ZodArray<any>>,
+    extends ModelBase<readonly unknown[], z.ZodArray<z.ZodTypeAny>>,
         UnknownArrayModelMethods {}
 
 export interface ArrayModel<TElementType extends z.ZodTypeAny>
@@ -197,9 +198,8 @@ export type UnknownModel =
     | StringConstantModel<z.ZodLiteral<string>>
     | NumberModel
     | NumberConstantModel<z.ZodLiteral<number>>
-    // Note that BooleanModel is actually UnionModel<true | false>
-    | BooleanConstantModel<z.ZodLiteral<true>>
-    | BooleanConstantModel<z.ZodLiteral<false>>
+    | BooleanModel
+    | BooleanConstantModel<z.ZodLiteral<boolean>>
     | NullModel
     | UndefinedModel
     | RealUnknownModel;
@@ -212,27 +212,35 @@ export type AnyModelConstraint =
     | StringConstantModel<z.ZodLiteral<string>>
     | NumberModel
     | NumberConstantModel<z.ZodLiteral<number>>
-    // Note that BooleanModel is actually UnionModel<true | false>
-    | BooleanConstantModel<z.ZodLiteral<true>>
-    | BooleanConstantModel<z.ZodLiteral<false>>
+    | BooleanConstantModel<z.ZodLiteral<boolean>>
     | NullModel
     | UndefinedModel
     | RealUnknownModel;
 
-export type Model<TType extends z.ZodTypeAny> = TType extends z.ZodUnion<any>
+export type Model<TType extends z.ZodTypeAny> = [TType] extends [z.ZodTypeAny] ? UnknownModel 
+    : TType extends z.ZodUnion<any>
     ? UnionModel<TType>
     : TType extends z.ZodArray<infer TElementType>
       ? ArrayModel<TElementType>
       : TType extends z.AnyZodObject
         ? ObjectModel<TType>
         : TType extends z.ZodLiteral<infer TLiteralType>
-            ? TLiteralType extends string ? StringConstantModel<z.ZodLiteral<TLiteralType>> 
+            ? /* Block distribution by comparing a 1-tuple */ [TLiteralType] extends [boolean] ? BooleanConstantModel<z.ZodLiteral<TLiteralType>>
+            : TLiteralType extends string ? StringConstantModel<z.ZodLiteral<TLiteralType>> 
             : TLiteralType extends number ? NumberConstantModel<z.ZodLiteral<TLiteralType>>
-            : TLiteralType extends boolean ? BooleanConstantModel<z.ZodLiteral<TLiteralType>>
-            : never
+            :  never
         : TType extends z.ZodString ? StringModel
         : TType extends z.ZodNumber ? NumberModel
-        // : TType extends z.ZodBoolean ? BooleanModel
+        : TType extends z.ZodBoolean ? BooleanModel
         : TType extends z.ZodNull ? NullModel
         : TType extends z.ZodUndefined ? UndefinedModel
         : UnknownModel;
+
+export type FixedPropertyModels<TZodObjectType extends z.AnyZodObject> = TZodObjectType extends z.ZodObject<infer TShape> ? 
+    {
+        [TKey in keyof TShape]: Model<TShape[TKey]>;
+    } : never;
+export type CatchallPropertyModels<TZodObjectType extends z.AnyZodObject> = TZodObjectType extends z.ZodObject<any, any, infer TCatchallType> ? 
+    {
+        [key: string]: Model<TCatchallType>;
+    } : never;

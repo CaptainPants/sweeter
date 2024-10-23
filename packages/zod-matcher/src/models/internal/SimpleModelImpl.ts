@@ -5,12 +5,12 @@ import { ModelImpl } from './ModelImpl.js';
 
 export class SimpleModelImpl<
     T,
-    TType extends z.ZodType,
-> extends ModelImpl<T, TType> {
+    TZodType extends z.ZodTypeAny,
+> extends ModelImpl<T, TZodType> {
     public constructor(
         archetype: string,
         value: T,
-        type: TType,
+        type: TZodType,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, archetype);

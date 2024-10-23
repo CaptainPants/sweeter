@@ -46,7 +46,7 @@ export function isStringLiteralType(
 
 export function isBooleanLiteralType(
     schema: z.ZodType,
-): schema is z.ZodLiteral<true> | z.ZodLiteral<false> {
+): schema is z.ZodLiteral<boolean> {
     return schema instanceof z.ZodLiteral && typeof schema.value === 'boolean';
 }
 
@@ -100,4 +100,8 @@ export function isNumberOrNumberConstantType(
     schema: z.ZodType,
 ): schema is z.ZodNumber | z.ZodLiteral<number> {
     return isNumberType(schema) || isNumberLiteralType(schema);
+}
+
+export function isUnknownType(schema: z.ZodType): schema is z.ZodUnknown {
+    return schema instanceof z.ZodUnknown;
 }

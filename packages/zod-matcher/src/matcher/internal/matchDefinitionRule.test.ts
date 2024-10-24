@@ -57,7 +57,8 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: z.number()
+                type: z
+                    .number()
                     .withAttr('type', 'ham-sandwich')
                     .withAttr('other', 'thing'),
                 parentInfo: null,

@@ -1,4 +1,3 @@
-
 import z from 'zod';
 import { type TypeInfo } from '../models/parents.js';
 

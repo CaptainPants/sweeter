@@ -23,7 +23,9 @@ export function createKnownAttribute<TName extends string, T>(
     result.get = function (from: z.ZodType<T>): T {
         const value = from.getAttr(name);
         if (!is(value, schema)) {
-            throw new TypeError(`Expected ${serializeSchemaForDisplay(schema)}.`);
+            throw new TypeError(
+                `Expected ${serializeSchemaForDisplay(schema)}.`,
+            );
         }
         return value;
     };

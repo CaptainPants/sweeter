@@ -1,11 +1,9 @@
 import { z } from 'zod';
-import {
-    type ReadonlyRecord,
-} from '../index.js';
+import { type ReadonlyRecord } from '../index.js';
 import { type IsUnion } from '../internal/unions.js';
 
 import { type ParentTypeInfo } from './parents.js';
-import { type PropertyModel } from './PropertyModel.js';
+import { UnknownPropertyModel, type PropertyModel } from './PropertyModel.js';
 import { zodUtilityTypes } from '../utility/zodUtilityTypes.js';
 
 export interface ModelBase<TValue, TZodType extends z.ZodType<unknown>> {
@@ -26,14 +24,17 @@ export interface BooleanModel extends SimpleModel<boolean, z.ZodBoolean> {}
 
 // Constants
 
-export interface StringConstantModel<TZodLiteralType extends z.ZodLiteral<string>>
-    extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+export interface StringConstantModel<
+    TZodLiteralType extends z.ZodLiteral<string>,
+> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
 
-export interface NumberConstantModel<TZodLiteralType extends z.ZodLiteral<number>>
-    extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+export interface NumberConstantModel<
+    TZodLiteralType extends z.ZodLiteral<number>,
+> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
 
-export interface BooleanConstantModel<TZodLiteralType extends z.ZodLiteral<boolean>>
-    extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+export interface BooleanConstantModel<
+    TZodLiteralType extends z.ZodLiteral<boolean>,
+> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
 
 export interface NullModel extends SimpleModel<null, z.ZodNull> {}
 
@@ -66,7 +67,10 @@ export interface UnknownArrayModel
         UnknownArrayModelMethods {}
 
 export interface ArrayModel<TElementType extends z.ZodTypeAny>
-    extends ModelBase<readonly TElementType[], z.ZodArray<z.ZodType<TElementType>>>,
+    extends ModelBase<
+            readonly TElementType[],
+            z.ZodArray<z.ZodType<TElementType>>
+        >,
         UnknownArrayModelMethods {
     getElementType: () => TElementType;
 
@@ -82,13 +86,13 @@ export interface ArrayModel<TElementType extends z.ZodTypeAny>
     ) => Promise<this>;
 }
 
-export type TypedPropertyModelFor<TZodObjectType, TKey extends keyof zodUtilityTypes.Shape<TZodObjectType>> =
-    | PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]>;
+export type TypedPropertyModelFor<
+    TZodObjectType,
+    TKey extends keyof zodUtilityTypes.Shape<TZodObjectType>,
+> = PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]>;
 
 interface UnknownObjectModelMethods {
-    unknownGetProperty(key: string): PropertyModel<unknown> | undefined;
-
-    unknownGetProperties(): Array<PropertyModel<unknown>>;
+    unknownGetProperty(key: string): UnknownPropertyModel | undefined;
 
     unknownSetProperty(
         key: string,
@@ -96,7 +100,7 @@ interface UnknownObjectModelMethods {
         triggerValidation?: boolean,
     ): Promise<this>;
 
-    unknownGetItemType(): z.ZodType<unknown>;
+    unknownGetCatchallType(): z.ZodTypeAny;
 
     unknownSetProperty(
         key: string,
@@ -104,13 +108,11 @@ interface UnknownObjectModelMethods {
         triggerValidation?: boolean,
     ): Promise<this>;
 
-    unknownGetCatchallProperty(key: string): UnknownModel | undefined;
+    deleteProperty(key: string, validate?: boolean): Promise<this>;
 
-    deleteCatchallProperty(key: string, validate?: boolean): Promise<this>;
+    moveProperty(from: string, to: string, validate?: boolean): Promise<this>;
 
-    moveCatchallProperty(from: string, to: string, validate?: boolean): Promise<this>;
-
-    unknownGetEntries(): readonly UnknownMapObjectEntry[];
+    unknownGetProperties(): readonly UnknownPropertyModel[];
 }
 
 export interface UnknownObjectModel
@@ -119,41 +121,30 @@ export interface UnknownObjectModel
 
 export type UnknownMapObjectEntry = readonly [
     name: string,
-    model: UnknownModel,
+    model: UnknownPropertyModel,
 ];
 
-export type MapObjectEntry<TValue extends z.ZodTypeAny> = readonly [
+export type MapObjectEntry<TZodType extends z.ZodTypeAny> = readonly [
     name: string,
-    model: Model<TValue>,
+    model: PropertyModel<TZodType>,
 ];
 
-export interface ObjectModel<
-    TZodObjectType extends z.AnyZodObject
->
+export interface ObjectModel<TZodObjectType extends z.AnyZodObject>
     extends ModelBase<z.infer<TZodObjectType>, TZodObjectType>,
         UnknownObjectModelMethods {
-            
     getCatchallType(): zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>;
 
-    setCatchallProperty(
-        key: zodUtilityTypes.CatchallPropertyKeyType<TZodObjectType>,
-        value: zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>,
-        triggerValidation?: boolean,
-    ): Promise<this>;
-
-    getCatchallProperty(key: string): Model<zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>> | undefined;
-
-    getEntries(): zodUtilityTypes.ObjectEntryType<TZodObjectType>[];
-    
     getProperty<TKey extends zodUtilityTypes.Shape<TZodObjectType>>(
         key: TKey,
     ): TypedPropertyModelFor<TZodObjectType, TKey>;
 
-    getProperties(): Array<PropertyModel<zodUtilityTypes.ValuesOfObject<zodUtilityTypes.Shape<TZodObjectType>>>>;
+    getProperties(): readonly PropertyModel<
+        z.infer<TZodObjectType>[keyof z.infer<TZodObjectType>]
+    >[];
 
-    setProperty<TKey extends keyof TZodObjectType & string>(
+    setProperty<TKey extends keyof z.infer<TZodObjectType> & string>(
         key: TKey,
-        value: TZodObjectType[TKey],
+        value: z.infer<TZodObjectType>[TKey],
         triggerValidation?: boolean,
     ): Promise<this>;
 }
@@ -170,7 +161,8 @@ export interface UnknownUnionModelMethods {
     replace: (value: unknown, validate?: boolean) => Promise<this>;
 }
 
-export interface UnionModelMethods<TUnionType extends z.ZodTypeAny> extends UnknownUnionModelMethods {
+export interface UnionModelMethods<TUnionType extends z.ZodTypeAny>
+    extends UnknownUnionModelMethods {
     getRecursivelyResolved: () => SpreadModel<TUnionType>;
 }
 
@@ -186,7 +178,9 @@ export interface UnionModel<TUnion extends z.ZodUnion<any>>
  * Use conditional to convert Model<T1 | T2> to Model<T1> | Model<T2>
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SpreadModel<T extends z.ZodTypeAny> = T extends any ? Model<T> : never;
+export type SpreadModel<T extends z.ZodTypeAny> = T extends any
+    ? Model<T>
+    : never;
 
 export interface RealUnknownModel extends ModelBase<unknown, z.ZodUnknown> {}
 
@@ -217,30 +211,45 @@ export type AnyModelConstraint =
     | UndefinedModel
     | RealUnknownModel;
 
-export type Model<TType extends z.ZodTypeAny> = [TType] extends [z.ZodTypeAny] ? UnknownModel 
-    : TType extends z.ZodUnion<any>
-    ? UnionModel<TType>
-    : TType extends z.ZodArray<infer TElementType>
-      ? ArrayModel<TElementType>
-      : TType extends z.AnyZodObject
-        ? ObjectModel<TType>
-        : TType extends z.ZodLiteral<infer TLiteralType>
-            ? /* Block distribution by comparing a 1-tuple */ [TLiteralType] extends [boolean] ? BooleanConstantModel<z.ZodLiteral<TLiteralType>>
-            : TLiteralType extends string ? StringConstantModel<z.ZodLiteral<TLiteralType>> 
-            : TLiteralType extends number ? NumberConstantModel<z.ZodLiteral<TLiteralType>>
-            :  never
-        : TType extends z.ZodString ? StringModel
-        : TType extends z.ZodNumber ? NumberModel
-        : TType extends z.ZodBoolean ? BooleanModel
-        : TType extends z.ZodNull ? NullModel
-        : TType extends z.ZodUndefined ? UndefinedModel
-        : UnknownModel;
+export type Model<TZodType extends z.ZodTypeAny> = [z.ZodTypeAny] extends [
+    TZodType,
+]
+    ? UnknownModel
+    : TZodType extends z.ZodUnion<any>
+      ? UnionModel<TZodType>
+      : TZodType extends z.ZodArray<infer TElementType>
+        ? ArrayModel<TElementType>
+        : TZodType extends z.AnyZodObject
+          ? ObjectModel<TZodType>
+          : TZodType extends z.ZodLiteral<infer TLiteralType>
+            ? /* Block distribution by comparing a 1-tuple */ [
+                  TLiteralType,
+              ] extends [boolean]
+                ? BooleanConstantModel<z.ZodLiteral<TLiteralType>>
+                : TLiteralType extends string
+                  ? StringConstantModel<z.ZodLiteral<TLiteralType>>
+                  : TLiteralType extends number
+                    ? NumberConstantModel<z.ZodLiteral<TLiteralType>>
+                    : never
+            : TZodType extends z.ZodString
+              ? StringModel
+              : TZodType extends z.ZodNumber
+                ? NumberModel
+                : TZodType extends z.ZodBoolean
+                  ? BooleanModel
+                  : TZodType extends z.ZodNull
+                    ? NullModel
+                    : TZodType extends z.ZodUndefined
+                      ? UndefinedModel
+                      : UnknownModel;
 
-export type FixedPropertyModels<TZodObjectType extends z.AnyZodObject> = TZodObjectType extends z.ZodObject<infer TShape> ? 
-    {
-        [TKey in keyof TShape]: Model<TShape[TKey]>;
-    } : never;
-export type CatchallPropertyModels<TZodObjectType extends z.AnyZodObject> = TZodObjectType extends z.ZodObject<any, any, infer TCatchallType> ? 
-    {
-        [key: string]: Model<TCatchallType>;
-    } : never;
+export type PropertyModels<TZodObjectType extends z.AnyZodObject> =
+    TZodObjectType extends z.ZodObject<infer TShape, any, infer TCatchallType>
+        ? {
+              [Key in keyof TShape]: PropertyModel<TShape[Key]>;
+          } & {
+              [key: string]: PropertyModel<TCatchallType>;
+          }
+        : {
+              [key: string]: UnknownPropertyModel;
+          };

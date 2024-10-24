@@ -7,7 +7,10 @@ import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { z } from 'zod';
 
-function findTypeForValue<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>(value: unknown, type: z.ZodUnion<TUnion>): TUnion[number] | null {
+function findTypeForValue<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>(
+    value: unknown,
+    type: z.ZodUnion<TUnion>,
+): TUnion[number] | null {
     for (const item of type.options) {
         if (item.safeParse(item).success) return item;
     }
@@ -18,7 +21,9 @@ export class UnionModelImpl<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>
     extends ModelImpl<TUnion, z.ZodUnion<TUnion>>
     implements UnionModel<TUnion>
 {
-    public static createFromValue<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>(
+    public static createFromValue<
+        TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]],
+    >(
         value: TUnion,
         type: z.ZodUnion<TUnion>,
         parentInfo: ParentTypeInfo | null,

@@ -1,9 +1,12 @@
+import { z } from 'zod';
+
 import { descend } from '@captainpants/sweeter-utilities';
-import { type Type } from '../../metadata/Type.js';
+
 import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
+import { matches, validateAndThrow } from '../validate.js';
 
 /**
  * For a given value (raw or model) validate that the value matches the type (using validateOrThrow). Throw if it does not.
@@ -15,30 +18,30 @@ import { type ParentTypeInfo } from '../parents.js';
  * @param depth
  * @returns
  */
-export async function validateAndMakeModel<T>(
+export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
     valueOrModel: unknown,
-    type: Type<T>,
+    type: TZodType,
     parentInfo: ParentTypeInfo | null,
     validate: boolean,
     depth = descend.defaultDepth,
-): Promise<Model<T>> {
+): Promise<Model<TZodType>> {
     if (isModel(valueOrModel)) {
         if (valueOrModel.type === type) {
-            return valueOrModel as Model<T>;
+            return valueOrModel as Model<TZodType>;
         } else {
-            let validated: T;
+            let validated: TZodType;
             if (validate) {
-                validated = await type.validateAndThrow(valueOrModel.value);
+                validated = await validateAndThrow(type, valueOrModel.value);
             } else {
                 // If not 'validating' we at least check the structure..
-                if (type.matches(valueOrModel.value)) {
+                if (matches(type, valueOrModel.value)) {
                     validated = valueOrModel.value;
                 } else {
                     throw new TypeError('Non-matching structure');
                 }
             }
 
-            return ModelFactory.createUnvalidatedModelPart({
+            return ModelFactory.createUnvalidatedModelPart<TZodType>({
                 parentInfo,
                 type,
                 value: validated,
@@ -46,8 +49,9 @@ export async function validateAndMakeModel<T>(
             });
         }
     } else {
-        const validated = await type.validateAndThrow(valueOrModel);
-        return ModelFactory.createUnvalidatedModelPart({
+        const validated = await validateAndThrow<TZodType>(type, valueOrModel);
+
+        return ModelFactory.createUnvalidatedModelPart<TZodType>({
             parentInfo,
             type,
             value: validated,

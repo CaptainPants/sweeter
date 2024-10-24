@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { type UnknownModel, type Model } from './Model.js';
 
 export interface UnknownPropertyModel {
@@ -5,7 +6,7 @@ export interface UnknownPropertyModel {
     readonly valueModel: UnknownModel;
 }
 
-export interface PropertyModel<TValue> {
+export interface PropertyModel<TZodType extends z.ZodTypeAny> {
     readonly name: string;
-    readonly valueModel: Model<TValue>;
+    readonly valueModel: Model<TZodType>;
 }

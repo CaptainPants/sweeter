@@ -1,12 +1,12 @@
+import { z } from 'zod';
 import { type ValueTypeFromZodType } from '../types.js';
-import { Types } from '../metadata/Types.js';
 
 import { ModelFactory } from './ModelFactory.js';
 
 test('map-object', async () => {
-    const type = Types.map(Types.number());
+    const type = z.object({}).catchall(z.number());
 
-    const value: ValueTypeFromZodType<typeof type> = {
+    const value: z.infer<typeof type> = {
         a: 1,
         b: 2,
     };

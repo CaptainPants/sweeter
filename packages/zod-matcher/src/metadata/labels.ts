@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 const weakMap = new WeakMap<z.ZodType, Set<string>>();
@@ -14,8 +13,7 @@ export const labels = {
 
         if (val) {
             set.add(name);
-        }
-        else {
+        } else {
             set.delete(name);
         }
     },
@@ -26,5 +24,5 @@ export const labels = {
         if (!map.has(key)) return false;
 
         return true;
-    }
-}
+    },
+};

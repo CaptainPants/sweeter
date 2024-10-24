@@ -12,7 +12,7 @@ import { ModelFactory } from './ModelFactory.js';
  */
 export async function tryApplyTypeToModel<TFrom, TTo>(
     model: Model<TFrom>,
-    toType: z.ZodType<TTo>
+    toType: z.ZodType<TTo>,
 ): Promise<Model<TTo> | undefined> {
     const validationResult = await toType.safeParseAsync(model.value);
     if (validationResult.success) {

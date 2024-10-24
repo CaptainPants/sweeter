@@ -5,20 +5,24 @@ export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
     return !res.error;
 }
 
-export function isObjectType(
-    schema: z.ZodType,
-): schema is z.ZodObject<any> {
+export function isObjectType(schema: z.ZodType): schema is z.ZodObject<any> {
     return schema instanceof z.ZodRecord && isStringType(schema.keySchema);
 }
-export function isArrayType(schema: z.ZodType): schema is z.ZodArray<z.ZodTypeAny> {
+export function isArrayType(
+    schema: z.ZodType,
+): schema is z.ZodArray<z.ZodTypeAny> {
     return schema instanceof z.ZodArray;
 }
 
-export function isUnionType(schema: z.ZodType): schema is z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]> {
+export function isUnionType(
+    schema: z.ZodType,
+): schema is z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]> {
     return schema instanceof z.ZodUnion;
 }
 
-export function isNumberType(schema: z.ZodType<unknown>): schema is z.ZodNumber {
+export function isNumberType(
+    schema: z.ZodType<unknown>,
+): schema is z.ZodNumber {
     return schema instanceof z.ZodNumber;
 }
 
@@ -26,9 +30,7 @@ export function isStringType(schema: z.ZodType): schema is z.ZodString {
     return schema instanceof z.ZodString;
 }
 
-export function isBooleanType(
-    schema: z.ZodType,
-): schema is z.ZodBoolean {
+export function isBooleanType(schema: z.ZodType): schema is z.ZodBoolean {
     return schema instanceof z.ZodBoolean;
 }
 

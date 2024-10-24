@@ -1,87 +1,102 @@
+import { z } from 'zod';
+
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
-import { type Type } from '../../types/Type.js';
+
 import {
     ObjectModel,
-    type MapObjectEntry,
     type Model,
-    type UnknownMapObjectEntry,
     UnknownModel,
-    FixedPropertyModels,
-    CatchallPropertyModels,
+    PropertyModels,
+    TypedPropertyModelFor,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
-import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type ReadonlyRecord } from '../../types.js';
-import { ZodObjectDef, z } from 'zod';
+import { zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
+import { validateAndThrow } from '../validate.js';
+import { PropertyModel, UnknownPropertyModel } from '../PropertyModel.js';
 
-export class ObjectImpl<TZodType extends z.AnyZodObject>
-    extends ModelImpl<z.infer<TZodType>, TZodType>
-    implements ObjectModel<TZodType>
+export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
+    extends ModelImpl<z.infer<TZodObjectType>, TZodObjectType>
+    implements ObjectModel<TZodObjectType>
 {
-    public static createFromValue<TZodType extends z.AnyZodObject>(
-        value: z.infer<TZodType>,
-        schema: TZodType,
+    public static createFromValue<TZodObjectType extends z.AnyZodObject>(
+        value: z.infer<TZodObjectType>,
+        schema: TZodObjectType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
-    ): ObjectImpl<TZodType> {
+    ): ObjectImpl<TZodObjectType> {
         const propertyModels: Record<string, UnknownModel> = {};
 
-        const shape = schema.shape as ReadonlyRecord<string | symbol, z.ZodTypeAny>;
+        const shape = schema.shape as ReadonlyRecord<
+            string | symbol,
+            z.ZodTypeAny
+        >;
 
         // Object.keys lets us avoid prototype pollution
-        for (const [name, keyType] of Object.entries(shape)) {
+        for (const [propertyName, propertyValue] of Object.entries(value)) {
+            const shapeType =
+                shape[propertyName] ?? (schema._def.catchall as z.ZodTypeAny);
+
             const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
-                value: value[name],
-                type: keyType,
+                value: propertyValue,
+                type: shapeType,
                 parentInfo: {
-                    relationship: { type: 'property', property: name },
+                    relationship: { type: 'property', property: propertyName },
                     type: schema,
                     parentInfo,
                 },
                 depth: descend(depth),
             });
 
-            (propertyModels as Record<string, UnknownModel>)[name] = propertyValueModel;
-        }
-        
-        if (schema._def.catchall) {
-            
+            (propertyModels as Record<string, UnknownModel>)[propertyName] =
+                propertyValueModel;
         }
 
-        return new ObjectImpl<TZodType>(
+        return new ObjectImpl<TZodObjectType>(
             value,
-            propertyModels as FixedPropertyModels<TZodType>,
-            catchallProperties as CatchallPropertyModels<TZodType>,
+            propertyModels as unknown as PropertyModels<TZodObjectType>,
             schema,
             parentInfo,
         );
     }
 
     public constructor(
-        value: z.infer<TZodType>,
-        properties: FixedPropertyModels<TZodType>,
-        catchallProperties: CatchallPropertyModels<TZodType>,
-        type: TZodType,
+        value: z.infer<TZodObjectType>,
+        properties: PropertyModels<TZodObjectType>,
+        type: TZodObjectType,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, 'object');
 
         this.#properties = properties;
-        this.#catchallProperties = catchallProperties;
     }
 
-    #properties: FixedPropertyModels<TZodType>;
-    #catchallProperties: ReadonlyRecord<string, UnknownModel>;
+    #properties: PropertyModels<TZodObjectType>;
 
-    public unknownGetItemType(): Type<unknown> {
-        return this.type.itemType;
+    public unknownGetCatchallType(): z.ZodTypeAny {
+        return this.type._def.catchall;
     }
 
-    public getItemType(): Type<TValue> {
-        return this.type.itemType;
+    public getCatchallType(): zodUtilityTypes.CatchallPropertyValueType<TZodObjectType> {
+        return this.type._def.catchall;
+    }
+
+    private typeForKey(key: string) {
+        const shapeType: z.ZodTypeAny | undefined = this.type.shape[key];
+        const catchall: z.ZodTypeAny | undefined = this.type._def.catchall;
+
+        const type: z.ZodTypeAny | undefined = shapeType ?? catchall;
+
+        if (!type) {
+            throw new Error(
+                `Property ${key} not found and no catchall type provided.`,
+            );
+        }
+
+        return type;
     }
 
     public async unknownSetProperty(
@@ -89,31 +104,32 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         value: unknown,
         validate: boolean = true,
     ): Promise<this> {
-        const adopted = await validateAndMakeModel(
+        const type = this.typeForKey(key);
+
+        const adopted = ModelFactory.createUnvalidatedModelPart({
             value,
-            this.type.itemType,
-            {
+            type,
+            parentInfo: {
                 type: this.type,
                 parentInfo: this.parentInfo,
                 relationship: { property: key, type: 'property' },
             },
-            validate,
-        );
+        });
 
         const copy = {
             ...this.value,
-            [key]: adopted.value as TValue,
         };
+        (copy as Record<string, unknown>)[key] = adopted.value;
 
         if (validate) {
-            await this.type.validateAndThrow(copy, { deep: false });
+            await validateAndThrow(this.type, copy, { deep: true });
         }
 
         const propertyModels = {
             ...this.#properties,
             [key]: adopted,
         };
-        const result = new ObjectImpl<TValue>(
+        const result = new ObjectImpl<TZodObjectType>(
             copy,
             propertyModels,
             this.type,
@@ -123,19 +139,18 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         return result as this;
     }
 
-    public async setProperty(
-        key: string,
+    public async setProperty<
+        TKey extends keyof z.infer<TZodObjectType> & string,
+        TValue extends z.infer<TZodObjectType>[TKey],
+    >(
+        key: TKey,
         value: TValue | Model<TValue>,
         validate: boolean = true,
     ): Promise<this> {
         return this.unknownSetProperty(key, value, validate);
     }
 
-    public unknownGetProperty(key: string): Model<TValue> | undefined {
-        return this.getProperty(key);
-    }
-
-    public getProperty(key: string): Model<TValue> | undefined {
+    public unknownGetProperty(key: string): UnknownPropertyModel | undefined {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
         if (hasOwnProperty(this.#properties, key)) {
             const result = this.#properties[key];
@@ -145,11 +160,27 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         return undefined;
     }
 
+    public getProperty<TKey extends zodUtilityTypes.Shape<TZodObjectType>>(
+        key: TKey,
+    ): TypedPropertyModelFor<TZodObjectType, TKey> {
+        return this.unknownGetProperty(key) as TypedPropertyModelFor<
+            TZodObjectType,
+            TKey
+        >;
+    }
+
     public async moveProperty(
         from: string,
         to: string,
         validate: boolean = true,
     ): Promise<this> {
+        if (hasOwnProperty(this.type.shape, from)) {
+            throw new Error(`Cannot delete a known property '${from}'.`);
+        }
+        if (hasOwnProperty(this.type.shape, to)) {
+            throw new Error(`Cannot add a known property '${to}'.`);
+        }
+
         const copy = {
             ...this.value,
             [to]: this.value[from]!,
@@ -157,7 +188,7 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         delete copy[from];
 
         if (validate) {
-            await this.type.validateAndThrow(copy, { deep: false });
+            await validateAndThrow(this.type, copy, { deep: true });
         }
 
         const propertyModels = {
@@ -166,7 +197,7 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         };
         delete propertyModels[from];
 
-        const result = new ObjectImpl<TValue>(
+        const result = new ObjectImpl<TZodObjectType>(
             copy,
             propertyModels,
             this.type,
@@ -180,13 +211,17 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         key: string,
         validate: boolean = true,
     ): Promise<this> {
+        if (hasOwnProperty(this.type.shape, key)) {
+            throw new Error(`Cannot delete a known property '${key}'.`);
+        }
+
         const copy = {
             ...this.value,
         };
         delete copy[key];
 
         if (validate) {
-            await this.type.validateAndThrow(copy, { deep: false });
+            await validateAndThrow(this.type, copy, { deep: false });
         }
 
         const propertyModels = {
@@ -194,7 +229,7 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         };
         delete propertyModels[key];
 
-        const result = new ObjectImpl<TValue>(
+        const result = new ObjectImpl<TZodObjectType>(
             copy,
             propertyModels,
             this.type,
@@ -204,15 +239,17 @@ export class ObjectImpl<TZodType extends z.AnyZodObject>
         return result as this;
     }
 
-    public unknownGetEntries(): readonly UnknownMapObjectEntry[] {
-        return Object.entries(this.#properties).sort(([a], [b]) =>
-            defaultSort(a, b),
+    public unknownGetProperties(): readonly UnknownPropertyModel[] {
+        return Object.values(this.#properties).sort((a, b) =>
+            defaultSort(a.name, b.name),
         );
     }
 
-    public getEntries(): readonly MapObjectEntry<TValue>[] {
-        return Object.entries(this.#properties).sort(([a], [b]) =>
-            defaultSort(a, b),
+    public getProperties(): readonly PropertyModel<
+        z.infer<TZodObjectType>[keyof z.infer<TZodObjectType>]
+    >[] {
+        return Object.values(this.#properties).sort((a, b) =>
+            defaultSort(a.name, b.name),
         );
     }
 }

@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 import { descend } from '@captainpants/sweeter-utilities';
@@ -130,7 +129,11 @@ export class ArrayModelImpl<TElementZodType extends z.ZodType>
         }
 
         const newElementModels = [...this.#elementModels];
-        newElementModels.splice(start, deleteCount, ...(newModels as Model<TElementZodType>[]));
+        newElementModels.splice(
+            start,
+            deleteCount,
+            ...(newModels as Model<TElementZodType>[]),
+        );
 
         const res = new ArrayModelImpl(
             newValue,

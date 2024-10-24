@@ -10,7 +10,19 @@ import { RigidObjectImpl } from './internal/RigidObjectImpl.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
 import { type ReadonlyRecord } from '../types.js';
 import { z } from 'zod';
-import { isArrayType, isBooleanLiteralType, isNullLiteralType, isNumberLiteralType, isNumberType, isObjectType, isStringLiteralType, isStringType, isUndefinedLiteralType, isUnionType, isUnknownType } from '../index.js';
+import {
+    isArrayType,
+    isBooleanLiteralType,
+    isNullLiteralType,
+    isNumberLiteralType,
+    isNumberType,
+    isObjectType,
+    isStringLiteralType,
+    isStringType,
+    isUndefinedLiteralType,
+    isUnionType,
+    isUnknownType,
+} from '../index.js';
 import { validateAndThrow } from './validate.js';
 
 export interface CreateModelArgs<TZodType extends z.ZodTypeAny> {
@@ -30,7 +42,6 @@ export interface CreateUnvalidatedModelPartArgs<T> {
 // eslint-disable-next-line @typescript-eslint/ban-types -- Used as a key to identify the actual type of a Definition object
 type ConstructorFunction = Function;
 
-
 type ModelFactoryMethod<TZodType extends z.ZodTypeAny> = (
     value: z.infer<TZodType>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,7 +59,10 @@ type UnknownModelFactoryMethod = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) => UnknownModel | undefined;
 
-function setup<TZodType extends z.ZodTypeAny>(is: (schema: z.ZodTypeAny) => schema is TZodType, factory: ModelFactoryMethod<TZodType>): UnknownModelFactoryMethod {
+function setup<TZodType extends z.ZodTypeAny>(
+    is: (schema: z.ZodTypeAny) => schema is TZodType,
+    factory: ModelFactoryMethod<TZodType>,
+): UnknownModelFactoryMethod {
     return (input, type, parentInfo, depth) => {
         if (!is(type)) {
             return undefined;
@@ -61,123 +75,62 @@ function setup<TZodType extends z.ZodTypeAny>(is: (schema: z.ZodTypeAny) => sche
         }
 
         return undefined;
-    }
+    };
 }
 
 const defaults = [
-    setup(
-        isUnionType, 
-        (value, type, parentInfo, depth) =>
-            UnionModelImpl.createFromValue(
-                value,
-                type,
-                parentInfo,
-                depth,
-            )
+    setup(isUnionType, (value, type, parentInfo, depth) =>
+        UnionModelImpl.createFromValue(value, type, parentInfo, depth),
     ),
-    setup(
-        isArrayType,
-        (value, type, parentInfo, depth) => 
-            ArrayModelImpl.createFromValue(
-                value,
-                type,
-                parentInfo,
-                depth,
-            ),
+    setup(isArrayType, (value, type, parentInfo, depth) =>
+        ArrayModelImpl.createFromValue(value, type, parentInfo, depth),
     ),
-    setup(
-        isObjectType,
-        (value, type, parentInfo, depth) =>
-            ObjectImpl.createFromValue(
-                value,
-                type,
-                parentInfo,
-                depth,
-            ),
+    setup(isObjectType, (value, type, parentInfo, depth) =>
+        ObjectImpl.createFromValue(value, type, parentInfo, depth),
     ),
     setup(
         isStringLiteralType,
         (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl(
-                'string-constant',
-                value,
-                type,
-                parentInfo,
-            ),
+            new SimpleModelImpl('string-constant', value, type, parentInfo),
     ),
     setup(
         isNumberLiteralType,
         (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl(
-                'number-constant',
-                value,
-                type,
-                parentInfo,
-            ),
+            new SimpleModelImpl('number-constant', value, type, parentInfo),
     ),
     setup(
         isBooleanLiteralType,
         (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl(
-                'boolean-constant',
-                value,
-                type,
-                parentInfo,
-            ),
+            new SimpleModelImpl('boolean-constant', value, type, parentInfo),
     ),
     setup(
         isNullLiteralType,
         (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl(
-                'null',
-                value,
-                type,
-                parentInfo,
-            ),
+            new SimpleModelImpl('null', value, type, parentInfo),
     ),
     setup(
         isUndefinedLiteralType,
         (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl(
-                'undefined',
-                value,
-                type,
-                parentInfo,
-            ),
+            new SimpleModelImpl('undefined', value, type, parentInfo),
     ),
     setup(
         isStringType,
         (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl(
-                'string',
-                value,
-                type,
-                parentInfo,
-            ),
+            new SimpleModelImpl('string', value, type, parentInfo),
     ),
     setup(
         isNumberType,
         (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl(
-                'number',
-                value,
-                type,
-                parentInfo,
-            ),
+            new SimpleModelImpl('number', value, type, parentInfo),
     ),
-    setup(
-        isUnknownType,
-        (value, type, parentInfo, _depth) => {
-            return new UnknownModelImpl(
-                value,
-                type,
-                parentInfo,
-            );
-        },
-    )
-]
+    setup(isUnknownType, (value, type, parentInfo, _depth) => {
+        return new UnknownModelImpl(value, type, parentInfo);
+    }),
+];
 
-function createModel<TZodType extends z.ZodTypeAny>(args: CreateModelArgs<TZodType>): Promise<Model<TZodType>>;
+function createModel<TZodType extends z.ZodTypeAny>(
+    args: CreateModelArgs<TZodType>,
+): Promise<Model<TZodType>>;
 async function createModel<TZodType extends z.ZodTypeAny>({
     value,
     type,
@@ -224,7 +177,10 @@ function doCreateModelPart<TZodType extends z.ZodTypeAny>(
     throw new TypeError(`Unrecognised type ${type.constructor.name}.`);
 }
 
-function createUnvalidatedReplacement<T extends z.ZodTypeAny>(value: z.infer<T>, model: Model<T>): Model<T> {
+function createUnvalidatedReplacement<T extends z.ZodTypeAny>(
+    value: z.infer<T>,
+    model: Model<T>,
+): Model<T> {
     return doCreateModelPart(value, model.type, model.parentInfo);
 }
 

@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 import { notFound } from '..';
 
@@ -32,5 +31,5 @@ export const attributes = {
         if (!map.has(key)) return false;
 
         return true;
-    }
-}
+    },
+};

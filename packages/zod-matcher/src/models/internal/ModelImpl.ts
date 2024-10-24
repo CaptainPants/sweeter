@@ -2,10 +2,8 @@ import { z } from 'zod';
 import { type UnknownModel, type Model, type ModelBase } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
 
-export class ModelImpl<
-    TValue,
-    TZodType extends z.ZodTypeAny,
-> implements ModelBase<TValue, TZodType>
+export class ModelImpl<TValue, TZodType extends z.ZodTypeAny>
+    implements ModelBase<TValue, TZodType>
 {
     public constructor(
         value: TValue,

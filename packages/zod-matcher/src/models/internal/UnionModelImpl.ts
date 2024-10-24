@@ -130,7 +130,7 @@ export class UnionModelImpl<TZodUnionType extends z.ZodUnion<any>>
     }
 
     public as<TTargetZodType extends z.ZodTypeAny>(
-        type: z.ZodType<TTargetZodType>,
+        type: TTargetZodType,
     ): Model<TTargetZodType> | null {
         let resolved = this.#resolvedModel as UnknownModel;
 

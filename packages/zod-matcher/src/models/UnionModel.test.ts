@@ -1,25 +1,25 @@
+import { z } from 'zod';
 import { type ValueTypeFromZodType } from '../types.js';
-import { Types } from '../metadata/Types.js';
 
-import { asRigidObject, asUnknown, cast } from './as.js';
+import { asObject, asUnknown, cast } from './as.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('union', async () => {
-    const a = Types.object({
-        type: Types.prop(Types.constant('hasNumber')),
-        number: Types.prop(Types.number()),
+    const a = z.object({
+        type: z.literal('hasNumber'),
+        number: z.number(),
     });
 
-    const b = Types.object({
-        type: Types.prop(Types.constant('hasString')),
-        string: Types.prop(Types.string()),
+    const b = z.object({
+        type: z.literal('hasString'),
+        string: z.string(),
     });
 
-    const c = Types.number();
+    const c = z.number();
 
-    const type = Types.union(a, b, c);
+    const type = z.union([a, b, c]);
 
-    const value: ValueTypeFromZodType<typeof type> = {
+    const value: z.infer<typeof type> = {
         type: 'hasString',
         string: '$abc245',
     };
@@ -33,7 +33,7 @@ test('union', async () => {
 
     const resolvedAsUnknown = asUnknown(recursiveResolved);
 
-    const casted = cast(resolvedAsUnknown, asRigidObject);
+    const casted = cast(resolvedAsUnknown, asObject);
 
     expect(casted).not.toBeUndefined();
 });

@@ -1,12 +1,12 @@
-import { Types } from '../metadata/Types.js';
 
+import { z } from 'zod';
 import { isModel } from './isModel.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('isModel should be true for an example model', async () => {
     const numberModel = await ModelFactory.createModel({
         value: 12,
-        type: Types.number(),
+        type: z.number(),
     });
     expect(isModel(numberModel)).toStrictEqual(true);
 });

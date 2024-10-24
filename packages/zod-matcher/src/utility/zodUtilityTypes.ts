@@ -40,4 +40,7 @@ export namespace zodUtilityTypes {
     export type RecursiveUnionOptions<T> = T extends z.ZodUnion<infer S>
         ? { [Key in keyof S]: RecursiveUnionOptions<S[Key]> }[number]
         : T;
+
+    export type IsAny<T> = 0 extends T & 1 ? true : false;
+    export type IsZodTypeAny<T extends z.ZodTypeAny> = IsAny<T['_output']>;
 }

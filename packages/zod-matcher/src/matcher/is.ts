@@ -92,16 +92,22 @@ export function isConstantType(
     );
 }
 
-export function isStringOrStringConstantType(
+export function isStringOrStringLiteralType(
     schema: z.ZodType,
 ): schema is z.ZodString | z.ZodLiteral<string> {
     return isStringType(schema) || isStringLiteralType(schema);
 }
 
-export function isNumberOrNumberConstantType(
+export function isNumberOrNumberLiteralType(
     schema: z.ZodType,
 ): schema is z.ZodNumber | z.ZodLiteral<number> {
     return isNumberType(schema) || isNumberLiteralType(schema);
+}
+
+export function isBooleanOrBooleanLiteralType(
+    schema: z.ZodType,
+): schema is z.ZodBoolean | z.ZodLiteral<boolean> {
+    return isBooleanType(schema) || isBooleanLiteralType(schema);
 }
 
 export function isUnknownType(schema: z.ZodType): schema is z.ZodUnknown {

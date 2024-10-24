@@ -13,7 +13,9 @@ test('union', async () => {
 
     const typeTest1: TypeMatchAssert<
         typeof unionType,
-        z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<1>, z.ZodLiteral<2>]>, z.ZodString]>
+        z.ZodUnion<
+            [z.ZodUnion<[z.ZodLiteral<1>, z.ZodLiteral<2>]>, z.ZodString]
+        >
     > = true;
 
     const model = await ModelFactory.createModel({ value: 1, type: unionType });
@@ -26,7 +28,9 @@ test('union', async () => {
 
     const typeTest2: TypeMatchAssert<
         typeof recursivelyResolved,
-        StringModel | NumberConstantModel<z.ZodLiteral<1>> | NumberConstantModel<z.ZodLiteral<2>>
+        | StringModel
+        | NumberConstantModel<z.ZodLiteral<1>>
+        | NumberConstantModel<z.ZodLiteral<2>>
     > = true;
 
     const typeTest3: TypeMatchAssert<

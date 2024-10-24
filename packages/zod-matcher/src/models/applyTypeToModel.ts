@@ -10,9 +10,12 @@ import { ModelFactory } from './ModelFactory.js';
  * @param options
  * @returns
  */
-export async function tryApplyTypeToModel<TFromZodType extends z.ZodTypeAny, TToZodType extends z.ZodTypeAny>(
+export async function tryApplyTypeToModel<
+    TFromZodType extends z.ZodTypeAny,
+    TToZodType extends z.ZodTypeAny,
+>(
     model: Model<TFromZodType>,
-    toType: z.ZodType<TToZodType>,
+    toType: TToZodType,
 ): Promise<Model<TToZodType> | undefined> {
     const validationResult = await toType.safeParseAsync(model.value);
     if (validationResult.success) {
@@ -32,10 +35,10 @@ export async function tryApplyTypeToModel<TFromZodType extends z.ZodTypeAny, TTo
  * @param options
  * @returns
  */
-export async function applyTypeToModel<TFromZodType extends z.ZodTypeAny, TToZodType extends z.ZodTypeAny>(
-    model: Model<TFromZodType>,
-    toType: z.ZodType<TToZodType>,
-): Promise<Model<TToZodType>> {
+export async function applyTypeToModel<
+    TFromZodType extends z.ZodTypeAny,
+    TToZodType extends z.ZodTypeAny,
+>(model: Model<TFromZodType>, toType: TToZodType): Promise<Model<TToZodType>> {
     const converted = await toType.parseAsync(model.value);
 
     return ModelFactory.createUnvalidatedModelPart<TToZodType>({

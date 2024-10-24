@@ -1,16 +1,15 @@
-import { Types } from '../metadata/index.js';
-
+import { z } from 'zod';
 import { asBoolean, asNumber } from './as.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('boolean', async () => {
     const example1 = await ModelFactory.createModel({
         value: true,
-        type: Types.boolean(),
+        type: z.boolean(),
     });
     const example2 = await ModelFactory.createModel({
         value: true,
-        type: Types.union(Types.true(), Types.false()),
+        type: z.union([z.literal(true), z.literal(false)]),
     });
 
     expect(asBoolean(example1)).not.toStrictEqual(undefined);

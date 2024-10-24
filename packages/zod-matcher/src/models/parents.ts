@@ -1,4 +1,4 @@
-import { type Type } from '../metadata/Type.js';
+import { z } from "zod";
 
 export type ParentRelationship =
     | {
@@ -13,7 +13,7 @@ export type ParentRelationship =
       };
 
 export interface TypeInfo {
-    type: Type<unknown>;
+    type: z.ZodTypeAny;
     parentInfo: ParentTypeInfo | null;
 }
 export interface ParentTypeInfo extends TypeInfo {

@@ -32,7 +32,10 @@ test('Something', async () => {
     );
 
     const type = retyped.getProperty('type');
-    const assertType1: TypeMatchAssert<typeof type, PropertyModel<'b'>> = true;
+    const assertType1: TypeMatchAssert<
+        typeof type,
+        PropertyModel<z.ZodLiteral<'b'>>
+    > = true;
 
     expect(type.valueModel.value).toStrictEqual('b');
 });

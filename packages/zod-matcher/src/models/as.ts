@@ -1,20 +1,8 @@
-import {
-    isArrayType,
-    isBooleanConstantType,
-    isMapObjectType,
-    isNullType,
-    isNumberConstantType,
-    isNumberType,
-    isRigidObjectType,
-    isStringConstantType,
-    isStringType,
-    isUndefinedType,
-    isUnionType,
-} from '../metadata/index.js';
+import { z } from 'zod';
+import { isArrayType, isBooleanLiteralType, isBooleanType, isNullLiteralType, isNumberLiteralType, isNumberOrNumberLiteralType, isNumberType, isObjectType, isStringLiteralType, isStringType, isUndefinedLiteralType, isUnionType } from '../index.js';
 
 import { isModel } from './isModel.js';
 import {
-    type MapObjectModel,
     type BooleanConstantModel,
     type Model,
     type NullModel,
@@ -23,12 +11,13 @@ import {
     type StringConstantModel,
     type StringModel,
     type UndefinedModel,
-    type UnionModel,
     type AnyModelConstraint,
-    type UnknownRigidObjectModel,
     type UnknownUnionModel,
     type UnknownArrayModel,
     type UnknownModel,
+    BooleanModel,
+    ObjectModel,
+    UnknownObjectModel,
 } from './Model.js';
 
 export function cast<TToModel extends AnyModelConstraint>(
@@ -49,18 +38,11 @@ export function asUnion(
     return isUnionType(model.type) ? (model as any) : undefined;
 }
 
-export function asRigidObject(
+export function asObject(
     model: AnyModelConstraint,
-): UnknownRigidObjectModel | undefined {
+): UnknownObjectModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isRigidObjectType(model.type) ? (model as any) : undefined;
-}
-
-export function asMap(
-    model: AnyModelConstraint,
-): MapObjectModel<unknown> | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isMapObjectType(model.type) ? (model as any) : undefined;
+    return isObjectType(model.type) ? (model as any) : undefined;
 }
 
 export function asArray(
@@ -77,12 +59,9 @@ export function asNumber(model: AnyModelConstraint): NumberModel | undefined {
 
 export function asBoolean(
     model: AnyModelConstraint,
-): UnionModel<true | false> | undefined {
-    const isUnion =
-        isUnionType(model.type) &&
-        model.type.types.every((x) => isBooleanConstantType(x));
+): BooleanModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isUnion ? (model as any) : undefined;
+    return isBooleanType(model.type) ? (model as any) : undefined;
 }
 
 export function asString(model: AnyModelConstraint): StringModel | undefined {
@@ -90,39 +69,39 @@ export function asString(model: AnyModelConstraint): StringModel | undefined {
     return isStringType(model.type) ? (model as any) : undefined;
 }
 
-export function asNumberConstant(
+export function asNumberLiteral(
     model: AnyModelConstraint,
-): NumberConstantModel<number> | undefined {
+): NumberConstantModel<z.ZodLiteral<number>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isNumberConstantType(model.type) ? (model as any) : undefined;
+    return isNumberLiteralType(model.type) ? (model as any) : undefined;
 }
 
 export function asStringConstant(
     model: AnyModelConstraint,
-): StringConstantModel<string> | undefined {
+): StringConstantModel<z.ZodLiteral<string>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isStringConstantType(model.type) ? (model as any) : undefined;
+    return isStringLiteralType(model.type) ? (model as any) : undefined;
 }
 
 export function asBooleanConstant(
     model: AnyModelConstraint,
-): BooleanConstantModel<boolean> | undefined {
+): BooleanConstantModel<z.ZodLiteral<boolean>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isBooleanConstantType(model.type) ? (model as any) : undefined;
+    return isBooleanLiteralType(model.type) ? (model as any) : undefined;
 }
 
 export function asNullConstant(
     model: AnyModelConstraint,
 ): NullModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isNullType(model.type) ? (model as any) : undefined;
+    return isNullLiteralType(model.type) ? (model as any) : undefined;
 }
 
 export function asUndefinedConstant(
     model: AnyModelConstraint,
 ): UndefinedModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isUndefinedType(model.type) ? (model as any) : undefined;
+    return isUndefinedLiteralType(model.type) ? (model as any) : undefined;
 }
 
 /**
@@ -131,7 +110,7 @@ export function asUndefinedConstant(
  */
 
 export function asUnknown(model: AnyModelConstraint): UnknownModel;
-export function asUnknown<T>(model: Model<T>): UnknownModel;
+export function asUnknown<TZodType extends z.ZodTypeAny>(model: Model<TZodType>): UnknownModel;
 export function asUnknown(model: unknown): UnknownModel {
     if (isModel(model)) {
         return model;
@@ -142,13 +121,13 @@ export function asUnknown(model: unknown): UnknownModel {
 
 export function asConstant(
     model: AnyModelConstraint,
-): Model<unknown> | undefined {
+): UnknownModel | undefined {
     if (
-        isStringConstantType(model.type) ||
-        isNumberConstantType(model.type) ||
-        isBooleanConstantType(model.type) ||
-        isNullType(model.type) ||
-        isUndefinedType(model.type)
+        isStringLiteralType(model.type) ||
+        isNumberLiteralType(model.type) ||
+        isBooleanLiteralType(model.type) ||
+        isNullLiteralType(model.type) ||
+        isUndefinedLiteralType(model.type)
     ) {
         return asUnknown(model);
     }

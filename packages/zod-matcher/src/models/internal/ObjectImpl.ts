@@ -160,9 +160,9 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         return undefined;
     }
 
-    public getProperty<TKey extends zodUtilityTypes.Shape<TZodObjectType>>(
-        key: TKey,
-    ): TypedPropertyModelFor<TZodObjectType, TKey> {
+    public getProperty<
+        TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> & string,
+    >(key: TKey): TypedPropertyModelFor<TZodObjectType, TKey> {
         return this.unknownGetProperty(key) as TypedPropertyModelFor<
             TZodObjectType,
             TKey

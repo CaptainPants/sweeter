@@ -85,7 +85,7 @@ export class ArrayModelImpl<TElementZodType extends z.ZodType>
     public async spliceElements(
         start: number,
         deleteCount: number,
-        newElements: ReadonlyArray<TElementZodType | Model<TElementZodType>>,
+        newElements: ReadonlyArray<z.infer<TElementZodType> | Model<TElementZodType>>,
         validate: boolean = true,
     ): Promise<this> {
         return this.unknownSpliceElements(

@@ -6,7 +6,6 @@ import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
 import { UnknownModel, type Model } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
-import { RigidObjectImpl } from './internal/RigidObjectImpl.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
 import { type ReadonlyRecord } from '../types.js';
 import { z } from 'zod';

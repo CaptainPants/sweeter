@@ -66,22 +66,22 @@ export interface UnknownArrayModel
     extends ModelBase<readonly unknown[], z.ZodArray<z.ZodTypeAny>>,
         UnknownArrayModelMethods {}
 
-export interface ArrayModel<TElementType extends z.ZodTypeAny>
+export interface ArrayModel<TElementZodType extends z.ZodTypeAny>
     extends ModelBase<
-            readonly TElementType[],
-            z.ZodArray<z.ZodType<TElementType>>
+            readonly TElementZodType[],
+            z.ZodArray<z.ZodType<TElementZodType>>
         >,
         UnknownArrayModelMethods {
-    getElementType: () => TElementType;
+    getElementType: () => TElementZodType;
 
-    getElement: (index: number) => Model<TElementType> | undefined;
+    getElement: (index: number) => Model<TElementZodType> | undefined;
 
-    getElements: () => ReadonlyArray<Model<TElementType>>;
+    getElements: () => ReadonlyArray<Model<TElementZodType>>;
 
     spliceElements: (
         start: number,
         deleteCount: number,
-        newElements: ReadonlyArray<TElementType | Model<TElementType>>,
+        newElements: ReadonlyArray<z.infer<TElementZodType> | Model<TElementZodType>>,
         validate?: boolean,
     ) => Promise<this>;
 }
@@ -161,9 +161,11 @@ export interface UnknownUnionModelMethods {
     replace: (value: unknown, validate?: boolean) => Promise<this>;
 }
 
-export interface UnionModelMethods<TUnionType extends z.ZodTypeAny>
+export interface UnionModelMethods<TZodUnionType extends z.ZodUnion<any>>
     extends UnknownUnionModelMethods {
-    getRecursivelyResolved: () => SpreadModel<TUnionType>;
+    getRecursivelyResolved: () => SpreadModel<
+        zodUtilityTypes.RecursiveUnionOptions<TZodUnionType>
+    >;
 }
 
 export interface UnknownUnionModel
@@ -174,9 +176,6 @@ export interface UnionModel<TUnion extends z.ZodUnion<any>>
     extends ModelBase<z.infer<TUnion>, TUnion>,
         UnionModelMethods<TUnion> {}
 
-/**
- * Use conditional to convert Model<T1 | T2> to Model<T1> | Model<T2>
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SpreadModel<T extends z.ZodTypeAny> = T extends any
     ? Model<T>

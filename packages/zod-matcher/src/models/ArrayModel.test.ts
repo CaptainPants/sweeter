@@ -1,9 +1,9 @@
-import { Types } from '../metadata/Types.js';
+import { z } from 'zod';
 
 import { ModelFactory } from './ModelFactory.js';
 
 test('array', async () => {
-    const type = Types.array(Types.number());
+    const type = z.array(z.number());
 
     const input = [1, 2, 3];
 
@@ -13,7 +13,7 @@ test('array', async () => {
         parentInfo: null,
     });
 
-    const result = await model.spliceElements(1, 0, [6, 7]);
+    const result = await model.unknownSpliceElements(1, 0, [6, 7]);
 
     expect(input).toStrictEqual([1, 2, 3]);
     expect(result.value).toStrictEqual([1, 6, 7, 2, 3]);

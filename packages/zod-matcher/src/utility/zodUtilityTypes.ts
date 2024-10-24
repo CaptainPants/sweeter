@@ -32,4 +32,12 @@ export namespace zodUtilityTypes {
         ),
         ValuesOfObject<TZodObjectType> | ValuesOfObject<TZodObjectType>,
     ];
+
+    export type UnionOptions<TUnion> = TUnion extends z.ZodUnion<infer S>
+        ? S[number]
+        : never;
+
+    export type RecursiveUnionOptions<T> = T extends z.ZodUnion<infer S>
+        ? { [Key in keyof S]: RecursiveUnionOptions<S[Key]> }[number]
+        : T;
 }

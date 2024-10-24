@@ -10,13 +10,13 @@ import { ModelFactory } from './ModelFactory.js';
  * @param options
  * @returns
  */
-export async function tryApplyTypeToModel<TFrom, TTo>(
-    model: Model<TFrom>,
-    toType: z.ZodType<TTo>,
-): Promise<Model<TTo> | undefined> {
+export async function tryApplyTypeToModel<TFromZodType extends z.ZodTypeAny, TToZodType extends z.ZodTypeAny>(
+    model: Model<TFromZodType>,
+    toType: z.ZodType<TToZodType>,
+): Promise<Model<TToZodType> | undefined> {
     const validationResult = await toType.safeParseAsync(model.value);
     if (validationResult.success) {
-        return ModelFactory.createUnvalidatedModelPart<TTo>({
+        return ModelFactory.createUnvalidatedModelPart<TToZodType>({
             value: validationResult.data,
             type: toType,
             parentInfo: model.parentInfo,
@@ -32,12 +32,13 @@ export async function tryApplyTypeToModel<TFrom, TTo>(
  * @param options
  * @returns
  */
-export async function applyTypeToModel<TFrom, TTo>(
-    model: Model<TFrom>,
-    toType: z.ZodType<TTo>,
-): Promise<Model<TTo>> {
+export async function applyTypeToModel<TFromZodType extends z.ZodTypeAny, TToZodType extends z.ZodTypeAny>(
+    model: Model<TFromZodType>,
+    toType: z.ZodType<TToZodType>,
+): Promise<Model<TToZodType>> {
     const converted = await toType.parseAsync(model.value);
-    return ModelFactory.createUnvalidatedModelPart<TTo>({
+
+    return ModelFactory.createUnvalidatedModelPart<TToZodType>({
         value: converted,
         type: toType,
         parentInfo: model.parentInfo,

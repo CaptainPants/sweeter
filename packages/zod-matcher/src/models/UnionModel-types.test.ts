@@ -1,20 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { z } from 'zod';
 import { type TypeMatchAssert } from '../testing.js';
-import { Types } from '../metadata/Types.js';
-import { type UnionType } from '../metadata/UnionType.js';
 
 import { type NumberConstantModel, type StringModel } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('union', async () => {
-    const nested = Types.union(Types.constant(1), Types.constant(2));
+    const nested = z.union([z.literal(1), z.literal(2)]);
 
-    const unionType = Types.union(nested, Types.string());
+    const unionType = z.union([nested, z.string()]);
 
     const typeTest1: TypeMatchAssert<
         typeof unionType,
-        UnionType<string | 1 | 2>
+        z.ZodUnion<[z.ZodUnion<[z.ZodLiteral<1>, z.ZodLiteral<2>]>, z.ZodString]>
     > = true;
 
     const model = await ModelFactory.createModel({ value: 1, type: unionType });
@@ -27,7 +26,7 @@ test('union', async () => {
 
     const typeTest2: TypeMatchAssert<
         typeof recursivelyResolved,
-        StringModel | NumberConstantModel<1> | NumberConstantModel<2>
+        StringModel | NumberConstantModel<z.ZodLiteral<1>> | NumberConstantModel<z.ZodLiteral<2>>
     > = true;
 
     const typeTest3: TypeMatchAssert<

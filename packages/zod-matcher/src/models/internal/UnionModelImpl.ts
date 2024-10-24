@@ -1,11 +1,17 @@
 import { descend } from '@captainpants/sweeter-utilities';
-import { type Model, type SpreadModel, type UnionModel } from '../Model.js';
+import {
+    SpreadModel,
+    type Model,
+    type UnionModel,
+    UnknownModel,
+} from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { z } from 'zod';
+import { zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
 
 function findTypeForValue<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>(
     value: unknown,
@@ -17,64 +23,75 @@ function findTypeForValue<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>(
     return null;
 }
 
-export class UnionModelImpl<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>
-    extends ModelImpl<TUnion, z.ZodUnion<TUnion>>
-    implements UnionModel<TUnion>
+export class UnionModelImpl<TZodUnionType extends z.ZodUnion<any>>
+    extends ModelImpl<z.infer<TZodUnionType>, TZodUnionType>
+    implements UnionModel<TZodUnionType>
 {
-    public static createFromValue<
-        TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]],
-    >(
-        value: TUnion,
-        type: z.ZodUnion<TUnion>,
+    public static createFromValue<TZodUnionType extends z.ZodUnion<any>>(
+        value: z.infer<TZodUnionType>,
+        type: TZodUnionType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
-    ): UnionModelImpl<TUnion> {
+    ): UnionModelImpl<TZodUnionType> {
         const match = findTypeForValue(value, type);
 
         if (match === null) {
             throw new Error(`Could not find matching type for value.`);
         }
 
-        const resolved = ModelFactory.createUnvalidatedModelPart<unknown>({
+        const resolvedModel = ModelFactory.createUnvalidatedModelPart<
+            zodUtilityTypes.UnionOptions<TZodUnionType>
+        >({
             value,
             type: match,
             parentInfo,
             depth: descend(depth),
-        });
+        }) as unknown as SpreadModel<
+            zodUtilityTypes.UnionOptions<TZodUnionType>
+        >;
 
-        return new UnionModelImpl<TUnion>(value, resolved, type, parentInfo);
+        return new UnionModelImpl<TZodUnionType>(
+            resolvedModel,
+            type,
+            parentInfo,
+        );
     }
 
     public constructor(
-        value: TUnion,
-        resolved: Model<unknown>,
-        type: z.ZodUnion<TUnion>,
+        resolvedModel: SpreadModel<zodUtilityTypes.UnionOptions<TZodUnionType>>,
+        type: TZodUnionType,
         parentInfo: ParentTypeInfo | null,
     ) {
-        super(value, type, parentInfo, 'union');
+        super(resolvedModel.value, type, parentInfo, 'union');
 
-        this.#resolved = resolved;
+        this.#resolvedModel = resolvedModel;
     }
 
-    #resolved: Model<unknown>;
+    #resolvedModel: SpreadModel<zodUtilityTypes.UnionOptions<TZodUnionType>>;
 
-    public getDirectlyResolved(): Model<unknown> {
-        return this.#resolved;
+    public getDirectlyResolved(): SpreadModel<
+        zodUtilityTypes.UnionOptions<TZodUnionType>
+    > {
+        return this.#resolvedModel;
     }
 
-    public getRecursivelyResolved(): SpreadModel<TUnion> {
-        let resolved = this.#resolved;
+    public getRecursivelyResolved(): SpreadModel<
+        zodUtilityTypes.RecursiveUnionOptions<TZodUnionType>
+    > {
+        let resolved: UnknownModel = this.#resolvedModel;
 
         while (resolved instanceof UnionModelImpl) {
-            resolved = resolved.#resolved;
+            resolved = resolved.#resolvedModel;
         }
 
-        return resolved as SpreadModel<TUnion>;
+        return resolved as SpreadModel<
+            zodUtilityTypes.RecursiveUnionOptions<TZodUnionType>
+        >;
     }
 
-    public unknownGetRecursivelyResolved(): Model<unknown> {
+    public unknownGetRecursivelyResolved(): UnknownModel {
         // Type system can't understand that SpreadModel results in a Model<T> at all times
-        return this.getRecursivelyResolved() as Model<unknown>;
+        return this.getRecursivelyResolved();
     }
 
     public getTypes(): ReadonlyArray<z.ZodTypeAny> {
@@ -93,16 +110,17 @@ export class UnionModelImpl<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>
             );
         }
 
-        const adoptedResolved = await validateAndMakeModel<TUnion>(
+        const adoptedResolved = (await validateAndMakeModel<TZodUnionType>(
             value,
-            type as z.ZodUnion<TUnion>,
+            type,
             this.parentInfo,
             validate,
-        );
+        )) as unknown as SpreadModel<
+            zodUtilityTypes.UnionOptions<TZodUnionType>
+        >;
 
-        const model = new UnionModelImpl<TUnion>(
-            adoptedResolved.value as TUnion,
-            adoptedResolved as Model<unknown>,
+        const model = new UnionModelImpl<TZodUnionType>(
+            adoptedResolved,
             this.type,
             this.parentInfo,
         );
@@ -111,17 +129,19 @@ export class UnionModelImpl<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>
         return model as this;
     }
 
-    public as<T>(type: z.ZodType<T>): Model<T> | null {
-        let resolved = this.#resolved;
+    public as<TTargetZodType extends z.ZodTypeAny>(
+        type: z.ZodType<TTargetZodType>,
+    ): Model<TTargetZodType> | null {
+        let resolved = this.#resolvedModel as UnknownModel;
 
         for (;;) {
             if (resolved.type === type) {
-                return resolved as unknown as Model<T>;
+                return resolved as unknown as Model<TTargetZodType>;
             }
 
             // If the current resolved is a Union, look at its resolved value
             if (resolved instanceof UnionModelImpl) {
-                resolved = resolved.#resolved;
+                resolved = resolved.#resolvedModel;
             } else {
                 break;
             }

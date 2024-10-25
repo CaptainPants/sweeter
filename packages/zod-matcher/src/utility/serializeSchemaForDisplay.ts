@@ -2,12 +2,12 @@ import { literal, z } from 'zod';
 import {
     isArrayType,
     isBooleanLiteralType,
-    isNullLiteralType,
+    isNullType,
     isNumberLiteralType,
     isObjectType,
     isStringLiteralType,
     isStringType,
-    isUndefinedLiteralType,
+    isUndefinedType,
     isUnionType,
     notFound,
 } from '..';
@@ -66,8 +66,8 @@ const convertors = [
     create(isStringLiteralType, (val) => JSON.stringify(val)),
     create(isNumberLiteralType, (val) => JSON.stringify(val)),
     create(isBooleanLiteralType, (val) => JSON.stringify(val)),
-    create(isNullLiteralType, (val) => JSON.stringify(val)),
-    create(isUndefinedLiteralType, (val) => 'undefined'),
+    create(isNullType, (val) => JSON.stringify(val)),
+    create(isUndefinedType, (val) => 'undefined'),
     create(isObjectType, (val, depth) => objectForDisplay(val, deeper(depth))),
     create(
         isArrayType,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { z } from 'zod';
-import { type TypeMatchAssert } from '../testing.js';
+import { type TypeMatchAssert } from '../testingTypes.js';
 
 import { type NumberConstantModel, type StringModel } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';

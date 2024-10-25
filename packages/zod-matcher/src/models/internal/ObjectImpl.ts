@@ -7,7 +7,7 @@ import {
     type Model,
     UnknownModel,
     PropertyModels,
-    TypedPropertyModelFor,
+    TypedPropertyModelForKey,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -162,8 +162,8 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
 
     public getProperty<
         TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> & string,
-    >(key: TKey): TypedPropertyModelFor<TZodObjectType, TKey> {
-        return this.unknownGetProperty(key) as TypedPropertyModelFor<
+    >(key: TKey): TypedPropertyModelForKey<TZodObjectType, TKey> {
+        return this.unknownGetProperty(key) as TypedPropertyModelForKey<
             TZodObjectType,
             TKey
         >;

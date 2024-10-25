@@ -24,17 +24,19 @@ export interface BooleanModel extends SimpleModel<boolean, z.ZodBoolean> {}
 
 // Constants
 
+export interface LiteralModel<TZodLiteralType extends z.ZodLiteral<any>> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+
 export interface StringConstantModel<
     TZodLiteralType extends z.ZodLiteral<string>,
-> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+> extends LiteralModel<TZodLiteralType> {}
 
 export interface NumberConstantModel<
     TZodLiteralType extends z.ZodLiteral<number>,
-> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+> extends LiteralModel<TZodLiteralType> {}
 
 export interface BooleanConstantModel<
     TZodLiteralType extends z.ZodLiteral<boolean>,
-> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+> extends LiteralModel<TZodLiteralType> {}
 
 export interface NullModel extends SimpleModel<null, z.ZodNull> {}
 
@@ -66,32 +68,33 @@ export interface UnknownArrayModel
     extends ModelBase<readonly unknown[], z.ZodArray<z.ZodTypeAny>>,
         UnknownArrayModelMethods {}
 
-export interface ArrayModel<TElementZodType extends z.ZodTypeAny>
+export interface ArrayModel<TArrayZodType extends z.ZodArray<any>>
     extends ModelBase<
-            readonly TElementZodType[],
-            z.ZodArray<z.ZodType<TElementZodType>>
+            readonly zodUtilityTypes.ArrayElementType<TArrayZodType>[],
+            z.ZodArray<z.ZodType<zodUtilityTypes.ArrayElementType<TArrayZodType>>>
         >,
         UnknownArrayModelMethods {
-    getElementType: () => TElementZodType;
+    getElementType: () => zodUtilityTypes.ArrayElementType<TArrayZodType>;
 
-    getElement: (index: number) => Model<TElementZodType> | undefined;
+    getElement: (index: number) => Model<zodUtilityTypes.ArrayElementType<TArrayZodType>> | undefined;
 
-    getElements: () => ReadonlyArray<Model<TElementZodType>>;
+    getElements: () => ReadonlyArray<Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>>;
 
     spliceElements: (
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            z.infer<TElementZodType> | Model<TElementZodType>
+            z.infer<zodUtilityTypes.ArrayElementType<TArrayZodType>> | Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
         >,
         validate?: boolean,
     ) => Promise<this>;
 }
 
-export type TypedPropertyModelFor<
-    TZodObjectType,
+export type TypedPropertyModelForKey<
+    TZodObjectType extends z.AnyZodObject,
     TKey extends keyof zodUtilityTypes.Shape<TZodObjectType>,
-> = PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]>;
+> = PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]> & 
+(TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> ? never : undefined);
 
 interface UnknownObjectModelMethods {
     unknownGetProperty(key: string): UnknownPropertyModel | undefined;
@@ -140,7 +143,7 @@ export interface ObjectModel<TZodObjectType extends z.AnyZodObject>
         TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> & string,
     >(
         key: TKey,
-    ): TypedPropertyModelFor<TZodObjectType, TKey>;
+    ): TypedPropertyModelForKey<TZodObjectType, TKey>;
 
     getProperties(): readonly PropertyModel<
         z.infer<TZodObjectType>[keyof z.infer<TZodObjectType>]
@@ -216,16 +219,18 @@ export type AnyModelConstraint =
     | RealUnknownModel;
 
 export type Model<TZodType extends z.ZodTypeAny> =
-    zodUtilityTypes.IsZodTypeAny<TZodType> extends true
+    TZodType extends z.ZodAny
         ? UnknownModel
         : TZodType extends z.ZodUnion<any>
           ? UnionModel<TZodType>
-          : TZodType extends z.ZodArray<infer TElementType>
-            ? ArrayModel<TElementType>
+          : TZodType extends z.ZodArray<any>
+            ? ArrayModel<TZodType>
             : TZodType extends z.AnyZodObject
               ? ObjectModel<TZodType>
               : TZodType extends z.ZodLiteral<infer TLiteralType>
-                ? /* Block distribution by comparing a 1-tuple */ [
+                ? 
+                  zodUtilityTypes.IsAny<TLiteralType> extends true ? LiteralModel<z.ZodLiteral<any>> :
+                /* Block distribution by comparing a 1-tuple */ [
                       TLiteralType,
                   ] extends [boolean]
                     ? BooleanConstantModel<z.ZodLiteral<TLiteralType>>

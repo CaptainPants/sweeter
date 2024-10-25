@@ -64,14 +64,27 @@ export function isBooleanFalseLiteralType(
     return schema instanceof z.ZodLiteral && schema.value === false;
 }
 
-export function isNullLiteralType(schema: z.ZodType): schema is z.ZodNull {
+export function isNullType(schema: z.ZodType): schema is z.ZodNull {
     return schema instanceof z.ZodNull;
 }
 
-export function isUndefinedLiteralType(
+export function isUndefinedType(
     type: z.ZodType,
 ): type is z.ZodUndefined {
     return type instanceof z.ZodUndefined;
+}
+
+export function isLiteralType(
+    schema: z.ZodType,
+): schema is
+    | z.ZodLiteral<string>
+    | z.ZodLiteral<number>
+    | z.ZodLiteral<boolean> {
+    return (
+        isStringLiteralType(schema) ||
+        isNumberLiteralType(schema) ||
+        isBooleanLiteralType(schema)
+    );
 }
 
 export function isConstantType(
@@ -79,16 +92,13 @@ export function isConstantType(
 ): schema is
     | z.ZodLiteral<string>
     | z.ZodLiteral<number>
-    | z.ZodLiteral<true>
-    | z.ZodLiteral<false>
+    | z.ZodLiteral<boolean>
     | z.ZodNull
     | z.ZodUndefined {
     return (
-        isStringLiteralType(schema) ||
-        isNumberLiteralType(schema) ||
-        isBooleanLiteralType(schema) ||
-        isNullLiteralType(schema) ||
-        isUndefinedLiteralType(schema)
+        isLiteralType(schema) ||
+        isNullType(schema) ||
+        isUndefinedType(schema)
     );
 }
 

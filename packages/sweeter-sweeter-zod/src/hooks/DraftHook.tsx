@@ -7,7 +7,7 @@ import {
     $calc,
 } from '@captainpants/sweeter-core';
 import { type Maybe } from '@captainpants/sweeter-utilities';
-import { type ValidationSingleResult } from '@captainpants/typeytypetype';
+import { ValidationSingleResult } from '@captainpants/zod-matcher';
 
 export interface DraftHookOptions<TModel, TDraft> {
     model: Signal<TModel>;

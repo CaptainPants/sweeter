@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { z } from 'zod';
 import {
-    type UnknownRigidObjectModel,
     type Model,
     type TypeExtendsAssert,
     type PropertyModel,
@@ -12,49 +12,41 @@ import {
     type UndefinedModel,
     type RealUnknownModel,
     type ReadonlyRecord,
-    type UnknownMapObjectModel,
+    ObjectModel,
+    UnknownObjectModel,
 } from '../index.js';
 
 it('Specific', () => {
     const rigidObject1: TypeExtendsAssert<
-        Model<{ test: string }>,
-        UnknownRigidObjectModel
+        Model<z.ZodObject<{ test: z.ZodString }>>,
+        ObjectModel<z.ZodObject<{ test: z.ZodString }>>
     > = true;
 
     const rigidObject2: TypeExtendsAssert<
-        PropertyModel<{ test: string }>,
+        PropertyModel<z.ZodObject<{ test: z.ZodString }>>,
         UnknownPropertyModel
     > = true;
 
     const mapObject1: TypeExtendsAssert<
-        Model<ReadonlyRecord<string, string>>,
-        UnknownMapObjectModel
+        Model<z.ZodObject<{ }, 'strict', z.ZodUnknown>>,
+        UnknownObjectModel
     > = true;
 
     const union1: TypeExtendsAssert<
-        UnionModel<{ test: string }>,
-        UnknownUnionModel
-    > = true;
-    const union2: TypeExtendsAssert<
-        UnionModel<{ test: string } | 1 | string>,
+        UnionModel<z.ZodUnion<[z.ZodObject<{ test: z.ZodString }>, z.ZodNumber, z.ZodLiteral<1>]>>,
         UnknownUnionModel
     > = true;
 });
 
 it('UnknownModel', () => {
     const a1: TypeExtendsAssert<
-        Model<{ test: string }>,
-        RealUnknownModel
+        Model<z.ZodObject<{ test: z.ZodString }>>,
+        UnknownModel
     > = true;
     const a2: TypeExtendsAssert<
-        Model<{ test: string }[]>,
-        RealUnknownModel
+        Model<z.ZodUnion<[z.ZodLiteral<'test'>, z.ZodLiteral<'run'>]>>, 
+        UnknownModel
     > = true;
-    const a3: TypeExtendsAssert<
-        Model<ReadonlyRecord<string, number>>,
-        RealUnknownModel
-    > = true;
-    const a4: TypeExtendsAssert<Model<'test' | 'run'>, UnknownModel> = true;
 
     const b1: TypeExtendsAssert<Model<{ test: string }>, UnknownModel> = true;
     const b2: TypeExtendsAssert<Model<{ test: string }[]>, UnknownModel> = true;

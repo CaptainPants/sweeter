@@ -3,7 +3,7 @@ import {
     type AmbientValueCallback,
     type ContextualValueCalculationContext,
     type LocalValueCallback,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 
 import {
     type Signal,

@@ -83,7 +83,7 @@ export function serializeSchemaForDisplay(
 ): string {
     for (const convertor of convertors) {
         const res = convertor(schema, depthLimit);
-        if (res != noValue) {
+        if (res != notFound) {
             return res;
         }
     }

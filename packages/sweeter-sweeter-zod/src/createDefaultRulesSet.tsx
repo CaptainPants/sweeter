@@ -1,18 +1,5 @@
-import {
-    ArrayType,
-    isBooleanType,
-    isConstantType,
-    isUnionType,
-    MapObjectType,
-    NumberType,
-    RigidObjectType,
-    Rules,
-    StringType,
-    type TypeMatcherRule,
-    type TypeMatcherRulePart,
-    UnionType,
-} from '@captainpants/typeytypetype';
 
+import { Rules, TypeMatcherRule, TypeMatcherRulePart, isBooleanType, isConstantType, isUnionType } from '@captainpants/zod-matcher';
 import { ModalEditorIfTooSmall } from './editors/index.js';
 import { type EditorComponentType } from './types.js';
 

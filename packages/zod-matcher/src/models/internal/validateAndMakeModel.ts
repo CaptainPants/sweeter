@@ -6,7 +6,7 @@ import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
-import { matches, validateAndThrow } from '../validate.js';
+import { shallowMatchesStructure, validateAndThrow } from '../validate.js';
 
 /**
  * For a given value (raw or model) validate that the value matches the type (using validateOrThrow). Throw if it does not.
@@ -34,7 +34,7 @@ export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
                 validated = await validateAndThrow(type, valueOrModel.value);
             } else {
                 // If not 'validating' we at least check the structure..
-                if (matches(type, valueOrModel.value)) {
+                if (shallowMatchesStructure(type, valueOrModel.value)) {
                     validated = valueOrModel.value;
                 } else {
                     throw new TypeError('Non-matching structure');

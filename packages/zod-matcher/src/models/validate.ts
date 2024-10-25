@@ -30,7 +30,7 @@ export async function validateAndThrow<TZodType extends z.ZodTypeAny>(
     return res.data;
 }
 
-export function matches<TZodType extends z.ZodTypeAny>(
+export function shallowMatchesStructure<TZodType extends z.ZodTypeAny>(
     schema: TZodType,
     value: unknown,
 ): value is z.infer<TZodType> {

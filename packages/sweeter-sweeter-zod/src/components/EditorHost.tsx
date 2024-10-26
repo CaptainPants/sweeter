@@ -5,7 +5,7 @@ import {
     createTypeMatcher,
     type TypeMatcherRule,
     notFound,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 import {
     $calc,
     $peek,

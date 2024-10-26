@@ -4,7 +4,7 @@ import {
     type Model,
     type Replacer,
     type TypeMatcherRule,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 
 import { AmbientValues } from './AmbientValues.js';
 import { EditorHost } from './EditorHost.js';

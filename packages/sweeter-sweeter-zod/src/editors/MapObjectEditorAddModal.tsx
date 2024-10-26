@@ -15,7 +15,7 @@ import {
     Row,
 } from '@captainpants/sweeter-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
-import { type Type } from '@captainpants/typeytypetype';
+import { type Type } from '@captainpants/zod-matcher';
 
 export type MapObjectEditorAddModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;

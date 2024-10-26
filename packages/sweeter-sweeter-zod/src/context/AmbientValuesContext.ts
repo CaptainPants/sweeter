@@ -1,5 +1,5 @@
 import { Context, type MightBeSignal } from '@captainpants/sweeter-core';
-import { type AmbientValueCallback } from '@captainpants/typeytypetype';
+import { type AmbientValueCallback } from '@captainpants/zod-matcher';
 
 export interface AmbientValuesContextType {
     ambientValueCallback: MightBeSignal<(name: string) => unknown>;

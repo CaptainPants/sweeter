@@ -8,11 +8,13 @@ export interface ValidateAndThrowArgs {
     abortSignal?: AbortSignal | undefined;
 }
 
+export const failedValidation: unique symbol = Symbol('failed validation');
+
 export async function validate<TZodType extends z.ZodTypeAny>(
     schema: TZodType,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },
-): value is z.infer<TZodType> {
+): Promise<z.infer<TZodType> | typeof failedValidation> {
     return (await schema.safeParseAsync(value)).data;
 }
 
@@ -33,6 +35,8 @@ export async function validateAndThrow<TZodType extends z.ZodTypeAny>(
 export function shallowMatchesStructure<TZodType extends z.ZodTypeAny>(
     schema: TZodType,
     value: unknown,
+    deep = true,
+    depth = 25
 ): value is z.infer<TZodType> {
     return schema.safeParse(value).data;
 }

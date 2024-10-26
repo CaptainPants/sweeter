@@ -93,8 +93,7 @@ export interface ArrayModel<TArrayZodType extends z.ZodArray<any>>
 export type TypedPropertyModelForKey<
     TZodObjectType extends z.AnyZodObject,
     TKey extends keyof zodUtilityTypes.Shape<TZodObjectType>,
-> = PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]> & 
-(TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> ? never : undefined);
+> = TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> ? PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]> : (PropertyModel<zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>> | undefined)
 
 interface UnknownObjectModelMethods {
     unknownGetProperty(key: string): UnknownPropertyModel | undefined;

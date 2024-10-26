@@ -1,4 +1,4 @@
-import { type TypeMatcherRule } from '@captainpants/typeytypetype';
+import { type TypeMatcherRule } from '@captainpants/zod-matcher';
 import {
     type ModalComponentType,
     type EditorSettings,

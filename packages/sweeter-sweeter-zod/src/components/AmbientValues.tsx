@@ -4,12 +4,9 @@ import {
     type ComponentInit,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import {
-    notFound,
-    type AmbientValueCallback,
-} from '@captainpants/typeytypetype';
 
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
+import { AmbientValueCallback, notFound } from '@captainpants/zod-matcher';
 
 export type AmbientValuesProps = PropertiesMightBeSignals<{
     callback: AmbientValueCallback | undefined;

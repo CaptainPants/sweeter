@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { type ReadonlySignalLike } from './ReadonlySignalLike.js';
 
 export interface ContextualValueCalculationContext {
@@ -8,8 +9,8 @@ export interface ContextualValueCalculationContext {
         | undefined;
 }
 
-export type ContextualValueCalculationCallback<T> = (
-    owner: ReadonlySignalLike<T>,
+export type ContextualValueCalculationCallback<TZodType extends z.ZodTypeAny> = (
+    owner: ReadonlySignalLike<z.infer<TZodType>>,
     context: ContextualValueCalculationContext,
 ) => unknown;
 
@@ -30,5 +31,5 @@ export const StandardLocalValues = {
     /**
      * Controls visibility of a property.
      */
-    Visible: '$Visible',
+    Visible: 'property:visible',
 };

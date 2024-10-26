@@ -16,7 +16,7 @@ import {
     categorizeProperties,
     StandardLocalValues,
     type UnknownRigidObjectModel,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
 import { type EditorProps } from '../types.js';

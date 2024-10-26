@@ -29,7 +29,7 @@ export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
         if (valueOrModel.type === type) {
             return valueOrModel as Model<TZodType>;
         } else {
-            let validated: TZodType;
+            let validated: z.infer<TZodType>;
             if (validate) {
                 validated = await validateAndThrow(type, valueOrModel.value);
             } else {

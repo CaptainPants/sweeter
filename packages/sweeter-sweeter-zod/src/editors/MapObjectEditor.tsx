@@ -19,7 +19,7 @@ import {
     type Type,
     type MapObjectModel,
     type Model,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { Box, Label } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';

@@ -6,7 +6,7 @@ import {
     LocalizerHook,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type Model } from '@captainpants/typeytypetype';
+import { type Model } from '@captainpants/zod-matcher';
 import { EditorHost } from '../components/EditorHost.js';
 import { idPaths } from '../idPaths.js';
 

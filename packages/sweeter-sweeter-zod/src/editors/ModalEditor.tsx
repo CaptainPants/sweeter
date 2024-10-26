@@ -1,4 +1,4 @@
-import { type Model } from '@captainpants/typeytypetype';
+import { type Model } from '@captainpants/zod-matcher';
 
 import { type EditorProps } from '../types.js';
 import {

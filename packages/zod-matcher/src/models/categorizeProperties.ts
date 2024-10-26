@@ -1,13 +1,11 @@
-import {
-    type UnknownRigidObjectType,
-    type UnknownPropertyDefinition,
-} from '../index.js';
+
+import { z } from 'zod';
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {
     name: string;
     order?: number;
-    definition: UnknownPropertyDefinition;
+    propertyType: z.ZodTypeAny;
 }
 
 /**
@@ -15,7 +13,7 @@ export interface CategorizedPropertyDefinition {
  * @returns
  */
 export function categorizeProperties(
-    type: UnknownRigidObjectType,
+    objectType: z.AnyZodObject,
 ): Array<{ category: string; properties: CategorizedPropertyDefinition[] }>;
 
 /**
@@ -24,18 +22,20 @@ export function categorizeProperties(
  * @returns
  */
 export function categorizeProperties<TPropertyResult>(
-    type: UnknownRigidObjectType,
+    objectType: z.AnyZodObject,
     transform?: (property: CategorizedPropertyDefinition) => TPropertyResult,
 ): Array<{ category: string; properties: TPropertyResult[] }>;
 
 export function categorizeProperties(
-    type: UnknownRigidObjectType,
+    objectType: z.AnyZodObject,
     transform?: (property: CategorizedPropertyDefinition) => unknown,
 ): Array<{ category: string; properties: unknown[] }> {
     const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();
 
-    for (const [name, property] of Object.entries(type.propertyDefinitions)) {
-        const category = property.category ?? 'Misc';
+    for (const [name, property] of Object.entries(objectType.shape)) {
+        const propertyTyped = property as z.ZodTypeAny;
+
+        const category = propertyTyped.category() ?? 'Misc';
 
         let list = categoryMap.get(category);
         if (!list) {
@@ -43,7 +43,7 @@ export function categorizeProperties(
             categoryMap.set(category, list);
         }
 
-        list.push({ name, order: 0, definition: property });
+        list.push({ name, order: 0, propertyType: propertyTyped });
     }
 
     const keys = [...categoryMap.keys()];

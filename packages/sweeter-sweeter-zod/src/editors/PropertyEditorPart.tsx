@@ -2,7 +2,7 @@ import {
     type ContextualValueCalculationContext,
     type Model,
     type PropertyModel,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 import {
     LocalizerHook,
     type ComponentInit,

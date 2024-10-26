@@ -3,7 +3,7 @@ import {
     cast,
     ModelFactory,
     type NumberModel,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $calc,

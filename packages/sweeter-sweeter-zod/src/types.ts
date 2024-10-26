@@ -6,7 +6,7 @@ import {
     type LocalValueCallback,
     type Model,
     type Replacer,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 
 export type EditorLikeProps = PropertiesMightBeSignals<{
     id?: string | undefined;

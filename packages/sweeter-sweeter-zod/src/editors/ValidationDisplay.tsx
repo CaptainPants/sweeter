@@ -8,7 +8,7 @@ import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import {
     type ValidationSingleResult,
     joinSingleValidationResults,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 
 const css = new GlobalCssClass({
     className: 'ValidationDisplay',

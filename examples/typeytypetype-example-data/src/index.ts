@@ -3,7 +3,7 @@ import {
     type Model,
     ModelFactory,
     Types,
-} from '@captainpants/typeytypetype';
+} from '@captainpants/zod-matcher';
 
 export const stringOnly = Types.string();
 export const numberOnly = Types.number();

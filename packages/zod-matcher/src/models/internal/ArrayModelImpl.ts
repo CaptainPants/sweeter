@@ -124,7 +124,7 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         newValue.splice(
             start,
             deleteCount,
-            ...newModels.map((x) => x.value),
+            ...newModels.map((x) => x.value as zodUtilityTypes.ArrayElementType<TArrayZodType>),
         );
 
         if (validate) {

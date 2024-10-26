@@ -35,7 +35,7 @@ export function categorizeProperties(
     for (const [name, property] of Object.entries(objectType.shape)) {
         const propertyTyped = property as z.ZodTypeAny;
 
-        const category = propertyTyped.category() ?? 'Misc';
+        const category = (propertyTyped.hasMetaData() ? propertyTyped.meta().category() : undefined) ?? 'Misc';
 
         let list = categoryMap.get(category);
         if (!list) {

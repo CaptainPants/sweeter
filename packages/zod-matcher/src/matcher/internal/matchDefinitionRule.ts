@@ -6,6 +6,7 @@ import {
     type TypeMatcherRule,
     type TypeMatcherRulePart,
 } from '../types.js';
+import { notFound } from '../../notFound.js';
 
 function traverseAncestors(
     node: TypeInfo,
@@ -45,10 +46,10 @@ export function matchDefinitionRulePart(
             res = deepEqual(part.value, context.settings[part.name]);
             break;
         case 'attr':
-            res = deepEqual(part.value, typeInfo.type.getAttr(part.name));
+            res = deepEqual(part.value, typeInfo.type.meta().getAttr(part.name, notFound));
             break;
         case 'label':
-            res = typeInfo.type.hasLabel(part.label);
+            res = typeInfo.type.meta().hasLabel(part.label);
             break;
         case 'type':
             res = typeInfo.type.constructor === part.constructor;

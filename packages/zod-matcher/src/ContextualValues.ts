@@ -10,7 +10,7 @@ export interface ContextualValueCalculationContext {
 }
 
 export type ContextualValueCalculationCallback<TZodType extends z.ZodTypeAny> = (
-    owner: ReadonlySignalLike<z.infer<TZodType>>,
+    owner: z.infer<TZodType>,
     context: ContextualValueCalculationContext,
 ) => unknown;
 

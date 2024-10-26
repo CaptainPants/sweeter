@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { type AttributeValue } from './_types.js';
-import { is } from '../index.js';
+import { is, notFound } from '../index.js';
 import { serializeSchemaForDisplay } from '../utility/serializeSchemaForDisplay.js';
 
 export interface KnownAttribute<TName extends string, T> {
@@ -21,7 +21,8 @@ export function createKnownAttribute<TName extends string, T>(
         return { name, value };
     }
     result.get = function (from: z.ZodType<T>): T {
-        const value = from.getAttr(name);
+        if (!from.hasMetaData()) throw new TypeError(`MetaData not found`);
+        const value = from.meta().getAttr(name, notFound);
         if (!is(value, schema)) {
             throw new TypeError(
                 `Expected ${serializeSchemaForDisplay(schema)}.`,
@@ -30,14 +31,16 @@ export function createKnownAttribute<TName extends string, T>(
         return value;
     };
     result.getOrFallback = function (from: z.ZodType<T>, fallback: T): T {
-        const value = from.getAttr(name);
+        if (!from.hasMetaData()) return fallback;
+        const value = from.meta().getAttr(name, notFound);
         if (!is(value, schema)) {
             return fallback;
         }
         return value;
     };
     result.getOrUndefined = function (from: z.ZodType<T>): T | undefined {
-        const value = from.getAttr(name);
+        if (!from.hasMetaData()) return undefined;
+        const value = from.meta().getAttr(name, undefined);
         if (!is(value, schema)) {
             return undefined;
         }

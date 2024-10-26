@@ -184,6 +184,9 @@ importers:
       tinycolor2:
         specifier: ^1.6.0
         version: 1.6.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     optionalDependencies:
       lucide:
         specifier: ^0.319.0

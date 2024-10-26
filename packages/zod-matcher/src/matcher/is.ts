@@ -2,7 +2,7 @@ import z from 'zod';
 
 export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
     const res = type.safeParse(val);
-    return !res.error;
+    return res.success;
 }
 
 export function isObjectType(schema: z.ZodType): schema is z.ZodObject<any> {

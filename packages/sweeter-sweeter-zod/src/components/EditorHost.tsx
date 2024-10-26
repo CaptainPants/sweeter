@@ -8,9 +8,11 @@ import {
 } from '@captainpants/zod-matcher';
 import {
     $calc,
+    $constant,
     $peek,
     $val,
     $valProperties,
+    $wrap,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 
@@ -23,6 +25,7 @@ import {
 } from '../types.js';
 import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
 import { EditorRootContext } from '../context/EditorRootContext.js';
+import { z } from 'vitest/dist/reporters-5f784f42.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const Last = (props: {}, init: ComponentInit): JSX.Element => {
@@ -65,39 +68,36 @@ export function EditorHost(
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
 
-    const calculateLocal = $calc(() => {
+    const calculateLocal = (name: string, context: ContextualValueCalculationContext) => {
         const modelResolved = $val(model);
 
-        return (name: string, context: ContextualValueCalculationContext) => {
-            // Look at the model, and then the parent's property model (which is passed via the localProp)
-            const found = modelResolved.type.getLocalValueForUnknown(
-                name,
-                $peek(modelResolved),
-                context,
-            );
-            if (found !== notFound) {
-                return found;
-            }
+        // Look at the model, and then the parent's property model (which is passed via the localProp)
+        const found = modelResolved.type.meta().getLocalValueForUnknown(
+            name,
+            modelResolved,
+            context,
+        );
+        if (found !== notFound) {
+            return found;
+        }
 
-            const localPropResolved = $peek(localProp);
-            if (!localPropResolved) {
-                return notFound;
-            }
+        const localPropResolved = $peek(localProp);
+        if (!localPropResolved) {
+            return notFound;
+        }
 
-            return localPropResolved(name);
-        };
-    });
-    const calculateAmbient = $calc(() => {
+        return localPropResolved(name);
+    };
+    
+    const calculateAmbient = (name: string, context: ContextualValueCalculationContext) => {
         const modelResolved = $val(model);
 
-        return (name: string, context: ContextualValueCalculationContext) => {
-            return modelResolved.type.getAmbientValueForUnknown(
-                name,
-                $peek(modelResolved),
-                context,
-            );
-        };
-    });
+        return modelResolved.type.meta().getAmbientValueForUnknown(
+            name,
+            modelResolved,
+            context,
+        );
+    };
 
     const { ambient, local } = init.hook(
         SetupContextualValueCallbacksHook,

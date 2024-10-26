@@ -38,7 +38,8 @@
         "@captainpants/sweeter-web": "workspace:^",
         "@captainpants/zod-matcher": "workspace:^",
         "@popperjs/core": "^2.11.8",
-        "tinycolor2": "^1.6.0"
+        "tinycolor2": "^1.6.0",
+        "zod": "^3.23.8"
     },
     "optionalDependencies": {
         "lucide": "^0.319.0"

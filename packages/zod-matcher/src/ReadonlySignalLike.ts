@@ -5,4 +5,6 @@
  */
 export interface ReadonlySignalLike<T> {
     readonly value: T;
+
+    __SIGNAL__: true;
 }

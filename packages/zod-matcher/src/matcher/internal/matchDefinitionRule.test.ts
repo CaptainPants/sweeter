@@ -7,14 +7,14 @@ test('label', async () => {
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number().withLabel('test-label'), parentInfo: null },
+            { type: z.number().meta().withLabel('test-label').endMeta(), parentInfo: null },
             Rules.label('test-label'),
         ),
     ).toStrictEqual(true);
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number().withLabel('test-label'), parentInfo: null },
+            { type: z.number().meta().withLabel('test-label').endMeta(), parentInfo: null },
             Rules.label('test-label'),
         ),
     ).toStrictEqual(true);
@@ -22,7 +22,7 @@ test('label', async () => {
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number().withLabel('label1'), parentInfo: null },
+            { type: z.number().meta().withLabel('label1').endMeta(), parentInfo: null },
             Rules.label('label1-suffix'),
         ),
     ).toStrictEqual(false);
@@ -40,7 +40,7 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: z.number().withAttr('type', 'ham-sandwich'),
+                type: z.number().meta().setAttr('type', 'ham-sandwich').endMeta(),
                 parentInfo: null,
             },
             Rules.attr('type', 'ham-sandwich'),
@@ -59,8 +59,10 @@ test('attribute', async () => {
             {
                 type: z
                     .number()
-                    .withAttr('type', 'ham-sandwich')
-                    .withAttr('other', 'thing'),
+                    .meta()
+                    .setAttr('type', 'ham-sandwich')
+                    .setAttr('other', 'thing')
+                    .endMeta(),
                 parentInfo: null,
             },
             Rules.attr('type', 'ham-sandwich'),

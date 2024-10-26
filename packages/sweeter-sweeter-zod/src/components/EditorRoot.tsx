@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import {
     type AmbientValueCallback,
     asUnknown,
@@ -21,10 +23,10 @@ import {
 import { Button, Modal } from '@captainpants/sweeter-gummybear';
 import { standardRules } from '../standardRules.js';
 
-export type EditorRootProps<T> = PropertiesMightBeSignals<{
+export type EditorRootProps<TZodType extends z.ZodTypeAny> = PropertiesMightBeSignals<{
     id?: string | undefined;
-    model: Model<T>;
-    replace: Replacer<T>;
+    model: Model<TZodType>;
+    replace: Replacer<TZodType>;
     settings?: EditorSettings;
 
     idPath?: string;
@@ -43,8 +45,8 @@ const defaultSettings = Object.freeze({});
  * The main entry point for an editor structure.
  * @param props
  */
-export function EditorRoot<T>(props: Readonly<EditorRootProps<T>>): JSX.Element;
-export function EditorRoot<T>({
+export function EditorRoot<TZodType extends z.ZodTypeAny>(props: Readonly<EditorRootProps<TZodType>>): JSX.Element;
+export function EditorRoot<TZodType extends z.ZodTypeAny>({
     id,
     model,
     replace,
@@ -52,7 +54,7 @@ export function EditorRoot<T>({
     idPath,
     getAmbientValue,
     rules: rulesProp,
-}: Readonly<EditorRootProps<T>>): JSX.Element {
+}: Readonly<EditorRootProps<TZodType>>): JSX.Element {
     const typedModel = $calc(() => asUnknown($val(model)));
 
     const newAmbientValuesCallback = $calc(() => {
@@ -120,7 +122,7 @@ export function EditorRoot<T>({
                         <EditorHost
                             id={id}
                             model={typedModel}
-                            replace={replace as unknown as Replacer<unknown>}
+                            replace={replace as unknown as Replacer<any>}
                             indent={0}
                             isRoot
                             idPath={idPath}

@@ -1,95 +1,64 @@
 import { z } from 'zod';
-import { ContextualValueCalculationCallback, notFound } from '..';
+import { ContextualValueCalculationCallback, ContextualValueCalculationContext, ReadonlySignalLike, notFound } from '..';
+import { descend } from '@captainpants/sweeter-utilities';
+import { shallowMatchesStructure } from '../models/validate';
 
 const weakMap = new WeakMap<z.ZodType, MetaData<any>>();
 
-export class MetaData<TZodType extends z.ZodTypeAny> {
-    #attributes?: Map<string, unknown>;
-    #labels?: Set<string>;
-    #localValues?: Map<
-        string,
-        ContextualValueCalculationCallback<TZodType>
-    > = new Map<string, ContextualValueCalculationCallback<TZodType>>();
-    #ambientValues?: Map<
-        string,
-        ContextualValueCalculationCallback<TZodType>
-    > = new Map<string, ContextualValueCalculationCallback<TZodType>>();
+const schemas = {
+    displayName: z.string(),
+    propertyCategory: z.string(),
+    propertyVisible: z.boolean()
+}
 
-    public setAttr(schema: z.ZodType, name: string, value: unknown) {
-        (this.#attributes ?? (this.#attributes = new Map())).set(name, value);
-    }
+export interface MetaData<TZodType extends z.ZodTypeAny> {
+    setAttr(name: string, value: unknown): this;
 
-    /**
-     * 
-     * @param schema 
-     * @param name 
-     * @returns symbol 'notFound' if not found
-     */
-    public getAttr(name: string): unknown {
-        if (!this.#attributes) return notFound;
+    getAttr(name: string, fallback: unknown): unknown;
 
-        if (!this.#attributes.has(name)) return notFound;
+    getAttrValidated<TValueZodType extends z.ZodTypeAny>(name: string, valueSchema: TValueZodType, fallback: z.infer<TValueZodType>): unknown;
 
-        return this.#attributes.get(name);
-    }
+    withLabel(name: string, val?: boolean): this;
 
-    public setLabel(name: string, val: boolean) {
-        const set = (this.#labels ?? (this.#labels = new Set()));
-        
-        if (val) {
-            set.add(name);
-        }
-        else {
-            set.delete(name);
-        }
-    }
-
-    public hasLabel(name: string): boolean {
-        if (!this.#labels) return false;
-
-        return this.#labels.has(name);
-    }
+    hasLabel(name: string): boolean ;
     
-    public setLocalValue(name: string, value: ContextualValueCalculationCallback<TZodType> | undefined) {
-        (this.#localValues ?? (this.#localValues = new Map())).set(name, value);
-    }
+    withCategory(category: string | undefined): this;
 
-    public getLocalValue(name: string): ContextualValueCalculationCallback<TZodType> | undefined {
-        return this.#localValues?.get(name);
-    }
+    category(): string | undefined;
 
-    public setAmbientValue(name: string, value: ContextualValueCalculationCallback<TZodType> | undefined) {
-        (this.#ambientValues ?? (this.#ambientValues = new Map())).set(name, value);
-    }
+    visible(visibility: boolean): this;
 
-    public getAmbientValue(name: string): ContextualValueCalculationCallback<TZodType> | undefined {
-        return this.#ambientValues?.get(name);
-    }
+    isVisible(): boolean;
+    
+    withLocalValue(name: string, callback: ContextualValueCalculationCallback<any>): this;
+    withLocalValue(name: string, value: unknown): this;
+    
+    withAmbientValue(name: string, callback: ContextualValueCalculationCallback<any>): this;
+    withAmbientValue(name: string, value: unknown): this;
 
-    public static tryGet<TZodType extends z.ZodTypeAny>(schema: TZodType): MetaData<TZodType> | undefined {
-        return weakMap.get(schema);
-    }
+    getLocalValue(
+        name: string,
+        value: z.infer<TZodType>,
+        context: ContextualValueCalculationContext,
+    ): unknown;
 
-    public static get<TZodType extends z.ZodTypeAny>(schema: TZodType, createIfNotFound: boolean): MetaData<TZodType> {
-        const item = weakMap.get(schema);
-        if (item === undefined) {
-            if (createIfNotFound) {
-                const result = new MetaData<TZodType>();
-                weakMap.set(schema, result);
-                return result;
-            }
-            else {
-                throw new Error('Metadata not found');
-            }
-        }
-        return item;
-    }
+    getLocalValueForUnknown(
+        name: string,
+        value: unknown,
+        context: ContextualValueCalculationContext,
+    ): unknown;
 
-    public static getAttr<TZodType extends z.ZodTypeAny>(schema: TZodType, name: string): unknown | typeof notFound {
-        return MetaData.tryGet(schema)?.getAttr(name) ?? notFound;
-    }
+    getAmbientValue(
+        name: string,
+        value: z.infer<TZodType>,
+        context: ContextualValueCalculationContext,
+    ): unknown;
 
-    public static hasLabel<TZodType extends z.ZodTypeAny>(schema: TZodType, name: string): boolean {
-        return MetaData.tryGet(schema)?.hasLabel(name) ?? false;
-    }
+    getAmbientValueForUnknown(
+        name: string,
+        value: unknown,
+        context: ContextualValueCalculationContext,
+    ): unknown;
+
+    endMeta(): TZodType;
 };

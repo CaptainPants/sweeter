@@ -38,21 +38,20 @@ export function createDefaultRulesSet(
     options: DefaultRulesSetOptions,
 ): Array<TypeMatcherRule<EditorComponentType>> {
     const result: Array<TypeMatcherRule<EditorComponentType>> = [];
-    addIfPresent(result, Rules.type(RigidObjectType), options.rigidObject);
-    addIfPresent(result, Rules.type(MapObjectType), options.mapObject);
-    addIfPresent(result, Rules.type(StringType), options.string);
-    addIfPresent(result, Rules.type(NumberType), options.number);
-    addIfPresent(result, Rules.type(ArrayType), options.array);
+    addIfPresent(result, Rules.object(), options.rigidObject);
+    addIfPresent(result, Rules.string(), options.string);
+    addIfPresent(result, Rules.number(), options.number);
+    addIfPresent(result, Rules.array(), options.array);
 
     // union variants: boolean (as a switch), union of only constants (show as a dropdown) or any other union
     // in reverse priority order (the latest match is used)
-    addIfPresent(result, Rules.type(UnionType), options.union);
+    addIfPresent(result, Rules.union(), options.union);
     addIfPresent(
         result,
         Rules.callback(
             ({ type }) =>
                 isUnionType(type) &&
-                type.types.every((member) => isConstantType(member)),
+                type.options.every((member) => isConstantType(member)),
         ),
         options.constantUnion,
     );
@@ -71,15 +70,14 @@ export function createDefaultRulesSet(
     // wrap in a modal
     result.push({
         matches: Rules.or([
-            Rules.type(RigidObjectType),
-            Rules.type(MapObjectType),
+            Rules.object(),
         ]),
         result: (props) => <ModalEditorIfTooSmall {...props} minWidth={240} />,
         priority: 10,
     });
 
     result.push({
-        matches: Rules.type(ArrayType),
+        matches: Rules.array(),
         result: (props) => <ModalEditorIfTooSmall {...props} minWidth={140} />,
         priority: 10,
     });

@@ -12,28 +12,19 @@ import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { z } from 'zod';
 import { zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
+import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
 
-function findTypeForValue<TUnion extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>(
-    value: unknown,
-    type: z.ZodUnion<TUnion>,
-): TUnion[number] | null {
-    for (const item of type.options) {
-        if (item.safeParse(item).success) return item;
-    }
-    return null;
-}
-
-export class UnionModelImpl<TZodUnionType extends z.ZodUnion<any>>
+export class UnionModelImpl<TZodUnionType extends zodUtilityTypes.ZodAnyUnionType>
     extends ModelImpl<z.infer<TZodUnionType>, TZodUnionType>
     implements UnionModel<TZodUnionType>
 {
-    public static createFromValue<TZodUnionType extends z.ZodUnion<any>>(
+    public static createFromValue<TZodUnionType extends zodUtilityTypes.ZodAnyUnionType>(
         value: z.infer<TZodUnionType>,
         type: TZodUnionType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
     ): UnionModelImpl<TZodUnionType> {
-        const match = findTypeForValue(value, type);
+        const match = findUnionOptionForValue(value, type);
 
         if (match === null) {
             throw new Error(`Could not find matching type for value.`);
@@ -102,7 +93,7 @@ export class UnionModelImpl<TZodUnionType extends z.ZodUnion<any>>
         value: unknown,
         validate: boolean = true,
     ): Promise<this> {
-        const type = findTypeForValue(value, this.type);
+        const type = findUnionOptionForValue(value, this.type);
 
         if (!type) {
             throw new TypeError(
@@ -110,7 +101,7 @@ export class UnionModelImpl<TZodUnionType extends z.ZodUnion<any>>
             );
         }
 
-        const adoptedResolved = (await validateAndMakeModel<TZodUnionType>(
+        const adoptedResolved = (await validateAndMakeModel<zodUtilityTypes.UnionOptions<TZodUnionType>>(
             value,
             type,
             this.parentInfo,

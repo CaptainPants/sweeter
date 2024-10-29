@@ -44,4 +44,6 @@ export namespace zodUtilityTypes {
     export type IsAny<T> = 0 extends T & 1 ? true : false;
 
     export type ArrayElementType<TArrayZodType extends z.ZodArray<any>> = TArrayZodType extends z.ZodArray<infer TArrayElementZodType> ? TArrayElementZodType : never;
+
+    export type ZodAnyUnionType = z.ZodUnion<[z.ZodTypeAny, ...readonly z.ZodTypeAny[]]>;
 }

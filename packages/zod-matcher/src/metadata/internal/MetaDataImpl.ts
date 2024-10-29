@@ -82,6 +82,19 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny> implements MetaData<TZo
         return undefined;
     };
 
+    public withDisplayName(displayName: string | undefined): this {
+        return this.setAttr('displayName', displayName);
+    }
+
+    public displayName(): string | undefined {
+        const res = this.getAttr('displayName', undefined);
+        const parsed = schemas.displayName.safeParse(res);
+        if (parsed.success) {
+            return parsed.data
+        }
+        return undefined;
+    }
+
     public visible(visibility: boolean) {
         this.setAttr('property:visible', visibility);
         return this;

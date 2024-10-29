@@ -167,7 +167,7 @@ export interface UnknownUnionModelMethods {
     replace: (value: unknown, validate?: boolean) => Promise<this>;
 }
 
-export interface UnionModelMethods<TZodUnionType extends z.ZodUnion<any>>
+export interface UnionModelMethods<TZodUnionType extends zodUtilityTypes.ZodAnyUnionType>
     extends UnknownUnionModelMethods {
     getRecursivelyResolved: () => SpreadModel<
         zodUtilityTypes.RecursiveUnionOptions<TZodUnionType>
@@ -175,10 +175,10 @@ export interface UnionModelMethods<TZodUnionType extends z.ZodUnion<any>>
 }
 
 export interface UnknownUnionModel
-    extends ModelBase<unknown, z.ZodUnion<any>>,
+    extends ModelBase<unknown, zodUtilityTypes.ZodAnyUnionType>,
         UnknownUnionModelMethods {}
 
-export interface UnionModel<TUnion extends z.ZodUnion<any>>
+export interface UnionModel<TUnion extends zodUtilityTypes.ZodAnyUnionType>
     extends ModelBase<z.infer<TUnion>, TUnion>,
         UnionModelMethods<TUnion> {}
 
@@ -220,7 +220,7 @@ export type AnyModelConstraint =
 export type Model<TZodType extends z.ZodTypeAny> =
     TZodType extends z.ZodAny
         ? UnknownModel
-        : TZodType extends z.ZodUnion<any>
+        : TZodType extends zodUtilityTypes.ZodAnyUnionType
           ? UnionModel<TZodType>
           : TZodType extends z.ZodArray<any>
             ? ArrayModel<TZodType>

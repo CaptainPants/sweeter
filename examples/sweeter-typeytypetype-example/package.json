@@ -24,10 +24,10 @@
     },
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",
-        "@captainpants/sweeter-web": "workspace:^",
         "@captainpants/sweeter-gummybear": "workspace:^",
+        "@captainpants/sweeter-web": "workspace:^",
         "@captainpants/sweeter-zod-web": "workspace:^",
-        "@captainpants/zod-matcher": "workspace:^",
-        "@captainpants/typeytypetype-example-data": "workspace:^"
+        "@captainpants/typeytypetype-example-data": "workspace:^",
+        "@captainpants/zod-matcher": "workspace:^"
     }
 }

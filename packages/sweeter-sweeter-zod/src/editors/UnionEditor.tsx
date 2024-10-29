@@ -3,9 +3,11 @@ import { type EditorProps } from '../types.js';
 import {
     type Model,
     ModelFactory,
-    type Type,
     asUnion,
     cast,
+    UnknownModel,
+    findUnionOptionIndexForValue,
+    isConstantType,
 } from '@captainpants/zod-matcher';
 import {
     $calc,
@@ -31,7 +33,7 @@ export function UnionEditor({
 
     const alternatives = $calc(() =>
         // Only depends on 'type' signal
-        type.value.types.map((alternative) => {
+        type.value.options.map((alternative) => {
             return {
                 label: alternative.displayName ?? alternative.name ?? 'unknown',
                 type: alternative,
@@ -59,7 +61,7 @@ export function UnionEditor({
     const resolved = $calc(() => typedModel.value.getDirectlyResolved());
 
     const replaceResolved = async (
-        newResolvedModel: Model<unknown>,
+        newResolvedModel: UnknownModel,
     ): Promise<void> => {
         const defaultModel = await typedModel
             .peek()
@@ -68,11 +70,11 @@ export function UnionEditor({
     };
 
     const typeIndex = $calc(() =>
-        type.value.getTypeIndexForValue(typedModel.value.value),
+        findUnionOptionIndexForValue(typedModel.value.value, type.value),
     );
 
     const typeValue = $mutableFromCallbacks(
-        () => typeIndex.value.toString(),
+        () => (typeIndex.value ?? -1).toString(),
         (value) => {
             const index = Number(value);
             const type = alternatives.peek()[index]?.type;
@@ -91,14 +93,14 @@ export function UnionEditor({
                 />
             </div>
             {$if(
-                $calc(() => !resolved.value.type.isConstant),
+                $calc(() => !isConstantType(resolved.value.type)),
                 () => (
                     <EditorHost
                         model={resolved}
                         replace={replaceResolved}
                         indent={indent}
                         idPath={$calc(() =>
-                            idPaths.union($val(idPath), typeIndex.value),
+                            idPaths.union($val(idPath), typeIndex.value ?? -1),
                         )}
                     />
                 ),

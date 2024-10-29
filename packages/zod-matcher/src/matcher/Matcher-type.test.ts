@@ -10,13 +10,13 @@ test('test', async () => {
     const rules: Array<TypeMatcherRule<number>> = [
         {
             name: 'rule1',
-            matches: Rules.type(z.number()),
+            matches: Rules.number(),
             priority: 0,
             result: 1,
         },
         {
             name: 'rule2',
-            matches: Rules.type(z.string()),
+            matches: Rules.string(),
             priority: 0,
             result: 2,
         },

@@ -51,8 +51,8 @@ export function matchDefinitionRulePart(
         case 'label':
             res = typeInfo.type.meta().hasLabel(part.label);
             break;
-        case 'type':
-            res = typeInfo.type.constructor === part.constructor;
+        case 'instanceOf':
+            res = typeInfo.type instanceof part.constructor;
             break;
         case 'not':
             res = !matchDefinitionRulePart(

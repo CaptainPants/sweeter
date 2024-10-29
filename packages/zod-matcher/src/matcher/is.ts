@@ -1,4 +1,5 @@
 import z from 'zod';
+import { zodUtilityTypes } from '../utility/zodUtilityTypes';
 
 export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
     const res = type.safeParse(val);
@@ -16,7 +17,7 @@ export function isArrayType(
 
 export function isUnionType(
     schema: z.ZodType,
-): schema is z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]> {
+): schema is zodUtilityTypes.ZodAnyUnionType {
     return schema instanceof z.ZodUnion;
 }
 

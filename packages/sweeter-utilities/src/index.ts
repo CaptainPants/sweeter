@@ -11,3 +11,4 @@ export * from './isAbortError.js';
 export * from './Maybe.js';
 export * from './StackTrace.js';
 export * from './interpolatePlaceholders.js';
+export * from './idPaths.js';

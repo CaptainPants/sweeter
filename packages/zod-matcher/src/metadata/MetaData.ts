@@ -26,6 +26,10 @@ export interface MetaData<TZodType extends z.ZodTypeAny> {
 
     category(): string | undefined;
 
+    withDisplayName(category: string | undefined): this;
+
+    displayName(): string | undefined;
+
     visible(visibility: boolean): this;
 
     isVisible(): boolean;

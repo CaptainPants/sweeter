@@ -16,8 +16,8 @@ it('All model types match expected results', () => {
     > = true;
 
     const union_any: TypeMatchAssert<
-        Model<z.ZodUnion<any>>,
-        UnionModel<z.ZodUnion<any>>
+        Model<zodUtilityTypes.ZodAnyUnionType>,
+        UnionModel<zodUtilityTypes.ZodAnyUnionType>
     > = true;
     const union_single: TypeMatchAssert<
         Model<z.ZodUnion<[z.ZodLiteral<1>]>>,

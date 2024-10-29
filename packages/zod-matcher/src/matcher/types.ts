@@ -20,8 +20,8 @@ export type TypeMatcherRulePart =
           type: 'any';
       }
     | {
-          type: 'type';
-          schema: z.ZodType;
+          type: 'instanceOf';
+          constructor: new (...args: any[]) => any;
       }
     | {
           type: 'label';

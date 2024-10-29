@@ -1,9 +1,9 @@
 import {
     asArray,
     cast,
-    type Type,
     isUnionType,
     type UnknownArrayModel,
+    validate,
 } from '@captainpants/zod-matcher';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
@@ -53,9 +53,7 @@ export function ArrayEditor(
                 result: draft,
             }),
             validate: async (converted) => {
-                const res = await typedModel
-                    .peek()
-                    .type.validate(converted.value);
+                const res = await validate(typedModel.peek().type, converted.value);
                 return res.success ? null : res.error;
             },
         },

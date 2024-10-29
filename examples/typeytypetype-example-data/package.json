@@ -32,6 +32,7 @@
         "pnpm": "8.14.1"
     },
     "dependencies": {
-        "@captainpants/zod-matcher": "workspace:^"
+        "@captainpants/zod-matcher": "workspace:^",
+        "zod": "^3.23.8"
     }
 }

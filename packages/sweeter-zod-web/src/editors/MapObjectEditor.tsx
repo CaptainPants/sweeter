@@ -74,9 +74,10 @@ export const MapObjectEditor: Component<EditorProps> = (
                 await $peek(replace)(validated);
             },
             validate: async (converted) => {
-                const res = await validate(typedModel
-                    .peek()
-                    .type, converted.value);
+                const res = await validate(
+                    typedModel.peek().type,
+                    converted.value,
+                );
                 return res.success ? null : res.error;
             },
         },
@@ -218,47 +219,53 @@ export const MapObjectEditor: Component<EditorProps> = (
                     <div class={css.editorContainer}>{content}</div>
                     <div>
                         {$calc(() =>
-                            catchallAllowedTypes.value.map((allowedType, index) => {
-                                const title =
-                                    catchallAllowedTypes.value.length === 1
-                                        ? localize('Add')
-                                        : localize('Add {0}', [
-                                              allowedType.meta().getBestDisplayName(),
-                                          ]);
+                            catchallAllowedTypes.value.map(
+                                (allowedType, index) => {
+                                    const title =
+                                        catchallAllowedTypes.value.length === 1
+                                            ? localize('Add')
+                                            : localize('Add {0}', [
+                                                  allowedType
+                                                      .meta()
+                                                      .getBestDisplayName(),
+                                              ]);
 
-                                const isOpen = $mutable(false);
+                                    const isOpen = $mutable(false);
 
-                                const validate = async (name: string) => {
-                                    const property =
-                                        draft.value.unknownGetProperty(name);
-                                    if (property !== undefined) {
-                                        return 'Property is already defined';
-                                    }
+                                    const validate = async (name: string) => {
+                                        const property =
+                                            draft.value.unknownGetProperty(
+                                                name,
+                                            );
+                                        if (property !== undefined) {
+                                            return 'Property is already defined';
+                                        }
 
-                                    return null;
-                                };
+                                        return null;
+                                    };
 
-                                return (
-                                    <>
-                                        <MapObjectEditorAddModal
-                                            isOpen={isOpen}
-                                            type={allowedType}
-                                            validate={validate}
-                                            onCancelled={() =>
-                                                (isOpen.value = false)
-                                            }
-                                            onFinished={onAdd}
-                                        />
-                                        <IconButton
-                                            icon="Add"
-                                            text={title}
-                                            onLeftClick={() => {
-                                                isOpen.value = true;
-                                            }}
-                                        />
-                                    </>
-                                );
-                            }),
+                                    return (
+                                        <>
+                                            <MapObjectEditorAddModal
+                                                isOpen={isOpen}
+                                                type={allowedType}
+                                                validate={validate}
+                                                onCancelled={() =>
+                                                    (isOpen.value = false)
+                                                }
+                                                onFinished={onAdd}
+                                            />
+                                            <IconButton
+                                                icon="Add"
+                                                text={title}
+                                                onLeftClick={() => {
+                                                    isOpen.value = true;
+                                                }}
+                                            />
+                                        </>
+                                    );
+                                },
+                            ),
                         )}
                     </div>
                 </div>

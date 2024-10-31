@@ -46,7 +46,10 @@ export function matchDefinitionRulePart(
             res = deepEqual(part.value, context.settings[part.name]);
             break;
         case 'attr':
-            res = deepEqual(part.value, typeInfo.type.meta().getAttr(part.name, notFound));
+            res = deepEqual(
+                part.value,
+                typeInfo.type.meta().getAttr(part.name, notFound),
+            );
             break;
         case 'label':
             res = typeInfo.type.meta().hasLabel(part.label);

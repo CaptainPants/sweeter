@@ -1,5 +1,5 @@
-import z from 'zod';
-import { zodUtilityTypes } from '../utility/zodUtilityTypes';
+import { z } from 'zod';
+import { type zodUtilityTypes } from '../utility/zodUtilityTypes.js';
 
 export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
     const res = type.safeParse(val);
@@ -10,13 +10,19 @@ export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
 // Also think about z.ZodNullable, z.ZodOptional as they are effectively unions
 // but presumably won't return true to X instanceof ZodUnion
 
-export function isDefaultWrapper(schema: z.ZodTypeAny): schema is z.ZodDefault<z.ZodTypeAny> {
+export function isDefaultWrapper(
+    schema: z.ZodTypeAny,
+): schema is z.ZodDefault<z.ZodTypeAny> {
     return schema instanceof z.ZodDefault;
 }
-export function isNullableType(schema: z.ZodTypeAny): schema is z.ZodNullable<z.ZodTypeAny> {
+export function isNullableType(
+    schema: z.ZodTypeAny,
+): schema is z.ZodNullable<z.ZodTypeAny> {
     return schema instanceof z.ZodNullable;
 }
-export function isOptionalType(schema: z.ZodTypeAny): schema is z.ZodOptional<z.ZodTypeAny> {
+export function isOptionalType(
+    schema: z.ZodTypeAny,
+): schema is z.ZodOptional<z.ZodTypeAny> {
     return schema instanceof z.ZodOptional;
 }
 
@@ -35,9 +41,7 @@ export function isUnionType(
     return schema instanceof z.ZodUnion;
 }
 
-export function isNumberType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodNumber {
+export function isNumberType(schema: z.ZodTypeAny): schema is z.ZodNumber {
     return schema instanceof z.ZodNumber;
 }
 
@@ -83,9 +87,7 @@ export function isNullType(schema: z.ZodTypeAny): schema is z.ZodNull {
     return schema instanceof z.ZodNull;
 }
 
-export function isUndefinedType(
-    type: z.ZodTypeAny,
-): type is z.ZodUndefined {
+export function isUndefinedType(type: z.ZodTypeAny): type is z.ZodUndefined {
     return type instanceof z.ZodUndefined;
 }
 
@@ -111,9 +113,7 @@ export function isConstantType(
     | z.ZodNull
     | z.ZodUndefined {
     return (
-        isLiteralType(schema) ||
-        isNullType(schema) ||
-        isUndefinedType(schema)
+        isLiteralType(schema) || isNullType(schema) || isUndefinedType(schema)
     );
 }
 

@@ -1,24 +1,28 @@
 import { descend } from '@captainpants/sweeter-utilities';
 import {
-    SpreadModel,
+    type SpreadModel,
     type Model,
     type UnionModel,
-    UnknownModel,
+    type UnknownModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { z } from 'zod';
-import { zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
+import { type z } from 'zod';
+import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
 import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
 
-export class UnionModelImpl<TZodUnionType extends zodUtilityTypes.ZodAnyUnionType>
+export class UnionModelImpl<
+        TZodUnionType extends zodUtilityTypes.ZodAnyUnionType,
+    >
     extends ModelImpl<z.infer<TZodUnionType>, TZodUnionType>
     implements UnionModel<TZodUnionType>
 {
-    public static createFromValue<TZodUnionType extends zodUtilityTypes.ZodAnyUnionType>(
+    public static createFromValue<
+        TZodUnionType extends zodUtilityTypes.ZodAnyUnionType,
+    >(
         value: z.infer<TZodUnionType>,
         type: TZodUnionType,
         parentInfo: ParentTypeInfo | null,
@@ -101,12 +105,9 @@ export class UnionModelImpl<TZodUnionType extends zodUtilityTypes.ZodAnyUnionTyp
             );
         }
 
-        const adoptedResolved = (await validateAndMakeModel<zodUtilityTypes.UnionOptions<TZodUnionType>>(
-            value,
-            type,
-            this.parentInfo,
-            validate,
-        )) as unknown as SpreadModel<
+        const adoptedResolved = (await validateAndMakeModel<
+            zodUtilityTypes.UnionOptions<TZodUnionType>
+        >(value, type, this.parentInfo, validate)) as unknown as SpreadModel<
             zodUtilityTypes.UnionOptions<TZodUnionType>
         >;
 

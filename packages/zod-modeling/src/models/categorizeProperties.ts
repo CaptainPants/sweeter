@@ -1,5 +1,4 @@
-
-import { z } from 'zod';
+import { type z } from 'zod';
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {
@@ -35,7 +34,10 @@ export function categorizeProperties(
     for (const [name, property] of Object.entries(objectType.shape)) {
         const propertyTyped = property as z.ZodTypeAny;
 
-        const category = (propertyTyped.hasMetaData() ? propertyTyped.meta().category() : undefined) ?? 'Misc';
+        const category =
+            (propertyTyped.hasMetaData()
+                ? propertyTyped.meta().category()
+                : undefined) ?? 'Misc';
 
         let list = categoryMap.get(category);
         if (!list) {

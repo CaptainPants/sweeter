@@ -43,7 +43,10 @@ export function BooleanEditor(
                 return { success: true, result: asModel };
             },
             validate: async (converted) => {
-                const res = await validate(typedModel.peek().type, converted.value);
+                const res = await validate(
+                    typedModel.peek().type,
+                    converted.value,
+                );
                 return res.success ? null : res.error;
             },
         },

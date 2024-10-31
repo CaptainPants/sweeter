@@ -56,7 +56,10 @@ export function ObjectEditor(
                 await $peek(replace)(validated);
             },
             validate: async (converted) => {
-                const res = await validate(typedModel.peek().type, converted.value);
+                const res = await validate(
+                    typedModel.peek().type,
+                    converted.value,
+                );
                 return res.success ? null : res.error;
             },
         },
@@ -114,11 +117,13 @@ export function ObjectEditor(
                             assertNotNullOrUndefined(propertyModel);
 
                             return (
-                                propertyModel.valueModel.type.meta().getLocalValueForUnknown(
-                                    StandardLocalValues.Visible,
-                                    typedModel.value,
-                                    calculationContext,
-                                ) !== false
+                                propertyModel.valueModel.type
+                                    .meta()
+                                    .getLocalValueForUnknown(
+                                        StandardLocalValues.Visible,
+                                        typedModel.value,
+                                        calculationContext,
+                                    ) !== false
                             ); // likely values are notFound and false
                         },
                     );
@@ -165,7 +170,10 @@ export function ObjectEditor(
                                     >
                                         <Column xs={4}>
                                             <Label for={id}>
-                                                {property.propertyType.meta().displayName() ?? property.name}
+                                                {property.propertyType
+                                                    .meta()
+                                                    .displayName() ??
+                                                    property.name}
                                             </Label>
                                         </Column>
                                         <Column xs={8}>

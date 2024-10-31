@@ -1,25 +1,22 @@
 import { z } from 'zod';
-import { ContextualValueCalculationCallback, ContextualValueCalculationContext, ReadonlySignalLike, notFound } from '..';
-import { descend } from '@captainpants/sweeter-utilities';
-import { shallowMatchesStructure } from '../models/validate';
-
-const weakMap = new WeakMap<z.ZodType, MetaData<any>>();
-
-const schemas = {
-    displayName: z.string(),
-    propertyCategory: z.string(),
-    propertyVisible: z.boolean()
-}
+import {
+    type ContextualValueCalculationCallback,
+    type ContextualValueCalculationContext
+} from '../index.js';
 
 export interface MetaData<TZodType extends z.ZodTypeAny> {
     attr(name: string, value: unknown): this;
 
     getAttr(name: string, fallback: unknown): unknown;
-    getAttrValidated<TValueZodType extends z.ZodTypeAny>(name: string, valueSchema: TValueZodType, fallback: z.infer<TValueZodType>): z.infer<TValueZodType>;
+    getAttrValidated<TValueZodType extends z.ZodTypeAny>(
+        name: string,
+        valueSchema: TValueZodType,
+        fallback: z.infer<TValueZodType>,
+    ): z.infer<TValueZodType>;
 
     label(name: string, val?: boolean): this;
     hasLabel(name: string): boolean;
-    
+
     category(category: string | null): this;
     category(): string | null;
 
@@ -29,11 +26,17 @@ export interface MetaData<TZodType extends z.ZodTypeAny> {
 
     visible(visibility: boolean): this;
     visible(): boolean;
-    
-    withLocalValue(name: string, callback: ContextualValueCalculationCallback<any>): this;
+
+    withLocalValue(
+        name: string,
+        callback: ContextualValueCalculationCallback<z.ZodTypeAny>,
+    ): this;
     withLocalValue(name: string, value: unknown): this;
-    
-    withAmbientValue(name: string, callback: ContextualValueCalculationCallback<any>): this;
+
+    withAmbientValue(
+        name: string,
+        callback: ContextualValueCalculationCallback<z.ZodTypeAny>,
+    ): this;
     withAmbientValue(name: string, value: unknown): this;
 
     getLocalValue(
@@ -61,4 +64,4 @@ export interface MetaData<TZodType extends z.ZodTypeAny> {
     ): unknown;
 
     endMeta(): TZodType;
-};
+}

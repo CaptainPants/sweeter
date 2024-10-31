@@ -1,16 +1,21 @@
-import { z } from 'zod';
-import { MetaData } from './metadata/MetaData';
-import { MetaDataImpl } from './metadata/internal/MetaDataImpl';
+import { type z } from 'zod';
+import { type MetaData } from './metadata/MetaData.js';
+import { MetaDataImpl } from './metadata/internal/MetaDataImpl.js';
 
 declare module 'zod' {
-    interface ZodType<Output = any, Def extends z.ZodTypeDef = z.ZodTypeDef, Input = Output> {
+    // eslint-disable-next-line@typescript-eslint/no-explicit-any
+    interface ZodType<
+        Output = any,
+        Def extends z.ZodTypeDef = z.ZodTypeDef,
+        Input = Output,
+    > {
         meta(): MetaData<ZodType<Output, Def, Input>>;
         hasMetaData(): boolean;
     }
 }
 
 export function extendZod(zod: typeof z) {
-    zod.ZodType.prototype.meta = function() {
+    zod.ZodType.prototype.meta = function () {
         return MetaDataImpl.get(this, true);
     };
 

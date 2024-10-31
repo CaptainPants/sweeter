@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 import { type UnknownModel, type Model, type ModelBase } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
 

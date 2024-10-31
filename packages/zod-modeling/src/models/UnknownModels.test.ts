@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { UnknownKeysParam, z } from 'zod';
+import { type UnknownKeysParam, type z } from 'zod';
 import {
     type Model,
     type TypeExtendsAssert,
@@ -13,7 +13,7 @@ import {
     type RealUnknownModel,
     type ReadonlyRecord,
     ObjectModel,
-    UnknownObjectModel,
+    type UnknownObjectModel,
     ModelBase,
 } from '../index.js';
 
@@ -24,12 +24,20 @@ it('Specific models conform to', () => {
     > = true;
 
     const mapObject1: TypeExtendsAssert<
-        Model<z.ZodObject<{ }, 'strict', z.ZodUnknown>>,
+        Model<z.ZodObject<{}, 'strict', z.ZodUnknown>>,
         UnknownObjectModel
     > = true;
 
     const union1: TypeExtendsAssert<
-        UnionModel<z.ZodUnion<[z.ZodObject<{ test: z.ZodString }>, z.ZodNumber, z.ZodLiteral<1>]>>,
+        UnionModel<
+            z.ZodUnion<
+                [
+                    z.ZodObject<{ test: z.ZodString }>,
+                    z.ZodNumber,
+                    z.ZodLiteral<1>,
+                ]
+            >
+        >,
         UnknownUnionModel
     > = true;
 });
@@ -40,7 +48,7 @@ it('All models conform to UnknownModel', () => {
         UnknownModel
     > = true;
     const a2: TypeExtendsAssert<
-        Model<z.ZodUnion<[z.ZodLiteral<1>, z.ZodLiteral<2>]>>, 
+        Model<z.ZodUnion<[z.ZodLiteral<1>, z.ZodLiteral<2>]>>,
         UnknownModel
     > = true;
 
@@ -49,14 +57,24 @@ it('All models conform to UnknownModel', () => {
     const a5: TypeExtendsAssert<Model<z.ZodBoolean>, UnknownModel> = true;
     const a6: TypeExtendsAssert<Model<z.ZodUndefined>, UnknownModel> = true;
     const a7: TypeExtendsAssert<Model<z.ZodNull>, UnknownModel> = true;
-    const a8: TypeExtendsAssert<Model<z.ZodLiteral<'test'>>, UnknownModel> = true;
+    const a8: TypeExtendsAssert<
+        Model<z.ZodLiteral<'test'>>,
+        UnknownModel
+    > = true;
     const a9: TypeExtendsAssert<Model<z.ZodLiteral<12>>, UnknownModel> = true;
-    const a10: TypeExtendsAssert<Model<z.ZodLiteral<true>>, UnknownModel> = true;
+    const a10: TypeExtendsAssert<
+        Model<z.ZodLiteral<true>>,
+        UnknownModel
+    > = true;
 });
 
 type A = z.ZodObject<{ test: z.ZodString }, UnknownKeysParam, z.ZodUnknown>;
-type B = z.ZodObject<Record<string, z.ZodUnknown>, UnknownKeysParam, z.ZodUnknown>;
-type ZZZ = Model<z.ZodUnion<[z.ZodAny]>>
+type B = z.ZodObject<
+    Record<string, z.ZodUnknown>,
+    UnknownKeysParam,
+    z.ZodUnknown
+>;
+type ZZZ = Model<z.ZodUnion<[z.ZodAny]>>;
 
 it('All models conform to reasonable less specific models', () => {
     // == I'd like this to work, but it doesn't
@@ -66,8 +84,20 @@ it('All models conform to reasonable less specific models', () => {
     // > = true;
 
     // Literal values should expand to the base type
-    const literal_any: TypeExtendsAssert<Model<z.ZodLiteral<'test'>>, Model<z.ZodLiteral<any>>> = true;
-    const literal_string: TypeExtendsAssert<Model<z.ZodLiteral<'test'>>, Model<z.ZodLiteral<string>>> = true;
-    const literal_number: TypeExtendsAssert<Model<z.ZodLiteral<12>>, Model<z.ZodLiteral<number>>> = true;
-    const literal_boolean: TypeExtendsAssert<Model<z.ZodLiteral<true>>, Model<z.ZodLiteral<boolean>>> = true;
+    const literal_any: TypeExtendsAssert<
+        Model<z.ZodLiteral<'test'>>,
+        Model<z.ZodLiteral<any>>
+    > = true;
+    const literal_string: TypeExtendsAssert<
+        Model<z.ZodLiteral<'test'>>,
+        Model<z.ZodLiteral<string>>
+    > = true;
+    const literal_number: TypeExtendsAssert<
+        Model<z.ZodLiteral<12>>,
+        Model<z.ZodLiteral<number>>
+    > = true;
+    const literal_boolean: TypeExtendsAssert<
+        Model<z.ZodLiteral<true>>,
+        Model<z.ZodLiteral<boolean>>
+    > = true;
 });

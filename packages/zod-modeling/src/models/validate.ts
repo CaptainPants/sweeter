@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { ValidationResult } from '..';
+import { type z } from 'zod';
+import { type ValidationResult } from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
 
 export interface ValidateAndThrowArgs {
@@ -15,17 +15,18 @@ export async function validate<TZodType extends z.ZodTypeAny>(
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },
 ): Promise<ValidationResult<z.infer<TZodType>>> {
-    const res = (await schema.safeParseAsync(value));
+    const res = await schema.safeParseAsync(value);
     if (res.success) return Maybe.success(res.data);
-    else return {
-        success: false,
-        error: res.error.issues.map(issue => {
-            return { 
-                message: issue.message,
-                idPath: idPaths.join(issue.path)
-            } as const;
-        }) // TODO: there is a lot more detail here, but lets start with message
-    }
+    else
+        return {
+            success: false,
+            error: res.error.issues.map((issue) => {
+                return {
+                    message: issue.message,
+                    idPath: idPaths.join(issue.path),
+                } as const;
+            }), // TODO: there is a lot more detail here, but lets start with message
+        };
 }
 
 export async function validateAndThrow<TZodType extends z.ZodTypeAny>(
@@ -46,7 +47,7 @@ export function shallowMatchesStructure<TZodType extends z.ZodTypeAny>(
     schema: TZodType,
     value: unknown,
     deep = true,
-    depth = 25
+    depth = 25,
 ): value is z.infer<TZodType> {
     return schema.safeParse(value).data;
 }

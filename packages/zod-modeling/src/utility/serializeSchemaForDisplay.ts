@@ -1,4 +1,4 @@
-import { literal, z } from 'zod';
+import { literal, type z } from 'zod';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -10,7 +10,7 @@ import {
     isUndefinedType,
     isUnionType,
     notFound,
-} from '..';
+} from '../index.js';
 
 function create<T extends z.ZodType>(
     check: (schema: z.ZodType) => schema is T,

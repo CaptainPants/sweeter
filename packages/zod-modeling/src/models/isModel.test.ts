@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 import { isModel } from './isModel.js';
 import { ModelFactory } from './ModelFactory.js';

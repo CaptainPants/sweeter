@@ -1,4 +1,4 @@
-import z from 'zod';
+import { z } from 'zod';
 import { type TypeInfo } from '../models/parents.js';
 
 import {
@@ -7,10 +7,13 @@ import {
     type TypeMatcherRulePart,
 } from './types.js';
 
-function createTypeCheck(schema: new (...args: any[]) => any): () => TypeMatcherRulePart {
+function createTypeCheck(
+    // eslint-disable-next-line@typescript-eslint/no-explicit-any
+    constructor: new (...args: any[]) => any,
+): () => TypeMatcherRulePart {
     return () => ({
         type: 'instanceOf',
-        constructor: schema
+        constructor: constructor,
     });
 }
 
@@ -103,9 +106,7 @@ export function callback(
     };
 }
 
-export function selector(
-    ...[top, ...steps]: Selector
-): TypeMatcherRulePart {
+export function selector(...[top, ...steps]: Selector): TypeMatcherRulePart {
     let previousLevelPart = top;
 
     for (const currentStep of steps) {
@@ -113,8 +114,7 @@ export function selector(
         let thisLevelPart: TypeMatcherRulePart;
 
         if ('$element' in currentStep) {
-            matchingAncestorRelationshipPart =
-                element(previousLevelPart);
+            matchingAncestorRelationshipPart = element(previousLevelPart);
             thisLevelPart = flatten(currentStep.$element);
         } else if ('$property' in currentStep) {
             matchingAncestorRelationshipPart = propertyOf(
@@ -123,8 +123,7 @@ export function selector(
             );
             thisLevelPart = flatten(currentStep.$property);
         } else if ('$descendent' in currentStep) {
-            matchingAncestorRelationshipPart =
-                ancestor(previousLevelPart);
+            matchingAncestorRelationshipPart = ancestor(previousLevelPart);
             thisLevelPart = flatten(currentStep.$descendent);
         } else {
             throw new TypeError('Unexpected');

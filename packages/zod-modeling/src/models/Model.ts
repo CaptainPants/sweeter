@@ -1,10 +1,9 @@
-import { z } from 'zod';
-import { IsAny, type ReadonlyRecord } from '../index.js';
-import { type IsUnion } from '../internal/unions.js';
+import { type z } from 'zod';
+import { type IsAny, type ReadonlyRecord } from '../index.js';
 
 import { type ParentTypeInfo } from './parents.js';
-import { UnknownPropertyModel, type PropertyModel } from './PropertyModel.js';
-import { zodUtilityTypes } from '../utility/zodUtilityTypes.js';
+import { type UnknownPropertyModel, type PropertyModel } from './PropertyModel.js';
+import { type zodUtilityTypes } from '../utility/zodUtilityTypes.js';
 
 export interface ModelBase<TValue, TZodType extends z.ZodType<unknown>> {
     readonly value: TValue;
@@ -24,7 +23,8 @@ export interface BooleanModel extends SimpleModel<boolean, z.ZodBoolean> {}
 
 // Constants
 
-export interface LiteralModel<TZodLiteralType extends z.ZodLiteral<any>> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+export interface LiteralModel<TZodLiteralType extends z.ZodLiteral<string | number | boolean>>
+    extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
 
 export interface StringConstantModel<
     TZodLiteralType extends z.ZodLiteral<string>,
@@ -68,23 +68,31 @@ export interface UnknownArrayModel
     extends ModelBase<readonly unknown[], z.ZodArray<z.ZodTypeAny>>,
         UnknownArrayModelMethods {}
 
+    // eslint-disable-next-line@typescript-eslint/no-explicit-any
 export interface ArrayModel<TArrayZodType extends z.ZodArray<any>>
     extends ModelBase<
             readonly zodUtilityTypes.ArrayElementType<TArrayZodType>[],
-            z.ZodArray<z.ZodType<zodUtilityTypes.ArrayElementType<TArrayZodType>>>
+            z.ZodArray<
+                z.ZodType<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+            >
         >,
         UnknownArrayModelMethods {
     getElementType: () => zodUtilityTypes.ArrayElementType<TArrayZodType>;
 
-    getElement: (index: number) => Model<zodUtilityTypes.ArrayElementType<TArrayZodType>> | undefined;
+    getElement: (
+        index: number,
+    ) => Model<zodUtilityTypes.ArrayElementType<TArrayZodType>> | undefined;
 
-    getElements: () => ReadonlyArray<Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>>;
+    getElements: () => ReadonlyArray<
+        Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+    >;
 
     spliceElements: (
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            z.infer<zodUtilityTypes.ArrayElementType<TArrayZodType>> | Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+            | z.infer<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+            | Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
         >,
         validate?: boolean,
     ) => Promise<this>;
@@ -93,7 +101,13 @@ export interface ArrayModel<TArrayZodType extends z.ZodArray<any>>
 export type TypedPropertyModelForKey<
     TZodObjectType extends z.AnyZodObject,
     TKey extends keyof zodUtilityTypes.Shape<TZodObjectType>,
-> = TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> ? PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]> : (PropertyModel<zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>> | undefined)
+> = TKey extends keyof zodUtilityTypes.Shape<TZodObjectType>
+    ? PropertyModel<zodUtilityTypes.Shape<TZodObjectType>[TKey]>
+    :
+          | PropertyModel<
+                zodUtilityTypes.CatchallPropertyValueType<TZodObjectType>
+            >
+          | undefined;
 
 interface UnknownObjectModelMethods {
     unknownGetProperty(key: string): UnknownPropertyModel | undefined;
@@ -156,7 +170,9 @@ export interface ObjectModel<TZodObjectType extends z.AnyZodObject>
 }
 
 export interface UnknownUnionModelMethods {
-    as: <TTargetZodType extends z.ZodTypeAny>(type: TTargetZodType) => Model<TTargetZodType> | null;
+    as: <TTargetZodType extends z.ZodTypeAny>(
+        type: TTargetZodType,
+    ) => Model<TTargetZodType> | null;
 
     getDirectlyResolved: () => UnknownModel;
 
@@ -167,8 +183,9 @@ export interface UnknownUnionModelMethods {
     replace: (value: unknown, validate?: boolean) => Promise<this>;
 }
 
-export interface UnionModelMethods<TZodUnionType extends zodUtilityTypes.ZodAnyUnionType>
-    extends UnknownUnionModelMethods {
+export interface UnionModelMethods<
+    TZodUnionType extends zodUtilityTypes.ZodAnyUnionType,
+> extends UnknownUnionModelMethods {
     getRecursivelyResolved: () => SpreadModel<
         zodUtilityTypes.RecursiveUnionOptions<TZodUnionType>
     >;
@@ -217,41 +234,44 @@ export type AnyModelConstraint =
     | UndefinedModel
     | RealUnknownModel;
 
-export type Model<TZodType extends z.ZodTypeAny> =
-    TZodType extends z.ZodAny
-        ? UnknownModel
-    : zodUtilityTypes.IsZodTypeAny<TZodType> extends true ? UnknownModel
-        : TZodType extends zodUtilityTypes.ZodAnyUnionType
-          ? UnionModel<TZodType>
-          : TZodType extends z.ZodArray<any>
-            ? ArrayModel<TZodType>
-            : TZodType extends z.AnyZodObject
-              ? ObjectModel<TZodType>
-              : TZodType extends z.ZodLiteral<infer TLiteralType>
-                ? 
-                  IsAny<TLiteralType> extends true ? LiteralModel<z.ZodLiteral<any>> :
-                /* Block distribution by comparing a 1-tuple */ [
-                      TLiteralType,
-                  ] extends [boolean]
+export type Model<TZodType extends z.ZodTypeAny> = TZodType extends z.ZodAny
+    ? UnknownModel
+    : zodUtilityTypes.IsZodTypeAny<TZodType> extends true
+      ? UnknownModel
+      : TZodType extends zodUtilityTypes.ZodAnyUnionType
+        ? UnionModel<TZodType>
+        // eslint-disable-next-line@typescript-eslint/no-explicit-any
+        : TZodType extends z.ZodArray<any>
+          ? ArrayModel<TZodType>
+          : TZodType extends z.AnyZodObject
+            ? ObjectModel<TZodType>
+            : TZodType extends z.ZodLiteral<infer TLiteralType>
+              ? IsAny<TLiteralType> extends true
+              // eslint-disable-next-line@typescript-eslint/no-explicit-any
+                  ? LiteralModel<z.ZodLiteral<any>>
+                  : /* Block distribution by comparing a 1-tuple */ [
+                          TLiteralType,
+                      ] extends [boolean]
                     ? BooleanConstantModel<z.ZodLiteral<TLiteralType>>
                     : TLiteralType extends string
                       ? StringConstantModel<z.ZodLiteral<TLiteralType>>
                       : TLiteralType extends number
                         ? NumberConstantModel<z.ZodLiteral<TLiteralType>>
                         : never
-                : TZodType extends z.ZodString
-                  ? StringModel
-                  : TZodType extends z.ZodNumber
-                    ? NumberModel
-                    : TZodType extends z.ZodBoolean
-                      ? BooleanModel
-                      : TZodType extends z.ZodNull
-                        ? NullModel
-                        : TZodType extends z.ZodUndefined
-                          ? UndefinedModel
-                          : UnknownModel;
+              : TZodType extends z.ZodString
+                ? StringModel
+                : TZodType extends z.ZodNumber
+                  ? NumberModel
+                  : TZodType extends z.ZodBoolean
+                    ? BooleanModel
+                    : TZodType extends z.ZodNull
+                      ? NullModel
+                      : TZodType extends z.ZodUndefined
+                        ? UndefinedModel
+                        : UnknownModel;
 
 export type PropertyModels<TZodObjectType extends z.AnyZodObject> =
+// eslint-disable-next-line@typescript-eslint/no-explicit-any
     TZodObjectType extends z.ZodObject<infer TShape, any, infer TCatchallType>
         ? {
               [Key in keyof TShape]: PropertyModel<TShape[Key]>;

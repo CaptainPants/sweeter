@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import { type Model } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';

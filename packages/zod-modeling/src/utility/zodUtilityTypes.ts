@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { And, IsAny, ReadonlyRecord, TypesEqual } from '../types.js';
+import { type z } from 'zod';
+import { type And, type IsAny, type ReadonlyRecord, type TypesEqual } from '../types.js';
 
 /**
  * Types that operate on Zod type
@@ -41,11 +41,20 @@ export namespace zodUtilityTypes {
         ? { [Key in keyof S]: RecursiveUnionOptions<S[Key]> }[number]
         : T;
 
-    export type IsZodTypeAny<TZodType extends z.ZodTypeAny> = TZodType extends z.ZodType<infer Output, infer Def, infer Input> 
-            ? And<IsAny<Output>, TypesEqual<TZodType, z.ZodType<Output, Def, Input>>> 
+    export type IsZodTypeAny<TZodType extends z.ZodTypeAny> =
+        TZodType extends z.ZodType<infer Output, infer Def, infer Input>
+            ? And<
+                  IsAny<Output>,
+                  TypesEqual<TZodType, z.ZodType<Output, Def, Input>>
+              >
             : false;
 
-    export type ArrayElementType<TArrayZodType extends z.ZodArray<any>> = TArrayZodType extends z.ZodArray<infer TArrayElementZodType> ? TArrayElementZodType : never;
+    export type ArrayElementType<TArrayZodType extends z.ZodArray<any>> =
+        TArrayZodType extends z.ZodArray<infer TArrayElementZodType>
+            ? TArrayElementZodType
+            : never;
 
-    export type ZodAnyUnionType = z.ZodUnion<[z.ZodTypeAny, ...readonly z.ZodTypeAny[]]>;
+    export type ZodAnyUnionType = z.ZodUnion<
+        [z.ZodTypeAny, ...(readonly z.ZodTypeAny[])]
+    >;
 }

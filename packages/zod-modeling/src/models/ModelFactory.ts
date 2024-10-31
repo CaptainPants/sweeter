@@ -4,11 +4,11 @@ import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
-import { UnknownModel, type Model } from './Model.js';
+import { type UnknownModel, type Model } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
 import { type ReadonlyRecord } from '../types.js';
-import { z } from 'zod';
+import { type z } from 'zod';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -43,11 +43,11 @@ type ConstructorFunction = Function;
 
 type ModelFactoryMethod<TZodType extends z.ZodTypeAny> = (
     value: z.infer<TZodType>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     type: TZodType,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
 ) => Model<TZodType>;
 
 type UnknownModelFactoryMethod = (
@@ -55,7 +55,7 @@ type UnknownModelFactoryMethod = (
     type: z.ZodTypeAny,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
 ) => UnknownModel | undefined;
 
 function setup<TZodType extends z.ZodTypeAny>(

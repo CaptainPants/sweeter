@@ -1,22 +1,22 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 
 import {
-    ObjectModel,
+    type ObjectModel,
     type Model,
-    UnknownModel,
-    PropertyModels,
-    TypedPropertyModelForKey,
+    type UnknownModel,
+    type PropertyModels,
+    type TypedPropertyModelForKey,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { type ReadonlyRecord } from '../../types.js';
-import { zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
+import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
 import { validateAndThrow } from '../validate.js';
-import { PropertyModel, UnknownPropertyModel } from '../PropertyModel.js';
+import { type PropertyModel, type UnknownPropertyModel } from '../PropertyModel.js';
 
 export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
     extends ModelImpl<z.infer<TZodObjectType>, TZodObjectType>

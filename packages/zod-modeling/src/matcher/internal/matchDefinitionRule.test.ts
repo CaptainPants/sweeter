@@ -7,14 +7,20 @@ test('label', async () => {
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number().meta().label('test-label').endMeta(), parentInfo: null },
+            {
+                type: z.number().meta().label('test-label').endMeta(),
+                parentInfo: null,
+            },
             Rules.label('test-label'),
         ),
     ).toStrictEqual(true);
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number().meta().label('test-label').endMeta(), parentInfo: null },
+            {
+                type: z.number().meta().label('test-label').endMeta(),
+                parentInfo: null,
+            },
             Rules.label('test-label'),
         ),
     ).toStrictEqual(true);
@@ -22,7 +28,10 @@ test('label', async () => {
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number().meta().label('label1').endMeta(), parentInfo: null },
+            {
+                type: z.number().meta().label('label1').endMeta(),
+                parentInfo: null,
+            },
             Rules.label('label1-suffix'),
         ),
     ).toStrictEqual(false);

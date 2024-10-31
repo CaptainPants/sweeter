@@ -60,11 +60,9 @@ export function PropertyEditorPart(
         $invalidateOnChange(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
-            propertyModelResolved.valueModel.type.meta().getLocalValueForUnknown(
-                name,
-                $wrap(owner),
-                context,
-            );
+            propertyModelResolved.valueModel.type
+                .meta()
+                .getLocalValueForUnknown(name, $wrap(owner), context);
     });
 
     const calculateAmbient = $calc(() => {
@@ -72,11 +70,9 @@ export function PropertyEditorPart(
         $invalidateOnChange(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
-            propertyModelResolved.valueModel.type.meta().getAmbientValueForUnknown(
-                name,
-                $wrap(owner),
-                context,
-            );
+            propertyModelResolved.valueModel.type
+                .meta()
+                .getAmbientValueForUnknown(name, $wrap(owner), context);
     });
 
     const { local, ambient } = init.hook(

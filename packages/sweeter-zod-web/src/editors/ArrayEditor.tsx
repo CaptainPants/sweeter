@@ -59,7 +59,10 @@ export function ArrayEditor(
                 result: draft,
             }),
             validate: async (converted) => {
-                const res = await validate(typedModel.peek().type, converted.value);
+                const res = await validate(
+                    typedModel.peek().type,
+                    converted.value,
+                );
                 return res.success ? null : res.error;
             },
         },

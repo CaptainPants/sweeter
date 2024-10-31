@@ -1,16 +1,16 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { mapAsync } from '../../internal/mapAsync.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
-import { UnknownModel, type ArrayModel, type Model } from '../Model.js';
+import { type UnknownModel, type ArrayModel, type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
+import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
 
 export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
     extends ModelImpl<z.infer<TArrayZodType>, TArrayZodType>
@@ -23,7 +23,9 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         depth: number,
     ): ArrayModelImpl<TArrayZodType> {
         const elementModels = value.map((item, index) =>
-            ModelFactory.createUnvalidatedModelPart<zodUtilityTypes.ArrayElementType<TArrayZodType>>({
+            ModelFactory.createUnvalidatedModelPart<
+                zodUtilityTypes.ArrayElementType<TArrayZodType>
+            >({
                 value: item,
                 type: schema.element,
                 parentInfo: {
@@ -45,7 +47,9 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
 
     public constructor(
         value: zodUtilityTypes.ArrayElementType<TArrayZodType>[],
-        elementModels: ReadonlyArray<Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>>,
+        elementModels: ReadonlyArray<
+            Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+        >,
         type: TArrayZodType,
         parentInfo: ParentTypeInfo | null,
     ) {
@@ -57,7 +61,9 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
     }
 
     #elementType: zodUtilityTypes.ArrayElementType<TArrayZodType>;
-    #elementModels: ReadonlyArray<Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>>;
+    #elementModels: ReadonlyArray<
+        Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+    >;
 
     public getElementType(): zodUtilityTypes.ArrayElementType<TArrayZodType> {
         return this.#elementType;
@@ -67,7 +73,9 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         return this.#elementType;
     }
 
-    public getElement(index: number): Model<zodUtilityTypes.ArrayElementType<TArrayZodType>> | undefined {
+    public getElement(
+        index: number,
+    ): Model<zodUtilityTypes.ArrayElementType<TArrayZodType>> | undefined {
         return this.#elementModels[index];
     }
 
@@ -75,7 +83,9 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         return this.getElement(index);
     }
 
-    public getElements(): ReadonlyArray<Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>> {
+    public getElements(): ReadonlyArray<
+        Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+    > {
         return this.#elementModels;
     }
 
@@ -87,7 +97,8 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            z.infer<zodUtilityTypes.ArrayElementType<TArrayZodType>> | Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+            | z.infer<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+            | Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
         >,
         validate: boolean = true,
     ): Promise<this> {
@@ -124,7 +135,10 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         newValue.splice(
             start,
             deleteCount,
-            ...newModels.map((x) => x.value as zodUtilityTypes.ArrayElementType<TArrayZodType>),
+            ...newModels.map(
+                (x) =>
+                    x.value as zodUtilityTypes.ArrayElementType<TArrayZodType>,
+            ),
         );
 
         if (validate) {
@@ -132,11 +146,7 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         }
 
         const newElementModels = [...this.#elementModels];
-        newElementModels.splice(
-            start,
-            deleteCount,
-            ...newModels,
-        );
+        newElementModels.splice(start, deleteCount, ...newModels);
 
         const res = new ArrayModelImpl(
             newValue,

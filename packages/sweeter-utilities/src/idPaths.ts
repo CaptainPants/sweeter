@@ -14,7 +14,7 @@ export const idPaths = {
         if (!path) return added;
         return path + '_' + added;
     },
-    join(path: readonly (number | string)[]): string { 
+    join(path: readonly (number | string)[]): string {
         return path.join('.');
-    }
+    },
 };

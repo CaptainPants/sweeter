@@ -68,15 +68,16 @@ export function EditorHost(
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
 
-    const calculateLocal = (name: string, context: ContextualValueCalculationContext) => {
+    const calculateLocal = (
+        name: string,
+        context: ContextualValueCalculationContext,
+    ) => {
         const modelResolved = $val(model);
 
         // Look at the model, and then the parent's property model (which is passed via the localProp)
-        const found = modelResolved.type.meta().getLocalValueForUnknown(
-            name,
-            modelResolved,
-            context,
-        );
+        const found = modelResolved.type
+            .meta()
+            .getLocalValueForUnknown(name, modelResolved, context);
         if (found !== notFound) {
             return found;
         }
@@ -88,15 +89,16 @@ export function EditorHost(
 
         return localPropResolved(name);
     };
-    
-    const calculateAmbient = (name: string, context: ContextualValueCalculationContext) => {
+
+    const calculateAmbient = (
+        name: string,
+        context: ContextualValueCalculationContext,
+    ) => {
         const modelResolved = $val(model);
 
-        return modelResolved.type.meta().getAmbientValueForUnknown(
-            name,
-            modelResolved,
-            context,
-        );
+        return modelResolved.type
+            .meta()
+            .getAmbientValueForUnknown(name, modelResolved, context);
     };
 
     const { ambient, local } = init.hook(

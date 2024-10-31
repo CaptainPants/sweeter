@@ -1,5 +1,11 @@
-
-import { Rules, TypeMatcherRule, TypeMatcherRulePart, isBooleanType, isConstantType, isUnionType } from '@captainpants/zod-modeling';
+import {
+    Rules,
+    TypeMatcherRule,
+    TypeMatcherRulePart,
+    isBooleanType,
+    isConstantType,
+    isUnionType,
+} from '@captainpants/zod-modeling';
 import { ModalEditorIfTooSmall } from './editors/index.js';
 import { type EditorComponentType } from './types.js';
 
@@ -69,9 +75,7 @@ export function createDefaultRulesSet(
 
     // wrap in a modal
     result.push({
-        matches: Rules.or([
-            Rules.object(),
-        ]),
+        matches: Rules.or([Rules.object()]),
         result: (props) => <ModalEditorIfTooSmall {...props} minWidth={240} />,
         priority: 10,
     });

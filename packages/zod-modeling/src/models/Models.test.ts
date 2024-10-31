@@ -1,6 +1,13 @@
-import { z } from "zod";
-import { ArrayModel, LiteralModel, Model, ObjectModel, TypeMatchAssert, UnionModel } from "..";
-import { zodUtilityTypes } from "../utility/zodUtilityTypes";
+import { type z } from 'zod';
+import {
+    type ArrayModel,
+    type LiteralModel,
+    type Model,
+    type ObjectModel,
+    type TypeMatchAssert,
+    type UnionModel,
+} from '../index.js';
+import { type zodUtilityTypes } from '../utility/zodUtilityTypes.js';
 
 type X = Model<z.ZodArray<z.ZodString>>;
 

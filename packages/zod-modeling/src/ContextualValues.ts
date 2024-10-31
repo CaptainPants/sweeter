@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 import { type ReadonlySignalLike } from './ReadonlySignalLike.js';
 
 export interface ContextualValueCalculationContext {
@@ -9,10 +9,11 @@ export interface ContextualValueCalculationContext {
         | undefined;
 }
 
-export type ContextualValueCalculationCallback<TZodType extends z.ZodTypeAny> = (
-    owner: z.infer<TZodType>,
-    context: ContextualValueCalculationContext,
-) => unknown;
+export type ContextualValueCalculationCallback<TZodType extends z.ZodTypeAny> =
+    (
+        owner: z.infer<TZodType>,
+        context: ContextualValueCalculationContext,
+    ) => unknown;
 
 /**
  * Return typeof notFound to indicate that there was no matching value.

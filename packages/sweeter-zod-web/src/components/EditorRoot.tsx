@@ -23,18 +23,19 @@ import {
 import { Button, Modal } from '@captainpants/sweeter-gummybear';
 import { standardRules } from '../standardRules.js';
 
-export type EditorRootProps<TZodType extends z.ZodTypeAny> = PropertiesMightBeSignals<{
-    id?: string | undefined;
-    model: Model<TZodType>;
-    replace: Replacer<TZodType>;
-    settings?: EditorSettings;
+export type EditorRootProps<TZodType extends z.ZodTypeAny> =
+    PropertiesMightBeSignals<{
+        id?: string | undefined;
+        model: Model<TZodType>;
+        replace: Replacer<TZodType>;
+        settings?: EditorSettings;
 
-    idPath?: string;
+        idPath?: string;
 
-    getAmbientValue?: (name: string) => unknown;
+        getAmbientValue?: (name: string) => unknown;
 
-    rules?: Array<TypeMatcherRule<EditorComponentType>>;
-}>;
+        rules?: Array<TypeMatcherRule<EditorComponentType>>;
+    }>;
 
 /**
  * Constant default settings so that the default value doesn't cause constant re-renders from updating the context value.
@@ -45,7 +46,9 @@ const defaultSettings = Object.freeze({});
  * The main entry point for an editor structure.
  * @param props
  */
-export function EditorRoot<TZodType extends z.ZodTypeAny>(props: Readonly<EditorRootProps<TZodType>>): JSX.Element;
+export function EditorRoot<TZodType extends z.ZodTypeAny>(
+    props: Readonly<EditorRootProps<TZodType>>,
+): JSX.Element;
 export function EditorRoot<TZodType extends z.ZodTypeAny>({
     id,
     model,

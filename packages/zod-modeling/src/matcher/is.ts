@@ -1,86 +1,96 @@
 import z from 'zod';
 import { zodUtilityTypes } from '../utility/zodUtilityTypes';
 
-// TODO: how do we conveiently handle wrapper types? I.e. z.ZodDefault
-// Also think about z.ZodNullable, z.ZodOptional as they are effectively unions
-// but presumably won't return true to X instanceof ZodUnion
-
 export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
     const res = type.safeParse(val);
     return res.success;
 }
 
-export function isObjectType(schema: z.ZodType): schema is z.ZodObject<any> {
+// TODO: how do we conveiently handle wrapper types? I.e. z.ZodDefault
+// Also think about z.ZodNullable, z.ZodOptional as they are effectively unions
+// but presumably won't return true to X instanceof ZodUnion
+
+export function isDefaultWrapper(schema: z.ZodTypeAny): schema is z.ZodDefault<z.ZodTypeAny> {
+    return schema instanceof z.ZodDefault;
+}
+export function isNullableType(schema: z.ZodTypeAny): schema is z.ZodNullable<z.ZodTypeAny> {
+    return schema instanceof z.ZodNullable;
+}
+export function isOptionalType(schema: z.ZodTypeAny): schema is z.ZodOptional<z.ZodTypeAny> {
+    return schema instanceof z.ZodOptional;
+}
+
+export function isObjectType(schema: z.ZodTypeAny): schema is z.ZodObject<any> {
     return schema instanceof z.ZodRecord && isStringType(schema.keySchema);
 }
 export function isArrayType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodArray<z.ZodTypeAny> {
     return schema instanceof z.ZodArray;
 }
 
 export function isUnionType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is zodUtilityTypes.ZodAnyUnionType {
     return schema instanceof z.ZodUnion;
 }
 
 export function isNumberType(
-    schema: z.ZodType<unknown>,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodNumber {
     return schema instanceof z.ZodNumber;
 }
 
-export function isStringType(schema: z.ZodType): schema is z.ZodString {
+export function isStringType(schema: z.ZodTypeAny): schema is z.ZodString {
     return schema instanceof z.ZodString;
 }
 
-export function isBooleanType(schema: z.ZodType): schema is z.ZodBoolean {
+export function isBooleanType(schema: z.ZodTypeAny): schema is z.ZodBoolean {
     return schema instanceof z.ZodBoolean;
 }
 
 export function isNumberLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodLiteral<number> {
     return schema instanceof z.ZodLiteral && typeof schema.value === 'number';
 }
 
 export function isStringLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodLiteral<string> {
     return schema instanceof z.ZodLiteral && typeof schema.value === 'string';
 }
 
 export function isBooleanLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodLiteral<boolean> {
     return schema instanceof z.ZodLiteral && typeof schema.value === 'boolean';
 }
 
 export function isBooleanTrueLiteral(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodLiteral<true> {
     return schema instanceof z.ZodLiteral && schema.value === true;
 }
 
 export function isBooleanFalseLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodLiteral<true> {
     return schema instanceof z.ZodLiteral && schema.value === false;
 }
 
-export function isNullType(schema: z.ZodType): schema is z.ZodNull {
+export function isNullType(schema: z.ZodTypeAny): schema is z.ZodNull {
     return schema instanceof z.ZodNull;
 }
 
 export function isUndefinedType(
-    type: z.ZodType,
+    type: z.ZodTypeAny,
 ): type is z.ZodUndefined {
     return type instanceof z.ZodUndefined;
 }
 
 export function isLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is
     | z.ZodLiteral<string>
     | z.ZodLiteral<number>
@@ -93,7 +103,7 @@ export function isLiteralType(
 }
 
 export function isConstantType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is
     | z.ZodLiteral<string>
     | z.ZodLiteral<number>
@@ -108,23 +118,23 @@ export function isConstantType(
 }
 
 export function isStringOrStringLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodString | z.ZodLiteral<string> {
     return isStringType(schema) || isStringLiteralType(schema);
 }
 
 export function isNumberOrNumberLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodNumber | z.ZodLiteral<number> {
     return isNumberType(schema) || isNumberLiteralType(schema);
 }
 
 export function isBooleanOrBooleanLiteralType(
-    schema: z.ZodType,
+    schema: z.ZodTypeAny,
 ): schema is z.ZodBoolean | z.ZodLiteral<boolean> {
     return isBooleanType(schema) || isBooleanLiteralType(schema);
 }
 
-export function isUnknownType(schema: z.ZodType): schema is z.ZodUnknown {
+export function isUnknownType(schema: z.ZodTypeAny): schema is z.ZodUnknown {
     return schema instanceof z.ZodUnknown;
 }

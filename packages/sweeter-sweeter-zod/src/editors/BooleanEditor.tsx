@@ -32,7 +32,7 @@ export function BooleanEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(cast(validated, asUnknown));
+                await $peek(replace)(validated);
             },
             convertIn: (model) => model.value,
             convertOut: (draft) => {

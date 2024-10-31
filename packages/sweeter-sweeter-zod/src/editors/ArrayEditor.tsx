@@ -5,6 +5,7 @@ import {
     type UnknownArrayModel,
     validate,
     createDefault,
+    Model,
 } from '@captainpants/zod-matcher';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
@@ -26,6 +27,8 @@ import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { IconButton } from '../components/IconButton.js';
 import { z } from 'zod';
 
+type X = Model<z.ZodTypeAny>;
+
 export function ArrayEditor(
     {
         model,
@@ -45,8 +48,8 @@ export function ArrayEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                const resolvedReplacer = $peek(replace);
-                await resolvedReplacer(validated);
+                const xx = validated.value;
+                await $peek(replace)(validated);
             },
             convertIn: (model) => {
                 return model;

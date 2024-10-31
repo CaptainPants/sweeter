@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type ReadonlyRecord } from '../index.js';
+import { IsAny, type ReadonlyRecord } from '../index.js';
 import { type IsUnion } from '../internal/unions.js';
 
 import { type ParentTypeInfo } from './parents.js';
@@ -220,6 +220,7 @@ export type AnyModelConstraint =
 export type Model<TZodType extends z.ZodTypeAny> =
     TZodType extends z.ZodAny
         ? UnknownModel
+    : zodUtilityTypes.IsZodTypeAny<TZodType> extends true ? UnknownModel
         : TZodType extends zodUtilityTypes.ZodAnyUnionType
           ? UnionModel<TZodType>
           : TZodType extends z.ZodArray<any>
@@ -228,7 +229,7 @@ export type Model<TZodType extends z.ZodTypeAny> =
               ? ObjectModel<TZodType>
               : TZodType extends z.ZodLiteral<infer TLiteralType>
                 ? 
-                  zodUtilityTypes.IsAny<TLiteralType> extends true ? LiteralModel<z.ZodLiteral<any>> :
+                  IsAny<TLiteralType> extends true ? LiteralModel<z.ZodLiteral<any>> :
                 /* Block distribution by comparing a 1-tuple */ [
                       TLiteralType,
                   ] extends [boolean]

@@ -11,12 +11,10 @@
     "test": "lerna run test",
     "watch-libs": "lerna watch --scope @captainpants/sweeter-utilities --scope @captainpants/sweeter-core --scope @captainpants/sweeter-web --scope @captainpants/sweeter-gummybear --scope @captainpants/zod-matcher --scope @captainpants/sweeter-zod-web  --scope @captainpants/typeytypetype-example-data -- pnpm run build --scope \\$LERNA_PACKAGE_NAME",
     "watch-example": "lerna run watch --scope @captainpants/sweeter-example",
-
     "watch-typeytypetype-example": "lerna run watch --scope @captainpants/sweeter-typeytypetype-example",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
     "set-versions": "pnpm -r exec npm version",
-    
     "generate-docs": "pnpm run build && typedoc --options typedoc.json"
   },
   "devDependencies": {
@@ -40,17 +38,15 @@
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
     "rollup": "^3.29.4",
+    "tslib": "^2.8.0",
     "typed-assert": "^1.0.9",
-    "typedoc": "^0.25.7",
-    "typescript": "^5.3.3",
+    "typedoc": "^0.26.10",
+    "typescript": "^5.6.3",
     "vite": "^5.0.11",
     "vite-plugin-dts": "^3.7.0",
     "vitest": "^0.34.6"
   },
   "engines": {
     "pnpm": "8.14.1"
-  },
-  "dependencies": {
-    "tslib": "^2.6.2"
   }
 }

@@ -2,6 +2,8 @@ import {
     asUnknown,
     type Model,
     ModelFactory,
+    createDefault,
+    type UnknownModel,
 } from '@captainpants/zod-matcher';
 
 import { z } from 'zod';
@@ -10,11 +12,11 @@ export const stringOnly = z.string();
 export const numberOnly = z.number();
 
 export const stringFieldOnly = z.object({
-    test: z.string().meta().withDisplayName('Test').endMeta(),
+    test: z.string().meta().displayName('Test').endMeta(),
 });
 
 export const simpleHiddenField = z.object({
-    test: z.string().meta().withDisplayName('Test').endMeta(),
+    test: z.string().meta().displayName('Test').endMeta(),
     hidden: z.string().meta().visible(false).endMeta(),
 });
 
@@ -22,65 +24,65 @@ export const simpleHiddenField = z.object({
  * Complicated type including all basic types, rigid and map objects, arrays and unions
  */
 export const complex = z.object({
-    string: z.string().meta().withDisplayName('String').endMeta(),
-    boolean: z.boolean().meta().withDisplayName('Boolean').endMeta(),
-    number: z.number().meta().withDisplayName('Number').endMeta(),
+    string: z.string().meta().displayName('String').endMeta(),
+    boolean: z.boolean().meta().displayName('Boolean').endMeta(),
+    number: z.number().meta().displayName('Number').endMeta(),
     hidden: z.string()
         .meta()
-        .withDisplayName('Hidden')
+        .displayName('Hidden')
         .visible(false)
         .endMeta(),
     arrayOfStrings:
         z
-            .array(z.string().meta().withDisplayName('String').endMeta())
+            .array(z.string().meta().displayName('String').endMeta())
             .default(
                 () => ['item 1', 'item 2'],
             )
-            .meta().withDisplayName('Array of Strings').endMeta(),
+            .meta().displayName('Array of Strings').endMeta(),
     object: z.object({
-            name: z.string().meta().withDisplayName('Name').endMeta(),
-        }).meta().withDisplayName('Object').endMeta(),
+            name: z.string().meta().displayName('Name').endMeta(),
+        }).meta().displayName('Object').endMeta(),
     map: z.object({}).catchall(z.object({
-        first: z.string().meta().withDisplayName('First name').endMeta(),
-        last: z.string().meta().withDisplayName('Last name').endMeta(),
+        first: z.string().meta().displayName('First name').endMeta(),
+        last: z.string().meta().displayName('Last name').endMeta(),
     })).default(() => {
             return {
                 test: { first: 'John', last: 'Smith' },
             };
-        }).meta().withDisplayName('Map').endMeta(),
+        }).meta().displayName('Map').endMeta(),
     constUnion: z.union([
         z.literal('a'),
         z.literal('b'),
         z.literal('c')
-    ]).meta().withDisplayName('Constant Union').endMeta(),
+    ]).meta().displayName('Constant Union').endMeta(),
     objectUnion: 
         z.union([
             z.object({
                 is: z.literal('example-a').meta().visible(false).endMeta(),
                 name: z.object({
-                    first: z.string().meta().withDisplayName(
+                    first: z.string().meta().displayName(
                         'First name',
                     ).endMeta(),
-                    last: z.string().meta().withDisplayName(
+                    last: z.string().meta().displayName(
                         'Last name',
                     ).endMeta(),
-                }).meta().withDisplayName('Name').endMeta()
-            }).meta().withDisplayName('Object A').endMeta(),
+                }).meta().displayName('Name').endMeta()
+            }).meta().displayName('Object A').endMeta(),
             z.object({
                 is: z.literal('example-b'),
-                age: z.number().meta().withDisplayName('Age').endMeta(),
-            }).meta().withDisplayName('Object B').endMeta()
+                age: z.number().meta().displayName('Age').endMeta(),
+            }).meta().displayName('Object B').endMeta()
         ]),
-    }).meta().withDisplayName('Complex Union').endMeta();
+    }).meta().displayName('Complex Union').endMeta();
 
 export const nestedObjects = z.object({
     people: z.array(
         z.object({
-            firstName: z.string().meta().withDisplayName(
+            firstName: z.string().meta().displayName(
                 'First name',
             ).endMeta(),
-            surname: z.string().meta().withDisplayName('Surname').endMeta(),
-            email: z.string().meta().withDisplayName('Email').endMeta(),
+            surname: z.string().meta().displayName('Surname').endMeta(),
+            email: z.string().meta().displayName('Email').endMeta(),
             address: z.object({
                     unit: z.union([z.null(), z.number()]),
                     streetNumber: z.union([z.null(), z.number()]),
@@ -91,7 +93,7 @@ export const nestedObjects = z.object({
                 }),
             }),
         ),
-    }).meta().withDisplayName('People').endMeta();
+    }).meta().displayName('People').endMeta();
 
 export const constantUnion = z.union(
     [z.literal(true),
@@ -102,7 +104,7 @@ export const exampleData = {
     Complex: async () => {
         return asUnknown(
             await ModelFactory.createModel({
-                value: complex.createDefault(),
+                value: createDefault(complex),
                 type: complex,
             }),
         );
@@ -110,7 +112,7 @@ export const exampleData = {
     NestedObjects: async () => {
         return asUnknown(
             await ModelFactory.createModel({
-                value: nestedObjects.createDefault(),
+                value: createDefault(nestedObjects),
                 type: nestedObjects,
             }),
         );
@@ -155,6 +157,6 @@ export const exampleData = {
             }),
         );
     },
-} as const satisfies Record<string, () => Promise<Model<unknown>>>;
+} as const satisfies Record<string, () => Promise<UnknownModel>>;
 
 export const defaultExample = 'StringFieldOnly';

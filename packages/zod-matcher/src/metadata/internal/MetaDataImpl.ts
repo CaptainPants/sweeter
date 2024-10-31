@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ContextualValueCalculationCallback, ContextualValueCalculationContext, MetaData, ReadonlySignalLike, notFound } from '../..';
+import { ContextualValueCalculationCallback, ContextualValueCalculationContext, MetaData, ReadonlySignalLike, notFound, serializeSchemaForDisplay } from '../..';
 import { descend } from '@captainpants/sweeter-utilities';
 import { shallowMatchesStructure } from '../../models/validate';
 
@@ -28,7 +28,7 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny> implements MetaData<TZo
         ContextualValueCalculationCallback<TZodType>
     > = new Map<string, ContextualValueCalculationCallback<TZodType>>();
 
-    public setAttr(name: string, value: unknown): this {
+    public attr(name: string, value: unknown): this {
         (this.#attributes ?? (this.#attributes = new Map())).set(name, value);
         return this;
     }
@@ -40,7 +40,7 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny> implements MetaData<TZo
         return this.#attributes.get(name);
     }
 
-    public getAttrValidated<TValueZodType extends z.ZodTypeAny>(name: string, valueSchema: TValueZodType, fallback: z.infer<TValueZodType>): unknown {
+    public getAttrValidated<TValueZodType extends z.ZodTypeAny>(name: string, valueSchema: TValueZodType, fallback: z.infer<TValueZodType>): z.infer<TValueZodType> {
         if (!this.#attributes) return fallback;
         if (!this.#attributes.has(name)) return fallback;
 
@@ -51,7 +51,7 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny> implements MetaData<TZo
         return fallback;
     }
 
-    public withLabel(name: string, val: boolean = true): this {
+    public label(name: string, val: boolean = true): this {
         const set = (this.#labels ?? (this.#labels = new Set()));
         
         if (val) {
@@ -68,45 +68,50 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny> implements MetaData<TZo
 
         return this.#labels.has(name);
     }
-    
-    public withCategory(category: string | undefined) {
-        return this.setAttr('property:category', category);
-    };
 
-    public category(): string | undefined {
+    public category(category: string | null): this;
+    public category(): string | null;
+    public category(category?: string | null | undefined): this | string | null {
+        if (category === undefined) {
+            return this.attr('property:category', category);
+        }
+
         const res = this.getAttr('property:category', undefined);
         const parsed = schemas.propertyCategory.safeParse(res);
         if (parsed.success) {
             return parsed.data
         }
-        return undefined;
+        return null;
     };
 
-    public withDisplayName(displayName: string | undefined): this {
-        return this.setAttr('displayName', displayName);
-    }
+    public displayName(): string | null;
+    public displayName(displayName: string | null): this;
+    public displayName(displayName?: string | undefined | null): this | string | null {
+        if (displayName === undefined) {
+            return this.attr('displayName', displayName);
+        }
 
-    public displayName(): string | undefined {
         const res = this.getAttr('displayName', undefined);
         const parsed = schemas.displayName.safeParse(res);
         if (parsed.success) {
             return parsed.data
         }
-        return undefined;
+        return null;
+    }
+    public getBestDisplayName(): string {
+        const displayName = this.displayName();
+        if (displayName) return displayName;
+        return serializeSchemaForDisplay(this.#schema);
     }
 
-    public visible(visibility: boolean) {
-        this.setAttr('property:visible', visibility);
-        return this;
-    };
-
-    public isVisible() {
-        const res = this.getAttr('property:visible', false);
-        const parsed = schemas.propertyVisible.safeParse(res);
-        if (parsed.success) {
-            return parsed.data
+    public visible(): boolean;
+    public visible(visibility: boolean): this;
+    public visible(visibility?: boolean): this | boolean {
+        if (visibility === undefined) {
+            return this.getAttrValidated('property:visible', schemas.propertyVisible, true);
         }
-        return true;
+
+        return this.attr('property:visible', visibility);
     };
     
     public withLocalValue(name: string, callback: ContextualValueCalculationCallback<any>): this;

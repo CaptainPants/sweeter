@@ -29,9 +29,9 @@ test('test', async () => {
         matchDefinitionRule,
     );
 
-    const numType1 = z.number().meta().withLabel('2').endMeta();
-    const numType2 = z.number().meta().withLabel('1').endMeta();
-    const numType3 = z.number().meta().withLabel('3').endMeta();
+    const numType1 = z.number().meta().label('2').endMeta();
+    const numType2 = z.number().meta().label('1').endMeta();
+    const numType3 = z.number().meta().label('3').endMeta();
 
     const match1 = matcher.findBestMatch(
         { settings: {} },
@@ -75,7 +75,7 @@ test('ordered', async () => {
 
     const numModel1 = await ModelFactory.createModel({
         value: 2,
-        type: z.number().meta().withLabel('1').endMeta(),
+        type: z.number().meta().label('1').endMeta(),
         parentInfo: null,
     });
 
@@ -119,7 +119,7 @@ test('multiple-ordered', async () => {
     const matcher = createTypeMatcher(rules);
 
     const model = await ModelFactory.createModel({
-        type: z.number().meta().withLabel('2').endMeta(),
+        type: z.number().meta().label('2').endMeta(),
         value: 6,
         parentInfo: null,
     });

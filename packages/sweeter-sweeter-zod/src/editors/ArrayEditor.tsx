@@ -4,6 +4,7 @@ import {
     isUnionType,
     type UnknownArrayModel,
     validate,
+    createDefault,
 } from '@captainpants/zod-matcher';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
@@ -23,6 +24,7 @@ import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { IconButton } from '../components/IconButton.js';
+import { z } from 'zod';
 
 export function ArrayEditor(
     {
@@ -43,7 +45,8 @@ export function ArrayEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                const resolvedReplacer = $peek(replace);
+                await resolvedReplacer(validated);
             },
             convertIn: (model) => {
                 return model;
@@ -70,13 +73,13 @@ export function ArrayEditor(
         draft.update(newDraft);
     };
 
-    const add = async (type: Type<unknown>): Promise<void> => {
+    const add = async (type: z.ZodTypeAny): Promise<void> => {
         const copy = await draft
             .peek()
             .unknownSpliceElements(
                 draft.peek().value.length,
                 0,
-                [type.createDefault()],
+                [createDefault(type)],
                 false,
             );
 
@@ -101,7 +104,7 @@ export function ArrayEditor(
         const elementType = draft.value.unknownGetElementType();
 
         if (isUnionType(elementType)) {
-            return elementType.types;
+            return elementType.options;
         } else {
             return [elementType];
         }
@@ -163,7 +166,7 @@ export function ArrayEditor(
                             allowedTypes.value.length === 1
                                 ? localize('Add')
                                 : localize('Add {0}', [
-                                      allowedType.getBestDisplayName(),
+                                      allowedType.meta().getBestDisplayName(),
                                   ]);
                         return (
                             <IconButton

@@ -8,6 +8,7 @@ import {
     UnknownModel,
     findUnionOptionIndexForValue,
     isConstantType,
+    createDefault,
 } from '@captainpants/zod-matcher';
 import {
     $calc,
@@ -18,7 +19,8 @@ import {
     $val,
 } from '@captainpants/sweeter-core';
 import { EditorHost } from '../index.js';
-import { idPaths } from '../idPaths.js';
+import { z } from 'zod';
+import { idPaths } from '@captainpants/sweeter-utilities';
 
 export function UnionEditor(props: Readonly<EditorProps>): JSX.Element;
 export function UnionEditor({
@@ -35,7 +37,7 @@ export function UnionEditor({
         // Only depends on 'type' signal
         type.value.options.map((alternative) => {
             return {
-                label: alternative.displayName ?? alternative.name ?? 'unknown',
+                label: alternative.meta().getBestDisplayName(),
                 type: alternative,
             };
         }),
@@ -49,8 +51,8 @@ export function UnionEditor({
         }));
     });
 
-    const changeType = async (type: Type<unknown>): Promise<void> => {
-        const defaultValue = type.createDefault();
+    const changeType = async (type: z.ZodTypeAny): Promise<void> => {
+        const defaultValue = createDefault(type);
         const defaultModel = await ModelFactory.createModel({
             value: defaultValue,
             type: typedModel.peek().type,

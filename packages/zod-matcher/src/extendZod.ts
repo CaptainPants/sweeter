@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { MetaData } from './MetaData';
-import { MetaDataImpl } from './internal/MetaDataImpl';
+import { MetaData } from './metadata/MetaData';
+import { MetaDataImpl } from './metadata/internal/MetaDataImpl';
 
 declare module 'zod' {
     interface ZodType<Output = any, Def extends z.ZodTypeDef = z.ZodTypeDef, Input = Output> {
@@ -9,8 +9,7 @@ declare module 'zod' {
     }
 }
 
-export function extendZodWithMetadataAttributes(zod: typeof z) {
-
+export function extendZod(zod: typeof z) {
     zod.ZodType.prototype.meta = function() {
         return MetaDataImpl.get(this, true);
     };

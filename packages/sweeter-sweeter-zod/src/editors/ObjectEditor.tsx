@@ -9,13 +9,14 @@ import {
 import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import {
     type ContextualValueCalculationContext,
-    type Model,
-    type PropertyModel,
-    asRigidObject,
     cast,
     categorizeProperties,
     StandardLocalValues,
-    type UnknownRigidObjectModel,
+    UnknownPropertyModel,
+    UnknownModel,
+    validate,
+    asObject,
+    UnknownObjectModel,
 } from '@captainpants/zod-matcher';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -26,12 +27,12 @@ import { Row, Column, Label, Box } from '@captainpants/sweeter-gummybear';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 
-export function RigidObjectEditor(
+export function ObjectEditor(
     { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
     const typedModel = $lastGood(() => {
-        return cast($val(model), asRigidObject);
+        return cast($val(model), asObject);
     });
 
     const ambient = init.getContext(AmbientValuesContext);
@@ -41,7 +42,7 @@ export function RigidObjectEditor(
     const idGenerator = init.idGenerator;
 
     const { draft } = init.hook(
-        DraftHook<UnknownRigidObjectModel, UnknownRigidObjectModel>,
+        DraftHook<UnknownObjectModel, UnknownObjectModel>,
         {
             model: typedModel,
             convertIn: (model) => model,
@@ -55,17 +56,15 @@ export function RigidObjectEditor(
                 await $peek(replace)(validated);
             },
             validate: async (converted) => {
-                const res = await typedModel
-                    .peek()
-                    .type.validate(converted.value);
+                const res = await validate(typedModel.peek().type, converted.value);
                 return res.success ? null : res.error;
             },
         },
     );
 
     const updatePropertyValue = async (
-        propertyModel: PropertyModel<unknown>,
-        value: Model<unknown>,
+        propertyModel: UnknownPropertyModel,
+        value: UnknownModel,
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
@@ -115,7 +114,7 @@ export function RigidObjectEditor(
                             assertNotNullOrUndefined(propertyModel);
 
                             return (
-                                propertyModel.definition.getLocalValue(
+                                propertyModel.valueModel.type.meta().getLocalValueForUnknown(
                                     StandardLocalValues.Visible,
                                     typedModel.value,
                                     calculationContext,
@@ -166,9 +165,7 @@ export function RigidObjectEditor(
                                     >
                                         <Column xs={4}>
                                             <Label for={id}>
-                                                {property.definition
-                                                    .displayName ??
-                                                    property.name}
+                                                {property.propertyType.meta().displayName() ?? property.name}
                                             </Label>
                                         </Column>
                                         <Column xs={8}>

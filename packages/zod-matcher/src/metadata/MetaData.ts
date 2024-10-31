@@ -12,27 +12,23 @@ const schemas = {
 }
 
 export interface MetaData<TZodType extends z.ZodTypeAny> {
-    setAttr(name: string, value: unknown): this;
+    attr(name: string, value: unknown): this;
 
     getAttr(name: string, fallback: unknown): unknown;
+    getAttrValidated<TValueZodType extends z.ZodTypeAny>(name: string, valueSchema: TValueZodType, fallback: z.infer<TValueZodType>): z.infer<TValueZodType>;
 
-    getAttrValidated<TValueZodType extends z.ZodTypeAny>(name: string, valueSchema: TValueZodType, fallback: z.infer<TValueZodType>): unknown;
-
-    withLabel(name: string, val?: boolean): this;
-
-    hasLabel(name: string): boolean ;
+    label(name: string, val?: boolean): this;
+    hasLabel(name: string): boolean;
     
-    withCategory(category: string | undefined): this;
+    category(category: string | null): this;
+    category(): string | null;
 
-    category(): string | undefined;
-
-    withDisplayName(category: string | undefined): this;
-
-    displayName(): string | undefined;
+    displayName(displayName: string | null): this;
+    displayName(): string | null;
+    getBestDisplayName(): string;
 
     visible(visibility: boolean): this;
-
-    isVisible(): boolean;
+    visible(): boolean;
     
     withLocalValue(name: string, callback: ContextualValueCalculationCallback<any>): this;
     withLocalValue(name: string, value: unknown): this;

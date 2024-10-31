@@ -3,15 +3,16 @@ import {
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import {
+    type UnknownModel,
     type LocalValueCallback,
-    type Model,
-    type Replacer,
+    type UnknownReplacer,
 } from '@captainpants/zod-matcher';
+import { z } from 'zod';
 
 export type EditorLikeProps = PropertiesMightBeSignals<{
     id?: string | undefined;
-    model: Model<unknown>;
-    replace: Replacer<unknown>;
+    model: UnknownModel;
+    replace: UnknownReplacer;
     propertyDisplayName?: string | undefined;
     indent: number;
     isRoot?: boolean;

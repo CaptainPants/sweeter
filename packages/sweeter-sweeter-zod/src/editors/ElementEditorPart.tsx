@@ -6,14 +6,14 @@ import {
     LocalizerHook,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type Model } from '@captainpants/zod-matcher';
+import { UnknownModel, type Model } from '@captainpants/zod-matcher';
 import { EditorHost } from '../components/EditorHost.js';
-import { idPaths } from '../idPaths.js';
+import { idPaths } from '@captainpants/sweeter-utilities';
 
 export type ElementEditorPartProps = PropertiesMightBeSignals<{
     index: number;
-    elementModel: Model<unknown>;
-    updateElement: (index: number, value: Model<unknown>) => Promise<void>;
+    elementModel: UnknownModel;
+    updateElement: (index: number, value: UnknownModel) => Promise<void>;
 
     indent: number;
     ownerIdPath: string | undefined;
@@ -33,7 +33,7 @@ export function ElementEditorPart(
     }: ElementEditorPartProps,
     init: ComponentInit,
 ): JSX.Element {
-    const replace = async (value: Model<unknown>) => {
+    const replace = async (value: UnknownModel) => {
         await $peek(updateElement)($peek(index), value);
     };
 

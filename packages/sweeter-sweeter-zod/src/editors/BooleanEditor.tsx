@@ -4,6 +4,8 @@ import {
     ModelFactory,
     type UnionModel,
     asUnknown,
+    BooleanModel,
+    validate,
 } from '@captainpants/zod-matcher';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
@@ -26,7 +28,7 @@ export function BooleanEditor(
     });
 
     const { draft, validationErrors } = init.hook(
-        DraftHook<UnionModel<boolean>, boolean>,
+        DraftHook<BooleanModel, boolean>,
         {
             model: typedModel,
             onValid: async (validated) => {
@@ -41,9 +43,7 @@ export function BooleanEditor(
                 return { success: true, result: asModel };
             },
             validate: async (converted) => {
-                const res = await typedModel
-                    .peek()
-                    .type.validate(converted.value);
+                const res = await validate(typedModel.peek().type, converted.value);
                 return res.success ? null : res.error;
             },
         },

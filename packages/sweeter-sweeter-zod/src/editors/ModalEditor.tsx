@@ -1,4 +1,4 @@
-import { type Model } from '@captainpants/zod-matcher';
+import { UnknownModel, type Model } from '@captainpants/zod-matcher';
 
 import { type EditorProps } from '../types.js';
 import {
@@ -42,7 +42,7 @@ export function ModalEditor(
         return Object.assign({}, $valProperties(passthrough), {
             indent: 0,
             model: modelSnapshot,
-            replace: async (replacement: Model<unknown>): Promise<void> => {
+            replace: async (replacement: UnknownModel): Promise<void> => {
                 modelSnapshot.value = replacement;
             },
             isRoot: true,

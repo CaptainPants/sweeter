@@ -1,7 +1,8 @@
 import {
+    type UnknownPropertyModel,
     type ContextualValueCalculationContext,
     type Model,
-    type PropertyModel,
+    type UnknownModel,
 } from '@captainpants/zod-matcher';
 import {
     LocalizerHook,
@@ -13,20 +14,20 @@ import {
     $invalidateOnChange,
 } from '@captainpants/sweeter-core';
 
-import { idPaths } from '../idPaths.js';
 import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
 import { AmbientValues } from '../components/AmbientValues.js';
 import { EditorHost } from '../components/EditorHost.js';
 import { $wrap } from '@captainpants/sweeter-core';
+import { idPaths } from '@captainpants/sweeter-utilities';
 
 export type PropertyEditorPartProps = PropertiesMightBeSignals<{
     id: string;
 
     owner: Record<string, unknown>;
-    propertyModel: PropertyModel<unknown>;
+    propertyModel: UnknownPropertyModel;
     updateValue: (
-        property: PropertyModel<unknown>,
-        value: Model<unknown>,
+        property: UnknownPropertyModel,
+        value: UnknownModel,
     ) => Promise<void>;
 
     indent: number;
@@ -48,7 +49,7 @@ export function PropertyEditorPart(
         idPaths.key($val(ownerIdPath), $val(propertyModel).name),
     );
 
-    const replace = async (value: Model<unknown>) => {
+    const replace = async (value: UnknownModel) => {
         await $peek(updateValue)($peek(propertyModel), value);
     };
 
@@ -59,7 +60,7 @@ export function PropertyEditorPart(
         $invalidateOnChange(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
-            propertyModelResolved.definition.getLocalValue(
+            propertyModelResolved.valueModel.type.meta().getLocalValueForUnknown(
                 name,
                 $wrap(owner),
                 context,
@@ -71,7 +72,7 @@ export function PropertyEditorPart(
         $invalidateOnChange(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
-            propertyModelResolved.definition.getAmbientValue(
+            propertyModelResolved.valueModel.type.meta().getAmbientValueForUnknown(
                 name,
                 $wrap(owner),
                 context,
@@ -87,7 +88,7 @@ export function PropertyEditorPart(
     const valueModel = $calc(() => $val(propertyModel).valueModel);
     const displayName = $calc(
         () =>
-            $val(propertyModel).definition.displayName ??
+            $val(propertyModel).valueModel.type.meta().displayName() ??
             $val(propertyModel).name,
     );
 

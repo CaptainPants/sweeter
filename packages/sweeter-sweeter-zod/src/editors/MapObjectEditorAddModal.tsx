@@ -15,17 +15,17 @@ import {
     Row,
 } from '@captainpants/sweeter-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
-import { type Type } from '@captainpants/zod-matcher';
+import { z } from 'zod';
 
 export type MapObjectEditorAddModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;
 
-    type: Type<unknown>;
+    type: z.ZodTypeAny;
 
     validate: (name: string) => Promise<string | null>;
 
     onCancelled: () => void;
-    onFinished: (name: string, type: Type<unknown>) => Promise<void>;
+    onFinished: (name: string, type: z.ZodTypeAny) => Promise<void>;
 }>;
 
 export const MapObjectEditorAddModal: Component<
@@ -33,7 +33,7 @@ export const MapObjectEditorAddModal: Component<
 > = ({ isOpen, type, validate, onCancelled, onFinished }, init) => {
     const title = $calc(() => {
         const typeResolved = $val(type);
-        const title = typeResolved.displayName ?? typeResolved.name;
+        const title = typeResolved.meta().getBestDisplayName();
         return title;
     });
 

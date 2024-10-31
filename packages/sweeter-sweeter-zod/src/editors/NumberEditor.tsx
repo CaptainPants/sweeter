@@ -2,6 +2,7 @@ import {
     asNumber,
     cast,
     ModelFactory,
+    validate,
     type NumberModel,
 } from '@captainpants/zod-matcher';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -47,9 +48,7 @@ export function NumberEditor(
                 return { success: true, result: asModel };
             },
             validate: async (converted) => {
-                const res = await typedModel
-                    .peek()
-                    .type.validate(converted.value);
+                const res = await validate(typedModel.peek().type, converted.value);
                 return res.success ? null : res.error;
             },
         },

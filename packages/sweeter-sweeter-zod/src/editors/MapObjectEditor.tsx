@@ -13,18 +13,22 @@ import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { DraftHook, IconButton } from '../index.js';
 import {
-    asMap,
+    asObject,
     cast,
     isUnionType,
-    type Type,
-    type MapObjectModel,
     type Model,
+    validate,
+    UnknownModel,
+    ObjectModel,
+    UnknownObjectModel,
+    createDefault,
 } from '@captainpants/zod-matcher';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { Box, Label } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { MapObjectEditorAddModal } from './MapObjectEditorAddModal.js';
 import { MapObjectEditorRenameModal } from './MapObjectEditorRenameModal.js';
+import { z } from 'zod';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {
@@ -37,7 +41,7 @@ export const MapObjectEditor: Component<EditorProps> = (
     }: Readonly<EditorProps>,
     init,
 ): JSX.Element => {
-    const typedModel = $lastGood(() => cast($val(model), asMap));
+    const typedModel = $lastGood(() => cast($val(model), asObject));
 
     const { indentWidth } = init.getContext(EditorSizesContext);
     const childIndent = $calc(() => $val(indent) + 1);
@@ -48,18 +52,18 @@ export const MapObjectEditor: Component<EditorProps> = (
 
     const { localize } = init.hook(LocalizerHook);
 
-    const allowedTypes = $calc(() => {
-        const elementType = draft.value.getItemType();
+    const catchallAllowedTypes = $calc(() => {
+        const catchallType = draft.value.unknownGetCatchallType();
 
-        if (isUnionType(elementType)) {
-            return elementType.types;
+        if (isUnionType(catchallType)) {
+            return catchallType.options;
         } else {
-            return [elementType];
+            return [catchallType];
         }
     });
 
     const { draft } = init.hook(
-        DraftHook<MapObjectModel<unknown>, MapObjectModel<unknown>>,
+        DraftHook<UnknownObjectModel, UnknownObjectModel>,
         {
             model: typedModel,
             convertIn: (model) => model,
@@ -70,9 +74,9 @@ export const MapObjectEditor: Component<EditorProps> = (
                 await $peek(replace)(validated);
             },
             validate: async (converted) => {
-                const res = await typedModel
+                const res = await validate(typedModel
                     .peek()
-                    .type.validate(converted.value);
+                    .type, converted.value);
                 return res.success ? null : res.error;
             },
         },
@@ -80,21 +84,21 @@ export const MapObjectEditor: Component<EditorProps> = (
 
     const updatePropertyValue = async (
         name: string,
-        propertyModel: Model<unknown>,
+        propertyModel: UnknownModel,
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .setProperty(name, propertyModel, true);
+            .unknownSetProperty(name, propertyModel, true);
 
         draft.update(newDraft);
     };
 
-    const onAdd = async (name: string, type: Type<unknown>) => {
-        const propertyModel = type.createDefault();
+    const onAdd = async (name: string, type: z.ZodTypeAny) => {
+        const propertyModel = createDefault(type);
 
         const newDraft = await draft
             .peek()
-            .setProperty(name, propertyModel, true);
+            .unknownSetProperty(name, propertyModel, true);
 
         draft.update(newDraft);
     };
@@ -118,11 +122,11 @@ export const MapObjectEditor: Component<EditorProps> = (
     };
 
     const content = $calc(() => {
-        const entries = draft.value.getEntries();
+        const entries = draft.value.unknownGetProperties();
 
         // TODO: rename button, column sizes
-        const mappedProperties = entries.map(([name, value]) => ({
-            property: value,
+        const mappedProperties = entries.map(({ name, valueModel }) => ({
+            property: valueModel,
             render: () => {
                 const id = idGenerator.next(name);
 
@@ -139,7 +143,7 @@ export const MapObjectEditor: Component<EditorProps> = (
                             <MapElementEditorPart
                                 id={idGenerator.next(name)}
                                 propertyName={name}
-                                elementModel={value}
+                                elementModel={valueModel}
                                 updateElement={updatePropertyValue}
                                 indent={childIndent}
                                 ownerIdPath={idPath}
@@ -174,7 +178,7 @@ export const MapObjectEditor: Component<EditorProps> = (
                         // Note that a self to self doesn't do a
                         // validate but does trigger onFinished
                         const validate = async (to: string) => {
-                            const property = draft.value.getProperty(to);
+                            const property = draft.value.unknownGetProperty(to);
                             if (property !== undefined) {
                                 return 'Property is already defined';
                             }
@@ -214,19 +218,19 @@ export const MapObjectEditor: Component<EditorProps> = (
                     <div class={css.editorContainer}>{content}</div>
                     <div>
                         {$calc(() =>
-                            allowedTypes.value.map((allowedType, index) => {
+                            catchallAllowedTypes.value.map((allowedType, index) => {
                                 const title =
-                                    allowedTypes.value.length === 1
+                                    catchallAllowedTypes.value.length === 1
                                         ? localize('Add')
                                         : localize('Add {0}', [
-                                              allowedType.getBestDisplayName(),
+                                              allowedType.meta().getBestDisplayName(),
                                           ]);
 
                                 const isOpen = $mutable(false);
 
                                 const validate = async (name: string) => {
                                     const property =
-                                        draft.value.getProperty(name);
+                                        draft.value.unknownGetProperty(name);
                                     if (property !== undefined) {
                                         return 'Property is already defined';
                                     }

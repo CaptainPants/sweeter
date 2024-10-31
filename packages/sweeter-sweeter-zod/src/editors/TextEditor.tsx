@@ -2,6 +2,7 @@ import {
     asString,
     cast,
     ModelFactory,
+    validate,
     type StringModel,
 } from '@captainpants/zod-matcher';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -40,9 +41,9 @@ export function TextEditor(
                 ),
             }),
             validate: async (converted) => {
-                const res = await typedModel
+                const res = await validate(typedModel
                     .peek()
-                    .type.validate(converted.value);
+                    .type, converted.value);
                 return res.success ? null : res.error;
             },
         },

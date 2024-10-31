@@ -8,6 +8,9 @@ export type ValueTypeFromModel<TModel> = TModel extends Model<infer TZodType>
     ? ValueTypeFromZodType<TZodType>
     : never;
 
+export type UnknownReplacer = <T extends z.ZodTypeAny>(
+    value: Model<T>,
+) => Promise<void>;
 export type Replacer<T extends z.ZodTypeAny> = (
     value: Model<T>,
 ) => Promise<void>;

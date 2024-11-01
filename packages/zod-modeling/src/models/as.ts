@@ -5,14 +5,13 @@ import {
     isBooleanType,
     isNullType,
     isNumberLiteralType,
-    isNumberOrNumberLiteralType,
     isNumberType,
     isObjectType,
     isStringLiteralType,
     isStringType,
     isUndefinedType,
     isUnionType,
-} from '../index.js';
+} from '../type/is/is.js';
 
 import { isModel } from './isModel.js';
 import {
@@ -29,7 +28,6 @@ import {
     type UnknownArrayModel,
     type UnknownModel,
     type BooleanModel,
-    ObjectModel,
     type UnknownObjectModel,
 } from './Model.js';
 

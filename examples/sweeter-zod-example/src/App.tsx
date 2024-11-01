@@ -8,6 +8,8 @@ import {
     createTheme,
 } from '@captainpants/sweeter-gummybear';
 
+import { z } from 'zod';
+
 //import typescriptLogo from "./typescript.svg";
 
 //import viteLogo from "/vite.svg";
@@ -20,8 +22,8 @@ import {
     WithId,
     $calc,
 } from '@captainpants/sweeter-core';
-import { exampleData } from '@captainpants/typeytypetype-example-data';
-import { EditorRoot } from '@captainpants/sweeter-typeytypetype-web';
+import { exampleData } from '@captainpants/zod-example-data';
+import { EditorRoot } from '@captainpants/sweeter-zod-web';
 
 const theme = createTheme({});
 
@@ -73,7 +75,7 @@ export function App(props: {}, init: ComponentInit): JSX.Element {
                                         console.log('State reset');
 
                                         return (
-                                            <EditorRoot<unknown>
+                                            <EditorRoot<z.ZodTypeAny>
                                                 model={state}
                                                 replace={(newValue) => {
                                                     state.value = newValue;

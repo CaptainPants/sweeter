@@ -9,3 +9,4 @@ export * from './validation/index.js';
 export * from './ReadonlySignalLike.js';
 export * from './notFound.js';
 export * from './metadata/index.js';
+export * from './type/index.js';

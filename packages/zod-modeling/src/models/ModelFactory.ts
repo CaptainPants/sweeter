@@ -4,10 +4,9 @@ import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
+import { ObjectImpl } from './internal/ObjectImpl.js';
 import { type UnknownModel, type Model } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
-import { ObjectImpl } from './internal/ObjectImpl.js';
-import { type ReadonlyRecord } from '../types.js';
 import { type z } from 'zod';
 import {
     isArrayType,
@@ -21,7 +20,7 @@ import {
     isUndefinedType,
     isUnionType,
     isUnknownType,
-} from '../index.js';
+} from '../type/is/is.js';
 import { validateAndThrow } from './validate.js';
 
 export interface CreateModelArgs<TZodType extends z.ZodTypeAny> {
@@ -37,9 +36,6 @@ export interface CreateUnvalidatedModelPartArgs<T> {
     parentInfo: ParentTypeInfo | null | undefined;
     depth?: number;
 }
-
-// eslint-disable-next-line @typescript-eslint/ban-types -- Used as a key to identify the actual type of a Definition object
-type ConstructorFunction = Function;
 
 type ModelFactoryMethod<TZodType extends z.ZodTypeAny> = (
     value: z.infer<TZodType>,

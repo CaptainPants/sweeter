@@ -8,6 +8,7 @@ import {
     type UnknownModel,
     type PropertyModels,
     type TypedPropertyModelForKey,
+    UnknownObjectModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -28,7 +29,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         parentInfo: ParentTypeInfo | null,
         depth: number,
     ): ObjectImpl<TZodObjectType> {
-        const propertyModels: Record<string, UnknownModel> = {};
+        const propertyModels: Record<string, UnknownPropertyModel> = {} ;
 
         const shape = schema.shape as ReadonlyRecord<
             string | symbol,
@@ -40,6 +41,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
             const shapeType =
                 shape[propertyName] ?? (schema._def.catchall as z.ZodTypeAny);
 
+            // TODO: this should potentially unwrap out ZodOptional
             const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
                 value: propertyValue,
                 type: shapeType,
@@ -51,13 +53,16 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
                 depth: descend(depth),
             });
 
-            (propertyModels as Record<string, UnknownModel>)[propertyName] =
-                propertyValueModel;
+            propertyModels[propertyName] = { 
+                name: propertyName, 
+                valueModel: propertyValueModel, 
+                isOptional: shapeType.isOptional() 
+            };
         }
 
         return new ObjectImpl<TZodObjectType>(
             value,
-            propertyModels as unknown as PropertyModels<TZodObjectType>,
+            propertyModels as PropertyModels<TZodObjectType>,
             schema,
             parentInfo,
         );

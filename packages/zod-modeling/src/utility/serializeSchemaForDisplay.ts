@@ -6,11 +6,10 @@ import {
     isNumberLiteralType,
     isObjectType,
     isStringLiteralType,
-    isStringType,
     isUndefinedType,
     isUnionType,
-    notFound,
-} from '../index.js';
+} from '../type/is/is.js';
+import { notFound } from '../notFound.js';
 
 function create<T extends z.ZodType>(
     check: (schema: z.ZodType) => schema is T,

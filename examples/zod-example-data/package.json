@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/typeytypetype-example-data",
+    "name": "@captainpants/zod-example-data",
     "version": "0.0.5",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
@@ -32,7 +32,7 @@
         "pnpm": "8.14.1"
     },
     "dependencies": {
-        "@captainpants/zod-matcher": "workspace:^",
+        "@captainpants/zod-modeling": "workspace:^",
         "zod": "^3.23.8"
     }
 }

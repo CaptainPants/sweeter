@@ -1,29 +1,9 @@
 import { z } from 'zod';
-import { type zodUtilityTypes } from '../utility/zodUtilityTypes.js';
+import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
 
 export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
     const res = type.safeParse(val);
     return res.success;
-}
-
-// TODO: how do we conveiently handle wrapper types? I.e. z.ZodDefault
-// Also think about z.ZodNullable, z.ZodOptional as they are effectively unions
-// but presumably won't return true to X instanceof ZodUnion
-
-export function isDefaultWrapper(
-    schema: z.ZodTypeAny,
-): schema is z.ZodDefault<z.ZodTypeAny> {
-    return schema instanceof z.ZodDefault;
-}
-export function isNullableType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodNullable<z.ZodTypeAny> {
-    return schema instanceof z.ZodNullable;
-}
-export function isOptionalType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodOptional<z.ZodTypeAny> {
-    return schema instanceof z.ZodOptional;
 }
 
 export function isObjectType(schema: z.ZodTypeAny): schema is z.ZodObject<any> {

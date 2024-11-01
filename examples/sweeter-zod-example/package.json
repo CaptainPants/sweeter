@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/sweeter-typeytypetype-example",
+    "name": "@captainpants/sweeter-zod-example",
     "private": true,
     "version": "0.0.5",
     "type": "module",
@@ -27,7 +27,8 @@
         "@captainpants/sweeter-gummybear": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
         "@captainpants/sweeter-zod-web": "workspace:^",
-        "@captainpants/typeytypetype-example-data": "workspace:^",
-        "@captainpants/zod-matcher": "workspace:^"
+        "@captainpants/zod-example-data": "workspace:^",
+        "@captainpants/zod-modeling": "workspace:^",
+        "zod": "^3.23.8"
     }
 }

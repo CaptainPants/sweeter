@@ -3,7 +3,7 @@
         "packages/sweeter-core",
         "packages/sweeter-web",
         "packages/sweeter-gummybear",
-        "packages/zod-matcher"
+        "packages/zod-modeling"
     ],
     "entryPointStrategy": "packages",
     "out": "docs/generated"

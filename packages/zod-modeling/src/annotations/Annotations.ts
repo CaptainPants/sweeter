@@ -1,18 +1,20 @@
-import { z } from 'zod';
+
+import { Type } from 'arktype';
 import {
+    arkTypeUtilityTypes,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
 } from '../index.js';
 
-export interface MetaData<TZodType extends z.ZodTypeAny> {
+export interface Annotations<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> {
     attr(name: string, value: unknown): this;
 
     getAttr(name: string, fallback: unknown): unknown;
-    getAttrValidated<TValueZodType extends z.ZodTypeAny>(
+    getAttrValidated<TValueArkType extends Type>(
         name: string,
-        valueSchema: TValueZodType,
-        fallback: z.infer<TValueZodType>,
-    ): z.infer<TValueZodType>;
+        valueSchema: TValueArkType,
+        fallback: Type['infer'],
+    ): TValueArkType['infer'];
 
     label(name: string, val?: boolean): this;
     hasLabel(name: string): boolean;
@@ -29,19 +31,19 @@ export interface MetaData<TZodType extends z.ZodTypeAny> {
 
     withLocalValue(
         name: string,
-        callback: ContextualValueCalculationCallback<z.ZodTypeAny>,
+        callback: ContextualValueCalculationCallback<Type>,
     ): this;
     withLocalValue(name: string, value: unknown): this;
 
     withAmbientValue(
         name: string,
-        callback: ContextualValueCalculationCallback<z.ZodTypeAny>,
+        callback: ContextualValueCalculationCallback<Type>,
     ): this;
     withAmbientValue(name: string, value: unknown): this;
 
     getLocalValue(
         name: string,
-        value: z.infer<TZodType>,
+        value: TArkType['infer'],
         context: ContextualValueCalculationContext,
     ): unknown;
 
@@ -53,7 +55,7 @@ export interface MetaData<TZodType extends z.ZodTypeAny> {
 
     getAmbientValue(
         name: string,
-        value: z.infer<TZodType>,
+        value: TArkType['infer'],
         context: ContextualValueCalculationContext,
     ): unknown;
 
@@ -63,5 +65,7 @@ export interface MetaData<TZodType extends z.ZodTypeAny> {
         context: ContextualValueCalculationContext,
     ): unknown;
 
-    endMeta(): TZodType;
+    end(): TArkType;
 }
+
+export type AnnotationSetter<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> = (annotations: Annotations<TArkType>) => void;

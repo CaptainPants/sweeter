@@ -22,7 +22,7 @@ export function createKnownAttribute<TName extends string, T>(
         return { name, value };
     }
     result.get = function (from: z.ZodType<T>): T {
-        if (!from.hasMetaData()) throw new TypeError(`MetaData not found`);
+        if (!from.hasAnnotations()) throw new TypeError(`MetaData not found`);
         const value = from.meta().getAttr(name, notFound);
         if (value === notFound || !is(value, schema)) {
             throw new TypeError(
@@ -32,7 +32,7 @@ export function createKnownAttribute<TName extends string, T>(
         return value;
     };
     result.getOrFallback = function (from: z.ZodType<T>, fallback: T): T {
-        if (!from.hasMetaData()) return fallback;
+        if (!from.hasAnnotations()) return fallback;
         const value = from.meta().getAttr(name, notFound);
         if (value === notFound || !is(value, schema)) {
             return fallback;
@@ -40,7 +40,7 @@ export function createKnownAttribute<TName extends string, T>(
         return value;
     };
     result.getOrUndefined = function (from: z.ZodType<T>): T | undefined {
-        if (!from.hasMetaData()) return undefined;
+        if (!from.hasAnnotations()) return undefined;
         const value = from.meta().getAttr(name, undefined);
         if (value === undefined || !is(value, schema)) {
             return undefined;

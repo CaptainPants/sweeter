@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type ValueTypeFromZodType } from '../types.js';
+import { type ValueTypeFromArkType } from '../types.js';
 
 import { ModelFactory } from './ModelFactory.js';
 
@@ -10,7 +10,7 @@ test('rigid-object', async () => {
         str: z.string(),
     });
 
-    const value: ValueTypeFromZodType<typeof type> = {
+    const value: ValueTypeFromArkType<typeof type> = {
         num: 1,
         str: 'banana',
     };

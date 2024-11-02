@@ -1,6 +1,7 @@
 import { type z } from 'zod';
-import { type ValidationResult } from '../index.js';
+import { arkTypeUtilityTypes, type ValidationResult } from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
+import { safeParse, safeParseAsync } from './parse.js';
 
 export interface ValidateAndThrowArgs {
     /**
@@ -10,17 +11,17 @@ export interface ValidateAndThrowArgs {
     abortSignal?: AbortSignal | undefined;
 }
 
-export async function validate<TZodType extends z.ZodTypeAny>(
-    schema: TZodType,
+export async function validate<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    schema: TArkType,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },
-): Promise<ValidationResult<z.infer<TZodType>>> {
-    const res = await schema.safeParseAsync(value);
+): Promise<ValidationResult<TArkType['infer']>> {
+    const res = await safeParseAsync(value, schema);
     if (res.success) return Maybe.success(res.data);
     else
         return {
             success: false,
-            error: res.error.issues.map((issue) => {
+            error: res.issues.map((issue) => {
                 return {
                     message: issue.message,
                     idPath: idPaths.join(issue.path),
@@ -43,11 +44,11 @@ export async function validateAndThrow<TZodType extends z.ZodTypeAny>(
     return res.data;
 }
 
-export function shallowMatchesStructure<TZodType extends z.ZodTypeAny>(
-    schema: TZodType,
+export function shallowMatchesStructure<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    schema: TArkType,
     value: unknown,
     deep = true,
     depth = 25,
-): value is z.infer<TZodType> {
-    return schema.safeParse(value).data;
+): value is TArkType['infer'] {
+    return safeParse(value, schema).success;
 }

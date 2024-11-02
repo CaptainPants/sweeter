@@ -6,7 +6,7 @@ import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
-import { shallowMatchesStructure, validateAndThrow } from '../validate.js';
+import { shallowMatchesStructure, validateAndThrow } from '../../utility/validate.js';
 
 /**
  * For a given value (raw or model) validate that the value matches the type (using validateOrThrow). Throw if it does not.

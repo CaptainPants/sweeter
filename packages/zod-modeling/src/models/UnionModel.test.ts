@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type ValueTypeFromZodType } from '../types.js';
+import { type ValueTypeFromArkType } from '../types.js';
 
 import { asObject, asUnknown, cast } from './as.js';
 import { ModelFactory } from './ModelFactory.js';

@@ -21,7 +21,7 @@ import {
     isUnionType,
     isUnknownType,
 } from '../type/is/is.js';
-import { validateAndThrow } from './validate.js';
+import { validateAndThrow } from '../utility/validate.js';
 
 export interface CreateModelArgs<TZodType extends z.ZodTypeAny> {
     value: z.infer<TZodType>;

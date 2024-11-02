@@ -15,8 +15,8 @@ import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { type ReadonlyRecord } from '../../types.js';
-import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
-import { validateAndThrow } from '../validate.js';
+import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
+import { validateAndThrow } from '../../utility/validate.js';
 import {
     type PropertyModel,
     type UnknownPropertyModel,
@@ -88,7 +88,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         return this.type._def.catchall;
     }
 
-    public getCatchallType(): zodUtilityTypes.CatchallPropertyValueType<TZodObjectType> {
+    public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueType<TZodObjectType> {
         return this.type._def.catchall;
     }
 
@@ -169,7 +169,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
     }
 
     public getProperty<
-        TKey extends keyof zodUtilityTypes.Shape<TZodObjectType> & string,
+        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TZodObjectType> & string,
     >(key: TKey): TypedPropertyModelForKey<TZodObjectType, TKey> {
         return this.unknownGetProperty(key) as TypedPropertyModelForKey<
             TZodObjectType,

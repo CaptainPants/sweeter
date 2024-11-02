@@ -1,2 +1,2 @@
-export * from './MetaData.js';
+export * from './annotations.js';
 export * from './createKnownAttribute.js';

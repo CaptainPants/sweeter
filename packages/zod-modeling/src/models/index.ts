@@ -8,4 +8,4 @@ export * from './ModelFactory.js';
 export * from './parents.js';
 export * from './PropertyModel.js';
 export * from './sortProperties.js';
-export * from './validate.js';
+export * from '../utility/validate.js';

@@ -35,7 +35,7 @@ export function categorizeProperties(
         const propertyTyped = property as z.ZodTypeAny;
 
         const category =
-            (propertyTyped.hasMetaData()
+            (propertyTyped.hasAnnotations()
                 ? propertyTyped.meta().category()
                 : undefined) ?? 'Misc';
 

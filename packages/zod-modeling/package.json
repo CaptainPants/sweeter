@@ -32,7 +32,9 @@
         "pnpm": "8.14.1"
     },
     "dependencies": {
+        "@ark/schema": "^0.21.0",
         "@captainpants/sweeter-utilities": "workspace:^",
+        "arktype": "2.0.0-rc.21",
         "zod": "^3.23.8"
     }
 }

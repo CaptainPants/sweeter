@@ -1,5 +1,6 @@
-import { type z } from 'zod';
+
 import { type ReadonlySignalLike } from './ReadonlySignalLike.js';
+import { Type } from 'arktype';
 
 export interface ContextualValueCalculationContext {
     ambient: ReadonlySignalLike<AmbientValueCallback> | AmbientValueCallback;
@@ -9,9 +10,9 @@ export interface ContextualValueCalculationContext {
         | undefined;
 }
 
-export type ContextualValueCalculationCallback<TZodType extends z.ZodTypeAny> =
+export type ContextualValueCalculationCallback<TZodType extends Type> =
     (
-        owner: z.infer<TZodType>,
+        owner: Type['infer'],
         context: ContextualValueCalculationContext,
     ) => unknown;
 

@@ -1,44 +1,44 @@
 import { type z } from 'zod';
 import {
-    type And,
-    type IsAny,
     type ReadonlyRecord,
-    type TypesEqual,
 } from '../types.js';
+import { Ark, Type, type,  } from 'arktype';
 
 /**
  * Types that operate on Zod type
  */
-export namespace zodUtilityTypes {
-    export type Shape<TZodObjectType> = TZodObjectType extends z.ZodObject<
-        infer S,
-        any,
-        any
-    >
-        ? S
+export namespace arkTypeUtilityTypes {
+    export type AnyTypeConstraint = Type<any, any>;
+
+    export type AllPropertyKeys<TArkTypeObjectType> = TArkTypeObjectType extends Type<infer S>
+        ? keyof S
         : never;
 
-    export type CatchallPropertyKeyType<TZodObjectType> =
-        TZodObjectType extends z.ZodObject<any, infer S, any> ? S : never;
+    export type AllPropertyTypes<TArkTypeObjectType> = TArkTypeObjectType extends Type<infer S>
+        ? S[keyof S]
+        : never;
 
-    export type CatchallPropertyValueType<TZodObjectType> =
-        TZodObjectType extends z.ZodObject<any, any, infer S> ? S : never;
+    export type CatchallPropertyKeyType<TArkTypeObjectType> =
+        TArkTypeObjectType extends z.ZodObject<any, infer S, any> ? S : never;
+
+    export type CatchallPropertyValueType<TArkTypeObjectType> =
+        TArkTypeObjectType extends z.ZodObject<any, any, infer S> ? S : never;
 
     export type PropertyType<
-        TZodObjectType,
+        TArkTypeObjectType,
         Property extends string,
-    > = Shape<TZodObjectType> extends ReadonlyRecord<Property, infer S>
+    > = AllPropertyTypes<TArkTypeObjectType> extends ReadonlyRecord<Property, infer S>
         ? S
         : never;
 
-    export type ValuesOfObject<T> = T[keyof T];
+    export type ValuesOfObject<TObject> = TObject[keyof TObject];
 
-    export type ObjectEntryType<TZodObjectType> = readonly [
+    export type ObjectEntryType<TArkTypeObjectType> = readonly [
         (
-            | keyof Shape<TZodObjectType>
-            | keyof CatchallPropertyKeyType<TZodObjectType>
+            | keyof AllPropertyTypes<TArkTypeObjectType>
+            | keyof CatchallPropertyKeyType<TArkTypeObjectType>
         ),
-        ValuesOfObject<TZodObjectType> | ValuesOfObject<TZodObjectType>,
+        ValuesOfObject<TArkTypeObjectType> | ValuesOfObject<TArkTypeObjectType>,
     ];
 
     export type UnionOptions<TUnion> = TUnion extends z.ZodUnion<infer S>
@@ -49,13 +49,13 @@ export namespace zodUtilityTypes {
         ? { [Key in keyof S]: RecursiveUnionOptions<S[Key]> }[number]
         : T;
 
-    export type IsZodTypeAny<TZodType extends z.ZodTypeAny> =
-        TZodType extends z.ZodType<infer Output, infer Def, infer Input>
-            ? And<
-                  IsAny<Output>,
-                  TypesEqual<TZodType, z.ZodType<Output, Def, Input>>
-              >
-            : false;
+    // export type IsZodTypeAny<TZodType extends z.ZodTypeAny> =
+    //     TZodType extends z.ZodType<infer Output, infer Def, infer Input>
+    //         ? And<
+    //               IsAny<Output>,
+    //               TypesEqual<TZodType, z.ZodType<Output, Def, Input>>
+    //           >
+    //         : false;
 
     export type ArrayElementType<TArrayZodType extends z.ZodArray<any>> =
         TArrayZodType extends z.ZodArray<infer TArrayElementZodType>

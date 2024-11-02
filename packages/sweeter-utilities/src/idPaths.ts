@@ -14,7 +14,7 @@ export const idPaths = {
         if (!path) return added;
         return path + '_' + added;
     },
-    join(path: readonly (number | string)[]): string {
-        return path.join('.');
+    join(path: readonly (number | string | symbol)[]): string {
+        return path.map(x => typeof x === 'symbol' ? `Symbol(${JSON.stringify(x.description)})` : x).join('.');
     },
 };

@@ -1,23 +1,25 @@
 import { z } from 'zod';
-import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
+import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
+import { safeParse } from '../../utility/parse.js';
+import { type, Type } from 'arktype';
 
-export function is<TRes>(val: unknown, type: z.ZodType<TRes>): val is TRes {
-    const res = type.safeParse(val);
+export function is<TRes>(val: unknown, type: arkTypeUtilityTypes.AnyTypeConstraint): val is TRes {
+    const res = safeParse(val, type);
     return res.success;
 }
 
-export function isObjectType(schema: z.ZodTypeAny): schema is z.ZodObject<any> {
-    return schema instanceof z.ZodRecord && isStringType(schema.keySchema);
+export function isObjectType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<object> {
+    return schema instanceof z.ZodRecord;
 }
 export function isArrayType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodArray<z.ZodTypeAny> {
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is Type<unknown[]> {
     return schema instanceof z.ZodArray;
 }
 
 export function isUnionType(
     schema: z.ZodTypeAny,
-): schema is zodUtilityTypes.ZodAnyUnionType {
+): schema is arkTypeUtilityTypes.ZodAnyUnionType {
     return schema instanceof z.ZodUnion;
 }
 

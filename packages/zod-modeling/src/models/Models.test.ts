@@ -7,7 +7,7 @@ import {
     type TypeMatchAssert,
     type UnionModel,
 } from '../index.js';
-import { type zodUtilityTypes } from '../utility/zodUtilityTypes.js';
+import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
 
 type X = Model<z.ZodArray<z.ZodString>>;
 
@@ -23,8 +23,8 @@ it('All model types match expected results', () => {
     > = true;
 
     const union_any: TypeMatchAssert<
-        Model<zodUtilityTypes.ZodAnyUnionType>,
-        UnionModel<zodUtilityTypes.ZodAnyUnionType>
+        Model<arkTypeUtilityTypes.ZodAnyUnionType>,
+        UnionModel<arkTypeUtilityTypes.ZodAnyUnionType>
     > = true;
     const union_single: TypeMatchAssert<
         Model<z.ZodUnion<[z.ZodLiteral<1>]>>,

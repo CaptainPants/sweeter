@@ -10,6 +10,7 @@ import {
     isUnionType,
 } from '../type/is/is.js';
 import { notFound } from '../notFound.js';
+import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
 
 function create<T extends z.ZodType>(
     check: (schema: z.ZodType) => schema is T,
@@ -77,7 +78,7 @@ const convertors = [
 ];
 
 export function serializeSchemaForDisplay(
-    schema: z.ZodType,
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
     depthLimit: number = 20,
 ): string {
     for (const convertor of convertors) {

@@ -1,36 +1,39 @@
 import { z } from 'zod';
 import {
+    Annotations,
+    arkTypeUtilityTypes,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
-    type MetaData,
     type ReadonlySignalLike,
     serializeSchemaForDisplay,
 } from '../../index.js';
 import { descend } from '@captainpants/sweeter-utilities';
-import { shallowMatchesStructure } from '../../models/validate.js';
+import { shallowMatchesStructure } from '../../utility/validate.js';
+import { safeParse } from '../../utility/parse.js';
+import { type } from 'arktype';
 
-const weakMap = new WeakMap<z.ZodType, MetaDataImpl<any>>();
+const weakMap = new WeakMap<arkTypeUtilityTypes.AnyTypeConstraint, AnnotationsImpl<any>>();
 
 const schemas = {
-    displayName: z.string(),
-    propertyCategory: z.string(),
-    propertyVisible: z.boolean(),
+    displayName: type.string,
+    propertyCategory: type.string,
+    propertyVisible: type.boolean,
 };
 
-export class MetaDataImpl<TZodType extends z.ZodTypeAny>
-    implements MetaData<TZodType>
+export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>
+    implements Annotations<TArkType>
 {
-    constructor(schema: TZodType) {
+    constructor(schema: TArkType) {
         this.#schema = schema;
     }
 
-    #schema: TZodType;
+    #schema: TArkType;
     #attributes?: Map<string, unknown>;
     #labels?: Set<string>;
-    #localValues?: Map<string, ContextualValueCalculationCallback<TZodType>> =
-        new Map<string, ContextualValueCalculationCallback<TZodType>>();
-    #ambientValues?: Map<string, ContextualValueCalculationCallback<TZodType>> =
-        new Map<string, ContextualValueCalculationCallback<TZodType>>();
+    #localValues?: Map<string, ContextualValueCalculationCallback<TArkType>> =
+        new Map<string, ContextualValueCalculationCallback<TArkType>>();
+    #ambientValues?: Map<string, ContextualValueCalculationCallback<TArkType>> =
+        new Map<string, ContextualValueCalculationCallback<TArkType>>();
 
     public attr(name: string, value: unknown): this {
         (this.#attributes ?? (this.#attributes = new Map())).set(name, value);
@@ -44,17 +47,17 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
         return this.#attributes.get(name);
     }
 
-    public getAttrValidated<TValueZodType extends z.ZodTypeAny>(
+    public getAttrValidated<TValueArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
         name: string,
-        valueSchema: TValueZodType,
-        fallback: z.infer<TValueZodType>,
-    ): z.infer<TValueZodType> {
+        valueSchema: TValueArkType,
+        fallback: TValueArkType['infer'],
+    ): TValueArkType['infer'] {
         if (!this.#attributes) return fallback;
         if (!this.#attributes.has(name)) return fallback;
 
         const value = this.#attributes.get(name);
 
-        const parsed = valueSchema.safeParse(value);
+        const parsed = safeParse(value, valueSchema);
         if (parsed.success) return parsed.data;
         return fallback;
     }
@@ -86,7 +89,7 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
         }
 
         const res = this.getAttr('property:category', undefined);
-        const parsed = schemas.propertyCategory.safeParse(res);
+        const parsed = safeParse(res, schemas.propertyCategory);
         if (parsed.success) {
             return parsed.data;
         }
@@ -103,7 +106,7 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
         }
 
         const res = this.getAttr('displayName', undefined);
-        const parsed = schemas.displayName.safeParse(res);
+        const parsed = safeParse(res, schemas.displayName);
         if (parsed.success) {
             return parsed.data;
         }
@@ -131,14 +134,14 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
 
     public withLocalValue(
         name: string,
-        callback: ContextualValueCalculationCallback<z.ZodTypeAny>,
+        callback: ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>,
     ): this;
     public withLocalValue(name: string, value: unknown): this;
     public withLocalValue(name: string, callbackOrValue: unknown): this {
         (this.#localValues ?? (this.#localValues = new Map())).set(
             name,
             typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<z.ZodTypeAny>)
+                ? (callbackOrValue as ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>)
                 : () => callbackOrValue,
         );
         return this;
@@ -146,14 +149,14 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
 
     public withAmbientValue(
         name: string,
-        callback: ContextualValueCalculationCallback<z.ZodTypeAny>,
+        callback: ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>,
     ): this;
     public withAmbientValue(name: string, value: unknown): this;
     public withAmbientValue(name: string, callbackOrValue: unknown): this {
         (this.#ambientValues ?? (this.#ambientValues = new Map())).set(
             name,
             typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<z.ZodTypeAny>)
+                ? (callbackOrValue as ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>)
                 : () => callbackOrValue,
         );
         return this;
@@ -161,7 +164,7 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
 
     public getLocalValue(
         name: string,
-        value: z.infer<TZodType>,
+        value: TArkType['infer'],
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#localValues?.get(name);
@@ -194,7 +197,7 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
 
     public getAmbientValue(
         name: string,
-        value: ReadonlySignalLike<z.infer<TZodType>>,
+        value: ReadonlySignalLike<TArkType['infer']>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#ambientValues?.get(name);
@@ -225,24 +228,24 @@ export class MetaDataImpl<TZodType extends z.ZodTypeAny>
         return this.getAmbientValue(name, value, context);
     }
 
-    endMeta(): TZodType {
+    end(): TArkType {
         return this.#schema;
     }
 
-    public static tryGet<TZodType extends z.ZodTypeAny>(
-        schema: TZodType,
-    ): MetaDataImpl<TZodType> | undefined {
+    public static tryGet<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+        schema: TArkType,
+    ): AnnotationsImpl<TArkType> | undefined {
         return weakMap.get(schema);
     }
 
-    public static get<TZodType extends z.ZodTypeAny>(
+    public static get<TZodType extends arkTypeUtilityTypes.AnyTypeConstraint>(
         schema: TZodType,
         createIfNotFound: boolean,
-    ): MetaDataImpl<TZodType> {
+    ): AnnotationsImpl<TZodType> {
         const item = weakMap.get(schema);
         if (item === undefined) {
             if (createIfNotFound) {
-                const result = new MetaDataImpl<TZodType>(schema);
+                const result = new AnnotationsImpl<TZodType>(schema);
                 weakMap.set(schema, result);
                 return result;
             } else {

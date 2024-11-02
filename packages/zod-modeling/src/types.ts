@@ -1,11 +1,11 @@
 import { type z } from 'zod';
 import { type Model } from './models/Model.js';
+import { Type, type } from 'arktype';
 
-export type ValueTypeFromZodType<TDefinition extends z.ZodTypeAny> =
-    z.infer<TDefinition>;
+export type ValueTypeFromArkType<TDefinition extends Type> = TDefinition['infer'];
 
-export type ValueTypeFromModel<TModel> = TModel extends Model<infer TZodType>
-    ? ValueTypeFromZodType<TZodType>
+export type ValueTypeFromModel<TModel> = TModel extends Model<infer TArkType>
+    ? ValueTypeFromArkType<TArkType>
     : never;
 
 export type UnknownReplacer = (value: Model<z.ZodTypeAny>) => Promise<void>;

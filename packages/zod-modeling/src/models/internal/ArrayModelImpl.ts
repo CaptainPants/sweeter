@@ -10,21 +10,21 @@ import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
+import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 
 export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
     extends ModelImpl<z.infer<TArrayZodType>, TArrayZodType>
     implements ArrayModel<TArrayZodType>
 {
     public static createFromValue<TArrayZodType extends z.ZodArray<any>>(
-        value: zodUtilityTypes.ArrayElementType<TArrayZodType>[],
+        value: arkTypeUtilityTypes.ArrayElementType<TArrayZodType>[],
         schema: TArrayZodType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
     ): ArrayModelImpl<TArrayZodType> {
         const elementModels = value.map((item, index) =>
             ModelFactory.createUnvalidatedModelPart<
-                zodUtilityTypes.ArrayElementType<TArrayZodType>
+                arkTypeUtilityTypes.ArrayElementType<TArrayZodType>
             >({
                 value: item,
                 type: schema.element,
@@ -46,9 +46,9 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
     }
 
     public constructor(
-        value: zodUtilityTypes.ArrayElementType<TArrayZodType>[],
+        value: arkTypeUtilityTypes.ArrayElementType<TArrayZodType>[],
         elementModels: ReadonlyArray<
-            Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+            Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
         >,
         type: TArrayZodType,
         parentInfo: ParentTypeInfo | null,
@@ -60,12 +60,12 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         this.#elementModels = elementModels;
     }
 
-    #elementType: zodUtilityTypes.ArrayElementType<TArrayZodType>;
+    #elementType: arkTypeUtilityTypes.ArrayElementType<TArrayZodType>;
     #elementModels: ReadonlyArray<
-        Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+        Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
     >;
 
-    public getElementType(): zodUtilityTypes.ArrayElementType<TArrayZodType> {
+    public getElementType(): arkTypeUtilityTypes.ArrayElementType<TArrayZodType> {
         return this.#elementType;
     }
 
@@ -75,7 +75,7 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
 
     public getElement(
         index: number,
-    ): Model<zodUtilityTypes.ArrayElementType<TArrayZodType>> | undefined {
+    ): Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>> | undefined {
         return this.#elementModels[index];
     }
 
@@ -84,7 +84,7 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
     }
 
     public getElements(): ReadonlyArray<
-        Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+        Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
     > {
         return this.#elementModels;
     }
@@ -97,8 +97,8 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            | z.infer<zodUtilityTypes.ArrayElementType<TArrayZodType>>
-            | Model<zodUtilityTypes.ArrayElementType<TArrayZodType>>
+            | z.infer<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
+            | Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
         >,
         validate: boolean = true,
     ): Promise<this> {
@@ -137,7 +137,7 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
             deleteCount,
             ...newModels.map(
                 (x) =>
-                    x.value as zodUtilityTypes.ArrayElementType<TArrayZodType>,
+                    x.value as arkTypeUtilityTypes.ArrayElementType<TArrayZodType>,
             ),
         );
 

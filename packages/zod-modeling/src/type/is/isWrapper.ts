@@ -1,5 +1,4 @@
-
-import { z } from "zod";
+import { z } from 'zod';
 
 // TODO: how do we conveiently handle wrapper types? I.e. z.ZodDefault
 // Also think about z.ZodNullable, z.ZodOptional as they are effectively unions

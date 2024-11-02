@@ -17,7 +17,10 @@ import { ModelImpl } from './ModelImpl.js';
 import { type ReadonlyRecord } from '../../types.js';
 import { type zodUtilityTypes } from '../../utility/zodUtilityTypes.js';
 import { validateAndThrow } from '../validate.js';
-import { type PropertyModel, type UnknownPropertyModel } from '../PropertyModel.js';
+import {
+    type PropertyModel,
+    type UnknownPropertyModel,
+} from '../PropertyModel.js';
 
 export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
     extends ModelImpl<z.infer<TZodObjectType>, TZodObjectType>
@@ -29,7 +32,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         parentInfo: ParentTypeInfo | null,
         depth: number,
     ): ObjectImpl<TZodObjectType> {
-        const propertyModels: Record<string, UnknownPropertyModel> = {} ;
+        const propertyModels: Record<string, UnknownPropertyModel> = {};
 
         const shape = schema.shape as ReadonlyRecord<
             string | symbol,
@@ -53,10 +56,10 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
                 depth: descend(depth),
             });
 
-            propertyModels[propertyName] = { 
-                name: propertyName, 
-                valueModel: propertyValueModel, 
-                isOptional: shapeType.isOptional() 
+            propertyModels[propertyName] = {
+                name: propertyName,
+                valueModel: propertyValueModel,
+                isOptional: shapeType.isOptional(),
             };
         }
 

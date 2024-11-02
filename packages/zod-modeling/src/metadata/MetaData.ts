@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import {
     type ContextualValueCalculationCallback,
-    type ContextualValueCalculationContext
+    type ContextualValueCalculationContext,
 } from '../index.js';
 
 export interface MetaData<TZodType extends z.ZodTypeAny> {

@@ -39,11 +39,10 @@ export interface CreateUnvalidatedModelPartArgs<T> {
 
 type ModelFactoryMethod<TZodType extends z.ZodTypeAny> = (
     value: z.infer<TZodType>,
-     
+
     type: TZodType,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-     
 ) => Model<TZodType>;
 
 type UnknownModelFactoryMethod = (
@@ -51,7 +50,6 @@ type UnknownModelFactoryMethod = (
     type: z.ZodTypeAny,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-     
 ) => UnknownModel | undefined;
 
 function setup<TZodType extends z.ZodTypeAny>(

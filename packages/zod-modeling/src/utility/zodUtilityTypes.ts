@@ -1,5 +1,10 @@
 import { type z } from 'zod';
-import { type And, type IsAny, type ReadonlyRecord, type TypesEqual } from '../types.js';
+import {
+    type And,
+    type IsAny,
+    type ReadonlyRecord,
+    type TypesEqual,
+} from '../types.js';
 
 /**
  * Types that operate on Zod type
@@ -12,10 +17,13 @@ export namespace zodUtilityTypes {
     >
         ? S
         : never;
+
     export type CatchallPropertyKeyType<TZodObjectType> =
         TZodObjectType extends z.ZodObject<any, infer S, any> ? S : never;
+
     export type CatchallPropertyValueType<TZodObjectType> =
         TZodObjectType extends z.ZodObject<any, any, infer S> ? S : never;
+
     export type PropertyType<
         TZodObjectType,
         Property extends string,
@@ -57,4 +65,21 @@ export namespace zodUtilityTypes {
     export type ZodAnyUnionType = z.ZodUnion<
         [z.ZodTypeAny, ...(readonly z.ZodTypeAny[])]
     >;
+
+    export type Unwrap<TStartingType extends z.ZodTypeAny> =
+        TStartingType extends z.ZodDefault<infer Inner>
+            ? Unwrap<Inner>
+            : TStartingType;
+
+    export type UnwrapEx<TStartingType extends z.ZodTypeAny> =
+        TStartingType extends z.ZodDefault<infer Inner>
+            ? UnwrapEx<Inner>
+            : TStartingType extends { unwrap(): infer Inner }
+              ? (Inner extends z.ZodTypeAny ? UnwrapEx<Inner> : never)
+              : TStartingType;
+
+    export type Wrapped<TZodType> = 
+        | TZodType 
+        | { unwrap(): TZodType }
+        | { unwrap(): z.ZodTypeAny };
 }

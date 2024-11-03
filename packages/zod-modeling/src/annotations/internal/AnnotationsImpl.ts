@@ -164,7 +164,7 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
 
     public getLocalValue(
         name: string,
-        value: TArkType['infer'],
+        value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#localValues?.get(name);
@@ -197,7 +197,7 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
 
     public getAmbientValue(
         name: string,
-        value: ReadonlySignalLike<TArkType['infer']>,
+        value: ReadonlySignalLike<type.infer<TArkType>>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#ambientValues?.get(name);
@@ -217,14 +217,14 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
         if (
             !shallowMatchesStructure(
                 this.#schema,
-                value,
+                value.value,
                 true,
                 descend.defaultDepth,
             )
         ) {
             throw new Error('Incorrect type value provided.');
         }
-
+        
         return this.getAmbientValue(name, value, context);
     }
 

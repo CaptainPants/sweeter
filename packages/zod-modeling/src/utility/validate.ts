@@ -2,6 +2,7 @@ import { type z } from 'zod';
 import { arkTypeUtilityTypes, type ValidationResult } from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
 import { safeParse, safeParseAsync } from './parse.js';
+import { type } from 'arktype';
 
 export interface ValidateAndThrowArgs {
     /**
@@ -15,7 +16,7 @@ export async function validate<TArkType extends arkTypeUtilityTypes.AnyTypeConst
     schema: TArkType,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },
-): Promise<ValidationResult<TArkType['infer']>> {
+): Promise<ValidationResult<type.infer<TArkType>>> {
     const res = await safeParseAsync(value, schema);
     if (res.success) return Maybe.success(res.data);
     else
@@ -49,6 +50,6 @@ export function shallowMatchesStructure<TArkType extends arkTypeUtilityTypes.Any
     value: unknown,
     deep = true,
     depth = 25,
-): value is TArkType['infer'] {
+): value is type.infer<TArkType> {
     return safeParse(value, schema).success;
 }

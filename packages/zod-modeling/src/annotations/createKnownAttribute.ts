@@ -1,52 +1,53 @@
-import { type z } from 'zod';
-import { type AttributeValue } from './_types.js';
-import { notFound } from '../index.js';
+import { arkTypeUtilityTypes, notFound } from '../index.js';
 import { serializeSchemaForDisplay } from '../utility/serializeSchemaForDisplay.js';
 import { is } from '../type/is/is.js';
+import { type } from 'arktype';
 
-export interface KnownAttribute<TName extends string, T> {
-    (value: T): AttributeValue<T>;
+export interface KnownAttribute<TName extends string, TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> {
+    // TODO: reconsider if this call signature makes sense/is required. Seems to do very little.
+    (from: TArkType): type.infer<TArkType> | undefined;
 
     readonly attributeName: TName;
 
-    get: (from: z.ZodType<T>) => T;
-    getOrFallback: (from: z.ZodType<T>, fallback: T) => T;
-    getOrUndefined: (from: z.ZodType<T>) => T | undefined;
+    get: (from: TArkType) => type.infer<TArkType>;
+    getOrFallback: (from: TArkType, fallback: type.infer<TArkType>) => type.infer<TArkType>;
+    getOrUndefined: (from: TArkType) => type.infer<TArkType> | undefined;
 }
 
-export function createKnownAttribute<TName extends string, T>(
+export function createKnownAttribute<TName extends string, TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
     name: TName,
-    schema: z.ZodType<T>,
-): KnownAttribute<TName, T> {
-    function result(value: T): { name: string; value: T } {
-        return { name, value };
+    schema: TArkType,
+): KnownAttribute<TName, TArkType> {
+    function result (from: TArkType): type.infer<TArkType> | undefined {
+        if (!from.hasAnnotations()) return undefined;
+        const value = from.annotations().getAttr(name, undefined);
+        if (value === undefined || !is(value, schema)) {
+            return undefined;
+        }
+        return value;
     }
-    result.get = function (from: z.ZodType<T>): T {
+
+    // Alias for consistency
+    result.get = (from: TArkType): type.infer<TArkType> => {
         if (!from.hasAnnotations()) throw new TypeError(`MetaData not found`);
-        const value = from.meta().getAttr(name, notFound);
+        const value = from.annotations().getAttr(name, notFound);
         if (value === notFound || !is(value, schema)) {
             throw new TypeError(
                 `Expected ${serializeSchemaForDisplay(schema)}.`,
             );
         }
         return value;
-    };
-    result.getOrFallback = function (from: z.ZodType<T>, fallback: T): T {
+    }
+
+    result.getOrFallback = function (from: TArkType, fallback: type.infer<TArkType>): type.infer<TArkType> {
         if (!from.hasAnnotations()) return fallback;
-        const value = from.meta().getAttr(name, notFound);
+        const value = from.annotations().getAttr(name, notFound);
         if (value === notFound || !is(value, schema)) {
             return fallback;
         }
         return value;
     };
-    result.getOrUndefined = function (from: z.ZodType<T>): T | undefined {
-        if (!from.hasAnnotations()) return undefined;
-        const value = from.meta().getAttr(name, undefined);
-        if (value === undefined || !is(value, schema)) {
-            return undefined;
-        }
-        return value;
-    };
+    result.getOrUndefined = result;
     result.attributeName = name;
     return result;
 }

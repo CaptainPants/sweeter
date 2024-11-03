@@ -1,5 +1,5 @@
 export * from './ContextualValues.js';
-export * from './extendArktype.js';
+export * from './extendArkTypes.js';
 export * from './matcher/index.js';
 export * from './models/index.js';
 export * from './testingTypes.js';

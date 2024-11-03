@@ -11,13 +11,13 @@ import { type z } from 'zod';
 import {
     isArrayType,
     isBooleanLiteralType,
-    isNullType,
+    isNullConstant,
     isNumberLiteralType,
     isNumberType,
     isObjectType,
     isStringLiteralType,
     isStringType,
-    isUndefinedType,
+    isUndefinedConstant,
     isUnionType,
     isUnknownType,
 } from '../type/is/is.js';
@@ -97,12 +97,12 @@ const defaults = [
             new SimpleModelImpl('boolean-constant', value, type, parentInfo),
     ),
     setup(
-        isNullType,
+        isNullConstant,
         (value, type, parentInfo, _depth) =>
             new SimpleModelImpl('null', value, type, parentInfo),
     ),
     setup(
-        isUndefinedType,
+        isUndefinedConstant,
         (value, type, parentInfo, _depth) =>
             new SimpleModelImpl('undefined', value, type, parentInfo),
     ),

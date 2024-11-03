@@ -2,20 +2,22 @@ import { literal, type z } from 'zod';
 import {
     isArrayType,
     isBooleanLiteralType,
-    isNullType,
+    isNullConstant,
     isNumberLiteralType,
     isObjectType,
     isStringLiteralType,
-    isUndefinedType,
+    isUndefinedConstant,
     isUnionType,
 } from '../type/is/is.js';
 import { notFound } from '../notFound.js';
 import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
+import { UnionType } from '../type/UnionType.js';
+import { Type } from 'arktype';
 
-function create<T extends z.ZodType>(
-    check: (schema: z.ZodType) => schema is T,
-    convert: (schema: T, depth: number) => string,
-): (schema: z.ZodType, depth: number) => string | typeof notFound {
+function create<TCheckedArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    check: (schema: arkTypeUtilityTypes.AnyTypeConstraint) => schema is TCheckedArkType,
+    convert: (schema: TCheckedArkType, depth: number) => string,
+): (schema: arkTypeUtilityTypes.AnyTypeConstraint, depth: number) => string | typeof notFound {
     return (schema, depth) => {
         if (check(schema)) {
             return convert(schema, depth);
@@ -24,31 +26,27 @@ function create<T extends z.ZodType>(
     };
 }
 
-function objectForDisplay(obj: z.AnyZodObject, depth: number): string {
+function objectForDisplay(obj: Type<{ readonly [key: string]: unknown }>, depth: number): string {
     const res: string[] = [];
 
-    const shape = obj.shape();
-    const keys = Object.keys(shape);
-
-    for (const key of keys) {
-        const keySchema = shape[key]!;
+    for (const { key, value: propType } of obj.props) {
         res.push(
             JSON.stringify(key) +
                 ':' +
-                serializeSchemaForDisplay(keySchema, depth - 1),
+                serializeSchemaForDisplay(propType, depth - 1),
         );
     }
 
     return '{' + res.join(',') + '}';
 }
 
-function unionForDisplay<T extends [z.ZodTypeAny, ...z.ZodTypeAny[]]>(
-    union: z.ZodUnion<T>,
+function unionForDisplay<T>(
+    union: UnionType<T>,
     depth: number,
 ): string {
     const res: string[] = [];
 
-    for (const option of union.options) {
+    for (const option of union.branchGroups) {
         res.push(serializeSchemaForDisplay(option, deeper(depth)));
     }
 
@@ -66,8 +64,8 @@ const convertors = [
     create(isStringLiteralType, (val) => JSON.stringify(val)),
     create(isNumberLiteralType, (val) => JSON.stringify(val)),
     create(isBooleanLiteralType, (val) => JSON.stringify(val)),
-    create(isNullType, (val) => JSON.stringify(val)),
-    create(isUndefinedType, (val) => 'undefined'),
+    create(isNullConstant, (val) => JSON.stringify(val)),
+    create(isUndefinedConstant, (val) => 'undefined'),
     create(isObjectType, (val, depth) => objectForDisplay(val, deeper(depth))),
     create(
         isArrayType,

@@ -1,84 +1,102 @@
-import { z } from 'zod';
+import { type, Type } from 'arktype';
+import { BaseNode, Domain, Union, Unit } from '@ark/schema';
+
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { safeParse } from '../../utility/parse.js';
-import { type, Type } from 'arktype';
+import { Constructor } from '../../types.js';
+import { LiteralType } from '../LiteralType.js';
+import { UnionType } from '../UnionType.js';
 
-export function is<TRes>(val: unknown, type: arkTypeUtilityTypes.AnyTypeConstraint): val is TRes {
+export function is<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(val: unknown, type: TArkType): val is type.infer<TArkType> {
     const res = safeParse(val, type);
     return res.success;
 }
 
-export function isObjectType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<object> {
-    return schema instanceof z.ZodRecord;
+function asClass<TNode extends BaseNode>(schema: arkTypeUtilityTypes.AnyTypeConstraint, NodeConstructor: Constructor<TNode>): TNode | undefined {
+    if (schema instanceof NodeConstructor) {
+        return schema;
+    }
+    return undefined;
+}
+
+export function isObjectType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<{ readonly [key: string]: unknown }> {
+    return asClass(schema, Domain.Node)?.domain === 'object';
 }
 export function isArrayType(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is Type<unknown[]> {
-    return schema instanceof z.ZodArray;
+): schema is Type<unknown[]> & { readonly element: Type<unknown> } {
+    throw new TypeError('TODO: not implemented');
+    // Seems to come through as a weird looking intersection (Intersection.Node), 
+    // not sure why its not Sequence.Node
 }
 
 export function isUnionType(
-    schema: z.ZodTypeAny,
-): schema is arkTypeUtilityTypes.ZodAnyUnionType {
-    return schema instanceof z.ZodUnion;
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is UnionType<unknown> {
+    return asClass(schema, Union.Node) !== undefined;
 }
 
-export function isNumberType(schema: z.ZodTypeAny): schema is z.ZodNumber {
-    return schema instanceof z.ZodNumber;
+export function isNumberType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<number> {
+    return asClass(schema, Domain.Node)?.domain === 'number';
 }
 
-export function isStringType(schema: z.ZodTypeAny): schema is z.ZodString {
-    return schema instanceof z.ZodString;
+export function isStringType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<string> {
+    return asClass(schema, Domain.Node)?.domain === 'string';
 }
 
-export function isBooleanType(schema: z.ZodTypeAny): schema is z.ZodBoolean {
-    return schema instanceof z.ZodBoolean;
+export function isBooleanType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<boolean> {
+    return asClass(schema, Union.Node)?.isBoolean ?? false;
 }
 
 export function isNumberLiteralType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodLiteral<number> {
-    return schema instanceof z.ZodLiteral && typeof schema.value === 'number';
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is LiteralType<number> {
+    return typeof asClass(schema, Unit.Node)?.compiledValue === 'number';
 }
 
 export function isStringLiteralType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodLiteral<string> {
-    return schema instanceof z.ZodLiteral && typeof schema.value === 'string';
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is LiteralType<string> {
+    return typeof asClass(schema, Unit.Node)?.compiledValue === 'string';
 }
 
 export function isBooleanLiteralType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodLiteral<boolean> {
-    return schema instanceof z.ZodLiteral && typeof schema.value === 'boolean';
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is LiteralType<boolean> {
+    return typeof asClass(schema, Unit.Node)?.compiledValue === 'boolean';
 }
 
 export function isBooleanTrueLiteral(
-    schema: z.ZodTypeAny,
-): schema is z.ZodLiteral<true> {
-    return schema instanceof z.ZodLiteral && schema.value === true;
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is LiteralType<true> {
+    return asClass(schema, Unit.Node)?.compiledValue === true;
 }
 
-export function isBooleanFalseLiteralType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodLiteral<true> {
-    return schema instanceof z.ZodLiteral && schema.value === false;
+export function isBooleanFalseLiteral(
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is LiteralType<true> {
+    return asClass(schema, Unit.Node)?.compiledValue === true;
 }
 
-export function isNullType(schema: z.ZodTypeAny): schema is z.ZodNull {
-    return schema instanceof z.ZodNull;
+export function isNullConstant(
+    schema: arkTypeUtilityTypes.AnyTypeConstraint
+): schema is LiteralType<null> {
+    return asClass(schema, Unit.Node)?.compiledValue === null;
 }
 
-export function isUndefinedType(type: z.ZodTypeAny): type is z.ZodUndefined {
-    return type instanceof z.ZodUndefined;
+export function isUndefinedConstant(
+    schema: arkTypeUtilityTypes.AnyTypeConstraint
+): schema is LiteralType<undefined> {
+    return asClass(schema, Unit.Node)?.compiledValue === undefined;
 }
 
 export function isLiteralType(
-    schema: z.ZodTypeAny,
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
 ): schema is
-    | z.ZodLiteral<string>
-    | z.ZodLiteral<number>
-    | z.ZodLiteral<boolean> {
+    | LiteralType<string>
+    | LiteralType<number>
+    | LiteralType<true>
+    | LiteralType<false> {
     return (
         isStringLiteralType(schema) ||
         isNumberLiteralType(schema) ||
@@ -87,36 +105,38 @@ export function isLiteralType(
 }
 
 export function isConstantType(
-    schema: z.ZodTypeAny,
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
 ): schema is
-    | z.ZodLiteral<string>
-    | z.ZodLiteral<number>
-    | z.ZodLiteral<boolean>
-    | z.ZodNull
-    | z.ZodUndefined {
+    | LiteralType<string>
+    | LiteralType<number>
+    | LiteralType<true>
+    | LiteralType<false>
+    | LiteralType<null>
+    | LiteralType<undefined> {
     return (
-        isLiteralType(schema) || isNullType(schema) || isUndefinedType(schema)
+        isLiteralType(schema) || isNullConstant(schema) || isUndefinedConstant(schema)
     );
 }
 
 export function isStringOrStringLiteralType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodString | z.ZodLiteral<string> {
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is Type<string> {
     return isStringType(schema) || isStringLiteralType(schema);
 }
 
 export function isNumberOrNumberLiteralType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodNumber | z.ZodLiteral<number> {
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is Type<number> {
     return isNumberType(schema) || isNumberLiteralType(schema);
 }
 
 export function isBooleanOrBooleanLiteralType(
-    schema: z.ZodTypeAny,
-): schema is z.ZodBoolean | z.ZodLiteral<boolean> {
+    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+): schema is Type<boolean> {
     return isBooleanType(schema) || isBooleanLiteralType(schema);
 }
 
-export function isUnknownType(schema: z.ZodTypeAny): schema is z.ZodUnknown {
-    return schema instanceof z.ZodUnknown;
+export function isUnknownType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<unknown> {
+    throw new TypeError('TODO: not implemented');
+    // Seems to come through as a weird looking intersection (Intersection.Node)
 }

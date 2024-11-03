@@ -1,5 +1,5 @@
 
-import { Type } from 'arktype';
+import { type, Type } from 'arktype';
 import {
     arkTypeUtilityTypes,
     type ContextualValueCalculationCallback,
@@ -43,7 +43,7 @@ export interface Annotations<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
 
     getLocalValue(
         name: string,
-        value: TArkType['infer'],
+        value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
     ): unknown;
 
@@ -55,7 +55,7 @@ export interface Annotations<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
 
     getAmbientValue(
         name: string,
-        value: TArkType['infer'],
+        value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
     ): unknown;
 

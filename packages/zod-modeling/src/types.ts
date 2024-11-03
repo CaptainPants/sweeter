@@ -32,3 +32,5 @@ export type And<A extends boolean, B extends boolean> = A extends true
         ? true
         : false
     : false;
+
+export type Constructor<TResult = unknown> = new (...args: any[]) => TResult;

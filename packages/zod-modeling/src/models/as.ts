@@ -3,13 +3,13 @@ import {
     isArrayType,
     isBooleanLiteralType,
     isBooleanType,
-    isNullType,
+    isNullConstant,
     isNumberLiteralType,
     isNumberType,
     isObjectType,
     isStringLiteralType,
     isStringType,
-    isUndefinedType,
+    isUndefinedConstant,
     isUnionType,
 } from '../type/is/is.js';
 
@@ -103,14 +103,14 @@ export function asNullConstant(
     model: AnyModelConstraint,
 ): NullModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isNullType(model.type) ? (model as any) : undefined;
+    return isNullConstant(model.type) ? (model as any) : undefined;
 }
 
 export function asUndefinedConstant(
     model: AnyModelConstraint,
 ): UndefinedModel | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return isUndefinedType(model.type) ? (model as any) : undefined;
+    return isUndefinedConstant(model.type) ? (model as any) : undefined;
 }
 
 /**
@@ -137,8 +137,8 @@ export function asConstant(
         isStringLiteralType(model.type) ||
         isNumberLiteralType(model.type) ||
         isBooleanLiteralType(model.type) ||
-        isNullType(model.type) ||
-        isUndefinedType(model.type)
+        isNullConstant(model.type) ||
+        isUndefinedConstant(model.type)
     ) {
         return asUnknown(model);
     }

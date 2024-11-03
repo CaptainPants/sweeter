@@ -1,54 +1,56 @@
 import { descend } from '@captainpants/sweeter-utilities';
-import { z } from 'zod';
 import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
+import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
+import { type } from 'arktype';
+import { isArrayType, isBooleanType, isNullConstant, isNumberType, isObjectType, isStringType, isUndefinedConstant, isUnionType } from '../type/index.js';
 
-export function createDefault<TZodType extends z.ZodTypeAny>(
-    schema: TZodType,
-): z.infer<TZodType> {
+export function createDefault<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    schema: TArkType,
+): type.infer<TArkType> {
     return createDefaultImplementation(schema, descend.defaultDepth);
 }
 
-function createDefaultImplementation<TZodType extends z.ZodTypeAny>(
-    schema: TZodType,
+function createDefaultImplementation<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    schema: TArkType,
     depth: number,
-): z.infer<TZodType> {
-    if (schema instanceof z.ZodDefault) {
-        return (schema._def as z.ZodDefaultDef).defaultValue();
+): type.infer<TArkType> {
+    if (schema.meta.default) {
+        return schema.meta.default as never;
     }
 
-    if (schema instanceof z.ZodObject) {
+    if (isObjectType(schema)) {
         const instance: Record<string | symbol, unknown> = {};
 
-        for (const [key, type] of Object.entries(
-            schema._def.shape as Record<string | symbol, z.ZodTypeAny>,
-        )) {
-            instance[key] = createDefaultImplementation(type, descend(depth));
+        for (const { key, value: propType } of schema.props) {
+            instance[key] = createDefaultImplementation(propType, descend(depth));
         }
 
-        return instance;
-    } else if (schema instanceof z.ZodUnion) {
-        const typed = schema as z.ZodUnion<
-            [z.ZodTypeAny, ...(readonly z.ZodTypeAny[])]
-        >;
+        return instance as never;
+
+    } else if (isUnionType(schema)) {
+        if (schema.branchGroups.length === 0)
+        {
+            throw new TypeError('Unexpected union of length zero.');
+        }
+
         return createDefaultImplementation(
-            typed._def.options[0],
+            schema.branchGroups[0]!,
             descend(depth),
         );
-    } else if (schema instanceof z.ZodArray) {
-        return [];
-    } else if (schema instanceof z.ZodString) {
-        return '';
-    } else if (schema instanceof z.ZodNumber) {
-        return 0;
-    } else if (schema instanceof z.ZodBoolean) {
-        return false;
+    } else if (isArrayType(schema)) {
+        return [] as type.infer<TArkType>;
+    } else if (isStringType(schema)) {
+        return '' as type.infer<TArkType>;
+    } else if (isNumberType(schema)) {
+        return 0 as type.infer<TArkType>;
+    } else if (isBooleanType(schema)) {
+        return false as type.infer<TArkType>;
     } else if (
-        schema instanceof z.ZodUndefined ||
-        schema instanceof z.ZodOptional
+        isUndefinedConstant(schema)
     ) {
-        return undefined;
-    } else if (schema instanceof z.ZodNull || schema instanceof z.ZodNullable) {
-        return null;
+        return undefined as type.infer<TArkType>;
+    } else if (isNullConstant(schema)) {
+        return null as type.infer<TArkType>;
     } else {
         throw new TypeError(
             `Could not create default value for schema ${serializeSchemaForDisplay(

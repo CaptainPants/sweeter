@@ -8,16 +8,29 @@ import {
     isStringLiteralType,
     isUndefinedConstant,
     isUnionType,
-} from '../type/is/is.js';
+} from '../type/introspect/is.js';
 import { notFound } from '../notFound.js';
 import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
-import { UnionType } from '../type/UnionType.js';
 import { Type } from 'arktype';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { getUnionInfo } from '../type/introspect/getUnionInfo.js';
 
-function create<TCheckedArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
-    check: (schema: arkTypeUtilityTypes.AnyTypeConstraint) => schema is TCheckedArkType,
+function createTyped<TCheckedArkType extends AnyTypeConstraint>(
+    check: (schema: AnyTypeConstraint) => schema is TCheckedArkType,
     convert: (schema: TCheckedArkType, depth: number) => string,
-): (schema: arkTypeUtilityTypes.AnyTypeConstraint, depth: number) => string | typeof notFound {
+): (schema: AnyTypeConstraint, depth: number) => string | typeof notFound {
+    return (schema, depth) => {
+        if (check(schema)) {
+            return convert(schema, depth);
+        }
+        return notFound;
+    };
+}
+
+function create(
+    check: (schema: AnyTypeConstraint) => boolean,
+    convert: (schema: Type<unknown>, depth: number) => string,
+): (schema: AnyTypeConstraint, depth: number) => string | typeof notFound {
     return (schema, depth) => {
         if (check(schema)) {
             return convert(schema, depth);
@@ -40,13 +53,15 @@ function objectForDisplay(obj: Type<{ readonly [key: string]: unknown }>, depth:
     return '{' + res.join(',') + '}';
 }
 
-function unionForDisplay<T>(
-    union: UnionType<T>,
+function unionForDisplay(
+    union: AnyTypeConstraint,
     depth: number,
 ): string {
     const res: string[] = [];
 
-    for (const option of union.branchGroups) {
+    const { branches } = getUnionInfo(union);
+
+    for (const option of branches) {
         res.push(serializeSchemaForDisplay(option, deeper(depth)));
     }
 
@@ -66,8 +81,8 @@ const convertors = [
     create(isBooleanLiteralType, (val) => JSON.stringify(val)),
     create(isNullConstant, (val) => JSON.stringify(val)),
     create(isUndefinedConstant, (val) => 'undefined'),
-    create(isObjectType, (val, depth) => objectForDisplay(val, deeper(depth))),
-    create(
+    createTyped(isObjectType, (val, depth) => objectForDisplay(val, deeper(depth))),
+    createTyped(
         isArrayType,
         (val, depth) =>
             serializeSchemaForDisplay(val.element, deeper(depth)) + '[]',

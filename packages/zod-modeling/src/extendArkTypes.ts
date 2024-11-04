@@ -5,13 +5,12 @@ import { BaseNode } from '@ark/schema';
 
 import { type Annotations } from './annotations/Annotations.js';
 import { AnnotationsImpl } from './annotations/internal/AnnotationsImpl.js';
-import { BaseType } from 'arktype/internal/methods/base.ts';
 
 declare module "arktype/internal/methods/base.ts" {
     /** @ts-ignore cast variance */
     interface BaseType<out t = unknown, $ = {}> {
         /** @ts-ignore */
-        annotations(): Annotations<this>;
+        annotations(): Annotations<Type<t>>;
         hasAnnotations(): boolean;
     }
 }

@@ -1,6 +1,6 @@
 import { arkTypeUtilityTypes, notFound } from '../index.js';
 import { serializeSchemaForDisplay } from '../utility/serializeSchemaForDisplay.js';
-import { is } from '../type/is/is.js';
+import { is } from '../type/introspect/is.js';
 import { type } from 'arktype';
 
 export interface KnownAttribute<TName extends string, TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> {

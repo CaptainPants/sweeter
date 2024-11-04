@@ -3,24 +3,15 @@ import { BaseNode, Domain, Union, Unit } from '@ark/schema';
 
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { safeParse } from '../../utility/parse.js';
-import { Constructor } from '../../types.js';
-import { LiteralType } from '../LiteralType.js';
-import { UnionType } from '../UnionType.js';
+import { tryCast } from '../internal/tools.js';
 
 export function is<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(val: unknown, type: TArkType): val is type.infer<TArkType> {
     const res = safeParse(val, type);
     return res.success;
 }
 
-function asClass<TNode extends BaseNode>(schema: arkTypeUtilityTypes.AnyTypeConstraint, NodeConstructor: Constructor<TNode>): TNode | undefined {
-    if (schema instanceof NodeConstructor) {
-        return schema;
-    }
-    return undefined;
-}
-
 export function isObjectType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<{ readonly [key: string]: unknown }> {
-    return asClass(schema, Domain.Node)?.domain === 'object';
+    return tryCast(schema, Domain.Node)?.domain === 'object';
 }
 export function isArrayType(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
@@ -32,89 +23,73 @@ export function isArrayType(
 
 export function isUnionType(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is UnionType<unknown> {
-    return asClass(schema, Union.Node) !== undefined;
+): boolean {
+    return tryCast(schema, Union.Node) !== undefined;
 }
 
 export function isNumberType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<number> {
-    return asClass(schema, Domain.Node)?.domain === 'number';
+    return tryCast(schema, Domain.Node)?.domain === 'number';
 }
 
 export function isStringType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<string> {
-    return asClass(schema, Domain.Node)?.domain === 'string';
+    return tryCast(schema, Domain.Node)?.domain === 'string';
 }
 
 export function isBooleanType(schema: arkTypeUtilityTypes.AnyTypeConstraint): schema is Type<boolean> {
-    return asClass(schema, Union.Node)?.isBoolean ?? false;
+    return tryCast(schema, Union.Node)?.isBoolean ?? false;
 }
 
 export function isNumberLiteralType(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is LiteralType<number> {
-    return typeof asClass(schema, Unit.Node)?.compiledValue === 'number';
+): boolean {
+    return typeof tryCast(schema, Unit.Node)?.compiledValue === 'number';
 }
 
 export function isStringLiteralType(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is LiteralType<string> {
-    return typeof asClass(schema, Unit.Node)?.compiledValue === 'string';
+): boolean {
+    return typeof tryCast(schema, Unit.Node)?.compiledValue === 'string';
 }
 
 export function isBooleanLiteralType(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is LiteralType<boolean> {
-    return typeof asClass(schema, Unit.Node)?.compiledValue === 'boolean';
+): boolean {
+    return typeof tryCast(schema, Unit.Node)?.compiledValue === 'boolean';
 }
 
 export function isBooleanTrueLiteral(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is LiteralType<true> {
-    return asClass(schema, Unit.Node)?.compiledValue === true;
+): boolean {
+    return tryCast(schema, Unit.Node)?.compiledValue === true;
 }
 
 export function isBooleanFalseLiteral(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is LiteralType<true> {
-    return asClass(schema, Unit.Node)?.compiledValue === true;
+): boolean {
+    return tryCast(schema, Unit.Node)?.compiledValue === true;
 }
 
 export function isNullConstant(
     schema: arkTypeUtilityTypes.AnyTypeConstraint
-): schema is LiteralType<null> {
-    return asClass(schema, Unit.Node)?.compiledValue === null;
+): boolean {
+    return tryCast(schema, Unit.Node)?.compiledValue === null;
 }
 
 export function isUndefinedConstant(
     schema: arkTypeUtilityTypes.AnyTypeConstraint
-): schema is LiteralType<undefined> {
-    return asClass(schema, Unit.Node)?.compiledValue === undefined;
+): boolean {
+    return tryCast(schema, Unit.Node)?.compiledValue === undefined;
 }
 
 export function isLiteralType(
     schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is
-    | LiteralType<string>
-    | LiteralType<number>
-    | LiteralType<true>
-    | LiteralType<false> {
+): boolean {
     return (
         isStringLiteralType(schema) ||
         isNumberLiteralType(schema) ||
-        isBooleanLiteralType(schema)
-    );
-}
-
-export function isConstantType(
-    schema: arkTypeUtilityTypes.AnyTypeConstraint,
-): schema is
-    | LiteralType<string>
-    | LiteralType<number>
-    | LiteralType<true>
-    | LiteralType<false>
-    | LiteralType<null>
-    | LiteralType<undefined> {
-    return (
-        isLiteralType(schema) || isNullConstant(schema) || isUndefinedConstant(schema)
+        isBooleanLiteralType(schema) ||
+        isNullConstant(schema) || 
+        isUndefinedConstant(schema)
     );
 }
 

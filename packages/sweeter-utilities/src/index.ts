@@ -12,3 +12,4 @@ export * from './Maybe.js';
 export * from './StackTrace.js';
 export * from './interpolatePlaceholders.js';
 export * from './idPaths.js';
+export * from './throwError.js';

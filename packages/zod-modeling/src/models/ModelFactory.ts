@@ -20,7 +20,7 @@ import {
     isUndefinedConstant,
     isUnionType,
     isUnknownType,
-} from '../type/is/is.js';
+} from '../type/introspect/is.js';
 import { validateAndThrow } from '../utility/validate.js';
 
 export interface CreateModelArgs<TZodType extends z.ZodTypeAny> {

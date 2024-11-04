@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { type UnknownKeysParam, type z } from 'zod';
 import {
     type Model,
     type TypeExtendsAssert,
@@ -12,19 +11,20 @@ import {
     type UndefinedModel,
     type RealUnknownModel,
     type ReadonlyRecord,
-    ObjectModel,
+    type ObjectModel,
     type UnknownObjectModel,
     ModelBase,
 } from '../index.js';
+import { type, Type } from 'arktype';
 
 it('Specific models conform to', () => {
     const rigidObject1: TypeExtendsAssert<
-        PropertyModel<z.ZodObject<{ test: z.ZodString }>>,
+        PropertyModel<Type<{ test: string }>>,
         UnknownPropertyModel
     > = true;
 
     const mapObject1: TypeExtendsAssert<
-        Model<z.ZodObject<{}, 'strict', z.ZodUnknown>>,
+        Model<Type<object>>,
         UnknownObjectModel
     > = true;
 

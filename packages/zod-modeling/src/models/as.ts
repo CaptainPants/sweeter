@@ -11,7 +11,7 @@ import {
     isStringType,
     isUndefinedConstant,
     isUnionType,
-} from '../type/is/is.js';
+} from '../type/introspect/is.js';
 
 import { isModel } from './isModel.js';
 import {

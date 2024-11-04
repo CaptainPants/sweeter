@@ -2,13 +2,17 @@ import { type z } from 'zod';
 import {
     type ReadonlyRecord,
 } from '../types.js';
-import { Ark, Type, type,  } from 'arktype';
+import { Type, type,  } from 'arktype';
+import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 
 /**
  * Types that operate on Zod type
  */
 export namespace arkTypeUtilityTypes {
-    export type AnyTypeConstraint = Type<any, any>;
+    /**
+     * This is obsolete, use the top level version.
+     */
+    export type AnyTypeConstraint = BaseAnyTypeConstraint;
 
     export type AllPropertyKeys<TArkTypeObjectType> = TArkTypeObjectType extends Type<infer S>
         ? keyof S
@@ -41,14 +45,6 @@ export namespace arkTypeUtilityTypes {
         ValuesOfObject<TArkTypeObjectType> | ValuesOfObject<TArkTypeObjectType>,
     ];
 
-    export type UnionOptions<TUnion> = TUnion extends z.ZodUnion<infer S>
-        ? S[number]
-        : never;
-
-    export type RecursiveUnionOptions<T> = T extends z.ZodUnion<infer S>
-        ? { [Key in keyof S]: RecursiveUnionOptions<S[Key]> }[number]
-        : T;
-
     // export type IsZodTypeAny<TZodType extends z.ZodTypeAny> =
     //     TZodType extends z.ZodType<infer Output, infer Def, infer Input>
     //         ? And<
@@ -62,24 +58,4 @@ export namespace arkTypeUtilityTypes {
             ? TArrayElementZodType
             : never;
 
-    export type ZodAnyUnionType = z.ZodUnion<
-        [z.ZodTypeAny, ...(readonly z.ZodTypeAny[])]
-    >;
-
-    export type Unwrap<TStartingType extends z.ZodTypeAny> =
-        TStartingType extends z.ZodDefault<infer Inner>
-            ? Unwrap<Inner>
-            : TStartingType;
-
-    export type UnwrapEx<TStartingType extends z.ZodTypeAny> =
-        TStartingType extends z.ZodDefault<infer Inner>
-            ? UnwrapEx<Inner>
-            : TStartingType extends { unwrap(): infer Inner }
-              ? (Inner extends z.ZodTypeAny ? UnwrapEx<Inner> : never)
-              : TStartingType;
-
-    export type Wrapped<TZodType> = 
-        | TZodType 
-        | { unwrap(): TZodType }
-        | { unwrap(): z.ZodTypeAny };
 }

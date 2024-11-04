@@ -1,13 +1,8 @@
-import { z } from 'zod';
+import { Constructor } from "../../types";
 
-interface Wrapper {
-    unwrap(): z.ZodTypeAny;
+export function tryCast<TType>(instance: unknown, Constructor: Constructor<TType>): TType | undefined {
+    if (instance instanceof Constructor) {
+        return instance;
+    }
+    return undefined;
 }
-
-function isWrapper<TZodType extends z.ZodTypeAny>(
-    schema: TZodType,
-): schema is TZodType & Wrapper {
-    return Boolean((schema as Partial<Wrapper> & TZodType).unwrap);
-}
-
-// TODO: looking into functions to make handling wrapper types more eassily here.

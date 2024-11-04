@@ -197,7 +197,7 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
 
     public getAmbientValue(
         name: string,
-        value: ReadonlySignalLike<type.infer<TArkType>>,
+        value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#ambientValues?.get(name);
@@ -211,13 +211,13 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
 
     public getAmbientValueForUnknown(
         name: string,
-        value: ReadonlySignalLike<unknown>,
+        value: unknown,
         context: ContextualValueCalculationContext,
     ) {
         if (
             !shallowMatchesStructure(
                 this.#schema,
-                value.value,
+                value,
                 true,
                 descend.defaultDepth,
             )

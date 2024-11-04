@@ -1,5 +1,6 @@
 import { type z } from 'zod';
 import { type UnknownModel, type Model } from './Model.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 
 export interface UnknownPropertyModel {
     readonly name: string;
@@ -7,8 +8,8 @@ export interface UnknownPropertyModel {
     readonly isOptional: boolean; // TODO: undecided about whether this should be on the property, or remain in the type. Will depend on how its handled by editors I guess.
 }
 
-export interface PropertyModel<TZodType extends z.ZodTypeAny> {
+export interface PropertyModel<TArkType extends AnyTypeConstraint> {
     readonly name: string;
-    readonly valueModel: Model<TZodType>;
+    readonly valueModel: Model<TArkType>;
     readonly isOptional: boolean; // TODO: undecided about whether this should be on the property, or remain in the type. Will depend on how its handled by editors I guess.
 }

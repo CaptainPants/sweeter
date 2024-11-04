@@ -1,8 +1,12 @@
+
+import { type } from 'arktype';
+
 import { descend } from '@captainpants/sweeter-utilities';
+
 import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
 import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
-import { type } from 'arktype';
-import { isArrayType, isBooleanType, isNullConstant, isNumberType, isObjectType, isStringType, isUndefinedConstant, isUnionType } from '../type/index.js';
+
+import { getUnionInfo, isArrayType, isBooleanType, isNullConstant, isNumberType, isObjectType, isStringType, isUndefinedConstant, isUnionType } from '../type/introspect/barrel.js';
 
 export function createDefault<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
     schema: TArkType,
@@ -28,15 +32,17 @@ function createDefaultImplementation<TArkType extends arkTypeUtilityTypes.AnyTyp
         return instance as never;
 
     } else if (isUnionType(schema)) {
-        if (schema.branchGroups.length === 0)
+        const { branches } = getUnionInfo(schema);
+
+        if (branches.length === 0)
         {
             throw new TypeError('Unexpected union of length zero.');
         }
 
         return createDefaultImplementation(
-            schema.branchGroups[0]!,
+            branches[0]!,
             descend(depth),
-        );
+        ) as never;
     } else if (isArrayType(schema)) {
         return [] as type.infer<TArkType>;
     } else if (isStringType(schema)) {

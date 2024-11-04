@@ -1,5 +1,5 @@
 import { type z } from 'zod';
-import { type IsAny, type ReadonlyRecord } from '../index.js';
+import { AnyTypeConstraint, type IsAny, type ReadonlyRecord } from '../index.js';
 
 import { type ParentTypeInfo } from './parents.js';
 import {
@@ -7,45 +7,46 @@ import {
     type PropertyModel,
 } from './PropertyModel.js';
 import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
+import { type, Type } from 'arktype';
 
-export interface ModelBase<TValue, TZodType extends z.ZodType<unknown>> {
+export interface ModelBase<TValue, TArkType extends AnyTypeConstraint> {
     readonly value: TValue;
-    readonly type: TZodType;
+    readonly type: TArkType;
     readonly parentInfo: ParentTypeInfo | null;
     readonly archetype: string;
 }
 
-export interface SimpleModel<T, TType extends z.ZodType<unknown>>
-    extends ModelBase<T, TType> {
+export interface SimpleModel<T, TArkType extends AnyTypeConstraint>
+    extends ModelBase<T, TArkType> {
     readonly archetype: string;
 }
 
-export interface StringModel extends SimpleModel<string, z.ZodString> {}
-export interface NumberModel extends SimpleModel<number, z.ZodNumber> {}
-export interface BooleanModel extends SimpleModel<boolean, z.ZodBoolean> {}
+export interface StringModel extends SimpleModel<string, Type<string>> {}
+export interface NumberModel extends SimpleModel<number, Type<string>> {}
+export interface BooleanModel extends SimpleModel<boolean, Type<string>> {}
 
 // Constants
 
 export interface LiteralModel<
-    TZodLiteralType extends z.ZodLiteral<string | number | boolean>,
-> extends SimpleModel<z.infer<TZodLiteralType>, TZodLiteralType> {}
+    TArkType extends Type<string | number | boolean | null | undefined>,
+> extends SimpleModel<type.infer<TArkType>, TArkType> {}
 
 export interface StringConstantModel<
-    TZodLiteralType extends z.ZodLiteral<string>,
-> extends LiteralModel<TZodLiteralType> {}
+    TLiteralArkType extends Type<string>,
+> extends LiteralModel<TLiteralArkType> {}
 
 export interface NumberConstantModel<
-    TZodLiteralType extends z.ZodLiteral<number>,
-> extends LiteralModel<TZodLiteralType> {}
+    TLiteralArkType extends Type<number>,
+> extends LiteralModel<TLiteralArkType> {}
 
 export interface BooleanConstantModel<
-    TZodLiteralType extends z.ZodLiteral<boolean>,
-> extends LiteralModel<TZodLiteralType> {}
+    TLiteralArkType extends Type<boolean>,
+> extends LiteralModel<TLiteralArkType> {}
 
-export interface NullModel extends SimpleModel<null, z.ZodNull> {}
+export interface NullModel extends LiteralModel<Type<null>> {}
 
 export interface UndefinedModel
-    extends SimpleModel<undefined, z.ZodUndefined> {}
+    extends LiteralModel<Type<undefined>> {}
 
 export interface UnknownArrayModelMethods {
     unknownGetElementType: () => z.ZodType<unknown>;
@@ -69,34 +70,34 @@ export interface UnknownArrayModelMethods {
 }
 
 export interface UnknownArrayModel
-    extends ModelBase<readonly unknown[], z.ZodArray<z.ZodTypeAny>>,
+    extends ModelBase<readonly unknown[], Type<unknown[]>>,
         UnknownArrayModelMethods {}
 
 // eslint-disable-next-line@typescript-eslint/no-explicit-any
-export interface ArrayModel<TArrayZodType extends z.ZodArray<any>>
+export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
     extends ModelBase<
-            readonly arkTypeUtilityTypes.ArrayElementType<TArrayZodType>[],
+            readonly arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[],
             z.ZodArray<
-                z.ZodType<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
+                z.ZodType<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
             >
         >,
         UnknownArrayModelMethods {
-    getElementType: () => arkTypeUtilityTypes.ArrayElementType<TArrayZodType>;
+    getElementType: () => arkTypeUtilityTypes.ArrayElementType<TArrayArkType>;
 
     getElement: (
         index: number,
-    ) => Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>> | undefined;
+    ) => Model<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>> | undefined;
 
     getElements: () => ReadonlyArray<
-        Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
+        Model<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
     >;
 
     spliceElements: (
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            | z.infer<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
-            | Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
+            | z.infer<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
+            | Model<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
         >,
         validate?: boolean,
     ) => Promise<this>;
@@ -196,7 +197,7 @@ export interface UnionModelMethods<
 }
 
 export interface UnknownUnionModel
-    extends ModelBase<unknown, arkTypeUtilityTypes.ZodAnyUnionType>,
+    extends ModelBase<unknown, Type<unknown>>,
         UnknownUnionModelMethods {}
 
 export interface UnionModel<TUnion extends arkTypeUtilityTypes.ZodAnyUnionType>

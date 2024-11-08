@@ -53,9 +53,8 @@ export namespace arkTypeUtilityTypes {
     //           >
     //         : false;
 
-    export type ArrayElementType<TArrayZodType extends z.ZodArray<any>> =
-        TArrayZodType extends z.ZodArray<infer TArrayElementZodType>
-            ? TArrayElementZodType
+    export type ArrayElementType<TArrayArkType extends Type<any[]>> =
+        TArrayArkType extends Type<(infer TElementType)[]>
+            ? Type<TElementType>
             : never;
-
 }

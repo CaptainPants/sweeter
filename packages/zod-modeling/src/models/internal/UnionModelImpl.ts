@@ -38,7 +38,7 @@ export class UnionModelImpl<
             arkTypeUtilityTypes.UnionOptions<TZodUnionType>
         >({
             value,
-            type: match,
+            arkType: match,
             parentInfo,
             depth: descend(depth),
         }) as unknown as SpreadModel<

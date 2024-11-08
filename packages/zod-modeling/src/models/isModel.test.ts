@@ -5,7 +5,7 @@ import { ModelFactory } from './ModelFactory.js';
 test('isModel should be true for an example model', async () => {
     const numberModel = await ModelFactory.createModel({
         value: 12,
-        type: z.number(),
+        arkType: z.number(),
     });
     expect(isModel(numberModel)).toStrictEqual(true);
 });

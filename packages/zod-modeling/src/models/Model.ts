@@ -8,6 +8,7 @@ import {
 } from './PropertyModel.js';
 import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
 import { type, Type } from 'arktype';
+import { IsUnion } from '@captainpants/sweeter-utilities';
 
 export interface ModelBase<TValue, TArkType extends AnyTypeConstraint> {
     readonly value: TValue;
@@ -72,14 +73,12 @@ export interface UnknownArrayModelMethods {
 export interface UnknownArrayModel
     extends ModelBase<readonly unknown[], Type<unknown[]>>,
         UnknownArrayModelMethods {}
-
+``
 // eslint-disable-next-line@typescript-eslint/no-explicit-any
 export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
     extends ModelBase<
-            readonly arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[],
-            z.ZodArray<
-                z.ZodType<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
-            >
+            type.infer<TArrayArkType>,
+            TArrayArkType
         >,
         UnknownArrayModelMethods {
     getElementType: () => arkTypeUtilityTypes.ArrayElementType<TArrayArkType>;
@@ -96,7 +95,7 @@ export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            | z.infer<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
+            | type.infer<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
             | Model<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
         >,
         validate?: boolean,
@@ -104,13 +103,13 @@ export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
 }
 
 export type TypedPropertyModelForKey<
-    TZodObjectType extends z.AnyZodObject,
-    TKey extends arkTypeUtilityTypes.AllPropertyKeys<TZodObjectType>,
-> = TKey extends arkTypeUtilityTypes.AllPropertyKeys<TZodObjectType>
-    ? PropertyModel<arkTypeUtilityTypes.AllPropertyTypes<TZodObjectType>[TKey]>
+    TArkObjectType extends AnyTypeConstraint,
+    TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>,
+> = TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>
+    ? PropertyModel<arkTypeUtilityTypes.AllPropertyTypes<TArkObjectType>[TKey]>
     :
           | PropertyModel<
-                arkTypeUtilityTypes.CatchallPropertyValueType<TZodObjectType>
+                arkTypeUtilityTypes.CatchallPropertyValueType<TArkObjectType>
             >
           | undefined;
 
@@ -139,7 +138,7 @@ interface UnknownObjectModelMethods {
 }
 
 export interface UnknownObjectModel
-    extends ModelBase<ReadonlyRecord<string, unknown>, z.AnyZodObject>,
+    extends ModelBase<ReadonlyRecord<string, unknown>, AnyTypeConstraint>,
         UnknownObjectModelMethods {}
 
 export type UnknownMapObjectEntry = readonly [
@@ -147,37 +146,37 @@ export type UnknownMapObjectEntry = readonly [
     model: UnknownPropertyModel,
 ];
 
-export type MapObjectEntry<TZodType extends z.ZodTypeAny> = readonly [
+export type MapObjectEntry<TArkType extends AnyTypeConstraint> = readonly [
     name: string,
-    model: PropertyModel<TZodType>,
+    model: PropertyModel<TArkType>,
 ];
 
-export interface ObjectModel<TZodObjectType extends z.AnyZodObject>
-    extends ModelBase<z.infer<TZodObjectType>, TZodObjectType>,
+export interface ObjectModel<TArkObjectType extends AnyTypeConstraint>
+    extends ModelBase<type.infer<TArkObjectType>, TArkObjectType>,
         UnknownObjectModelMethods {
-    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueType<TZodObjectType>;
+    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueType<TArkObjectType>;
 
     getProperty<
-        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TZodObjectType> & string,
+        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType> & string,
     >(
         key: TKey,
-    ): TypedPropertyModelForKey<TZodObjectType, TKey>;
+    ): TypedPropertyModelForKey<TArkObjectType, TKey>;
 
     getProperties(): readonly PropertyModel<
-        z.infer<TZodObjectType>[keyof z.infer<TZodObjectType>]
+        type.infer<TArkObjectType>[keyof type.infer<TArkObjectType>]
     >[];
 
-    setProperty<TKey extends keyof z.infer<TZodObjectType> & string>(
+    setProperty<TKey extends keyof type.infer<TArkObjectType> & string>(
         key: TKey,
-        value: z.infer<TZodObjectType>[TKey],
+        value: type.infer<TArkObjectType>[TKey],
         triggerValidation?: boolean,
     ): Promise<this>;
 }
 
 export interface UnknownUnionModelMethods {
-    as: <TTargetZodType extends z.ZodTypeAny>(
-        type: TTargetZodType,
-    ) => Model<TTargetZodType> | null;
+    as: <TTargetArkType extends z.ZodTypeAny>(
+        type: TTargetArkType,
+    ) => Model<TTargetArkType> | null;
 
     getDirectlyResolved: () => UnknownModel;
 
@@ -189,7 +188,7 @@ export interface UnknownUnionModelMethods {
 }
 
 export interface UnionModelMethods<
-    TZodUnionType extends arkTypeUtilityTypes.ZodAnyUnionType,
+    TZodUnionType extends AnyTypeConstraint,
 > extends UnknownUnionModelMethods {
     getRecursivelyResolved: () => SpreadModel<
         arkTypeUtilityTypes.RecursiveUnionOptions<TZodUnionType>
@@ -200,27 +199,27 @@ export interface UnknownUnionModel
     extends ModelBase<unknown, Type<unknown>>,
         UnknownUnionModelMethods {}
 
-export interface UnionModel<TUnion extends arkTypeUtilityTypes.ZodAnyUnionType>
-    extends ModelBase<z.infer<TUnion>, TUnion>,
+export interface UnionModel<TUnion extends AnyTypeConstraint>
+    extends ModelBase<type.infer<TUnion>, TUnion>,
         UnionModelMethods<TUnion> {}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SpreadModel<T extends z.ZodTypeAny> = T extends any
+export type SpreadModel<T extends AnyTypeConstraint> = T extends any
     ? Model<T>
     : never;
 
-export interface RealUnknownModel extends ModelBase<unknown, z.ZodUnknown> {}
+export interface RealUnknownModel extends ModelBase<unknown, Type<unknown>> {}
 
 export type UnknownModel =
     | UnknownArrayModel
     | UnknownObjectModel
     | UnknownUnionModel
     | StringModel
-    | StringConstantModel<z.ZodLiteral<string>>
+    | StringConstantModel<Type<string>>
     | NumberModel
-    | NumberConstantModel<z.ZodLiteral<number>>
+    | NumberConstantModel<Type<number>>
     | BooleanModel
-    | BooleanConstantModel<z.ZodLiteral<boolean>>
+    | BooleanConstantModel<Type<boolean>>
     | NullModel
     | UndefinedModel
     | RealUnknownModel;
@@ -230,38 +229,35 @@ export type AnyModelConstraint =
     | UnknownObjectModel
     | UnknownUnionModel
     | StringModel
-    | StringConstantModel<z.ZodLiteral<string>>
+    | StringConstantModel<Type<string>>
     | NumberModel
-    | NumberConstantModel<z.ZodLiteral<number>>
+    | NumberConstantModel<Type<number>>
     | BooleanModel
-    | BooleanConstantModel<z.ZodLiteral<boolean>>
+    | BooleanConstantModel<Type<boolean>>
     | NullModel
     | UndefinedModel
     | RealUnknownModel;
 
-export type Model<TArkType extends Type> = TArkType extends Type
-    ? UnknownModel
-    : arkTypeUtilityTypes.IsZodTypeAny<TArkType> extends true
-      ? UnknownModel
-      : TArkType extends arkTypeUtilityTypes.ZodAnyUnionType
-        ? UnionModel<TArkType>
+export type Model<TArkType extends Type> = TArkType extends Type<unknown>
+    ? IsUnion<type.infer<TArkType>> extends true
+      ? UnionModel<TArkType>
         : // eslint-disable-next-line@typescript-eslint/no-explicit-any
-          TArkType extends z.ZodArray<any>
+          TArkType extends Type<unknown[]>
           ? ArrayModel<TArkType>
           : TArkType extends z.AnyZodObject
             ? ObjectModel<TArkType>
             : TArkType extends z.ZodLiteral<infer TLiteralType>
               ? IsAny<TLiteralType> extends true
                   ? // eslint-disable-next-line@typescript-eslint/no-explicit-any
-                    LiteralModel<z.ZodLiteral<any>>
+                    LiteralModel<Type<any>>
                   : /* Block distribution by comparing a 1-tuple */ [
                           TLiteralType,
                       ] extends [boolean]
-                    ? BooleanConstantModel<z.ZodLiteral<TLiteralType>>
+                    ? BooleanConstantModel<Type<TLiteralType>>
                     : TLiteralType extends string
-                      ? StringConstantModel<z.ZodLiteral<TLiteralType>>
+                      ? StringConstantModel<Type<TLiteralType>>
                       : TLiteralType extends number
-                        ? NumberConstantModel<z.ZodLiteral<TLiteralType>>
+                        ? NumberConstantModel<Type<TLiteralType>>
                         : never
               : TArkType extends z.ZodString
                 ? StringModel
@@ -273,13 +269,14 @@ export type Model<TArkType extends Type> = TArkType extends Type
                       ? NullModel
                       : TArkType extends z.ZodUndefined
                         ? UndefinedModel
-                        : UnknownModel;
+                        : UnknownModel
+    : never;
 
 export type PropertyModels<TZodObjectType extends z.AnyZodObject> =
     // eslint-disable-next-line@typescript-eslint/no-explicit-any
-    TZodObjectType extends z.ZodObject<infer TShape, any, infer TCatchallType>
+    TZodObjectType extends Type<infer TUnderlyingObject, any, infer TCatchallType>
         ? {
-              [Key in keyof TShape]: PropertyModel<TShape[Key]>;
+              [Key in keyof TUnderlyingObject]: PropertyModel<TUnderlyingObject[Key]>;
           } & {
               [key: string]: PropertyModel<TCatchallType>;
           }

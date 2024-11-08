@@ -1,13 +1,14 @@
-import { type z } from 'zod';
+
 import { type UnknownModel, type Model, type ModelBase } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
+import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 
-export class ModelImpl<TValue, TZodType extends z.ZodTypeAny>
-    implements ModelBase<TValue, TZodType>
+export class ModelImpl<TValue, TArkType extends AnyTypeConstraint>
+    implements ModelBase<TValue, TArkType>
 {
     public constructor(
         value: TValue,
-        type: TZodType,
+        type: TArkType,
         parentInfo: ParentTypeInfo | null,
         archetype: string,
     ) {
@@ -18,7 +19,7 @@ export class ModelImpl<TValue, TZodType extends z.ZodTypeAny>
     }
 
     public readonly value: TValue;
-    public readonly type: TZodType;
+    public readonly type: TArkType;
     public readonly parentInfo: ParentTypeInfo | null;
     public readonly archetype: string;
 

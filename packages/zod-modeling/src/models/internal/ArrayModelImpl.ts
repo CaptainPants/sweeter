@@ -27,7 +27,7 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
                 arkTypeUtilityTypes.ArrayElementType<TArrayZodType>
             >({
                 value: item,
-                type: schema.element,
+                arkType: schema.element,
                 parentInfo: {
                     relationship: { type: 'element' },
                     type: schema,

@@ -13,3 +13,5 @@ export * from './StackTrace.js';
 export * from './interpolatePlaceholders.js';
 export * from './idPaths.js';
 export * from './throwError.js';
+
+export * from './utilityTypes/index.js';

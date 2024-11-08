@@ -2,15 +2,16 @@ import { type z } from 'zod';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
+import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 
 export class SimpleModelImpl<
     T,
-    TZodType extends z.ZodTypeAny,
-> extends ModelImpl<T, TZodType> {
+    TArkType extends AnyTypeConstraint,
+> extends ModelImpl<T, TArkType> {
     public constructor(
         archetype: string,
         value: T,
-        type: TZodType,
+        type: TArkType,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, archetype);

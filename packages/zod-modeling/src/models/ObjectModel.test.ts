@@ -11,7 +11,7 @@ test('map-object', async () => {
         b: 2,
     };
 
-    const model = await ModelFactory.createModel({ value, type });
+    const model = await ModelFactory.createModel({ value, arkType: type });
 
     const updated = await model.setProperty('c', 3);
 

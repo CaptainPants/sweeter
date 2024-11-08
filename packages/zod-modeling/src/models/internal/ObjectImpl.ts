@@ -47,7 +47,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
             // TODO: this should potentially unwrap out ZodOptional
             const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
                 value: propertyValue,
-                type: shapeType,
+                arkType: shapeType,
                 parentInfo: {
                     relationship: { type: 'property', property: propertyName },
                     type: schema,
@@ -116,7 +116,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
 
         const adopted = ModelFactory.createUnvalidatedModelPart({
             value,
-            type,
+            arkType: type,
             parentInfo: {
                 type: this.type,
                 parentInfo: this.parentInfo,

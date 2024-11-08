@@ -43,7 +43,7 @@ export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
 
             return ModelFactory.createUnvalidatedModelPart<TZodType>({
                 parentInfo,
-                type,
+                arkType: type,
                 value: validated,
                 depth,
             });
@@ -53,7 +53,7 @@ export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
 
         return ModelFactory.createUnvalidatedModelPart<TZodType>({
             parentInfo,
-            type,
+            arkType: type,
             value: validated,
             depth,
         });

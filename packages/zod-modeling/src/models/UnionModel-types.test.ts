@@ -18,7 +18,7 @@ test('union', async () => {
         >
     > = true;
 
-    const model = await ModelFactory.createModel({ value: 1, type: unionType });
+    const model = await ModelFactory.createModel({ value: 1, arkType: unionType });
 
     const value1: 1 | 2 | string = model.value;
 

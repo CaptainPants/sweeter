@@ -2,6 +2,8 @@ import { type z } from 'zod';
 
 import { type Model } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { parseAsync } from '../utility/parse.js';
 
 /**
  * Attempt to validate the given models' value against the new type, returning undefined on failure.
@@ -21,7 +23,7 @@ export async function tryApplyTypeToModel<
     if (validationResult.success) {
         return ModelFactory.createUnvalidatedModelPart<TToZodType>({
             value: validationResult.data,
-            type: toType,
+            arkType: toType,
             parentInfo: model.parentInfo,
         });
     }
@@ -36,14 +38,14 @@ export async function tryApplyTypeToModel<
  * @returns
  */
 export async function applyTypeToModel<
-    TFromZodType extends z.ZodTypeAny,
-    TToZodType extends z.ZodTypeAny,
->(model: Model<TFromZodType>, toType: TToZodType): Promise<Model<TToZodType>> {
-    const converted = await toType.parseAsync(model.value);
+    TFromArkType extends AnyTypeConstraint,
+    TToArkType extends AnyTypeConstraint,
+>(model: Model<TFromArkType>, toType: TToArkType): Promise<Model<TToArkType>> {
+    const converted = await parseAsync(model.value, toType);
 
-    return ModelFactory.createUnvalidatedModelPart<TToZodType>({
+    return ModelFactory.createUnvalidatedModelPart<TToArkType>({
         value: converted,
-        type: toType,
+        arkType: toType,
         parentInfo: model.parentInfo,
     });
 }

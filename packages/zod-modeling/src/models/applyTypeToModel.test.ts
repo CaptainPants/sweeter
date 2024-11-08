@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { z } from 'zod';
+import { Type, type } from 'arktype';
+
 import { type TypeMatchAssert } from '../testingTypes.js';
 import { type ValueTypeFromArkType } from '../types.js';
 
@@ -9,33 +10,31 @@ import { ModelFactory } from './ModelFactory.js';
 import { type PropertyModel } from './PropertyModel.js';
 
 test('Something', async () => {
-    const unionType = z.union([
-        z.object({
-            type: z.literal('a'),
-        }),
-        z.object({
-            type: z.literal('b'),
-            otherProperty: z.string(),
-        }),
-    ]);
+    const unionType = type({
+            type: type.unit('a'),
+        })
+        .or({
+            type: type.unit('b'),
+            otherProperty: type.string,
+        });
 
     const value: ValueTypeFromArkType<typeof unionType> = {
         type: 'b',
         otherProperty: 'Something',
     };
 
-    const model = await ModelFactory.createModel({ type: unionType, value });
+    const model = await ModelFactory.createModel({ arkType: unionType, value });
 
     const retyped = await applyTypeToModel(
         model,
-        z.object({ type: z.literal('b') }),
+        type({ type: type.unit('b') }),
     );
 
-    const type = retyped.getProperty('type');
+    const typeProperty = retyped.getProperty('type');
     const assertType1: TypeMatchAssert<
         typeof type,
-        PropertyModel<z.ZodLiteral<'b'>>
+        PropertyModel<Type<'b'>>
     > = true;
 
-    expect(type.valueModel.value).toStrictEqual('b');
+    expect(typeProperty.valueModel.value).toStrictEqual('b');
 });

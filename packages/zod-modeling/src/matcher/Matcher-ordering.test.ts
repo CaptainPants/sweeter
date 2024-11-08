@@ -75,7 +75,7 @@ test('ordered', async () => {
 
     const numModel1 = await ModelFactory.createModel({
         value: 2,
-        type: z.number().meta().label('1').endMeta(),
+        arkType: z.number().meta().label('1').endMeta(),
         parentInfo: null,
     });
 
@@ -119,7 +119,7 @@ test('multiple-ordered', async () => {
     const matcher = createTypeMatcher(rules);
 
     const model = await ModelFactory.createModel({
-        type: z.number().meta().label('2').endMeta(),
+        arkType: z.number().meta().label('2').endMeta(),
         value: 6,
         parentInfo: null,
     });

@@ -5,11 +5,11 @@ import { ModelFactory } from './ModelFactory.js';
 test('boolean', async () => {
     const example1 = await ModelFactory.createModel({
         value: true,
-        type: z.boolean(),
+        arkType: z.boolean(),
     });
     const example2 = await ModelFactory.createModel({
         value: true,
-        type: z.union([z.literal(true), z.literal(false)]),
+        arkType: z.union([z.literal(true), z.literal(false)]),
     });
 
     expect(asBoolean(example1)).not.toStrictEqual(undefined);

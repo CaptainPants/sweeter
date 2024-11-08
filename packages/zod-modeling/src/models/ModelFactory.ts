@@ -22,49 +22,70 @@ import {
     isUnknownType,
 } from '../type/introspect/is.js';
 import { validateAndThrow } from '../utility/validate.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { Type, type } from 'arktype';
+import { safeParse } from '../utility/parse.js';
 
-export interface CreateModelArgs<TZodType extends z.ZodTypeAny> {
-    value: z.infer<TZodType>;
-    type: TZodType;
+export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
+    value: type.infer<TArkType>;
+    arkType: TArkType;
     parentInfo?: ParentTypeInfo | null | undefined;
     abortSignal?: AbortSignal | undefined;
 }
 
 export interface CreateUnvalidatedModelPartArgs<T> {
     value: T;
-    type: z.ZodType<T>;
+    arkType: Type<T>;
     parentInfo: ParentTypeInfo | null | undefined;
     depth?: number;
 }
 
-type ModelFactoryMethod<TZodType extends z.ZodTypeAny> = (
-    value: z.infer<TZodType>,
+type ModelFactoryMethod<TArkType extends AnyTypeConstraint> = (
+    value: type.infer<TArkType>,
 
-    type: TZodType,
+    arkType: TArkType,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-) => Model<TZodType>;
+) => Model<TArkType>;
 
 type UnknownModelFactoryMethod = (
     value: unknown,
-    type: z.ZodTypeAny,
+    arkType: AnyTypeConstraint,
     parentInfo: ParentTypeInfo | null,
     depth: number,
 ) => UnknownModel | undefined;
 
-function setup<TZodType extends z.ZodTypeAny>(
-    is: (schema: z.ZodTypeAny) => schema is TZodType,
-    factory: ModelFactoryMethod<TZodType>,
+function setup(
+    is: (schema: AnyTypeConstraint) => boolean,
+    factory: ModelFactoryMethod<Type<unknown>>,
 ): UnknownModelFactoryMethod {
-    return (input, type, parentInfo, depth) => {
-        if (!is(type)) {
+    return (input, arkType, parentInfo, depth) => {
+        if (!is(arkType)) {
             return undefined;
         }
 
-        const res = type.safeParse(input);
+        const res = safeParse(input, arkType);
 
         if (res.success) {
-            return factory(res.data, type, parentInfo, depth);
+            return factory(res.data, arkType, parentInfo, depth);
+        }
+
+        return undefined;
+    };
+}
+function setupTyped<TArkType extends AnyTypeConstraint>(
+    is: (schema: AnyTypeConstraint) => schema is TArkType,
+    factory: ModelFactoryMethod<TArkType>,
+): UnknownModelFactoryMethod {
+    return (input, arkType, parentInfo, depth) => {
+        if (!is(arkType)) {
+            return undefined;
+        }
+
+        const res = safeParse(input, arkType);
+
+        if (res.success) {
+            return factory(res.data, arkType, parentInfo, depth);
         }
 
         return undefined;
@@ -75,10 +96,10 @@ const defaults = [
     setup(isUnionType, (value, type, parentInfo, depth) =>
         UnionModelImpl.createFromValue(value, type, parentInfo, depth),
     ),
-    setup(isArrayType, (value, type, parentInfo, depth) =>
+    setupTyped(isArrayType, (value, type, parentInfo, depth) =>
         ArrayModelImpl.createFromValue(value, type, parentInfo, depth),
     ),
-    setup(isObjectType, (value, type, parentInfo, depth) =>
+    setupTyped(isObjectType, (value, type, parentInfo, depth) =>
         ObjectImpl.createFromValue(value, type, parentInfo, depth),
     ),
     setup(
@@ -106,12 +127,12 @@ const defaults = [
         (value, type, parentInfo, _depth) =>
             new SimpleModelImpl('undefined', value, type, parentInfo),
     ),
-    setup(
+    setupTyped(
         isStringType,
         (value, type, parentInfo, _depth) =>
             new SimpleModelImpl('string', value, type, parentInfo),
     ),
-    setup(
+    setupTyped(
         isNumberType,
         (value, type, parentInfo, _depth) =>
             new SimpleModelImpl('number', value, type, parentInfo),
@@ -121,37 +142,37 @@ const defaults = [
     }),
 ];
 
-function createModel<TZodType extends z.ZodTypeAny>(
-    args: CreateModelArgs<TZodType>,
-): Promise<Model<TZodType>>;
-async function createModel<TZodType extends z.ZodTypeAny>({
+function createModel<TArkType extends AnyTypeConstraint>(
+    args: CreateModelArgs<TArkType>,
+): Promise<Model<TArkType>>;
+async function createModel<TArkType extends AnyTypeConstraint>({
     value,
-    type,
+    arkType,
     parentInfo,
     abortSignal,
-}: CreateModelArgs<TZodType>): Promise<Model<TZodType>> {
-    const typed = await validateAndThrow(type, value, { abortSignal });
+}: CreateModelArgs<TArkType>): Promise<Model<TArkType>> {
+    const typed = await validateAndThrow(arkType, value, { abortSignal });
 
-    return createUnvalidatedModelPart<TZodType>({
+    return createUnvalidatedModelPart<TArkType>({
         value: typed,
-        type,
+        arkType: arkType,
         depth: descend.defaultDepth,
         parentInfo,
     });
 }
 
-function createUnvalidatedModelPart<TZodType extends z.ZodTypeAny>(
-    args: CreateUnvalidatedModelPartArgs<TZodType>,
-): Model<TZodType> {
+function createUnvalidatedModelPart<TArkType extends AnyTypeConstraint>(
+    args: CreateUnvalidatedModelPartArgs<TArkType>,
+): Model<TArkType> {
     // This indirection is mostly so that we don't have 15 'as any' parts,
     // and just have the one 'any' return type
-    const { value, type, parentInfo, depth } = args;
+    const { value, arkType: type, parentInfo, depth } = args;
     return doCreateModelPart(value, type, parentInfo, depth);
 }
 
-function doCreateModelPart<TZodType extends z.ZodTypeAny>(
+function doCreateModelPart<TArkType extends AnyTypeConstraint>(
     value: unknown,
-    type: TZodType,
+    type: TArkType,
     parentInfo: ParentTypeInfo | null = null,
     depth = descend.defaultDepth,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -170,10 +191,10 @@ function doCreateModelPart<TZodType extends z.ZodTypeAny>(
     throw new TypeError(`Unrecognised type ${type.constructor.name}.`);
 }
 
-function createUnvalidatedReplacement<T extends z.ZodTypeAny>(
-    value: z.infer<T>,
-    model: Model<T>,
-): Model<T> {
+function createUnvalidatedReplacement<TArkType extends AnyTypeConstraint>(
+    value: type.infer<TArkType>,
+    model: Model<TArkType>,
+): Model<TArkType> {
     return doCreateModelPart(value, model.type, model.parentInfo);
 }
 

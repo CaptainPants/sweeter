@@ -24,7 +24,7 @@ test('union', async () => {
         string: '$abc245',
     };
 
-    const model = await ModelFactory.createModel({ value, type });
+    const model = await ModelFactory.createModel({ value, arkType: type });
 
     expect(model.as(a)).toBeNull();
     expect(model.as(b)).not.toBeNull();

@@ -1,5 +1,5 @@
 import { type z } from 'zod';
-import { arkTypeUtilityTypes, type ValidationResult } from '../index.js';
+import { AnyTypeConstraint, arkTypeUtilityTypes, type ValidationResult } from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
 import { safeParse, safeParseAsync } from './parse.js';
 import { type } from 'arktype';
@@ -31,12 +31,12 @@ export async function validate<TArkType extends arkTypeUtilityTypes.AnyTypeConst
         };
 }
 
-export async function validateAndThrow<TZodType extends z.ZodTypeAny>(
-    schema: TZodType,
+export async function validateAndThrow<TArkType extends AnyTypeConstraint>(
+    schema: TArkType,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },
-): Promise<z.infer<TZodType>> {
-    const res = await schema.safeParseAsync(value);
+): Promise<type.infer<TArkType>> {
+    const res = await safeParseAsync(value, schema);
 
     if (!res.success) {
         throw new Error('Parse error: ' + res.error.message);
@@ -45,7 +45,7 @@ export async function validateAndThrow<TZodType extends z.ZodTypeAny>(
     return res.data;
 }
 
-export function shallowMatchesStructure<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+export function shallowMatchesStructure<TArkType extends AnyTypeConstraint>(
     schema: TArkType,
     value: unknown,
     deep = true,

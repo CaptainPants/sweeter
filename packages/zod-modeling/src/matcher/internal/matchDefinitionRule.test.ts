@@ -1,4 +1,5 @@
-import { z } from 'zod';
+
+import { type } from 'arktype';
 import { Rules } from '../Rules.js';
 
 import { matchDefinitionRulePart } from './matchDefinitionRule.js';
@@ -8,7 +9,7 @@ test('label', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: z.number().meta().label('test-label').endMeta(),
+                type: type.number.annotations().label('test-label').end(),
                 parentInfo: null,
             },
             Rules.label('test-label'),
@@ -18,7 +19,7 @@ test('label', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: z.number().meta().label('test-label').endMeta(),
+                type: type.number.annotations().label('test-label').end(),
                 parentInfo: null,
             },
             Rules.label('test-label'),
@@ -29,7 +30,7 @@ test('label', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: z.number().meta().label('label1').endMeta(),
+                type: type.number.annotations().label('label1').end(),
                 parentInfo: null,
             },
             Rules.label('label1-suffix'),
@@ -38,7 +39,7 @@ test('label', async () => {
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number(), parentInfo: null },
+            { type: type.number, parentInfo: null },
             Rules.label('test-label'),
         ),
     );
@@ -49,7 +50,7 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: z.number().meta().attr('type', 'ham-sandwich').endMeta(),
+                type: type.number.annotations().attr('type', 'ham-sandwich').end(),
                 parentInfo: null,
             },
             Rules.attr('type', 'ham-sandwich'),
@@ -58,7 +59,7 @@ test('attribute', async () => {
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            { type: z.number(), parentInfo: null },
+            { type: type.number, parentInfo: null },
             Rules.attr('type', 'ham-sandwich'),
         ),
     ).toStrictEqual(false);
@@ -66,12 +67,12 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: z
-                    .number()
-                    .meta()
+                type: type
+                    .number
+                    .annotations()
                     .attr('type', 'ham-sandwich')
                     .attr('other', 'thing')
-                    .endMeta(),
+                    .end(),
                 parentInfo: null,
             },
             Rules.attr('type', 'ham-sandwich'),

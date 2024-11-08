@@ -1,4 +1,4 @@
-import { type z } from 'zod';
+
 import { AnyTypeConstraint, arkTypeUtilityTypes, type ValidationResult } from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
 import { safeParse, safeParseAsync } from './parse.js';
@@ -39,7 +39,7 @@ export async function validateAndThrow<TArkType extends AnyTypeConstraint>(
     const res = await safeParseAsync(value, schema);
 
     if (!res.success) {
-        throw new Error('Parse error: ' + res.error.message);
+        throw new Error('Parse error: ' + res.issues.message);
     }
 
     return res.data;

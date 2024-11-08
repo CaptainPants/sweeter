@@ -1,13 +1,12 @@
-import { z } from 'zod';
+import { descend } from '@captainpants/sweeter-utilities';
+
 import {
     Annotations,
     arkTypeUtilityTypes,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
-    type ReadonlySignalLike,
     serializeSchemaForDisplay,
 } from '../../index.js';
-import { descend } from '@captainpants/sweeter-utilities';
 import { shallowMatchesStructure } from '../../utility/validate.js';
 import { safeParse } from '../../utility/parse.js';
 import { type } from 'arktype';

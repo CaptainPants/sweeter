@@ -1,9 +1,11 @@
-import { type z } from 'zod';
+
 import {
     type ReadonlyRecord,
 } from '../types.js';
 import { Type, type,  } from 'arktype';
 import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { GetExpandoKey, GetExpandoType } from '../internal/utilityTypes.js';
+import { IsNever } from '@captainpants/sweeter-utilities';
 
 /**
  * Types that operate on Zod type
@@ -22,11 +24,9 @@ export namespace arkTypeUtilityTypes {
         ? S[keyof S]
         : never;
 
-    export type CatchallPropertyKeyType<TArkTypeObjectType> =
-        TArkTypeObjectType extends z.ZodObject<any, infer S, any> ? S : never;
+    export type CatchallPropertyKeyType<TArkTypeObjectType> = Type<GetExpandoKey<type.infer<TArkTypeObjectType>>>;
 
-    export type CatchallPropertyValueType<TArkTypeObjectType> =
-        TArkTypeObjectType extends z.ZodObject<any, any, infer S> ? S : never;
+    export type CatchallPropertyValueType<TArkTypeObjectType> = Type<GetExpandoType<type.infer<TArkTypeObjectType>>>;
 
     export type PropertyType<
         TArkTypeObjectType,

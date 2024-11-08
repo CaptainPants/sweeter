@@ -1,5 +1,7 @@
-import { z } from 'zod';
+
 import { type TypeInfo } from '../models/parents.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { isArrayType, isBooleanType, isNumberType, isObjectType, isStringType, isUnionType } from '../type/introspect/is.js';
 
 import {
     type MatcherContext,
@@ -7,22 +9,21 @@ import {
     type TypeMatcherRulePart,
 } from './types.js';
 
-function createTypeCheck(
-    // eslint-disable-next-line@typescript-eslint/no-explicit-any
-    constructor: new (...args: any[]) => any,
+function isCallback(
+    callback: (type: AnyTypeConstraint) => boolean,
 ): () => TypeMatcherRulePart {
     return () => ({
-        type: 'instanceOf',
-        constructor: constructor,
+        type: 'callback',
+        callback: (typeInfo) => callback(typeInfo.type),
     });
 }
 
-export const string = createTypeCheck(z.ZodString);
-export const number = createTypeCheck(z.ZodNumber);
-export const boolean = createTypeCheck(z.ZodBoolean);
-export const object = createTypeCheck(z.ZodObject);
-export const array = createTypeCheck(z.ZodArray);
-export const union = createTypeCheck(z.ZodUnion);
+export const string = isCallback(isStringType);
+export const number = isCallback(isNumberType);
+export const boolean = isCallback(isBooleanType);
+export const object = isCallback(isObjectType);
+export const array = isCallback(isArrayType);
+export const union = isCallback(isUnionType);
 
 export function label(label: string): TypeMatcherRulePart {
     return {

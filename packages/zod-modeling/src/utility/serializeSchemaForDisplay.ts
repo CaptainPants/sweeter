@@ -1,4 +1,3 @@
-import { literal, type z } from 'zod';
 import {
     isArrayType,
     isBooleanLiteralType,

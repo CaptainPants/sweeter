@@ -1,13 +1,5 @@
-/**
- * This is some true black magic: https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type
- * Which references https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types
- * and https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#type-inference-in-conditional-types
- */
-export type UnionToIntersection<U> =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (U extends any ? (k: U) => void : never) extends (k: infer I) => void
-        ? I
-        : never;
+import { UnionToIntersection } from "@captainpants/sweeter-utilities";
+import { type } from "arktype";
 
 /**
  * This is not in use but is cool so keeping it around.
@@ -23,10 +15,13 @@ export type TupleToIntersection<TArgs extends readonly unknown[]> =
 //   ? First & Intersect<Rest>
 //   : never;
 
-type _GetExpandoTypeHelper<TObject> = {
-    [TKey in keyof TObject as string extends TKey
+type PropertyKeys = string | symbol | number;
+
+type _GetExpandoTypeHelper<TObject, TPropertyKeys = PropertyKeys> = {
+    [TKey in keyof TObject as TPropertyKeys extends TKey
         ? TKey
-        : never]: TObject[TKey];
+        : never]: TKey;
 };
-export type GetExpandoType<TObject> =
-    _GetExpandoTypeHelper<TObject>[keyof _GetExpandoTypeHelper<TObject>];
+
+export type GetExpandoKey<TObject> = _GetExpandoTypeHelper<TObject>[keyof _GetExpandoTypeHelper<TObject>];
+export type GetExpandoType<TObject> = TObject[GetExpandoKey<TObject>];

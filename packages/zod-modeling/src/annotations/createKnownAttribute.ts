@@ -1,7 +1,8 @@
+import { type } from 'arktype';
+
 import { arkTypeUtilityTypes, notFound } from '../index.js';
 import { serializeSchemaForDisplay } from '../utility/serializeSchemaForDisplay.js';
 import { is } from '../type/introspect/is.js';
-import { type } from 'arktype';
 
 export interface KnownAttribute<TName extends string, TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> {
     // TODO: reconsider if this call signature makes sense/is required. Seems to do very little.

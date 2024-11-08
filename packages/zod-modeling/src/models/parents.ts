@@ -1,4 +1,4 @@
-import { type z } from 'zod';
+import { AnyTypeConstraint } from "../type";
 
 export type ParentRelationship =
     | {
@@ -13,7 +13,7 @@ export type ParentRelationship =
       };
 
 export interface TypeInfo {
-    type: z.ZodTypeAny;
+    type: AnyTypeConstraint;
     parentInfo: ParentTypeInfo | null;
 }
 export interface ParentTypeInfo extends TypeInfo {

@@ -1,4 +1,4 @@
-import { Union, Unit } from "@ark/schema";
+import { Unit } from "@ark/schema";
 import { AnyTypeConstraint } from "../AnyTypeConstraint";
 import { tryCast } from "../internal/tools";
 import { throwError } from "@captainpants/sweeter-utilities";

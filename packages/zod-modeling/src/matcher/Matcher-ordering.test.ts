@@ -1,4 +1,5 @@
-import { z } from 'zod';
+
+import { type } from 'arktype';
 import { ModelFactory } from '../models/ModelFactory.js';
 import { type TypeInfo } from '../models/parents.js';
 
@@ -29,9 +30,9 @@ test('test', async () => {
         matchDefinitionRule,
     );
 
-    const numType1 = z.number().meta().label('2').endMeta();
-    const numType2 = z.number().meta().label('1').endMeta();
-    const numType3 = z.number().meta().label('3').endMeta();
+    const numType1 = type.number.annotations().label('2').end();
+    const numType2 = type.number.annotations().label('1').end();
+    const numType3 = type.number.annotations().label('3').end();
 
     const match1 = matcher.findBestMatch(
         { settings: {} },
@@ -75,7 +76,7 @@ test('ordered', async () => {
 
     const numModel1 = await ModelFactory.createModel({
         value: 2,
-        arkType: z.number().meta().label('1').endMeta(),
+        arkType: type.number.annotations().label('1').end(),
         parentInfo: null,
     });
 
@@ -119,7 +120,7 @@ test('multiple-ordered', async () => {
     const matcher = createTypeMatcher(rules);
 
     const model = await ModelFactory.createModel({
-        arkType: z.number().meta().label('2').endMeta(),
+        arkType: type.number.annotations().label('2').end(),
         value: 6,
         parentInfo: null,
     });

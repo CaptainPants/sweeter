@@ -1,4 +1,5 @@
-import { z } from 'zod';
+
+import { type } from 'arktype';
 import { type TypeInfo } from '../models/parents.js';
 
 import { matchDefinitionRule } from './internal/matchDefinitionRule.js';
@@ -27,8 +28,8 @@ test('test', async () => {
         matchDefinitionRule,
     );
 
-    const stringType = z.string();
-    const numberType = z.number();
+    const stringType = type.string;
+    const numberType = type.number;
 
     const stringMatch = matcher.findBestMatch(
         { settings: {} },

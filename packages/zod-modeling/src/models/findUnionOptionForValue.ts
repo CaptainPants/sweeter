@@ -1,24 +1,31 @@
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { getUnionInfo } from '../type/introspect/getUnionInfo.js';
 import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
+import { safeParse } from '../utility/parse.js';
 
 export function findUnionOptionForValue<
-    TZodUnionType extends arkTypeUtilityTypes.ZodAnyUnionType,
+    TUnionArkType extends AnyTypeConstraint,
 >(
     value: unknown,
-    type: TZodUnionType,
-): arkTypeUtilityTypes.UnionOptions<TZodUnionType> | null {
-    for (const item of type.options) {
-        if (item.safeParse(value).success) {
-            return item as arkTypeUtilityTypes.UnionOptions<TZodUnionType>;
+    type: TUnionArkType,
+): arkTypeUtilityTypes.UnionOptions<TUnionArkType> | null {
+    const options = getUnionInfo(type).branches;
+
+    for (const item of options) {
+        if (safeParse(value, item).success) {
+            return item as arkTypeUtilityTypes.UnionOptions<TUnionArkType>;
         }
     }
     return null;
 }
 export function findUnionOptionIndexForValue<
-    TZodUnionType extends arkTypeUtilityTypes.ZodAnyUnionType,
->(value: unknown, type: TZodUnionType): number | undefined {
+    TUnionArkType extends AnyTypeConstraint,
+>(value: unknown, type: TUnionArkType): number | undefined {
+    const options = getUnionInfo(type).branches;
+
     let i = 0;
-    for (const item of type.options) {
-        if (item.safeParse(value).success) {
+    for (const item of options) {
+        if (safeParse(value, item).success) {
             return i;
         }
         ++i;

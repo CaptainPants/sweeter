@@ -51,10 +51,9 @@ export namespace arkTypeUtilityTypes {
     //           >
     //         : false;
 
-    export type ArrayElementType<TArrayArkType extends Type<any[]>> =
-        TArrayArkType extends Type<(infer TElementType)[]>
-            ? Type<TElementType>
-            : never;
+    /* @ts-expect-error Type-system doesn't understand that type.infer here is always an array */
+    export type ArrayElementType<TArrayArkType extends Type<unknown[]>> = type.infer<TArrayArkType>[number];
+    export type ArrayElementArkType<TArrayArkType extends Type<unknown[]>> = Type<ArrayElementType<TArrayArkType>>;
 
     export type UnionOptions<TUnionArkType> = IsUnion<type.infer<TUnionArkType>> extends true ? 
             type.infer<TUnionArkType> 

@@ -1,4 +1,3 @@
-import { type z } from 'zod';
 
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 
@@ -7,45 +6,45 @@ import {
     type Model,
     type KnownPropertyModels,
     type TypedPropertyModelForKey,
+    PropertyModelNoConstraint,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
-import { type ReadonlyRecord } from '../../types.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { validateAndThrow } from '../../utility/validate.js';
 import {
-    type PropertyModel,
     type UnknownPropertyModel,
 } from '../PropertyModel.js';
+import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
+import { type } from 'arktype';
+import { AnyObjectTypeConstraint } from '../../type/AnyObjectTypeConstraint.js';
 
-export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
-    extends ModelImpl<z.infer<TZodObjectType>, TZodObjectType>
-    implements ObjectModel<TZodObjectType>
+export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
+    extends ModelImpl<type.infer<TObjectArkType>, TObjectArkType>
+    implements ObjectModel<TObjectArkType>
 {
-    public static createFromValue<TZodObjectType extends z.AnyZodObject>(
-        value: z.infer<TZodObjectType>,
-        schema: TZodObjectType,
+    public static createFromValue<TObjectArkType extends AnyObjectTypeConstraint>(
+        value: type.infer<TObjectArkType>,
+        schema: TObjectArkType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
-    ): ObjectImpl<TZodObjectType> {
+    ): ObjectImpl<TObjectArkType> {
         const propertyModels: Record<string, UnknownPropertyModel> = {};
 
-        const shape = schema.shape as ReadonlyRecord<
-            string | symbol,
-            z.ZodTypeAny
-        >;
-
         // Object.keys lets us avoid prototype pollution
-        for (const [propertyName, propertyValue] of Object.entries(value)) {
-            const shapeType =
-                shape[propertyName] ?? (schema._def.catchall as z.ZodTypeAny);
+        for (const prop of schema.props) {
+            const propertyValue = (value as Record<string | symbol, unknown>)[prop.key];
+
+            const propertyName = prop.key;
+
+            const propertyType = prop.value;
 
             // TODO: this should potentially unwrap out ZodOptional
             const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
                 value: propertyValue,
-                arkType: shapeType,
+                arkType: propertyType,
                 parentInfo: {
                     relationship: { type: 'property', property: propertyName },
                     type: schema,
@@ -57,22 +56,22 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
             propertyModels[propertyName] = {
                 name: propertyName,
                 valueModel: propertyValueModel,
-                isOptional: shapeType.isOptional(),
+                isOptional: propertyType.meta.optional ?? false,
             };
         }
 
-        return new ObjectImpl<TZodObjectType>(
+        return new ObjectImpl<TObjectArkType>(
             value,
-            propertyModels as KnownPropertyModels<TZodObjectType>,
+            propertyModels as KnownPropertyModels<TObjectArkType>,
             schema,
             parentInfo,
         );
     }
 
     public constructor(
-        value: z.infer<TZodObjectType>,
-        properties: KnownPropertyModels<TZodObjectType>,
-        type: TZodObjectType,
+        value: type.infer<TObjectArkType>,
+        properties: KnownPropertyModels<TObjectArkType>,
+        type: TObjectArkType,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, 'object');
@@ -80,21 +79,21 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         this.#properties = properties;
     }
 
-    #properties: KnownPropertyModels<TZodObjectType>;
+    #properties: KnownPropertyModels<TObjectArkType>;
 
-    public unknownGetCatchallType(): z.ZodTypeAny {
+    public unknownGetCatchallType(): AnyTypeConstraint {
         return this.type._def.catchall;
     }
 
-    public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TZodObjectType> {
+    public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectArkType> {
         return this.type._def.catchall;
     }
 
     private typeForKey(key: string) {
-        const shapeType: z.ZodTypeAny | undefined = this.type.shape[key];
-        const catchall: z.ZodTypeAny | undefined = this.type._def.catchall;
+        const shapeType: AnyTypeConstraint | undefined = this.type.get(key);
+        const catchall: AnyTypeConstraint | undefined = this.type._def.catchall;
 
-        const type: z.ZodTypeAny | undefined = shapeType ?? catchall;
+        const type: AnyTypeConstraint | undefined = shapeType ?? catchall;
 
         if (!type) {
             throw new Error(
@@ -135,7 +134,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
             ...this.#properties,
             [key]: adopted,
         };
-        const result = new ObjectImpl<TZodObjectType>(
+        const result = new ObjectImpl<TObjectArkType>(
             copy,
             propertyModels,
             this.type,
@@ -146,8 +145,8 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
     }
 
     public async setProperty<
-        TKey extends keyof z.infer<TZodObjectType> & string,
-        TValue extends z.infer<TZodObjectType>[TKey],
+        TKey extends keyof type.infer<TObjectArkType> & string,
+        TValue extends type.infer<TObjectArkType>[TKey],
     >(
         key: TKey,
         value: TValue | Model<TValue>,
@@ -167,10 +166,10 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
     }
 
     public getProperty<
-        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TZodObjectType> & string,
-    >(key: TKey): TypedPropertyModelForKey<TZodObjectType, TKey> {
+        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectArkType> & string,
+    >(key: TKey): TypedPropertyModelForKey<TObjectArkType, TKey> {
         return this.unknownGetProperty(key) as TypedPropertyModelForKey<
-            TZodObjectType,
+            TObjectArkType,
             TKey
         >;
     }
@@ -203,7 +202,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         };
         delete propertyModels[from];
 
-        const result = new ObjectImpl<TZodObjectType>(
+        const result = new ObjectImpl<TObjectArkType>(
             copy,
             propertyModels,
             this.type,
@@ -235,7 +234,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         };
         delete propertyModels[key];
 
-        const result = new ObjectImpl<TZodObjectType>(
+        const result = new ObjectImpl<TObjectArkType>(
             copy,
             propertyModels,
             this.type,
@@ -251,12 +250,12 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         );
     }
 
-    public getProperties(): readonly PropertyModel<
-        z.infer<TZodObjectType>[keyof z.infer<TZodObjectType>]
+    public getProperties(): readonly PropertyModelNoConstraint<
+        arkTypeUtilityTypes.AllPropertyArkTypes<TObjectArkType>
     >[] {
         return Object.values(this.#properties).sort((a, b) =>
             defaultSort(a.name, b.name),
-        );
+        ) as never;
     }
 }
 

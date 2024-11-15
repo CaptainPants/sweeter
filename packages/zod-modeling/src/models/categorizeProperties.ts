@@ -1,4 +1,5 @@
 
+import { Type } from 'arktype';
 import { AnyObjectTypeConstraint } from '../type/AnyObjectTypeConstraint.js';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { sortProperties } from './sortProperties.js';
@@ -26,15 +27,15 @@ export function categorizeProperties<TPropertyResult>(
     objectType: AnyObjectTypeConstraint,
     transform?: (property: CategorizedPropertyDefinition) => TPropertyResult,
 ): Array<{ category: string; properties: TPropertyResult[] }>;
-
 export function categorizeProperties(
     objectType: AnyObjectTypeConstraint,
     transform?: (property: CategorizedPropertyDefinition) => unknown,
 ): Array<{ category: string; properties: unknown[] }> {
     const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();
-
-    for (const [name, property] of Object.entries(objectType.shape)) {
-        const propertyTyped = property as AnyTypeConstraint;
+    
+    for (const property of objectType.props) {
+        const name = property.key;
+        const propertyTyped = property.value as AnyTypeConstraint;
 
         const category =
             (propertyTyped.hasAnnotations()

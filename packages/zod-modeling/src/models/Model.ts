@@ -83,36 +83,34 @@ export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
             TArrayArkType
         >,
         UnknownArrayModelMethods {
-    getElementType: () => arkTypeUtilityTypes.ArrayElementType<TArrayArkType>;
+    getElementType: () => arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
 
     getElement: (
         index: number,
-    ) => Model<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>> | undefined;
+    ) => ElementModelNoConstraint<TArrayArkType> | undefined;
 
     getElements: () => ReadonlyArray<
-        Model<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
+        ElementModelNoConstraint<TArrayArkType>
     >;
 
     spliceElements: (
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            | type.infer<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
-            | Model<arkTypeUtilityTypes.ArrayElementType<TArrayArkType>>
+            | type.infer<arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>>
+            | ElementModelNoConstraint<TArrayArkType>
         >,
         validate?: boolean,
     ) => Promise<this>;
 }
 
-type _PropertyModelNoConstraint<T> = T extends AnyTypeConstraint ? PropertyModel<T> : never; 
-
 export type TypedPropertyModelForKey<
     TArkObjectType extends AnyTypeConstraint,
     TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>,
 > = TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>
-    ? _PropertyModelNoConstraint<arkTypeUtilityTypes.AllPropertyArkTypes<TArkObjectType>>
+    ? PropertyModelNoConstraint<arkTypeUtilityTypes.AllPropertyArkTypes<TArkObjectType>>
     :
-          | _PropertyModelNoConstraint<
+          | PropertyModelNoConstraint<
                 arkTypeUtilityTypes.CatchallPropertyValueArkType<TArkObjectType>
             >
           | undefined;
@@ -155,24 +153,24 @@ export type MapObjectEntry<TArkType extends AnyTypeConstraint> = readonly [
     model: PropertyModel<TArkType>,
 ];
 
-export interface ObjectModel<TArkObjectType extends AnyTypeConstraint>
-    extends ModelBase<type.infer<TArkObjectType>, TArkObjectType>,
+export interface ObjectModel<TObjectArkType extends AnyTypeConstraint>
+    extends ModelBase<type.infer<TObjectArkType>, TObjectArkType>,
         UnknownObjectModelMethods {
-    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TArkObjectType>;
+    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectArkType>;
 
     getProperty<
-        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType> & string,
+        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectArkType> & string,
     >(
         key: TKey,
-    ): TypedPropertyModelForKey<TArkObjectType, TKey>;
+    ): TypedPropertyModelForKey<TObjectArkType, TKey>;
 
-    getProperties(): readonly _PropertyModelNoConstraint<
-        arkTypeUtilityTypes.AllPropertyArkTypes<TArkObjectType>
+    getProperties(): readonly PropertyModelNoConstraint<
+        arkTypeUtilityTypes.AllPropertyArkTypes<TObjectArkType>
     >[];
 
-    setProperty<TKey extends keyof type.infer<TArkObjectType> & string>(
+    setProperty<TKey extends keyof type.infer<TObjectArkType> & string>(
         key: TKey,
-        value: type.infer<TArkObjectType>[TKey],
+        value: type.infer<TObjectArkType>[TKey],
         triggerValidation?: boolean,
     ): Promise<this>;
 }
@@ -265,10 +263,14 @@ export type Model<TArkType extends Type<any>> = type.infer<TArkType> extends inf
     : ObjectModel<TArkType>)
 : never;
 
+
+export type PropertyModelNoConstraint<TType> = TType extends AnyTypeConstraint ? PropertyModel<TType> : never; 
+export type ElementModelNoConstraint<TType> = TType extends Type<(infer S)[]> ? S extends AnyTypeConstraint ? Model<S> : never : never;
+
 export type KnownPropertyModels<TObjectArkType extends AnyObjectTypeConstraint> =
     type.infer<TObjectArkType> extends infer TUnderlyingObject
         ? {
-              [Key in arkTypeUtilityTypes.NonCatchallPropertyKeys<TUnderlyingObject> & keyof TUnderlyingObject]: _PropertyModelNoConstraint<Type<TUnderlyingObject[Key]>>;
+              [Key in arkTypeUtilityTypes.NonCatchallPropertyKeys<TUnderlyingObject> & keyof TUnderlyingObject]: PropertyModelNoConstraint<Type<TUnderlyingObject[Key]>>;
           }
         : {
               [key: string]: UnknownPropertyModel;

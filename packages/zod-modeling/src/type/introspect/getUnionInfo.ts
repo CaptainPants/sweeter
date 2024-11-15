@@ -14,6 +14,12 @@ export function tryGetUnionInfo(schema: AnyTypeConstraint) {
     };
 }
 
+/**
+ * 
+ * @param schema 
+ * @throws if they schema is not a union.
+ * @returns 
+ */
 export function getUnionInfo(schema: AnyTypeConstraint) {
     return tryGetUnionInfo(schema) ?? throwError(new TypeError('Schema was not a union'));
 }

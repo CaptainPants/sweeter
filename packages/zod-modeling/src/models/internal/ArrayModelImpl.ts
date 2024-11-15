@@ -1,33 +1,41 @@
-import { type z } from 'zod';
 
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { mapAsync } from '../../internal/mapAsync.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
-import { type UnknownModel, type ArrayModel, type Model } from '../Model.js';
+import { type UnknownModel, type ArrayModel, type Model, ElementModelNoConstraint } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
+import { type, Type } from 'arktype';
+import { ArrayType } from 'arktype/internal/methods/array.ts';
+import { getArrayInfo } from '../../type/introspect/getArrayInfo.js';
+import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
+import { parseAsync } from '../../utility/parse.js';
 
-export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
-    extends ModelImpl<z.infer<TArrayZodType>, TArrayZodType>
-    implements ArrayModel<TArrayZodType>
+export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
+    extends ModelImpl<type.infer<TArrayArkType>, TArrayArkType>
+    implements ArrayModel<TArrayArkType>
 {
-    public static createFromValue<TArrayZodType extends z.ZodArray<any>>(
-        value: arkTypeUtilityTypes.ArrayElementType<TArrayZodType>[],
-        schema: TArrayZodType,
+    public static createFromValue<TArrayArkType extends ArrayType<unknown[]>>(
+        value: type.infer<TArrayArkType>,
+        schema: TArrayArkType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
-    ): ArrayModelImpl<TArrayZodType> {
-        const elementModels = value.map((item, index) =>
+    ): ArrayModelImpl<TArrayArkType> {
+        const info = getArrayInfo(schema);
+        const elementType = info.elementType as arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
+
+        const elementModels = (value as readonly unknown[]).map((item, index) =>
             ModelFactory.createUnvalidatedModelPart<
-                arkTypeUtilityTypes.ArrayElementType<TArrayZodType>
+                /* @ts-expect-error - Type system doesn't know that this is always a Type<?> */
+                arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>
             >({
-                value: item,
-                arkType: schema.element,
+                value: item as never,
+                arkType: elementType as never,
                 parentInfo: {
                     relationship: { type: 'element' },
                     type: schema,
@@ -37,54 +45,54 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
             }),
         );
 
-        return new ArrayModelImpl<TArrayZodType>(
+        return new ArrayModelImpl<TArrayArkType>(
             value,
-            elementModels,
+            elementType,
+            elementModels as never,
             schema,
             parentInfo,
         );
     }
 
     public constructor(
-        value: arkTypeUtilityTypes.ArrayElementType<TArrayZodType>[],
-        elementModels: ReadonlyArray<
-            Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
-        >,
-        type: TArrayZodType,
+        value: type.infer<TArrayArkType>,
+        elementType: arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>,
+        elementModels: readonly ElementModelNoConstraint<TArrayArkType>[],
+        type: TArrayArkType,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, 'array');
 
-        this.#elementType = type.element;
+        this.#elementType = elementType;
 
         this.#elementModels = elementModels;
     }
 
-    #elementType: arkTypeUtilityTypes.ArrayElementType<TArrayZodType>;
+    #elementType: arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
     #elementModels: ReadonlyArray<
-        Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
+        ElementModelNoConstraint<TArrayArkType>
     >;
 
-    public getElementType(): arkTypeUtilityTypes.ArrayElementType<TArrayZodType> {
+    public getElementType(): arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType> {
         return this.#elementType;
     }
 
-    public unknownGetElementType(): z.ZodType {
-        return this.#elementType;
+    public unknownGetElementType(): AnyTypeConstraint {
+        return this.#elementType as never;
     }
 
     public getElement(
         index: number,
-    ): Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>> | undefined {
+    ): ElementModelNoConstraint<TArrayArkType> | undefined {
         return this.#elementModels[index];
     }
 
     public unknownGetElement(index: number): UnknownModel | undefined {
-        return this.getElement(index);
+        return this.getElement(index) as never;
     }
 
     public getElements(): ReadonlyArray<
-        Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
+        ElementModelNoConstraint<TArrayArkType>
     > {
         return this.#elementModels;
     }
@@ -97,8 +105,8 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            | z.infer<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
-            | Model<arkTypeUtilityTypes.ArrayElementType<TArrayZodType>>
+            | type.infer<arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>>
+            | ElementModelNoConstraint<TArrayArkType>
         >,
         validate: boolean = true,
     ): Promise<this> {
@@ -116,7 +124,7 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         newElements: ReadonlyArray<unknown | UnknownModel>,
         validate: boolean = true,
     ): Promise<this> {
-        const eleDefinition = this.getElementType();
+        const eleDefinition = this.getElementType() as Type<unknown>;
 
         const newModels = await mapAsync(newElements, async (item) => {
             return await validateAndMakeModel(
@@ -131,31 +139,31 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
             );
         });
 
-        const newValue = [...this.value];
+        const newValue = [...(this.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[])];
         newValue.splice(
             start,
             deleteCount,
             ...newModels.map(
-                (x) =>
-                    x.value as arkTypeUtilityTypes.ArrayElementType<TArrayZodType>,
+                (x) => x.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>,
             ),
         );
 
         if (validate) {
-            await this.type.parseAsync(newValue);
+            await parseAsync(newValue, this.type);
         }
 
         const newElementModels = [...this.#elementModels];
-        newElementModels.splice(start, deleteCount, ...newModels);
+        newElementModels.splice(start, deleteCount, ...(newModels as ElementModelNoConstraint<TArrayArkType>[]));
 
         const res = new ArrayModelImpl(
             newValue,
+            this.#elementType as never,
             newElementModels,
             this.type,
             this.parentInfo,
         );
 
-        return res as this;
+        return res as unknown as this;
     }
 
     public async moveElement(
@@ -163,10 +171,14 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
         to: number,
         validate: boolean = true,
     ): Promise<this> {
-        const newValue = arrayMoveImmutable(this.value, from, to);
+        const newValue = arrayMoveImmutable(
+            this.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[], 
+            from, 
+            to
+        );
 
         if (validate) {
-            await this.type.parseAsync(newValue);
+            await parseAsync(newValue, this.type);
         }
 
         const newElementModels = arrayMoveImmutable(
@@ -175,8 +187,9 @@ export class ArrayModelImpl<TArrayZodType extends z.ZodArray<any>>
             to,
         );
 
-        return new ArrayModelImpl<TArrayZodType>(
-            newValue,
+        return new ArrayModelImpl<TArrayArkType>(
+            newValue as never,
+            this.#elementType as never,
             newElementModels,
             this.type,
             this.parentInfo,

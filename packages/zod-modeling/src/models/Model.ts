@@ -8,8 +8,9 @@ import {
 } from './PropertyModel.js';
 import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
 import { type, Type } from 'arktype';
-import { IsBooleanLiteral, IsLiteral, IsNumberLiteral, IsStringLiteral, IsUnion } from '@captainpants/sweeter-utilities';
+import { IsBooleanLiteral, IsLiteral, IsNever, IsNumberLiteral, IsStringLiteral, IsUnion } from '@captainpants/sweeter-utilities';
 import { ObjectType } from 'arktype/internal/methods/object.ts';
+import { GetNonExpandoKeys } from '../internal/utilityTypes.js';
 
 export interface ModelBase<TValue, TArkType extends AnyTypeConstraint> {
     readonly value: TValue;
@@ -103,14 +104,16 @@ export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
     ) => Promise<this>;
 }
 
+type _PropertyModelNoConstraint<T> = T extends AnyTypeConstraint ? PropertyModel<T> : never; 
+
 export type TypedPropertyModelForKey<
     TArkObjectType extends AnyTypeConstraint,
     TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>,
 > = TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>
-    ? PropertyModel<arkTypeUtilityTypes.AllPropertyTypes<TArkObjectType>[TKey]>
+    ? _PropertyModelNoConstraint<arkTypeUtilityTypes.AllPropertyArkTypes<TArkObjectType>>
     :
-          | PropertyModel<
-                arkTypeUtilityTypes.CatchallPropertyValueType<TArkObjectType>
+          | _PropertyModelNoConstraint<
+                arkTypeUtilityTypes.CatchallPropertyValueArkType<TArkObjectType>
             >
           | undefined;
 
@@ -155,7 +158,7 @@ export type MapObjectEntry<TArkType extends AnyTypeConstraint> = readonly [
 export interface ObjectModel<TArkObjectType extends AnyTypeConstraint>
     extends ModelBase<type.infer<TArkObjectType>, TArkObjectType>,
         UnknownObjectModelMethods {
-    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueType<TArkObjectType>;
+    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TArkObjectType>;
 
     getProperty<
         TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType> & string,
@@ -163,8 +166,8 @@ export interface ObjectModel<TArkObjectType extends AnyTypeConstraint>
         key: TKey,
     ): TypedPropertyModelForKey<TArkObjectType, TKey>;
 
-    getProperties(): readonly PropertyModel<
-        type.infer<TArkObjectType>[keyof type.infer<TArkObjectType>]
+    getProperties(): readonly _PropertyModelNoConstraint<
+        arkTypeUtilityTypes.AllPropertyArkTypes<TArkObjectType>
     >[];
 
     setProperty<TKey extends keyof type.infer<TArkObjectType> & string>(
@@ -235,41 +238,37 @@ export type AnyModelConstraint =
     | UndefinedModel
     | RealUnknownModel;
 
-export type Model<TArkType extends Type<any>> = 
-    TArkType extends Type<infer TUnderlying> ? 
-        IsUnion<TUnderlying> extends true 
-            ? UnionModel<TArkType> 
-        : TArkType extends Type<unknown[]>
-            ? ArrayModel<TArkType>
-        : IsStringLiteral<TUnderlying> extends true
-            /* @ts-ignore - not narrowing TArkType but we know its a string */
-            ? StringConstantModel<TArkType>
-        : IsNumberLiteral<TUnderlying> extends true
-            /* @ts-ignore - not narrowing TArkType but we know its a string */
-            ? NumberConstantModel<TArkType>
-        : IsBooleanLiteral<TUnderlying> extends true
-            /* @ts-ignore - not narrowing TArkType but we know its a string */
-            ? BooleanConstantModel<TArkType>
-        : TUnderlying extends string
-            ? StringModel
-        : TUnderlying extends number
-            ? NumberModel
-        : TUnderlying extends boolean
-            ? BooleanModel
-        : TUnderlying extends null
-            ? NullModel
-        : TUnderlying extends undefined
-            ? UndefinedModel
-        : UnknownModel
-    : never;
+export type Model<TArkType extends Type<any>> = type.infer<TArkType> extends infer TUnderlying ? 
+    (IsUnion<TUnderlying> extends true 
+        ? UnionModel<TArkType> 
+    : TArkType extends Type<unknown[]>
+        ? ArrayModel<TArkType>
+    : IsStringLiteral<TUnderlying> extends true
+        /* @ts-ignore - not narrowing TArkType but we know its a string */
+        ? StringConstantModel<TArkType>
+    : IsNumberLiteral<TUnderlying> extends true
+        /* @ts-ignore - not narrowing TArkType but we know its a string */
+        ? NumberConstantModel<TArkType>
+    : IsBooleanLiteral<TUnderlying> extends true
+        /* @ts-ignore - not narrowing TArkType but we know its a string */
+        ? BooleanConstantModel<TArkType>
+    : TUnderlying extends string
+        ? StringModel
+    : TUnderlying extends number
+        ? NumberModel
+    : TUnderlying extends boolean
+        ? BooleanModel
+    : TUnderlying extends null
+        ? NullModel
+    : TUnderlying extends undefined
+        ? UndefinedModel
+    : ObjectModel<TArkType>)
+: never;
 
-export type PropertyModels<TObjectArkType extends AnyObjectTypeConstraint> =
-    // eslint-disable-next-line@typescript-eslint/no-explicit-any
-    TObjectArkType extends ObjectType<infer TUnderlyingObject>
+export type KnownPropertyModels<TObjectArkType extends AnyObjectTypeConstraint> =
+    type.infer<TObjectArkType> extends infer TUnderlyingObject
         ? {
-              [Key in keyof TUnderlyingObject]: PropertyModel<TUnderlyingObject[Key]>;
-          } & {
-              [key: string]: PropertyModel<TCatchallType>;
+              [Key in arkTypeUtilityTypes.NonCatchallPropertyKeys<TUnderlyingObject> & keyof TUnderlyingObject]: _PropertyModelNoConstraint<Type<TUnderlyingObject[Key]>>;
           }
         : {
               [key: string]: UnknownPropertyModel;

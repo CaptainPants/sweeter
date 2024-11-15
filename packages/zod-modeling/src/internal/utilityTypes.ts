@@ -23,5 +23,7 @@ type _GetExpandoTypeHelper<TObject, TPropertyKeys = PropertyKeys> = {
         : never]: TKey;
 };
 
-export type GetExpandoKey<TObject> = _GetExpandoTypeHelper<TObject>[keyof _GetExpandoTypeHelper<TObject>];
-export type GetExpandoType<TObject> = TObject[GetExpandoKey<TObject>];
+export type GetExpandoKeys<TObject> = _GetExpandoTypeHelper<TObject>[keyof _GetExpandoTypeHelper<TObject>];
+export type GetNonExpandoKeys<TObject> = Exclude<keyof TObject, GetExpandoKeys<TObject>>;
+export type GetExpandoType<TObject> = TObject[GetExpandoKeys<TObject>];
+

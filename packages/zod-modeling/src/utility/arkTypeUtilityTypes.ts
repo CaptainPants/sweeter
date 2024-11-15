@@ -4,34 +4,32 @@ import {
 } from '../types.js';
 import { Type, type,  } from 'arktype';
 import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/AnyTypeConstraint.js';
-import { GetExpandoKey, GetExpandoType } from '../internal/utilityTypes.js';
+import { GetExpandoKeys, GetExpandoType, GetNonExpandoKeys } from '../internal/utilityTypes.js';
 import { IsNever, IsUnion } from '@captainpants/sweeter-utilities';
 
 /**
  * Types that operate on Zod type
  */
 export namespace arkTypeUtilityTypes {
+    type _SpreadWrapType<T> = T extends infer _ ? Type<T> : never;
+    type _PropertyType<T> = T[keyof T];
+
     /**
      * This is obsolete, use the top level version.
      */
     export type AnyTypeConstraint = BaseAnyTypeConstraint;
 
-    export type AllPropertyKeys<TArkTypeObjectType> = TArkTypeObjectType extends Type<infer S>
-        ? keyof S
-        : never;
+    export type AllPropertyKeys<TArkTypeObjectType> = keyof type.infer<TArkTypeObjectType>;
+    export type AllPropertyArkTypes<TArkTypeObjectType> = _SpreadWrapType<_PropertyType<type.infer<TArkTypeObjectType>>>;
 
-    export type AllPropertyTypes<TArkTypeObjectType> = TArkTypeObjectType extends Type<infer S>
-        ? S[keyof S]
-        : never;
-
-    export type CatchallPropertyKeyType<TArkTypeObjectType> = Type<GetExpandoKey<type.infer<TArkTypeObjectType>>>;
-
-    export type CatchallPropertyValueType<TArkTypeObjectType> = Type<GetExpandoType<type.infer<TArkTypeObjectType>>>;
+    export type NonCatchallPropertyKeys<TArkTypeObjectType> = GetNonExpandoKeys<type.infer<TArkTypeObjectType>>;
+    export type CatchallPropertyKeyRawType<TArkTypeObjectType> = GetExpandoKeys<type.infer<TArkTypeObjectType>>;
+    export type CatchallPropertyValueArkType<TArkTypeObjectType> = Type<GetExpandoType<type.infer<TArkTypeObjectType>>>;
 
     export type PropertyType<
         TArkTypeObjectType,
         Property extends string,
-    > = AllPropertyTypes<TArkTypeObjectType> extends ReadonlyRecord<Property, infer S>
+    > = AllPropertyArkTypes<TArkTypeObjectType> extends ReadonlyRecord<Property, infer S>
         ? S
         : never;
 
@@ -39,8 +37,8 @@ export namespace arkTypeUtilityTypes {
 
     export type ObjectEntryType<TArkTypeObjectType> = readonly [
         (
-            | keyof AllPropertyTypes<TArkTypeObjectType>
-            | keyof CatchallPropertyKeyType<TArkTypeObjectType>
+            | keyof AllPropertyArkTypes<TArkTypeObjectType>
+            | keyof CatchallPropertyKeyRawType<TArkTypeObjectType>
         ),
         ValuesOfObject<TArkTypeObjectType> | ValuesOfObject<TArkTypeObjectType>,
     ];

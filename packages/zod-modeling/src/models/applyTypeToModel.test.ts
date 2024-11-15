@@ -3,11 +3,13 @@
 import { Type, type } from 'arktype';
 
 import { type TypeMatchAssert } from '../testingTypes.js';
-import { type ValueTypeFromArkType } from '../types.js';
+import { ValueTypeFromModel, type ValueTypeFromArkType } from '../types.js';
 
 import { applyTypeToModel } from './applyTypeToModel.js';
 import { ModelFactory } from './ModelFactory.js';
 import { type PropertyModel } from './PropertyModel.js';
+import { Model, TypedPropertyModelForKey } from './Model.js';
+import { typeAssert } from '@captainpants/sweeter-utilities';
 
 test('Something', async () => {
     const unionType = type({
@@ -23,7 +25,7 @@ test('Something', async () => {
         otherProperty: 'Something',
     };
 
-    const model = await ModelFactory.createModel({ arkType: unionType, value });
+    const model = await ModelFactory.createModel<typeof unionType>({ arkType: unionType, value });
 
     const retyped = await applyTypeToModel(
         model,
@@ -31,10 +33,10 @@ test('Something', async () => {
     );
 
     const typeProperty = retyped.getProperty('type');
-    const assertType1: TypeMatchAssert<
-        typeof type,
-        PropertyModel<Type<'b'>>
-    > = true;
+
+    typeAssert.equal<typeof typeProperty, PropertyModel<Type<'b'>>>();
 
     expect(typeProperty.valueModel.value).toStrictEqual('b');
 });
+
+type XXXX = TypedPropertyModelForKey<Type<{ banana: 1 }>, 'banana'>;

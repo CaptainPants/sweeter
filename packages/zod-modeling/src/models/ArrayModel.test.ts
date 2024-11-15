@@ -1,15 +1,15 @@
-import { z } from 'zod';
 
+import { type } from 'arktype';
 import { ModelFactory } from './ModelFactory.js';
 
 test('array', async () => {
-    const type = z.array(z.number());
+    const arkType = type.number.array();
 
     const input = [1, 2, 3];
 
     const model = await ModelFactory.createModel({
         value: input,
-        arkType: type,
+        arkType: arkType,
         parentInfo: null,
     });
 

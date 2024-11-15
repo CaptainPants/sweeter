@@ -5,10 +5,8 @@ import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import {
     type ObjectModel,
     type Model,
-    type UnknownModel,
-    type PropertyModels,
+    type KnownPropertyModels,
     type TypedPropertyModelForKey,
-    UnknownObjectModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -65,7 +63,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
 
         return new ObjectImpl<TZodObjectType>(
             value,
-            propertyModels as PropertyModels<TZodObjectType>,
+            propertyModels as KnownPropertyModels<TZodObjectType>,
             schema,
             parentInfo,
         );
@@ -73,7 +71,7 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
 
     public constructor(
         value: z.infer<TZodObjectType>,
-        properties: PropertyModels<TZodObjectType>,
+        properties: KnownPropertyModels<TZodObjectType>,
         type: TZodObjectType,
         parentInfo: ParentTypeInfo | null,
     ) {
@@ -82,13 +80,13 @@ export class ObjectImpl<TZodObjectType extends z.AnyZodObject>
         this.#properties = properties;
     }
 
-    #properties: PropertyModels<TZodObjectType>;
+    #properties: KnownPropertyModels<TZodObjectType>;
 
     public unknownGetCatchallType(): z.ZodTypeAny {
         return this.type._def.catchall;
     }
 
-    public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueType<TZodObjectType> {
+    public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TZodObjectType> {
         return this.type._def.catchall;
     }
 

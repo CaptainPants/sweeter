@@ -1,15 +1,16 @@
-import { z } from 'zod';
+
+import { type } from 'arktype';
 import { asBoolean, asNumber } from './as.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('boolean', async () => {
     const example1 = await ModelFactory.createModel({
         value: true,
-        arkType: z.boolean(),
+        arkType: type.boolean,
     });
     const example2 = await ModelFactory.createModel({
         value: true,
-        arkType: z.union([z.literal(true), z.literal(false)]),
+        arkType: type.unit(true).or(type.unit(false)),
     });
 
     expect(asBoolean(example1)).not.toStrictEqual(undefined);

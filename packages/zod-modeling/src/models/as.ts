@@ -1,4 +1,5 @@
-import { type z } from 'zod';
+
+import { Type } from 'arktype';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -30,6 +31,7 @@ import {
     type BooleanModel,
     type UnknownObjectModel,
 } from './Model.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 
 export function cast<TToModel extends AnyModelConstraint>(
     model: AnyModelConstraint,
@@ -80,21 +82,21 @@ export function asString(model: AnyModelConstraint): StringModel | undefined {
 
 export function asNumberLiteral(
     model: AnyModelConstraint,
-): NumberConstantModel<z.ZodLiteral<number>> | undefined {
+): NumberConstantModel<Type<number>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isNumberLiteralType(model.type) ? (model as any) : undefined;
 }
 
 export function asStringConstant(
     model: AnyModelConstraint,
-): StringConstantModel<z.ZodLiteral<string>> | undefined {
+): StringConstantModel<Type<string>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isStringLiteralType(model.type) ? (model as any) : undefined;
 }
 
 export function asBooleanConstant(
     model: AnyModelConstraint,
-): BooleanConstantModel<z.ZodLiteral<boolean>> | undefined {
+): BooleanConstantModel<Type<boolean>> | undefined {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return isBooleanLiteralType(model.type) ? (model as any) : undefined;
 }
@@ -119,7 +121,7 @@ export function asUndefinedConstant(
  */
 
 export function asUnknown(model: AnyModelConstraint): UnknownModel;
-export function asUnknown<TZodType extends z.ZodTypeAny>(
+export function asUnknown<TZodType extends AnyTypeConstraint>(
     model: Model<TZodType>,
 ): UnknownModel;
 export function asUnknown(model: unknown): UnknownModel {

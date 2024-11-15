@@ -26,22 +26,21 @@ import { Type, type } from 'arktype';
 import { safeParse } from '../utility/parse.js';
 
 export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
+    arkType: TArkType; // putting this at the top seems to help with type inference
     value: type.infer<TArkType>;
-    arkType: TArkType;
     parentInfo?: ParentTypeInfo | null | undefined;
     abortSignal?: AbortSignal | undefined;
 }
 
 export interface CreateUnvalidatedModelPartArgs<TArkType extends AnyTypeConstraint> {
+    arkType: TArkType; // putting this at the top seems to help with type inference
     value: type.infer<TArkType>;
-    arkType: TArkType;
     parentInfo: ParentTypeInfo | null | undefined;
     depth?: number;
 }
 
 type ModelFactoryMethod<TArkType extends AnyTypeConstraint> = (
     value: type.infer<TArkType>,
-
     arkType: TArkType,
     parentInfo: ParentTypeInfo | null,
     depth: number,

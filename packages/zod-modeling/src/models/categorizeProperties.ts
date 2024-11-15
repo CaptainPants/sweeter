@@ -1,10 +1,12 @@
-import { type z } from 'zod';
+
+import { AnyObjectTypeConstraint } from '../type/AnyObjectTypeConstraint.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {
     name: string;
     order?: number;
-    propertyType: z.ZodTypeAny;
+    propertyType: AnyTypeConstraint;
 }
 
 /**
@@ -12,7 +14,7 @@ export interface CategorizedPropertyDefinition {
  * @returns
  */
 export function categorizeProperties(
-    objectType: z.AnyZodObject,
+    objectType: AnyObjectTypeConstraint,
 ): Array<{ category: string; properties: CategorizedPropertyDefinition[] }>;
 
 /**
@@ -21,22 +23,22 @@ export function categorizeProperties(
  * @returns
  */
 export function categorizeProperties<TPropertyResult>(
-    objectType: z.AnyZodObject,
+    objectType: AnyObjectTypeConstraint,
     transform?: (property: CategorizedPropertyDefinition) => TPropertyResult,
 ): Array<{ category: string; properties: TPropertyResult[] }>;
 
 export function categorizeProperties(
-    objectType: z.AnyZodObject,
+    objectType: AnyObjectTypeConstraint,
     transform?: (property: CategorizedPropertyDefinition) => unknown,
 ): Array<{ category: string; properties: unknown[] }> {
     const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();
 
     for (const [name, property] of Object.entries(objectType.shape)) {
-        const propertyTyped = property as z.ZodTypeAny;
+        const propertyTyped = property as AnyTypeConstraint;
 
         const category =
             (propertyTyped.hasAnnotations()
-                ? propertyTyped.meta().category()
+                ? propertyTyped.annotations().category()
                 : undefined) ?? 'Misc';
 
         let list = categoryMap.get(category);

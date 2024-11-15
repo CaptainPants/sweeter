@@ -1,4 +1,3 @@
-import { type z } from 'zod';
 
 import { descend } from '@captainpants/sweeter-utilities';
 
@@ -7,6 +6,7 @@ import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 import { shallowMatchesStructure, validateAndThrow } from '../../utility/validate.js';
+import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 
 /**
  * For a given value (raw or model) validate that the value matches the type (using validateOrThrow). Throw if it does not.
@@ -18,18 +18,18 @@ import { shallowMatchesStructure, validateAndThrow } from '../../utility/validat
  * @param depth
  * @returns
  */
-export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
+export async function validateAndMakeModel<TArkType extends AnyTypeConstraint>(
     valueOrModel: unknown,
-    type: TZodType,
+    type: TArkType,
     parentInfo: ParentTypeInfo | null,
     validate: boolean,
     depth = descend.defaultDepth,
-): Promise<Model<TZodType>> {
+): Promise<Model<TArkType>> {
     if (isModel(valueOrModel)) {
         if (valueOrModel.type === type) {
-            return valueOrModel as Model<TZodType>;
+            return valueOrModel as Model<TArkType>;
         } else {
-            let validated: z.infer<TZodType>;
+            let validated: z.infer<TArkType>;
             if (validate) {
                 validated = await validateAndThrow(type, valueOrModel.value);
             } else {
@@ -41,7 +41,7 @@ export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
                 }
             }
 
-            return ModelFactory.createUnvalidatedModelPart<TZodType>({
+            return ModelFactory.createUnvalidatedModelPart<TArkType>({
                 parentInfo,
                 arkType: type,
                 value: validated,
@@ -49,9 +49,9 @@ export async function validateAndMakeModel<TZodType extends z.ZodTypeAny>(
             });
         }
     } else {
-        const validated = await validateAndThrow<TZodType>(type, valueOrModel);
+        const validated = await validateAndThrow<TArkType>(type, valueOrModel);
 
-        return ModelFactory.createUnvalidatedModelPart<TZodType>({
+        return ModelFactory.createUnvalidatedModelPart<TArkType>({
             parentInfo,
             arkType: type,
             value: validated,

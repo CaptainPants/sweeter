@@ -1,4 +1,6 @@
 import { descend } from '@captainpants/sweeter-utilities';
+import { type } from 'arktype';
+
 import {
     type SpreadModel,
     type Model,
@@ -10,24 +12,25 @@ import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { type z } from 'zod';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
+import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
+import { getUnionInfo } from '../../type/introspect/getUnionInfo.js';
 
 export class UnionModelImpl<
-        TZodUnionType extends arkTypeUtilityTypes.ZodAnyUnionType,
+        TUnionArkType extends AnyTypeConstraint,
     >
-    extends ModelImpl<z.infer<TZodUnionType>, TZodUnionType>
-    implements UnionModel<TZodUnionType>
+    extends ModelImpl<type.infer<TUnionArkType>, TUnionArkType>
+    implements UnionModel<TUnionArkType>
 {
     public static createFromValue<
-        TZodUnionType extends arkTypeUtilityTypes.ZodAnyUnionType,
+        TUnionArkType extends AnyTypeConstraint,
     >(
-        value: z.infer<TZodUnionType>,
-        type: TZodUnionType,
+        value: type.infer<TUnionArkType>,
+        type: TUnionArkType,
         parentInfo: ParentTypeInfo | null,
         depth: number,
-    ): UnionModelImpl<TZodUnionType> {
+    ): UnionModelImpl<TUnionArkType> {
         const match = findUnionOptionForValue(value, type);
 
         if (match === null) {
@@ -35,17 +38,17 @@ export class UnionModelImpl<
         }
 
         const resolvedModel = ModelFactory.createUnvalidatedModelPart<
-            arkTypeUtilityTypes.UnionOptions<TZodUnionType>
+            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
         >({
             value,
             arkType: match,
             parentInfo,
             depth: descend(depth),
         }) as unknown as SpreadModel<
-            arkTypeUtilityTypes.UnionOptions<TZodUnionType>
+            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
         >;
 
-        return new UnionModelImpl<TZodUnionType>(
+        return new UnionModelImpl<TUnionArkType>(
             resolvedModel,
             type,
             parentInfo,
@@ -53,8 +56,8 @@ export class UnionModelImpl<
     }
 
     public constructor(
-        resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TZodUnionType>>,
-        type: TZodUnionType,
+        resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>>,
+        type: TUnionArkType,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(resolvedModel.value, type, parentInfo, 'union');
@@ -62,35 +65,14 @@ export class UnionModelImpl<
         this.#resolvedModel = resolvedModel;
     }
 
-    #resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TZodUnionType>>;
+    #resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>>;
 
-    public getDirectlyResolved(): SpreadModel<
-        arkTypeUtilityTypes.UnionOptions<TZodUnionType>
-    > {
+    public getDirectlyResolved(): SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>> {
         return this.#resolvedModel;
     }
 
-    public getRecursivelyResolved(): SpreadModel<
-        arkTypeUtilityTypes.RecursiveUnionOptions<TZodUnionType>
-    > {
-        let resolved: UnknownModel = this.#resolvedModel;
-
-        while (resolved instanceof UnionModelImpl) {
-            resolved = resolved.#resolvedModel;
-        }
-
-        return resolved as SpreadModel<
-            arkTypeUtilityTypes.RecursiveUnionOptions<TZodUnionType>
-        >;
-    }
-
-    public unknownGetRecursivelyResolved(): UnknownModel {
-        // Type system can't understand that SpreadModel results in a Model<T> at all times
-        return this.getRecursivelyResolved();
-    }
-
-    public getTypes(): ReadonlyArray<z.ZodTypeAny> {
-        return this.type.options;
+    public getTypes(): ReadonlyArray<AnyTypeConstraint> {
+        return getUnionInfo(this.type).branches;
     }
 
     public async replace(
@@ -106,12 +88,12 @@ export class UnionModelImpl<
         }
 
         const adoptedResolved = (await validateAndMakeModel<
-            arkTypeUtilityTypes.UnionOptions<TZodUnionType>
+            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
         >(value, type, this.parentInfo, validate)) as unknown as SpreadModel<
-            arkTypeUtilityTypes.UnionOptions<TZodUnionType>
+            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
         >;
 
-        const model = new UnionModelImpl<TZodUnionType>(
+        const model = new UnionModelImpl<TUnionArkType>(
             adoptedResolved,
             this.type,
             this.parentInfo,
@@ -121,14 +103,14 @@ export class UnionModelImpl<
         return model as this;
     }
 
-    public as<TTargetZodType extends z.ZodTypeAny>(
-        type: TTargetZodType,
-    ): Model<TTargetZodType> | null {
+    public as<TTargetArkType extends AnyTypeConstraint>(
+        type: TTargetArkType,
+    ): Model<TTargetArkType> | null {
         let resolved = this.#resolvedModel as UnknownModel;
 
         for (;;) {
             if (resolved.type === type) {
-                return resolved as unknown as Model<TTargetZodType>;
+                return resolved as unknown as Model<TTargetArkType>;
             }
 
             // If the current resolved is a Union, look at its resolved value

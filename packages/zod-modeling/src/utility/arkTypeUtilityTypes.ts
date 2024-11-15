@@ -5,7 +5,7 @@ import {
 import { Type, type,  } from 'arktype';
 import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { GetExpandoKey, GetExpandoType } from '../internal/utilityTypes.js';
-import { IsNever } from '@captainpants/sweeter-utilities';
+import { IsNever, IsUnion } from '@captainpants/sweeter-utilities';
 
 /**
  * Types that operate on Zod type
@@ -57,4 +57,8 @@ export namespace arkTypeUtilityTypes {
         TArrayArkType extends Type<(infer TElementType)[]>
             ? Type<TElementType>
             : never;
+
+    export type UnionOptions<TUnionArkType> = IsUnion<type.infer<TUnionArkType>> extends true ? 
+            type.infer<TUnionArkType> 
+        : never;
 }

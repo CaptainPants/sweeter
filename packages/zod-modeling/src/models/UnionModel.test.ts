@@ -28,12 +28,4 @@ test('union', async () => {
 
     expect(model.as(a)).toBeNull();
     expect(model.as(b)).not.toBeNull();
-
-    const recursiveResolved = model.getRecursivelyResolved();
-
-    const resolvedAsUnknown = asUnknown(recursiveResolved);
-
-    const casted = cast(resolvedAsUnknown, asObject);
-
-    expect(casted).not.toBeUndefined();
 });

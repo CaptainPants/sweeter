@@ -24,20 +24,6 @@ test('union', async () => {
 
     expect(value1).toStrictEqual(1);
 
-    const recursivelyResolved = model.getRecursivelyResolved();
-
-    const typeTest2: TypeMatchAssert<
-        typeof recursivelyResolved,
-        | StringModel
-        | NumberConstantModel<z.ZodLiteral<1>>
-        | NumberConstantModel<z.ZodLiteral<2>>
-    > = true;
-
-    const typeTest3: TypeMatchAssert<
-        typeof recursivelyResolved.value,
-        1 | 2 | string
-    > = true;
-
     const resolved = model.getDirectlyResolved();
 
     expect(resolved.type).toStrictEqual(nested);

@@ -7,7 +7,6 @@ import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
 import { type UnknownModel, type Model } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
-import { type z } from 'zod';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -33,9 +32,9 @@ export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
     abortSignal?: AbortSignal | undefined;
 }
 
-export interface CreateUnvalidatedModelPartArgs<T> {
-    value: T;
-    arkType: Type<T>;
+export interface CreateUnvalidatedModelPartArgs<TArkType extends AnyTypeConstraint> {
+    value: type.infer<TArkType>;
+    arkType: TArkType;
     parentInfo: ParentTypeInfo | null | undefined;
     depth?: number;
 }

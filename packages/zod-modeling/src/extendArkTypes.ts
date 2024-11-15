@@ -1,6 +1,4 @@
 
-import { ark } from 'arktype';
-import * as arktype from 'arktype';
 import { BaseNode } from '@ark/schema';
 
 import { type Annotations } from './annotations/Annotations.js';

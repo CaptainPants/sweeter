@@ -57,15 +57,15 @@ function setup(
     is: (schema: AnyTypeConstraint) => boolean,
     factory: ModelFactoryMethod<Type<unknown>>,
 ): UnknownModelFactoryMethod {
-    return (input, arkType, parentInfo, depth) => {
+    return (input, arkType, parentInfo, depth): UnknownModel | undefined => {
         if (!is(arkType)) {
             return undefined;
         }
 
-        const res = safeParse(input, arkType);
+        const parsed = safeParse(input, arkType);
 
-        if (res.success) {
-            return factory(res.data, arkType, parentInfo, depth);
+        if (parsed.success) {
+            return factory(parsed.data, arkType, parentInfo, depth);
         }
 
         return undefined;
@@ -75,15 +75,16 @@ function setupTyped<TArkType extends AnyTypeConstraint>(
     is: (schema: AnyTypeConstraint) => schema is TArkType,
     factory: ModelFactoryMethod<TArkType>,
 ): UnknownModelFactoryMethod {
-    return (input, arkType, parentInfo, depth) => {
+    return (input, arkType, parentInfo, depth): UnknownModel | undefined => {
         if (!is(arkType)) {
             return undefined;
         }
 
-        const res = safeParse(input, arkType);
+        const parsed = safeParse(input, arkType);
 
-        if (res.success) {
-            return factory(res.data, arkType, parentInfo, depth);
+        if (parsed.success) {
+            const res: Model<TArkType> = factory(parsed.data, arkType, parentInfo, depth);
+            return res;
         }
 
         return undefined;

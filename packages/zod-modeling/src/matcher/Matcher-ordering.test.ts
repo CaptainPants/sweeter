@@ -76,7 +76,7 @@ test('ordered', async () => {
 
     const numModel1 = await ModelFactory.createModel({
         value: 2,
-        arkType: type.number.annotations().label('1').end(),
+        schema: type.number.annotations().label('1').end(),
         parentInfo: null,
     });
 
@@ -120,7 +120,7 @@ test('multiple-ordered', async () => {
     const matcher = createTypeMatcher(rules);
 
     const model = await ModelFactory.createModel({
-        arkType: type.number.annotations().label('2').end(),
+        schema: type.number.annotations().label('2').end(),
         value: 6,
         parentInfo: null,
     });

@@ -13,6 +13,7 @@ import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
 import { Type } from 'arktype';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { getUnionInfo } from '../type/introspect/getUnionInfo.js';
+import { getArrayTypeInfo } from '../type/introspect/getArrayTypeInfo.js';
 
 function createTyped<TCheckedArkType extends AnyTypeConstraint>(
     check: (schema: AnyTypeConstraint) => schema is TCheckedArkType,
@@ -84,7 +85,7 @@ const convertors = [
     createTyped(
         isArrayType,
         (val, depth) =>
-            serializeSchemaForDisplay(val.element, deeper(depth)) + '[]',
+            serializeSchemaForDisplay(getArrayTypeInfo(val).elementType, deeper(depth)) + '[]',
     ),
     create(isUnionType, (val, depth) => unionForDisplay(val, deeper(depth))),
 ];

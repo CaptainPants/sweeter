@@ -124,7 +124,7 @@ interface UnknownObjectModelMethods {
         triggerValidation?: boolean,
     ): Promise<this>;
 
-    unknownGetCatchallType(): AnyTypeConstraint;
+    unknownGetCatchallType(): AnyTypeConstraint | undefined;
 
     unknownSetProperty(
         key: string,
@@ -266,13 +266,3 @@ export type Model<TArkType extends Type<any>> = type.infer<TArkType> extends inf
 
 export type PropertyModelNoConstraint<TType> = TType extends AnyTypeConstraint ? PropertyModel<TType> : never; 
 export type ElementModelNoConstraint<TType> = TType extends Type<(infer S)[]> ? S extends AnyTypeConstraint ? Model<S> : never : never;
-
-export type KnownPropertyModels<TObjectArkType extends AnyObjectTypeConstraint> =
-    type.infer<TObjectArkType> extends infer TUnderlyingObject
-        ? {
-              [Key in arkTypeUtilityTypes.NonCatchallPropertyKeys<TUnderlyingObject> & keyof TUnderlyingObject]: PropertyModelNoConstraint<Type<TUnderlyingObject[Key]>>;
-          }
-        : {
-              [key: string]: UnknownPropertyModel;
-          };
-

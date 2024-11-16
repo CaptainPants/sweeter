@@ -26,7 +26,7 @@ import { Type, type } from 'arktype';
 import { safeParse } from '../utility/parse.js';
 
 export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
-    arkType: TArkType; // putting this at the top seems to help with type inference
+    schema: TArkType; // putting this at the top seems to help with type inference
     value: type.infer<TArkType>;
     parentInfo?: ParentTypeInfo | null | undefined;
     abortSignal?: AbortSignal | undefined;
@@ -145,7 +145,7 @@ function createModel<TArkType extends AnyTypeConstraint>(
 ): Promise<Model<TArkType>>;
 async function createModel<TArkType extends AnyTypeConstraint>({
     value,
-    arkType,
+    schema: arkType,
     parentInfo,
     abortSignal,
 }: CreateModelArgs<TArkType>): Promise<Model<TArkType>> {

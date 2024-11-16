@@ -12,7 +12,7 @@ import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { type, Type } from 'arktype';
 import { ArrayType } from 'arktype/internal/methods/array.ts';
-import { getArrayInfo } from '../../type/introspect/getArrayInfo.js';
+import { getArrayTypeInfo } from '../../type/introspect/getArrayTypeInfo.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 import { parseAsync } from '../../utility/parse.js';
 
@@ -26,7 +26,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         parentInfo: ParentTypeInfo | null,
         depth: number,
     ): ArrayModelImpl<TArrayArkType> {
-        const info = getArrayInfo(schema);
+        const info = getArrayTypeInfo(schema);
         const elementType = info.elementType as arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
 
         const elementModels = (value as readonly unknown[]).map((item, index) =>

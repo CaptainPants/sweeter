@@ -1,30 +1,31 @@
-import { z } from 'zod';
+import { type } from 'arktype';
+
 import { type ValueTypeFromArkType } from '../types.js';
 
 import { asObject, asUnknown, cast } from './as.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('union', async () => {
-    const a = z.object({
-        type: z.literal('hasNumber'),
-        number: z.number(),
+    const a = type({
+        type: type.unit('hasNumber'),
+        number: type.number,
     });
 
-    const b = z.object({
-        type: z.literal('hasString'),
-        string: z.string(),
+    const b = type({
+        type: type.unit('hasString'),
+        string: type.string,
     });
 
-    const c = z.number();
+    const c = type.number;
 
-    const type = z.union([a, b, c]);
+    const schema = a.or(b).or(c);
 
-    const value: z.infer<typeof type> = {
+    const value: type.infer<typeof schema> = {
         type: 'hasString',
         string: '$abc245',
     };
 
-    const model = await ModelFactory.createModel({ value, arkType: type });
+    const model = await ModelFactory.createModel({ value, schema: schema });
 
     expect(model.as(a)).toBeNull();
     expect(model.as(b)).not.toBeNull();

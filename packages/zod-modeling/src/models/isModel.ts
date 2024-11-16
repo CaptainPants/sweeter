@@ -1,9 +1,10 @@
-import { type z } from 'zod';
 import { type UnknownModel, type Model } from './Model.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { type } from 'arktype';
 
-export function isModel<TZodType extends z.ZodTypeAny>(
-    value: z.infer<TZodType> | Model<TZodType>,
-): value is Model<TZodType>;
+export function isModel<TArkType extends AnyTypeConstraint>(
+    value: type.infer<TArkType> | Model<TArkType>,
+): value is Model<TArkType>;
 export function isModel(value: unknown): value is UnknownModel;
 export function isModel(value: unknown): value is UnknownModel {
     return (

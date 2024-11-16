@@ -15,7 +15,7 @@ test('rigid-object', async () => {
         str: 'banana',
     };
 
-    const model = await ModelFactory.createModel({ value, arkType: type });
+    const model = await ModelFactory.createModel({ value, schema: type });
 
     // Act
     const updated = await model.setProperty('num', 2);

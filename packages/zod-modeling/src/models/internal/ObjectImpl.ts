@@ -4,7 +4,6 @@ import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import {
     type ObjectModel,
     type Model,
-    type KnownPropertyModels,
     type TypedPropertyModelForKey,
     PropertyModelNoConstraint,
 } from '../Model.js';
@@ -15,11 +14,19 @@ import { ModelImpl } from './ModelImpl.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { validateAndThrow } from '../../utility/validate.js';
 import {
+    PropertyModel,
     type UnknownPropertyModel,
 } from '../PropertyModel.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
-import { type } from 'arktype';
+import { Type, type } from 'arktype';
 import { AnyObjectTypeConstraint } from '../../type/AnyObjectTypeConstraint.js';
+import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
+
+type UnknownRecord = Record<string | symbol, unknown>;
+type KnownPropertyModels = {
+    [key: string]: UnknownPropertyModel;
+}
+
 
 export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     extends ModelImpl<type.infer<TObjectArkType>, TObjectArkType>
@@ -31,11 +38,11 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         parentInfo: ParentTypeInfo | null,
         depth: number,
     ): ObjectImpl<TObjectArkType> {
-        const propertyModels: Record<string, UnknownPropertyModel> = {};
+        const propertyModels: KnownPropertyModels = {};
 
         // Object.keys lets us avoid prototype pollution
         for (const prop of schema.props) {
-            const propertyValue = (value as Record<string | symbol, unknown>)[prop.key];
+            const propertyValue = (value as UnknownRecord)[prop.key];
 
             const propertyName = prop.key;
 
@@ -62,7 +69,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
 
         return new ObjectImpl<TObjectArkType>(
             value,
-            propertyModels as KnownPropertyModels<TObjectArkType>,
+            propertyModels,
             schema,
             parentInfo,
         );
@@ -70,7 +77,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
 
     public constructor(
         value: type.infer<TObjectArkType>,
-        properties: KnownPropertyModels<TObjectArkType>,
+        properties: KnownPropertyModels,
         type: TObjectArkType,
         parentInfo: ParentTypeInfo | null,
     ) {
@@ -79,21 +86,20 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         this.#properties = properties;
     }
 
-    #properties: KnownPropertyModels<TObjectArkType>;
+    #properties: KnownPropertyModels;
 
-    public unknownGetCatchallType(): AnyTypeConstraint {
-        return this.type._def.catchall;
+    public unknownGetCatchallType(): AnyTypeConstraint | undefined {
+        return getObjectTypeInfo(this.type).stringMappingType;
     }
 
     public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectArkType> {
-        return this.type._def.catchall;
+        return getObjectTypeInfo(this.type).stringMappingType as never;
     }
 
     private typeForKey(key: string) {
-        const shapeType: AnyTypeConstraint | undefined = this.type.get(key);
-        const catchall: AnyTypeConstraint | undefined = this.type._def.catchall;
-
-        const type: AnyTypeConstraint | undefined = shapeType ?? catchall;
+        const info = getObjectTypeInfo(this.type);
+    
+        const type: AnyTypeConstraint | undefined = info.fixedProps.get(key) ?? info.stringMappingType;
 
         if (!type) {
             throw new Error(
@@ -122,20 +128,24 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         });
 
         const copy = {
-            ...this.value,
+            ...(this.value as UnknownRecord),
         };
-        (copy as Record<string, unknown>)[key] = adopted.value;
+        (copy as UnknownRecord)[key] = adopted.value;
 
         if (validate) {
             await validateAndThrow(this.type, copy, { deep: true });
         }
 
-        const propertyModels = {
+        const propertyModels: KnownPropertyModels = {
             ...this.#properties,
-            [key]: adopted,
+            [key]: {
+                name: key,
+                isOptional: type.meta.optional ?? false,
+                valueModel: adopted
+            },
         };
         const result = new ObjectImpl<TObjectArkType>(
-            copy,
+            copy as never,
             propertyModels,
             this.type,
             this.parentInfo,
@@ -149,7 +159,8 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         TValue extends type.infer<TObjectArkType>[TKey],
     >(
         key: TKey,
-        value: TValue | Model<TValue>,
+        /* @ts-expect-error */
+        value: TValue | Model<Type<TValue>>,
         validate: boolean = true,
     ): Promise<this> {
         return this.unknownSetProperty(key, value, validate);
@@ -179,16 +190,18 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         to: string,
         validate: boolean = true,
     ): Promise<this> {
-        if (hasOwnProperty(this.type.shape, from)) {
+        const typeInfo = getObjectTypeInfo(this.type);
+
+        if (hasOwnProperty(typeInfo.fixedProps, from)) {
             throw new Error(`Cannot delete a known property '${from}'.`);
         }
-        if (hasOwnProperty(this.type.shape, to)) {
+        if (hasOwnProperty(typeInfo.fixedProps, to)) {
             throw new Error(`Cannot add a known property '${to}'.`);
         }
 
         const copy = {
-            ...this.value,
-            [to]: this.value[from]!,
+            ...(this.value as UnknownRecord),
+            [to]: (this.value as UnknownRecord)[from]!,
         };
         delete copy[from];
 
@@ -203,7 +216,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         delete propertyModels[from];
 
         const result = new ObjectImpl<TObjectArkType>(
-            copy,
+            copy as never,
             propertyModels,
             this.type,
             this.parentInfo,
@@ -216,12 +229,14 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         key: string,
         validate: boolean = true,
     ): Promise<this> {
-        if (hasOwnProperty(this.type.shape, key)) {
+        const typeInfo = getObjectTypeInfo(this.type);
+
+        if (hasOwnProperty(typeInfo.fixedProps, key)) {
             throw new Error(`Cannot delete a known property '${key}'.`);
         }
 
         const copy = {
-            ...this.value,
+            ...(this.value as UnknownRecord),
         };
         delete copy[key];
 
@@ -235,7 +250,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         delete propertyModels[key];
 
         const result = new ObjectImpl<TObjectArkType>(
-            copy,
+            copy as never,
             propertyModels,
             this.type,
             this.parentInfo,

@@ -5,7 +5,11 @@ import { throwError } from "@captainpants/sweeter-utilities";
 
 import { AnyTypeConstraint } from "../AnyTypeConstraint";
 
-export function tryGetArrayInfo(schema: AnyTypeConstraint): { elementType: Type<unknown> } {
+export interface ArrayTypeInfo { 
+    elementType: Type<unknown>;
+}
+
+export function tryGetArrayTypeInfo(schema: AnyTypeConstraint): ArrayTypeInfo {
     throw new Error('Not implemented');
 }
 type.Array
@@ -15,6 +19,6 @@ type.Array
  * @throws if they schema is not an array.
  * @returns 
  */
-export function getArrayInfo(schema: AnyTypeConstraint) {
-    return tryGetArrayInfo(schema) ?? throwError(new TypeError('Schema was not a union'));
+export function getArrayTypeInfo(schema: AnyTypeConstraint) {
+    return tryGetArrayTypeInfo(schema) ?? throwError(new TypeError('Schema was not a union'));
 }

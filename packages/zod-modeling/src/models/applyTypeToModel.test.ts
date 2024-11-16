@@ -25,7 +25,7 @@ test('Something', async () => {
         otherProperty: 'Something',
     };
 
-    const model = await ModelFactory.createModel<typeof unionType>({ arkType: unionType, value });
+    const model = await ModelFactory.createModel<typeof unionType>({ schema: unionType, value });
 
     const retyped = await applyTypeToModel(
         model,

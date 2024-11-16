@@ -1,5 +1,5 @@
 import { descend } from '@captainpants/sweeter-utilities';
-import { type } from 'arktype';
+import { Type, type } from 'arktype';
 
 import {
     type SpreadModel,
@@ -40,7 +40,7 @@ export class UnionModelImpl<
         const resolvedModel = ModelFactory.createUnvalidatedModelPart<
             arkTypeUtilityTypes.UnionOptions<TUnionArkType>
         >({
-            value,
+            value: value as never,
             arkType: match,
             parentInfo,
             depth: descend(depth),
@@ -67,6 +67,9 @@ export class UnionModelImpl<
 
     #resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>>;
 
+    public unknownGetDirectlyResolved(): Model<Type<unknown>> {
+        return this.#resolvedModel as never;
+    }
     public getDirectlyResolved(): SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>> {
         return this.#resolvedModel;
     }

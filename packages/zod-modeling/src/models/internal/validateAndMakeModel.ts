@@ -7,6 +7,7 @@ import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 import { shallowMatchesStructure, validateAndThrow } from '../../utility/validate.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
+import { type } from 'arktype';
 
 /**
  * For a given value (raw or model) validate that the value matches the type (using validateOrThrow). Throw if it does not.
@@ -29,7 +30,7 @@ export async function validateAndMakeModel<TArkType extends AnyTypeConstraint>(
         if (valueOrModel.type === type) {
             return valueOrModel as Model<TArkType>;
         } else {
-            let validated: z.infer<TArkType>;
+            let validated: type.infer<TArkType>;
             if (validate) {
                 validated = await validateAndThrow(type, valueOrModel.value);
             } else {

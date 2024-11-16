@@ -6,11 +6,11 @@ import { ModelFactory } from './ModelFactory.js';
 test('boolean', async () => {
     const example1 = await ModelFactory.createModel({
         value: true,
-        arkType: type.boolean,
+        schema: type.boolean,
     });
     const example2 = await ModelFactory.createModel({
         value: true,
-        arkType: type.unit(true).or(type.unit(false)),
+        schema: type.unit(true).or(type.unit(false)),
     });
 
     expect(asBoolean(example1)).not.toStrictEqual(undefined);

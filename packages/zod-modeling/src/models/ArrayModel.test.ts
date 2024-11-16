@@ -9,7 +9,7 @@ test('array', async () => {
 
     const model = await ModelFactory.createModel({
         value: input,
-        arkType: arkType,
+        schema: arkType,
         parentInfo: null,
     });
 

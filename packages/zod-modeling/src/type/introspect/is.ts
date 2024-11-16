@@ -15,7 +15,7 @@ export function isObjectType(schema: AnyTypeConstraint): schema is Type<{ readon
 }
 export function isArrayType(
     schema: AnyTypeConstraint,
-): schema is Type<unknown[]> & { readonly element: Type<unknown> } {
+): schema is Type<unknown[]> {
     throw new TypeError('TODO: not implemented');
     // Seems to come through as a weird looking intersection (Intersection.Node), 
     // not sure why its not Sequence.Node

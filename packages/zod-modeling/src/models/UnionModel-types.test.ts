@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { z } from 'zod';
+import { Type, type } from 'arktype';
 import { type TypeMatchAssert } from '../testingTypes.js';
 
 import { type NumberConstantModel, type StringModel } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('union', async () => {
-    const nested = z.union([z.literal(1), z.literal(2)]);
+    const nested = type.unit(1).or(type.unit(2));
 
-    const unionType = z.union([nested, z.string()]);
+    const unionType = nested.or(type.string);
 
     const typeTest1: TypeMatchAssert<
         typeof unionType,
-        z.ZodUnion<
-            [z.ZodUnion<[z.ZodLiteral<1>, z.ZodLiteral<2>]>, z.ZodString]
+        Type<
+            1 | 2 | string
         >
     > = true;
 

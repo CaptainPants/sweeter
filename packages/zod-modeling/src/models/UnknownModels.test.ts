@@ -69,8 +69,8 @@ it('All models conform to UnknownModel', () => {
 it('All models conform to reasonable less specific models', () => {
     // == I'd like this to work, but it doesn't
     // const object_less_properties: TypeExtendsAssert<
-    //     ObjectModel<z.ZodObject<{ test: z.ZodString }>>,
-    //     ObjectModel<z.ZodObject<{ }, UnknownKeysParam, z.ZodUnknown>>
+    //     ObjectModel<Type<{ test: string }>>,
+    //     ObjectModel<Type<{ [key: string]: string }>>
     // > = true;
 
     // Literal values should expand to the base type
@@ -82,10 +82,12 @@ it('All models conform to reasonable less specific models', () => {
         Model<Type<'test'>>,
         Model<Type<string>>
     > = true;
+    
     const literal_number: TypeExtendsAssert<
         Model<Type<12>>,
         Model<Type<number>>
     > = true;
+    const XXX: Model<Type<boolean>> = null! as Model<Type<true>>;
     const literal_boolean: TypeExtendsAssert<
         Model<Type<true>>,
         Model<Type<boolean>>

@@ -1,5 +1,5 @@
 
-import { AnyObjectTypeConstraint, AnyTypeConstraint, type ReadonlyRecord } from '../index.js';
+import { AnyTypeConstraint, type ReadonlyRecord } from '../index.js';
 
 import { type ParentTypeInfo } from './parents.js';
 import {
@@ -25,8 +25,8 @@ export interface SimpleModel<T, TArkType extends AnyTypeConstraint>
 }
 
 export interface StringModel extends SimpleModel<string, Type<string>> {}
-export interface NumberModel extends SimpleModel<number, Type<string>> {}
-export interface BooleanModel extends SimpleModel<boolean, Type<string>> {}
+export interface NumberModel extends SimpleModel<number, Type<number>> {}
+export interface BooleanModel extends SimpleModel<boolean, Type<boolean>> {}
 
 // Constants
 
@@ -237,9 +237,7 @@ export type AnyModelConstraint =
     | RealUnknownModel;
 
 export type Model<TArkType extends Type<any>> = type.infer<TArkType> extends infer TUnderlying ? 
-    (IsUnion<TUnderlying> extends true 
-        ? UnionModel<TArkType> 
-    : TArkType extends Type<unknown[]>
+    (TArkType extends Type<unknown[]>
         ? ArrayModel<TArkType>
     : IsStringLiteral<TUnderlying> extends true
         /* @ts-ignore - not narrowing TArkType but we know its a string */
@@ -260,6 +258,10 @@ export type Model<TArkType extends Type<any>> = type.infer<TArkType> extends inf
         ? NullModel
     : TUnderlying extends undefined
         ? UndefinedModel
+    // Its important that this is after boolean, as TypeScript treats boolean
+    // as a union: true|false and therefore IsUnion<boolean> is true.
+    : IsUnion<TUnderlying> extends true 
+        ? UnionModel<TArkType> 
     : ObjectModel<TArkType>)
 : never;
 

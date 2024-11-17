@@ -15,20 +15,18 @@ import { DraftHook, IconButton } from '../index.js';
 import {
     asObject,
     cast,
-    isUnionType,
-    type Model,
+    introspect,
     validate,
     UnknownModel,
-    ObjectModel,
     UnknownObjectModel,
     createDefault,
+    AnyTypeConstraint,
 } from '@captainpants/arktype-modeling';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { Box, Label } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { MapObjectEditorAddModal } from './MapObjectEditorAddModal.js';
 import { MapObjectEditorRenameModal } from './MapObjectEditorRenameModal.js';
-import { z } from 'arktype';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {
@@ -55,8 +53,12 @@ export const MapObjectEditor: Component<EditorProps> = (
     const catchallAllowedTypes = $calc(() => {
         const catchallType = draft.value.unknownGetCatchallType();
 
-        if (isUnionType(catchallType)) {
-            return catchallType.options;
+        if (!catchallType) {
+            return undefined;
+        }
+        const options = introspect.tryGetUnionTypeInfo(catchallType)?.branches;
+        if (options) {
+            return options;
         } else {
             return [catchallType];
         }
@@ -94,7 +96,7 @@ export const MapObjectEditor: Component<EditorProps> = (
         draft.update(newDraft);
     };
 
-    const onAdd = async (name: string, type: z.ZodTypeAny) => {
+    const onAdd = async (name: string, type: AnyTypeConstraint) => {
         const propertyModel = createDefault(type);
 
         const newDraft = await draft
@@ -218,15 +220,20 @@ export const MapObjectEditor: Component<EditorProps> = (
                 <div>
                     <div class={css.editorContainer}>{content}</div>
                     <div>
-                        {$calc(() =>
-                            catchallAllowedTypes.value.map(
+                        {$calc(() => {
+                            const catchallAllowedTypesResolved = catchallAllowedTypes.value;
+                            if (!catchallAllowedTypesResolved) {
+                                return <></>;
+                            }
+                            
+                            return catchallAllowedTypesResolved.map(
                                 (allowedType, index) => {
                                     const title =
-                                        catchallAllowedTypes.value.length === 1
+                                        catchallAllowedTypesResolved.length === 1
                                             ? localize('Add')
                                             : localize('Add {0}', [
                                                   allowedType
-                                                      .meta()
+                                                      .annotations()
                                                       .getBestDisplayName(),
                                               ]);
 
@@ -265,8 +272,8 @@ export const MapObjectEditor: Component<EditorProps> = (
                                         </>
                                     );
                                 },
-                            ),
-                        )}
+                            );
+                        })}
                     </div>
                 </div>
             </div>

@@ -115,15 +115,8 @@ export function asUndefinedConstant(
     return isUndefinedConstant(model.type) ? (model as any) : undefined;
 }
 
-/**
- * Slightly ugly overload to allow for unions of model types, and therefore relatively easy access to casting these to other types.
- * @param model
- */
-
 export function asUnknown(model: AnyModelConstraint): UnspecifiedModel;
-export function asUnknown<TSourceArkType extends AnyTypeConstraint>(
-    model: Model<TSourceArkType>,
-): UnspecifiedModel;
+export function asUnknown(model: unknown): UnspecifiedModel;
 export function asUnknown(model: unknown): UnspecifiedModel {
     if (isModel(model)) {
         return model;

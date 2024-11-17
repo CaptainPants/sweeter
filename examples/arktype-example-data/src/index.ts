@@ -37,7 +37,7 @@ export const complex = type({
             type.string.annotations().displayName('String').end()
                 .array()
                 .default(() => ['item 1', 'item 2'])
-                .meta()
+                .annotations()
                 .displayName('Array of Strings')
                 .end(),
         object: type({
@@ -126,65 +126,58 @@ export const nestedObjects = type({
     .displayName('People')
     .end();
 
-export const constantUnion = type.unit(true).or(type.unit('test'));
+export const constantUnion = type.unit(true).or(type.unit('test')).annotations().end();
 
 
 export const exampleData = {
     Complex: async () => {
-        return asUnknown(
-            await ModelFactory.createModel({
-                value: createDefault(complex),
-                type: complex,
-            }),
-        );
+        const res = await ModelFactory.createModel({
+            value: createDefault(complex),
+            schema: complex,
+        });
+        return asUnknown(res);
     },
     NestedObjects: async () => {
-        return asUnknown(
-            await ModelFactory.createModel({
-                value: createDefault(nestedObjects),
-                type: nestedObjects,
-            }),
-        );
+        const res = await ModelFactory.createModel({
+            value: createDefault(nestedObjects),
+            schema: nestedObjects,
+        });
+        return asUnknown(res);
     },
     ConstantUnion: async () => {
-        return asUnknown(
-            await ModelFactory.createModel({
-                value: 'test',
-                type: constantUnion,
-            }),
-        );
+        const res = await ModelFactory.createModel({
+            value: 'test',
+            schema: constantUnion,
+        });
+        return asUnknown(res);
     },
     StringFieldOnly: async () => {
-        return asUnknown(
-            await ModelFactory.createModel({
-                value: { test: 'Test' },
-                type: stringFieldOnly,
-            }),
-        );
+        const res = await ModelFactory.createModel({
+            value: { test: 'Test' },
+            schema: stringFieldOnly,
+        });
+        return asUnknown(res);
     },
     StringOnly: async () => {
-        return asUnknown(
-            await ModelFactory.createModel({
-                value: 'Test',
-                type: stringOnly,
-            }),
-        );
+        const res = await ModelFactory.createModel({
+            value: 'Test',
+            schema: stringOnly,
+        });
+        return asUnknown(res);
     },
     NumberOnly: async () => {
-        return asUnknown(
-            await ModelFactory.createModel({
-                value: 1,
-                type: numberOnly,
-            }),
-        );
+        const res = await ModelFactory.createModel({
+            value: 1,
+            schema: numberOnly,
+        });
+        return asUnknown(res);
     },
     SimpleHiddenField: async () => {
-        return asUnknown(
-            await ModelFactory.createModel({
-                value: { test: 'Test', hidden: 'Hello' },
-                type: simpleHiddenField,
-            }),
-        );
+        const res = await ModelFactory.createModel({
+            value: { test: 'Test', hidden: 'Hello' },
+            schema: simpleHiddenField,
+        });
+        return asUnknown(res);
     },
 } as const satisfies Record<string, () => Promise<UnknownModel>>;
 

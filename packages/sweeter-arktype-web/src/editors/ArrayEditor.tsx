@@ -26,8 +26,7 @@ import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { IconButton } from '../components/IconButton.js';
-import { z } from 'arktype';
-import { getUnionTypeInfo } from '../../../arktype-modeling/build/type/introspect/getUnionTypeInfo.js';
+import { tryGetUnionTypeInfo } from '../../../arktype-modeling/build/type/introspect/getUnionTypeInfo.js';
 
 export function ArrayEditor(
     {
@@ -109,9 +108,9 @@ export function ArrayEditor(
     const allowedTypes = $calc(() => {
         const elementType = draft.value.unknownGetElementType();
 
-        const unionTypeInfo = getUnionTypeInfo(elementType);
-        if (introspect.isUnionType(elementType)) {
-            return elementType.options;
+        const unionTypeInfo = tryGetUnionTypeInfo(elementType);
+        if (unionTypeInfo) {
+            return unionTypeInfo.branches;
         } else {
             return [elementType];
         }
@@ -173,7 +172,7 @@ export function ArrayEditor(
                             allowedTypes.value.length === 1
                                 ? localize('Add')
                                 : localize('Add {0}', [
-                                      allowedType.meta().getBestDisplayName(),
+                                      allowedType.annotations().getBestDisplayName(),
                                   ]);
                         return (
                             <IconButton

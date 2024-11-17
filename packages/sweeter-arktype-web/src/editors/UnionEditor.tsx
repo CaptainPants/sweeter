@@ -1,14 +1,14 @@
 import { Select } from '@captainpants/sweeter-gummybear';
 import { type EditorProps } from '../types.js';
 import {
-    type Model,
     ModelFactory,
     asUnion,
     cast,
     UnknownModel,
     findUnionOptionIndexForValue,
-    isConstantType,
+    introspect,
     createDefault,
+    AnyTypeConstraint,
 } from '@captainpants/arktype-modeling';
 import {
     $calc,
@@ -19,7 +19,6 @@ import {
     $val,
 } from '@captainpants/sweeter-core';
 import { EditorHost } from '../index.js';
-import { z } from 'arktype';
 import { idPaths } from '@captainpants/sweeter-utilities';
 
 export function UnionEditor(props: Readonly<EditorProps>): JSX.Element;
@@ -33,15 +32,16 @@ export function UnionEditor({
 
     const type = $calc(() => typedModel.value.type);
 
-    const alternatives = $calc(() =>
+    const alternatives = $calc(() => {
+        const options = introspect.getUnionTypeInfo(type.value).branches;
         // Only depends on 'type' signal
-        type.value.options.map((alternative) => {
+        return options.map((alternative) => {
             return {
-                label: alternative.meta().getBestDisplayName(),
+                label: alternative.annotations().getBestDisplayName(),
                 type: alternative,
             };
-        }),
-    );
+        });
+    });
 
     const selectOptions = $calc(() => {
         // Only depends on 'alternatives' signal
@@ -51,16 +51,16 @@ export function UnionEditor({
         }));
     });
 
-    const changeType = async (type: z.ZodTypeAny): Promise<void> => {
+    const changeType = async (type: AnyTypeConstraint): Promise<void> => {
         const defaultValue = createDefault(type);
         const defaultModel = await ModelFactory.createModel({
             value: defaultValue,
-            type: typedModel.peek().type,
+            schema: typedModel.peek().type,
         });
         await $peek(replace)(defaultModel);
     };
 
-    const resolved = $calc(() => typedModel.value.getDirectlyResolved());
+    const resolved = $calc(() => typedModel.value.unknownGetDirectlyResolved());
 
     const replaceResolved = async (
         newResolvedModel: UnknownModel,
@@ -95,7 +95,7 @@ export function UnionEditor({
                 />
             </div>
             {$if(
-                $calc(() => !isConstantType(resolved.value.type)),
+                $calc(() => !introspect.isLiteralType(resolved.value.type)),
                 () => (
                     <EditorHost
                         model={resolved}

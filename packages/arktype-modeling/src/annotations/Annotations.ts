@@ -41,21 +41,9 @@ export interface Annotations<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
     ): this;
     withAmbientValue(name: string, value: unknown): this;
 
-    getLocalValue(
-        name: string,
-        value: type.infer<TArkType>,
-        context: ContextualValueCalculationContext,
-    ): unknown;
-
     getLocalValueForUnknown(
         name: string,
         value: unknown,
-        context: ContextualValueCalculationContext,
-    ): unknown;
-
-    getAmbientValue(
-        name: string,
-        value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
     ): unknown;
 

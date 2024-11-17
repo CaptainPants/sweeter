@@ -2,9 +2,7 @@ import {
     Rules,
     TypeMatcherRule,
     TypeMatcherRulePart,
-    isBooleanType,
-    isConstantType,
-    isUnionType,
+    introspect,
 } from '@captainpants/arktype-modeling';
 import { ModalEditorIfTooSmall } from './editors/index.js';
 import { type EditorComponentType } from './types.js';
@@ -56,20 +54,19 @@ export function createDefaultRulesSet(
         result,
         Rules.callback(
             ({ type }) =>
-                isUnionType(type) &&
-                type.options.every((member) => isConstantType(member)),
+                introspect.tryGetUnionTypeInfo(type)?.branches.every((member) => introspect.isLiteralType(member)) ?? false,
         ),
         options.constantUnion,
     );
     addIfPresent(
         result,
-        Rules.callback(({ type }) => isBooleanType(type)),
+        Rules.callback(({ type }) => introspect.isBooleanType(type)),
         options.boolean,
     );
 
     addIfPresent(
         result,
-        Rules.callback(({ type }) => isConstantType(type)),
+        Rules.callback(({ type }) => introspect.isLiteralType(type)),
         options.constant,
     );
 

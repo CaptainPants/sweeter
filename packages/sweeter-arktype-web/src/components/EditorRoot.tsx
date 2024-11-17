@@ -1,4 +1,4 @@
-import { z } from 'arktype';
+
 
 import {
     type AmbientValueCallback,
@@ -59,7 +59,10 @@ export function EditorRoot<TArkType extends AnyTypeConstraint>({
     getAmbientValue,
     rules: rulesProp,
 }: Readonly<EditorRootProps<TArkType>>): JSX.Element {
-    const typedModel = $calc(() => asUnknown($val(model)));
+    const typedModel = $calc(() => {
+        const val = $val(model);
+        return asUnknown(val);
+    });
 
     const newAmbientValuesCallback = $calc(() => {
         const getAmbientValueResolved = $val(getAmbientValue);

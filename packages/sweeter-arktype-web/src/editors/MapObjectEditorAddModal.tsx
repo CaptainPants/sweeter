@@ -1,3 +1,4 @@
+import { AnyTypeConstraint } from '@captainpants/arktype-modeling';
 import {
     type PropertiesMightBeSignals,
     type Component,
@@ -15,17 +16,16 @@ import {
     Row,
 } from '@captainpants/sweeter-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
-import { z } from 'arktype';
 
 export type MapObjectEditorAddModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;
 
-    type: z.ZodTypeAny;
+    type: AnyTypeConstraint;
 
     validate: (name: string) => Promise<string | null>;
 
     onCancelled: () => void;
-    onFinished: (name: string, type: z.ZodTypeAny) => Promise<void>;
+    onFinished: (name: string, type: AnyTypeConstraint) => Promise<void>;
 }>;
 
 export const MapObjectEditorAddModal: Component<
@@ -33,7 +33,7 @@ export const MapObjectEditorAddModal: Component<
 > = ({ isOpen, type, validate, onCancelled, onFinished }, init) => {
     const title = $calc(() => {
         const typeResolved = $val(type);
-        const title = typeResolved.meta().getBestDisplayName();
+        const title = typeResolved.annotations().getBestDisplayName();
         return title;
     });
 

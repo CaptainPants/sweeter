@@ -161,7 +161,7 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
         return this;
     }
 
-    public getLocalValue(
+    #getLocalValue(
         name: string,
         value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
@@ -191,10 +191,10 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
             throw new Error('Incorrect type value provided.');
         }
 
-        return this.getLocalValue(name, value, context);
+        return this.#getLocalValue(name, value, context);
     }
 
-    public getAmbientValue(
+    #getAmbientValue(
         name: string,
         value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
@@ -224,7 +224,7 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
             throw new Error('Incorrect type value provided.');
         }
         
-        return this.getAmbientValue(name, value, context);
+        return this.#getAmbientValue(name, value, context);
     }
 
     end(): TArkType {

@@ -5,7 +5,7 @@ import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
-import { type UnspecifiedModel, type Model, UnionModel, ElementModelNoConstraint, ModelNoConstraint } from './Model.js';
+import { type UnspecifiedModel, type Model, UnionModel, ElementModelNoConstraint, ModelNoConstraint, AnyModelConstraint } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
 import {
     isArrayType,
@@ -24,6 +24,7 @@ import { validateAndThrow } from '../utility/validate.js';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { Type, type } from 'arktype';
 import { safeParse } from '../utility/parse.js';
+import { ValueTypeFromModel } from '../types.js';
 
 export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
     schema: TArkType; // putting this at the top seems to help with type inference
@@ -33,7 +34,7 @@ export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
 }
 
 export interface CreateUnvalidatedModelPartArgs<TArkType extends AnyTypeConstraint> {
-    arkType: TArkType; // putting this at the top seems to help with type inference
+    schema: TArkType; // putting this at the top seems to help with type inference
     value: type.infer<TArkType>;
     parentInfo: ParentTypeInfo | null | undefined;
     depth?: number;
@@ -146,15 +147,15 @@ function createModel<TArkType extends AnyTypeConstraint>(
 ): Promise<Model<TArkType>>;
 async function createModel<TArkType extends AnyTypeConstraint>({
     value,
-    schema: arkType,
+    schema,
     parentInfo,
     abortSignal,
 }: CreateModelArgs<TArkType>): Promise<Model<TArkType>> {
-    const typed = await validateAndThrow(arkType, value, { abortSignal });
+    const typed = await validateAndThrow(schema, value, { abortSignal });
 
     return createUnvalidatedModelPart<TArkType>({
         value: typed,
-        arkType: arkType,
+        schema: schema,
         depth: descend.defaultDepth,
         parentInfo,
     });
@@ -165,7 +166,7 @@ function createUnvalidatedModelPart<TArkType extends AnyTypeConstraint>(
 ): Model<TArkType> {
     // This indirection is mostly so that we don't have 15 'as any' parts,
     // and just have the one 'any' return type
-    const { value, arkType: type, parentInfo, depth } = args;
+    const { value, schema: type, parentInfo, depth } = args;
     return doCreateModelPart(value, type, parentInfo, depth) as never;
 }
 
@@ -188,10 +189,10 @@ function doCreateModelPart<TArkType extends AnyTypeConstraint>(
     throw new TypeError(`Unrecognised type ${schema.constructor.name}.`);
 }
 
-function createUnvalidatedReplacement<TValue>(
+function createUnvalidatedReplacement<TModel extends AnyModelConstraint, TValue extends ValueTypeFromModel<TModel>>(
     value: TValue,
-    model: ModelNoConstraint<Type<TValue>>,
-): ModelNoConstraint<Type<TValue>> {
+    model: TModel,
+): TModel {
     const res = doCreateModelPart(value, model.type, model.parentInfo);
     return res as never;
 }

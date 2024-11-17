@@ -1,10 +1,10 @@
 
-import { type UnspecifiedModel, type Model, type ModelBase } from '../Model.js';
+import { type UnspecifiedModel, type Model, type BaseModel } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 
 export class ModelImpl<TValue, TArkType extends AnyTypeConstraint>
-    implements ModelBase<TValue, TArkType>
+    implements BaseModel<TValue, TArkType>
 {
     public constructor(
         value: TValue,

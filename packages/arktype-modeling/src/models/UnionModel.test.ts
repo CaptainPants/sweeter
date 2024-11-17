@@ -1,8 +1,5 @@
 import { type } from 'arktype';
 
-import { type ValueTypeFromArkType } from '../types.js';
-
-import { asObject, asUnknown, cast } from './as.js';
 import { ModelFactory } from './ModelFactory.js';
 
 test('union', async () => {

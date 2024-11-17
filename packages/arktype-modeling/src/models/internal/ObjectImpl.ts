@@ -21,6 +21,7 @@ import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 import { Type, type } from 'arktype';
 import { AnyObjectTypeConstraint } from '../../type/AnyObjectTypeConstraint.js';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
+import { introspect } from '../../type/index.js';
 
 type UnknownRecord = Record<string | symbol, unknown>;
 type KnownPropertyModels = {
@@ -40,18 +41,16 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     ): ObjectImpl<TObjectArkType> {
         const propertyModels: KnownPropertyModels = {};
 
+        const typeInfo = introspect.getObjectTypeInfo(schema);
+
         // Object.keys lets us avoid prototype pollution
-        for (const prop of schema.props) {
-            const propertyValue = (value as UnknownRecord)[prop.key];
-
-            const propertyName = prop.key;
-
-            const propertyType = prop.value;
+        for (const [propertyName, propertyType] of typeInfo.fixedProps) {
+            const propertyValue = (value as UnknownRecord)[propertyName];
 
             // TODO: this should potentially unwrap out ZodOptional
             const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
                 value: propertyValue,
-                arkType: propertyType,
+                schema: propertyType,
                 parentInfo: {
                     relationship: { type: 'property', property: propertyName },
                     type: schema,
@@ -119,7 +118,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
 
         const adopted = ModelFactory.createUnvalidatedModelPart({
             value,
-            arkType: type,
+            schema: type,
             parentInfo: {
                 type: this.type,
                 parentInfo: this.parentInfo,

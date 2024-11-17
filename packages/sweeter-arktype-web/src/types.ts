@@ -7,7 +7,6 @@ import {
     type LocalValueCallback,
     type UnknownReplacer,
 } from '@captainpants/arktype-modeling';
-import { z } from 'arktype';
 
 export type EditorLikeProps = PropertiesMightBeSignals<{
     id?: string | undefined;

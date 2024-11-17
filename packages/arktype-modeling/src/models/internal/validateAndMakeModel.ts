@@ -44,7 +44,7 @@ export async function validateAndMakeModel<TArkType extends AnyTypeConstraint>(
 
             return ModelFactory.createUnvalidatedModelPart<TArkType>({
                 parentInfo,
-                arkType: type,
+                schema: type,
                 value: validated,
                 depth,
             });
@@ -54,7 +54,7 @@ export async function validateAndMakeModel<TArkType extends AnyTypeConstraint>(
 
         return ModelFactory.createUnvalidatedModelPart<TArkType>({
             parentInfo,
-            arkType: type,
+            schema: type,
             value: validated,
             depth,
         });

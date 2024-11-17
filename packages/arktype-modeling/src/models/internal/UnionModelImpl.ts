@@ -15,7 +15,7 @@ import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
-import { getUnionTypeInfo } from '../../type/introspect/getUnionTypeInfo.js';
+import { introspect } from '../../type/index.js';
 
 export class UnionModelImpl<
         TUnionArkType extends AnyTypeConstraint,
@@ -41,7 +41,7 @@ export class UnionModelImpl<
             arkTypeUtilityTypes.UnionOptions<TUnionArkType>
         >({
             value: value as never,
-            arkType: match,
+            schema: match,
             parentInfo,
             depth: descend(depth),
         }) as unknown as SpreadModel<
@@ -75,7 +75,7 @@ export class UnionModelImpl<
     }
 
     public getTypes(): ReadonlyArray<AnyTypeConstraint> {
-        return getUnionTypeInfo(this.type).branches;
+        return introspect.getUnionTypeInfo(this.type).branches;
     }
 
     public async replace(

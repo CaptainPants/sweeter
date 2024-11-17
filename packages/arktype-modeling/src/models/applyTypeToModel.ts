@@ -22,7 +22,7 @@ export async function tryApplyTypeToModel<
     if (validationResult.success) {
         return ModelFactory.createUnvalidatedModelPart<TToArkType>({
             value: validationResult.data,
-            arkType: toType,
+            schema: toType,
             parentInfo: model.parentInfo,
         });
     }
@@ -44,7 +44,7 @@ export async function applyTypeToModel<
 
     return ModelFactory.createUnvalidatedModelPart<TToArkType>({
         value: converted,
-        arkType: toType,
+        schema: toType,
         parentInfo: model.parentInfo,
     });
 }

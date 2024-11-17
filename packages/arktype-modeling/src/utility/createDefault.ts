@@ -6,7 +6,7 @@ import { descend } from '@captainpants/sweeter-utilities';
 import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
 import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
 
-import { getUnionTypeInfo, isArrayType, isBooleanType, isNullConstant, isNumberType, isObjectType, isStringType, isUndefinedConstant, isUnionType } from '../type/introspect/barrel.js';
+import { introspect } from '../type/introspect/index.js';
 
 export function createDefault<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
     schema: TArkType,
@@ -22,17 +22,20 @@ function createDefaultImplementation<TArkType extends arkTypeUtilityTypes.AnyTyp
         return schema.meta.default as never;
     }
 
-    if (isObjectType(schema)) {
+    const objectTypeInfo = introspect.tryGetObjectTypeInfo(schema);
+    const unionTypeInfo = introspect.tryGetUnionTypeInfo(schema);
+    
+    if (objectTypeInfo) {
         const instance: Record<string | symbol, unknown> = {};
 
-        for (const { key, value: propType } of schema.props) {
+        for (const [key, propType] of objectTypeInfo.fixedProps) {
             instance[key] = createDefaultImplementation(propType, descend(depth));
         }
 
         return instance as never;
 
-    } else if (isUnionType(schema)) {
-        const { branches } = getUnionTypeInfo(schema);
+    } else if (unionTypeInfo) {
+        const branches = unionTypeInfo.branches;
 
         if (branches.length === 0)
         {
@@ -43,19 +46,19 @@ function createDefaultImplementation<TArkType extends arkTypeUtilityTypes.AnyTyp
             branches[0]!,
             descend(depth),
         ) as never;
-    } else if (isArrayType(schema)) {
+    } else if (introspect.isArrayType(schema)) {
         return [] as type.infer<TArkType>;
-    } else if (isStringType(schema)) {
+    } else if (introspect.isStringType(schema)) {
         return '' as type.infer<TArkType>;
-    } else if (isNumberType(schema)) {
+    } else if (introspect.isNumberType(schema)) {
         return 0 as type.infer<TArkType>;
-    } else if (isBooleanType(schema)) {
+    } else if (introspect.isBooleanType(schema)) {
         return false as type.infer<TArkType>;
     } else if (
-        isUndefinedConstant(schema)
+        introspect.isUndefinedConstant(schema)
     ) {
         return undefined as type.infer<TArkType>;
-    } else if (isNullConstant(schema)) {
+    } else if (introspect.isNullConstant(schema)) {
         return null as type.infer<TArkType>;
     } else {
         throw new TypeError(

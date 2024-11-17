@@ -1,12 +1,11 @@
 import {
     asArray,
     cast,
-    introspect,
     type UnknownArrayModel,
     validate,
     createDefault,
-    Model,
     AnyTypeConstraint,
+    introspect,
 } from '@captainpants/arktype-modeling';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
@@ -108,7 +107,7 @@ export function ArrayEditor(
     const allowedTypes = $calc(() => {
         const elementType = draft.value.unknownGetElementType();
 
-        const unionTypeInfo = tryGetUnionTypeInfo(elementType);
+        const unionTypeInfo = introspect.tryGetUnionTypeInfo(elementType);
         if (unionTypeInfo) {
             return unionTypeInfo.branches;
         } else {

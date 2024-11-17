@@ -2,14 +2,10 @@
 
 import { Type, type } from 'arktype';
 
-import { type TypeMatchAssert } from '../testingTypes.js';
-import { ValueTypeFromModel, type ValueTypeFromArkType } from '../types.js';
-
 import { applyTypeToModel } from './applyTypeToModel.js';
 import { ModelFactory } from './ModelFactory.js';
 import { type PropertyModel } from './PropertyModel.js';
-import { Model, TypedPropertyModelForKey } from './Model.js';
-import { IsUnion, typeAssert } from '@captainpants/sweeter-utilities';
+import { typeAssert } from '@captainpants/sweeter-utilities';
 
 test('Something', async () => {
     const unionType = type({
@@ -20,7 +16,7 @@ test('Something', async () => {
             otherProperty: type.string,
         });
 
-    const value: ValueTypeFromArkType<typeof unionType> = {
+    const value: type.infer<typeof unionType> = {
         type: 'b',
         otherProperty: 'Something',
     };

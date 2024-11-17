@@ -3,7 +3,7 @@ import { descend } from '@captainpants/sweeter-utilities';
 
 import { mapAsync } from '../../internal/mapAsync.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
-import { type UnspecifiedModel, type ArrayModel, type Model, ElementModelNoConstraint } from '../Model.js';
+import { type UnspecifiedModel, type ArrayModel, ElementModelNoConstraint } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
@@ -35,7 +35,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
                 arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>
             >({
                 value: item as never,
-                arkType: elementType as never,
+                schema: elementType as never,
                 parentInfo: {
                     relationship: { type: 'element' },
                     type: schema,

@@ -1,7 +1,7 @@
 
-import { Type } from 'arktype';
 import { AnyObjectTypeConstraint } from '../type/AnyObjectTypeConstraint.js';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { introspect } from '../type/index.js';
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {
@@ -33,9 +33,7 @@ export function categorizeProperties(
 ): Array<{ category: string; properties: unknown[] }> {
     const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();
     
-    for (const property of objectType.props) {
-        const name = property.key;
-        const propertyTyped = property.value as AnyTypeConstraint;
+    for (const [name, propertyTyped] of introspect.getObjectTypeInfo(objectType).fixedProps) {
 
         const category =
             (propertyTyped.hasAnnotations()

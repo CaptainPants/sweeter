@@ -1,7 +1,6 @@
 import {
     type UnknownPropertyModel,
     type ContextualValueCalculationContext,
-    type Model,
     type UnknownModel,
 } from '@captainpants/arktype-modeling';
 import {
@@ -61,7 +60,7 @@ export function PropertyEditorPart(
 
         return (name: string, context: ContextualValueCalculationContext) =>
             propertyModelResolved.valueModel.type
-                .meta()
+                .annotations()
                 .getLocalValueForUnknown(name, $wrap(owner), context);
     });
 
@@ -71,7 +70,7 @@ export function PropertyEditorPart(
 
         return (name: string, context: ContextualValueCalculationContext) =>
             propertyModelResolved.valueModel.type
-                .meta()
+                .annotations()
                 .getAmbientValueForUnknown(name, $wrap(owner), context);
     });
 
@@ -84,7 +83,7 @@ export function PropertyEditorPart(
     const valueModel = $calc(() => $val(propertyModel).valueModel);
     const displayName = $calc(
         () =>
-            $val(propertyModel).valueModel.type.meta().displayName() ??
+            $val(propertyModel).valueModel.type.annotations().displayName() ??
             $val(propertyModel).name,
     );
 

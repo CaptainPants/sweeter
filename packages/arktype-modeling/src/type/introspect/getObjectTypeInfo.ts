@@ -1,6 +1,7 @@
 import { Type } from "arktype";
 import { AnyObjectTypeConstraint } from "../AnyObjectTypeConstraint";
 import { throwError } from "@captainpants/sweeter-utilities";
+import { AnyTypeConstraint } from "../AnyTypeConstraint";
 
 export interface ObjectTypeInfo {
     fixedProps: Map<string, Type<unknown>>;
@@ -9,10 +10,10 @@ export interface ObjectTypeInfo {
     symbolMappingType?: Type<unknown>;
 }
 
-export function tryGetObjectTypeInfo(schema: AnyObjectTypeConstraint): ObjectTypeInfo | undefined {
+export function tryGetObjectTypeInfo(schema: AnyTypeConstraint): ObjectTypeInfo | undefined {
     throw new Error('Not implemented');
 }
 
-export function getObjectTypeInfo(schema: AnyObjectTypeConstraint): ObjectTypeInfo {
+export function getObjectTypeInfo(schema: AnyTypeConstraint): ObjectTypeInfo {
     return tryGetObjectTypeInfo(schema) ?? throwError(new TypeError('Schema was not a union'));
 }

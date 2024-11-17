@@ -1,6 +1,5 @@
 
 import { type } from 'arktype';
-import { type ValueTypeFromArkType } from '../types.js';
 
 import { ModelFactory } from './ModelFactory.js';
 
@@ -26,7 +25,7 @@ test('rigid-object', async () => {
         str: type.string,
     });
 
-    const value: ValueTypeFromArkType<typeof schema> = {
+    const value: type.infer<typeof schema> = {
         num: 1,
         str: 'banana',
     };

@@ -42,15 +42,7 @@ export namespace arkTypeUtilityTypes {
         ),
         ValuesOfObject<TArkTypeObjectType> | ValuesOfObject<TArkTypeObjectType>,
     ];
-
-    // export type IsZodTypeAny<TZodType extends z.ZodTypeAny> =
-    //     TZodType extends z.ZodType<infer Output, infer Def, infer Input>
-    //         ? And<
-    //               IsAny<Output>,
-    //               TypesEqual<TZodType, z.ZodType<Output, Def, Input>>
-    //           >
-    //         : false;
-
+    
     /* @ts-expect-error Type-system doesn't understand that type.infer here is always an array */
     export type ArrayElementType<TArrayArkType extends Type<unknown[]>> = type.infer<TArrayArkType>[number];
     export type ArrayElementArkType<TArrayArkType extends Type<unknown[]>> = Type<ArrayElementType<TArrayArkType>>;

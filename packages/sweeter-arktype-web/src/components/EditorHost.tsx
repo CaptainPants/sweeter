@@ -25,7 +25,6 @@ import {
 } from '../types.js';
 import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
 import { EditorRootContext } from '../context/EditorRootContext.js';
-import { z } from 'vitest/dist/reporters-5f784f42.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const Last = (props: {}, init: ComponentInit): JSX.Element => {

@@ -118,7 +118,7 @@ export function ObjectEditor(
 
                             return (
                                 propertyModel.valueModel.type
-                                    .meta()
+                                    .annotations()
                                     .getLocalValueForUnknown(
                                         StandardLocalValues.Visible,
                                         typedModel.value,
@@ -171,7 +171,7 @@ export function ObjectEditor(
                                         <Column xs={4}>
                                             <Label for={id}>
                                                 {property.propertyType
-                                                    .meta()
+                                                    .annotations()
                                                     .displayName() ??
                                                     property.name}
                                             </Label>

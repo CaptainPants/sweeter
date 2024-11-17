@@ -1,5 +1,7 @@
 
-import { AnyTypeConstraint, type ReadonlyRecord } from '../index.js';
+import { type, Type } from 'arktype';
+
+import { AnyObjectTypeConstraint, AnyTypeConstraint, type ReadonlyRecord } from '../index.js';
 
 import { type ParentTypeInfo } from './parents.js';
 import {
@@ -7,12 +9,9 @@ import {
     type PropertyModel,
 } from './PropertyModel.js';
 import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
-import { type, Type } from 'arktype';
-import { IsAny, IsBooleanLiteral, IsLiteral, IsNever, IsNumberLiteral, IsStringLiteral, IsUnion } from '@captainpants/sweeter-utilities';
-import { ObjectType } from 'arktype/internal/methods/object.ts';
-import { GetNonExpandoKeys } from '../internal/utilityTypes.js';
+import { IsAny, IsBooleanLiteral, IsNumberLiteral, IsStringLiteral, IsUnion } from '@captainpants/sweeter-utilities';
 
-export interface ModelBase<TValue, TArkType extends AnyTypeConstraint> {
+export interface BaseModel<TValue, TArkType extends AnyTypeConstraint> {
     readonly value: TValue;
     readonly type: TArkType;
     readonly parentInfo: ParentTypeInfo | null;
@@ -20,7 +19,7 @@ export interface ModelBase<TValue, TArkType extends AnyTypeConstraint> {
 }
 
 export interface SimpleModel<T, TArkType extends AnyTypeConstraint>
-    extends ModelBase<T, TArkType> {
+    extends BaseModel<T, TArkType> {
     readonly archetype: string;
 }
 
@@ -73,12 +72,12 @@ export interface UnknownArrayModelMethods {
 }
 
 export interface UnknownArrayModel
-    extends ModelBase<readonly unknown[], Type<unknown[]>>,
+    extends BaseModel<readonly unknown[], Type<unknown[]>>,
         UnknownArrayModelMethods {}
 ``
 // eslint-disable-next-line@typescript-eslint/no-explicit-any
 export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
-    extends ModelBase<
+    extends BaseModel<
             type.infer<TArrayArkType>,
             TArrayArkType
         >,
@@ -140,7 +139,7 @@ interface UnknownObjectModelMethods {
 }
 
 export interface UnknownObjectModel
-    extends ModelBase<ReadonlyRecord<string, unknown>, AnyTypeConstraint>,
+    extends BaseModel<ReadonlyRecord<string, unknown>, AnyObjectTypeConstraint>,
         UnknownObjectModelMethods {}
 
 export type UnknownMapObjectEntry = readonly [
@@ -153,8 +152,8 @@ export type MapObjectEntry<TArkType extends AnyTypeConstraint> = readonly [
     model: PropertyModel<TArkType>,
 ];
 
-export interface ObjectModel<TObjectArkType extends AnyTypeConstraint>
-    extends ModelBase<type.infer<TObjectArkType>, TObjectArkType>,
+export interface ObjectModel<TObjectArkType extends AnyObjectTypeConstraint>
+    extends BaseModel<type.infer<TObjectArkType>, TObjectArkType>,
         UnknownObjectModelMethods {
     getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectArkType>;
 
@@ -194,11 +193,11 @@ export interface UnionModelMethods<
 }
 
 export interface UnknownUnionModel
-    extends ModelBase<unknown, Type<unknown>>,
+    extends BaseModel<unknown, Type<unknown>>,
         UnknownUnionModelMethods {}
 
 export interface UnionModel<TUnion extends AnyTypeConstraint>
-    extends ModelBase<type.infer<TUnion>, TUnion>,
+    extends BaseModel<type.infer<TUnion>, TUnion>,
         UnionModelMethods<TUnion> {}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -206,7 +205,7 @@ export type SpreadModel<T extends AnyTypeConstraint> = T extends any
     ? Model<T>
     : never;
 
-export interface UnknownModel extends ModelBase<unknown, Type<unknown>> {}
+export interface UnknownModel extends BaseModel<unknown, Type<unknown>> {}
 
 export type UnspecifiedModel =
     | UnknownArrayModel
@@ -235,7 +234,6 @@ export type Model<TArkType extends Type<any>> = [type.infer<TArkType>] extends [
         : [TArkType] extends [Type<unknown[]>]
             ? ArrayModel<TArkType>
         : [IsBooleanLiteral<TUnderlying>] extends [true]
-            /* @ts-ignore - not narrowing TArkType but we know its a string */
             ? BooleanConstantModel<TArkType>
         : [TUnderlying] extends [boolean]
             ? BooleanModel
@@ -244,12 +242,12 @@ export type Model<TArkType extends Type<any>> = [type.infer<TArkType>] extends [
         : [IsUnion<TUnderlying>] extends [true] 
                 ? UnionModel<TArkType>
         : [IsStringLiteral<TUnderlying>] extends [true]
-            /* @ts-ignore - not narrowing TArkType but we know its a string */
+            /* @ts-expect-error - not narrowing TArkType but we know its a string */
             ? StringConstantModel<TArkType>
         : [TUnderlying] extends [string] // be wary that ('a'|'b') extends string, so this must happen after union
             ? StringModel
         : [IsNumberLiteral<TUnderlying>] extends [true]
-            /* @ts-ignore - not narrowing TArkType but we know its a string */
+            /* @ts-expect-error - not narrowing TArkType but we know its a string */
             ? NumberConstantModel<TArkType>
         : [TUnderlying] extends [number] // be wary that (1|2) extends number, so this must happen after union
             ? NumberModel
@@ -257,10 +255,12 @@ export type Model<TArkType extends Type<any>> = [type.infer<TArkType>] extends [
             ? NullModel
         : [TUnderlying] extends [undefined]
             ? UndefinedModel
-        :
-        [TUnderlying] extends [Function] | [symbol]
-            ? never // NOT SUPPORTED
-        : ObjectModel<TArkType>
+        : [TUnderlying] extends [object]
+        /* @ts-expect-error - not narrowing TArkType but we know its a object */
+            ? ObjectModel<TArkType>
+        : [TUnderlying] extends [Function] | [symbol]
+            ? never
+        : BaseModel<TUnderlying, TArkType>
     )
 : never;
 

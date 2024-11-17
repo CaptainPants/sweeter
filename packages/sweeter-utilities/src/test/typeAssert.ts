@@ -1,4 +1,4 @@
-import { IsSameType } from '../utilityTypes';
+import { type IsSameType } from '../utilityTypes/index.js';
 
 export const typeAssert = {
     equal<TFirst, TSecond>(

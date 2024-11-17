@@ -1,4 +1,4 @@
-import { typeAssert } from './typeAssert';
+import { typeAssert } from './typeAssert.js';
 
 it('Happy', () => {
     typeAssert.equal<1, 1>();

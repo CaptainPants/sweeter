@@ -1,4 +1,4 @@
-import { UnionToIntersection } from '@captainpants/sweeter-utilities';
+import { type UnionToIntersection } from '@captainpants/sweeter-utilities';
 import { type Context, type Runtime } from './index.js';
 import { type Signal, type UnsignalAll } from './signals/types.js';
 

@@ -1,8 +1,7 @@
 import {
-    IsBooleanLiteral,
-    IsNumberLiteral,
-    IsStringLiteral,
-    IsUnion,
+    type IsBooleanLiteral,
+    type IsNumberLiteral,
+    type IsStringLiteral,
     type TypeMatchAssert,
 } from '../index.js';
 

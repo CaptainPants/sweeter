@@ -1,4 +1,4 @@
-import { IsSameType } from './IsSameType';
+import { type IsSameType } from './IsSameType.js';
 
 export type TypeMatchAssert<T, U> = IsSameType<T, U> extends true
     ? true

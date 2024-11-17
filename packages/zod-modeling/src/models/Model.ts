@@ -54,14 +54,14 @@ export interface UndefinedModel
 export interface UnknownArrayModelMethods {
     unknownGetElementType: () => Type<unknown>;
 
-    unknownGetElement: (index: number) => UnknownModel | undefined;
+    unknownGetElement: (index: number) => UnspecifiedModel | undefined;
 
-    unknownGetElements: () => ReadonlyArray<UnknownModel>;
+    unknownGetElements: () => ReadonlyArray<UnspecifiedModel>;
 
     unknownSpliceElements: (
         start: number,
         deleteCount: number,
-        newElements: ReadonlyArray<unknown | UnknownModel>,
+        newElements: ReadonlyArray<unknown | UnspecifiedModel>,
         validate?: boolean,
     ) => Promise<this>;
 
@@ -180,7 +180,7 @@ export interface UnknownUnionModelMethods {
         type: TTargetArkType,
     ) => Model<TTargetArkType> | null;
 
-    unknownGetDirectlyResolved: () => UnknownModel;
+    unknownGetDirectlyResolved: () => UnspecifiedModel;
 
     getTypes: () => ReadonlyArray<AnyTypeConstraint>;
 
@@ -206,9 +206,9 @@ export type SpreadModel<T extends AnyTypeConstraint> = T extends any
     ? Model<T>
     : never;
 
-export interface RealUnknownModel extends ModelBase<unknown, Type<unknown>> {}
+export interface UnknownModel extends ModelBase<unknown, Type<unknown>> {}
 
-export type UnknownModel =
+export type UnspecifiedModel =
     | UnknownArrayModel
     | UnknownObjectModel
     | UnknownUnionModel
@@ -220,51 +220,42 @@ export type UnknownModel =
     | BooleanConstantModel<Type<boolean>>
     | NullModel
     | UndefinedModel
-    | RealUnknownModel;
+    | UnknownModel;
 
-export type AnyModelConstraint =
-    | UnknownArrayModel
-    | UnknownObjectModel
-    | UnknownUnionModel
-    | StringModel
-    | StringConstantModel<Type<string>>
-    | NumberModel
-    | NumberConstantModel<Type<number>>
-    | BooleanModel
-    | BooleanConstantModel<Type<boolean>>
-    | NullModel
-    | UndefinedModel
-    | RealUnknownModel;
+export type AnyModelConstraint = UnspecifiedModel;
 
-export type Model<TArkType extends Type<any>> = type.infer<TArkType> extends infer TUnderlying ? 
-    (TArkType extends Type<unknown[]>
+export type Model<TArkType extends Type<any>> = [type.infer<TArkType>] extends [infer TUnderlying] ? 
+    ([TArkType] extends [Type<unknown[]>]
         ? ArrayModel<TArkType>
-    : IsStringLiteral<TUnderlying> extends true
+    : [IsStringLiteral<TUnderlying>] extends [true]
         /* @ts-ignore - not narrowing TArkType but we know its a string */
         ? StringConstantModel<TArkType>
-    : IsNumberLiteral<TUnderlying> extends true
+    : [IsNumberLiteral<TUnderlying>] extends [true]
         /* @ts-ignore - not narrowing TArkType but we know its a string */
         ? NumberConstantModel<TArkType>
-    : IsBooleanLiteral<TUnderlying> extends true
+    : [IsBooleanLiteral<TUnderlying>] extends [true]
         /* @ts-ignore - not narrowing TArkType but we know its a string */
         ? BooleanConstantModel<TArkType>
-    : TUnderlying extends string
+    : [TUnderlying] extends [string]
         ? StringModel
-    : TUnderlying extends number
+    : [TUnderlying] extends [number]
         ? NumberModel
-    : TUnderlying extends boolean
+    : [TUnderlying] extends [boolean]
         ? BooleanModel
-    : TUnderlying extends null
+    : [TUnderlying] extends [null]
         ? NullModel
-    : TUnderlying extends undefined
+    : [TUnderlying] extends [undefined]
         ? UndefinedModel
     // Its important that this is after boolean, as TypeScript treats boolean
     // as a union: true|false and therefore IsUnion<boolean> is true.
-    : IsUnion<TUnderlying> extends true 
-        ? UnionModel<TArkType> 
+    : [IsUnion<TUnderlying>] extends [true] 
+        ? UnionModel<TArkType>
+    : [TUnderlying] extends [Function] | [symbol]
+        ? never // NOT SUPPORTED
     : ObjectModel<TArkType>)
 : never;
 
+type X = Model<Type<1 | 'test'>>;
 
 export type PropertyModelNoConstraint<TType> = TType extends AnyTypeConstraint ? PropertyModel<TType> : never; 
 export type ElementModelNoConstraint<TType> = TType extends Type<(infer S)[]> ? S extends AnyTypeConstraint ? Model<S> : never : never;

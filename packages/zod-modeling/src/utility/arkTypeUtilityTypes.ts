@@ -5,7 +5,7 @@ import {
 import { Type, type,  } from 'arktype';
 import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { GetExpandoKeys, GetExpandoType, GetNonExpandoKeys } from '../internal/utilityTypes.js';
-import { IsNever, IsUnion } from '@captainpants/sweeter-utilities';
+import { IsUnion } from '@captainpants/sweeter-utilities';
 
 /**
  * Types that operate on Zod type

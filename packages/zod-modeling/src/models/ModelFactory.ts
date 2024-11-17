@@ -5,7 +5,7 @@ import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
-import { type UnknownModel, type Model } from './Model.js';
+import { type UnspecifiedModel, type Model, UnionModel } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
 import {
     isArrayType,
@@ -44,20 +44,20 @@ type ModelFactoryMethod<TArkType extends AnyTypeConstraint> = (
     arkType: TArkType,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-) => Model<TArkType>;
+) => UnspecifiedModel;
 
 type UnknownModelFactoryMethod = (
     value: unknown,
     arkType: AnyTypeConstraint,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-) => UnknownModel | undefined;
+) => UnspecifiedModel | undefined;
 
 function setup(
     is: (schema: AnyTypeConstraint) => boolean,
-    factory: ModelFactoryMethod<Type<unknown>>,
+    factory: UnknownModelFactoryMethod,
 ): UnknownModelFactoryMethod {
-    return (input, arkType, parentInfo, depth): UnknownModel | undefined => {
+    return (input, arkType, parentInfo, depth): UnspecifiedModel | undefined => {
         if (!is(arkType)) {
             return undefined;
         }
@@ -75,7 +75,7 @@ function setupTyped<TArkType extends AnyTypeConstraint>(
     is: (schema: AnyTypeConstraint) => schema is TArkType,
     factory: ModelFactoryMethod<TArkType>,
 ): UnknownModelFactoryMethod {
-    return (input, arkType, parentInfo, depth): UnknownModel | undefined => {
+    return (input, arkType, parentInfo, depth): UnspecifiedModel | undefined => {
         if (!is(arkType)) {
             return undefined;
         }
@@ -83,8 +83,7 @@ function setupTyped<TArkType extends AnyTypeConstraint>(
         const parsed = safeParse(input, arkType);
 
         if (parsed.success) {
-            const res: Model<TArkType> = factory(parsed.data, arkType, parentInfo, depth);
-            return res;
+            return factory(parsed.data, arkType, parentInfo, depth);
         }
 
         return undefined;
@@ -92,12 +91,13 @@ function setupTyped<TArkType extends AnyTypeConstraint>(
 }
 
 const defaults = [
-    setup(isUnionType, (value, type, parentInfo, depth) =>
-        UnionModelImpl.createFromValue(value, type, parentInfo, depth),
+    setup(isUnionType, (value, type, parentInfo, depth) => 
+        UnionModelImpl.createFromValue(value, type, parentInfo, depth)
     ),
-    setupTyped(isArrayType, (value, type, parentInfo, depth) =>
-        ArrayModelImpl.createFromValue(value, type, parentInfo, depth),
-    ),
+    setupTyped(isArrayType, (value, type, parentInfo, depth) => {
+        const res = ArrayModelImpl.createFromValue(value, type, parentInfo, depth);
+        return res;
+    }),
     setupTyped(isObjectType, (value, type, parentInfo, depth) =>
         ObjectImpl.createFromValue(value, type, parentInfo, depth),
     ),
@@ -171,30 +171,29 @@ function createUnvalidatedModelPart<TArkType extends AnyTypeConstraint>(
 
 function doCreateModelPart<TArkType extends AnyTypeConstraint>(
     value: unknown,
-    type: TArkType,
+    schema: TArkType,
     parentInfo: ParentTypeInfo | null = null,
     depth = descend.defaultDepth,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any {
+): UnspecifiedModel {
     parentInfo ??= null;
 
-    let match: UnknownModel | undefined = undefined;
-
     for (const item of defaults) {
-        const currentResult = item(value, type, parentInfo, depth);
+        const currentResult = item(value, schema, parentInfo, depth);
         if (currentResult) {
-            match = currentResult;
+            return currentResult;
         }
     }
 
-    throw new TypeError(`Unrecognised type ${type.constructor.name}.`);
+    throw new TypeError(`Unrecognised type ${schema.constructor.name}.`);
 }
 
-function createUnvalidatedReplacement<TArkType extends AnyTypeConstraint>(
-    value: type.infer<TArkType>,
-    model: Model<TArkType>,
-): Model<TArkType> {
-    return doCreateModelPart(value, model.type, model.parentInfo);
+function createUnvalidatedReplacement<TValue>(
+    value: TValue,
+    model: Model<Type<TValue>>,
+): Model<Type<TValue>> {
+    const res = doCreateModelPart<Type<TValue>>(value, model.type, model.parentInfo);
+    return res;
 }
 
 export const ModelFactory = {

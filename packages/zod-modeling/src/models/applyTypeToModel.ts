@@ -1,5 +1,5 @@
 
-import { type Model } from './Model.js';
+import { AnyModelConstraint, type Model } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { parseAsync, safeParseAsync } from '../utility/parse.js';
@@ -37,9 +37,9 @@ export async function tryApplyTypeToModel<
  * @returns
  */
 export async function applyTypeToModel<
-    TFromArkType extends AnyTypeConstraint,
+    TSourceModel extends AnyModelConstraint,
     TToArkType extends AnyTypeConstraint,
->(model: Model<TFromArkType>, toType: TToArkType): Promise<Model<TToArkType>> {
+>(model: TSourceModel, toType: TToArkType): Promise<Model<TToArkType>> {
     const converted = await parseAsync(model.value, toType);
 
     return ModelFactory.createUnvalidatedModelPart<TToArkType>({

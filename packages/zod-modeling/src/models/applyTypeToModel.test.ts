@@ -9,7 +9,7 @@ import { applyTypeToModel } from './applyTypeToModel.js';
 import { ModelFactory } from './ModelFactory.js';
 import { type PropertyModel } from './PropertyModel.js';
 import { Model, TypedPropertyModelForKey } from './Model.js';
-import { typeAssert } from '@captainpants/sweeter-utilities';
+import { IsUnion, typeAssert } from '@captainpants/sweeter-utilities';
 
 test('Something', async () => {
     const unionType = type({
@@ -38,5 +38,3 @@ test('Something', async () => {
 
     expect(typeProperty.valueModel.value).toStrictEqual('b');
 });
-
-type XXXX = TypedPropertyModelForKey<Type<{ banana: 1 }>, 'banana'>;

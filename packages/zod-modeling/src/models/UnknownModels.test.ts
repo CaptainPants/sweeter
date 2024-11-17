@@ -6,10 +6,10 @@ import {
     type UnknownPropertyModel,
     type UnionModel,
     type UnknownUnionModel,
-    type UnknownModel,
+    type UnspecifiedModel,
     type NullModel,
     type UndefinedModel,
-    type RealUnknownModel,
+    type UnknownModel,
     type ReadonlyRecord,
     type ObjectModel,
     type UnknownObjectModel,
@@ -43,26 +43,26 @@ it('Specific models conform to', () => {
 it('All models conform to UnknownModel', () => {
     const a1: TypeExtendsAssert<
         Model<Type<{ test: string }>>,
-        UnknownModel
+        UnspecifiedModel
     > = true;
     const a2: TypeExtendsAssert<
         Model<Type<1 | 2>>,
-        UnknownModel
+        UnspecifiedModel
     > = true;
 
-    const a3: TypeExtendsAssert<Model<Type<string>>, UnknownModel> = true;
-    const a4: TypeExtendsAssert<Model<Type<number>>, UnknownModel> = true;
-    const a5: TypeExtendsAssert<Model<Type<boolean>>, UnknownModel> = true;
-    const a6: TypeExtendsAssert<Model<Type<undefined>>, UnknownModel> = true;
-    const a7: TypeExtendsAssert<Model<Type<null>>, UnknownModel> = true;
+    const a3: TypeExtendsAssert<Model<Type<string>>, UnspecifiedModel> = true;
+    const a4: TypeExtendsAssert<Model<Type<number>>, UnspecifiedModel> = true;
+    const a5: TypeExtendsAssert<Model<Type<boolean>>, UnspecifiedModel> = true;
+    const a6: TypeExtendsAssert<Model<Type<undefined>>, UnspecifiedModel> = true;
+    const a7: TypeExtendsAssert<Model<Type<null>>, UnspecifiedModel> = true;
     const a8: TypeExtendsAssert<
         Model<Type<'test'>>,
-        UnknownModel
+        UnspecifiedModel
     > = true;
-    const a9: TypeExtendsAssert<Model<Type<12>>, UnknownModel> = true;
+    const a9: TypeExtendsAssert<Model<Type<12>>, UnspecifiedModel> = true;
     const a10: TypeExtendsAssert<
         Model<Type<true>>,
-        UnknownModel
+        UnspecifiedModel
     > = true;
 });
 

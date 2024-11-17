@@ -24,10 +24,10 @@ import {
     type StringConstantModel,
     type StringModel,
     type UndefinedModel,
-    type AnyModelConstraint,
+    type UnspecifiedModel,
     type UnknownUnionModel,
     type UnknownArrayModel,
-    type UnknownModel,
+    type AnyModelConstraint,
     type BooleanModel,
     type UnknownObjectModel,
 } from './Model.js';
@@ -120,11 +120,11 @@ export function asUndefinedConstant(
  * @param model
  */
 
-export function asUnknown(model: AnyModelConstraint): UnknownModel;
-export function asUnknown<TZodType extends AnyTypeConstraint>(
-    model: Model<TZodType>,
-): UnknownModel;
-export function asUnknown(model: unknown): UnknownModel {
+export function asUnknown(model: AnyModelConstraint): UnspecifiedModel;
+export function asUnknown<TSourceArkType extends AnyTypeConstraint>(
+    model: Model<TSourceArkType>,
+): UnspecifiedModel;
+export function asUnknown(model: unknown): UnspecifiedModel {
     if (isModel(model)) {
         return model;
     } else {
@@ -133,8 +133,8 @@ export function asUnknown(model: unknown): UnknownModel {
 }
 
 export function asConstant(
-    model: AnyModelConstraint,
-): UnknownModel | undefined {
+    model: UnspecifiedModel,
+): UnspecifiedModel | undefined {
     if (
         isStringLiteralType(model.type) ||
         isNumberLiteralType(model.type) ||

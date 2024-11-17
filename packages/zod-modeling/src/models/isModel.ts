@@ -1,17 +1,19 @@
-import { type UnknownModel, type Model } from './Model.js';
-import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
-import { type } from 'arktype';
+import { type UnspecifiedModel, type Model, AnyModelConstraint } from './Model.js';
 
-export function isModel<TArkType extends AnyTypeConstraint>(
-    value: type.infer<TArkType> | Model<TArkType>,
-): value is Model<TArkType>;
-export function isModel(value: unknown): value is UnknownModel;
-export function isModel(value: unknown): value is UnknownModel {
+type OnlyModels<T> = T extends UnspecifiedModel ? T : never;
+
+export function isModel(
+    value: unknown,
+): value is UnspecifiedModel;
+export function isModel<TModel>(
+    value: TModel,
+): value is OnlyModels<TModel>;
+export function isModel(value: unknown): value is UnspecifiedModel {
     return (
-        typeof (value as UnknownModel).type === 'object' &&
-        typeof (value as UnknownModel).archetype === 'string' &&
+        typeof (value as UnspecifiedModel).type === 'object' &&
+        typeof (value as UnspecifiedModel).archetype === 'string' &&
         // unknown value may be undefined, but should be present
-        'value' in (value as UnknownModel) /* including prototype chain */ &&
-        'parentInfo' in (value as UnknownModel) /* including prototype chain */
+        'value' in (value as UnspecifiedModel) /* including prototype chain */ &&
+        'parentInfo' in (value as UnspecifiedModel) /* including prototype chain */
     );
 }

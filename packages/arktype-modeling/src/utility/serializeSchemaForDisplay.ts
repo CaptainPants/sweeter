@@ -39,7 +39,10 @@ function create(
     };
 }
 
-function objectForDisplay(obj: Type<{ readonly [key: string]: unknown }>, depth: number): string {
+function objectForDisplay(
+    obj: Type<{ readonly [key: string]: unknown }>,
+    depth: number,
+): string {
     const res: string[] = [];
 
     for (const { key, value: propType } of obj.props) {
@@ -53,10 +56,7 @@ function objectForDisplay(obj: Type<{ readonly [key: string]: unknown }>, depth:
     return '{' + res.join(',') + '}';
 }
 
-function unionForDisplay(
-    union: AnyTypeConstraint,
-    depth: number,
-): string {
+function unionForDisplay(union: AnyTypeConstraint, depth: number): string {
     const res: string[] = [];
 
     const { branches } = getUnionTypeInfo(union);
@@ -81,11 +81,16 @@ const convertors = [
     create(isBooleanLiteralType, (val) => JSON.stringify(val)),
     create(isNullConstant, (val) => JSON.stringify(val)),
     create(isUndefinedConstant, (val) => 'undefined'),
-    createTyped(isObjectType, (val, depth) => objectForDisplay(val, deeper(depth))),
+    createTyped(isObjectType, (val, depth) =>
+        objectForDisplay(val, deeper(depth)),
+    ),
     createTyped(
         isArrayType,
         (val, depth) =>
-            serializeSchemaForDisplay(getArrayTypeInfo(val).elementType, deeper(depth)) + '[]',
+            serializeSchemaForDisplay(
+                getArrayTypeInfo(val).elementType,
+                deeper(depth),
+            ) + '[]',
     ),
     create(isUnionType, (val, depth) => unionForDisplay(val, deeper(depth))),
 ];

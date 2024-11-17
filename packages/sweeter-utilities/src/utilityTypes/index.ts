@@ -1,4 +1,3 @@
-
 export * from './And.js';
 export * from './CheckConstraint.js';
 export * from './Or.js';

@@ -1,5 +1,8 @@
-
-import { AnyTypeConstraint, arkTypeUtilityTypes, type ValidationResult } from '../index.js';
+import {
+    AnyTypeConstraint,
+    arkTypeUtilityTypes,
+    type ValidationResult,
+} from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
 import { safeParse, safeParseAsync } from './parse.js';
 import { type } from 'arktype';
@@ -12,7 +15,9 @@ export interface ValidateAndThrowArgs {
     abortSignal?: AbortSignal | undefined;
 }
 
-export async function validate<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+export async function validate<
+    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+>(
     schema: TArkType,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },

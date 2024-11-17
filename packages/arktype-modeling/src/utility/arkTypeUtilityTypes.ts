@@ -1,10 +1,11 @@
-
-import {
-    type ReadonlyRecord,
-} from '../types.js';
-import { Type, type,  } from 'arktype';
+import { type ReadonlyRecord } from '../types.js';
+import { Type, type } from 'arktype';
 import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/AnyTypeConstraint.js';
-import { GetExpandoKeys, GetExpandoType, GetNonExpandoKeys } from '../internal/utilityTypes.js';
+import {
+    GetExpandoKeys,
+    GetExpandoType,
+    GetNonExpandoKeys,
+} from '../internal/utilityTypes.js';
 import { IsUnion } from '@captainpants/sweeter-utilities';
 
 /**
@@ -19,17 +20,29 @@ export namespace arkTypeUtilityTypes {
      */
     export type AnyTypeConstraint = BaseAnyTypeConstraint;
 
-    export type AllPropertyKeys<TArkTypeObjectType> = keyof type.infer<TArkTypeObjectType>;
-    export type AllPropertyArkTypes<TArkTypeObjectType> = _SpreadWrapType<_PropertyType<type.infer<TArkTypeObjectType>>>;
+    export type AllPropertyKeys<TArkTypeObjectType> =
+        keyof type.infer<TArkTypeObjectType>;
+    export type AllPropertyArkTypes<TArkTypeObjectType> = _SpreadWrapType<
+        _PropertyType<type.infer<TArkTypeObjectType>>
+    >;
 
-    export type NonCatchallPropertyKeys<TArkTypeObjectType> = GetNonExpandoKeys<type.infer<TArkTypeObjectType>>;
-    export type CatchallPropertyKeyRawType<TArkTypeObjectType> = GetExpandoKeys<type.infer<TArkTypeObjectType>>;
-    export type CatchallPropertyValueArkType<TArkTypeObjectType> = Type<GetExpandoType<type.infer<TArkTypeObjectType>>>;
+    export type NonCatchallPropertyKeys<TArkTypeObjectType> = GetNonExpandoKeys<
+        type.infer<TArkTypeObjectType>
+    >;
+    export type CatchallPropertyKeyRawType<TArkTypeObjectType> = GetExpandoKeys<
+        type.infer<TArkTypeObjectType>
+    >;
+    export type CatchallPropertyValueArkType<TArkTypeObjectType> = Type<
+        GetExpandoType<type.infer<TArkTypeObjectType>>
+    >;
 
     export type PropertyType<
         TArkTypeObjectType,
         Property extends string,
-    > = AllPropertyArkTypes<TArkTypeObjectType> extends ReadonlyRecord<Property, infer S>
+    > = AllPropertyArkTypes<TArkTypeObjectType> extends ReadonlyRecord<
+        Property,
+        infer S
+    >
         ? S
         : never;
 
@@ -42,12 +55,16 @@ export namespace arkTypeUtilityTypes {
         ),
         ValuesOfObject<TArkTypeObjectType> | ValuesOfObject<TArkTypeObjectType>,
     ];
-    
-    /* @ts-expect-error Type-system doesn't understand that type.infer here is always an array */
-    export type ArrayElementType<TArrayArkType extends Type<unknown[]>> = type.infer<TArrayArkType>[number];
-    export type ArrayElementArkType<TArrayArkType extends Type<unknown[]>> = Type<ArrayElementType<TArrayArkType>>;
 
-    export type UnionOptions<TUnionArkType> = IsUnion<type.infer<TUnionArkType>> extends true ? 
-            type.infer<TUnionArkType> 
+    /* @ts-expect-error Type-system doesn't understand that type.infer here is always an array */
+    export type ArrayElementType<TArrayArkType extends Type<unknown[]>> =
+        type.infer<TArrayArkType>[number];
+    export type ArrayElementArkType<TArrayArkType extends Type<unknown[]>> =
+        Type<ArrayElementType<TArrayArkType>>;
+
+    export type UnionOptions<TUnionArkType> = IsUnion<
+        type.infer<TUnionArkType>
+    > extends true
+        ? type.infer<TUnionArkType>
         : never;
 }

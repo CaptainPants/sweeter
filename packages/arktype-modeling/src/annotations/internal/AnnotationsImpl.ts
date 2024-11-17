@@ -11,7 +11,10 @@ import { shallowMatchesStructure } from '../../utility/validate.js';
 import { safeParse } from '../../utility/parse.js';
 import { type } from 'arktype';
 
-const weakMap = new WeakMap<arkTypeUtilityTypes.AnyTypeConstraint, AnnotationsImpl<any>>();
+const weakMap = new WeakMap<
+    arkTypeUtilityTypes.AnyTypeConstraint,
+    AnnotationsImpl<any>
+>();
 
 const schemas = {
     displayName: type.string,
@@ -19,8 +22,9 @@ const schemas = {
     propertyVisible: type.boolean,
 };
 
-export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>
-    implements Annotations<TArkType>
+export class AnnotationsImpl<
+    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+> implements Annotations<TArkType>
 {
     constructor(schema: TArkType) {
         this.#schema = schema;
@@ -46,7 +50,9 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
         return this.#attributes.get(name);
     }
 
-    public getAttrValidated<TValueArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    public getAttrValidated<
+        TValueArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    >(
         name: string,
         valueSchema: TValueArkType,
         fallback: TValueArkType['infer'],
@@ -223,7 +229,7 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
         ) {
             throw new Error('Incorrect type value provided.');
         }
-        
+
         return this.#getAmbientValue(name, value, context);
     }
 
@@ -231,9 +237,9 @@ export class AnnotationsImpl<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
         return this.#schema;
     }
 
-    public static tryGet<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
-        schema: TArkType,
-    ): AnnotationsImpl<TArkType> | undefined {
+    public static tryGet<
+        TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    >(schema: TArkType): AnnotationsImpl<TArkType> | undefined {
         return weakMap.get(schema);
     }
 

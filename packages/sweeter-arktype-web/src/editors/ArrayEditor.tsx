@@ -171,7 +171,9 @@ export function ArrayEditor(
                             allowedTypes.value.length === 1
                                 ? localize('Add')
                                 : localize('Add {0}', [
-                                      allowedType.annotations().getBestDisplayName(),
+                                      allowedType
+                                          .annotations()
+                                          .getBestDisplayName(),
                                   ]);
                         return (
                             <IconButton

@@ -1,4 +1,3 @@
-
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 
 import {
@@ -13,10 +12,7 @@ import { type ParentTypeInfo } from '../parents.js';
 import { ModelImpl } from './ModelImpl.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { validateAndThrow } from '../../utility/validate.js';
-import {
-    PropertyModel,
-    type UnknownPropertyModel,
-} from '../PropertyModel.js';
+import { PropertyModel, type UnknownPropertyModel } from '../PropertyModel.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 import { Type, type } from 'arktype';
 import { AnyObjectTypeConstraint } from '../../type/AnyObjectTypeConstraint.js';
@@ -26,14 +22,15 @@ import { introspect } from '../../type/index.js';
 type UnknownRecord = Record<string | symbol, unknown>;
 type KnownPropertyModels = {
     [key: string]: UnknownPropertyModel;
-}
-
+};
 
 export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     extends ModelImpl<type.infer<TObjectArkType>, TObjectArkType>
     implements ObjectModel<TObjectArkType>
 {
-    public static createFromValue<TObjectArkType extends AnyObjectTypeConstraint>(
+    public static createFromValue<
+        TObjectArkType extends AnyObjectTypeConstraint,
+    >(
         value: type.infer<TObjectArkType>,
         schema: TObjectArkType,
         parentInfo: ParentTypeInfo | null,
@@ -97,8 +94,9 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
 
     private typeForKey(key: string) {
         const info = getObjectTypeInfo(this.type);
-    
-        const type: AnyTypeConstraint | undefined = info.fixedProps.get(key) ?? info.stringMappingType;
+
+        const type: AnyTypeConstraint | undefined =
+            info.fixedProps.get(key) ?? info.stringMappingType;
 
         if (!type) {
             throw new Error(
@@ -140,7 +138,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
             [key]: {
                 name: key,
                 isOptional: type.meta.optional ?? false,
-                valueModel: adopted
+                valueModel: adopted,
             },
         };
         const result = new ObjectImpl<TObjectArkType>(
@@ -176,7 +174,8 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public getProperty<
-        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectArkType> & string,
+        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectArkType> &
+            string,
     >(key: TKey): TypedPropertyModelForKey<TObjectArkType, TKey> {
         return this.unknownGetProperty(key) as TypedPropertyModelForKey<
             TObjectArkType,

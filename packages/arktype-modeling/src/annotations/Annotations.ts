@@ -1,4 +1,3 @@
-
 import { type, Type } from 'arktype';
 import {
     arkTypeUtilityTypes,
@@ -6,7 +5,9 @@ import {
     type ContextualValueCalculationContext,
 } from '../index.js';
 
-export interface Annotations<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> {
+export interface Annotations<
+    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+> {
     attr(name: string, value: unknown): this;
 
     getAttr(name: string, fallback: unknown): unknown;
@@ -56,4 +57,6 @@ export interface Annotations<TArkType extends arkTypeUtilityTypes.AnyTypeConstra
     end(): TArkType;
 }
 
-export type AnnotationSetter<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> = (annotations: Annotations<TArkType>) => void;
+export type AnnotationSetter<
+    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+> = (annotations: Annotations<TArkType>) => void;

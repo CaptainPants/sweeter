@@ -1,12 +1,14 @@
-
 import { type, Type } from 'arktype';
 
 import { AnyModelConstraint, type Model } from './models/Model.js';
 import { AnyTypeConstraint } from './type/AnyTypeConstraint.js';
 
-export type ValueTypeFromModel<TModel extends AnyModelConstraint> = TModel['value'];
+export type ValueTypeFromModel<TModel extends AnyModelConstraint> =
+    TModel['value'];
 
-export type UnknownReplacer = (value: Model<AnyTypeConstraint>) => Promise<void>;
+export type UnknownReplacer = (
+    value: Model<AnyTypeConstraint>,
+) => Promise<void>;
 export type Replacer<T extends AnyTypeConstraint> = (
     value: Model<T>,
 ) => Promise<void>;

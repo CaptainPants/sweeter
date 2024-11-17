@@ -1,4 +1,3 @@
-
 export * from './getLiteralTypeInfo.js';
 export * from './getUnionTypeInfo.js';
 export * from './getObjectTypeInfo.js';

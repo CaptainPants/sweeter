@@ -1,7 +1,13 @@
-
 import { type TypeInfo } from '../models/parents.js';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
-import { isArrayType, isBooleanType, isNumberType, isObjectType, isStringType, isUnionType } from '../type/introspect/is.js';
+import {
+    isArrayType,
+    isBooleanType,
+    isNumberType,
+    isObjectType,
+    isStringType,
+    isUnionType,
+} from '../type/introspect/is.js';
 
 import {
     type MatcherContext,

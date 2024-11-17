@@ -1,4 +1,3 @@
-
 import { type UnspecifiedModel, type Model } from './Model.js';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 

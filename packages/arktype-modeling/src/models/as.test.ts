@@ -1,4 +1,3 @@
-
 import { type } from 'arktype';
 import { asBoolean, asNumber } from './as.js';
 import { ModelFactory } from './ModelFactory.js';

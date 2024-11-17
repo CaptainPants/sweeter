@@ -1,5 +1,5 @@
-import { UnionToIntersection } from "@captainpants/sweeter-utilities";
-import { type } from "arktype";
+import { UnionToIntersection } from '@captainpants/sweeter-utilities';
+import { type } from 'arktype';
 
 /**
  * This is not in use but is cool so keeping it around.
@@ -18,12 +18,13 @@ export type TupleToIntersection<TArgs extends readonly unknown[]> =
 type PropertyKeys = string | symbol | number;
 
 type _GetExpandoTypeHelper<TObject, TPropertyKeys = PropertyKeys> = {
-    [TKey in keyof TObject as TPropertyKeys extends TKey
-        ? TKey
-        : never]: TKey;
+    [TKey in keyof TObject as TPropertyKeys extends TKey ? TKey : never]: TKey;
 };
 
-export type GetExpandoKeys<TObject> = _GetExpandoTypeHelper<TObject>[keyof _GetExpandoTypeHelper<TObject>];
-export type GetNonExpandoKeys<TObject> = Exclude<keyof TObject, GetExpandoKeys<TObject>>;
+export type GetExpandoKeys<TObject> =
+    _GetExpandoTypeHelper<TObject>[keyof _GetExpandoTypeHelper<TObject>];
+export type GetNonExpandoKeys<TObject> = Exclude<
+    keyof TObject,
+    GetExpandoKeys<TObject>
+>;
 export type GetExpandoType<TObject> = TObject[GetExpandoKeys<TObject>];
-

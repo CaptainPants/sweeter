@@ -1,4 +1,3 @@
-
 import { AnyObjectTypeConstraint } from '../type/AnyObjectTypeConstraint.js';
 import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { introspect } from '../type/index.js';
@@ -32,9 +31,9 @@ export function categorizeProperties(
     transform?: (property: CategorizedPropertyDefinition) => unknown,
 ): Array<{ category: string; properties: unknown[] }> {
     const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();
-    
-    for (const [name, propertyTyped] of introspect.getObjectTypeInfo(objectType).fixedProps) {
 
+    for (const [name, propertyTyped] of introspect.getObjectTypeInfo(objectType)
+        .fixedProps) {
         const category =
             (propertyTyped.hasAnnotations()
                 ? propertyTyped.annotations().category()

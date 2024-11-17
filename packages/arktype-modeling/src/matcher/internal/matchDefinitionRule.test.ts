@@ -1,4 +1,3 @@
-
 import { type } from 'arktype';
 import { Rules } from '../Rules.js';
 
@@ -50,7 +49,10 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type.number.annotations().attr('type', 'ham-sandwich').end(),
+                type: type.number
+                    .annotations()
+                    .attr('type', 'ham-sandwich')
+                    .end(),
                 parentInfo: null,
             },
             Rules.attr('type', 'ham-sandwich'),
@@ -67,8 +69,7 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type
-                    .number
+                type: type.number
                     .annotations()
                     .attr('type', 'ham-sandwich')
                     .attr('other', 'thing')

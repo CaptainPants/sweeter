@@ -17,15 +17,11 @@ import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 import { introspect } from '../../type/index.js';
 
-export class UnionModelImpl<
-        TUnionArkType extends AnyTypeConstraint,
-    >
+export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>
     extends ModelImpl<type.infer<TUnionArkType>, TUnionArkType>
     implements UnionModel<TUnionArkType>
 {
-    public static createFromValue<
-        TUnionArkType extends AnyTypeConstraint,
-    >(
+    public static createFromValue<TUnionArkType extends AnyTypeConstraint>(
         value: type.infer<TUnionArkType>,
         type: TUnionArkType,
         parentInfo: ParentTypeInfo | null,
@@ -56,7 +52,9 @@ export class UnionModelImpl<
     }
 
     public constructor(
-        resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>>,
+        resolvedModel: SpreadModel<
+            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
+        >,
         type: TUnionArkType,
         parentInfo: ParentTypeInfo | null,
     ) {
@@ -65,12 +63,16 @@ export class UnionModelImpl<
         this.#resolvedModel = resolvedModel;
     }
 
-    #resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>>;
+    #resolvedModel: SpreadModel<
+        arkTypeUtilityTypes.UnionOptions<TUnionArkType>
+    >;
 
     public unknownGetDirectlyResolved(): Model<Type<unknown>> {
         return this.#resolvedModel as never;
     }
-    public getDirectlyResolved(): SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>> {
+    public getDirectlyResolved(): SpreadModel<
+        arkTypeUtilityTypes.UnionOptions<TUnionArkType>
+    > {
         return this.#resolvedModel;
     }
 

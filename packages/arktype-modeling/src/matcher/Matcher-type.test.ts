@@ -1,4 +1,3 @@
-
 import { type } from 'arktype';
 import { type TypeInfo } from '../models/parents.js';
 

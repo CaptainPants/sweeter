@@ -1,7 +1,6 @@
+import { type UnionToIntersection } from './UnionToIntersection.js';
 
-import { type UnionToIntersection } from "./UnionToIntersection.js";
-
-export type IsUnion<T> = [T] extends [UnionToIntersection<T>] ? false : true
+export type IsUnion<T> = [T] extends [UnionToIntersection<T>] ? false : true;
 
 // https://ghaiklor.github.io/type-challenges-solutions/en/medium-isunion.html
 

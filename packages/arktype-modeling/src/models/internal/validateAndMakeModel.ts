@@ -1,11 +1,13 @@
-
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
-import { shallowMatchesStructure, validateAndThrow } from '../../utility/validate.js';
+import {
+    shallowMatchesStructure,
+    validateAndThrow,
+} from '../../utility/validate.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
 import { type } from 'arktype';
 

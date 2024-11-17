@@ -5,7 +5,14 @@ import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
-import { type UnspecifiedModel, type Model, UnionModel, ElementModelNoConstraint, ModelNoConstraint, AnyModelConstraint } from './Model.js';
+import {
+    type UnspecifiedModel,
+    type Model,
+    UnionModel,
+    ElementModelNoConstraint,
+    ModelNoConstraint,
+    AnyModelConstraint,
+} from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
 import {
     isArrayType,
@@ -33,7 +40,9 @@ export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
     abortSignal?: AbortSignal | undefined;
 }
 
-export interface CreateUnvalidatedModelPartArgs<TArkType extends AnyTypeConstraint> {
+export interface CreateUnvalidatedModelPartArgs<
+    TArkType extends AnyTypeConstraint,
+> {
     schema: TArkType; // putting this at the top seems to help with type inference
     value: type.infer<TArkType>;
     parentInfo: ParentTypeInfo | null | undefined;
@@ -58,7 +67,12 @@ function setup(
     is: (schema: AnyTypeConstraint) => boolean,
     factory: UnknownModelFactoryMethod,
 ): UnknownModelFactoryMethod {
-    return (input, arkType, parentInfo, depth): UnspecifiedModel | undefined => {
+    return (
+        input,
+        arkType,
+        parentInfo,
+        depth,
+    ): UnspecifiedModel | undefined => {
         if (!is(arkType)) {
             return undefined;
         }
@@ -76,7 +90,12 @@ function setupTyped<TArkType extends AnyTypeConstraint>(
     is: (schema: AnyTypeConstraint) => schema is TArkType,
     factory: ModelFactoryMethod<TArkType>,
 ): UnknownModelFactoryMethod {
-    return (input, arkType, parentInfo, depth): UnspecifiedModel | undefined => {
+    return (
+        input,
+        arkType,
+        parentInfo,
+        depth,
+    ): UnspecifiedModel | undefined => {
         if (!is(arkType)) {
             return undefined;
         }
@@ -92,11 +111,16 @@ function setupTyped<TArkType extends AnyTypeConstraint>(
 }
 
 const defaults = [
-    setup(isUnionType, (value, type, parentInfo, depth) => 
-        UnionModelImpl.createFromValue(value, type, parentInfo, depth)
+    setup(isUnionType, (value, type, parentInfo, depth) =>
+        UnionModelImpl.createFromValue(value, type, parentInfo, depth),
     ),
     setupTyped(isArrayType, (value, type, parentInfo, depth) => {
-        const res = ArrayModelImpl.createFromValue(value, type, parentInfo, depth);
+        const res = ArrayModelImpl.createFromValue(
+            value,
+            type,
+            parentInfo,
+            depth,
+        );
         return res;
     }),
     setupTyped(isObjectType, (value, type, parentInfo, depth) =>
@@ -189,10 +213,10 @@ function doCreateModelPart<TArkType extends AnyTypeConstraint>(
     throw new TypeError(`Unrecognised type ${schema.constructor.name}.`);
 }
 
-function createUnvalidatedReplacement<TModel extends AnyModelConstraint, TValue extends ValueTypeFromModel<TModel>>(
-    value: TValue,
-    model: TModel,
-): TModel {
+function createUnvalidatedReplacement<
+    TModel extends AnyModelConstraint,
+    TValue extends ValueTypeFromModel<TModel>,
+>(value: TValue, model: TModel): TModel {
     const res = doCreateModelPart(value, model.type, model.parentInfo);
     return res as never;
 }

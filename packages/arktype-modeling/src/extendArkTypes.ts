@@ -1,15 +1,14 @@
-
 import { BaseNode } from '@ark/schema';
 
 import { type Annotations } from './annotations/Annotations.js';
 import { AnnotationsImpl } from './annotations/internal/AnnotationsImpl.js';
 import { Type } from 'arktype';
 
-declare module "arktype/internal/methods/base.ts" {
+declare module 'arktype/internal/methods/base.ts' {
     /** @ts-ignore cast variance */
     interface BaseType<out t = unknown, $ = {}> {
         /** @ts-ignore */
-        annotate(callback: (annotations: Annotations<Type<t>>) => void): this; 
+        annotate(callback: (annotations: Annotations<Type<t>>) => void): this;
         /** @ts-ignore */
         annotations(): Annotations<this>;
         hasAnnotations(): boolean;

@@ -41,7 +41,7 @@ export function NumberEditor(
                         error: [`Failed to parse ${draft} as a number.`],
                     };
                 }
-                
+
                 const asModel = ModelFactory.createUnvalidatedReplacement(
                     parsed,
                     typedModel.peek(),

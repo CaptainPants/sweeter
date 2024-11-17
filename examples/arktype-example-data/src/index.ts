@@ -24,110 +24,101 @@ export const simpleHiddenField = type({
  * Complicated type including all basic types, rigid and map objects, arrays and unions
  */
 export const complex = type({
-        string: type.string.annotations().displayName('String').end(),
-        boolean: type.boolean.annotations().displayName('Boolean').end(),
-        number: type.number.annotations().displayName('Number').end(),
-        hidden: type
-            .string
-            .annotations()
-            .displayName('Hidden')
-            .visible(false)
-            .end(),
-        arrayOfStrings: 
-            type.string.annotations().displayName('String').end()
-                .array()
-                .default(() => ['item 1', 'item 2'])
-                .annotations()
-                .displayName('Array of Strings')
-                .end(),
-        object: type({
-                name: type.string.annotations().displayName('Name').end(),
-            })
-            .annotations()
-            .displayName('Object')
-            .end(),
-        map: type({
-                '[string]': type({
-                    first: type.string.annotations().displayName('First name').end(),
-                    last: type.string.annotations().displayName('Last name').end(),
-                })
-            })
-            .default(() => {
-                return {
-                    test: { first: 'John', last: 'Smith' },
-                };
-            })
-            .annotations()
-            .displayName('Map')
-            .end(),
-        constUnion: type.unit('a').or(type.unit('b')).or(type.unit('c'))
-            .annotations()
-            .displayName('Constant Union')
-            .end(),
-        objectUnion:
-            (type({
-                    is: type.unit('example-a').annotations().visible(false).end(),
-                    name: type({
-                            first: type
-                                .string
-                                .annotations()
-                                .displayName('First name')
-                                .end(),
-                            last: type
-                                .string
-                                .annotations()
-                                .displayName('Last name')
-                                .end(),
-                        })
-                        .annotations()
-                        .displayName('Name')
-                        .end(),
-                })
-                .annotations()
-                .displayName('Object A')
-                .end())
-            .or(
-                type({
-                    is: type.unit('example-b'),
-                    age: type.number.annotations().displayName('Age').end(),
-                })
-                .annotations()
-                .displayName('Object B')
-                .end()
-            )
+    string: type.string.annotations().displayName('String').end(),
+    boolean: type.boolean.annotations().displayName('Boolean').end(),
+    number: type.number.annotations().displayName('Number').end(),
+    hidden: type.string
+        .annotations()
+        .displayName('Hidden')
+        .visible(false)
+        .end(),
+    arrayOfStrings: type.string
+        .annotations()
+        .displayName('String')
+        .end()
+        .array()
+        .default(() => ['item 1', 'item 2'])
+        .annotations()
+        .displayName('Array of Strings')
+        .end(),
+    object: type({
+        name: type.string.annotations().displayName('Name').end(),
+    })
+        .annotations()
+        .displayName('Object')
+        .end(),
+    map: type({
+        '[string]': type({
+            first: type.string.annotations().displayName('First name').end(),
+            last: type.string.annotations().displayName('Last name').end(),
+        }),
+    })
+        .default(() => {
+            return {
+                test: { first: 'John', last: 'Smith' },
+            };
         })
         .annotations()
-        .displayName('Complex Union')
-        .end();
+        .displayName('Map')
+        .end(),
+    constUnion: type
+        .unit('a')
+        .or(type.unit('b'))
+        .or(type.unit('c'))
+        .annotations()
+        .displayName('Constant Union')
+        .end(),
+    objectUnion: type({
+        is: type.unit('example-a').annotations().visible(false).end(),
+        name: type({
+            first: type.string.annotations().displayName('First name').end(),
+            last: type.string.annotations().displayName('Last name').end(),
+        })
+            .annotations()
+            .displayName('Name')
+            .end(),
+    })
+        .annotations()
+        .displayName('Object A')
+        .end()
+        .or(
+            type({
+                is: type.unit('example-b'),
+                age: type.number.annotations().displayName('Age').end(),
+            })
+                .annotations()
+                .displayName('Object B')
+                .end(),
+        ),
+})
+    .annotations()
+    .displayName('Complex Union')
+    .end();
 
 export const nestedObjects = type({
-        people: (
-            type({
-                firstName: type
-                    .string
-                    .annotations()
-                    .displayName('First name')
-                    .end(),
-                surname: type.string.annotations().displayName('Surname').end(),
-                email: type.string.annotations().displayName('Email').end(),
-                address: type({
-                    unit: type.number.or(type.null),
-                    streetNumber: type.number.or(type.null),
-                    street: type.string,
-                    suburb: type.string,
-                    state: type.string,
-                    postCode: type.string,
-                }),
-            })
-            .array()
-        )
-    })
+    people: type({
+        firstName: type.string.annotations().displayName('First name').end(),
+        surname: type.string.annotations().displayName('Surname').end(),
+        email: type.string.annotations().displayName('Email').end(),
+        address: type({
+            unit: type.number.or(type.null),
+            streetNumber: type.number.or(type.null),
+            street: type.string,
+            suburb: type.string,
+            state: type.string,
+            postCode: type.string,
+        }),
+    }).array(),
+})
     .annotations()
     .displayName('People')
     .end();
 
-export const constantUnion = type.unit(true).or(type.unit('test')).annotations().end();
-
+export const constantUnion = type
+    .unit(true)
+    .or(type.unit('test'))
+    .annotations()
+    .end();
 
 export const exampleData = {
     Complex: async () => {

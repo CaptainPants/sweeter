@@ -1,4 +1,3 @@
-
 import { type UnspecifiedModel, type Model, type BaseModel } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
 import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';

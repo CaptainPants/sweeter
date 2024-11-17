@@ -13,12 +13,13 @@ test('union', async () => {
 
     const typeTest1: TypeMatchAssert<
         typeof unionType,
-        Type<
-            1 | 2 | string
-        >
+        Type<1 | 2 | string>
     > = true;
 
-    const model = await ModelFactory.createModel({ value: 1, schema: unionType });
+    const model = await ModelFactory.createModel({
+        value: 1,
+        schema: unionType,
+    });
 
     const value1: 1 | 2 | string = model.value;
 

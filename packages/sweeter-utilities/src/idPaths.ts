@@ -15,6 +15,12 @@ export const idPaths = {
         return path + '_' + added;
     },
     join(path: readonly (number | string | symbol)[]): string {
-        return path.map(x => typeof x === 'symbol' ? `Symbol(${JSON.stringify(x.description)})` : x).join('.');
+        return path
+            .map((x) =>
+                typeof x === 'symbol'
+                    ? `Symbol(${JSON.stringify(x.description)})`
+                    : x,
+            )
+            .join('.');
     },
 };

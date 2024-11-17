@@ -1,4 +1,3 @@
-
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';

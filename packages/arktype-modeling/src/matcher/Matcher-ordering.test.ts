@@ -1,4 +1,3 @@
-
 import { type } from 'arktype';
 import { ModelFactory } from '../models/ModelFactory.js';
 import { type TypeInfo } from '../models/parents.js';

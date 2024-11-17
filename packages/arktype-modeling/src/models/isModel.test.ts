@@ -1,4 +1,3 @@
-
 import { type } from 'arktype';
 import { isModel } from './isModel.js';
 import { ModelFactory } from './ModelFactory.js';

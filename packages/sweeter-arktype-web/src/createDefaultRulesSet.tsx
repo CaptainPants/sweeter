@@ -54,7 +54,11 @@ export function createDefaultRulesSet(
         result,
         Rules.callback(
             ({ type }) =>
-                introspect.tryGetUnionTypeInfo(type)?.branches.every((member) => introspect.isLiteralType(member)) ?? false,
+                introspect
+                    .tryGetUnionTypeInfo(type)
+                    ?.branches.every((member) =>
+                        introspect.isLiteralType(member),
+                    ) ?? false,
         ),
         options.constantUnion,
     );

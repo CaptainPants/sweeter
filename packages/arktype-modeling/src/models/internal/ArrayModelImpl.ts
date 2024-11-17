@@ -1,9 +1,12 @@
-
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { mapAsync } from '../../internal/mapAsync.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
-import { type UnspecifiedModel, type ArrayModel, ElementModelNoConstraint } from '../Model.js';
+import {
+    type UnspecifiedModel,
+    type ArrayModel,
+    ElementModelNoConstraint,
+} from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
@@ -27,7 +30,8 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         depth: number,
     ): ArrayModelImpl<TArrayArkType> {
         const info = getArrayTypeInfo(schema);
-        const elementType = info.elementType as arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
+        const elementType =
+            info.elementType as arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
 
         const elementModels = (value as readonly unknown[]).map((item, index) =>
             ModelFactory.createUnvalidatedModelPart<
@@ -69,9 +73,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
     }
 
     #elementType: arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
-    #elementModels: ReadonlyArray<
-        ElementModelNoConstraint<TArrayArkType>
-    >;
+    #elementModels: ReadonlyArray<ElementModelNoConstraint<TArrayArkType>>;
 
     public getElementType(): arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType> {
         return this.#elementType;
@@ -139,12 +141,16 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
             );
         });
 
-        const newValue = [...(this.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[])];
+        const newValue = [
+            ...(this
+                .value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[]),
+        ];
         newValue.splice(
             start,
             deleteCount,
             ...newModels.map(
-                (x) => x.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>,
+                (x) =>
+                    x.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>,
             ),
         );
 
@@ -153,7 +159,11 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         }
 
         const newElementModels = [...this.#elementModels];
-        newElementModels.splice(start, deleteCount, ...(newModels as ElementModelNoConstraint<TArrayArkType>[]));
+        newElementModels.splice(
+            start,
+            deleteCount,
+            ...(newModels as ElementModelNoConstraint<TArrayArkType>[]),
+        );
 
         const res = new ArrayModelImpl(
             newValue,
@@ -172,9 +182,9 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         validate: boolean = true,
     ): Promise<this> {
         const newValue = arrayMoveImmutable(
-            this.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[], 
-            from, 
-            to
+            this.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[],
+            from,
+            to,
         );
 
         if (validate) {

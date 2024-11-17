@@ -221,15 +221,17 @@ export const MapObjectEditor: Component<EditorProps> = (
                     <div class={css.editorContainer}>{content}</div>
                     <div>
                         {$calc(() => {
-                            const catchallAllowedTypesResolved = catchallAllowedTypes.value;
+                            const catchallAllowedTypesResolved =
+                                catchallAllowedTypes.value;
                             if (!catchallAllowedTypesResolved) {
                                 return <></>;
                             }
-                            
+
                             return catchallAllowedTypesResolved.map(
                                 (allowedType, index) => {
                                     const title =
-                                        catchallAllowedTypesResolved.length === 1
+                                        catchallAllowedTypesResolved.length ===
+                                        1
                                             ? localize('Add')
                                             : localize('Add {0}', [
                                                   allowedType

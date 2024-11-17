@@ -9,19 +9,21 @@ import { typeAssert } from '@captainpants/sweeter-utilities';
 
 test('Something', async () => {
     const unionType = type({
-            type: type.unit('a'),
-        })
-        .or({
-            type: type.unit('b'),
-            otherProperty: type.string,
-        });
+        type: type.unit('a'),
+    }).or({
+        type: type.unit('b'),
+        otherProperty: type.string,
+    });
 
     const value: type.infer<typeof unionType> = {
         type: 'b',
         otherProperty: 'Something',
     };
 
-    const model = await ModelFactory.createModel<typeof unionType>({ schema: unionType, value });
+    const model = await ModelFactory.createModel<typeof unionType>({
+        schema: unionType,
+        value,
+    });
 
     const retyped = await applyTypeToModel(
         model,

@@ -1,4 +1,3 @@
-
 import { type ReadonlySignalLike } from './ReadonlySignalLike.js';
 import { Type } from 'arktype';
 
@@ -10,11 +9,10 @@ export interface ContextualValueCalculationContext {
         | undefined;
 }
 
-export type ContextualValueCalculationCallback<TZodType extends Type> =
-    (
-        owner: Type['infer'],
-        context: ContextualValueCalculationContext,
-    ) => unknown;
+export type ContextualValueCalculationCallback<TZodType extends Type> = (
+    owner: Type['infer'],
+    context: ContextualValueCalculationContext,
+) => unknown;
 
 /**
  * Return typeof notFound to indicate that there was no matching value.

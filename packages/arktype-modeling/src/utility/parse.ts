@@ -1,9 +1,15 @@
-import { ArkErrors, type } from "arktype";
-import { arkTypeUtilityTypes } from "./arkTypeUtilityTypes";
+import { ArkErrors, type } from 'arktype';
+import { arkTypeUtilityTypes } from './arkTypeUtilityTypes';
 
-export type SafeParseResult<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint> = { success: true, data: type.infer<TArkType> } | { success: false, summary: string, issues: ArkErrors };
+export type SafeParseResult<
+    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+> =
+    | { success: true; data: type.infer<TArkType> }
+    | { success: false; summary: string; issues: ArkErrors };
 
-export function safeParse<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(value: unknown, schema: TArkType): SafeParseResult<TArkType>  {
+export function safeParse<
+    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+>(value: unknown, schema: TArkType): SafeParseResult<TArkType> {
     const res = schema(value);
 
     if (res instanceof type.errors) {
@@ -12,7 +18,10 @@ export function safeParse<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint
     return { success: true, data: value as type.infer<TArkType> };
 }
 
-export function parse<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(value: unknown, schema: TArkType): type.infer<TArkType> {
+export function parse<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    value: unknown,
+    schema: TArkType,
+): type.infer<TArkType> {
     const res = schema(value);
 
     if (value instanceof type.errors) {
@@ -23,20 +32,22 @@ export function parse<TArkType extends arkTypeUtilityTypes.AnyTypeConstraint>(va
 
 // TODO: not sure that there is an async model in ArkType (where Zod has one)
 // so will have to see if these can have a meaningful implementation
-export const parseAsync = (...args: Parameters<typeof parse>): Promise<ReturnType<typeof parse>> => {
+export const parseAsync = (
+    ...args: Parameters<typeof parse>
+): Promise<ReturnType<typeof parse>> => {
     try {
         return Promise.resolve(parse(...args));
-    }
-    catch (err) {
+    } catch (err) {
         return Promise.reject(err);
     }
-}
+};
 
-export const safeParseAsync = (...args: Parameters<typeof safeParse>): Promise<ReturnType<typeof safeParse>> => {
+export const safeParseAsync = (
+    ...args: Parameters<typeof safeParse>
+): Promise<ReturnType<typeof safeParse>> => {
     try {
         return Promise.resolve(safeParse(...args));
-    }
-    catch (err) {
+    } catch (err) {
         return Promise.reject(err);
     }
-}
+};

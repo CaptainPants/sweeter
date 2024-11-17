@@ -2,7 +2,10 @@
 
 import { jsx } from './jsx.js';
 import { testRender } from '../test/testRender.js';
-import { assertNotNullOrUndefined, TypeMatchAssert } from '@captainpants/sweeter-utilities';
+import {
+    assertNotNullOrUndefined,
+    TypeMatchAssert,
+} from '@captainpants/sweeter-utilities';
 
 it('basic div creates with props (function syntax)', () => {
     let div: HTMLDivElement | undefined;

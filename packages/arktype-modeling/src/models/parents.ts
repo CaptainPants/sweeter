@@ -1,4 +1,4 @@
-import { AnyTypeConstraint } from "../type";
+import { AnyTypeConstraint } from '../type';
 
 export type ParentRelationship =
     | {

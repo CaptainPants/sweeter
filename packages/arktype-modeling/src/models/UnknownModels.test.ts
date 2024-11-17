@@ -23,13 +23,7 @@ it('Specific models conform to', () => {
     > = true;
 
     const union1: TypeExtendsAssert<
-        UnionModel<
-            Type<
-                | { test: string }
-                | number
-                | 1
-            >
-        >,
+        UnionModel<Type<{ test: string } | number | 1>>,
         UnknownUnionModel
     > = true;
 });
@@ -39,25 +33,19 @@ it('All models conform to UnknownModel', () => {
         Model<Type<{ test: string }>>,
         UnspecifiedModel
     > = true;
-    const a2: TypeExtendsAssert<
-        Model<Type<1 | 2>>,
-        UnspecifiedModel
-    > = true;
+    const a2: TypeExtendsAssert<Model<Type<1 | 2>>, UnspecifiedModel> = true;
 
     const a3: TypeExtendsAssert<Model<Type<string>>, UnspecifiedModel> = true;
     const a4: TypeExtendsAssert<Model<Type<number>>, UnspecifiedModel> = true;
     const a5: TypeExtendsAssert<Model<Type<boolean>>, UnspecifiedModel> = true;
-    const a6: TypeExtendsAssert<Model<Type<undefined>>, UnspecifiedModel> = true;
+    const a6: TypeExtendsAssert<
+        Model<Type<undefined>>,
+        UnspecifiedModel
+    > = true;
     const a7: TypeExtendsAssert<Model<Type<null>>, UnspecifiedModel> = true;
-    const a8: TypeExtendsAssert<
-        Model<Type<'test'>>,
-        UnspecifiedModel
-    > = true;
+    const a8: TypeExtendsAssert<Model<Type<'test'>>, UnspecifiedModel> = true;
     const a9: TypeExtendsAssert<Model<Type<12>>, UnspecifiedModel> = true;
-    const a10: TypeExtendsAssert<
-        Model<Type<true>>,
-        UnspecifiedModel
-    > = true;
+    const a10: TypeExtendsAssert<Model<Type<true>>, UnspecifiedModel> = true;
 });
 
 it('All models conform to reasonable less specific models', () => {
@@ -76,7 +64,7 @@ it('All models conform to reasonable less specific models', () => {
         Model<Type<'test'>>,
         Model<Type<string>>
     > = true;
-    
+
     const literal_number: TypeExtendsAssert<
         Model<Type<12>>,
         Model<Type<number>>

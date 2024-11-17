@@ -1,5 +1,5 @@
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Default value for TResult as this is intended to be used in form T extends Check<CONDITION> and any is used as something that everything extends
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- This is intended to be used in a constraint and the default value of TResult should pass for all types
 export type CheckConstraint<T extends boolean, TResult = any> = T extends true
     ? TResult
     : { error: "Constraint check failed" };

@@ -90,6 +90,39 @@ importers:
         specifier: ^0.34.6
         version: 0.34.6(jsdom@23.2.0)
 
+  examples/arktype-example-data:
+    dependencies:
+      '@captainpants/arktype-modeling':
+        specifier: workspace:^
+        version: link:../../packages/arktype-modeling
+      arktype:
+        specifier: 2.0.0-rc.21
+        version: 2.0.0-rc.21
+
+  examples/sweeter-arktype-example:
+    dependencies:
+      '@captainpants/arktype-example-data':
+        specifier: workspace:^
+        version: link:../arktype-example-data
+      '@captainpants/arktype-modeling':
+        specifier: workspace:^
+        version: link:../../packages/arktype-modeling
+      '@captainpants/sweeter-arktype-web':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-arktype-web
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-core
+      '@captainpants/sweeter-gummybear':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-gummybear
+      '@captainpants/sweeter-web':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-web
+      arktype:
+        specifier: 2.0.0-rc.21
+        version: 2.0.0-rc.21
+
   examples/sweeter-example:
     dependencies:
       '@captainpants/sweeter-core':
@@ -102,38 +135,48 @@ importers:
         specifier: workspace:^
         version: link:../../packages/sweeter-web
 
-  examples/sweeter-zod-example:
+  packages/arktype-modeling:
     dependencies:
+      '@ark/schema':
+        specifier: ^0.21.0
+        version: 0.21.0
+      '@captainpants/sweeter-utilities':
+        specifier: workspace:^
+        version: link:../sweeter-utilities
+      arktype:
+        specifier: 2.0.0-rc.21
+        version: 2.0.0-rc.21
+
+  packages/sweeter-arktype-web:
+    dependencies:
+      '@captainpants/arktype-modeling':
+        specifier: workspace:^
+        version: link:../arktype-modeling
       '@captainpants/sweeter-core':
         specifier: workspace:^
-        version: link:../../packages/sweeter-core
+        version: link:../sweeter-core
       '@captainpants/sweeter-gummybear':
         specifier: workspace:^
-        version: link:../../packages/sweeter-gummybear
+        version: link:../sweeter-gummybear
+      '@captainpants/sweeter-utilities':
+        specifier: workspace:^
+        version: link:../sweeter-utilities
       '@captainpants/sweeter-web':
         specifier: workspace:^
-        version: link:../../packages/sweeter-web
-      '@captainpants/sweeter-zod-web':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-zod-web
-      '@captainpants/zod-example-data':
-        specifier: workspace:^
-        version: link:../zod-example-data
-      '@captainpants/zod-modeling':
-        specifier: workspace:^
-        version: link:../../packages/zod-modeling
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-
-  examples/zod-example-data:
-    dependencies:
-      '@captainpants/zod-modeling':
-        specifier: workspace:^
-        version: link:../../packages/zod-modeling
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        version: link:../sweeter-web
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
+      arktype:
+        specifier: 2.0.0-rc.21
+        version: 2.0.0-rc.21
+      tinycolor2:
+        specifier: ^1.6.0
+        version: 1.6.0
+    optionalDependencies:
+      lucide:
+        specifier: ^0.319.0
+        version: 0.319.0
 
   packages/sweeter-core:
     dependencies:
@@ -179,49 +222,6 @@ importers:
       csstype:
         specifier: ^3.1.3
         version: 3.1.3
-
-  packages/sweeter-zod-web:
-    dependencies:
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../sweeter-core
-      '@captainpants/sweeter-gummybear':
-        specifier: workspace:^
-        version: link:../sweeter-gummybear
-      '@captainpants/sweeter-utilities':
-        specifier: workspace:^
-        version: link:../sweeter-utilities
-      '@captainpants/sweeter-web':
-        specifier: workspace:^
-        version: link:../sweeter-web
-      '@captainpants/zod-modeling':
-        specifier: workspace:^
-        version: link:../zod-modeling
-      '@popperjs/core':
-        specifier: ^2.11.8
-        version: 2.11.8
-      tinycolor2:
-        specifier: ^1.6.0
-        version: 1.6.0
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-    optionalDependencies:
-      lucide:
-        specifier: ^0.319.0
-        version: 0.319.0
-
-  packages/zod-modeling:
-    dependencies:
-      '@ark/schema':
-        specifier: ^0.21.0
-        version: 0.21.0
-      '@captainpants/sweeter-utilities':
-        specifier: workspace:^
-        version: link:../sweeter-utilities
-      arktype:
-        specifier: 2.0.0-rc.21
-        version: 2.0.0-rc.21
 
 packages:
 
@@ -7291,10 +7291,6 @@ packages:
     optionalDependencies:
       commander: 9.5.0
     dev: true
-
-  /zod@3.23.8:
-    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

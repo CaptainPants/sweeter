@@ -1,12 +1,12 @@
 import { type } from 'arktype';
 
-import { arkTypeUtilityTypes, notFound } from '../index.js';
+import { AnyTypeConstraint, notFound } from '../index.js';
 import { serializeSchemaForDisplay } from '../utility/serializeSchemaForDisplay.js';
 import { is } from '../type/introspect/is.js';
 
 export interface KnownAttribute<
     TName extends string,
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 > {
     // TODO: reconsider if this call signature makes sense/is required. Seems to do very little.
     (from: TArkType): type.infer<TArkType> | undefined;
@@ -23,7 +23,7 @@ export interface KnownAttribute<
 
 export function createKnownAttribute<
     TName extends string,
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 >(name: TName, schema: TArkType): KnownAttribute<TName, TArkType> {
     function result(from: TArkType): type.infer<TArkType> | undefined {
         if (!from.hasAnnotations()) return undefined;

@@ -1,17 +1,18 @@
 import { type, Type } from 'arktype';
 import {
+    AnyTypeConstraint,
     arkTypeUtilityTypes,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
 } from '../index.js';
 
 export interface Annotations<
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 > {
     attr(name: string, value: unknown): this;
 
     getAttr(name: string, fallback: unknown): unknown;
-    getAttrValidated<TValueArkType extends Type>(
+    getAttrValidated<TValueArkType extends AnyTypeConstraint>(
         name: string,
         valueSchema: TValueArkType,
         fallback: Type['infer'],
@@ -42,7 +43,7 @@ export interface Annotations<
     ): this;
     withAmbientValue(name: string, value: unknown): this;
 
-    getLocalValueForUnknown(
+    getAssociatedValueForUnknown(
         name: string,
         value: unknown,
         context: ContextualValueCalculationContext,
@@ -58,5 +59,5 @@ export interface Annotations<
 }
 
 export type AnnotationSetter<
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 > = (annotations: Annotations<TArkType>) => void;

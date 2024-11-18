@@ -119,7 +119,7 @@ export function ObjectEditor(
                             return (
                                 propertyModel.valueModel.type
                                     .annotations()
-                                    .getLocalValueForUnknown(
+                                    .getAssociatedValueForUnknown(
                                         StandardLocalValues.Visible,
                                         typedModel.value,
                                         calculationContext,

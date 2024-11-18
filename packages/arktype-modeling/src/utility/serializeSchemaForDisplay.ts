@@ -96,7 +96,7 @@ const convertors = [
 ];
 
 export function serializeSchemaForDisplay(
-    schema: arkTypeUtilityTypes.AnyTypeConstraint,
+    schema: AnyTypeConstraint,
     depthLimit: number = 20,
 ): string {
     for (const convertor of convertors) {

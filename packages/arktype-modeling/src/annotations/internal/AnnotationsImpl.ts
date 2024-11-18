@@ -2,6 +2,7 @@ import { descend } from '@captainpants/sweeter-utilities';
 
 import {
     Annotations,
+    AnyTypeConstraint,
     arkTypeUtilityTypes,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
@@ -12,7 +13,7 @@ import { safeParse } from '../../utility/parse.js';
 import { type } from 'arktype';
 
 const weakMap = new WeakMap<
-    arkTypeUtilityTypes.AnyTypeConstraint,
+    AnyTypeConstraint,
     AnnotationsImpl<any>
 >();
 
@@ -23,7 +24,7 @@ const schemas = {
 };
 
 export class AnnotationsImpl<
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 > implements Annotations<TArkType>
 {
     constructor(schema: TArkType) {
@@ -33,7 +34,7 @@ export class AnnotationsImpl<
     #schema: TArkType;
     #attributes?: Map<string, unknown>;
     #labels?: Set<string>;
-    #localValues?: Map<string, ContextualValueCalculationCallback<TArkType>> =
+    #associatedValues?: Map<string, ContextualValueCalculationCallback<TArkType>> =
         new Map<string, ContextualValueCalculationCallback<TArkType>>();
     #ambientValues?: Map<string, ContextualValueCalculationCallback<TArkType>> =
         new Map<string, ContextualValueCalculationCallback<TArkType>>();
@@ -51,7 +52,7 @@ export class AnnotationsImpl<
     }
 
     public getAttrValidated<
-        TValueArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+        TValueArkType extends AnyTypeConstraint,
     >(
         name: string,
         valueSchema: TValueArkType,
@@ -139,14 +140,14 @@ export class AnnotationsImpl<
 
     public withLocalValue(
         name: string,
-        callback: ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>,
+        callback: ContextualValueCalculationCallback<AnyTypeConstraint>,
     ): this;
     public withLocalValue(name: string, value: unknown): this;
     public withLocalValue(name: string, callbackOrValue: unknown): this {
-        (this.#localValues ?? (this.#localValues = new Map())).set(
+        (this.#associatedValues ?? (this.#associatedValues = new Map())).set(
             name,
             typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>)
+                ? (callbackOrValue as ContextualValueCalculationCallback<AnyTypeConstraint>)
                 : () => callbackOrValue,
         );
         return this;
@@ -154,25 +155,25 @@ export class AnnotationsImpl<
 
     public withAmbientValue(
         name: string,
-        callback: ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>,
+        callback: ContextualValueCalculationCallback<AnyTypeConstraint>,
     ): this;
     public withAmbientValue(name: string, value: unknown): this;
     public withAmbientValue(name: string, callbackOrValue: unknown): this {
         (this.#ambientValues ?? (this.#ambientValues = new Map())).set(
             name,
             typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<arkTypeUtilityTypes.AnyTypeConstraint>)
+                ? (callbackOrValue as ContextualValueCalculationCallback<AnyTypeConstraint>)
                 : () => callbackOrValue,
         );
         return this;
     }
 
-    #getLocalValue(
+    #getAssociatedValue(
         name: string,
         value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
     ) {
-        const found = this.#localValues?.get(name);
+        const found = this.#associatedValues?.get(name);
 
         if (!found) {
             return undefined;
@@ -181,7 +182,7 @@ export class AnnotationsImpl<
         return found(value, context);
     }
 
-    public getLocalValueForUnknown(
+    public getAssociatedValueForUnknown(
         name: string,
         value: unknown,
         context: ContextualValueCalculationContext,
@@ -197,7 +198,7 @@ export class AnnotationsImpl<
             throw new Error('Incorrect type value provided.');
         }
 
-        return this.#getLocalValue(name, value, context);
+        return this.#getAssociatedValue(name, value, context);
     }
 
     #getAmbientValue(
@@ -238,12 +239,12 @@ export class AnnotationsImpl<
     }
 
     public static tryGet<
-        TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+        TArkType extends AnyTypeConstraint,
     >(schema: TArkType): AnnotationsImpl<TArkType> | undefined {
         return weakMap.get(schema);
     }
 
-    public static get<TZodType extends arkTypeUtilityTypes.AnyTypeConstraint>(
+    public static get<TZodType extends AnyTypeConstraint>(
         schema: TZodType,
         createIfNotFound: boolean,
     ): AnnotationsImpl<TZodType> {

@@ -16,7 +16,7 @@ export interface ValidateAndThrowArgs {
 }
 
 export async function validate<
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 >(
     schema: TArkType,
     value: unknown,

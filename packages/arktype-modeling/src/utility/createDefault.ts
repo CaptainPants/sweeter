@@ -6,15 +6,16 @@ import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
 import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
 
 import { introspect } from '../type/introspect/index.js';
+import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 
 export function createDefault<
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 >(schema: TArkType): type.infer<TArkType> {
     return createDefaultImplementation(schema, descend.defaultDepth);
 }
 
 function createDefaultImplementation<
-    TArkType extends arkTypeUtilityTypes.AnyTypeConstraint,
+    TArkType extends AnyTypeConstraint,
 >(schema: TArkType, depth: number): type.infer<TArkType> {
     if (schema.meta.default) {
         return schema.meta.default as never;

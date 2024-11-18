@@ -61,7 +61,7 @@ export function PropertyEditorPart(
         return (name: string, context: ContextualValueCalculationContext) =>
             propertyModelResolved.valueModel.type
                 .annotations()
-                .getLocalValueForUnknown(name, $wrap(owner), context);
+                .getAssociatedValueForUnknown(name, $wrap(owner), context);
     });
 
     const calculateAmbient = $calc(() => {

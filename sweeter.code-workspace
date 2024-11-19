@@ -1,9 +1,12 @@
 {
 	"folders": [
-		{
-			"path": "."
-		}
-	],
+        {
+            "path": "."
+        },
+        {
+            "path": "node_modules"
+        }
+    ],
 	"settings": {
 		"editor.indentSize": 4,
 		"editor.detectIndentation": false,

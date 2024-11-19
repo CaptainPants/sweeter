@@ -56,8 +56,8 @@ export class AnnotationsImpl<
     >(
         name: string,
         valueSchema: TValueArkType,
-        fallback: TValueArkType['infer'],
-    ): TValueArkType['infer'] {
+        fallback: type.infer<TValueArkType>,
+    ): type.infer<TValueArkType> {
         if (!this.#attributes) return fallback;
         if (!this.#attributes.has(name)) return fallback;
 
@@ -138,12 +138,12 @@ export class AnnotationsImpl<
         return this.attr('property:visible', visibility);
     }
 
-    public withLocalValue(
+    public withAssociatedValue(
         name: string,
         callback: ContextualValueCalculationCallback<AnyTypeConstraint>,
     ): this;
-    public withLocalValue(name: string, value: unknown): this;
-    public withLocalValue(name: string, callbackOrValue: unknown): this {
+    public withAssociatedValue(name: string, value: unknown): this;
+    public withAssociatedValue(name: string, callbackOrValue: unknown): this {
         (this.#associatedValues ?? (this.#associatedValues = new Map())).set(
             name,
             typeof callbackOrValue === 'function'
@@ -168,7 +168,7 @@ export class AnnotationsImpl<
         return this;
     }
 
-    #getAssociatedValue(
+    #getAssociatedValueTyped(
         name: string,
         value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
@@ -182,7 +182,7 @@ export class AnnotationsImpl<
         return found(value, context);
     }
 
-    public getAssociatedValueForUnknown(
+    public getAssociatedValue(
         name: string,
         value: unknown,
         context: ContextualValueCalculationContext,
@@ -198,10 +198,10 @@ export class AnnotationsImpl<
             throw new Error('Incorrect type value provided.');
         }
 
-        return this.#getAssociatedValue(name, value, context);
+        return this.#getAssociatedValueTyped(name, value, context);
     }
 
-    #getAmbientValue(
+    #getAmbientValueTyped(
         name: string,
         value: type.infer<TArkType>,
         context: ContextualValueCalculationContext,
@@ -215,7 +215,7 @@ export class AnnotationsImpl<
         return found(value, context);
     }
 
-    public getAmbientValueForUnknown(
+    public getAmbientValue(
         name: string,
         value: unknown,
         context: ContextualValueCalculationContext,
@@ -231,7 +231,7 @@ export class AnnotationsImpl<
             throw new Error('Incorrect type value provided.');
         }
 
-        return this.#getAmbientValue(name, value, context);
+        return this.#getAmbientValueTyped(name, value, context);
     }
 
     end(): TArkType {
@@ -244,14 +244,14 @@ export class AnnotationsImpl<
         return weakMap.get(schema);
     }
 
-    public static get<TZodType extends AnyTypeConstraint>(
-        schema: TZodType,
+    public static get<TArkType extends AnyTypeConstraint>(
+        schema: TArkType,
         createIfNotFound: boolean,
-    ): AnnotationsImpl<TZodType> {
+    ): AnnotationsImpl<TArkType> {
         const item = weakMap.get(schema);
         if (item === undefined) {
             if (createIfNotFound) {
-                const result = new AnnotationsImpl<TZodType>(schema);
+                const result = new AnnotationsImpl<TArkType>(schema);
                 weakMap.set(schema, result);
                 return result;
             } else {

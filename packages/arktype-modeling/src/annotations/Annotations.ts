@@ -31,11 +31,11 @@ export interface Annotations<
     visible(visibility: boolean): this;
     visible(): boolean;
 
-    withLocalValue(
+    withAssociatedValue(
         name: string,
         callback: ContextualValueCalculationCallback<Type>,
     ): this;
-    withLocalValue(name: string, value: unknown): this;
+    withAssociatedValue(name: string, value: unknown): this;
 
     withAmbientValue(
         name: string,
@@ -43,13 +43,13 @@ export interface Annotations<
     ): this;
     withAmbientValue(name: string, value: unknown): this;
 
-    getAssociatedValueForUnknown(
+    getAssociatedValue(
         name: string,
         value: unknown,
         context: ContextualValueCalculationContext,
     ): unknown;
 
-    getAmbientValueForUnknown(
+    getAmbientValue(
         name: string,
         value: unknown,
         context: ContextualValueCalculationContext,

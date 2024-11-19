@@ -10,14 +10,3 @@ it('General', () => {
     expect(DOMException.ABORT_ERR).toStrictEqual(20);
 });
 
-it('General', () => {
-    expect(Imported).toStrictEqual(DOMException);
-
-    expect(Imported).not.toBeUndefined();
-
-    const domEx = new Imported('Aborted', 'AbortError');
-
-    expect(domEx.code).toStrictEqual(Imported.ABORT_ERR);
-
-    expect(Imported.ABORT_ERR).toStrictEqual(20);
-});

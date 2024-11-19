@@ -2,8 +2,14 @@ import { type } from 'arktype';
 import { Rules } from '../Rules.js';
 
 import { matchDefinitionRulePart } from './matchDefinitionRule.js';
+import { extendArkTypes } from '../../index.js';
 
 test('label', async () => {
+    extendArkTypes();
+
+    const x = type.number;
+    const y = type.string;
+
     expect(
         matchDefinitionRulePart(
             { settings: {} },

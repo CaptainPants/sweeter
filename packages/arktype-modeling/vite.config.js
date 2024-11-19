@@ -21,5 +21,8 @@ export default defineConfig({
         },
         target: "ESNext",
     },
-    plugins: [dts({ clearPureImport: false })]
+    plugins: [dts({ clearPureImport: false })],
+    test: {
+        globalSetup: './src/globalSetup.js'
+    }
 });

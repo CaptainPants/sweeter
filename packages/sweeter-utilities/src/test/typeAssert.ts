@@ -2,16 +2,16 @@ import { type IsSameType } from '../utilityTypes/index.js';
 
 export const typeAssert = {
     equal<TFirst, TSecond>(
-        ...message: IsSameType<TFirst, TSecond> extends true
+        ..._args: IsSameType<TFirst, TSecond> extends true
             ? []
-            : [{ error: 'Types are not equal'; type1: TFirst; type2: TSecond }]
+            : [error: { message: 'Types are not equal'; type1: TFirst; type2: TSecond }]
     ): void {},
     extends<TSubType, TExtends>(
-        ...message: TSubType extends TExtends
+        ..._args: TSubType extends TExtends
             ? []
-            : [
+            : [error:
                   {
-                      error: 'TSubType does not extend TExtends';
+                      message: 'TSubType does not extend TExtends';
                       subtype: TSubType;
                       extends: TExtends;
                   },

@@ -1,9 +1,8 @@
 import { descend } from '@captainpants/sweeter-utilities';
 
 import {
-    Annotations,
-    AnyTypeConstraint,
-    arkTypeUtilityTypes,
+    type Annotations,
+    type AnyTypeConstraint,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
     serializeSchemaForDisplay,

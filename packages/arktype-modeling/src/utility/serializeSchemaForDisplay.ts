@@ -1,3 +1,5 @@
+
+import { type Type } from 'arktype';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -9,9 +11,7 @@ import {
     isUnionType,
 } from '../type/introspect/is.js';
 import { notFound } from '../notFound.js';
-import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
-import { Type } from 'arktype';
-import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { type AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
 import { getUnionTypeInfo } from '../type/introspect/getUnionTypeInfo.js';
 import { getArrayTypeInfo } from '../type/introspect/getArrayTypeInfo.js';
 

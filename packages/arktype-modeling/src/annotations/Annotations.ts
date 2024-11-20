@@ -1,7 +1,6 @@
-import { type, Type } from 'arktype';
+import type { Type } from 'arktype';
 import {
-    AnyTypeConstraint,
-    arkTypeUtilityTypes,
+    type AnyTypeConstraint,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
 } from '../index.js';

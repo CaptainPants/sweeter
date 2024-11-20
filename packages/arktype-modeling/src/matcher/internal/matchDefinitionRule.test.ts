@@ -1,14 +1,22 @@
+
+import { } from '../../extendArkType/extendArkTypes.js';
+
 import { type } from 'arktype';
+
 import { Rules } from '../Rules.js';
 
 import { matchDefinitionRulePart } from './matchDefinitionRule.js';
-import { extendArkTypes } from '../../index.js';
+import { $ark } from '@ark/schema';
+
 
 test('label', async () => {
-    extendArkTypes();
-
     const x = type.number;
     const y = type.string;
+
+    const parser = type;
+
+
+    const x2 = $ark.intrinsic.number;
 
     expect(
         matchDefinitionRulePart(

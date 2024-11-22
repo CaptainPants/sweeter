@@ -1,22 +1,13 @@
 
-import { } from '../../extendArkType/extendArkTypes.js';
-
 import { type } from 'arktype';
 
 import { Rules } from '../Rules.js';
 
 import { matchDefinitionRulePart } from './matchDefinitionRule.js';
-import { $ark } from '@ark/schema';
-
+import { extendArkTypes } from '../../extendArkTypes.js';
 
 test('label', async () => {
-    const x = type.number;
-    const y = type.string;
-
-    const parser = type;
-
-
-    const x2 = $ark.intrinsic.number;
+    extendArkTypes();
 
     expect(
         matchDefinitionRulePart(
@@ -28,6 +19,7 @@ test('label', async () => {
             Rules.label('test-label'),
         ),
     ).toStrictEqual(true);
+
     expect(
         matchDefinitionRulePart(
             { settings: {} },
@@ -49,6 +41,7 @@ test('label', async () => {
             Rules.label('label1-suffix'),
         ),
     ).toStrictEqual(false);
+
     expect(
         matchDefinitionRulePart(
             { settings: {} },
@@ -72,6 +65,7 @@ test('attribute', async () => {
             Rules.attr('type', 'ham-sandwich'),
         ),
     ).toStrictEqual(true);
+
     expect(
         matchDefinitionRulePart(
             { settings: {} },
@@ -79,6 +73,7 @@ test('attribute', async () => {
             Rules.attr('type', 'ham-sandwich'),
         ),
     ).toStrictEqual(false);
+
     expect(
         matchDefinitionRulePart(
             { settings: {} },

@@ -6,6 +6,6 @@ export interface InterrogableNode extends BaseNode {
         unit?: Unit.Node | undefined;
         structure?: Structure.Node | undefined;
         proto?: Proto.Node | undefined;
-        union?: Union.Node;
+        branches?: BaseNode[];
     }
 }

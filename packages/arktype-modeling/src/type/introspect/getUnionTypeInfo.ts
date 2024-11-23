@@ -5,11 +5,11 @@ import { InterrogableNode } from './types';
 
 export function tryGetUnionTypeInfo(schema: AnyTypeConstraint) {
     const typed = schema as never as InterrogableNode;
-    if (!typed.inner.union) {
+    if (!typed.inner.branches) {
         return undefined;
     }
     return {
-        branches: typed.inner.union.branchGroups as unknown as readonly Type<unknown>[],
+        branches: typed.inner.branches as unknown as readonly Type<unknown>[],
     };
 }
 

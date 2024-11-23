@@ -28,7 +28,7 @@ export function isArrayType(
 
 export function isUnionType(schema: AnyTypeConstraint): boolean {
     const typed = schema as any as InterrogableNode;
-    return !!typed.inner.union;
+    return !!typed.inner.branches;
 }
 
 export function isNumberType(
@@ -49,8 +49,8 @@ export function isBooleanType(
     schema: AnyTypeConstraint,
 ): schema is Type<boolean> {
     const typed = schema as any as InterrogableNode;
-    if (typed.inner.union) {
-        const branches = typed.inner.union.branches;
+    if (typed.inner.branches) {
+        const branches = typed.inner.branches;
         if (branches.length != 2) return false;
 
         const branch1 = branches[0] as InterrogableNode;

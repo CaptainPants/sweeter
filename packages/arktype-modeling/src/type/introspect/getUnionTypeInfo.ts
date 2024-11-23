@@ -1,16 +1,15 @@
-import { Union } from '@ark/schema';
 import { AnyTypeConstraint } from '../AnyTypeConstraint';
-import { tryCast } from '../internal/tools';
 import { throwError } from '@captainpants/sweeter-utilities';
 import { Type } from 'arktype';
+import { InterrogableNode } from './types';
 
 export function tryGetUnionTypeInfo(schema: AnyTypeConstraint) {
-    const typed = tryCast(schema, Union.Node);
-    if (!typed) {
+    const typed = schema as never as InterrogableNode;
+    if (!typed.inner.union) {
         return undefined;
     }
     return {
-        branches: typed.branchGroups as unknown as readonly Type<unknown>[],
+        branches: typed.inner.union.branchGroups as unknown as readonly Type<unknown>[],
     };
 }
 

@@ -12,7 +12,7 @@ export interface ArrayTypeInfo {
 export function tryGetArrayTypeInfo(schema: AnyTypeConstraint): ArrayTypeInfo {
     throw new Error('Not implemented');
 }
-type.Array;
+
 /**
  *
  * @param schema

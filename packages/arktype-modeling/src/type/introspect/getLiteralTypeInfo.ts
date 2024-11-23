@@ -1,16 +1,13 @@
-import { Unit } from '@ark/schema';
 import { AnyTypeConstraint } from '../AnyTypeConstraint';
-import { tryCast } from '../internal/tools';
 import { throwError } from '@captainpants/sweeter-utilities';
+import { InterrogableNode } from './types';
 
-export function tryGetLiteralTypeInfo(schema: AnyTypeConstraint) {
-    const typed = tryCast(schema, Unit.Node);
-    if (!typed) {
-        return undefined;
+export function tryGetLiteralTypeInfo(schema: AnyTypeConstraint): unknown {
+    const typed = schema as never as InterrogableNode;
+    if (typed.inner.unit) {
+        return typed.inner.unit.compiledValue;
     }
-    return {
-        value: typed.compiledValue as unknown,
-    };
+    return undefined;
 }
 
 export function getLiteralTypeInfo(schema: AnyTypeConstraint) {

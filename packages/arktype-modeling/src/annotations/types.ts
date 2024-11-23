@@ -5,30 +5,12 @@ import {
     type ContextualValueCalculationContext,
 } from '../index.js';
 
-export interface Annotations<
-    TArkType extends AnyTypeConstraint,
-> {
+export interface AnnotationsBuilder {
     attr(name: string, value: unknown): this;
-
-    getAttr(name: string, fallback: unknown): unknown;
-    getAttrValidated<TValueArkType extends AnyTypeConstraint>(
-        name: string,
-        valueSchema: TValueArkType,
-        fallback: Type['infer'],
-    ): TValueArkType['infer'];
-
     label(name: string, val?: boolean): this;
-    hasLabel(name: string): boolean;
-
     category(category: string | null): this;
-    category(): string | null;
-
     displayName(displayName: string | null): this;
-    displayName(): string | null;
-    getBestDisplayName(): string;
-
     visible(visibility: boolean): this;
-    visible(): boolean;
 
     withAssociatedValue(
         name: string,
@@ -41,6 +23,24 @@ export interface Annotations<
         callback: ContextualValueCalculationCallback<Type>,
     ): this;
     withAmbientValue(name: string, value: unknown): this;
+}
+
+export interface Annotations {
+    attr(name: string, fallback: unknown): unknown;
+    getAttrValidated<TValueArkType extends AnyTypeConstraint>(
+        name: string,
+        valueSchema: TValueArkType,
+        fallback: Type['infer'],
+    ): TValueArkType['infer'];
+
+    hasLabel(name: string): boolean;
+
+    category(): string | null;
+
+    displayName(): string | null;
+    getBestDisplayName(): string;
+
+    visible(): boolean;
 
     getAssociatedValue(
         name: string,
@@ -53,10 +53,6 @@ export interface Annotations<
         value: unknown,
         context: ContextualValueCalculationContext,
     ): unknown;
-
-    end(): TArkType;
 }
 
-export type AnnotationSetter<
-    TArkType extends AnyTypeConstraint,
-> = (annotations: Annotations<TArkType>) => void;
+export type AnnotationSetter = (annotations: AnnotationsBuilder) => void;

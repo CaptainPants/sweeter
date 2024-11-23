@@ -29,9 +29,9 @@ test('test', async () => {
         matchDefinitionRule,
     );
 
-    const numType1 = type.number.annotations().label('2').end();
-    const numType2 = type.number.annotations().label('1').end();
-    const numType3 = type.number.annotations().label('3').end();
+    const numType1 = type.number.annotate((add) => add.label('2'));
+    const numType2 = type.number.annotate((add) => add.label('1'));
+    const numType3 = type.number.annotate((add) => add.label('3'));
 
     const match1 = matcher.findBestMatch(
         { settings: {} },
@@ -75,7 +75,7 @@ test('ordered', async () => {
 
     const numModel1 = await ModelFactory.createModel({
         value: 2,
-        schema: type.number.annotations().label('1').end(),
+        schema: type.number.annotate((add) => add.label('1')),
         parentInfo: null,
     });
 
@@ -119,7 +119,7 @@ test('multiple-ordered', async () => {
     const matcher = createTypeMatcher(rules);
 
     const model = await ModelFactory.createModel({
-        schema: type.number.annotations().label('2').end(),
+        schema: type.number.annotate((add) => add.label('2')),
         value: 6,
         parentInfo: null,
     });

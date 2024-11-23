@@ -27,7 +27,7 @@ export function createKnownAttribute<
 >(name: TName, schema: TArkType): KnownAttribute<TName, TArkType> {
     function result(from: TArkType): type.infer<TArkType> | undefined {
         if (!from.hasAnnotations()) return undefined;
-        const value = from.annotations().getAttr(name, undefined);
+        const value = from.annotations()?.attr(name, undefined);
         if (value === undefined || !is(value, schema)) {
             return undefined;
         }
@@ -37,7 +37,7 @@ export function createKnownAttribute<
     // Alias for consistency
     result.get = (from: TArkType): type.infer<TArkType> => {
         if (!from.hasAnnotations()) throw new TypeError(`MetaData not found`);
-        const value = from.annotations().getAttr(name, notFound);
+        const value = from.annotations()?.attr(name, notFound);
         if (value === notFound || !is(value, schema)) {
             throw new TypeError(
                 `Expected ${serializeSchemaForDisplay(schema)}.`,
@@ -51,7 +51,7 @@ export function createKnownAttribute<
         fallback: type.infer<TArkType>,
     ): type.infer<TArkType> {
         if (!from.hasAnnotations()) return fallback;
-        const value = from.annotations().getAttr(name, notFound);
+        const value = from.annotations()?.attr(name, notFound);
         if (value === notFound || !is(value, schema)) {
             return fallback;
         }

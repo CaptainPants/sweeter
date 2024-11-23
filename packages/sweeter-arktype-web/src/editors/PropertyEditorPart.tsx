@@ -61,7 +61,7 @@ export function PropertyEditorPart(
         return (name: string, context: ContextualValueCalculationContext) =>
             propertyModelResolved.valueModel.type
                 .annotations()
-                .getAssociatedValue(name, $wrap(owner), context);
+                ?.getAssociatedValue(name, $wrap(owner), context);
     });
 
     const calculateAmbient = $calc(() => {
@@ -71,7 +71,7 @@ export function PropertyEditorPart(
         return (name: string, context: ContextualValueCalculationContext) =>
             propertyModelResolved.valueModel.type
                 .annotations()
-                .getAmbientValue(name, $wrap(owner), context);
+                ?.getAmbientValue(name, $wrap(owner), context);
     });
 
     const { local, ambient } = init.hook(
@@ -83,7 +83,7 @@ export function PropertyEditorPart(
     const valueModel = $calc(() => $val(propertyModel).valueModel);
     const displayName = $calc(
         () =>
-            $val(propertyModel).valueModel.type.annotations().displayName() ??
+            $val(propertyModel).valueModel.type.annotations()?.displayName() ??
             $val(propertyModel).name,
     );
 

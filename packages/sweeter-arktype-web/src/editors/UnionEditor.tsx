@@ -37,7 +37,7 @@ export function UnionEditor({
         // Only depends on 'type' signal
         return options.map((alternative) => {
             return {
-                label: alternative.annotations().getBestDisplayName(),
+                label: alternative.annotations()?.getBestDisplayName(),
                 type: alternative,
             };
         });

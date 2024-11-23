@@ -1,3 +1,3 @@
-import { extendArkTypes } from ".";
+import { extendArkTypes } from '.';
 
 extendArkTypes();

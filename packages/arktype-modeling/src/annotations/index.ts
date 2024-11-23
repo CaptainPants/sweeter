@@ -1,2 +1,2 @@
-export * from './Annotations.js';
+export * from './types.js';
 export * from './createKnownAttribute.js';

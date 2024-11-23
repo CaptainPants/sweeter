@@ -236,7 +236,7 @@ export const MapObjectEditor: Component<EditorProps> = (
                                             : localize('Add {0}', [
                                                   allowedType
                                                       .annotations()
-                                                      .getBestDisplayName(),
+                                                      ?.getBestDisplayName(),
                                               ]);
 
                                     const isOpen = $mutable(false);

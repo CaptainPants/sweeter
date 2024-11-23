@@ -25,7 +25,6 @@ import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { IconButton } from '../components/IconButton.js';
-import { tryGetUnionTypeInfo } from '../../../arktype-modeling/build/type/introspect/getUnionTypeInfo.js';
 
 export function ArrayEditor(
     {
@@ -173,7 +172,7 @@ export function ArrayEditor(
                                 : localize('Add {0}', [
                                       allowedType
                                           .annotations()
-                                          .getBestDisplayName(),
+                                          ?.getBestDisplayName(),
                                   ]);
                         return (
                             <IconButton

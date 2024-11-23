@@ -36,7 +36,7 @@ export function categorizeProperties(
         .fixedProps) {
         const category =
             (propertyTyped.hasAnnotations()
-                ? propertyTyped.annotations().category()
+                ? propertyTyped.annotations()?.category()
                 : undefined) ?? 'Misc';
 
         let list = categoryMap.get(category);

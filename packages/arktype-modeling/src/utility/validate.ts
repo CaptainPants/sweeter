@@ -15,9 +15,7 @@ export interface ValidateAndThrowArgs {
     abortSignal?: AbortSignal | undefined;
 }
 
-export async function validate<
-    TArkType extends AnyTypeConstraint,
->(
+export async function validate<TArkType extends AnyTypeConstraint>(
     schema: TArkType,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },

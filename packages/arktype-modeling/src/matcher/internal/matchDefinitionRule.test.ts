@@ -1,4 +1,3 @@
-
 import { type } from 'arktype';
 
 import { Rules } from '../Rules.js';
@@ -13,7 +12,7 @@ test('label', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type.number.annotations().label('test-label').end(),
+                type: type.number.annotate((add) => add.label('test-label')),
                 parentInfo: null,
             },
             Rules.label('test-label'),
@@ -24,7 +23,7 @@ test('label', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type.number.annotations().label('test-label').end(),
+                type: type.number.annotate((add) => add.label('test-label')),
                 parentInfo: null,
             },
             Rules.label('test-label'),
@@ -35,7 +34,7 @@ test('label', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type.number.annotations().label('label1').end(),
+                type: type.number.annotate((add) => add.label('label1')),
                 parentInfo: null,
             },
             Rules.label('label1-suffix'),
@@ -56,10 +55,9 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type.number
-                    .annotations()
-                    .attr('type', 'ham-sandwich')
-                    .end(),
+                type: type.number.annotate((add) =>
+                    add.attr('type', 'ham-sandwich'),
+                ),
                 parentInfo: null,
             },
             Rules.attr('type', 'ham-sandwich'),
@@ -78,11 +76,9 @@ test('attribute', async () => {
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type.number
-                    .annotations()
-                    .attr('type', 'ham-sandwich')
-                    .attr('other', 'thing')
-                    .end(),
+                type: type.number.annotate((add) =>
+                    add.attr('type', 'ham-sandwich').attr('other', 'thing'),
+                ),
                 parentInfo: null,
             },
             Rules.attr('type', 'ham-sandwich'),

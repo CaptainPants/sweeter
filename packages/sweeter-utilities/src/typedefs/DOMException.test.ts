@@ -9,4 +9,3 @@ it('General', () => {
 
     expect(DOMException.ABORT_ERR).toStrictEqual(20);
 });
-

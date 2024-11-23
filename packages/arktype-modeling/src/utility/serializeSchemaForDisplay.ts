@@ -1,4 +1,3 @@
-
 import { type Type } from 'arktype';
 import {
     isArrayType,

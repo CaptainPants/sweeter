@@ -48,11 +48,11 @@ export function matchDefinitionRulePart(
         case 'attr':
             res = deepEqual(
                 part.value,
-                typeInfo.type.annotations().getAttr(part.name, notFound),
+                typeInfo.type.annotations()?.attr(part.name, notFound),
             );
             break;
         case 'label':
-            res = typeInfo.type.annotations().hasLabel(part.label);
+            res = typeInfo.type.annotations()?.hasLabel(part.label) ?? false;
             break;
         case 'instanceOf':
             res = typeInfo.type instanceof part.constructor;

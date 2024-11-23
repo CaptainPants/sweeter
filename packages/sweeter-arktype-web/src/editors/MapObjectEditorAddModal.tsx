@@ -33,7 +33,7 @@ export const MapObjectEditorAddModal: Component<
 > = ({ isOpen, type, validate, onCancelled, onFinished }, init) => {
     const title = $calc(() => {
         const typeResolved = $val(type);
-        const title = typeResolved.annotations().getBestDisplayName();
+        const title = typeResolved.annotations()?.getBestDisplayName();
         return title;
     });
 

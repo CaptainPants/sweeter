@@ -10,49 +10,48 @@ import {
 import { shallowMatchesStructure } from '../../utility/validate.js';
 import { safeParse } from '../../utility/parse.js';
 import { type } from 'arktype';
+import { AnnotationsBuilderImpl } from './AnnotationBuilderImpl.js';
+import { schemas } from './schemas.js';
 
-const weakMap = new WeakMap<
-    AnyTypeConstraint,
-    AnnotationsImpl<any>
->();
-
-const schemas = {
-    displayName: type.string,
-    propertyCategory: type.string,
-    propertyVisible: type.boolean,
-};
-
-export class AnnotationsImpl<
-    TArkType extends AnyTypeConstraint,
-> implements Annotations<TArkType>
+export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
+    implements Annotations
 {
-    constructor(schema: TArkType) {
+    constructor(
+        schema: TSchema,
+        attributes: Map<string, unknown> | undefined,
+        labels: Set<string> | undefined,
+        associatedValues:
+            | Map<string, ContextualValueCalculationCallback<TSchema>>
+            | undefined,
+        ambientValues:
+            | Map<string, ContextualValueCalculationCallback<TSchema>>
+            | undefined,
+    ) {
         this.#schema = schema;
+        this.#attributes = attributes;
+        this.#labels = labels;
+        this.#associatedValues = associatedValues;
+        this.#ambientValues = ambientValues;
     }
 
-    #schema: TArkType;
-    #attributes?: Map<string, unknown>;
-    #labels?: Set<string>;
-    #associatedValues?: Map<string, ContextualValueCalculationCallback<TArkType>> =
-        new Map<string, ContextualValueCalculationCallback<TArkType>>();
-    #ambientValues?: Map<string, ContextualValueCalculationCallback<TArkType>> =
-        new Map<string, ContextualValueCalculationCallback<TArkType>>();
+    #schema: TSchema;
+    #attributes: Map<string, unknown> | undefined;
+    #labels: Set<string> | undefined;
+    #associatedValues:
+        | Map<string, ContextualValueCalculationCallback<TSchema>>
+        | undefined;
+    #ambientValues:
+        | Map<string, ContextualValueCalculationCallback<TSchema>>
+        | undefined;
 
-    public attr(name: string, value: unknown): this {
-        (this.#attributes ?? (this.#attributes = new Map())).set(name, value);
-        return this;
-    }
-
-    public getAttr(name: string, fallback: unknown): unknown {
+    public attr(name: string, fallback: unknown): unknown {
         if (!this.#attributes) return fallback;
         if (!this.#attributes.has(name)) return fallback;
 
         return this.#attributes.get(name);
     }
 
-    public getAttrValidated<
-        TValueArkType extends AnyTypeConstraint,
-    >(
+    public getAttrValidated<TValueArkType extends AnyTypeConstraint>(
         name: string,
         valueSchema: TValueArkType,
         fallback: type.infer<TValueArkType>,
@@ -84,16 +83,9 @@ export class AnnotationsImpl<
         return this.#labels.has(name);
     }
 
-    public category(category: string | null): this;
     public category(): string | null;
-    public category(
-        category?: string | null | undefined,
-    ): this | string | null {
-        if (category === undefined) {
-            return this.attr('property:category', category);
-        }
-
-        const res = this.getAttr('property:category', undefined);
+    public category(): string | null {
+        const res = this.attr('property:category', undefined);
         const parsed = safeParse(res, schemas.propertyCategory);
         if (parsed.success) {
             return parsed.data;
@@ -101,16 +93,8 @@ export class AnnotationsImpl<
         return null;
     }
 
-    public displayName(): string | null;
-    public displayName(displayName: string | null): this;
-    public displayName(
-        displayName?: string | undefined | null,
-    ): this | string | null {
-        if (displayName === undefined) {
-            return this.attr('displayName', displayName);
-        }
-
-        const res = this.getAttr('displayName', undefined);
+    public displayName(): string | null {
+        const res = this.attr('displayName', undefined);
         const parsed = safeParse(res, schemas.displayName);
         if (parsed.success) {
             return parsed.data;
@@ -123,53 +107,17 @@ export class AnnotationsImpl<
         return serializeSchemaForDisplay(this.#schema);
     }
 
-    public visible(): boolean;
-    public visible(visibility: boolean): this;
-    public visible(visibility?: boolean): this | boolean {
-        if (visibility === undefined) {
-            return this.getAttrValidated(
-                'property:visible',
-                schemas.propertyVisible,
-                true,
-            );
-        }
-
-        return this.attr('property:visible', visibility);
-    }
-
-    public withAssociatedValue(
-        name: string,
-        callback: ContextualValueCalculationCallback<AnyTypeConstraint>,
-    ): this;
-    public withAssociatedValue(name: string, value: unknown): this;
-    public withAssociatedValue(name: string, callbackOrValue: unknown): this {
-        (this.#associatedValues ?? (this.#associatedValues = new Map())).set(
-            name,
-            typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<AnyTypeConstraint>)
-                : () => callbackOrValue,
+    public visible(): boolean {
+        return this.getAttrValidated(
+            'property:visible',
+            schemas.propertyVisible,
+            true,
         );
-        return this;
-    }
-
-    public withAmbientValue(
-        name: string,
-        callback: ContextualValueCalculationCallback<AnyTypeConstraint>,
-    ): this;
-    public withAmbientValue(name: string, value: unknown): this;
-    public withAmbientValue(name: string, callbackOrValue: unknown): this {
-        (this.#ambientValues ?? (this.#ambientValues = new Map())).set(
-            name,
-            typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<AnyTypeConstraint>)
-                : () => callbackOrValue,
-        );
-        return this;
     }
 
     #getAssociatedValueTyped(
         name: string,
-        value: type.infer<TArkType>,
+        value: type.infer<TSchema>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#associatedValues?.get(name);
@@ -202,7 +150,7 @@ export class AnnotationsImpl<
 
     #getAmbientValueTyped(
         name: string,
-        value: type.infer<TArkType>,
+        value: type.infer<TSchema>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#ambientValues?.get(name);
@@ -233,30 +181,16 @@ export class AnnotationsImpl<
         return this.#getAmbientValueTyped(name, value, context);
     }
 
-    end(): TArkType {
-        return this.#schema;
-    }
-
-    public static tryGet<
-        TArkType extends AnyTypeConstraint,
-    >(schema: TArkType): AnnotationsImpl<TArkType> | undefined {
-        return weakMap.get(schema);
-    }
-
-    public static get<TArkType extends AnyTypeConstraint>(
-        schema: TArkType,
-        createIfNotFound: boolean,
-    ): AnnotationsImpl<TArkType> {
-        const item = weakMap.get(schema);
-        if (item === undefined) {
-            if (createIfNotFound) {
-                const result = new AnnotationsImpl<TArkType>(schema);
-                weakMap.set(schema, result);
-                return result;
-            } else {
-                throw new Error('Metadata not found');
-            }
-        }
-        return item;
+    createBuilder(): AnnotationsBuilderImpl<TSchema> {
+        return new AnnotationsBuilderImpl(
+            this.#attributes ? new Map(this.#attributes.entries()) : undefined,
+            this.#labels ? new Set(this.#labels) : undefined,
+            this.#associatedValues
+                ? new Map(this.#associatedValues.entries())
+                : undefined,
+            this.#ambientValues
+                ? new Map(this.#ambientValues.entries())
+                : undefined,
+        );
     }
 }

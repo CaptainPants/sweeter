@@ -119,7 +119,7 @@ export function ObjectEditor(
                             return (
                                 propertyModel.valueModel.type
                                     .annotations()
-                                    .getAssociatedValue(
+                                    ?.getAssociatedValue(
                                         StandardLocalValues.Visible,
                                         typedModel.value,
                                         calculationContext,
@@ -172,7 +172,7 @@ export function ObjectEditor(
                                             <Label for={id}>
                                                 {property.propertyType
                                                     .annotations()
-                                                    .displayName() ??
+                                                    ?.displayName() ??
                                                     property.name}
                                             </Label>
                                         </Column>

@@ -57,7 +57,7 @@ export namespace arkTypeUtilityTypes {
     ];
 
     export type ArrayElementType<TArrayArkType extends Type<unknown[]>> =
-    /* @ts-expect-error Type-system doesn't understand that type.infer here is always an array */
+        /* @ts-expect-error Type-system doesn't understand that type.infer here is always an array */
         type.infer<TArrayArkType>[number];
     export type ArrayElementArkType<TArrayArkType extends Type<unknown[]>> =
         Type<ArrayElementType<TArrayArkType>>;

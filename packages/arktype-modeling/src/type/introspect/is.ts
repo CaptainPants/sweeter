@@ -1,5 +1,5 @@
 import { type, Type } from 'arktype';
-import { Domain, Union, Unit } from '@ark/schema';
+import { Domain, DomainNode, Intersection, Union, Unit } from '@ark/schema';
 
 import { safeParse } from '../../utility/parse.js';
 import { tryCast } from '../internal/tools.js';
@@ -16,14 +16,16 @@ export function is<TArkType extends AnyTypeConstraint>(
 export function isObjectType(
     schema: AnyTypeConstraint,
 ): schema is Type<{ readonly [key: string]: unknown }> {
-    return tryCast(schema, Domain.Node)?.domain === 'object';
+    // const typed = schema as { domain?: string | undefined };
+    // return typed.domain === 'object';
+    throw new TypeError('TODO: not implemented');
 }
 export function isArrayType(
     schema: AnyTypeConstraint,
 ): schema is Type<unknown[]> {
+    // const typed = schema as { domain?: string | undefined };
+    // return typed.domain === 'array';
     throw new TypeError('TODO: not implemented');
-    // Seems to come through as a weird looking intersection (Intersection.Node),
-    // not sure why its not Sequence.Node
 }
 
 export function isUnionType(schema: AnyTypeConstraint): boolean {

@@ -111,10 +111,10 @@ function setupTyped<TArkType extends AnyTypeConstraint>(
 }
 
 const defaults = [
-    setup(isUnionType, (value, type, parentInfo, depth) =>
-        UnionModelImpl.createFromValue(value, type, parentInfo, depth),
-    ),
-    setupTyped(isArrayType, (value, type, parentInfo, depth) => {
+    setup(isUnionType, function union(value, type, parentInfo, depth) {
+        return UnionModelImpl.createFromValue(value, type, parentInfo, depth);
+    }),
+    setupTyped(isArrayType, function array(value, type, parentInfo, depth) {
         const res = ArrayModelImpl.createFromValue(
             value,
             type,
@@ -123,9 +123,9 @@ const defaults = [
         );
         return res;
     }),
-    setupTyped(isObjectType, (value, type, parentInfo, depth) =>
-        ObjectImpl.createFromValue(value, type, parentInfo, depth),
-    ),
+    setupTyped(isObjectType, function object(value, type, parentInfo, depth) {
+        return ObjectImpl.createFromValue(value, type, parentInfo, depth);
+    }),
     setup(
         isStringLiteralType,
         (value, type, parentInfo, _depth) =>
@@ -133,37 +133,46 @@ const defaults = [
     ),
     setup(
         isNumberLiteralType,
-        (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl('number-constant', value, type, parentInfo),
+        function number_literal(value, type, parentInfo, _depth) {
+            return new SimpleModelImpl('number-constant', value, type, parentInfo);
+        }
     ),
     setup(
         isBooleanLiteralType,
-        (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl('boolean-constant', value, type, parentInfo),
+        function boolean_literal(value, type, parentInfo, _depth) {
+            return new SimpleModelImpl('boolean-constant', value, type, parentInfo);
+        }
     ),
     setup(
         isNullConstant,
-        (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl('null', value, type, parentInfo),
+        function null_literal(value, type, parentInfo, _depth) {
+            return new SimpleModelImpl('null', value, type, parentInfo);
+        }
     ),
     setup(
         isUndefinedConstant,
-        (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl('undefined', value, type, parentInfo),
+        function undefined_literal(value, type, parentInfo, _depth) {
+            return new SimpleModelImpl('undefined', value, type, parentInfo);
+        }
     ),
     setupTyped(
         isStringType,
-        (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl('string', value, type, parentInfo),
+        function string(value, type, parentInfo, _depth) {
+            return new SimpleModelImpl('string', value, type, parentInfo);
+        },
     ),
     setupTyped(
         isNumberType,
-        (value, type, parentInfo, _depth) =>
-            new SimpleModelImpl('number', value, type, parentInfo),
+        function number(value, type, parentInfo, _depth) {
+            return new SimpleModelImpl('number', value, type, parentInfo);
+        }
     ),
-    setup(isUnknownType, (value, type, parentInfo, _depth) => {
-        return new UnknownModelImpl(value, type, parentInfo);
-    }),
+    setup(
+        isUnknownType, 
+        function unknown(value, type, parentInfo, _depth) {
+            return new UnknownModelImpl(value, type, parentInfo);
+        }
+    ),
 ];
 
 function createModel<TArkType extends AnyTypeConstraint>(

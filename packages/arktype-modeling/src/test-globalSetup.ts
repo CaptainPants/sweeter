@@ -1,3 +1,5 @@
 import { extendArkTypes } from '.';
 
-extendArkTypes();
+export default function globalSetup() {
+    extendArkTypes();
+}

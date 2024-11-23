@@ -23,6 +23,6 @@ export default defineConfig({
     },
     plugins: [dts({ clearPureImport: false })],
     test: {
-        globalSetup: './src/globalSetup.js'
+        globalSetup: './src/test-globalSetup.ts'
     }
 });

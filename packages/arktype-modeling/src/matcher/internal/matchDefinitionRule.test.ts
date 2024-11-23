@@ -8,11 +8,13 @@ import { extendArkTypes } from '../../extendArkTypes.js';
 test('label', async () => {
     extendArkTypes();
 
+    const exampleType = type.number.annotate((add) => add.label('test-label'));
+
     expect(
         matchDefinitionRulePart(
             { settings: {} },
             {
-                type: type.number.annotate((add) => add.label('test-label')),
+                type: exampleType,
                 parentInfo: null,
             },
             Rules.label('test-label'),

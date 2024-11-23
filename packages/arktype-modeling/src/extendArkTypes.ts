@@ -1,4 +1,4 @@
-import { BaseRoot, nodeClassesByKind, NodeKind } from '@ark/schema';
+import { BaseNode, BaseRoot, nodeClassesByKind, NodeKind } from '@ark/schema';
 import { type, type Type } from 'arktype';
 
 import { throwError } from '@captainpants/sweeter-utilities';
@@ -54,8 +54,7 @@ export function extendArkTypes() {
 
 function addFunctionsToSchemaNode(name: string, node: any) {
     node.annotate = function (callback: AnnotationSetter): unknown {
-        funcs.annotate(this, callback);
-        return this;
+        return funcs.annotate(this, callback);
     };
 
     node.annotations = function (): Annotations | undefined {
@@ -63,7 +62,7 @@ function addFunctionsToSchemaNode(name: string, node: any) {
     };
 
     node.hasAnnotations = function (): boolean {
-        return funcs.hasAnnotations(this);
+        return !!funcs.annotations(this);
     };
 
     console.log(`Added for ${name}, ${node.attachments.id}`);
@@ -84,20 +83,23 @@ const funcs = {
     annotate<TSchema extends AnyTypeConstraint>(
         schema: TSchema,
         callback: AnnotationSetter,
-    ): void {
+    ): TSchema {
         const prior = funcs.annotations(schema) as AnnotationsImpl<TSchema>;
-        const builder = prior.createBuilder();
+        const builder = prior?.createBuilder() ?? AnnotationsBuilderImpl.empty();
         callback(builder);
+        const annotations = new AnnotationsImpl(
+            schema,
+            builder.attributes,
+            builder.labels,
+            builder.associatedValues,
+            builder.ambientValues 
+        );
+        const result = (schema as any as BaseNode).withMeta({ annotations: annotations });
+        return result as never;
     },
-    annotations<TSchema extends AnyTypeConstraint>(
-        schema: TSchema,
+    annotations(
+        schema: AnyTypeConstraint,
     ): Annotations | undefined {
         return schema.meta.annotations;
-    },
-    hasAnnotations<TSchema extends AnyTypeConstraint>(
-        schema: TSchema,
-    ): boolean {
-        /** @ts-ignore */
-        return AnnotationsImpl.tryGet(schema) !== undefined;
     },
 };

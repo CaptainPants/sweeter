@@ -3,7 +3,7 @@ import { type, Type } from 'arktype';
 import { safeParse } from '../../utility/parse.js';
 import { type AnyTypeConstraint } from '../AnyTypeConstraint.js';
 import { BaseNode } from '@ark/schema';
-import { getDomainNode, getIntersectionNode, getProtoNode, getUnionNode, getUnitNode } from './internal/arktypeInternals.js';
+import { asDomainNode, asIntersectionNode, asUnionNode, asUnitNode } from './internal/arktypeInternals.js';
 
 export function is<TArkType extends AnyTypeConstraint>(
     val: unknown,
@@ -16,41 +16,47 @@ export function is<TArkType extends AnyTypeConstraint>(
 export function isObjectType(
     schema: AnyTypeConstraint,
 ): schema is Type<{ readonly [key: string]: unknown }> {
-    return getIntersectionNode(schema as never)?.domain?.domain === 'object';
+    return asIntersectionNode(schema as never)?.domain?.domain === 'object';
 }
 
 export function isArrayType(
     schema: AnyTypeConstraint,
 ): schema is Type<unknown[]> {
-    return getProtoNode(schema as never)?.builtinName === 'Array';
+    return asIntersectionNode(schema as never)?.proto?.builtinName === 'Array';
 }
 
 export function isUnionType(schema: AnyTypeConstraint): boolean {
-    return !!getUnionNode(schema as never);
+    return Boolean(asUnionNode(schema as never));
 }
 
 export function isNumberType(
     schema: AnyTypeConstraint,
 ): schema is Type<number> {
-    return getDomainNode(schema as never)?.domain === 'number';
+    return asDomainNode(schema as never)?.domain === 'number';
 }
 
 export function isStringType(
     schema: AnyTypeConstraint,
 ): schema is Type<string> {
-    return getDomainNode(schema as never)?.domain === 'string';
+    return asDomainNode(schema as never)?.domain === 'string';
+}
+
+export function isSymbolType(
+    schema: AnyTypeConstraint,
+): schema is Type<symbol> {
+    return asDomainNode(schema as never)?.domain === 'symbol';
 }
 
 export function isBooleanType(
     schema: AnyTypeConstraint,
 ): schema is Type<boolean> {
-    const typed = getUnionNode(schema as never);
+    const typed = asUnionNode(schema as never);
     if (typed?.inner.branches) {
         const branches = typed.inner.branches;
         if (branches.length != 2) return false;
 
-        const branch1 = getUnitNode(branches[0]!);
-        const branch2 = getUnitNode(branches[1]!);
+        const branch1 = asUnitNode(branches[0]!);
+        const branch2 = asUnitNode(branches[1]!);
 
         if (!branch1 || !branch2) {
             return false;
@@ -65,31 +71,31 @@ export function isBooleanType(
 }
 
 export function isNumberLiteralType(schema: AnyTypeConstraint): boolean {
-    return getUnitNode(schema as never)?.domain === 'number';
+    return asUnitNode(schema as never)?.domain === 'number';
 }
 
 export function isStringLiteralType(schema: AnyTypeConstraint): boolean {
-    return getUnitNode(schema as never)?.domain === 'string';
+    return asUnitNode(schema as never)?.domain === 'string';
 }
 
 export function isBooleanLiteralType(schema: AnyTypeConstraint): boolean {
-    return getUnitNode(schema as never)?.domain === 'boolean';
+    return asUnitNode(schema as never)?.domain === 'boolean';
 }
 
 export function isBooleanTrueLiteral(schema: AnyTypeConstraint): boolean {
-    return getUnitNode(schema as never)?.compiledValue === true;
+    return asUnitNode(schema as never)?.unit === true;
 }
 
 export function isBooleanFalseLiteral(schema: AnyTypeConstraint): boolean {
-    return getUnitNode(schema as never)?.compiledValue === false;
+    return asUnitNode(schema as never)?.unit === false;
 }
 
 export function isNullConstant(schema: AnyTypeConstraint): boolean {
-    return getUnitNode(schema as never)?.compiledValue === null;
+    return asUnitNode(schema as never)?.unit === null;
 }
 
 export function isUndefinedConstant(schema: AnyTypeConstraint): boolean {
-    const node = getUnitNode(schema as never);
+    const node = asUnitNode(schema as never);
     if (!node) return false;
     return node.unit === undefined;
 }

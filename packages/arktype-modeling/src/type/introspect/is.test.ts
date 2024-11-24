@@ -19,13 +19,9 @@ const isFuncs = {
     isUnknownType
 } satisfies Record<string, (input: AnyTypeConstraint) => boolean>;
 
-function testAll(input: AnyTypeConstraint, shouldReturnTrue: readonly (keyof typeof isFuncs)[]) {
+function tryAll(input: AnyTypeConstraint, shouldReturnTrue: readonly (keyof typeof isFuncs)[]) {
     for (const [name, test] of Object.entries(isFuncs)) {
         const expected = shouldReturnTrue.includes(name as keyof typeof isFuncs);
-
-        if (test(input) !== expected) {
-            let j = 0;
-        }
 
         const actual = test(input);
 
@@ -51,20 +47,35 @@ const schemas = {
 };
 
 test('is', () => {
-    
-    testAll(schemas.number, ['isNumberType']);
-    testAll(schemas.object, ['isObjectType']);
-    testAll(schemas.array, ['isArrayType']);
-    testAll(schemas.union, ['isUnionType']);
-    testAll(schemas.number, ['isNumberType']);
-    testAll(schemas.string, ['isStringType']);
-    testAll(schemas.boolean, ['isBooleanType', 'isUnionType']);
-    testAll(schemas.number_literal, ['isNumberLiteralType']);
-    testAll(schemas.string_literal, ['isStringLiteralType']);
-    testAll(schemas.boolean_literal, ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
-    testAll(schemas.true, ['isBooleanLiteralType', 'isBooleanTrueLiteral']);
-    testAll(schemas.false, ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
-    testAll(schemas.null, ['isNullConstant']);
-    testAll(schemas.undefined, ['isUndefinedConstant']);
-    testAll(schemas.unknown, ['isUnknownType']);
-})
+    tryAll(schemas.object, ['isObjectType']);
+    tryAll(schemas.array, ['isArrayType']);
+    tryAll(schemas.union, ['isUnionType']);
+    tryAll(schemas.number, ['isNumberType']);
+    tryAll(schemas.string, ['isStringType']);
+    tryAll(schemas.boolean, ['isBooleanType', 'isUnionType']);
+    tryAll(schemas.number_literal, ['isNumberLiteralType']);
+    tryAll(schemas.string_literal, ['isStringLiteralType']);
+    tryAll(schemas.boolean_literal, ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
+    tryAll(schemas.true, ['isBooleanLiteralType', 'isBooleanTrueLiteral']);
+    tryAll(schemas.false, ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
+    tryAll(schemas.null, ['isNullConstant']);
+    tryAll(schemas.undefined, ['isUndefinedConstant']);
+    tryAll(schemas.unknown, ['isUnknownType']);
+});
+
+test('is (structural)', () => {
+    tryAll(schemas.object.optional(), ['isObjectType']);
+    tryAll(schemas.array.optional(), ['isArrayType']);
+    tryAll(schemas.union.optional(), ['isUnionType']);
+    tryAll(schemas.number.optional(), ['isNumberType']);
+    tryAll(schemas.string.optional(), ['isStringType']);
+    tryAll(schemas.boolean.optional(), ['isBooleanType', 'isUnionType']);
+    tryAll(schemas.number_literal.optional(), ['isNumberLiteralType']);
+    tryAll(schemas.string_literal.optional(), ['isStringLiteralType']);
+    tryAll(schemas.boolean_literal.optional(), ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
+    tryAll(schemas.true.optional(), ['isBooleanLiteralType', 'isBooleanTrueLiteral']);
+    tryAll(schemas.false.optional(), ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
+    tryAll(schemas.null.optional(), ['isNullConstant']);
+    tryAll(schemas.undefined.optional(), ['isUndefinedConstant']);
+    tryAll(schemas.unknown.optional(), ['isUnknownType']);
+});

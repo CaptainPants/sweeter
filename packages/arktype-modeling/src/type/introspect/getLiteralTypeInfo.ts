@@ -1,13 +1,9 @@
 import { AnyTypeConstraint } from '../AnyTypeConstraint';
 import { throwError } from '@captainpants/sweeter-utilities';
-import { InterrogableNode } from './types';
+import { asUnitNode } from './internal/arktypeInternals';
 
 export function tryGetLiteralTypeInfo(schema: AnyTypeConstraint): unknown {
-    const typed = schema as never as InterrogableNode;
-    if (typed.inner.unit) {
-        return typed.inner.unit.compiledValue;
-    }
-    return undefined;
+    return asUnitNode(schema as never)?.unit;
 }
 
 export function getLiteralTypeInfo(schema: AnyTypeConstraint) {

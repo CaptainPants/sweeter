@@ -1,7 +1,6 @@
 import { type, Type } from 'arktype';
 import { throwError } from '@captainpants/sweeter-utilities';
 import { AnyTypeConstraint } from '../AnyTypeConstraint';
-import { ObjectType } from 'arktype/internal/methods/object.ts';
 import { BaseRoot } from '@ark/schema';
 import { asDomainNode, asIntersectionNode, asUnitNode } from './internal/arktypeInternals';
 
@@ -21,11 +20,15 @@ export function tryGetObjectTypeInfo(
     if (!asObject) {
         return undefined;
     }
-    const keys = asObject.keyof();
 
+    const fixedProps: Map<string | symbol, AnyTypeConstraint> = new Map();
+    for (const prop of asObject.props) {
+        fixedProps.set(prop.key, prop.value as never);
+    }
+
+    const keys = asObject.keyof();
     let stringKey: BaseRoot | undefined;
     let symbolKey: BaseRoot | undefined;
-    const fixedProps: Map<string | symbol, AnyTypeConstraint> = new Map();
 
     for (const key of keys.branches) {
         const asDomain = asDomainNode(key);
@@ -38,13 +41,6 @@ export function tryGetObjectTypeInfo(
                 symbolKey = key;
                 continue;
             }
-        }
-        const asUnit = asUnitNode(key);
-        if (asUnit) {
-            fixedProps.set(asUnit.unit as never, node as never);
-        }
-        else {
-            // IGNORE UNKNOWN
         }
     }
 

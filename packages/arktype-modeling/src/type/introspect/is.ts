@@ -101,13 +101,13 @@ export function isUndefinedConstant(schema: AnyTypeConstraint): boolean {
 }
 
 export function isLiteralType(schema: AnyTypeConstraint): boolean {
-    return (
-        isStringLiteralType(schema) ||
-        isNumberLiteralType(schema) ||
-        isBooleanLiteralType(schema) ||
-        isNullConstant(schema) ||
-        isUndefinedConstant(schema)
-    );
+    const node = asUnitNode(schema as never);
+    return !!node;
+}
+export function isLiteralValue(schema: AnyTypeConstraint, value: unknown): boolean {
+    const node = asUnitNode(schema as never);
+    if (!node) return false;
+    return node.unit === value;
 }
 
 export function isStringOrStringLiteralType(

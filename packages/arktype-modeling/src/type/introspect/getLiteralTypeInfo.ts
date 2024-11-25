@@ -2,8 +2,17 @@ import { AnyTypeConstraint } from '../AnyTypeConstraint';
 import { throwError } from '@captainpants/sweeter-utilities';
 import { asUnitNode } from './internal/arktypeInternals';
 
-export function tryGetLiteralTypeInfo(schema: AnyTypeConstraint): unknown {
-    return asUnitNode(schema as never)?.unit;
+export interface LiteralTypeInfo {
+    value: unknown;
+}
+
+export function tryGetLiteralTypeInfo(schema: AnyTypeConstraint): LiteralTypeInfo | undefined {
+    const node = asUnitNode(schema as never);
+    if (!node) return undefined;
+    
+    return {
+        value: node.unit
+    };
 }
 
 export function getLiteralTypeInfo(schema: AnyTypeConstraint) {

@@ -1,10 +1,10 @@
-import { AnyObjectTypeConstraint } from '../type/AnyObjectTypeConstraint.js';
+import { UnknownObjectType } from '../type/types.js';
 import { AnyTypeConstraint } from '../type/types.js';
 import { introspect } from '../type/index.js';
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {
-    name: string;
+    name: string | symbol;
     order?: number;
     propertyType: AnyTypeConstraint;
 }
@@ -14,7 +14,7 @@ export interface CategorizedPropertyDefinition {
  * @returns
  */
 export function categorizeProperties(
-    objectType: AnyObjectTypeConstraint,
+    objectType: UnknownObjectType,
 ): Array<{ category: string; properties: CategorizedPropertyDefinition[] }>;
 
 /**
@@ -23,17 +23,18 @@ export function categorizeProperties(
  * @returns
  */
 export function categorizeProperties<TPropertyResult>(
-    objectType: AnyObjectTypeConstraint,
+    objectType: UnknownObjectType,
     transform?: (property: CategorizedPropertyDefinition) => TPropertyResult,
 ): Array<{ category: string; properties: TPropertyResult[] }>;
 export function categorizeProperties(
-    objectType: AnyObjectTypeConstraint,
+    objectType: UnknownObjectType,
     transform?: (property: CategorizedPropertyDefinition) => unknown,
 ): Array<{ category: string; properties: unknown[] }> {
     const categoryMap = new Map<string, CategorizedPropertyDefinition[]>();
 
-    for (const [name, propertyTyped] of introspect.getObjectTypeInfo(objectType)
-        .fixedProps) {
+    for (const [name, propertyTyped] of introspect
+        .getObjectTypeInfo(objectType)
+        .getProperties()) {
         const category =
             (propertyTyped.hasAnnotations()
                 ? propertyTyped.annotations()?.category()

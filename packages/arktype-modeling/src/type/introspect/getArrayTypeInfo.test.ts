@@ -1,5 +1,5 @@
-import { type } from "arktype";
-import { getArrayTypeInfo } from "./getArrayTypeInfo"
+import { type } from 'arktype';
+import { getArrayTypeInfo } from './getArrayTypeInfo';
 
 test('Single element type', () => {
     const input = type.string;

@@ -1,5 +1,5 @@
 export interface PropertyConstraint {
-    readonly name: string;
+    readonly name: string | symbol;
     readonly order?: number | undefined;
 }
 
@@ -13,8 +13,18 @@ function compareProperties(
         return orderDifferent;
     }
 
+    const aType = typeof a.name === 'symbol' ? -1 : 1;
+    const bType = typeof b.name === 'symbol' ? -1 : 1;
+    if (aType !== bType) {
+        return aType < bType ? -1 : 1;
+    }
+
+    // string.toString() is a no-op, if its a symbol it will be a mangled name
+    const aName = a.name.toString();
+    const bName = b.name.toString();
+
     // TODO: property order overrides
-    return a.name > b.name ? 1 : a.name === b.name ? 0 : -1;
+    return aName > bName ? 1 : aName === bName ? 0 : -1;
 }
 
 export function sortProperties<TProp extends PropertyConstraint>(

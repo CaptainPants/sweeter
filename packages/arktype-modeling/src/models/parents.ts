@@ -6,7 +6,7 @@ export type ParentRelationship =
       }
     | {
           type: 'property';
-          property: string;
+          property: string | symbol;
       }
     | {
           type: 'self';

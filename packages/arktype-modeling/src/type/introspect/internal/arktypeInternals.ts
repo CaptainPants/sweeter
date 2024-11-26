@@ -1,4 +1,11 @@
-import { BaseNode, Domain, Intersection, Proto, Union, Unit } from "@ark/schema";
+import {
+    BaseNode,
+    Domain,
+    Intersection,
+    Proto,
+    Union,
+    Unit,
+} from '@ark/schema';
 
 export function asUnitNode(node: BaseNode): Unit.Node | undefined {
     if (node instanceof Unit.Node) return node;
@@ -10,7 +17,9 @@ export function asDomainNode(node: BaseNode): Domain.Node | undefined {
     return undefined;
 }
 
-export function asIntersectionNode(node: BaseNode): Intersection.Node | undefined {
+export function asIntersectionNode(
+    node: BaseNode,
+): Intersection.Node | undefined {
     if (node instanceof Intersection.Node) return node;
     return undefined;
 }

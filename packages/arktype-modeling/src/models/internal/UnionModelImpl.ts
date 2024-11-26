@@ -67,10 +67,10 @@ export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>
         arkTypeUtilityTypes.UnionOptions<TUnionArkType>
     >;
 
-    public unknownGetDirectlyResolved(): Model<Type<unknown>> {
+    public unknownResolve(): Model<Type<unknown>> {
         return this.#resolvedModel as never;
     }
-    public getDirectlyResolved(): SpreadModel<
+    public resolve(): SpreadModel<
         arkTypeUtilityTypes.UnionOptions<TUnionArkType>
     > {
         return this.#resolvedModel;

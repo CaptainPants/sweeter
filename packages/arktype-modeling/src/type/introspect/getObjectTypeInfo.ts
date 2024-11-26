@@ -39,8 +39,8 @@ export function tryGetObjectTypeInfo(
                 result.set(key as never, node.get(key) as never);
             }
             return result;
-        } 
-    }
+        },
+    };
 }
 
 export function getObjectTypeInfo(schema: UnknownType): ObjectTypeInfo {

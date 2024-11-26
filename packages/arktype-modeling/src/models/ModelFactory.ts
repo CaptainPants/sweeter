@@ -134,45 +134,46 @@ const defaults = [
     setup(
         isNumberLiteralType,
         function number_literal(value, type, parentInfo, _depth) {
-            return new SimpleModelImpl('number-constant', value, type, parentInfo);
-        }
+            return new SimpleModelImpl(
+                'number-constant',
+                value,
+                type,
+                parentInfo,
+            );
+        },
     ),
     setup(
         isBooleanLiteralType,
         function boolean_literal(value, type, parentInfo, _depth) {
-            return new SimpleModelImpl('boolean-constant', value, type, parentInfo);
-        }
+            return new SimpleModelImpl(
+                'boolean-constant',
+                value,
+                type,
+                parentInfo,
+            );
+        },
     ),
     setup(
         isNullConstant,
         function null_literal(value, type, parentInfo, _depth) {
             return new SimpleModelImpl('null', value, type, parentInfo);
-        }
+        },
     ),
     setup(
         isUndefinedConstant,
         function undefined_literal(value, type, parentInfo, _depth) {
             return new SimpleModelImpl('undefined', value, type, parentInfo);
-        }
-    ),
-    setupTyped(
-        isStringType,
-        function string(value, type, parentInfo, _depth) {
-            return new SimpleModelImpl('string', value, type, parentInfo);
         },
     ),
-    setupTyped(
-        isNumberType,
-        function number(value, type, parentInfo, _depth) {
-            return new SimpleModelImpl('number', value, type, parentInfo);
-        }
-    ),
-    setup(
-        isUnknownType, 
-        function unknown(value, type, parentInfo, _depth) {
-            return new UnknownModelImpl(value, type, parentInfo);
-        }
-    ),
+    setupTyped(isStringType, function string(value, type, parentInfo, _depth) {
+        return new SimpleModelImpl('string', value, type, parentInfo);
+    }),
+    setupTyped(isNumberType, function number(value, type, parentInfo, _depth) {
+        return new SimpleModelImpl('number', value, type, parentInfo);
+    }),
+    setup(isUnknownType, function unknown(value, type, parentInfo, _depth) {
+        return new UnknownModelImpl(value, type, parentInfo);
+    }),
 ];
 
 function createModel<TArkType extends AnyTypeConstraint>(

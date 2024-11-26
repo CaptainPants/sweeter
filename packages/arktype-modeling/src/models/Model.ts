@@ -3,6 +3,8 @@ import { type, Type } from 'arktype';
 import {
     AnyObjectTypeConstraint,
     AnyTypeConstraint,
+    UnknownObjectType,
+    UnknownType,
     type ReadonlyRecord,
 } from '../index.js';
 
@@ -125,7 +127,7 @@ interface UnknownObjectModelMethods {
         triggerValidation?: boolean,
     ): Promise<this>;
 
-    unknownGetCatchallType(): AnyTypeConstraint | undefined;
+    unknownGetCatchallType(): UnknownType | undefined;
 
     unknownSetProperty(
         key: string,
@@ -141,7 +143,7 @@ interface UnknownObjectModelMethods {
 }
 
 export interface UnknownObjectModel
-    extends BaseModel<ReadonlyRecord<string, unknown>, AnyObjectTypeConstraint>,
+    extends BaseModel<ReadonlyRecord<string, unknown>, UnknownObjectType>,
         UnknownObjectModelMethods {}
 
 export type UnknownMapObjectEntry = readonly [
@@ -182,7 +184,7 @@ export interface UnknownUnionModelMethods {
         type: TTargetArkType,
     ) => Model<TTargetArkType> | null;
 
-    unknownGetDirectlyResolved: () => UnspecifiedModel;
+    unknownResolve: () => UnspecifiedModel;
 
     getTypes: () => ReadonlyArray<AnyTypeConstraint>;
 
@@ -191,9 +193,7 @@ export interface UnknownUnionModelMethods {
 
 export interface UnionModelMethods<TUnionArkType extends AnyTypeConstraint>
     extends UnknownUnionModelMethods {
-    getDirectlyResolved: () => SpreadModel<
-        arkTypeUtilityTypes.UnionOptions<TUnionArkType>
-    >;
+    resolve: () => SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionArkType>>;
 }
 
 export interface UnknownUnionModel
@@ -205,9 +205,8 @@ export interface UnionModel<TUnion extends AnyTypeConstraint>
         UnionModelMethods<TUnion> {}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SpreadModel<T extends AnyTypeConstraint> = T extends any
-    ? Model<T>
-    : never;
+export type SpreadModel<TUnionOfSchemas extends AnyTypeConstraint> =
+    TUnionOfSchemas extends any ? Model<TUnionOfSchemas> : never;
 
 export interface UnknownModel extends BaseModel<unknown, Type<unknown>> {}
 

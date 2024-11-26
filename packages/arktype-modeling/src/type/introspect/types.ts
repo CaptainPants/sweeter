@@ -1,1 +1,1 @@
-import { BaseNode, Domain, Proto, Structure, Union, Unit } from "@ark/schema";
+import { BaseNode, Domain, Proto, Structure, Union, Unit } from '@ark/schema';

@@ -90,7 +90,14 @@ export class AnnotationsBuilderImpl<TSchema extends AnyTypeConstraint>
         return this;
     }
 
-    public static empty<TSchema extends AnyTypeConstraint>(): AnnotationsBuilderImpl<TSchema> { 
-        return new AnnotationsBuilderImpl(undefined, undefined, undefined, undefined);
+    public static empty<
+        TSchema extends AnyTypeConstraint,
+    >(): AnnotationsBuilderImpl<TSchema> {
+        return new AnnotationsBuilderImpl(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+        );
     }
 }

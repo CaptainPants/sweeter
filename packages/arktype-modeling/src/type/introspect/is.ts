@@ -3,7 +3,16 @@ import { type, Type } from 'arktype';
 import { safeParse } from '../../utility/parse.js';
 import { type AnyTypeConstraint } from '../types.js';
 import { BaseNode } from '@ark/schema';
-import { asDomainNode, asIntersectionNode, asUnionNode, asUnitNode } from './internal/arktypeInternals.js';
+import {
+    asDomainNode,
+    asIntersectionNode,
+    asUnionNode,
+    asUnitNode,
+} from './internal/arktypeInternals.js';
+
+export function isType(value: unknown): value is Type<unknown> {
+    return value instanceof BaseNode;
+}
 
 export function is<TArkType extends AnyTypeConstraint>(
     val: unknown,
@@ -65,7 +74,11 @@ export function isBooleanType(
         const value1 = branch1.compiledValue;
         const value2 = branch2.compiledValue;
 
-        return typeof value1 === 'boolean' && typeof value2 === 'boolean' && value1 !== value2;
+        return (
+            typeof value1 === 'boolean' &&
+            typeof value2 === 'boolean' &&
+            value1 !== value2
+        );
     }
     return false;
 }
@@ -104,7 +117,10 @@ export function isLiteralType(schema: AnyTypeConstraint): boolean {
     const node = asUnitNode(schema as never);
     return !!node;
 }
-export function isLiteralValue(schema: AnyTypeConstraint, value: unknown): boolean {
+export function isLiteralValue(
+    schema: AnyTypeConstraint,
+    value: unknown,
+): boolean {
     const node = asUnitNode(schema as never);
     if (!node) return false;
     return node.unit === value;

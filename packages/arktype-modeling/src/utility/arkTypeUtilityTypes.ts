@@ -62,9 +62,11 @@ export namespace arkTypeUtilityTypes {
     export type ArrayElementArkType<TArrayArkType extends Type<unknown[]>> =
         Type<ArrayElementType<TArrayArkType>>;
 
+    type _DistributeType<T> = T extends infer _ ? Type<T> : never;
+
     export type UnionOptions<TUnionArkType> = IsUnion<
         type.infer<TUnionArkType>
     > extends true
-        ? type.infer<TUnionArkType>
+        ? _DistributeType<type.infer<TUnionArkType>>
         : never;
 }

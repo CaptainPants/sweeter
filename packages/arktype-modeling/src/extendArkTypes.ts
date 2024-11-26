@@ -85,21 +85,22 @@ const funcs = {
         callback: AnnotationSetter,
     ): TSchema {
         const prior = funcs.annotations(schema) as AnnotationsImpl<TSchema>;
-        const builder = prior?.createBuilder() ?? AnnotationsBuilderImpl.empty();
+        const builder =
+            prior?.createBuilder() ?? AnnotationsBuilderImpl.empty();
         callback(builder);
         const annotations = new AnnotationsImpl(
             schema,
             builder.attributes,
             builder.labels,
             builder.associatedValues,
-            builder.ambientValues 
+            builder.ambientValues,
         );
-        const result = (schema as any as BaseNode).withMeta({ annotations: annotations });
+        const result = (schema as any as BaseNode).withMeta({
+            annotations: annotations,
+        });
         return result as never;
     },
-    annotations(
-        schema: AnyTypeConstraint,
-    ): Annotations | undefined {
+    annotations(schema: AnyTypeConstraint): Annotations | undefined {
         return schema.meta.annotations;
     },
 };

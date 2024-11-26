@@ -1,6 +1,21 @@
-import { type } from "arktype";
-import { isArrayType, isBooleanFalseLiteral, isBooleanLiteralType, isBooleanTrueLiteral, isBooleanType, isNullConstant, isNumberLiteralType, isNumberType, isObjectType, isStringLiteralType, isStringType, isUndefinedConstant, isUnionType, isUnknownType } from "./is";
-import { AnyTypeConstraint } from "../types";
+import { type } from 'arktype';
+import {
+    isArrayType,
+    isBooleanFalseLiteral,
+    isBooleanLiteralType,
+    isBooleanTrueLiteral,
+    isBooleanType,
+    isNullConstant,
+    isNumberLiteralType,
+    isNumberType,
+    isObjectType,
+    isStringLiteralType,
+    isStringType,
+    isUndefinedConstant,
+    isUnionType,
+    isUnknownType,
+} from './is';
+import { AnyTypeConstraint } from '../types';
 
 const isFuncs = {
     isObjectType,
@@ -16,16 +31,24 @@ const isFuncs = {
     isBooleanFalseLiteral,
     isNullConstant,
     isUndefinedConstant,
-    isUnknownType
+    isUnknownType,
 } satisfies Record<string, (input: AnyTypeConstraint) => boolean>;
 
-function tryAll(input: AnyTypeConstraint, shouldReturnTrue: readonly (keyof typeof isFuncs)[]) {
+function tryAll(
+    input: AnyTypeConstraint,
+    shouldReturnTrue: readonly (keyof typeof isFuncs)[],
+) {
     for (const [name, test] of Object.entries(isFuncs)) {
-        const expected = shouldReturnTrue.includes(name as keyof typeof isFuncs);
+        const expected = shouldReturnTrue.includes(
+            name as keyof typeof isFuncs,
+        );
 
         const actual = test(input);
 
-        expect(actual, `${name}(${input.expression}) was unexpectedly ${actual}`).toStrictEqual(expected);
+        expect(
+            actual,
+            `${name}(${input.expression}) was unexpectedly ${actual}`,
+        ).toStrictEqual(expected);
     }
 }
 
@@ -43,7 +66,7 @@ const schemas = {
     false: type.false,
     null: type.null,
     undefined: type.undefined,
-    unknown: type.unknown
+    unknown: type.unknown,
 };
 
 test('is', () => {
@@ -55,7 +78,10 @@ test('is', () => {
     tryAll(schemas.boolean, ['isBooleanType', 'isUnionType']);
     tryAll(schemas.number_literal, ['isNumberLiteralType']);
     tryAll(schemas.string_literal, ['isStringLiteralType']);
-    tryAll(schemas.boolean_literal, ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
+    tryAll(schemas.boolean_literal, [
+        'isBooleanLiteralType',
+        'isBooleanFalseLiteral',
+    ]);
     tryAll(schemas.true, ['isBooleanLiteralType', 'isBooleanTrueLiteral']);
     tryAll(schemas.false, ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
     tryAll(schemas.null, ['isNullConstant']);
@@ -72,9 +98,18 @@ test('is (structural)', () => {
     tryAll(schemas.boolean.optional(), ['isBooleanType', 'isUnionType']);
     tryAll(schemas.number_literal.optional(), ['isNumberLiteralType']);
     tryAll(schemas.string_literal.optional(), ['isStringLiteralType']);
-    tryAll(schemas.boolean_literal.optional(), ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
-    tryAll(schemas.true.optional(), ['isBooleanLiteralType', 'isBooleanTrueLiteral']);
-    tryAll(schemas.false.optional(), ['isBooleanLiteralType', 'isBooleanFalseLiteral']);
+    tryAll(schemas.boolean_literal.optional(), [
+        'isBooleanLiteralType',
+        'isBooleanFalseLiteral',
+    ]);
+    tryAll(schemas.true.optional(), [
+        'isBooleanLiteralType',
+        'isBooleanTrueLiteral',
+    ]);
+    tryAll(schemas.false.optional(), [
+        'isBooleanLiteralType',
+        'isBooleanFalseLiteral',
+    ]);
     tryAll(schemas.null.optional(), ['isNullConstant']);
     tryAll(schemas.undefined.optional(), ['isUndefinedConstant']);
     tryAll(schemas.unknown.optional(), ['isUnknownType']);

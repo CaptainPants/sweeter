@@ -1,20 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Type, type } from 'arktype';
-import { type TypeMatchAssert } from '../testingTypes.js';
 
-import { type NumberConstantModel, type StringModel } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';
+import { typeAssert } from '@captainpants/sweeter-utilities';
+import { SpreadModel } from './Model.js';
+import { arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
 
 test('union', async () => {
-    const nested = type.unit(1).or(type.unit(2));
+    const expected = type.unit(1);
+    const unionType = expected.or(type.unit(2)).or(type.string);
 
-    const unionType = nested.or(type.string);
-
-    const typeTest1: TypeMatchAssert<
-        typeof unionType,
-        Type<1 | 2 | string>
-    > = true;
+    typeAssert.equal<typeof unionType, Type<1 | 2 | string>>();
 
     const model = await ModelFactory.createModel({
         value: 1,
@@ -25,8 +22,9 @@ test('union', async () => {
 
     expect(value1).toStrictEqual(1);
 
-    const resolved = model.getDirectlyResolved();
+    const resolved = model.resolve();
 
-    expect(resolved.type).toStrictEqual(nested);
+    expect(resolved.type).toStrictEqual(expected);
+
     expect(resolved.value).toStrictEqual(1);
 });

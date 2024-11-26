@@ -1,5 +1,8 @@
-import { type } from "arktype"
-import { getLiteralTypeInfo, tryGetLiteralTypeInfo } from "./getLiteralTypeInfo";
+import { type } from 'arktype';
+import {
+    getLiteralTypeInfo,
+    tryGetLiteralTypeInfo,
+} from './getLiteralTypeInfo';
 
 it('getLiteralTypeInfo returns correct value', () => {
     const schemas = {
@@ -11,7 +14,7 @@ it('getLiteralTypeInfo returns correct value', () => {
         null2: type.unit(null),
         undefined1: type.undefined,
         undefined2: type.unit(undefined),
-        non_unit: type({ test: type.unit(1) })
+        non_unit: type({ test: type.unit(1) }),
     };
 
     expect(getLiteralTypeInfo(schemas.number).value).toStrictEqual(1);
@@ -20,7 +23,11 @@ it('getLiteralTypeInfo returns correct value', () => {
     expect(getLiteralTypeInfo(schemas.false).value).toStrictEqual(false);
     expect(getLiteralTypeInfo(schemas.null1).value).toStrictEqual(null);
     expect(getLiteralTypeInfo(schemas.null2).value).toStrictEqual(null);
-    expect(getLiteralTypeInfo(schemas.undefined1).value).toStrictEqual(undefined);
-    expect(getLiteralTypeInfo(schemas.undefined2).value).toStrictEqual(undefined);
+    expect(getLiteralTypeInfo(schemas.undefined1).value).toStrictEqual(
+        undefined,
+    );
+    expect(getLiteralTypeInfo(schemas.undefined2).value).toStrictEqual(
+        undefined,
+    );
     expect(tryGetLiteralTypeInfo(schemas.non_unit)).toStrictEqual(undefined);
-})
+});

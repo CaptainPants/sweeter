@@ -1,4 +1,8 @@
-import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
+import {
+    descend,
+    hasOwnProperty,
+    throwError,
+} from '@captainpants/sweeter-utilities';
 
 import {
     type ObjectModel,
@@ -12,16 +16,19 @@ import { type ParentTypeInfo } from '../parents.js';
 import { ModelImpl } from './ModelImpl.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { validateAndThrow } from '../../utility/validate.js';
-import { PropertyModel, type UnknownPropertyModel } from '../PropertyModel.js';
-import { AnyTypeConstraint } from '../../type/types.js';
+import { type UnknownPropertyModel } from '../PropertyModel.js';
+import {
+    AnyObjectTypeConstraint,
+    AnyTypeConstraint,
+    UnknownType,
+} from '../../type/types.js';
 import { Type, type } from 'arktype';
-import { AnyObjectTypeConstraint } from '../../type/AnyObjectTypeConstraint.js';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import { introspect } from '../../type/index.js';
 
 type UnknownRecord = Record<string | symbol, unknown>;
 type KnownPropertyModels = {
-    [key: string]: UnknownPropertyModel;
+    [key: string | symbol]: UnknownPropertyModel;
 };
 
 export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
@@ -41,7 +48,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         const typeInfo = introspect.getObjectTypeInfo(schema);
 
         // Object.keys lets us avoid prototype pollution
-        for (const [propertyName, propertyType] of typeInfo.fixedProps) {
+        for (const [propertyName, propertyType] of typeInfo.getProperties()) {
             const propertyValue = (value as UnknownRecord)[propertyName];
 
             // TODO: this should potentially unwrap out ZodOptional
@@ -84,23 +91,26 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
 
     #properties: KnownPropertyModels;
 
-    public unknownGetCatchallType(): AnyTypeConstraint | undefined {
-        return getObjectTypeInfo(this.type).stringMappingType;
+    public unknownGetCatchallType(): UnknownType | undefined {
+        throw new Error('TODO: CATCH ALL');
+        // return getObjectTypeInfo(this.type).stringMappingType;
     }
 
     public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectArkType> {
-        return getObjectTypeInfo(this.type).stringMappingType as never;
+        throw new Error('TODO: CATCH ALL');
+        // return getObjectTypeInfo(this.type).stringMappingType as never;
     }
 
-    private typeForKey(key: string) {
+    private typeForKey(key: string | symbol) {
         const info = getObjectTypeInfo(this.type);
+        const fixedProps = info.getProperties();
 
         const type: AnyTypeConstraint | undefined =
-            info.fixedProps.get(key) ?? info.stringMappingType;
+            fixedProps.get(key) ?? throwError('TODO'); //?? info.stringMappingType;
 
         if (!type) {
             throw new Error(
-                `Property ${key} not found and no catchall type provided.`,
+                `Property ${key.toString()} not found and no catchall type provided.`,
             );
         }
 
@@ -189,11 +199,12 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         validate: boolean = true,
     ): Promise<this> {
         const typeInfo = getObjectTypeInfo(this.type);
+        const fixedProps = typeInfo.getProperties();
 
-        if (hasOwnProperty(typeInfo.fixedProps, from)) {
+        if (fixedProps.has(from)) {
             throw new Error(`Cannot delete a known property '${from}'.`);
         }
-        if (hasOwnProperty(typeInfo.fixedProps, to)) {
+        if (fixedProps.has(to)) {
             throw new Error(`Cannot add a known property '${to}'.`);
         }
 
@@ -228,8 +239,9 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         validate: boolean = true,
     ): Promise<this> {
         const typeInfo = getObjectTypeInfo(this.type);
+        const fixedProps = typeInfo.getProperties();
 
-        if (hasOwnProperty(typeInfo.fixedProps, key)) {
+        if (fixedProps.has(key)) {
             throw new Error(`Cannot delete a known property '${key}'.`);
         }
 

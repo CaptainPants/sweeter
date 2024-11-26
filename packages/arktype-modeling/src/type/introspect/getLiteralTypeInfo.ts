@@ -6,12 +6,14 @@ export interface LiteralTypeInfo {
     value: unknown;
 }
 
-export function tryGetLiteralTypeInfo(schema: UnknownType): LiteralTypeInfo | undefined {
+export function tryGetLiteralTypeInfo(
+    schema: UnknownType,
+): LiteralTypeInfo | undefined {
     const node = asUnitNode(schema as never);
     if (!node) return undefined;
-    
+
     return {
-        value: node.unit
+        value: node.unit,
     };
 }
 

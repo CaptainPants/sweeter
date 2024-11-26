@@ -51,6 +51,9 @@ export function extendArkTypes() {
         }
     }
 }
+extendArkTypes.also = function(type: Type<any>) {
+    addFunctionsToSchemaNode(type.expression, type as never);
+}
 
 function addFunctionsToSchemaNode(name: string, node: any) {
     node.annotate = function (callback: AnnotationSetter): unknown {
@@ -64,8 +67,6 @@ function addFunctionsToSchemaNode(name: string, node: any) {
     node.hasAnnotations = function (): boolean {
         return !!funcs.annotations(this);
     };
-
-    console.log(`Added for ${name}, ${node.attachments.id}`);
 }
 
 function wrap(Node: NodeClass): NodeClass {

@@ -119,10 +119,10 @@ export type TypedPropertyModelForKey<
           | undefined;
 
 interface UnknownObjectModelMethods {
-    unknownGetProperty(key: string): UnknownPropertyModel | undefined;
+    unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined;
 
     unknownSetProperty(
-        key: string,
+        key: string | symbol,
         value: unknown,
         triggerValidation?: boolean,
     ): Promise<this>;
@@ -130,14 +130,14 @@ interface UnknownObjectModelMethods {
     unknownGetCatchallType(): UnknownType | undefined;
 
     unknownSetProperty(
-        key: string,
+        key: string | symbol,
         value: unknown,
         triggerValidation?: boolean,
     ): Promise<this>;
 
-    deleteProperty(key: string, validate?: boolean): Promise<this>;
+    deleteProperty(key: string | symbol, validate?: boolean): Promise<this>;
 
-    moveProperty(from: string, to: string, validate?: boolean): Promise<this>;
+    moveProperty(from: string | symbol, to: string | symbol, validate?: boolean): Promise<this>;
 
     unknownGetProperties(): readonly UnknownPropertyModel[];
 }

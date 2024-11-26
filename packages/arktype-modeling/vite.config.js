@@ -23,6 +23,6 @@ export default defineConfig({
     },
     plugins: [dts({ clearPureImport: false })],
     test: {
-        globalSetup: './src/test-globalSetup.ts'
+        setupFiles: ['./src/globalSetup/index.js']
     }
 });

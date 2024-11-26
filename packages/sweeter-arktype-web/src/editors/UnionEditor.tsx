@@ -60,7 +60,7 @@ export function UnionEditor({
         await $peek(replace)(defaultModel);
     };
 
-    const resolved = $calc(() => typedModel.value.unknownGetDirectlyResolved());
+    const resolved = $calc(() => typedModel.value.unknownResolve());
 
     const replaceResolved = async (
         newResolvedModel: UnknownModel,

@@ -13,9 +13,9 @@ import { idPaths } from '@captainpants/sweeter-utilities';
 export type MapElementEditorPartProps = PropertiesMightBeSignals<{
     id: string;
 
-    propertyName: string;
+    propertyName: string | symbol;
     elementModel: UnknownModel;
-    updateElement: (name: string, value: UnknownModel) => Promise<void>;
+    updateElement: (name: string | symbol, value: UnknownModel) => Promise<void>;
 
     indent: number;
     ownerIdPath: string | undefined;
@@ -41,14 +41,16 @@ export function MapElementEditorPart(
 
     const { localize } = init.hook(LocalizerHook);
 
+    const stringKey = $calc(() => String($val(elementKey)));
+
     return (
         <EditorHost
             model={elementModel}
             replace={replace}
-            propertyDisplayName={$calc(() => localize($val(elementKey)))}
+            propertyDisplayName={$calc(() => localize($val(stringKey)))}
             indent={indent}
             idPath={$calc(() =>
-                idPaths.key($val(ownerIdPath), $val(elementKey)),
+                idPaths.key($val(ownerIdPath), $val(stringKey)),
             )}
         />
     );

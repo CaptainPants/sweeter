@@ -4,7 +4,7 @@
  * @param key
  * @returns
  */
-export function hasOwnProperty<const TKey extends string>(
+export function hasOwnProperty<const TKey extends string | symbol>(
     value: unknown,
     key: TKey,
 ): value is { [Key in TKey]: unknown } {

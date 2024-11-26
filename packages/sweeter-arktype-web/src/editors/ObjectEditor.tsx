@@ -96,7 +96,7 @@ export function ObjectEditor(
             // SIGNAL HERE
             type.value,
             (property) => {
-                const id = idGenerator.next(property.name);
+                const id = idGenerator.next(String(property.name));
 
                 return {
                     property,
@@ -166,14 +166,14 @@ export function ObjectEditor(
                                 () => (
                                     <Row
                                         class={css.property}
-                                        key={`prop-${property.name}`}
+                                        key={`prop-${String(property.name)}`}
                                     >
                                         <Column xs={4}>
                                             <Label for={id}>
                                                 {property.propertyType
                                                     .annotations()
                                                     ?.displayName() ??
-                                                    property.name}
+                                                    String(property.name)}
                                             </Label>
                                         </Column>
                                         <Column xs={8}>

@@ -118,7 +118,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public async unknownSetProperty(
-        key: string,
+        key: string | symbol,
         value: unknown,
         validate: boolean = true,
     ): Promise<this> {
@@ -162,7 +162,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public async setProperty<
-        TKey extends keyof type.infer<TObjectArkType> & string,
+        TKey extends keyof type.infer<TObjectArkType> & (string | symbol),
         TValue extends type.infer<TObjectArkType>[TKey],
     >(
         key: TKey,
@@ -173,7 +173,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         return this.unknownSetProperty(key, value, validate);
     }
 
-    public unknownGetProperty(key: string): UnknownPropertyModel | undefined {
+    public unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
         if (hasOwnProperty(this.#properties, key)) {
             const result = this.#properties[key];
@@ -194,21 +194,21 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public async moveProperty(
-        from: string,
-        to: string,
+        from: string | symbol,
+        to: string | symbol,
         validate: boolean = true,
     ): Promise<this> {
         const typeInfo = getObjectTypeInfo(this.type);
         const fixedProps = typeInfo.getProperties();
 
         if (fixedProps.has(from)) {
-            throw new Error(`Cannot delete a known property '${from}'.`);
+            throw new Error(`Cannot delete a known property '${from.toString()}'.`);
         }
         if (fixedProps.has(to)) {
-            throw new Error(`Cannot add a known property '${to}'.`);
+            throw new Error(`Cannot add a known property '${to.toString()}'.`);
         }
 
-        const copy = {
+        const copy: UnknownRecord = {
             ...(this.value as UnknownRecord),
             [to]: (this.value as UnknownRecord)[from]!,
         };
@@ -218,7 +218,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
             await validateAndThrow(this.type, copy, { deep: true });
         }
 
-        const propertyModels = {
+        const propertyModels: KnownPropertyModels = {
             ...this.#properties,
             [to]: this.#properties[from]!,
         };
@@ -235,14 +235,14 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public async deleteProperty(
-        key: string,
+        key: string | symbol,
         validate: boolean = true,
     ): Promise<this> {
         const typeInfo = getObjectTypeInfo(this.type);
         const fixedProps = typeInfo.getProperties();
 
         if (fixedProps.has(key)) {
-            throw new Error(`Cannot delete a known property '${key}'.`);
+            throw new Error(`Cannot delete a known property '${key.toString()}'.`);
         }
 
         const copy = {

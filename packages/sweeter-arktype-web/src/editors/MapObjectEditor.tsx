@@ -86,7 +86,7 @@ export const MapObjectEditor: Component<EditorProps> = (
     );
 
     const updatePropertyValue = async (
-        name: string,
+        name: string | symbol,
         propertyModel: UnknownModel,
     ): Promise<void> => {
         const newDraft = await draft
@@ -112,7 +112,7 @@ export const MapObjectEditor: Component<EditorProps> = (
         draft.update(newDraft);
     };
 
-    const remove = async (name: string): Promise<void> => {
+    const remove = async (name: string | symbol): Promise<void> => {
         const copy = await draft.peek().deleteProperty(name);
 
         draft.update(copy);
@@ -131,20 +131,20 @@ export const MapObjectEditor: Component<EditorProps> = (
         const mappedProperties = entries.map(({ name, valueModel }) => ({
             property: valueModel,
             render: () => {
-                const id = idGenerator.next(name);
+                const id = idGenerator.next(String(name));
 
                 return (
                     <div>
                         <div class={css.propertyName}>
-                            <Label for={id}>{name}</Label>
-                            <IconButton
+                            <Label for={id}>{String(name)}</Label>
+                            {typeof name !== 'symbol' && <IconButton
                                 icon="Edit"
                                 onLeftClick={() => startRename(name)}
-                            />
+                            />}
                         </div>
                         <div>
                             <MapElementEditorPart
-                                id={idGenerator.next(name)}
+                                id={idGenerator.next(String(name))}
                                 propertyName={name}
                                 elementModel={valueModel}
                                 updateElement={updatePropertyValue}

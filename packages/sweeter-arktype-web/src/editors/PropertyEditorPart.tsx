@@ -44,9 +44,10 @@ export function PropertyEditorPart(
     }: PropertyEditorPartProps,
     init: ComponentInit,
 ): JSX.Element {
-    const idPath = $calc(() =>
-        idPaths.key($val(ownerIdPath), $val(propertyModel).name),
-    );
+    const idPath = $calc(() => {
+        const name = $val(propertyModel).name;
+        return idPaths.key($val(ownerIdPath), String(name));
+    });
 
     const replace = async (value: UnknownModel) => {
         await $peek(updateValue)($peek(propertyModel), value);
@@ -84,7 +85,7 @@ export function PropertyEditorPart(
     const displayName = $calc(
         () =>
             $val(propertyModel).valueModel.type.annotations()?.displayName() ??
-            $val(propertyModel).name,
+            String($val(propertyModel).name),
     );
 
     return $calc(() => {

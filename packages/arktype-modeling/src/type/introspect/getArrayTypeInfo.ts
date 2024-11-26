@@ -1,16 +1,15 @@
-import { Union } from '@ark/schema';
-import { type, Type } from 'arktype';
+import { Type } from 'arktype';
 
 import { throwError } from '@captainpants/sweeter-utilities';
 
-import { AnyTypeConstraint } from '../AnyTypeConstraint';
+import { UnknownType } from '../types';
 import { asIntersectionNode } from './internal/arktypeInternals';
 
 export interface ArrayTypeInfo {
-    elementType: Type<unknown>;
+    readonly elementType: UnknownType;
 }
 
-export function tryGetArrayTypeInfo(schema: AnyTypeConstraint): ArrayTypeInfo | undefined {
+export function tryGetArrayTypeInfo(schema: UnknownType): ArrayTypeInfo | undefined {
     const elementType = asIntersectionNode(schema as never)?.structure?.sequence?.element;
     if (!elementType) { return undefined; }
     return {
@@ -24,7 +23,7 @@ export function tryGetArrayTypeInfo(schema: AnyTypeConstraint): ArrayTypeInfo | 
  * @throws if they schema is not an array.
  * @returns
  */
-export function getArrayTypeInfo(schema: AnyTypeConstraint) {
+export function getArrayTypeInfo(schema: UnknownType) {
     return (
         tryGetArrayTypeInfo(schema) ??
         throwError(new TypeError('Schema was not a union'))

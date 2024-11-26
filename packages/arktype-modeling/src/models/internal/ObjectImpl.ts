@@ -13,7 +13,7 @@ import { ModelImpl } from './ModelImpl.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { validateAndThrow } from '../../utility/validate.js';
 import { PropertyModel, type UnknownPropertyModel } from '../PropertyModel.js';
-import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
+import { AnyTypeConstraint } from '../../type/types.js';
 import { Type, type } from 'arktype';
 import { AnyObjectTypeConstraint } from '../../type/AnyObjectTypeConstraint.js';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';

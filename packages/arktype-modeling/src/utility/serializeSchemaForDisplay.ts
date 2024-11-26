@@ -10,7 +10,7 @@ import {
     isUnionType,
 } from '../type/introspect/is.js';
 import { notFound } from '../notFound.js';
-import { type AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { type AnyTypeConstraint } from '../type/types.js';
 import { getUnionTypeInfo } from '../type/introspect/getUnionTypeInfo.js';
 import { getArrayTypeInfo } from '../type/introspect/getArrayTypeInfo.js';
 

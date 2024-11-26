@@ -1,6 +1,6 @@
 import { type ReadonlyRecord } from '../types.js';
 import { Type, type } from 'arktype';
-import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/types.js';
 import {
     GetExpandoKeys,
     GetExpandoType,

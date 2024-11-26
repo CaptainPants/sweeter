@@ -11,9 +11,11 @@ test('general', () => {
     });
 
     const info = getObjectTypeInfo(schema);
+    const fixedProps = info.getProperties();
 
-    expect(info.fixedProps.size).toStrictEqual(1);
-    expect(isLiteralValue(info.fixedProps.get('test') ?? throwError('Expected a match'), 1))
-    expect(isStringType(info.stringMappingType ?? throwError('Expected a match'))).toStrictEqual(true);
-    expect(isNumberType(info.symbolMappingType ?? throwError('Expected a match'))).toStrictEqual(true);
+    expect(fixedProps.size).toStrictEqual(1);
+    expect(isLiteralValue(fixedProps.get('test') ?? throwError('Expected a match'), 1))
+    
+    const _keys = info.getMappedKeys();
+    // TODO: tests about mapped keys
 });

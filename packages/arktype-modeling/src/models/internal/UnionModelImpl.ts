@@ -14,7 +14,7 @@ import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
-import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
+import { AnyTypeConstraint } from '../../type/types.js';
 import { introspect } from '../../type/index.js';
 
 export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>

@@ -1,7 +1,7 @@
 import { type, Type } from 'arktype';
 
 import { AnyModelConstraint, type Model } from './models/Model.js';
-import { AnyTypeConstraint } from './type/AnyTypeConstraint.js';
+import { AnyTypeConstraint } from './type/types.js';
 
 export type ValueTypeFromModel<TModel extends AnyModelConstraint> =
     TModel['value'];

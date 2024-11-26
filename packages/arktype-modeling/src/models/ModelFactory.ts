@@ -28,7 +28,7 @@ import {
     isUnknownType,
 } from '../type/introspect/is.js';
 import { validateAndThrow } from '../utility/validate.js';
-import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { AnyTypeConstraint } from '../type/types.js';
 import { Type, type } from 'arktype';
 import { safeParse } from '../utility/parse.js';
 import { ValueTypeFromModel } from '../types.js';

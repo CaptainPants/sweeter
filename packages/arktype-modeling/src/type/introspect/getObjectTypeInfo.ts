@@ -1,63 +1,49 @@
-import { type, Type } from 'arktype';
 import { throwError } from '@captainpants/sweeter-utilities';
-import { AnyTypeConstraint } from '../AnyTypeConstraint';
 import { BaseRoot } from '@ark/schema';
-import { asDomainNode, asIntersectionNode, asUnitNode } from './internal/arktypeInternals';
+
+import { UnknownType, AnyTypeConstraint } from '../types';
+import { asIntersectionNode } from './internal/arktypeInternals';
 
 export interface ObjectTypeInfo {
-    fixedProps: Map<string | symbol, Type<unknown>>;
-
-    stringMappingType: Type<unknown> | undefined;
-    symbolMappingType: Type<unknown> | undefined;
+    /**
+     * Map of properties by name (excludes indexers).
+     */
+    getProperties(): ReadonlyMap<string | symbol, UnknownType>;
+    getMappedKeys(): ReadonlyMap<UnknownType, UnknownType>;
 }
 
 export function tryGetObjectTypeInfo(
-    schema: AnyTypeConstraint,
+    schema: UnknownType,
 ): ObjectTypeInfo | undefined {
     const node = schema as never as BaseRoot;
-    
+
     const asObject = asIntersectionNode(node);
     if (!asObject) {
         return undefined;
     }
 
-    const fixedProps: Map<string | symbol, AnyTypeConstraint> = new Map();
-    for (const prop of asObject.props) {
-        fixedProps.set(prop.key, prop.value as never);
-    }
-
-    const keys = asObject.keyof();
-    let stringKey: BaseRoot | undefined;
-    let symbolKey: BaseRoot | undefined;
-
-    for (const key of keys.branches) {
-        const asDomain = asDomainNode(key);
-        if (asDomain) {
-            if (asDomain.domain === 'string') {
-                stringKey = key;
-                continue;
-            }
-            else if (asDomain.domain === 'symbol') {
-                symbolKey = key;
-                continue;
-            }
-        }
-    }
-
-    // TODO: this doesn't really cater to complex mapped keys that
-    // you can get through things like [Key in `PREFIX-${string}]
-    // but ... :shrug:
-
     return {
-        fixedProps: fixedProps,
-        stringMappingType: stringKey ? node.get(stringKey) as never : undefined,
-        symbolMappingType: symbolKey ? node.get(symbolKey) as never : undefined
+        getProperties() {
+            const result: Map<string | symbol, UnknownType> = new Map();
+
+            for (const prop of asObject.props) {
+                result.set(prop.key, prop.value as never);
+            }
+
+            return result;
+        },
+        getMappedKeys() {
+            const result = new Map<UnknownType, UnknownType>();
+            const keys = node.keyof().branches;
+            for (const key of keys) {
+                result.set(key as never, node.get(key) as never);
+            }
+            return result;
+        } 
     }
 }
 
-type X = { [Key in `banana-${string}`]: string };
-
-export function getObjectTypeInfo(schema: AnyTypeConstraint): ObjectTypeInfo {
+export function getObjectTypeInfo(schema: UnknownType): ObjectTypeInfo {
     return (
         tryGetObjectTypeInfo(schema) ??
         throwError(new TypeError('Schema was not a union'))

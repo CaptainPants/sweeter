@@ -4,7 +4,7 @@ import { type, type Type } from 'arktype';
 import { throwError } from '@captainpants/sweeter-utilities';
 
 import type { Annotations, AnnotationSetter } from './annotations/types.js';
-import type { AnyTypeConstraint } from './type/AnyTypeConstraint.js';
+import type { AnyTypeConstraint } from './type/types.js';
 import { AnnotationsImpl } from './annotations/internal/AnnotationsImpl.js';
 import { AnnotationsBuilderImpl } from './annotations/internal/AnnotationBuilderImpl.js';
 

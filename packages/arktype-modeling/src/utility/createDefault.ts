@@ -6,7 +6,7 @@ import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
 import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
 
 import { introspect } from '../type/introspect/index.js';
-import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { AnyTypeConstraint } from '../type/types.js';
 
 export function createDefault<TArkType extends AnyTypeConstraint>(
     schema: TArkType,

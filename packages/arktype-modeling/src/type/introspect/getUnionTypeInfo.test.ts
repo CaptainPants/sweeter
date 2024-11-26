@@ -1,6 +1,5 @@
 import { type } from "arktype";
 import { getUnionTypeInfo, tryGetUnionTypeInfo } from "./getUnionTypeInfo";
-import { isNumberLiteralType } from "./is";
 import { getLiteralTypeInfo } from "./getLiteralTypeInfo";
 
 test('branches contains expected items', () => {

@@ -1,6 +1,6 @@
 import { type } from "arktype";
 import { isArrayType, isBooleanFalseLiteral, isBooleanLiteralType, isBooleanTrueLiteral, isBooleanType, isNullConstant, isNumberLiteralType, isNumberType, isObjectType, isStringLiteralType, isStringType, isUndefinedConstant, isUnionType, isUnknownType } from "./is";
-import { AnyTypeConstraint } from "../AnyTypeConstraint";
+import { AnyTypeConstraint } from "../types";
 
 const isFuncs = {
     isObjectType,

@@ -30,7 +30,7 @@ import {
     type BooleanModel,
     type UnknownObjectModel,
 } from './Model.js';
-import { AnyTypeConstraint } from '../type/AnyTypeConstraint.js';
+import { AnyTypeConstraint } from '../type/types.js';
 
 export function cast<TToModel extends AnyModelConstraint>(
     model: AnyModelConstraint,

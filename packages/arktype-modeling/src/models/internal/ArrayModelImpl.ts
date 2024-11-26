@@ -16,7 +16,7 @@ import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { type, Type } from 'arktype';
 import { ArrayType } from 'arktype/internal/methods/array.ts';
 import { getArrayTypeInfo } from '../../type/introspect/getArrayTypeInfo.js';
-import { AnyTypeConstraint } from '../../type/AnyTypeConstraint.js';
+import { AnyTypeConstraint } from '../../type/types.js';
 import { parseAsync } from '../../utility/parse.js';
 
 export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>

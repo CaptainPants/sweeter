@@ -99,9 +99,11 @@ export function $mapByIdentity<T, U>(
     };
 
     if (isSignal(map)) {
-        const cleanup = map.listenWeak(resetCache);
+        const cleanup = map.listen(resetCache);
 
         // When the signal is no longer reachable, stop listening
+        // Nothing in this method references resultSignal so this
+        // should be pretty safe.
         whenGarbageCollected(resultSignal, cleanup);
     }
 

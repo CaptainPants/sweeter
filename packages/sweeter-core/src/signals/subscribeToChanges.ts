@@ -20,6 +20,9 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
      */
     callback: (values: UnsignalAll<TArgs>) => void | (() => void),
     invokeImmediate = false,
+    /**
+     * Whether or not the callback should be registered via WeakRef from dependent signals.
+     */
     strong = true,
 ): () => void {
     let lastCleanup: void | (() => void);

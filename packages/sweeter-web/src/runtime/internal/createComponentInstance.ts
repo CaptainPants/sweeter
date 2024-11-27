@@ -126,6 +126,8 @@ function createComponentInstanceInit<
             });
 
             whenGarbageCollected(
+                // When this magic comment gets removed,
+                // clean up.
                 getOrCreateMagicComment('onSignalChange'),
                 cleanup
             );

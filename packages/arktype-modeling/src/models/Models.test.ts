@@ -4,7 +4,6 @@ import {
     type LiteralModel,
     type Model,
     type ObjectModel,
-    type TypeMatchAssert,
     type UnionModel,
 } from '../index.js';
 import { typeAssert } from '@captainpants/sweeter-utilities';

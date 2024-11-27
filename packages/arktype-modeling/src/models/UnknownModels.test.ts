@@ -2,7 +2,6 @@
 import { typeAssert } from '@captainpants/sweeter-utilities';
 import {
     type Model,
-    type TypeExtendsAssert,
     type PropertyModel,
     type UnknownPropertyModel,
     type UnionModel,

@@ -5,9 +5,11 @@ import { Rules } from '../Rules.js';
 import { matchDefinitionRulePart } from './matchDefinitionRule.js';
 import { extendArkTypes } from '../../extendArkTypes.js';
 
-test('label', async () => {
+beforeAll(() => {
     extendArkTypes();
+});
 
+test('label', async () => {
     const exampleType = type.number.annotate((add) => add.label('test-label'));
 
     expect(

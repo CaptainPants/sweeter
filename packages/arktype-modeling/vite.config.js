@@ -23,6 +23,5 @@ export default defineConfig({
     },
     plugins: [dts({ clearPureImport: false })],
     test: {
-        setupFiles: ['./src/globalSetup/index.js']
     }
 });

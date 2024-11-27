@@ -176,7 +176,7 @@ export function createComponentInstance<
         {
             reportFaulted(err) {
                 // This might be undefined
-                console.log(result);
+                console.log('Faulted (createComponentInstance): ', result);
                 resultController.update({ mode: 'ERROR', error: err });
             },
         },

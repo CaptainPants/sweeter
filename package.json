@@ -11,7 +11,7 @@
     "test": "lerna run test",
     "watch-libs": "lerna watch --scope @captainpants/sweeter-utilities --scope @captainpants/sweeter-core --scope @captainpants/sweeter-web --scope @captainpants/sweeter-gummybear --scope @captainpants/arktype-modeling --scope @captainpants/sweeter-arktype-web  --scope @captainpants/arktype-example-data -- pnpm run build --scope \\$LERNA_PACKAGE_NAME",
     "watch-example": "lerna run watch --scope @captainpants/sweeter-example",
-    "watch-typeytypetype-example": "lerna run watch --scope @captainpants/sweeter-typeytypetype-example",
+    "watch-arktype-example": "lerna run watch --scope @captainpants/sweeter-arktype-example",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
     "set-versions": "pnpm -r exec npm version",

@@ -2,8 +2,6 @@ import {
     asBoolean,
     cast,
     ModelFactory,
-    type UnionModel,
-    asUnknown,
     BooleanModel,
     validate,
 } from '@captainpants/arktype-modeling';
@@ -36,7 +34,7 @@ export function BooleanEditor(
             },
             convertIn: (model) => model.value,
             convertOut: (draft) => {
-                const asModel = ModelFactory.createUnvalidatedReplacement(
+                const asModel = ModelFactory.createReplacement(
                     draft,
                     typedModel.peek(),
                 );

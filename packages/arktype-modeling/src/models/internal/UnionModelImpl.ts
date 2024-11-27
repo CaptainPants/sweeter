@@ -33,7 +33,7 @@ export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>
             throw new Error(`Could not find matching type for value.`);
         }
 
-        const resolvedModel = ModelFactory.createUnvalidatedModelPart<
+        const resolvedModel = ModelFactory.createModelPart<
             arkTypeUtilityTypes.UnionOptions<TUnionArkType>
         >({
             value: value as never,

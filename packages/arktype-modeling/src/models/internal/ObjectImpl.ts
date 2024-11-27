@@ -52,7 +52,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
             const propertyValue = (value as UnknownRecord)[propertyName];
 
             // TODO: this should potentially unwrap out ZodOptional
-            const propertyValueModel = ModelFactory.createUnvalidatedModelPart({
+            const propertyValueModel = ModelFactory.createModelPart({
                 value: propertyValue,
                 schema: propertyType,
                 parentInfo: {
@@ -126,11 +126,11 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     public async unknownSetProperty(
         key: string | symbol,
         value: unknown,
-        validate: boolean = true,
     ): Promise<this> {
         const type = this.typeForKey(key);
 
-        const adopted = ModelFactory.createUnvalidatedModelPart({
+        // Note that this parses the value and throws on failure
+        const adopted = ModelFactory.createModelPart({
             value,
             schema: type,
             parentInfo: {
@@ -145,9 +145,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         };
         (copy as UnknownRecord)[key] = adopted.value;
 
-        if (validate) {
-            await validateAndThrow(this.type, copy, { deep: true });
-        }
+        await validateAndThrow(this.type, copy, { deep: true });
 
         const propertyModels: KnownPropertyModels = {
             ...this.#properties,
@@ -173,10 +171,9 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     >(
         key: TKey,
         /* @ts-expect-error */
-        value: TValue | Model<Type<TValue>>,
-        validate: boolean = true,
+        value: TValue | Model<Type<TValue>>
     ): Promise<this> {
-        return this.unknownSetProperty(key, value, validate);
+        return this.unknownSetProperty(key, value);
     }
 
     public unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined {

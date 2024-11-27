@@ -19,7 +19,7 @@ export async function tryApplyTypeToModel<
 ): Promise<Model<TToArkType> | undefined> {
     const validationResult = await safeParseAsync(model.value, toType);
     if (validationResult.success) {
-        return ModelFactory.createUnvalidatedModelPart<TToArkType>({
+        return ModelFactory.createModelPart<TToArkType>({
             value: validationResult.data,
             schema: toType,
             parentInfo: model.parentInfo,
@@ -41,7 +41,7 @@ export async function applyTypeToModel<
 >(model: TSourceModel, toType: TToArkType): Promise<Model<TToArkType>> {
     const converted = await parseAsync(model.value, toType);
 
-    return ModelFactory.createUnvalidatedModelPart<TToArkType>({
+    return ModelFactory.createModelPart<TToArkType>({
         value: converted,
         schema: toType,
         parentInfo: model.parentInfo,

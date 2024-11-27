@@ -35,7 +35,7 @@ export function TextEditor(
             convertIn: (model) => model.value,
             convertOut: (draft) => ({
                 success: true,
-                result: ModelFactory.createUnvalidatedReplacement(
+                result: ModelFactory.createReplacement(
                     draft,
                     typedModel.peek(),
                 ),

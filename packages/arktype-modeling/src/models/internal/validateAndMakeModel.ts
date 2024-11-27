@@ -44,7 +44,7 @@ export async function validateAndMakeModel<TArkType extends AnyTypeConstraint>(
                 }
             }
 
-            return ModelFactory.createUnvalidatedModelPart<TArkType>({
+            return ModelFactory.createModelPart<TArkType>({
                 parentInfo,
                 schema: type,
                 value: validated,
@@ -54,7 +54,7 @@ export async function validateAndMakeModel<TArkType extends AnyTypeConstraint>(
     } else {
         const validated = await validateAndThrow<TArkType>(type, valueOrModel);
 
-        return ModelFactory.createUnvalidatedModelPart<TArkType>({
+        return ModelFactory.createModelPart<TArkType>({
             parentInfo,
             schema: type,
             value: validated,

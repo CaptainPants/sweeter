@@ -91,7 +91,7 @@ export const MapObjectEditor: Component<EditorProps> = (
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .unknownSetProperty(name, propertyModel, true);
+            .unknownSetProperty(name, propertyModel);
 
         draft.update(newDraft);
     };
@@ -101,7 +101,7 @@ export const MapObjectEditor: Component<EditorProps> = (
 
         const newDraft = await draft
             .peek()
-            .unknownSetProperty(name, propertyModel, true);
+            .unknownSetProperty(name, propertyModel);
 
         draft.update(newDraft);
     };

@@ -42,7 +42,7 @@ export function NumberEditor(
                     };
                 }
 
-                const asModel = ModelFactory.createUnvalidatedReplacement(
+                const asModel = ModelFactory.createReplacement(
                     parsed,
                     typedModel.peek(),
                 );

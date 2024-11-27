@@ -71,7 +71,7 @@ export function ObjectEditor(
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .unknownSetProperty(propertyModel.name, value, true);
+            .unknownSetProperty(propertyModel.name, value);
 
         draft.update(newDraft);
     };

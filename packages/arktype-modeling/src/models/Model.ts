@@ -124,7 +124,6 @@ interface UnknownObjectModelMethods {
     unknownSetProperty(
         key: string | symbol,
         value: unknown,
-        triggerValidation?: boolean,
     ): Promise<this>;
 
     unknownGetCatchallType(): UnknownType | undefined;
@@ -175,7 +174,6 @@ export interface ObjectModel<TObjectArkType extends AnyObjectTypeConstraint>
     setProperty<TKey extends keyof type.infer<TObjectArkType> & string>(
         key: TKey,
         value: type.infer<TObjectArkType>[TKey],
-        triggerValidation?: boolean,
     ): Promise<this>;
 }
 

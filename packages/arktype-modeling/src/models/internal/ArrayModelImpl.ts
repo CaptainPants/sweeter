@@ -34,7 +34,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
             info.elementType as arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
 
         const elementModels = (value as readonly unknown[]).map((item, index) =>
-            ModelFactory.createUnvalidatedModelPart<
+            ModelFactory.createModelPart<
                 /* @ts-expect-error - Type system doesn't know that this is always a Type<?> */
                 arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>
             >({

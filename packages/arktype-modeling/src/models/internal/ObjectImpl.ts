@@ -105,8 +105,14 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         const info = getObjectTypeInfo(this.type);
         const fixedProps = info.getProperties();
 
-        const type: AnyTypeConstraint | undefined =
-            fixedProps.get(key) ?? throwError('TODO: ObjectImpl.typeForKey.1 -- mapped keys'); //?? info.stringMappingType;
+        let type: UnknownType | undefined =
+            fixedProps.get(key);
+        if (!type) {
+            const matchingKey = [...info.getMappedKeys().entries()].filter(([indexerKey, value]) => indexerKey.allows(key))[0];
+            if (matchingKey) {
+                type = matchingKey[1];
+            }
+        }
 
         if (!type) {
             throw new Error(

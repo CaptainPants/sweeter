@@ -1,7 +1,6 @@
 import { type } from 'arktype';
 
 import { ModelFactory } from './ModelFactory.js';
-import { introspect } from '../type/index.js';
 
 test('map-object', async () => {
     const schema = type({ '[string]': type.number });
@@ -18,6 +17,10 @@ test('map-object', async () => {
     const updated = await model.setProperty('c', 3);
 
     expect(updated.value).toStrictEqual({ a: 1, b: 2, c: 3 });
+
+    expect(async () => {
+        await model.unknownSetProperty('c', 'test');
+    }).toThrow();
 });
 
 test('rigid-object', async () => {

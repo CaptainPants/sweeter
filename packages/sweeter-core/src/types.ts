@@ -72,7 +72,7 @@ export interface ComponentInit {
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void,
         invokeImmediately?: boolean,
-    ): void;
+    ): () => void;
     getContext<T>(context: Context<T>): T;
 
     readonly idGenerator: IdGenerator;

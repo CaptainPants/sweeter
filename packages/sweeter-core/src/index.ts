@@ -1,7 +1,6 @@
 import './jsx-globals.js';
 import './SweeterExtensionPoints.js';
 
-export * from './addExplicitStrongReference.js';
 export * from './components/index.js';
 export * from './context/index.js';
 export * from './executionContext/index.js';

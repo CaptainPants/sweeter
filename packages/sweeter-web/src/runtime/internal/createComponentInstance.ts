@@ -2,7 +2,6 @@ import {
     subscribeToChanges,
     Context,
     initializeHook,
-    addExplicitStrongReference,
     untrack,
     type ComponentTypeConstraint,
     type UnsignalAll,
@@ -16,6 +15,7 @@ import {
 } from '@captainpants/sweeter-core';
 import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
+import { whenGarbageCollected } from '@captainpants/sweeter-utilities';
 
 const hookInitSymbol = Symbol('hook');
 
@@ -115,13 +115,8 @@ function createComponentInstanceInit<
                 );
             }
 
-            addExplicitStrongReference(
-                getOrCreateMagicComment('onSignalChange'),
-                callback,
-            );
-
-            untrack(() => {
-                subscribeToChanges(
+            const cleanup = untrack(() => {
+                return subscribeToChanges(
                     dependencies,
                     callback,
                     invokeImmediately,
@@ -129,6 +124,13 @@ function createComponentInstanceInit<
                     false,
                 );
             });
+
+            whenGarbageCollected(
+                getOrCreateMagicComment('onSignalChange'),
+                cleanup
+            );
+
+            return cleanup;
         },
         get idGenerator(): IdGenerator {
             if (!init.isValid) {

@@ -1,11 +1,10 @@
-import { arrayExcept } from '@captainpants/sweeter-utilities';
+import { arrayExcept, whenGarbageCollected } from '@captainpants/sweeter-utilities';
 import {
     $calc,
     $peek,
     $invalidateOnChange,
     $val,
     isSignal,
-    addExplicitStrongReference,
     $constant,
     SignalController,
     $controlled,
@@ -100,11 +99,11 @@ export function $mapByIdentity<T, U>(
     };
 
     if (isSignal(map)) {
-        map.listenWeak(resetCache);
-    }
+        const cleanup = map.listenWeak(resetCache);
 
-    // keep mapChange alive (and therefore receiving updates) as long as the result signal is alive
-    addExplicitStrongReference(resultSignal, resetCache);
+        // When the signal is no longer reachable, stop listening
+        whenGarbageCollected(resultSignal, cleanup);
+    }
 
     return resultSignal;
 }

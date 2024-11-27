@@ -1,11 +1,11 @@
 import { type Signal } from '@captainpants/sweeter-core';
 import {
     $calc,
-    addExplicitStrongReference,
     $val,
 } from '@captainpants/sweeter-core';
 import { type ElementCssStyles } from '../../IntrinsicAttributes.js';
 import { translateNumericPropertyValue } from './translateNumericPropertyValue.js';
+import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';
 
 export function bindDOMStyleProp(
     node: HTMLElement | SVGElement,

@@ -1,6 +1,5 @@
 import {
     type ContextSnapshot,
-    addExplicitStrongReference,
     flattenElements,
     ComponentFaultContext,
     type SignalState,
@@ -16,6 +15,7 @@ import {
 import { isText } from './utility/isText.js';
 import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
+import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';
 
 export function addJsxChildren(
     getContext: ContextSnapshot,

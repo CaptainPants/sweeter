@@ -1,3 +1,4 @@
+import { whenGarbageCollected } from '@captainpants/sweeter-utilities';
 import {
     $calc,
     $mutable,
@@ -6,7 +7,6 @@ import {
     $val,
     isSignal,
     trackingIsAnError,
-    addExplicitStrongReference,
 } from '../index.js';
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
@@ -89,11 +89,11 @@ export function $mapByIndex<T, U>(
     };
 
     if (isSignal(map)) {
-        map.listenWeak(resetCache);
-    }
+        const cleanup = map.listenWeak(resetCache);
 
-    // keep mapChange alive (and therefore receiving updates) as long as the result signal is alive
-    addExplicitStrongReference(resultSignal, resetCache);
+        // When the signal is no longer reachable, stop listening
+        whenGarbageCollected(resultSignal, cleanup);
+    }
 
     return resultSignal;
 }

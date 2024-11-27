@@ -1,4 +1,4 @@
-import { arrayRemove } from '@captainpants/sweeter-utilities';
+import { arrayRemove } from "../arrayRemove";
 
 const strongReferences = new WeakMap<object, unknown[]>();
 

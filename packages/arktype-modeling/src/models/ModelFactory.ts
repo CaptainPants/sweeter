@@ -63,54 +63,35 @@ type UnknownModelFactoryMethod = (
     depth: number,
 ) => UnspecifiedModel | undefined;
 
-function failedToParse(type: UnknownType, errors: ArkErrors): never {
-    throw new Error(`Failed to parse value as ${type.expression}. ${errors.summary}`);
-}
-
+function setup<TArkType extends AnyTypeConstraint>(
+    is: (schema: UnknownType) => schema is TArkType,
+    factory: ModelFactoryMethod<TArkType>,
+): UnknownModelFactoryMethod
 function setup(
-    is: (schema: AnyTypeConstraint) => boolean,
+    is: (schema: UnknownType) => boolean,
+    factory: UnknownModelFactoryMethod,
+): UnknownModelFactoryMethod;
+function setup(
+    is: (schema: UnknownType) => boolean,
     factory: UnknownModelFactoryMethod,
 ): UnknownModelFactoryMethod {
     return (
         input,
-        arkType,
+        schema,
         parentInfo,
         depth,
     ): UnspecifiedModel | undefined => {
-        if (!is(arkType)) {
+        if (!is(schema)) {
             return undefined;
         }
 
-        const parsed = safeParse(input, arkType);
+        const parsed = safeParse(input, schema);
 
         if (parsed.success) {
-            return factory(parsed.data, arkType, parentInfo, depth);
+            return factory(parsed.data, schema, parentInfo, depth);
         }
 
-        failedToParse(arkType, parsed.issues);
-    };
-}
-function setupTyped<TArkType extends AnyTypeConstraint>(
-    is: (schema: AnyTypeConstraint) => schema is TArkType,
-    factory: ModelFactoryMethod<TArkType>,
-): UnknownModelFactoryMethod {
-    return (
-        input,
-        arkType,
-        parentInfo,
-        depth,
-    ): UnspecifiedModel | undefined => {
-        if (!is(arkType)) {
-            return undefined;
-        }
-
-        const parsed = safeParse(input, arkType);
-
-        if (parsed.success) {
-            return factory(parsed.data, arkType, parentInfo, depth);
-        }
-
-        failedToParse(arkType, parsed.issues);
+        throw new Error(`Failed to parse value as ${schema.expression}. ${parsed.issues.summary}`);
     };
 }
 
@@ -118,7 +99,7 @@ const defaults = [
     setup(isUnionType, function union(value, type, parentInfo, depth) {
         return UnionModelImpl.createFromValue(value, type, parentInfo, depth);
     }),
-    setupTyped(isArrayType, function array(value, type, parentInfo, depth) {
+    setup(isArrayType, function array(value, type, parentInfo, depth) {
         const res = ArrayModelImpl.createFromValue(
             value,
             type,
@@ -127,7 +108,7 @@ const defaults = [
         );
         return res;
     }),
-    setupTyped(isObjectType, function object(value, type, parentInfo, depth) {
+    setup(isObjectType, function object(value, type, parentInfo, depth) {
         return ObjectImpl.createFromValue(value, type, parentInfo, depth);
     }),
     setup(
@@ -169,10 +150,10 @@ const defaults = [
             return new SimpleModelImpl('undefined', value, type, parentInfo);
         },
     ),
-    setupTyped(isStringType, function string(value, type, parentInfo, _depth) {
+    setup(isStringType, function string(value, type, parentInfo, _depth) {
         return new SimpleModelImpl('string', value, type, parentInfo);
     }),
-    setupTyped(isNumberType, function number(value, type, parentInfo, _depth) {
+    setup(isNumberType, function number(value, type, parentInfo, _depth) {
         return new SimpleModelImpl('number', value, type, parentInfo);
     }),
     setup(isUnknownType, function unknown(value, type, parentInfo, _depth) {
@@ -218,7 +199,6 @@ function doCreateModelPart<TArkType extends AnyTypeConstraint>(
     schema: TArkType,
     parentInfo: ParentTypeInfo | null = null,
     depth = descend.defaultDepth,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): UnspecifiedModel {
     parentInfo ??= null;
 
@@ -229,7 +209,7 @@ function doCreateModelPart<TArkType extends AnyTypeConstraint>(
         }
     }
 
-    throw new TypeError(`Unrecognised type ${schema.constructor.name}.`);
+    throw new TypeError(`Unrecognised type ${schema.expression}.`);
 }
 
 function createReplacement<

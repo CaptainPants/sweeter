@@ -1,10 +1,10 @@
-import { createLocationSignal } from "./createLocationSignal";
+import { createLocationSignal } from './createLocationSignal';
 
 test('Test', () => {
-    let location = "/start";
+    let location = '/start';
     createLocationSignal.getLocation = () => {
         return location;
-    }
+    };
     function setLocation(newLocation: string) {
         location = newLocation;
         window.dispatchEvent(new Event('popstate', {}));
@@ -14,12 +14,10 @@ test('Test', () => {
     try {
         const urls: string[] = [];
 
-        handle.signal.listen(
-            () => {
-                urls.push(handle.signal.peek());
-            }
-        );
-        
+        handle.signal.listen(() => {
+            urls.push(handle.signal.peek());
+        });
+
         expect(handle.signal.peek()).toEqual('/start');
         expect(urls).toEqual([]);
 
@@ -32,8 +30,7 @@ test('Test', () => {
 
         expect(handle.signal.peek()).toEqual('/test2');
         expect(urls).toEqual(['/test1', '/test2']);
-    }
-    finally {
+    } finally {
         handle.dispose();
     }
 });

@@ -51,9 +51,9 @@ export function extendArkTypes() {
         }
     }
 }
-extendArkTypes.also = function(type: Type<any>) {
+extendArkTypes.also = function (type: Type<any>) {
     addFunctionsToSchemaNode(type.expression, type as never);
-}
+};
 
 function addFunctionsToSchemaNode(name: string, node: any) {
     node.annotate = function (callback: AnnotationSetter): unknown {

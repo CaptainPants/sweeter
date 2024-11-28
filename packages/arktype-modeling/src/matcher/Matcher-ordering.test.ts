@@ -14,7 +14,6 @@ beforeAll(() => {
 });
 
 test('test', async () => {
-
     const rules: Array<TypeMatcherRule<number>> = [
         {
             name: 'rule1',

@@ -108,23 +108,21 @@ export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
 export type TypedPropertyModelForKey<
     TArkObjectType extends AnyTypeConstraint,
     TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>,
-> = TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>
-    ? PropertyModelNoConstraint<
-          arkTypeUtilityTypes.AllPropertyArkTypes<TArkObjectType>
-      >
-    :
-          | PropertyModelNoConstraint<
-                arkTypeUtilityTypes.CatchallPropertyValueArkType<TArkObjectType>
-            >
-          | undefined;
+> =
+    TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>
+        ? PropertyModelNoConstraint<
+              arkTypeUtilityTypes.AllPropertyArkTypes<TArkObjectType>
+          >
+        :
+              | PropertyModelNoConstraint<
+                    arkTypeUtilityTypes.CatchallPropertyValueArkType<TArkObjectType>
+                >
+              | undefined;
 
 interface UnknownObjectModelMethods {
     unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined;
 
-    unknownSetProperty(
-        key: string | symbol,
-        value: unknown,
-    ): Promise<this>;
+    unknownSetProperty(key: string | symbol, value: unknown): Promise<this>;
 
     unknownGetCatchallType(): UnknownType | undefined;
 
@@ -136,7 +134,11 @@ interface UnknownObjectModelMethods {
 
     deleteProperty(key: string | symbol, validate?: boolean): Promise<this>;
 
-    moveProperty(from: string | symbol, to: string | symbol, validate?: boolean): Promise<this>;
+    moveProperty(
+        from: string | symbol,
+        to: string | symbol,
+        validate?: boolean,
+    ): Promise<this>;
 
     unknownGetProperties(): readonly UnknownPropertyModel[];
 }

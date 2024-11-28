@@ -129,7 +129,7 @@ function createComponentInstanceInit<
                 // When this magic comment gets removed,
                 // clean up.
                 getOrCreateMagicComment('onSignalChange'),
-                cleanup
+                cleanup,
             );
 
             return cleanup;

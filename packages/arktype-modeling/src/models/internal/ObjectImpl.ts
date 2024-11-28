@@ -105,10 +105,11 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         const info = getObjectTypeInfo(this.type);
         const fixedProps = info.getProperties();
 
-        let type: UnknownType | undefined =
-            fixedProps.get(key);
+        let type: UnknownType | undefined = fixedProps.get(key);
         if (!type) {
-            const matchingKey = [...info.getMappedKeys().entries()].filter(([indexerKey, value]) => indexerKey.allows(key))[0];
+            const matchingKey = [...info.getMappedKeys().entries()].filter(
+                ([indexerKey, value]) => indexerKey.allows(key),
+            )[0];
             if (matchingKey) {
                 type = matchingKey[1];
             }
@@ -171,12 +172,14 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     >(
         key: TKey,
         /* @ts-expect-error */
-        value: TValue | Model<Type<TValue>>
+        value: TValue | Model<Type<TValue>>,
     ): Promise<this> {
         return this.unknownSetProperty(key, value);
     }
 
-    public unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined {
+    public unknownGetProperty(
+        key: string | symbol,
+    ): UnknownPropertyModel | undefined {
         // Avoid prototype properties being treated as valid (E.g. 'toString')
         if (hasOwnProperty(this.#properties, key)) {
             const result = this.#properties[key];
@@ -205,7 +208,9 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         const fixedProps = typeInfo.getProperties();
 
         if (fixedProps.has(from)) {
-            throw new Error(`Cannot delete a known property '${from.toString()}'.`);
+            throw new Error(
+                `Cannot delete a known property '${from.toString()}'.`,
+            );
         }
         if (fixedProps.has(to)) {
             throw new Error(`Cannot add a known property '${to.toString()}'.`);
@@ -245,7 +250,9 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         const fixedProps = typeInfo.getProperties();
 
         if (fixedProps.has(key)) {
-            throw new Error(`Cannot delete a known property '${key.toString()}'.`);
+            throw new Error(
+                `Cannot delete a known property '${key.toString()}'.`,
+            );
         }
 
         const copy = {

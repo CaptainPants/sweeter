@@ -82,7 +82,7 @@ export function ModalEditor(
         () =>
             localize('Edit') +
             ' ' +
-            ($val(isRoot) ? 'root' : propertyDisplayName ?? 'unknown'),
+            ($val(isRoot) ? 'root' : (propertyDisplayName ?? 'unknown')),
     );
 
     return $calc(() => {

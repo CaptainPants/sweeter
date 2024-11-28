@@ -109,11 +109,12 @@ export type JSXResultForComponentOrElementType<
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = ComponentOrIntrinsicElementTypeString extends Component<infer Props>
-    ? Props
-    : ComponentOrIntrinsicElementTypeString extends string
-      ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
-      : never;
+> =
+    ComponentOrIntrinsicElementTypeString extends Component<infer Props>
+        ? Props
+        : ComponentOrIntrinsicElementTypeString extends string
+          ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
+          : never;
 
 export type PropsWithIntrinsicAttributesFor<
     ComponentOrIntrinsicElementTypeString extends
@@ -123,11 +124,12 @@ export type PropsWithIntrinsicAttributesFor<
 export type ChildrenTypeFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = PropsFor<ComponentOrIntrinsicElementTypeString> extends {
-    children: infer Children;
-}
-    ? Children
-    : never;
+> =
+    PropsFor<ComponentOrIntrinsicElementTypeString> extends {
+        children: infer Children;
+    }
+        ? Children
+        : never;
 
 export type MightBeSignal<T> = T | Signal<T>;
 

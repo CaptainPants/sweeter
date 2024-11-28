@@ -36,15 +36,13 @@ export namespace arkTypeUtilityTypes {
         GetExpandoType<type.infer<TArkTypeObjectType>>
     >;
 
-    export type PropertyType<
-        TArkTypeObjectType,
-        Property extends string,
-    > = AllPropertyArkTypes<TArkTypeObjectType> extends ReadonlyRecord<
-        Property,
-        infer S
-    >
-        ? S
-        : never;
+    export type PropertyType<TArkTypeObjectType, Property extends string> =
+        AllPropertyArkTypes<TArkTypeObjectType> extends ReadonlyRecord<
+            Property,
+            infer S
+        >
+            ? S
+            : never;
 
     export type ValuesOfObject<TObject> = TObject[keyof TObject];
 
@@ -64,9 +62,8 @@ export namespace arkTypeUtilityTypes {
 
     type _DistributeType<T> = T extends infer _ ? Type<T> : never;
 
-    export type UnionOptions<TUnionArkType> = IsUnion<
-        type.infer<TUnionArkType>
-    > extends true
-        ? _DistributeType<type.infer<TUnionArkType>>
-        : never;
+    export type UnionOptions<TUnionArkType> =
+        IsUnion<type.infer<TUnionArkType>> extends true
+            ? _DistributeType<type.infer<TUnionArkType>>
+            : never;
 }

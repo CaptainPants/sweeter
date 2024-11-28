@@ -1,4 +1,7 @@
-import { arrayExcept, whenGarbageCollected } from '@captainpants/sweeter-utilities';
+import {
+    arrayExcept,
+    whenGarbageCollected,
+} from '@captainpants/sweeter-utilities';
 import {
     $calc,
     $peek,

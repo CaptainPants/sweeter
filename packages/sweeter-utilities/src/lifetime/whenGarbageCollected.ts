@@ -1,13 +1,12 @@
-
 const finalizationRegistry = new FinalizationRegistry<() => void>(
-    callback => {
+    (callback) => {
         callback();
-    }
+    },
 );
 
 export function whenGarbageCollected(
     lifetimeObject: object,
-    callback: () => void
+    callback: () => void,
 ) {
     finalizationRegistry.register(lifetimeObject, callback);
 }

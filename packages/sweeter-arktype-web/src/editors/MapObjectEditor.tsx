@@ -137,10 +137,12 @@ export const MapObjectEditor: Component<EditorProps> = (
                     <div>
                         <div class={css.propertyName}>
                             <Label for={id}>{String(name)}</Label>
-                            {typeof name !== 'symbol' && <IconButton
-                                icon="Edit"
-                                onLeftClick={() => startRename(name)}
-                            />}
+                            {typeof name !== 'symbol' && (
+                                <IconButton
+                                    icon="Edit"
+                                    onLeftClick={() => startRename(name)}
+                                />
+                            )}
                         </div>
                         <div>
                             <MapElementEditorPart

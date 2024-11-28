@@ -1,4 +1,3 @@
-
 export function isAbortError(ex: unknown): boolean {
     if (typeof DOMException === 'undefined')
         throw new TypeError('DOMException not found');

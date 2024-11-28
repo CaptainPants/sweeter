@@ -1,8 +1,5 @@
 import { type PropsWithIntrinsicAttributesFor } from '@captainpants/sweeter-core';
-import {
-    isReadWriteSignal,
-    isSignal,
-} from '@captainpants/sweeter-core';
+import { isReadWriteSignal, isSignal } from '@captainpants/sweeter-core';
 import { type WebRuntime } from '../types.js';
 import { indeterminite } from '../../indeterminate.js';
 import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';

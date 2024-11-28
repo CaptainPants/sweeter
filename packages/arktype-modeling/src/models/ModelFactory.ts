@@ -40,9 +40,7 @@ export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
     abortSignal?: AbortSignal | undefined;
 }
 
-export interface CreateModelPartArgs<
-    TArkType extends AnyTypeConstraint,
-> {
+export interface CreateModelPartArgs<TArkType extends AnyTypeConstraint> {
     schema: TArkType; // putting this at the top seems to help with type inference
     value: type.infer<TArkType>;
     parentInfo: ParentTypeInfo | null | undefined;
@@ -66,7 +64,7 @@ type UnknownModelFactoryMethod = (
 function setup<TArkType extends AnyTypeConstraint>(
     is: (schema: UnknownType) => schema is TArkType,
     factory: ModelFactoryMethod<TArkType>,
-): UnknownModelFactoryMethod
+): UnknownModelFactoryMethod;
 function setup(
     is: (schema: UnknownType) => boolean,
     factory: UnknownModelFactoryMethod,
@@ -75,12 +73,7 @@ function setup(
     is: (schema: UnknownType) => boolean,
     factory: UnknownModelFactoryMethod,
 ): UnknownModelFactoryMethod {
-    return (
-        input,
-        schema,
-        parentInfo,
-        depth,
-    ): UnspecifiedModel | undefined => {
+    return (input, schema, parentInfo, depth): UnspecifiedModel | undefined => {
         if (!is(schema)) {
             return undefined;
         }
@@ -91,7 +84,9 @@ function setup(
             return factory(parsed.data, schema, parentInfo, depth);
         }
 
-        throw new Error(`Failed to parse value as ${schema.expression}. ${parsed.issues.summary}`);
+        throw new Error(
+            `Failed to parse value as ${schema.expression}. ${parsed.issues.summary}`,
+        );
     };
 }
 
@@ -182,8 +177,8 @@ async function createModel<TArkType extends AnyTypeConstraint>({
 
 /**
  * Note that while the value is not validated, it is type necessarily type checked.
- * @param args 
- * @returns 
+ * @param args
+ * @returns
  */
 function createModelPart<TArkType extends AnyTypeConstraint>(
     args: CreateModelPartArgs<TArkType>,

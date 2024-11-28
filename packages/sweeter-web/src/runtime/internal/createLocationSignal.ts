@@ -36,7 +36,6 @@ export function createLocationSignal(): LocationSignalResult {
         });
     }
 
-
     window.addEventListener('pushstate', updateState);
     window.addEventListener('popstate', updateState);
 
@@ -54,8 +53,8 @@ export function createLocationSignal(): LocationSignalResult {
 /**
  * Basically exists to allow easy overriding for testing as JSDOM doesn't support
  * the history API properly
- * @returns 
+ * @returns
  */
-createLocationSignal.getLocation = function() {
+createLocationSignal.getLocation = function () {
     return window.location.toString();
-}
+};

@@ -15,7 +15,10 @@ export type MapElementEditorPartProps = PropertiesMightBeSignals<{
 
     propertyName: string | symbol;
     elementModel: UnknownModel;
-    updateElement: (name: string | symbol, value: UnknownModel) => Promise<void>;
+    updateElement: (
+        name: string | symbol,
+        value: UnknownModel,
+    ) => Promise<void>;
 
     indent: number;
     ownerIdPath: string | undefined;

@@ -4,11 +4,11 @@ import {
     ModelFactory,
     asUnion,
     cast,
-    UnknownModel,
+    type UnknownModel,
     findUnionOptionIndexForValue,
     introspect,
     createDefault,
-    AnyTypeConstraint,
+    type AnyTypeConstraint,
 } from '@captainpants/arktype-modeling';
 import {
     $calc,

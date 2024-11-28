@@ -1,5 +1,5 @@
 import { type TypeInfo } from '../models/parents.js';
-import { AnyTypeConstraint } from '../type/types.js';
+import { type AnyTypeConstraint } from '../type/types.js';
 import {
     isArrayType,
     isBooleanType,

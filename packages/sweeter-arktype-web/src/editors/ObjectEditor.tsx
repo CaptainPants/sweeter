@@ -12,11 +12,11 @@ import {
     cast,
     categorizeProperties,
     StandardLocalValues,
-    UnknownPropertyModel,
-    UnknownModel,
+    type UnknownPropertyModel,
+    type UnknownModel,
     validate,
     asObject,
-    UnknownObjectModel,
+    type UnknownObjectModel,
 } from '@captainpants/arktype-modeling';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';

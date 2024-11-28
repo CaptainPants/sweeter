@@ -2,7 +2,7 @@ import { type } from 'arktype';
 import {
     getLiteralTypeInfo,
     tryGetLiteralTypeInfo,
-} from './getLiteralTypeInfo';
+} from './getLiteralTypeInfo.js';
 
 it('getLiteralTypeInfo returns correct value', () => {
     const schemas = {

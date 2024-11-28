@@ -1,4 +1,4 @@
-import { createLocationSignal } from './createLocationSignal';
+import { createLocationSignal } from './createLocationSignal.js';
 
 test('Test', () => {
     let location = '/start';

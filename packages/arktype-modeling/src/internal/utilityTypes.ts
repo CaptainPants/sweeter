@@ -1,5 +1,4 @@
-import { UnionToIntersection } from '@captainpants/sweeter-utilities';
-import { type } from 'arktype';
+import { type UnionToIntersection } from '@captainpants/sweeter-utilities';
 
 /**
  * This is not in use but is cool so keeping it around.

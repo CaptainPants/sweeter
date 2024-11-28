@@ -1,7 +1,7 @@
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
-import { AnyTypeConstraint } from '../../type/types.js';
+import { type AnyTypeConstraint } from '../../type/types.js';
 
 export class SimpleModelImpl<
     T,

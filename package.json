@@ -8,6 +8,8 @@
     "verify:fix": "lerna run verify:fix",
     "verify": "lerna run verify",
     "format": "lerna run format",
+    "lint": "lerna run lint",
+    "lint:fix": "lerna run lint -- --fix",
     "test": "lerna run test",
     "watch-libs": "lerna watch --scope @captainpants/sweeter-utilities --scope @captainpants/sweeter-core --scope @captainpants/sweeter-web --scope @captainpants/sweeter-gummybear --scope @captainpants/arktype-modeling --scope @captainpants/sweeter-arktype-web  --scope @captainpants/arktype-example-data -- pnpm run build --scope \\$LERNA_PACKAGE_NAME",
     "watch-example": "lerna run watch --scope @captainpants/sweeter-example",

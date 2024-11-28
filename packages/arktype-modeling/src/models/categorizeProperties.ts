@@ -1,5 +1,4 @@
-import { UnknownObjectType } from '../type/types.js';
-import { AnyTypeConstraint } from '../type/types.js';
+import { type UnknownObjectType , type AnyTypeConstraint } from '../type/types.js';
 import { introspect } from '../type/index.js';
 import { sortProperties } from './sortProperties.js';
 

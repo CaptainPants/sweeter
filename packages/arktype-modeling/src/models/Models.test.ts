@@ -1,4 +1,4 @@
-import { Type } from 'arktype';
+import { type Type } from 'arktype';
 import {
     type ArrayModel,
     type LiteralModel,
@@ -9,7 +9,7 @@ import {
 import { typeAssert } from '@captainpants/sweeter-utilities';
 
 it('All model types match expected results', () => {
-    typeAssert.equal<Model<Type<{}>>, ObjectModel<Type<{}>>>();
+    typeAssert.equal<Model<Type<object>>, ObjectModel<Type<object>>>();
 
     typeAssert.equal<Model<Type<string[]>>, ArrayModel<Type<string[]>>>();
 

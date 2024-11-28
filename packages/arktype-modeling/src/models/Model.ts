@@ -1,10 +1,10 @@
-import { type, Type } from 'arktype';
+import { type type, type Type } from 'arktype';
 
 import {
-    AnyObjectTypeConstraint,
-    AnyTypeConstraint,
-    UnknownObjectType,
-    UnknownType,
+    type AnyObjectTypeConstraint,
+    type AnyTypeConstraint,
+    type UnknownObjectType,
+    type UnknownType,
     type ReadonlyRecord,
 } from '../index.js';
 
@@ -15,11 +15,11 @@ import {
 } from './PropertyModel.js';
 import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
 import {
-    IsAny,
-    IsBooleanLiteral,
-    IsNumberLiteral,
-    IsStringLiteral,
-    IsUnion,
+    type IsAny,
+    type IsBooleanLiteral,
+    type IsNumberLiteral,
+    type IsStringLiteral,
+    type IsUnion,
 } from '@captainpants/sweeter-utilities';
 
 export interface BaseModel<TValue, TArkType extends AnyTypeConstraint> {
@@ -157,25 +157,25 @@ export type MapObjectEntry<TArkType extends AnyTypeConstraint> = readonly [
     model: PropertyModel<TArkType>,
 ];
 
-export interface ObjectModel<TObjectArkType extends AnyObjectTypeConstraint>
-    extends BaseModel<type.infer<TObjectArkType>, TObjectArkType>,
+export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
+    extends BaseModel<type.infer<TObjectSchema>, TObjectSchema>,
         UnknownObjectModelMethods {
-    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectArkType>;
+    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectSchema>;
 
     getProperty<
-        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectArkType> &
+        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectSchema> &
             string,
     >(
         key: TKey,
-    ): TypedPropertyModelForKey<TObjectArkType, TKey>;
+    ): TypedPropertyModelForKey<TObjectSchema, TKey>;
 
     getProperties(): readonly PropertyModelNoConstraint<
-        arkTypeUtilityTypes.AllPropertyArkTypes<TObjectArkType>
+        arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[];
 
-    setProperty<TKey extends keyof type.infer<TObjectArkType> & string>(
+    setProperty<TKey extends keyof type.infer<TObjectSchema> & string>(
         key: TKey,
-        value: type.infer<TObjectArkType>[TKey],
+        value: type.infer<TObjectSchema>[TKey],
     ): Promise<this>;
 }
 
@@ -204,9 +204,9 @@ export interface UnionModel<TUnion extends AnyTypeConstraint>
     extends BaseModel<type.infer<TUnion>, TUnion>,
         UnionModelMethods<TUnion> {}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export type SpreadModel<TUnionOfSchemas extends AnyTypeConstraint> =
-    TUnionOfSchemas extends any ? Model<TUnionOfSchemas> : never;
+    TUnionOfSchemas extends infer _ ? Model<TUnionOfSchemas> : never;
 
 export interface UnknownModel extends BaseModel<unknown, Type<unknown>> {}
 
@@ -231,29 +231,29 @@ export type AnyModelConstraint = UnspecifiedModel;
 //   handled before unions.
 // - Literal types need to be before their base types, as 1|2 extends number
 
-export type Model<TArkType extends Type<any>> = [type.infer<TArkType>] extends [
+export type Model<TSchema extends AnyTypeConstraint> = [type.infer<TSchema>] extends [
     infer TUnderlying,
 ]
     ? IsAny<TUnderlying> extends true
         ? UnknownModel
-        : [TArkType] extends [Type<unknown[]>]
-          ? ArrayModel<TArkType>
+        : [TSchema] extends [Type<unknown[]>]
+          ? ArrayModel<TSchema>
           : [IsBooleanLiteral<TUnderlying>] extends [true]
-            ? BooleanConstantModel<TArkType>
+            ? BooleanConstantModel<TSchema>
             : [TUnderlying] extends [boolean]
               ? BooleanModel
               : // Its important that this is after boolean, as TypeScript treats boolean
                 // as a union: true|false and therefore IsUnion<boolean> is true.
                 [IsUnion<TUnderlying>] extends [true]
-                ? UnionModel<TArkType>
+                ? UnionModel<TSchema>
                 : [IsStringLiteral<TUnderlying>] extends [true]
                   ? /* @ts-expect-error - not narrowing TArkType but we know its a string */
-                    StringConstantModel<TArkType>
+                    StringConstantModel<TSchema>
                   : [TUnderlying] extends [string] // be wary that ('a'|'b') extends string, so this must happen after union
                     ? StringModel
                     : [IsNumberLiteral<TUnderlying>] extends [true]
                       ? /* @ts-expect-error - not narrowing TArkType but we know its a string */
-                        NumberConstantModel<TArkType>
+                        NumberConstantModel<TSchema>
                       : [TUnderlying] extends [number] // be wary that (1|2) extends number, so this must happen after union
                         ? NumberModel
                         : [TUnderlying] extends [null]
@@ -261,11 +261,12 @@ export type Model<TArkType extends Type<any>> = [type.infer<TArkType>] extends [
                           : [TUnderlying] extends [undefined]
                             ? UndefinedModel
                             : [TUnderlying] extends [object]
-                              ? /* @ts-expect-error - not narrowing TArkType but we know its a object */
-                                ObjectModel<TArkType>
+                              ? /* @ts-expect-error - not narrowing TSchema but we know its an object */
+                                ObjectModel<TSchema>
+                                /* eslint-disable-next-line @typescript-eslint/ban-types -- We want the model for a Function to be 'never' at the moment so need this check */
                               : [TUnderlying] extends [Function] | [symbol]
                                 ? never
-                                : BaseModel<TUnderlying, TArkType>
+                                : BaseModel<TUnderlying, TSchema>
     : never;
 
 export type PropertyModelNoConstraint<TType> = [TType] extends [
@@ -283,5 +284,3 @@ export type ElementModelNoConstraint<TType> = [TType] extends [
 export type ModelNoConstraint<TType> = [TType] extends [AnyTypeConstraint]
     ? Model<TType>
     : never;
-
-type XXX = Model<Type<1 | 2>>;

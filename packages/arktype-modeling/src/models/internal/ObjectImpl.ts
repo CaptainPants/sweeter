@@ -1,14 +1,13 @@
 import {
     descend,
     hasOwnProperty,
-    throwError,
 } from '@captainpants/sweeter-utilities';
 
 import {
     type ObjectModel,
     type Model,
     type TypedPropertyModelForKey,
-    PropertyModelNoConstraint,
+    type PropertyModelNoConstraint,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -18,11 +17,10 @@ import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { validateAndThrow } from '../../utility/validate.js';
 import { type UnknownPropertyModel } from '../PropertyModel.js';
 import {
-    AnyObjectTypeConstraint,
-    AnyTypeConstraint,
-    UnknownType,
+    type AnyObjectTypeConstraint,
+    type UnknownType,
 } from '../../type/types.js';
-import { Type, type } from 'arktype';
+import { type Type, type type } from 'arktype';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import { introspect } from '../../type/index.js';
 
@@ -171,7 +169,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         TValue extends type.infer<TObjectArkType>[TKey],
     >(
         key: TKey,
-        /* @ts-expect-error */
+        /* @ts-expect-error -- Typescript can't confirm that Type<TValue> is a Type (it might be never) */
         value: TValue | Model<Type<TValue>>,
     ): Promise<this> {
         return this.unknownSetProperty(key, value);

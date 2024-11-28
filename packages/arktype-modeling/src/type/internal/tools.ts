@@ -1,4 +1,4 @@
-import { Constructor } from '../../types';
+import { type Constructor } from '../../types.js';
 
 export function tryCast<TType>(
     instance: unknown,

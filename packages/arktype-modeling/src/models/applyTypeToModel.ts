@@ -1,6 +1,6 @@
-import { AnyModelConstraint, type Model } from './Model.js';
+import { type AnyModelConstraint, type Model } from './Model.js';
 import { ModelFactory } from './ModelFactory.js';
-import { AnyTypeConstraint } from '../type/types.js';
+import { type AnyTypeConstraint } from '../type/types.js';
 import { parseAsync, safeParseAsync } from '../utility/parse.js';
 
 /**

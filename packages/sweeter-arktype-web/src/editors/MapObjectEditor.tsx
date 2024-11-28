@@ -17,10 +17,10 @@ import {
     cast,
     introspect,
     validate,
-    UnknownModel,
-    UnknownObjectModel,
+    type UnknownModel,
+    type UnknownObjectModel,
     createDefault,
-    AnyTypeConstraint,
+    type AnyTypeConstraint,
 } from '@captainpants/arktype-modeling';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { Box, Label } from '../../../sweeter-gummybear/build/index.js';

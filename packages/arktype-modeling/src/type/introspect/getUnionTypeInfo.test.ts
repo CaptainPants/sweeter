@@ -1,6 +1,6 @@
 import { type } from 'arktype';
-import { getUnionTypeInfo, tryGetUnionTypeInfo } from './getUnionTypeInfo';
-import { getLiteralTypeInfo } from './getLiteralTypeInfo';
+import { getUnionTypeInfo, tryGetUnionTypeInfo } from './getUnionTypeInfo.js';
+import { getLiteralTypeInfo } from './getLiteralTypeInfo.js';
 
 test('branches contains expected items', () => {
     const schemas = {

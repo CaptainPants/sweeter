@@ -1,4 +1,4 @@
-import { AnyTypeConstraint } from '@captainpants/arktype-modeling';
+import { type AnyTypeConstraint } from '@captainpants/arktype-modeling';
 import {
     type PropertiesMightBeSignals,
     type Component,

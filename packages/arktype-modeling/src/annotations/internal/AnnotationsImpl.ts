@@ -9,7 +9,7 @@ import {
 } from '../../index.js';
 import { shallowMatchesStructure } from '../../utility/validate.js';
 import { safeParse } from '../../utility/parse.js';
-import { type } from 'arktype';
+import { type type } from 'arktype';
 import { AnnotationsBuilderImpl } from './AnnotationBuilderImpl.js';
 import { schemas } from './schemas.js';
 
@@ -21,10 +21,10 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         attributes: Map<string, unknown> | undefined,
         labels: Set<string> | undefined,
         associatedValues:
-            | Map<string, ContextualValueCalculationCallback<TSchema>>
+            | Map<string, ContextualValueCalculationCallback>
             | undefined,
         ambientValues:
-            | Map<string, ContextualValueCalculationCallback<TSchema>>
+            | Map<string, ContextualValueCalculationCallback>
             | undefined,
     ) {
         this.#schema = schema;
@@ -38,10 +38,10 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     #attributes: Map<string, unknown> | undefined;
     #labels: Set<string> | undefined;
     #associatedValues:
-        | Map<string, ContextualValueCalculationCallback<TSchema>>
+        | Map<string, ContextualValueCalculationCallback>
         | undefined;
     #ambientValues:
-        | Map<string, ContextualValueCalculationCallback<TSchema>>
+        | Map<string, ContextualValueCalculationCallback>
         | undefined;
 
     public attr(name: string, fallback: unknown): unknown {
@@ -181,7 +181,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         return this.#getAmbientValueTyped(name, value, context);
     }
 
-    createBuilder(): AnnotationsBuilderImpl<TSchema> {
+    createBuilder(): AnnotationsBuilderImpl {
         return new AnnotationsBuilderImpl(
             this.#attributes ? new Map(this.#attributes.entries()) : undefined,
             this.#labels ? new Set(this.#labels) : undefined,

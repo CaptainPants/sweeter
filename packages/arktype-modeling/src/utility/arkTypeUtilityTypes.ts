@@ -1,16 +1,17 @@
 import { type ReadonlyRecord } from '../types.js';
-import { Type, type } from 'arktype';
-import { AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/types.js';
+import { type Type, type type } from 'arktype';
+import { type AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/types.js';
 import {
-    GetExpandoKeys,
-    GetExpandoType,
-    GetNonExpandoKeys,
+    type GetExpandoKeys,
+    type GetExpandoType,
+    type GetNonExpandoKeys,
 } from '../internal/utilityTypes.js';
-import { IsUnion } from '@captainpants/sweeter-utilities';
+import { type IsUnion } from '@captainpants/sweeter-utilities';
 
 /**
  * Types that operate on Zod type
  */
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace arkTypeUtilityTypes {
     type _SpreadWrapType<T> = T extends infer _ ? Type<T> : never;
     type _PropertyType<T> = T[keyof T];

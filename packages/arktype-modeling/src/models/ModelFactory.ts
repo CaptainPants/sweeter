@@ -8,10 +8,7 @@ import { ObjectImpl } from './internal/ObjectImpl.js';
 import {
     type UnspecifiedModel,
     type Model,
-    UnionModel,
-    ElementModelNoConstraint,
-    ModelNoConstraint,
-    AnyModelConstraint,
+    type AnyModelConstraint,
 } from './Model.js';
 import { type ParentTypeInfo } from './parents.js';
 import {
@@ -28,10 +25,10 @@ import {
     isUnknownType,
 } from '../type/introspect/is.js';
 import { validateAndThrow } from '../utility/validate.js';
-import { AnyTypeConstraint, UnknownType } from '../type/types.js';
-import { ArkErrors, Type, type } from 'arktype';
+import { type AnyTypeConstraint, type UnknownType } from '../type/types.js';
+import { type type } from 'arktype';
 import { safeParse } from '../utility/parse.js';
-import { ValueTypeFromModel } from '../types.js';
+import { type ValueTypeFromModel } from '../types.js';
 
 export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
     schema: TArkType; // putting this at the top seems to help with type inference

@@ -1,6 +1,6 @@
-import { type UnspecifiedModel, type Model, type BaseModel } from '../Model.js';
+import { type UnspecifiedModel, type BaseModel } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
-import { AnyTypeConstraint } from '../../type/types.js';
+import { type AnyTypeConstraint } from '../../type/types.js';
 
 export class ModelImpl<TValue, TArkType extends AnyTypeConstraint>
     implements BaseModel<TValue, TArkType>
@@ -23,6 +23,6 @@ export class ModelImpl<TValue, TArkType extends AnyTypeConstraint>
     public readonly archetype: string;
 
     public asUnknown(): UnspecifiedModel {
-        return this as any;
+        return this;
     }
 }

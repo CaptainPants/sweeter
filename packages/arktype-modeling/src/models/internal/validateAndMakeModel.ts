@@ -8,8 +8,8 @@ import {
     shallowMatchesStructure,
     validateAndThrow,
 } from '../../utility/validate.js';
-import { AnyTypeConstraint } from '../../type/types.js';
-import { type } from 'arktype';
+import { type AnyTypeConstraint } from '../../type/types.js';
+import { type type } from 'arktype';
 
 /**
  * For a given value (raw or model) validate that the value matches the type (using validateOrThrow). Throw if it does not.

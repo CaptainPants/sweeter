@@ -1,5 +1,5 @@
 import { type UnspecifiedModel, type Model } from './Model.js';
-import { AnyTypeConstraint } from '../type/types.js';
+import { type AnyTypeConstraint } from '../type/types.js';
 
 export interface UnknownPropertyModel {
     readonly name: string | symbol;

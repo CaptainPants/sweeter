@@ -1,20 +1,19 @@
 import {
-    AnnotationsBuilder,
-    type AnyTypeConstraint,
+    type AnnotationsBuilder,
     type ContextualValueCalculationCallback,
 } from '../../index.js';
 
-export class AnnotationsBuilderImpl<TSchema extends AnyTypeConstraint>
+export class AnnotationsBuilderImpl
     implements AnnotationsBuilder
 {
     constructor(
         attributes: Map<string, unknown> | undefined,
         labels: Set<string> | undefined,
         associatedValues:
-            | Map<string, ContextualValueCalculationCallback<TSchema>>
+            | Map<string, ContextualValueCalculationCallback>
             | undefined,
         ambientValues:
-            | Map<string, ContextualValueCalculationCallback<TSchema>>
+            | Map<string, ContextualValueCalculationCallback>
             | undefined,
     ) {
         this.attributes = attributes;
@@ -26,10 +25,10 @@ export class AnnotationsBuilderImpl<TSchema extends AnyTypeConstraint>
     attributes?: Map<string, unknown> | undefined;
     labels?: Set<string> | undefined;
     associatedValues?:
-        | Map<string, ContextualValueCalculationCallback<TSchema>>
+        | Map<string, ContextualValueCalculationCallback>
         | undefined;
     ambientValues?:
-        | Map<string, ContextualValueCalculationCallback<TSchema>>
+        | Map<string, ContextualValueCalculationCallback>
         | undefined;
 
     public attr(name: string, value: unknown): this {
@@ -62,14 +61,14 @@ export class AnnotationsBuilderImpl<TSchema extends AnyTypeConstraint>
 
     public withAssociatedValue(
         name: string,
-        callback: ContextualValueCalculationCallback<AnyTypeConstraint>,
+        callback: ContextualValueCalculationCallback,
     ): this;
     public withAssociatedValue(name: string, value: unknown): this;
     public withAssociatedValue(name: string, callbackOrValue: unknown): this {
         (this.associatedValues ?? (this.associatedValues = new Map())).set(
             name,
             typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<AnyTypeConstraint>)
+                ? (callbackOrValue as ContextualValueCalculationCallback)
                 : () => callbackOrValue,
         );
         return this;
@@ -77,22 +76,20 @@ export class AnnotationsBuilderImpl<TSchema extends AnyTypeConstraint>
 
     public withAmbientValue(
         name: string,
-        callback: ContextualValueCalculationCallback<AnyTypeConstraint>,
+        callback: ContextualValueCalculationCallback,
     ): this;
     public withAmbientValue(name: string, value: unknown): this;
     public withAmbientValue(name: string, callbackOrValue: unknown): this {
         (this.ambientValues ?? (this.ambientValues = new Map())).set(
             name,
             typeof callbackOrValue === 'function'
-                ? (callbackOrValue as ContextualValueCalculationCallback<AnyTypeConstraint>)
+                ? (callbackOrValue as ContextualValueCalculationCallback)
                 : () => callbackOrValue,
         );
         return this;
     }
 
-    public static empty<
-        TSchema extends AnyTypeConstraint,
-    >(): AnnotationsBuilderImpl<TSchema> {
+    public static empty(): AnnotationsBuilderImpl {
         return new AnnotationsBuilderImpl(
             undefined,
             undefined,

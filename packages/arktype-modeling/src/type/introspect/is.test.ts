@@ -14,8 +14,8 @@ import {
     isUndefinedConstant,
     isUnionType,
     isUnknownType,
-} from './is';
-import { AnyTypeConstraint } from '../types';
+} from './is.js';
+import { type AnyTypeConstraint } from '../types.js';
 
 const isFuncs = {
     isObjectType,

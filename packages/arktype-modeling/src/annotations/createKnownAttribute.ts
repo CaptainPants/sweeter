@@ -1,6 +1,6 @@
-import { type } from 'arktype';
+import { type type } from 'arktype';
 
-import { AnyTypeConstraint, notFound } from '../index.js';
+import { type AnyTypeConstraint, notFound } from '../index.js';
 import { serializeSchemaForDisplay } from '../utility/serializeSchemaForDisplay.js';
 import { is } from '../type/introspect/is.js';
 

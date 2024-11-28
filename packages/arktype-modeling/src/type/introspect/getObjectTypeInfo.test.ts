@@ -1,6 +1,6 @@
 import { type } from 'arktype';
-import { getObjectTypeInfo } from './getObjectTypeInfo';
-import { isLiteralValue, isNumberType, isStringType } from './is';
+import { getObjectTypeInfo } from './getObjectTypeInfo.js';
+import { isLiteralValue } from './is.js';
 import { throwError } from '@captainpants/sweeter-utilities';
 
 test('general', () => {

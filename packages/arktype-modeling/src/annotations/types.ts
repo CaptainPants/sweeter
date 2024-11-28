@@ -1,4 +1,4 @@
-import type { Type } from 'arktype';
+import  { type Type } from 'arktype';
 import {
     type AnyTypeConstraint,
     type ContextualValueCalculationCallback,
@@ -14,13 +14,13 @@ export interface AnnotationsBuilder {
 
     withAssociatedValue(
         name: string,
-        callback: ContextualValueCalculationCallback<Type>,
+        callback: ContextualValueCalculationCallback,
     ): this;
     withAssociatedValue(name: string, value: unknown): this;
 
     withAmbientValue(
         name: string,
-        callback: ContextualValueCalculationCallback<Type>,
+        callback: ContextualValueCalculationCallback,
     ): this;
     withAmbientValue(name: string, value: unknown): this;
 }

@@ -1,7 +1,6 @@
-import { type, Type } from 'arktype';
 
-import { AnyModelConstraint, type Model } from './models/Model.js';
-import { AnyTypeConstraint } from './type/types.js';
+import { type AnyModelConstraint, type Model } from './models/Model.js';
+import { type AnyTypeConstraint } from './type/types.js';
 
 export type ValueTypeFromModel<TModel extends AnyModelConstraint> =
     TModel['value'];
@@ -20,4 +19,5 @@ export type ReadonlyRecord<TKey extends string | number | symbol, TValue> = {
     readonly [Key in TKey]: TValue;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Constructor<TResult = unknown> = new (...args: any[]) => TResult;

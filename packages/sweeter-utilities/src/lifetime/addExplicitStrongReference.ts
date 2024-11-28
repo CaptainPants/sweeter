@@ -1,4 +1,4 @@
-import { arrayRemove } from '../arrayRemove';
+import { arrayRemove } from '../arrayRemove.js';
 
 const strongReferences = new WeakMap<object, unknown[]>();
 

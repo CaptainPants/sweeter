@@ -1,8 +1,8 @@
 import { throwError } from '@captainpants/sweeter-utilities';
-import { BaseRoot } from '@ark/schema';
+import { type BaseRoot } from '@ark/schema';
 
-import { UnknownType, AnyTypeConstraint } from '../types';
-import { asIntersectionNode } from './internal/arktypeInternals';
+import { type UnknownType } from '../types.js';
+import { asIntersectionNode } from './internal/arktypeInternals.js';
 
 export interface ObjectTypeInfo {
     /**

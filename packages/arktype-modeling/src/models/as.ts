@@ -1,4 +1,4 @@
-import { Type } from 'arktype';
+import { type Type } from 'arktype';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -16,7 +16,6 @@ import {
 import { isModel } from './isModel.js';
 import {
     type BooleanConstantModel,
-    type Model,
     type NullModel,
     type NumberConstantModel,
     type NumberModel,
@@ -30,7 +29,6 @@ import {
     type BooleanModel,
     type UnknownObjectModel,
 } from './Model.js';
-import { AnyTypeConstraint } from '../type/types.js';
 
 export function cast<TToModel extends AnyModelConstraint>(
     model: AnyModelConstraint,

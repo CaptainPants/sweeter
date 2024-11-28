@@ -5,7 +5,7 @@ import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
 import {
     type UnspecifiedModel,
     type ArrayModel,
-    ElementModelNoConstraint,
+    type ElementModelNoConstraint,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -13,10 +13,10 @@ import { type ParentTypeInfo } from '../parents.js';
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
-import { type, Type } from 'arktype';
-import { ArrayType } from 'arktype/internal/methods/array.ts';
+import { type type, type Type } from 'arktype';
+import { type ArrayType } from 'arktype/internal/methods/array.ts';
 import { getArrayTypeInfo } from '../../type/introspect/getArrayTypeInfo.js';
-import { AnyTypeConstraint } from '../../type/types.js';
+import { type AnyTypeConstraint } from '../../type/types.js';
 import { parseAsync } from '../../utility/parse.js';
 
 export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import { typeAssert } from '@captainpants/sweeter-utilities';
 import {
     type Model,
@@ -9,7 +9,7 @@ import {
     type UnspecifiedModel,
     type ObjectModel,
 } from '../index.js';
-import { Type } from 'arktype';
+import { type Type } from 'arktype';
 
 it('Specific models conform to', () => {
     typeAssert.extends<
@@ -47,6 +47,7 @@ it('All models conform to reasonable less specific models', () => {
     // > = true;
 
     // Literal values should expand to the base type
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- Unit test for any as a base type */
     typeAssert.extends<Model<Type<'test'>>, Model<Type<any>>>();
     typeAssert.extends<Model<Type<'test'>>, Model<Type<string>>>();
 

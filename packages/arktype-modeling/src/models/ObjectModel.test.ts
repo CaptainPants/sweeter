@@ -5,8 +5,6 @@ import { ModelFactory } from './ModelFactory.js';
 test.only('map-object', async () => {
     const schema = type({ '[string]': type.number });
 
-    const a1 = type({ '[string]': type.number });
-
     const value: type.infer<typeof schema> = {
         a: 1,
         b: 2,

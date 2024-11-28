@@ -1,4 +1,4 @@
-import { throwError } from '../throwError';
+import { throwError } from '../throwError.js';
 
 const brand = Symbol('BRAND');
 
@@ -16,7 +16,9 @@ interface GlobalThisType {
     clearInterval?: (handle: IntervalHandle) => void;
 }
 
-const globalThisTyped: undefined | GlobalThisType = globalThis as any;
+const globalThisTyped: undefined | GlobalThisType = globalThis as unknown as
+    | undefined
+    | GlobalThisType;
 
 const setTimeout =
     globalThisTyped?.setTimeout ??

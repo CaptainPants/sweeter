@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Type, type } from 'arktype';
+import { type Type, type } from 'arktype';
 
 import { ModelFactory } from './ModelFactory.js';
 import { typeAssert } from '@captainpants/sweeter-utilities';

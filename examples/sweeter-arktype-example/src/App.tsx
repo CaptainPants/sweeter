@@ -22,7 +22,7 @@ import {
 } from '@captainpants/sweeter-core';
 import { exampleData } from '@captainpants/arktype-example-data';
 import { EditorRoot } from '@captainpants/sweeter-arktype-web';
-import { AnyTypeConstraint } from '@captainpants/arktype-modeling';
+import { type AnyTypeConstraint } from '@captainpants/arktype-modeling';
 
 const theme = createTheme({});
 

@@ -1,4 +1,5 @@
 import { type TypeInfo } from '../models/parents.js';
+import { type Constructor } from '../types.js';
 
 export type SelectorStep =
     | {
@@ -20,7 +21,7 @@ export type TypeMatcherRulePart =
       }
     | {
           type: 'instanceOf';
-          constructor: new (...args: any[]) => any;
+          constructor: Constructor;
       }
     | {
           type: 'label';

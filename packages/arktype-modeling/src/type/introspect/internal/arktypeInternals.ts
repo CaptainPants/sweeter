@@ -1,8 +1,7 @@
 import {
-    BaseNode,
+    type BaseNode,
     Domain,
     Intersection,
-    Proto,
     Union,
     Unit,
 } from '@ark/schema';

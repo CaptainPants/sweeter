@@ -1,4 +1,4 @@
-import { AnyTypeConstraint } from '../type/types.js';
+import { type AnyTypeConstraint } from '../type/types.js';
 import { introspect } from '../type/index.js';
 import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
 import { safeParse } from '../utility/parse.js';

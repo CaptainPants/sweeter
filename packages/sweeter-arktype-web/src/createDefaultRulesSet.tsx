@@ -1,7 +1,7 @@
 import {
     Rules,
-    TypeMatcherRule,
-    TypeMatcherRulePart,
+    type TypeMatcherRule,
+    type TypeMatcherRulePart,
     introspect,
 } from '@captainpants/arktype-modeling';
 import { ModalEditorIfTooSmall } from './editors/index.js';

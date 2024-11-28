@@ -1,11 +1,10 @@
 import {
-    AnyTypeConstraint,
-    arkTypeUtilityTypes,
+    type AnyTypeConstraint,
     type ValidationResult,
 } from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
 import { safeParse, safeParseAsync } from './parse.js';
-import { type } from 'arktype';
+import { type type } from 'arktype';
 
 export interface ValidateAndThrowArgs {
     /**

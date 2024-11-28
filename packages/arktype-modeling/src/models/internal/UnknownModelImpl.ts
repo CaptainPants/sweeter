@@ -1,4 +1,4 @@
-import { Type } from 'arktype';
+import { type Type } from 'arktype';
 
 import { type ParentTypeInfo } from '../parents.js';
 

@@ -1,12 +1,11 @@
-import { type } from 'arktype';
+import { type type } from 'arktype';
 
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
-import { arkTypeUtilityTypes } from './arkTypeUtilityTypes.js';
 
 import { introspect } from '../type/introspect/index.js';
-import { AnyTypeConstraint } from '../type/types.js';
+import { type AnyTypeConstraint } from '../type/types.js';
 
 export function createDefault<TArkType extends AnyTypeConstraint>(
     schema: TArkType,

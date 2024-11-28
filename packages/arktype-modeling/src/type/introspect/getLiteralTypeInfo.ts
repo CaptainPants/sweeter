@@ -1,6 +1,6 @@
-import { UnknownType } from '../types';
+import { type UnknownType } from '../types.js';
 import { throwError } from '@captainpants/sweeter-utilities';
-import { asUnitNode } from './internal/arktypeInternals';
+import { asUnitNode } from './internal/arktypeInternals.js';
 
 export interface LiteralTypeInfo {
     value: unknown;

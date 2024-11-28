@@ -1,20 +1,27 @@
-import { BaseNode, BaseRoot, nodeClassesByKind, NodeKind } from '@ark/schema';
+import { type BaseNode, BaseRoot, nodeClassesByKind, type NodeKind } from '@ark/schema';
 import { type, type Type } from 'arktype';
 
 import { throwError } from '@captainpants/sweeter-utilities';
 
-import type { Annotations, AnnotationSetter } from './annotations/types.js';
-import type { AnyTypeConstraint } from './type/types.js';
+import  { type Annotations, type AnnotationSetter } from './annotations/types.js';
+import  { type UnknownType, type AnyTypeConstraint } from './type/types.js';
 import { AnnotationsImpl } from './annotations/internal/AnnotationsImpl.js';
 import { AnnotationsBuilderImpl } from './annotations/internal/AnnotationBuilderImpl.js';
 
+
 declare module 'arktype/internal/methods/base.ts' {
-    /** @ts-ignore cast variance */
+    /** @ts-expect-error cast variance */ /* eslint-disable-next-line -- Multiple issues with the signature (but we have to match the original) */
     interface BaseType<out t = unknown, $ = {}> {
         annotate(callback: AnnotationSetter): this;
         annotations(): Annotations | undefined;
         hasAnnotations(): boolean;
     }
+}
+
+interface SchemaNodeToExtend {
+    annotate(this: Type<unknown>, callback: AnnotationSetter): unknown;
+    annotations(this: Type<unknown>): Annotations | undefined;
+    hasAnnotations(this: Type<unknown>): boolean;
 }
 
 declare module '@ark/schema' {
@@ -23,7 +30,7 @@ declare module '@ark/schema' {
     }
 }
 
-let extended = false;
+const extended = false;
 
 type NodeClass = (typeof nodeClassesByKind)[NodeKind];
 
@@ -47,15 +54,15 @@ export function extendArkTypes() {
     const intrinsicTypes = type;
     for (const [name, node] of Object.entries(intrinsicTypes)) {
         if (node instanceof BaseRoot) {
-            addFunctionsToSchemaNode(name, node);
+            addFunctionsToSchemaNode(name, node as never);
         }
     }
 }
-extendArkTypes.also = function (type: Type<any>) {
+extendArkTypes.also = function (type: UnknownType) {
     addFunctionsToSchemaNode(type.expression, type as never);
 };
 
-function addFunctionsToSchemaNode(name: string, node: any) {
+function addFunctionsToSchemaNode(name: string, node: SchemaNodeToExtend) {
     node.annotate = function (callback: AnnotationSetter): unknown {
         return funcs.annotate(this, callback);
     };
@@ -70,11 +77,11 @@ function addFunctionsToSchemaNode(name: string, node: any) {
 }
 
 function wrap(Node: NodeClass): NodeClass {
-    // @ts-expect-error
+    // @ts-expect-error -- Wrapped doesn't correctly implement Node
     const Wrapped = class Wrapped extends Node {
         constructor(...args: ConstructorParameters<NodeClass>) {
             super(...args);
-            addFunctionsToSchemaNode(Node.name, this);
+            addFunctionsToSchemaNode(Node.name, this as never);
         }
     };
     return Wrapped;
@@ -96,7 +103,7 @@ const funcs = {
             builder.associatedValues,
             builder.ambientValues,
         );
-        const result = (schema as any as BaseNode).withMeta({
+        const result = (schema as unknown as BaseNode).withMeta({
             annotations: annotations,
         });
         return result as never;

@@ -4,7 +4,7 @@ import { jsx } from './jsx.js';
 import { testRender } from '../test/testRender.js';
 import {
     assertNotNullOrUndefined,
-    TypeMatchAssert,
+    type TypeMatchAssert,
 } from '@captainpants/sweeter-utilities';
 
 it('basic div creates with props (function syntax)', () => {

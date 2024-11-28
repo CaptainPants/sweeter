@@ -1,10 +1,11 @@
 import {
     type AmbientValueCallback,
-    AnyTypeConstraint,
+    type AnyTypeConstraint,
     asUnknown,
     type Model,
     type Replacer,
     type TypeMatcherRule,
+    type UnknownReplacer,
 } from '@captainpants/arktype-modeling';
 
 import { AmbientValues } from './AmbientValues.js';
@@ -59,7 +60,8 @@ export function EditorRoot<TArkType extends AnyTypeConstraint>({
 }: Readonly<EditorRootProps<TArkType>>): JSX.Element {
     const typedModel = $calc(() => {
         const val = $val(model);
-        return asUnknown(val);
+        const result = asUnknown(val);
+        return result;
     });
 
     const newAmbientValuesCallback = $calc(() => {
@@ -127,7 +129,7 @@ export function EditorRoot<TArkType extends AnyTypeConstraint>({
                         <EditorHost
                             id={id}
                             model={typedModel}
-                            replace={replace as unknown as Replacer<any>}
+                            replace={replace as unknown as UnknownReplacer}
                             indent={0}
                             isRoot
                             idPath={idPath}

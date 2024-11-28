@@ -1,9 +1,8 @@
-import { Type } from 'arktype';
 
 import { throwError } from '@captainpants/sweeter-utilities';
 
-import { UnknownType } from '../types';
-import { asIntersectionNode } from './internal/arktypeInternals';
+import { type UnknownType } from '../types.js';
+import { asIntersectionNode } from './internal/arktypeInternals.js';
 
 export interface ArrayTypeInfo {
     readonly elementType: UnknownType;

@@ -4,7 +4,7 @@ import {
     type UnknownArrayModel,
     validate,
     createDefault,
-    AnyTypeConstraint,
+    type AnyTypeConstraint,
     introspect,
 } from '@captainpants/arktype-modeling';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -45,7 +45,6 @@ export function ArrayEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                const xx = validated.value;
                 await $peek(replace)(validated);
             },
             convertIn: (model) => {

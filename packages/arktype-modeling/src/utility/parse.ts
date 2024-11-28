@@ -1,5 +1,5 @@
-import { ArkErrors, type } from 'arktype';
-import { AnyTypeConstraint } from '../type';
+import { type ArkErrors, type } from 'arktype';
+import { type AnyTypeConstraint } from '../type/index.js';
 
 export type SafeParseResult<TArkType extends AnyTypeConstraint> =
     | { success: true; data: type.infer<TArkType> }
@@ -17,16 +17,16 @@ export function safeParse<TArkType extends AnyTypeConstraint>(
     return { success: true, data: value as type.infer<TArkType> };
 }
 
-export function parse<TArkType extends AnyTypeConstraint>(
+export function parse<TSchema extends AnyTypeConstraint>(
     value: unknown,
-    schema: TArkType,
-): type.infer<TArkType> {
+    schema: TSchema,
+): type.infer<TSchema> {
     const res = schema(value);
 
-    if (value instanceof type.errors) {
-        throw new TypeError(value.summary);
+    if (res instanceof type.errors) {
+        throw new TypeError(res.summary);
     }
-    return value as type.infer<TArkType>;
+    return res as type.infer<TSchema>;
 }
 
 // TODO: not sure that there is an async model in ArkType (where Zod has one)

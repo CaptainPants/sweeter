@@ -8,11 +8,9 @@ import {
 } from '@captainpants/arktype-modeling';
 import {
     $calc,
-    $constant,
     $peek,
     $val,
     $valProperties,
-    $wrap,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 

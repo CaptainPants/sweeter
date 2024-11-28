@@ -6,10 +6,7 @@ export default defineConfig({
         minify: false,
         rollupOptions: {
         },
-        target: "ESNext",
-        watch: {
-            include: []
-        },
+        target: "ESNext"
     },
     test: {
         environmentMatchGlobs: [

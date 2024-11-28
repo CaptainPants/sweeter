@@ -1,4 +1,3 @@
-export * from './typedefs/DOMException.js';
 
 export * from './arrayExcept.js';
 export * from './arrayRemove.js';

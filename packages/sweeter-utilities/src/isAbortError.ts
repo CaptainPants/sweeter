@@ -1,4 +1,3 @@
-import { DOMException } from './typedefs/DOMException.js';
 
 export function isAbortError(ex: unknown): boolean {
     if (typeof DOMException === 'undefined')

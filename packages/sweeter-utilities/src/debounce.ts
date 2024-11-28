@@ -1,5 +1,5 @@
 import { assertNotNullOrUndefined } from './assertNotNullOrUndefined.js';
-import { clearTimeout, setTimeout } from './internal/timeouts.js';
+import { clearTimeout, setTimeout } from './cross/index.js';
 
 export interface DebouncedCallback<
     TCallback extends (...args: readonly unknown[]) => void,

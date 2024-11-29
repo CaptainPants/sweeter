@@ -1,5 +1,4 @@
 import { assertNotNullOrUndefined } from './assertNotNullOrUndefined.js';
-import { timeouts } from './cross/index.js';
 
 export interface DebouncedCallback<
     TCallback extends (...args: readonly unknown[]) => void,
@@ -17,17 +16,19 @@ export function debounce<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TCallback extends (...args: readonly any[]) => void,
 >(timeout: number, callback: TCallback): DebouncedCallback<TCallback> {
-    let id: ReturnType<typeof timeouts.setTimeout> | null = null;
+    const { setTimeout, clearTimeout } = globalThis;
+
+    let id: ReturnType<typeof globalThis.setTimeout> | null = null;
     let lastArgs: Parameters<TCallback> | null = null;
 
     const returnedCallback = (...args: Parameters<TCallback>): void => {
         if (id !== null) {
-            timeouts.clearTimeout(id);
+            clearTimeout(id);
             id = null;
         }
 
         if (timeout > 0) {
-            id = timeouts.setTimeout(() => {
+            id = setTimeout(() => {
                 returnedCallback.callback(...args);
             }, returnedCallback.timeout);
         } else {
@@ -42,7 +43,7 @@ export function debounce<
     returnedCallback.timeout = timeout;
     returnedCallback.cancel = () => {
         if (id !== null) {
-            timeouts.clearTimeout(id);
+            clearTimeout(id);
             id = null;
         }
     };
@@ -50,7 +51,7 @@ export function debounce<
         if (id !== null) {
             assertNotNullOrUndefined(lastArgs);
             returnedCallback.callback(...lastArgs);
-            timeouts.clearTimeout(id);
+            clearTimeout(id);
             id = null;
         }
     };

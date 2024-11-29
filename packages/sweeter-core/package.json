@@ -33,8 +33,5 @@
     },
     "dependencies": {
         "@captainpants/sweeter-utilities": "workspace:^"
-    },
-    "devDependencies": {
-        "@types/node": "^22.10.1"
     }
 }

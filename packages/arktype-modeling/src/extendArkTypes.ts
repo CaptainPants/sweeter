@@ -1,14 +1,14 @@
 import { arkKind, type BaseNode, nodeClassesByKind, type NodeKind } from '@ark/schema';
 import { type, type Type } from 'arktype';
 
+import { throwError } from '@captainpants/sweeter-utilities';
+
 import  { type Annotations, type AnnotationSetter } from './annotations/types.js';
 import  { type UnknownType, type AnyTypeConstraint } from './type/types.js';
 import { AnnotationsImpl } from './annotations/internal/AnnotationsImpl.js';
 import { AnnotationsBuilderImpl } from './annotations/internal/AnnotationBuilderImpl.js';
 import { WithKind } from './type/introspect/internal/arktypeInternals.js';
 import { isType } from './type/introspect/is.js';
-import { throwError } from '@captainpants/sweeter-utilities';
-
 
 declare module 'arktype/internal/methods/base.ts' {
     /** @ts-expect-error cast variance */ /* eslint-disable-next-line -- Multiple issues with the signature (but we have to match the original) */
@@ -41,7 +41,8 @@ interface Marker {
     id: number;
 }
 
-export function extendArkTypes() {
+// TODO: remove the parameter here
+export function extendArkTypes(...args: any[]) {
     const toExtend = type as typeof type & { [extensionMarkerSymbol]: Marker };
 
     if (toExtend[extensionMarkerSymbol]) {

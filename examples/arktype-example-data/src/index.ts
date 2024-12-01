@@ -8,7 +8,7 @@ import {
 
 import { type } from 'arktype';
 
-extendArkTypes();
+extendArkTypes(type);
 
 export const stringOnly = type.string;
 export const numberOnly = type.number;

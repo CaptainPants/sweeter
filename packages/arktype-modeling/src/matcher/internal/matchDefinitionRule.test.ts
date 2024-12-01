@@ -4,6 +4,7 @@ import { Rules } from '../Rules.js';
 
 import { matchDefinitionRulePart } from './matchDefinitionRule.js';
 import { extendArkTypes } from '../../extendArkTypes.js';
+import { TypeInfo } from '../../models/parents.js';
 
 beforeAll(() => {
     extendArkTypes();
@@ -55,15 +56,17 @@ test('label', async () => {
 });
 
 test('attribute', async () => {
+    const typeInfo: TypeInfo = {
+        type: type.number.annotate((add) =>
+            add.attr('type', 'ham-sandwich'),
+        ),
+        parentInfo: null,
+    };
+    
     expect(
         matchDefinitionRulePart(
             { settings: {} },
-            {
-                type: type.number.annotate((add) =>
-                    add.attr('type', 'ham-sandwich'),
-                ),
-                parentInfo: null,
-            },
+            typeInfo,
             Rules.attr('type', 'ham-sandwich'),
         ),
     ).toStrictEqual(true);

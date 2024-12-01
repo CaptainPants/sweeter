@@ -10,19 +10,19 @@
     "main": "./build/index.js",
     "exports": {
         ".": {
+            "types": "./build/index.d.ts",
             "import": "./build/index.js",
-            "require": "./build/index.cjs",
-            "types": "./build/index.d.ts"
+            "require": "./build/index.cjs"
         },
         "./jsx-runtime": {
+            "types": "./build/jsx-runtime.d.ts",
             "import": "./build/jsx-runtime.js",
-            "require": "./build/jsx-runtime.cjs",
-            "types": "./build/jsx-runtime.d.ts"
+            "require": "./build/jsx-runtime.cjs"
         },
         "./jsx-dev-runtime": {
+            "types": "./build/jsx-dev-runtime.d.ts",
             "import": "./build/jsx-dev-runtime.js",
-            "require": "./build/jsx-dev-runtime.cjs",
-            "types": "./build/jsx-dev-runtime.d.ts"
+            "require": "./build/jsx-dev-runtime.cjs"
         }
     },
     "scripts": {

@@ -2,7 +2,7 @@ import { type } from 'arktype';
 
 import { ModelFactory } from './ModelFactory.js';
 
-test.only('map-object', async () => {
+test('map-object', async () => {
     const schema = type({ '[string]': type.number });
 
     const value: type.infer<typeof schema> = {

@@ -3,9 +3,12 @@ import {
     ModelFactory,
     createDefault,
     type UnknownModel,
+    extendArkTypes,
 } from '@captainpants/arktype-modeling';
 
 import { type } from 'arktype';
+
+extendArkTypes();
 
 export const stringOnly = type.string;
 export const numberOnly = type.number;

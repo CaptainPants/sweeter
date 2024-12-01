@@ -2,9 +2,6 @@
 	"folders": [
         {
             "path": "."
-        },
-        {
-            "path": "node_modules"
         }
     ],
 	"settings": {
@@ -17,6 +14,11 @@
 		},
 		"files.exclude": {
 			//"**/node_modules": true
-        }
-	}
+        },
+        "debug.javascript.terminalOptions": {
+            "skipFiles": [
+                "!**/node_modules/.pnpm/**",
+            ]
+        },
+	},
 }

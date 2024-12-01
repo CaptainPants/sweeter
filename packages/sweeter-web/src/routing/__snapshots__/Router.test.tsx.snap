@@ -1,5 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`General 1`] = `"Loading<div style=\\"display: none;\\"><!--Hooks(Async): trackSignals--></div>"`;
+exports[`General 1`] = `"Loading<div style="display: none;"><!--Hooks(Async): trackSignals--></div>"`;
 
 exports[`General 2`] = `"Text: Test<!--Hooks(Async): trackSignals-->"`;

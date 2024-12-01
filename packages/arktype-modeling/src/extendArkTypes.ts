@@ -1,12 +1,13 @@
-import { type BaseNode, BaseRoot, nodeClassesByKind, type NodeKind } from '@ark/schema';
+import { arkKind, type BaseNode, nodeClassesByKind, type NodeKind } from '@ark/schema';
 import { type, type Type } from 'arktype';
-
-import { throwError } from '@captainpants/sweeter-utilities';
 
 import  { type Annotations, type AnnotationSetter } from './annotations/types.js';
 import  { type UnknownType, type AnyTypeConstraint } from './type/types.js';
 import { AnnotationsImpl } from './annotations/internal/AnnotationsImpl.js';
 import { AnnotationsBuilderImpl } from './annotations/internal/AnnotationBuilderImpl.js';
+import { WithKind } from './type/introspect/internal/arktypeInternals.js';
+import { isType } from './type/introspect/is.js';
+import { throwError } from '@captainpants/sweeter-utilities';
 
 
 declare module 'arktype/internal/methods/base.ts' {
@@ -30,15 +31,44 @@ declare module '@ark/schema' {
     }
 }
 
-const extended = false;
-
 type NodeClass = (typeof nodeClassesByKind)[NodeKind];
 
+const extensionMarkerSymbol: unique symbol = Symbol('arktype-modeling');
+
+let counter = 0;
+
+interface Marker {
+    id: number;
+}
+
 export function extendArkTypes() {
-    if (extended) {
+    const toExtend = type as typeof type & { [extensionMarkerSymbol]: Marker };
+
+    if (toExtend[extensionMarkerSymbol]) {
         return;
     }
 
+    const id = ++counter;
+
+    toExtend[extensionMarkerSymbol] = {
+        id
+    };
+
+    // const baseTypes = [
+    //     Unit.Node,
+    //     Domain.Node,
+    //     Intersection.Node,
+    //     Union.Node,
+    //     // Do this last
+    //     BaseRoot,
+    // ] as const;
+
+    // for (const item of baseTypes) {
+    //     addFunctionsToSchemaNode(item.name, item.prototype as never, id);
+    // }
+    // Not sure if I need to add to all base nodes
+
+    // TODO: trying to remove usage of nodeClassesByKind in favour of just modifying the types..
     const wrapped = new Map<NodeClass, NodeClass>();
     for (const item of Object.values(nodeClassesByKind)) {
         if (!wrapped.has(item)) {
@@ -51,18 +81,49 @@ export function extendArkTypes() {
             wrapped.get(value) ?? throwError('Not found');
     }
 
-    const intrinsicTypes = type;
-    for (const [name, node] of Object.entries(intrinsicTypes)) {
-        if (node instanceof BaseRoot) {
-            addFunctionsToSchemaNode(name, node as never);
+    walkTypes(
+        toExtend,
+        '',
+        (path, schema, id) => {
+            addFunctionsToSchemaNode(path, schema as never, id);
+        }, 
+        id
+    );
+}
+extendArkTypes.also = function (schema: UnknownType) {
+    addFunctionsToSchemaNode(schema.expression, schema as never);
+};
+
+function walkTypes(moduleLike: object, path: string, callback: (path: string, schema: UnknownType, extensionId: number | undefined) => void, extensionId: number | undefined) {
+    const items = Object.entries(moduleLike);
+    console.log('Walking module', path);
+
+    for (const [name, value] of items) {
+        if (value === undefined) continue;
+
+        const subPath = path ? path + '.' + name : name;
+
+        if ((value as WithKind)[arkKind] === 'module') {
+            walkTypes(moduleLike, subPath, callback, extensionId);
+        }
+        else if (isType(value)) {
+            callback(subPath, value, extensionId);
+        }
+        else {
+            // Nothing to do
         }
     }
 }
-extendArkTypes.also = function (type: UnknownType) {
-    addFunctionsToSchemaNode(type.expression, type as never);
-};
 
-function addFunctionsToSchemaNode(name: string, node: SchemaNodeToExtend) {
+function addFunctionsToSchemaNode(name: string, node: SchemaNodeToExtend, id?: number | undefined) {
+    console.log('Trying to extend type', name);
+
+    if (typeof node.annotate !== 'undefined') {
+        return; // Means it's already been added
+    }
+
+    console.log('Extending type', name);
+
     node.annotate = function (callback: AnnotationSetter): unknown {
         return funcs.annotate(this, callback);
     };

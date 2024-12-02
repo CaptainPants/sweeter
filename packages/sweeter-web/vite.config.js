@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
@@ -13,13 +14,10 @@ export default defineConfig({
         outDir: 'build',
         minify: false,
         rollupOptions: {
-            // make sure to externalize deps that shouldn't be bundled
-            // into your library
-            external: [/node_modules/],
         },
         target: "ESNext"
     },
-    plugins: [dts({ clearPureImport: false })],
+    plugins: [dts({ clearPureImport: false }), nodeExternals()],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

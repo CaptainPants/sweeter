@@ -15,7 +15,7 @@ export default defineConfig({
         rollupOptions: {
             // make sure to externalize deps that shouldn't be bundled
             // into your library
-            external: [/@captainpants\/.+/],
+            external: [/node_modules/],
         },
         target: "ESNext"
     },

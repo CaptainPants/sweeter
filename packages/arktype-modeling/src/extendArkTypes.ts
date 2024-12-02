@@ -41,8 +41,7 @@ interface Marker {
     id: number;
 }
 
-// TODO: remove the parameter here
-export function extendArkTypes(...args: any[]) {
+export function extendArkTypes() {
     const toExtend = type as typeof type & { [extensionMarkerSymbol]: Marker };
 
     if (toExtend[extensionMarkerSymbol]) {

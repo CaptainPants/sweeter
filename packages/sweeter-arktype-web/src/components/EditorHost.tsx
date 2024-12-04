@@ -74,7 +74,7 @@ export function EditorHost(
         // Look at the model, and then the parent's property model (which is passed via the localProp)
         const found = modelResolved.type
             .annotations()
-            ?.getAssociatedValue(name, modelResolved, context);
+            ?.getAssociatedValue(name, modelResolved.value, context);
         if (found !== notFound) {
             return found;
         }

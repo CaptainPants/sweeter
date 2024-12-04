@@ -6,17 +6,18 @@ import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
 
 import { introspect } from '../type/introspect/index.js';
 import { type AnyTypeConstraint } from '../type/types.js';
+import { getUnitTypeInfo } from '../type/introspect/getUnitTypeInfo.js';
 
-export function createDefault<TArkType extends AnyTypeConstraint>(
-    schema: TArkType,
-): type.infer<TArkType> {
+export function createDefault<TSchema extends AnyTypeConstraint>(
+    schema: TSchema,
+): type.infer<TSchema> {
     return createDefaultImplementation(schema, descend.defaultDepth);
 }
 
-function createDefaultImplementation<TArkType extends AnyTypeConstraint>(
-    schema: TArkType,
+function createDefaultImplementation<TSchema extends AnyTypeConstraint>(
+    schema: TSchema,
     depth: number,
-): type.infer<TArkType> {
+): type.infer<TSchema> {
     if (schema.meta.default) {
         return schema.meta.default as never;
     }
@@ -47,17 +48,17 @@ function createDefaultImplementation<TArkType extends AnyTypeConstraint>(
             descend(depth),
         ) as never;
     } else if (introspect.isArrayType(schema)) {
-        return [] as type.infer<TArkType>;
+        return [] as type.infer<TSchema>;
     } else if (introspect.isStringType(schema)) {
-        return '' as type.infer<TArkType>;
+        return '' as type.infer<TSchema>;
     } else if (introspect.isNumberType(schema)) {
-        return 0 as type.infer<TArkType>;
+        return 0 as type.infer<TSchema>;
     } else if (introspect.isBooleanType(schema)) {
-        return false as type.infer<TArkType>;
-    } else if (introspect.isUndefinedConstant(schema)) {
-        return undefined as type.infer<TArkType>;
-    } else if (introspect.isNullConstant(schema)) {
-        return null as type.infer<TArkType>;
+        return false as type.infer<TSchema>;
+    } else if (introspect.isLiteralType(schema)) {
+        const info = getUnitTypeInfo(schema);
+        if (info) return info.value as type.infer<TSchema>;
+        throw new TypeError('Unexpected');
     } else {
         throw new TypeError(
             `Could not create default value for schema ${serializeSchemaForDisplay(

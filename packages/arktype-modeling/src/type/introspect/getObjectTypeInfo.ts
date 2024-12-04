@@ -18,7 +18,7 @@ export function tryGetObjectTypeInfo(
     const node = schema as never as BaseRoot;
 
     const asObject = asIntersectionNode(node);
-    if (!asObject) {
+    if (!asObject || asObject.structure?.sequence?.element) {
         return undefined;
     }
 

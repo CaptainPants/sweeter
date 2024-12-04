@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
@@ -17,7 +18,7 @@ export default defineConfig({
         },
         target: "ESNext",
     },
-    plugins: [dts()],
+    plugins: [dts(), nodeExternals()],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

@@ -96,7 +96,6 @@ extendArkTypes.also = function (schema: UnknownType) {
 
 function walkTypes(moduleLike: object, path: string, callback: (path: string, schema: UnknownType, extensionId: number | undefined) => void, extensionId: number | undefined) {
     const items = Object.entries(moduleLike);
-    console.log('Walking module', path);
 
     for (const [name, value] of items) {
         if (value === undefined) continue;
@@ -116,13 +115,9 @@ function walkTypes(moduleLike: object, path: string, callback: (path: string, sc
 }
 
 function addFunctionsToSchemaNode(name: string, node: SchemaNodeToExtend, id?: number | undefined) {
-    console.log('Trying to extend type', name);
-
     if (typeof node.annotate !== 'undefined') {
         return; // Means it's already been added
     }
-
-    console.log('Extending type', name);
 
     node.annotate = function (callback: AnnotationSetter): unknown {
         return funcs.annotate(this, callback);

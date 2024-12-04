@@ -6,6 +6,7 @@ export type SavedExecutionContextRevertAgainCallback = () => void;
 export type SavedExecutionContextRestoreCallback = () => SavedExecutionContextRevertAgainCallback;
 
 export interface SavedExecutionContext {
+    debugLog(): void;
     getDebugString(): string;
     restore(): SavedExecutionContextRevertAgainCallback;
     invokeWith<T>(callback: () => T): T;
@@ -38,6 +39,13 @@ export function saveExecutionContext(): SavedExecutionContext {
     return {
         getDebugString() {
             return restoreList.map(x => `${x.name}: ${String(x.value)}`).join(';\r\n');
+        },
+        debugLog() {
+            console.log('==== Execuation Context ====');
+            for (const item of restoreList) {
+                console.log(item.name, item.value);
+            }
+            console.log('==== END OF Execuation Context ====');
         },
         restore() {
             const revertList = restoreAll();

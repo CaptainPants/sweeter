@@ -22,15 +22,15 @@ import {
     type IsUnion,
 } from '@captainpants/sweeter-utilities';
 
-export interface BaseModel<TValue, TArkType extends AnyTypeConstraint> {
+export interface BaseModel<TValue, TSchema extends AnyTypeConstraint> {
     readonly value: TValue;
-    readonly type: TArkType;
+    readonly type: TSchema;
     readonly parentInfo: ParentTypeInfo | null;
     readonly archetype: string;
 }
 
-export interface SimpleModel<T, TArkType extends AnyTypeConstraint>
-    extends BaseModel<T, TArkType> {
+export interface SimpleModel<T, TSchema extends AnyTypeConstraint>
+    extends BaseModel<T, TSchema> {
     readonly archetype: string;
 }
 
@@ -41,8 +41,8 @@ export interface BooleanModel extends SimpleModel<boolean, Type<boolean>> {}
 // Constants
 
 export interface LiteralModel<
-    TArkType extends Type<string | number | boolean | null | undefined>,
-> extends SimpleModel<type.infer<TArkType>, TArkType> {}
+    TSchema extends Type<string | number | boolean | null | undefined>,
+> extends SimpleModel<type.infer<TSchema>, TSchema> {}
 
 export interface StringConstantModel<TLiteralArkType extends Type<string>>
     extends LiteralModel<TLiteralArkType> {}
@@ -152,9 +152,9 @@ export type UnknownMapObjectEntry = readonly [
     model: UnknownPropertyModel,
 ];
 
-export type MapObjectEntry<TArkType extends AnyTypeConstraint> = readonly [
+export type MapObjectEntry<TSchema extends AnyTypeConstraint> = readonly [
     name: string,
-    model: PropertyModel<TArkType>,
+    model: PropertyModel<TSchema>,
 ];
 
 export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
@@ -247,12 +247,12 @@ export type Model<TSchema extends AnyTypeConstraint> = [type.infer<TSchema>] ext
                 [IsUnion<TUnderlying>] extends [true]
                 ? UnionModel<TSchema>
                 : [IsStringLiteral<TUnderlying>] extends [true]
-                  ? /* @ts-expect-error - not narrowing TArkType but we know its a string */
+                  ? /* @ts-expect-error - not narrowing TSchema but we know its a string */
                     StringConstantModel<TSchema>
                   : [TUnderlying] extends [string] // be wary that ('a'|'b') extends string, so this must happen after union
                     ? StringModel
                     : [IsNumberLiteral<TUnderlying>] extends [true]
-                      ? /* @ts-expect-error - not narrowing TArkType but we know its a string */
+                      ? /* @ts-expect-error - not narrowing TSchema but we know its a string */
                         NumberConstantModel<TSchema>
                       : [TUnderlying] extends [number] // be wary that (1|2) extends number, so this must happen after union
                         ? NumberModel

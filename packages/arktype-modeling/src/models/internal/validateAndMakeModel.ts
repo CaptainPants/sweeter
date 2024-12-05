@@ -5,7 +5,6 @@ import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 import {
-    shallowMatchesStructure,
     validateAndThrow,
 } from '../../utility/validate.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
@@ -21,44 +20,29 @@ import { type type } from 'arktype';
  * @param depth
  * @returns
  */
-export async function validateAndMakeModel<TArkType extends AnyTypeConstraint>(
+export async function validateAndMakeModel<TSchema extends AnyTypeConstraint>(
     valueOrModel: unknown,
-    type: TArkType,
+    type: TSchema,
     parentInfo: ParentTypeInfo | null,
-    validate: boolean,
     depth = descend.defaultDepth,
-): Promise<Model<TArkType>> {
+): Promise<Model<TSchema>> {
+    let validated: type.infer<TSchema>;
     if (isModel(valueOrModel)) {
-        if (valueOrModel.type === type) {
-            return valueOrModel as unknown as Model<TArkType>;
-        } else {
-            let validated: type.infer<TArkType>;
-            if (validate) {
-                validated = await validateAndThrow(type, valueOrModel.value);
-            } else {
-                // If not 'validating' we at least check the structure..
-                if (shallowMatchesStructure(type, valueOrModel.value)) {
-                    validated = valueOrModel.value;
-                } else {
-                    throw new TypeError('Non-matching structure');
-                }
-            }
-
-            return ModelFactory.createModelPart<TArkType>({
-                parentInfo,
-                schema: type,
-                value: validated,
-                depth,
-            });
+        if (valueOrModel.type == type) { // type is the same object
+            validated = valueOrModel.value as type.infer<TSchema>;
         }
-    } else {
-        const validated = await validateAndThrow<TArkType>(type, valueOrModel);
-
-        return ModelFactory.createModelPart<TArkType>({
-            parentInfo,
-            schema: type,
-            value: validated,
-            depth,
-        });
+        else {
+            validated = await validateAndThrow(type, valueOrModel.value);
+        }
     }
+    else {
+        validated = await validateAndThrow(type, valueOrModel);
+    }
+
+    return ModelFactory.createModelPart<TSchema>({
+        parentInfo,
+        schema: type,
+        value: validated,
+        depth,
+    });
 }

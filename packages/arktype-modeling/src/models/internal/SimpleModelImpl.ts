@@ -5,12 +5,12 @@ import { type AnyTypeConstraint } from '../../type/types.js';
 
 export class SimpleModelImpl<
     T,
-    TArkType extends AnyTypeConstraint,
-> extends ModelImpl<T, TArkType> {
+    TSchema extends AnyTypeConstraint,
+> extends ModelImpl<T, TSchema> {
     public constructor(
         archetype: string,
         value: T,
-        type: TArkType,
+        type: TSchema,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, archetype);

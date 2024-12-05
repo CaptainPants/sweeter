@@ -136,8 +136,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
                     type: this.type,
                     parentInfo: this.parentInfo,
                     relationship: { type: 'element' },
-                },
-                validate,
+                }
             );
         });
 

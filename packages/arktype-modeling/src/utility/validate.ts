@@ -14,11 +14,11 @@ export interface ValidateAndThrowArgs {
     abortSignal?: AbortSignal | undefined;
 }
 
-export async function validate<TArkType extends AnyTypeConstraint>(
-    schema: TArkType,
+export async function validate<TSchema extends AnyTypeConstraint>(
+    schema: TSchema,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },
-): Promise<ValidationResult<type.infer<TArkType>>> {
+): Promise<ValidationResult<type.infer<TSchema>>> {
     const res = await safeParseAsync(value, schema);
     if (res.success) return Maybe.success(res.data);
     else
@@ -33,11 +33,11 @@ export async function validate<TArkType extends AnyTypeConstraint>(
         };
 }
 
-export async function validateAndThrow<TArkType extends AnyTypeConstraint>(
-    schema: TArkType,
+export async function validateAndThrow<TSchema extends AnyTypeConstraint>(
+    schema: TSchema,
     value: unknown,
     args: ValidateAndThrowArgs = { deep: true },
-): Promise<type.infer<TArkType>> {
+): Promise<type.infer<TSchema>> {
     const res = await safeParseAsync(value, schema);
 
     if (!res.success) {
@@ -47,11 +47,11 @@ export async function validateAndThrow<TArkType extends AnyTypeConstraint>(
     return res.data;
 }
 
-export function shallowMatchesStructure<TArkType extends AnyTypeConstraint>(
-    schema: TArkType,
+export function shallowMatchesStructure<TSchema extends AnyTypeConstraint>(
+    schema: TSchema,
     value: unknown,
     deep = true,
     depth = 25,
-): value is type.infer<TArkType> {
+): value is type.infer<TSchema> {
     return safeParse(value, schema).success;
 }

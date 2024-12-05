@@ -14,10 +14,10 @@ export function isType(value: unknown): value is Type<unknown> {
     return value instanceof BaseNode;
 }
 
-export function is<TArkType extends AnyTypeConstraint>(
+export function is<TSchema extends AnyTypeConstraint>(
     val: unknown,
-    type: TArkType,
-): val is type.infer<TArkType> {
+    type: TSchema,
+): val is type.infer<TSchema> {
     const res = safeParse(val, type);
     return res.success;
 }

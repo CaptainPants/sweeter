@@ -17,9 +17,9 @@ import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
 import { introspect } from '../../type/index.js';
 
-export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>
-    extends ModelImpl<type.infer<TUnionArkType>, TUnionArkType>
-    implements UnionModel<TUnionArkType>
+export class UnionModelImpl<TUnionSchema extends AnyTypeConstraint>
+    extends ModelImpl<type.infer<TUnionSchema>, TUnionSchema>
+    implements UnionModel<TUnionSchema>
 {
     public static createFromValue<TUnionArkType extends AnyTypeConstraint>(
         value: type.infer<TUnionArkType>,
@@ -53,9 +53,9 @@ export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>
 
     public constructor(
         resolvedModel: SpreadModel<
-            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
+            arkTypeUtilityTypes.UnionOptions<TUnionSchema>
         >,
-        type: TUnionArkType,
+        type: TUnionSchema,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(resolvedModel.value as never, type, parentInfo, 'union');
@@ -64,14 +64,14 @@ export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>
     }
 
     #resolvedModel: SpreadModel<
-        arkTypeUtilityTypes.UnionOptions<TUnionArkType>
+        arkTypeUtilityTypes.UnionOptions<TUnionSchema>
     >;
 
     public unknownResolve(): Model<Type<unknown>> {
         return this.#resolvedModel as never;
     }
     public resolve(): SpreadModel<
-        arkTypeUtilityTypes.UnionOptions<TUnionArkType>
+        arkTypeUtilityTypes.UnionOptions<TUnionSchema>
     > {
         return this.#resolvedModel;
     }
@@ -93,12 +93,12 @@ export class UnionModelImpl<TUnionArkType extends AnyTypeConstraint>
         }
 
         const adoptedResolved = (await validateAndMakeModel<
-            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
-        >(value, type, this.parentInfo, validate)) as unknown as SpreadModel<
-            arkTypeUtilityTypes.UnionOptions<TUnionArkType>
+            arkTypeUtilityTypes.UnionOptions<TUnionSchema>
+        >(value, type, this.parentInfo)) as unknown as SpreadModel<
+            arkTypeUtilityTypes.UnionOptions<TUnionSchema>
         >;
 
-        const model = new UnionModelImpl<TUnionArkType>(
+        const model = new UnionModelImpl<TUnionSchema>(
             adoptedResolved,
             this.type,
             this.parentInfo,

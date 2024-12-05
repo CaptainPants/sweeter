@@ -121,7 +121,7 @@ export function ObjectEditor(
                                     .annotations()
                                     ?.getAssociatedValue(
                                         StandardLocalValues.Visible,
-                                        typedModel.value.value,
+                                        propertyModel.valueModel.value,
                                         calculationContext,
                                     ) !== false
                             ); // likely values are notFound and false

@@ -23,11 +23,11 @@ import {
 import { Button, Modal } from '@captainpants/sweeter-gummybear';
 import { standardRules } from '../standardRules.js';
 
-export type EditorRootProps<TArkType extends AnyTypeConstraint> =
+export type EditorRootProps<TSchema extends AnyTypeConstraint> =
     PropertiesMightBeSignals<{
         id?: string | undefined;
-        model: Model<TArkType>;
-        replace: Replacer<TArkType>;
+        model: Model<TSchema>;
+        replace: Replacer<TSchema>;
         settings?: EditorSettings;
 
         idPath?: string;
@@ -46,10 +46,10 @@ const defaultSettings = Object.freeze({});
  * The main entry point for an editor structure.
  * @param props
  */
-export function EditorRoot<TArkType extends AnyTypeConstraint>(
-    props: Readonly<EditorRootProps<TArkType>>,
+export function EditorRoot<TSchema extends AnyTypeConstraint>(
+    props: Readonly<EditorRootProps<TSchema>>,
 ): JSX.Element;
-export function EditorRoot<TArkType extends AnyTypeConstraint>({
+export function EditorRoot<TSchema extends AnyTypeConstraint>({
     id,
     model,
     replace,
@@ -57,7 +57,7 @@ export function EditorRoot<TArkType extends AnyTypeConstraint>({
     idPath,
     getAmbientValue,
     rules: rulesProp,
-}: Readonly<EditorRootProps<TArkType>>): JSX.Element {
+}: Readonly<EditorRootProps<TSchema>>): JSX.Element {
     const typedModel = $calc(() => {
         const val = $val(model);
         const result = asUnknown(val);

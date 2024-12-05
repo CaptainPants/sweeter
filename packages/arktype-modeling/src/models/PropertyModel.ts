@@ -7,8 +7,8 @@ export interface UnknownPropertyModel {
     readonly isOptional: boolean; // TODO: undecided about whether this should be on the property, or remain in the type. Will depend on how its handled by editors I guess.
 }
 
-export interface PropertyModel<TArkType extends AnyTypeConstraint> {
+export interface PropertyModel<TSchema extends AnyTypeConstraint> {
     readonly name: string | symbol;
-    readonly valueModel: Model<TArkType>;
+    readonly valueModel: Model<TSchema>;
     readonly isOptional: boolean; // TODO: undecided about whether this should be on the property, or remain in the type. Will depend on how its handled by editors I guess.
 }

@@ -1,20 +1,20 @@
 import { type ArkErrors, type } from 'arktype';
 import { type AnyTypeConstraint } from '../type/index.js';
 
-export type SafeParseResult<TArkType extends AnyTypeConstraint> =
-    | { success: true; data: type.infer<TArkType> }
+export type SafeParseResult<TSchema extends AnyTypeConstraint> =
+    | { success: true; data: type.infer<TSchema> }
     | { success: false; summary: string; issues: ArkErrors };
 
-export function safeParse<TArkType extends AnyTypeConstraint>(
+export function safeParse<TSchema extends AnyTypeConstraint>(
     value: unknown,
-    schema: TArkType,
-): SafeParseResult<TArkType> {
+    schema: TSchema,
+): SafeParseResult<TSchema> {
     const res = schema(value);
 
     if (res instanceof type.errors) {
         return { success: false, summary: res.summary, issues: res.issues };
     }
-    return { success: true, data: value as type.infer<TArkType> };
+    return { success: true, data: value as type.infer<TSchema> };
 }
 
 export function parse<TSchema extends AnyTypeConstraint>(

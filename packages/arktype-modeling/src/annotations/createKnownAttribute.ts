@@ -6,26 +6,26 @@ import { is } from '../type/introspect/is.js';
 
 export interface KnownAttribute<
     TName extends string,
-    TArkType extends AnyTypeConstraint,
+    TSchema extends AnyTypeConstraint,
 > {
     // TODO: reconsider if this call signature makes sense/is required. Seems to do very little.
-    (from: TArkType): type.infer<TArkType> | undefined;
+    (from: TSchema): type.infer<TSchema> | undefined;
 
     readonly attributeName: TName;
 
-    get: (from: TArkType) => type.infer<TArkType>;
+    get: (from: TSchema) => type.infer<TSchema>;
     getOrFallback: (
-        from: TArkType,
-        fallback: type.infer<TArkType>,
-    ) => type.infer<TArkType>;
-    getOrUndefined: (from: TArkType) => type.infer<TArkType> | undefined;
+        from: TSchema,
+        fallback: type.infer<TSchema>,
+    ) => type.infer<TSchema>;
+    getOrUndefined: (from: TSchema) => type.infer<TSchema> | undefined;
 }
 
 export function createKnownAttribute<
     TName extends string,
-    TArkType extends AnyTypeConstraint,
->(name: TName, schema: TArkType): KnownAttribute<TName, TArkType> {
-    function result(from: TArkType): type.infer<TArkType> | undefined {
+    TSchema extends AnyTypeConstraint,
+>(name: TName, schema: TSchema): KnownAttribute<TName, TSchema> {
+    function result(from: TSchema): type.infer<TSchema> | undefined {
         if (!from.hasAnnotations()) return undefined;
         const value = from.annotations()?.attr(name, undefined);
         if (value === undefined || !is(value, schema)) {
@@ -35,7 +35,7 @@ export function createKnownAttribute<
     }
 
     // Alias for consistency
-    result.get = (from: TArkType): type.infer<TArkType> => {
+    result.get = (from: TSchema): type.infer<TSchema> => {
         if (!from.hasAnnotations()) throw new TypeError(`MetaData not found`);
         const value = from.annotations()?.attr(name, notFound);
         if (value === notFound || !is(value, schema)) {
@@ -47,9 +47,9 @@ export function createKnownAttribute<
     };
 
     result.getOrFallback = function (
-        from: TArkType,
-        fallback: type.infer<TArkType>,
-    ): type.infer<TArkType> {
+        from: TSchema,
+        fallback: type.infer<TSchema>,
+    ): type.infer<TSchema> {
         if (!from.hasAnnotations()) return fallback;
         const value = from.annotations()?.attr(name, notFound);
         if (value === notFound || !is(value, schema)) {

@@ -23,6 +23,8 @@ import {
 import { type Type, type type } from 'arktype';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import { introspect } from '../../type/index.js';
+import { isModel } from '../isModel.js';
+import { validateAndMakeModel } from './validateAndMakeModel.js';
 
 type UnknownRecord = Record<string | symbol, unknown>;
 type KnownPropertyModels = {
@@ -99,7 +101,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         // return getObjectTypeInfo(this.type).stringMappingType as never;
     }
 
-    private typeForKey(key: string | symbol) {
+    private schemaForKey(key: string | symbol) {
         const info = getObjectTypeInfo(this.type);
         const fixedProps = info.getProperties();
 
@@ -126,18 +128,17 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         key: string | symbol,
         value: unknown,
     ): Promise<this> {
-        const type = this.typeForKey(key);
+        const schema = this.schemaForKey(key);
 
-        // Note that this parses the value and throws on failure
-        const adopted = ModelFactory.createModelPart({
+        const adopted = await validateAndMakeModel(
             value,
-            schema: type,
-            parentInfo: {
+            schema,
+            {
                 type: this.type,
                 parentInfo: this.parentInfo,
                 relationship: { property: key, type: 'property' },
             },
-        });
+        );
 
         const copy = {
             ...(this.value as UnknownRecord),
@@ -150,7 +151,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
             ...this.#properties,
             [key]: {
                 name: key,
-                isOptional: type.meta.optional ?? false,
+                isOptional: schema.meta.optional ?? false,
                 valueModel: adopted,
             },
         };

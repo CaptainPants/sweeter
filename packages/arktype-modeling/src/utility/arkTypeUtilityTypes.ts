@@ -21,24 +21,24 @@ export namespace arkTypeUtilityTypes {
      */
     export type AnyTypeConstraint = BaseAnyTypeConstraint;
 
-    export type AllPropertyKeys<TArkTypeObjectType> =
-        keyof type.infer<TArkTypeObjectType>;
-    export type AllPropertyArkTypes<TArkTypeObjectType> = _SpreadWrapType<
-        _PropertyType<type.infer<TArkTypeObjectType>>
+    export type AllPropertyKeys<TSchemaObjectType> =
+        keyof type.infer<TSchemaObjectType>;
+    export type AllPropertyArkTypes<TSchemaObjectType> = _SpreadWrapType<
+        _PropertyType<type.infer<TSchemaObjectType>>
     >;
 
-    export type NonCatchallPropertyKeys<TArkTypeObjectType> = GetNonExpandoKeys<
-        type.infer<TArkTypeObjectType>
+    export type NonCatchallPropertyKeys<TSchemaObjectType> = GetNonExpandoKeys<
+        type.infer<TSchemaObjectType>
     >;
-    export type CatchallPropertyKeyRawType<TArkTypeObjectType> = GetExpandoKeys<
-        type.infer<TArkTypeObjectType>
+    export type CatchallPropertyKeyRawType<TSchemaObjectType> = GetExpandoKeys<
+        type.infer<TSchemaObjectType>
     >;
-    export type CatchallPropertyValueArkType<TArkTypeObjectType> = Type<
-        GetExpandoType<type.infer<TArkTypeObjectType>>
+    export type CatchallPropertyValueArkType<TSchemaObjectType> = Type<
+        GetExpandoType<type.infer<TSchemaObjectType>>
     >;
 
-    export type PropertyType<TArkTypeObjectType, Property extends string> =
-        AllPropertyArkTypes<TArkTypeObjectType> extends ReadonlyRecord<
+    export type PropertyType<TSchemaObjectType, Property extends string> =
+        AllPropertyArkTypes<TSchemaObjectType> extends ReadonlyRecord<
             Property,
             infer S
         >
@@ -47,12 +47,12 @@ export namespace arkTypeUtilityTypes {
 
     export type ValuesOfObject<TObject> = TObject[keyof TObject];
 
-    export type ObjectEntryType<TArkTypeObjectType> = readonly [
+    export type ObjectEntryType<TSchemaObjectType> = readonly [
         (
-            | keyof AllPropertyArkTypes<TArkTypeObjectType>
-            | keyof CatchallPropertyKeyRawType<TArkTypeObjectType>
+            | keyof AllPropertyArkTypes<TSchemaObjectType>
+            | keyof CatchallPropertyKeyRawType<TSchemaObjectType>
         ),
-        ValuesOfObject<TArkTypeObjectType> | ValuesOfObject<TArkTypeObjectType>,
+        ValuesOfObject<TSchemaObjectType> | ValuesOfObject<TSchemaObjectType>,
     ];
 
     export type ArrayElementType<TArrayArkType extends Type<unknown[]>> =

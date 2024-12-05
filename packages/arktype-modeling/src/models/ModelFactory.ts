@@ -30,23 +30,23 @@ import { type type } from 'arktype';
 import { safeParse } from '../utility/parse.js';
 import { type ValueTypeFromModel } from '../types.js';
 
-export interface CreateModelArgs<TArkType extends AnyTypeConstraint> {
-    schema: TArkType; // putting this at the top seems to help with type inference
-    value: type.infer<TArkType>;
+export interface CreateModelArgs<TSchema extends AnyTypeConstraint> {
+    schema: TSchema; // putting this at the top seems to help with type inference
+    value: type.infer<TSchema>;
     parentInfo?: ParentTypeInfo | null | undefined;
     abortSignal?: AbortSignal | undefined;
 }
 
-export interface CreateModelPartArgs<TArkType extends AnyTypeConstraint> {
-    schema: TArkType; // putting this at the top seems to help with type inference
-    value: type.infer<TArkType>;
+export interface CreateModelPartArgs<TSchema extends AnyTypeConstraint> {
+    schema: TSchema; // putting this at the top seems to help with type inference
+    value: type.infer<TSchema>;
     parentInfo: ParentTypeInfo | null | undefined;
     depth?: number;
 }
 
-type ModelFactoryMethod<TArkType extends AnyTypeConstraint> = (
-    value: type.infer<TArkType>,
-    arkType: TArkType,
+type ModelFactoryMethod<TSchema extends AnyTypeConstraint> = (
+    value: type.infer<TSchema>,
+    arkType: TSchema,
     parentInfo: ParentTypeInfo | null,
     depth: number,
 ) => UnspecifiedModel;
@@ -58,9 +58,9 @@ type UnknownModelFactoryMethod = (
     depth: number,
 ) => UnspecifiedModel | undefined;
 
-function setup<TArkType extends AnyTypeConstraint>(
-    is: (schema: UnknownType) => schema is TArkType,
-    factory: ModelFactoryMethod<TArkType>,
+function setup<TSchema extends AnyTypeConstraint>(
+    is: (schema: UnknownType) => schema is TSchema,
+    factory: ModelFactoryMethod<TSchema>,
 ): UnknownModelFactoryMethod;
 function setup(
     is: (schema: UnknownType) => boolean,
@@ -153,18 +153,18 @@ const defaults = [
     }),
 ];
 
-function createModel<TArkType extends AnyTypeConstraint>(
-    args: CreateModelArgs<TArkType>,
-): Promise<Model<TArkType>>;
-async function createModel<TArkType extends AnyTypeConstraint>({
+function createModel<TSchema extends AnyTypeConstraint>(
+    args: CreateModelArgs<TSchema>,
+): Promise<Model<TSchema>>;
+async function createModel<TSchema extends AnyTypeConstraint>({
     value,
     schema,
     parentInfo,
     abortSignal,
-}: CreateModelArgs<TArkType>): Promise<Model<TArkType>> {
+}: CreateModelArgs<TSchema>): Promise<Model<TSchema>> {
     const typed = await validateAndThrow(schema, value, { abortSignal });
 
-    return createModelPart<TArkType>({
+    return createModelPart<TSchema>({
         value: typed,
         schema: schema,
         depth: descend.defaultDepth,
@@ -177,18 +177,18 @@ async function createModel<TArkType extends AnyTypeConstraint>({
  * @param args
  * @returns
  */
-function createModelPart<TArkType extends AnyTypeConstraint>(
-    args: CreateModelPartArgs<TArkType>,
-): Model<TArkType> {
+function createModelPart<TSchema extends AnyTypeConstraint>(
+    args: CreateModelPartArgs<TSchema>,
+): Model<TSchema> {
     // This indirection is mostly so that we don't have 15 'as any' parts,
     // and just have the one 'any' return type
     const { value, schema: type, parentInfo, depth } = args;
     return doCreateModelPart(value, type, parentInfo, depth) as never;
 }
 
-function doCreateModelPart<TArkType extends AnyTypeConstraint>(
+function doCreateModelPart<TSchema extends AnyTypeConstraint>(
     value: unknown,
-    schema: TArkType,
+    schema: TSchema,
     parentInfo: ParentTypeInfo | null = null,
     depth = descend.defaultDepth,
 ): UnspecifiedModel {

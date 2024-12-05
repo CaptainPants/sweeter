@@ -2,12 +2,12 @@ import { type UnspecifiedModel, type BaseModel } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
 
-export class ModelImpl<TValue, TArkType extends AnyTypeConstraint>
-    implements BaseModel<TValue, TArkType>
+export class ModelImpl<TValue, TSchema extends AnyTypeConstraint>
+    implements BaseModel<TValue, TSchema>
 {
     public constructor(
         value: TValue,
-        type: TArkType,
+        type: TSchema,
         parentInfo: ParentTypeInfo | null,
         archetype: string,
     ) {
@@ -18,7 +18,7 @@ export class ModelImpl<TValue, TArkType extends AnyTypeConstraint>
     }
 
     public readonly value: TValue;
-    public readonly type: TArkType;
+    public readonly type: TSchema;
     public readonly parentInfo: ParentTypeInfo | null;
     public readonly archetype: string;
 

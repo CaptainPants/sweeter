@@ -1,4 +1,5 @@
-import { type SignalState } from './types.js';
+import { SignalState } from "./SignalState";
+
 
 export class SignalController<T> {
     #handlers: ((newState: SignalState<T>) => void)[] = [];

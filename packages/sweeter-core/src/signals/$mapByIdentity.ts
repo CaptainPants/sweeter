@@ -11,6 +11,7 @@ import {
     $constant,
     SignalController,
     $controlled,
+    SignalState,
 } from '../index.js';
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
@@ -72,15 +73,12 @@ export function $mapByIdentity<T, U>(
             if (match) {
                 // Avoid the object allocation here if the index is already correct
                 if (match.indexSignal.value !== index) {
-                    match.indexController.update({
-                        mode: 'SUCCESS',
-                        value: index,
-                    });
+                    match.indexController.update(SignalState.success(index));
                 }
             } else {
                 const indexController = new SignalController<number>();
                 const indexSignal = $controlled(indexController);
-                indexController.update({ mode: 'SUCCESS', value: index });
+                indexController.update(SignalState.success(index));
                 match = {
                     source: item,
                     mappedElement: $peek(map)(item, indexSignal),

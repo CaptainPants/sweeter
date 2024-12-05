@@ -4,6 +4,7 @@ import {
     Context,
     dev,
     SignalController,
+    SignalState,
     type PropsWithIntrinsicAttributesFor,
     type Signal,
 } from '@captainpants/sweeter-core';
@@ -23,17 +24,14 @@ export function createDOMElement<TElementTypeString extends string>(
 
     const ele = document.createElement(type);
 
-    const result = $controlled(resultController, {
-        mode: 'SUCCESS',
-        value: ele,
-    });
+    const result = $controlled(resultController, SignalState.success(ele));
 
     const cleanupFaultContext = ComponentFaultContext.replace({
         reportFaulted(err) {
             console.log('Fault (createDOMElement): ', result.peekState());
             // If its mounted to the document, we can potentially cheat
             // If its not, then we need to make the result invalid -- and currently its a raw DOM Element
-            resultController.update({ mode: 'ERROR', error: err });
+            resultController.update(SignalState.error(err));
         },
     });
     try {

@@ -1,7 +1,4 @@
-import {
-    getSignalValueFromState,
-    isEqualSignalState,
-} from '../../SignalState-support.js';
+
 import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
 import { signalMarker } from '../markers.js';
@@ -9,10 +6,10 @@ import {
     type DebugDependencyNode,
     type Signal,
     type SignalListener,
-    type SignalState,
 } from '../../types.js';
 import { dev } from '../../../dev.js';
 import { StackTrace } from '@captainpants/sweeter-utilities';
+import { SignalState } from '../../SignalState.js';
 
 interface ChangeAnnouncerStackNode {
     signal: Signal<unknown>;
@@ -46,7 +43,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     public peek(): T {
-        return getSignalValueFromState(this.peekState());
+        return SignalState.getValue(this.peekState());
     }
 
     public peekState(ensureInit = true): SignalState<T> {
@@ -71,7 +68,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     protected _updateAndAnnounce(state: SignalState<T>) {
         const previous = this.#state;
 
-        if (isEqualSignalState(previous, state)) {
+        if (SignalState.isEqual(previous, state)) {
             return; // Don't announce the change if the values were equal
         }
 

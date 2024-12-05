@@ -12,6 +12,7 @@ import {
     $controlled,
     ComponentFaultContext,
     type Signal,
+    SignalState,
 } from '@captainpants/sweeter-core';
 import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
@@ -181,7 +182,7 @@ export function createComponentInstance<
             reportFaulted(err) {
                 // This might be undefined
                 console.log('Faulted (createComponentInstance): ', result);
-                resultController.update({ mode: 'ERROR', error: err });
+                resultController.update(SignalState.error(err));
             },
         },
         () => {
@@ -196,16 +197,10 @@ export function createComponentInstance<
 
             // shortcut if we don't need to add in markers for mount callbacks.
             if (hookElement) {
-                return $controlled(resultController, {
-                    mode: 'SUCCESS',
-                    value: [componentContent, hookElement],
-                });
+                return $controlled(resultController, SignalState.success([componentContent, hookElement]));
             } else {
                 // shortcut if we don't need to add in markers for mount callbacks.
-                return $controlled(resultController, {
-                    mode: 'SUCCESS',
-                    value: componentContent,
-                });
+                return $controlled(resultController, SignalState.success(componentContent));
             }
         },
     );

@@ -1,5 +1,6 @@
 import { $controlled } from './$controlled.js';
 import { SignalController } from './SignalController.js';
+import { SignalState } from './SignalState.js';
 
 it('Controlled does stuff', () => {
     const controller = new SignalController<number>();
@@ -8,11 +9,11 @@ it('Controlled does stuff', () => {
 
     expect(signal.inited).toStrictEqual(false);
 
-    controller.update({ mode: 'SUCCESS', value: 1234 });
+    controller.update(SignalState.success(1234));
 
     expect(signal.value).toStrictEqual(1234);
 
-    controller.update({ mode: 'ERROR', error: new Error('This is an error') });
+    controller.update(SignalState.error(new Error('This is an error')));
 
     expect(() => {
         const _ = signal.value;

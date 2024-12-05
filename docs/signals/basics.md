@@ -36,7 +36,7 @@ export interface Signal<T> {
     /**
      * Gets the current state of the signal, which might be an exception.
      */
-    peekState(): InitializedSignalState<T>;
+    peekState(ensureInited?: boolean = true): SignalState<T>;
 
     /**
      * Use this to check if a signal has been initialized. This can be useful in a $calc that references itself.
@@ -204,7 +204,7 @@ const controller = new SignalController<number>();
 
 const signal = $controlled(controller);
 
-controller.update({ mode: 'SUCCESS', value: 1 })
+controller.update(SignalState.success(1))
 ```
 
 ### $deferred

@@ -2,6 +2,7 @@ import {
     $controlled,
     type Signal,
     SignalController,
+    SignalState,
 } from '@captainpants/sweeter-core';
 
 export interface LocationSignalResult {
@@ -24,16 +25,10 @@ export interface LocationSignalResult {
 export function createLocationSignal(): LocationSignalResult {
     const signalController = new SignalController<string>();
 
-    const signal = $controlled(signalController, {
-        mode: 'SUCCESS',
-        value: createLocationSignal.getLocation(),
-    });
+    const signal = $controlled(signalController, SignalState.success(createLocationSignal.getLocation()));
 
     function updateState() {
-        signalController.update({
-            mode: 'SUCCESS',
-            value: createLocationSignal.getLocation(),
-        });
+        signalController.update(SignalState.success(createLocationSignal.getLocation()));
     }
 
     window.addEventListener('pushstate', updateState);

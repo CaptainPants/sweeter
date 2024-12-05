@@ -7,7 +7,6 @@ import {
 } from '../../ambient.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
 import {
-    type SignalState,
     type Signal,
     type CalculatedSignalOptions,
 } from '../../types.js';
@@ -16,13 +15,14 @@ import {
     finishCalculation,
     startCalculation,
 } from '../../calculationDeferral.js';
+import { SignalState } from '../../SignalState.js';
 
 export class CalculatedSignal<T> extends SignalBase<T> {
     constructor(calculation: () => T, options?: CalculatedSignalOptions) {
         // Capture execution context before we do anything else
         const savedContext = saveExecutionContext();
 
-        super({ mode: 'INITIALISING' });
+        super(SignalState.init());
 
         // We can't use this. before calling super, so this is separated from the saveExecutionContext() call
         this.#capturedContext = savedContext;
@@ -92,15 +92,9 @@ export class CalculatedSignal<T> extends SignalBase<T> {
 
     #deriveState(result: CallAndReturnDependenciesResult<T>): SignalState<T> {
         if (result.succeeded) {
-            return {
-                mode: 'SUCCESS',
-                value: result.result,
-            };
+            return SignalState.success(result.result);
         } else {
-            return {
-                mode: 'ERROR',
-                error: result.error,
-            };
+            return SignalState.error(result.error);
         }
     }
 

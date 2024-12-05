@@ -2,8 +2,7 @@ import {
     type ContextSnapshot,
     flattenElements,
     ComponentFaultContext,
-    type SignalState,
-    getSignalValueFromState,
+    SignalState,
     type FlattenedElement,
     afterCalculationsComplete,
 } from '@captainpants/sweeter-core';
@@ -49,7 +48,7 @@ export function addJsxChildren(
     ) => {
         afterCalculationsComplete(() => {
             try {
-                const updatedChildren = getSignalValueFromState(newState); // newState might be an error state
+                const updatedChildren = SignalState.getValue(newState); // newState might be an error state
                 replaceJsxChildren(parentNode, updatedChildren);
             } catch (err) {
                 const faultContext = getContext(ComponentFaultContext);

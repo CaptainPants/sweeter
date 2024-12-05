@@ -1,5 +1,5 @@
 import { $mutable } from './$mutable.js';
-import { type SignalState } from './types.js';
+import { SignalState } from './SignalState.js';
 
 it('MutableValueSignal has initial value', () => {
     const signal = $mutable(23);
@@ -22,12 +22,6 @@ it('MutableValueSignal listeners invoked with correct value after update', () =>
 
     signal.value = 2;
 
-    expect(prevStored).toEqual({
-        mode: 'SUCCESS',
-        value: 1,
-    } satisfies SignalState<number>);
-    expect(nextStored).toEqual({
-        mode: 'SUCCESS',
-        value: 2,
-    } satisfies SignalState<number>);
+    expect(prevStored).toEqual(SignalState.success(1));
+    expect(nextStored).toEqual(SignalState.success(2));
 });

@@ -2,13 +2,14 @@ import { SignalBase } from './SignalBase.js';
 import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
 import { writableSignalMarker } from '../markers.js';
 import { type ReadWriteSignal } from '../../types.js';
+import { SignalState } from '../../SignalState.js';
 
 export class MutableValueSignal<T>
     extends SignalBase<T>
     implements ReadWriteSignal<T>
 {
     constructor(initialValue: T) {
-        super({ mode: 'SUCCESS', value: initialValue });
+        super(SignalState.success(initialValue));
     }
 
     readonly [writableSignalMarker] = true;
@@ -22,7 +23,7 @@ export class MutableValueSignal<T>
 
     override set value(value: T) {
         announceMutatingSignal(this);
-        super._updateAndAnnounce({ mode: 'SUCCESS', value: value });
+        super._updateAndAnnounce(SignalState.success(value));
     }
 
     update(value: T): void {

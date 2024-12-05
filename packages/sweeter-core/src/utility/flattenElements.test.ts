@@ -2,12 +2,13 @@ import {
     $calc,
     $controlled,
     SignalController,
+    SignalState,
     flattenElements,
 } from '../index.js';
 
 it('throws through layers', () => {
     const controller = new SignalController<boolean>();
-    const trigger = $controlled(controller, { mode: 'SUCCESS', value: false });
+    const trigger = $controlled(controller, SignalState.success(false));
 
     const throws = $calc(() => {
         if (trigger.value) {
@@ -34,7 +35,7 @@ it('throws through layers', () => {
         threw = flattened.peekState().mode === 'ERROR';
     });
 
-    controller.update({ mode: 'ERROR', error: new Error('TEST') });
+    controller.update(SignalState.error(new Error('TEST')));
 
     expect(handlerRan).toStrictEqual(true);
     expect(threw).toStrictEqual(true);

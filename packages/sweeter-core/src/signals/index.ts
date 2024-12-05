@@ -14,8 +14,9 @@ export * from './calculationDeferral.js';
 export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';
-export * from './SignalState-support.js';
 export * from './$mapByIndex.js';
 export * from './$val.js';
 export * from './subscribeToChanges.js';
 export * from './SignalController.js';
+
+export * from './SignalState.js';

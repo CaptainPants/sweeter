@@ -6,7 +6,7 @@ import {
     type UnknownPropertyModel,
     type UnionModel,
     type UnknownUnionModel,
-    type UnspecifiedModel,
+    type UnknownModel,
     type ObjectModel,
 } from '../index.js';
 import { type Type } from 'arktype';
@@ -26,17 +26,17 @@ it('Specific models conform to', () => {
 });
 
 it('All models conform to UnknownModel', () => {
-    typeAssert.extends<Model<Type<{ test: string }>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<1 | 2>>, UnspecifiedModel>();
+    typeAssert.extends<Model<Type<{ test: string }>>, UnknownModel>();
+    typeAssert.extends<Model<Type<1 | 2>>, UnknownModel>();
 
-    typeAssert.extends<Model<Type<string>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<number>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<boolean>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<undefined>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<null>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<'test'>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<12>>, UnspecifiedModel>();
-    typeAssert.extends<Model<Type<true>>, UnspecifiedModel>();
+    typeAssert.extends<Model<Type<string>>, UnknownModel>();
+    typeAssert.extends<Model<Type<number>>, UnknownModel>();
+    typeAssert.extends<Model<Type<boolean>>, UnknownModel>();
+    typeAssert.extends<Model<Type<undefined>>, UnknownModel>();
+    typeAssert.extends<Model<Type<null>>, UnknownModel>();
+    typeAssert.extends<Model<Type<'test'>>, UnknownModel>();
+    typeAssert.extends<Model<Type<12>>, UnknownModel>();
+    typeAssert.extends<Model<Type<true>>, UnknownModel>();
 });
 
 it('All models conform to reasonable less specific models', () => {

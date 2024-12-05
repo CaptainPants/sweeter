@@ -4,7 +4,7 @@ import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 
-export class UnknownModelImpl extends ModelImpl<unknown, Type<unknown>> {
+export class UnknownTypedModelImpl extends ModelImpl<unknown, Type<unknown>> {
     public constructor(
         value: unknown,
         type: Type<unknown>,

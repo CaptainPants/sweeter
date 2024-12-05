@@ -22,7 +22,7 @@ import {
     type StringConstantModel,
     type StringModel,
     type UndefinedModel,
-    type UnspecifiedModel,
+    type UnknownModel,
     type UnknownUnionModel,
     type UnknownArrayModel,
     type AnyModelConstraint,
@@ -112,19 +112,13 @@ export function asUndefinedConstant(
     return isUndefinedConstant(model.type) ? (model as any) : undefined;
 }
 
-export function asUnknown(model: AnyModelConstraint): UnspecifiedModel;
-export function asUnknown(model: unknown): UnspecifiedModel;
-export function asUnknown(model: unknown): UnspecifiedModel {
-    if (isModel(model)) {
-        return model;
-    } else {
-        throw new TypeError(`Provided value was not a model`);
-    }
+export function asUnknown(model: UnknownModel): UnknownModel {
+    return model;
 }
 
 export function asConstant(
-    model: UnspecifiedModel,
-): UnspecifiedModel | undefined {
+    model: UnknownModel,
+): UnknownModel | undefined {
     if (
         isStringLiteralType(model.type) ||
         isNumberLiteralType(model.type) ||

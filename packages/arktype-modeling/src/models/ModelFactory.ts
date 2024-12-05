@@ -3,10 +3,10 @@ import { descend } from '@captainpants/sweeter-utilities';
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
-import { UnknownModelImpl } from './internal/UnknownModelImpl.js';
+import { UnknownTypedModelImpl } from './internal/UnknownTypedModelImpl.js';
 import { ObjectImpl } from './internal/ObjectImpl.js';
 import {
-    type UnspecifiedModel,
+    type UnknownModel,
     type Model,
     type AnyModelConstraint,
 } from './Model.js';
@@ -49,14 +49,14 @@ type ModelFactoryMethod<TSchema extends AnyTypeConstraint> = (
     arkType: TSchema,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-) => UnspecifiedModel;
+) => UnknownModel;
 
 type UnknownModelFactoryMethod = (
     value: unknown,
     arkType: AnyTypeConstraint,
     parentInfo: ParentTypeInfo | null,
     depth: number,
-) => UnspecifiedModel | undefined;
+) => UnknownModel | undefined;
 
 function setup<TSchema extends AnyTypeConstraint>(
     is: (schema: UnknownType) => schema is TSchema,
@@ -70,7 +70,7 @@ function setup(
     is: (schema: UnknownType) => boolean,
     factory: UnknownModelFactoryMethod,
 ): UnknownModelFactoryMethod {
-    return (input, schema, parentInfo, depth): UnspecifiedModel | undefined => {
+    return (input, schema, parentInfo, depth): UnknownModel | undefined => {
         if (!is(schema)) {
             return undefined;
         }
@@ -149,7 +149,7 @@ const defaults = [
         return new SimpleModelImpl('number', value, type, parentInfo);
     }),
     setup(isUnknownType, function unknown(value, type, parentInfo, _depth) {
-        return new UnknownModelImpl(value, type, parentInfo);
+        return new UnknownTypedModelImpl(value, type, parentInfo);
     }),
 ];
 
@@ -191,7 +191,7 @@ function doCreateModelPart<TSchema extends AnyTypeConstraint>(
     schema: TSchema,
     parentInfo: ParentTypeInfo | null = null,
     depth = descend.defaultDepth,
-): UnspecifiedModel {
+): UnknownModel {
     parentInfo ??= null;
 
     for (const item of defaults) {

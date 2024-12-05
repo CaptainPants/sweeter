@@ -5,7 +5,7 @@ import {
     type SpreadModel,
     type Model,
     type UnionModel,
-    type UnspecifiedModel,
+    type UnknownModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -111,7 +111,7 @@ export class UnionModelImpl<TUnionSchema extends AnyTypeConstraint>
     public as<TTargetArkType extends AnyTypeConstraint>(
         type: TTargetArkType,
     ): Model<TTargetArkType> | null {
-        let resolved = this.#resolvedModel as UnspecifiedModel;
+        let resolved = this.#resolvedModel as UnknownModel;
 
         for (;;) {
             if (resolved.type === type) {

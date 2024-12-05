@@ -3,9 +3,9 @@ import {
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import {
-    type UnknownModel,
     type LocalValueCallback,
     type UnknownReplacer,
+    type UnknownModel,
 } from '@captainpants/arktype-modeling';
 
 export type EditorLikeProps = PropertiesMightBeSignals<{

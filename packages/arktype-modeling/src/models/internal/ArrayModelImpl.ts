@@ -3,7 +3,7 @@ import { descend } from '@captainpants/sweeter-utilities';
 import { mapAsync } from '../../internal/mapAsync.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
 import {
-    type UnspecifiedModel,
+    type UnknownModel,
     type ArrayModel,
     type ElementModelNoConstraint,
 } from '../Model.js';
@@ -89,7 +89,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         return this.#elementModels[index];
     }
 
-    public unknownGetElement(index: number): UnspecifiedModel | undefined {
+    public unknownGetElement(index: number): UnknownModel | undefined {
         return this.getElement(index) as never;
     }
 
@@ -99,7 +99,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         return this.#elementModels;
     }
 
-    public unknownGetElements(): ReadonlyArray<UnspecifiedModel> {
+    public unknownGetElements(): ReadonlyArray<UnknownModel> {
         return this.#elementModels;
     }
 
@@ -123,7 +123,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
     public async unknownSpliceElements(
         start: number,
         deleteCount: number,
-        newElements: ReadonlyArray<unknown | UnspecifiedModel>,
+        newElements: ReadonlyArray<unknown | UnknownModel>,
         validate: boolean = true,
     ): Promise<this> {
         const eleDefinition = this.getElementType() as Type<unknown>;

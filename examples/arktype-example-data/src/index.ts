@@ -2,8 +2,8 @@ import {
     asUnknown,
     ModelFactory,
     createDefault,
-    type UnknownModel,
     extendArkTypes,
+    UnknownModel,
 } from '@captainpants/arktype-modeling';
 
 import { type } from 'arktype';

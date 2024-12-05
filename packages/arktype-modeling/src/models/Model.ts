@@ -60,14 +60,14 @@ export interface UndefinedModel extends LiteralModel<Type<undefined>> {}
 export interface UnknownArrayModelMethods {
     unknownGetElementType: () => Type<unknown>;
 
-    unknownGetElement: (index: number) => UnspecifiedModel | undefined;
+    unknownGetElement: (index: number) => UnknownModel | undefined;
 
-    unknownGetElements: () => ReadonlyArray<UnspecifiedModel>;
+    unknownGetElements: () => ReadonlyArray<UnknownModel>;
 
     unknownSpliceElements: (
         start: number,
         deleteCount: number,
-        newElements: ReadonlyArray<unknown | UnspecifiedModel>,
+        newElements: ReadonlyArray<unknown | UnknownModel>,
         validate?: boolean,
     ) => Promise<this>;
 
@@ -184,7 +184,7 @@ export interface UnknownUnionModelMethods {
         type: TTargetArkType,
     ) => Model<TTargetArkType> | null;
 
-    unknownResolve: () => UnspecifiedModel;
+    unknownResolve: () => UnknownModel;
 
     getTypes: () => ReadonlyArray<AnyTypeConstraint>;
 
@@ -208,9 +208,12 @@ export interface UnionModel<TUnion extends AnyTypeConstraint>
 export type SpreadModel<TUnionOfSchemas extends AnyTypeConstraint> =
     TUnionOfSchemas extends infer _ ? Model<TUnionOfSchemas> : never;
 
-export interface UnknownModel extends BaseModel<unknown, Type<unknown>> {}
 
-export type UnspecifiedModel =
+export interface UnknownTypedModel extends BaseModel<unknown, Type<unknown>> {}
+
+export type UnknownModel = BaseModel<unknown, Type<unknown>>;
+
+export type KnownModel =
     | UnknownArrayModel
     | UnknownObjectModel
     | UnknownUnionModel
@@ -222,9 +225,9 @@ export type UnspecifiedModel =
     | BooleanConstantModel<Type<boolean>>
     | NullModel
     | UndefinedModel
-    | UnknownModel;
+    | UnknownTypedModel;
 
-export type AnyModelConstraint = UnspecifiedModel;
+export type AnyModelConstraint = UnknownModel;
 
 // Implementation notes:
 // - 'boolean' is treated as a union by typescript so boolean types need to be
@@ -235,7 +238,7 @@ export type Model<TSchema extends AnyTypeConstraint> = [type.infer<TSchema>] ext
     infer TUnderlying,
 ]
     ? IsAny<TUnderlying> extends true
-        ? UnknownModel
+        ? UnknownTypedModel
         : [TSchema] extends [Type<unknown[]>]
           ? ArrayModel<TSchema>
           : [IsBooleanLiteral<TUnderlying>] extends [true]

@@ -1,4 +1,4 @@
-import { type UnspecifiedModel, type BaseModel } from '../Model.js';
+import { type UnknownModel, type BaseModel } from '../Model.js';
 import { type ParentTypeInfo } from '../parents.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
 
@@ -22,7 +22,7 @@ export class ModelImpl<TValue, TSchema extends AnyTypeConstraint>
     public readonly parentInfo: ParentTypeInfo | null;
     public readonly archetype: string;
 
-    public asUnknown(): UnspecifiedModel {
+    public asUnknown(): UnknownModel {
         return this;
     }
 }

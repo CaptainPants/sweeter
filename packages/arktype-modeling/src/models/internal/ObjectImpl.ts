@@ -130,10 +130,12 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     ): Promise<this> {
         const schema = this.schemaForKey(key);
 
+        const existing = this.unknownGetProperty(key);
+
         const adopted = await validateAndMakeModel(
             value,
             schema,
-            {
+            existing?.valueModel.parentInfo /* keep the existing parentInfo if possible */ ?? {
                 type: this.type,
                 parentInfo: this.parentInfo,
                 relationship: { property: key, type: 'property' },

@@ -126,12 +126,6 @@ interface UnknownObjectModelMethods {
 
     unknownGetCatchallType(): UnknownType | undefined;
 
-    unknownSetProperty(
-        key: string | symbol,
-        value: unknown,
-        triggerValidation?: boolean,
-    ): Promise<this>;
-
     deleteProperty(key: string | symbol, validate?: boolean): Promise<this>;
 
     moveProperty(

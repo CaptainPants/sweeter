@@ -15,3 +15,5 @@ msbuild.binlog
 
 # Temp config files while vite is being compiled
 **/vite.config.js.timestamp-*.mjs
+
+.nx

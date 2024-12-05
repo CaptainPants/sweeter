@@ -3,7 +3,6 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
-        'prettier',
         'plugin:import/recommended',
         'plugin:import/typescript',
         // Fix up typescript imports to have .js

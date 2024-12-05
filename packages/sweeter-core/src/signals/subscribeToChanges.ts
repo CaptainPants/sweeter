@@ -5,7 +5,7 @@ import { popAndCallAll } from '../internal/popAndCallAll.js';
 import {
     addExplicitStrongReference,
     removeExplicitStrongReference,
-} from '../addExplicitStrongReference.js';
+} from '@captainpants/sweeter-utilities';
 
 /**
  * Subscribe to multiple signals, with a callback to remove that subscription.
@@ -18,8 +18,14 @@ import {
 export function subscribeToChanges<TArgs extends readonly unknown[]>(
     // the [...TArgs] causes inference as a tuple more often (although not for literal types)
     dependencies: [...TArgs],
+    /**
+     * The subscription will be dropped if this callback is garbage collected -- TODO: not sure .. why
+     */
     callback: (values: UnsignalAll<TArgs>) => void | (() => void),
     invokeImmediate = false,
+    /**
+     * Whether or not the callback should be registered via WeakRef from dependent signals.
+     */
     strong = true,
 ): () => void {
     let lastCleanup: void | (() => void);

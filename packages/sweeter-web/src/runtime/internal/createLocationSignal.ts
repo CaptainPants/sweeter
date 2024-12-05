@@ -23,23 +23,25 @@ export interface LocationSignalResult {
 
 export function createLocationSignal(): LocationSignalResult {
     const signalController = new SignalController<string>();
-    const signal = $controlled(signalController);
+
+    const signal = $controlled(signalController, {
+        mode: 'SUCCESS',
+        value: createLocationSignal.getLocation(),
+    });
 
     function updateState() {
         signalController.update({
             mode: 'SUCCESS',
-            value: location.toString(),
+            value: createLocationSignal.getLocation(),
         });
     }
-
-    updateState();
 
     window.addEventListener('pushstate', updateState);
     window.addEventListener('popstate', updateState);
 
     function dispose() {
-        window.removeEventListener('pushstate', updateState);
         window.removeEventListener('popstate', updateState);
+        window.removeEventListener('pushstate', updateState);
     }
 
     return {
@@ -48,3 +50,11 @@ export function createLocationSignal(): LocationSignalResult {
         ping: updateState,
     };
 }
+/**
+ * Basically exists to allow easy overriding for testing as JSDOM doesn't support
+ * the history API properly
+ * @returns
+ */
+createLocationSignal.getLocation = function () {
+    return window.location.toString();
+};

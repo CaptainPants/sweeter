@@ -16,7 +16,9 @@ export function debounce<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TCallback extends (...args: readonly any[]) => void,
 >(timeout: number, callback: TCallback): DebouncedCallback<TCallback> {
-    let id: ReturnType<typeof setTimeout> | null = null;
+    const { setTimeout, clearTimeout } = globalThis;
+
+    let id: ReturnType<typeof globalThis.setTimeout> | null = null;
     let lastArgs: Parameters<TCallback> | null = null;
 
     const returnedCallback = (...args: Parameters<TCallback>): void => {

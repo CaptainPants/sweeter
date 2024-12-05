@@ -1,0 +1,34 @@
+{
+    "name": "@captainpants/sweeter-arktype-example",
+    "private": true,
+    "version": "0.0.5",
+    "type": "module",
+    "packageManager": "pnpm@8.14.1",
+    "scripts": {
+        "trace": "pnpm exec tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
+        "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
+        "typecheck": "tsc --noEmit",
+        "format": "prettier --write src",
+        "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "test:watch": "vitest --globals",
+        "test": "vitest --globals --watch=false",
+        "verify:fix": "corepack pnpm run lint --fix && corepack pnpm run format && corepack pnpm run test && corepack pnpm run typecheck",
+        "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
+        "dev": "vite",
+        "watch": "vite",
+        "build": "pnpm run typecheck && vite build --watch=false",
+        "preview": "vite preview"
+    },
+    "engines": {
+        "pnpm": "8.14.1"
+    },
+    "dependencies": {
+        "@captainpants/arktype-example-data": "workspace:^",
+        "@captainpants/arktype-modeling": "workspace:^",
+        "@captainpants/sweeter-arktype-web": "workspace:^",
+        "@captainpants/sweeter-core": "workspace:^",
+        "@captainpants/sweeter-gummybear": "workspace:^",
+        "@captainpants/sweeter-web": "workspace:^",
+        "arktype": "2.0.0-rc.21"
+    }
+}

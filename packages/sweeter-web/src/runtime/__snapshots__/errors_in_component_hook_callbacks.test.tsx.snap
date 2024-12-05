@@ -1,7 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`onMount 1`] = `"<div class=\\"error\\">Error: Error thrown on mount</div>"`;
+exports[`onMount 1`] = `"<div class="error">Error: Error thrown on mount</div>"`;
 
-exports[`onSignalChange 1`] = `"<div class=\\"error\\">Error: Error thrown on onSignalChange</div>"`;
-
-exports[`trackSignals 1`] = `"<div class=\\"error\\">Error: Error thrown on trackSignals</div>"`;
+exports[`trackSignals 1`] = `"<div class="error">Error: Error thrown on trackSignals</div>"`;

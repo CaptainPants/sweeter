@@ -1,5 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`bindStyle 1`] = `"<div style=\\"color: red;\\"></div>"`;
+exports[`bindStyle 1`] = `"<div style="color: red;"></div>"`;
 
-exports[`bindStyle 2`] = `"<div style=\\"color: green;\\"></div>"`;
+exports[`bindStyle 2`] = `"<div style="color: green;"></div>"`;

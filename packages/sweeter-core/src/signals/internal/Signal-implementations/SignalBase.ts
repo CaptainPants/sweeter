@@ -218,6 +218,6 @@ export abstract class SignalBase<T> implements Signal<T> {
      * This is basically just convenience in your chrome developer console.
      */
     debugLogListenerTree(): void {
-        console.log(this.debugGetListenerTree());
+        console.log('debugListenerTree: ', this.debugGetListenerTree());
     }
 }

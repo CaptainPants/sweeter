@@ -2,62 +2,62 @@
 
 exports[`Portal element content is added 1`] = `"<!--Hooks(Portal): trackSignals-->"`;
 
-exports[`Portal element content is added 2`] = `"<div id=\\"host1\\"><div>CONTENT</div></div>"`;
+exports[`Portal element content is added 2`] = `"<div id="host1"><div>CONTENT</div></div>"`;
 
-exports[`Portal element content is added 3`] = `"<div id=\\"host1\\"></div>"`;
+exports[`Portal element content is added 3`] = `"<div id="host1"></div>"`;
 
 exports[`Portal elements unmount correctly (css class ref) 1`] = `
-"<head><style data-id=\\"name\\">
+"<head><style data-id="name">
 .name div {
     color: red;
 }
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly (css class ref) 2`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 2`] = `"<body><div id="host3"><div class="name">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly (css class ref) 3`] = `"<head></head>"`;
 
-exports[`Portal elements unmount correctly (css class ref) 4`] = `"<body><div id=\\"host3\\"></div><div>NOT MOUNTED</div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 4`] = `"<body><div id="host3"></div><div>NOT MOUNTED</div></body>"`;
 
 exports[`Portal elements unmount correctly (css class ref) 5`] = `
-"<head><style data-id=\\"name\\">
+"<head><style data-id="name">
 .name div {
     color: red;
 }
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly (css class ref) 6`] = `"<body><div id=\\"host3\\"><div class=\\"name\\">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 6`] = `"<body><div id="host3"><div class="name">MOUNTED</div></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly (css class ref) 7`] = `"<head></head>"`;
 
-exports[`Portal elements unmount correctly (css class ref) 8`] = `"<body><div id=\\"host3\\"></div></body>"`;
+exports[`Portal elements unmount correctly (css class ref) 8`] = `"<body><div id="host3"></div></body>"`;
 
 exports[`Portal elements unmount correctly 1`] = `
-"<head><style data-id=\\"style\\">
+"<head><style data-id="style">
 div {
     color: red;
 }
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly 2`] = `"<body><div id=\\"host2\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): trackSignals, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly 2`] = `"<body><div id="host2"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): trackSignals, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly 3`] = `"<head></head>"`;
 
-exports[`Portal elements unmount correctly 4`] = `"<body><div id=\\"host2\\"></div><div>NOT MOUNTED</div></body>"`;
+exports[`Portal elements unmount correctly 4`] = `"<body><div id="host2"></div><div>NOT MOUNTED</div></body>"`;
 
 exports[`Portal elements unmount correctly 5`] = `
-"<head><style data-id=\\"style\\">
+"<head><style data-id="style">
 div {
     color: red;
 }
 </style></head>"
 `;
 
-exports[`Portal elements unmount correctly 6`] = `"<body><div id=\\"host2\\"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): trackSignals, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
+exports[`Portal elements unmount correctly 6`] = `"<body><div id="host2"><div>MOUNTED</div><!--Hooks(IncludeStylesheet): trackSignals, onUnMount--></div><div>MOUNTED<!--Hooks(Portal): trackSignals--><!--Hooks(TestComponent): onMount--></div></body>"`;
 
 exports[`Portal elements unmount correctly 7`] = `"<head></head>"`;
 
-exports[`Portal elements unmount correctly 8`] = `"<body><div id=\\"host2\\"></div></body>"`;
+exports[`Portal elements unmount correctly 8`] = `"<body><div id="host2"></div></body>"`;

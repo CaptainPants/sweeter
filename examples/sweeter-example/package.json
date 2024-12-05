@@ -16,7 +16,7 @@
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
         "dev": "vite",
         "watch": "vite",
-        "build": "pnpm run typecheck && vite build --watch=false",
+        "build": "pnpm run typecheck && vite build --watch false",
         "preview": "vite preview"
     },
     "engines": {

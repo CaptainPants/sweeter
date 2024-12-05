@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`button style 1`] = `"<button class=\\"button\\">Test</button>"`;
+exports[`button style 1`] = `"<button class="button">Test</button>"`;
 
 exports[`button style 2`] = `
-"<style data-id=\\"button\\">
+"<style data-id="button">
 .button {
     background-color: white;
     padding: .375rem .75rem;

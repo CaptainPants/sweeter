@@ -1,5 +1,5 @@
+import { type UnionToIntersection } from '@captainpants/sweeter-utilities';
 import { type Context, type Runtime } from './index.js';
-import { type UnionToIntersection } from './internal/UnionToIntersection.js';
 import { type Signal, type UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;
@@ -72,7 +72,7 @@ export interface ComponentInit {
         dependencies: [...TArgs],
         callback: (values: UnsignalAll<TArgs>) => void,
         invokeImmediately?: boolean,
-    ): void;
+    ): () => void;
     getContext<T>(context: Context<T>): T;
 
     readonly idGenerator: IdGenerator;
@@ -109,11 +109,12 @@ export type JSXResultForComponentOrElementType<
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = ComponentOrIntrinsicElementTypeString extends Component<infer Props>
-    ? Props
-    : ComponentOrIntrinsicElementTypeString extends string
-      ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
-      : never;
+> =
+    ComponentOrIntrinsicElementTypeString extends Component<infer Props>
+        ? Props
+        : ComponentOrIntrinsicElementTypeString extends string
+          ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
+          : never;
 
 export type PropsWithIntrinsicAttributesFor<
     ComponentOrIntrinsicElementTypeString extends
@@ -123,11 +124,12 @@ export type PropsWithIntrinsicAttributesFor<
 export type ChildrenTypeFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = PropsFor<ComponentOrIntrinsicElementTypeString> extends {
-    children: infer Children;
-}
-    ? Children
-    : never;
+> =
+    PropsFor<ComponentOrIntrinsicElementTypeString> extends {
+        children: infer Children;
+    }
+        ? Children
+        : never;
 
 export type MightBeSignal<T> = T | Signal<T>;
 

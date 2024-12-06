@@ -89,7 +89,7 @@ it('onUnMount', async () => {
     res.dispose();
 });
 
-it.only('subscribeToChanges', async () => {
+it('subscribeToChanges', async () => {
     const deferred = defer<unknown>();
 
     const res = testRender(() => (

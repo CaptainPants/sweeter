@@ -1,7 +1,7 @@
 
 - $peek
 - $val
-  - $valEach
-  - $valObjectValues
 - $wrap
 - $subscribe
+- $peek
+- $valProperties

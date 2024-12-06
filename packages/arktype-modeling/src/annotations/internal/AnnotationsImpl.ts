@@ -1,18 +1,18 @@
 import { descend } from '@captainpants/sweeter-utilities';
+import { type type } from 'arktype';
 
-import {
-    type Annotations,
-    type AnyTypeConstraint,
-    type ContextualValueCalculationCallback,
-    type ContextualValueCalculationContext,
-    isModel,
-    serializeSchemaForDisplay,
-} from '../../index.js';
 import { shallowMatchesStructure } from '../../utility/validate.js';
 import { safeParse } from '../../utility/parse.js';
-import { type type } from 'arktype';
 import { AnnotationsBuilderImpl } from './AnnotationBuilderImpl.js';
 import { schemas } from './schemas.js';
+import { AnyTypeConstraint } from '../../type/types.js';
+import {
+    ContextualValueCalculationCallback,
+    ContextualValueCalculationContext,
+} from '../../ContextualValues.js';
+import { type Annotations } from '../types.js';
+import { serializeSchemaForDisplay } from '../../utility/serializeSchemaForDisplay.js';
+import { isModel } from '../../models/isModel.js';
 
 export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     implements Annotations
@@ -41,9 +41,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     #associatedValues:
         | Map<string, ContextualValueCalculationCallback>
         | undefined;
-    #ambientValues:
-        | Map<string, ContextualValueCalculationCallback>
-        | undefined;
+    #ambientValues: Map<string, ContextualValueCalculationCallback> | undefined;
 
     public attr(name: string, fallback: unknown): unknown {
         if (!this.#attributes) return fallback;
@@ -145,7 +143,9 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         ) {
             // slightly more helpful error message, only incur cost if there is a failure.
             if (isModel(value)) {
-                throw new Error('Value was a model -- expected the value to be passed, you may be missing a .value');
+                throw new Error(
+                    'Value was a model -- expected the value to be passed, you may be missing a .value',
+                );
             }
             throw new Error('Incorrect type value provided.');
         }
@@ -182,7 +182,9 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         ) {
             // slightly more helpful error message, only incur cost if there is a failure.
             if (isModel(value)) {
-                throw new Error('Value was a model -- expected the value to be passed, you may be missing a .value');
+                throw new Error(
+                    'Value was a model -- expected the value to be passed, you may be missing a .value',
+                );
             }
             throw new Error('Incorrect type value provided.');
         }

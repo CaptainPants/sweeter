@@ -8,8 +8,12 @@ export class MutableValueSignal<T>
     extends SignalBase<T>
     implements ReadWriteSignal<T>
 {
-    constructor(initialValue: T) {
-        super(SignalState.success(initialValue));
+    constructor(value?: T) {
+        super(
+            arguments.length === 0
+                ? SignalState.init()
+                : SignalState.success(value as T),
+        );
     }
 
     readonly [writableSignalMarker] = true;
@@ -22,11 +26,20 @@ export class MutableValueSignal<T>
     }
 
     override set value(value: T) {
-        announceMutatingSignal(this);
-        super._updateAndAnnounce(SignalState.success(value));
+        this.#updateState(SignalState.success(value));
     }
 
     update(value: T): void {
-        this.value = value;
+        this.#updateState(SignalState.success(value));
+    }
+
+    #updateState(state: SignalState<T>): void {
+        // We COULD allow error values to be assigned
+        // (by making this public)
+        // but thats hard for MutableCalculatedSignal and it
+        // would be good to be consistent between
+        // implementations of ReadWriteSignal
+        announceMutatingSignal(this);
+        super._updateAndAnnounce(state);
     }
 }

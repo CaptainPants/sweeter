@@ -1,5 +1,6 @@
 import { StackTrace } from '@captainpants/sweeter-utilities';
-import { type Signal, dev, type SignalListener } from '../../index.js';
+import { type Signal, type SignalListener } from '../types.js';
+import { dev } from '../../dev.js';
 
 /**
  * Global cache of weakrefs for listeners. Slightly ugly typings as we don't know the parameter

@@ -1,5 +1,3 @@
- 
-
 import { type Type, type } from 'arktype';
 
 import { applyTypeToModel } from './applyTypeToModel.js';

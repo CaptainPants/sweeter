@@ -33,6 +33,7 @@ export interface Signal<T> {
      * Use this to check if a signal has been initialized. This can be useful in a $calc that references itself.
      */
     readonly inited: boolean;
+    readonly failed: boolean;
 
     /**
      * Add a callback to be invoked when the signal's value changes.

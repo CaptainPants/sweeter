@@ -1,3 +1,4 @@
+import { StackTrace } from '@captainpants/sweeter-utilities';
 
 import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
@@ -8,7 +9,6 @@ import {
     type SignalListener,
 } from '../../types.js';
 import { dev } from '../../../dev.js';
-import { StackTrace } from '@captainpants/sweeter-utilities';
 import { SignalState } from '../../SignalState.js';
 
 interface ChangeAnnouncerStackNode {
@@ -59,6 +59,10 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     public get inited(): boolean {
         return this.#state.mode !== 'INITIALISING';
+    }
+
+    public get failed(): boolean {
+        return this.#state.mode === 'ERROR';
     }
 
     /**

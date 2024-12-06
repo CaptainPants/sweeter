@@ -18,8 +18,8 @@ import {
     $peek,
     $val,
 } from '@captainpants/sweeter-core';
-import { EditorHost } from '../index.js';
 import { idPaths } from '@captainpants/sweeter-utilities';
+import { EditorHost } from '../components/EditorHost.js';
 
 export function UnionEditor(props: Readonly<EditorProps>): JSX.Element;
 export function UnionEditor({

@@ -1,4 +1,4 @@
-import { getRuntime } from '../index.js';
+import { getRuntime } from '../runtime/Runtime.js';
 import {
     type PropertiesMightBeSignals,
     type Component,

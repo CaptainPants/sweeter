@@ -1,4 +1,3 @@
-
 import { type AnyModelConstraint, type Model } from './models/Model.js';
 import { type AnyTypeConstraint } from './type/types.js';
 

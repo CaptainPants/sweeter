@@ -6,10 +6,7 @@ import {
     callAndReturnDependencies,
 } from '../../ambient.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
-import {
-    type Signal,
-    type CalculatedSignalOptions,
-} from '../../types.js';
+import { type Signal, type CalculatedSignalOptions } from '../../types.js';
 import { type ListenerSetCallback } from '../ListenerSet.js';
 import {
     finishCalculation,

@@ -129,15 +129,11 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         const eleDefinition = this.getElementType() as Type<unknown>;
 
         const newModels = await mapAsync(newElements, async (item) => {
-            return await validateAndMakeModel(
-                item,
-                eleDefinition,
-                {
-                    type: this.type,
-                    parentInfo: this.parentInfo,
-                    relationship: { type: 'element' },
-                }
-            );
+            return await validateAndMakeModel(item, eleDefinition, {
+                type: this.type,
+                parentInfo: this.parentInfo,
+                relationship: { type: 'element' },
+            });
         });
 
         const newValue = [

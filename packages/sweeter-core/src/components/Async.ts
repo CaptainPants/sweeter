@@ -3,9 +3,12 @@ import {
     type MightBeSignal,
     type PropertiesMightBeSignals,
 } from '../types.js';
-import { $calc, $mutable, $val, type Signal } from '../signals/index.js';
+import { type Signal } from '../signals/types.js';
+import { $calc } from '../signals/$calc.js';
+import { $mutable } from '../signals/$mutable.js';
+import { $val } from '../signals/$val.js';
 import { SuspenseContext } from './SuspenseContext.js';
-import { getRuntime } from '../index.js';
+import { getRuntime } from '../runtime/Runtime.js';
 
 export type AsyncProps<T> = PropertiesMightBeSignals<{
     loadData: (abort: AbortSignal) => Promise<T>;

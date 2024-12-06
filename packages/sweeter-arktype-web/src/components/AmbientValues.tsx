@@ -6,7 +6,10 @@ import {
 } from '@captainpants/sweeter-core';
 
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
-import { type AmbientValueCallback, notFound } from '@captainpants/arktype-modeling';
+import {
+    type AmbientValueCallback,
+    notFound,
+} from '@captainpants/arktype-modeling';
 
 export type AmbientValuesProps = PropertiesMightBeSignals<{
     callback: AmbientValueCallback | undefined;

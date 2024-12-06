@@ -1,6 +1,6 @@
 export * from './$calc.js';
 export * from './$defer.js';
-export * from './$controlled.js';
+export * from './$controller.js';
 export * from './$constant.js';
 export * from './$elementOf.js';
 export * from './$lastGood.js';

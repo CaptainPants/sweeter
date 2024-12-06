@@ -1,7 +1,4 @@
-import {
-    descend,
-    hasOwnProperty,
-} from '@captainpants/sweeter-utilities';
+import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 
 import {
     type ObjectModel,
@@ -135,7 +132,8 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         const adopted = await validateAndMakeModel(
             value,
             schema,
-            existing?.valueModel.parentInfo /* keep the existing parentInfo if possible */ ?? {
+            existing?.valueModel
+                .parentInfo /* keep the existing parentInfo if possible */ ?? {
                 type: this.type,
                 parentInfo: this.parentInfo,
                 relationship: { property: key, type: 'property' },

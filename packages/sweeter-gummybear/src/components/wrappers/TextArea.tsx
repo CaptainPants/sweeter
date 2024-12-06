@@ -11,10 +11,10 @@ import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
-import { forms } from '../../index.js';
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 import { combineStyles } from '../../internal/combineStyles.js';
+import { forms } from '../../stylesheets/index.js';
 
 export type TextAreaProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;

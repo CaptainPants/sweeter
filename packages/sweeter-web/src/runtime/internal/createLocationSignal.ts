@@ -1,7 +1,6 @@
 import {
-    $controlled,
+    $controller,
     type Signal,
-    SignalController,
     SignalState,
 } from '@captainpants/sweeter-core';
 
@@ -23,12 +22,14 @@ export interface LocationSignalResult {
 }
 
 export function createLocationSignal(): LocationSignalResult {
-    const signalController = new SignalController<string>();
-
-    const signal = $controlled(signalController, SignalState.success(createLocationSignal.getLocation()));
+    const signalController = $controller<string>(
+        SignalState.success(createLocationSignal.getLocation()),
+    );
 
     function updateState() {
-        signalController.update(SignalState.success(createLocationSignal.getLocation()));
+        signalController.updateState(
+            SignalState.success(createLocationSignal.getLocation()),
+        );
     }
 
     window.addEventListener('pushstate', updateState);
@@ -41,7 +42,7 @@ export function createLocationSignal(): LocationSignalResult {
 
     return {
         dispose,
-        signal,
+        signal: signalController.signal,
         ping: updateState,
     };
 }

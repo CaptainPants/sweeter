@@ -108,5 +108,8 @@ const dev = {
 };
 export { dev };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(globalThis as any).sweeterDev = dev;
+// Make this easily accessible from the window object
+declare global {
+    var sweeterDev: typeof dev;
+}
+globalThis.sweeterDev = dev;

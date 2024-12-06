@@ -12,5 +12,6 @@ export function $readonly<T>(source: Signal<T>) {
         return source;
     }
 
-    return $calc(() => source.value);
+    const readonlyCalculation = () => source.value;
+    return $calc(readonlyCalculation);
 }

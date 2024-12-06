@@ -22,7 +22,7 @@ export function $wrap<T>(value: T | Signal<T>): Signal<T> {
  * Explicitly track a signal, ignoring what its actual value is.
  * @param value
  */
-export function $invalidateOnChange<T>(value: T | Signal<T>): void {
+export function $subscribe<T>(value: T | Signal<T>): void {
     if (isSignal(value)) {
         announceSignalUsage(value);
     }

@@ -8,7 +8,7 @@ import {
     Unit,
 } from '@ark/schema';
 
-// TODO: consider making these all use arkKind instead of instanceof 
+// TODO: consider making these all use arkKind instead of instanceof
 
 export function asUnitNode(node: BaseNode): Unit.Node | undefined {
     if (node instanceof Unit.Node) return node;

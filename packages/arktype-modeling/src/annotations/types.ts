@@ -1,4 +1,4 @@
-import  { type Type } from 'arktype';
+import { type Type } from 'arktype';
 import {
     type AnyTypeConstraint,
     type ContextualValueCalculationCallback,

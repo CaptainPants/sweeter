@@ -31,8 +31,7 @@ export function addJsxChildren(
         if (isText(child)) {
             // TODO: reuse text nodes here
             child = document.createTextNode(String(child));
-        }
-        else if (typeof child === 'boolean') {
+        } else if (typeof child === 'boolean') {
             child = document.createTextNode(''); // This is to support <bool> || thing(), <bool> && thing() syntax
         }
 

@@ -8,6 +8,13 @@ import {
     type UnknownReplacer,
 } from '@captainpants/arktype-modeling';
 
+import {
+    $calc,
+    $val,
+    type PropertiesMightBeSignals,
+} from '@captainpants/sweeter-core';
+import { Button, Modal } from '@captainpants/sweeter-gummybear';
+
 import { AmbientValues } from './AmbientValues.js';
 import { EditorHost } from './EditorHost.js';
 import { type EditorComponentType, type EditorSettings } from '../types.js';
@@ -15,12 +22,6 @@ import {
     EditorRootContext,
     type EditorRootContextType,
 } from '../context/EditorRootContext.js';
-import {
-    $calc,
-    $val,
-    type PropertiesMightBeSignals,
-} from '@captainpants/sweeter-core';
-import { Button, Modal } from '@captainpants/sweeter-gummybear';
 import { standardRules } from '../standardRules.js';
 
 export type EditorRootProps<TSchema extends AnyTypeConstraint> =

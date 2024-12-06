@@ -1,4 +1,4 @@
-import { getRuntime } from '../index.js';
+import { getRuntime } from '../runtime/Runtime.js';
 import { $mapByIndex } from '../signals/$mapByIndex.js';
 import { type Signal } from '../signals/types.js';
 import {

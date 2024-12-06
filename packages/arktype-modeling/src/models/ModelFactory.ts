@@ -1,3 +1,5 @@
+import { type type } from 'arktype';
+
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
@@ -26,7 +28,6 @@ import {
 } from '../type/introspect/is.js';
 import { validateAndThrow } from '../utility/validate.js';
 import { type AnyTypeConstraint, type UnknownType } from '../type/types.js';
-import { type type } from 'arktype';
 import { safeParse } from '../utility/parse.js';
 import { type ValueTypeFromModel } from '../types.js';
 

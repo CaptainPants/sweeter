@@ -1,10 +1,18 @@
-import { arkKind, type BaseNode, nodeClassesByKind, type NodeKind } from '@ark/schema';
+import {
+    arkKind,
+    type BaseNode,
+    nodeClassesByKind,
+    type NodeKind,
+} from '@ark/schema';
 import { type, type Type } from 'arktype';
 
 import { throwError } from '@captainpants/sweeter-utilities';
 
-import  { type Annotations, type AnnotationSetter } from './annotations/types.js';
-import  { type UnknownType, type AnyTypeConstraint } from './type/types.js';
+import {
+    type Annotations,
+    type AnnotationSetter,
+} from './annotations/types.js';
+import { type UnknownType, type AnyTypeConstraint } from './type/types.js';
 import { AnnotationsImpl } from './annotations/internal/AnnotationsImpl.js';
 import { AnnotationsBuilderImpl } from './annotations/internal/AnnotationBuilderImpl.js';
 import { WithKind } from './type/introspect/internal/arktypeInternals.js';
@@ -51,7 +59,7 @@ export function extendArkTypes() {
     const id = ++counter;
 
     toExtend[extensionMarkerSymbol] = {
-        id
+        id,
     };
 
     // const baseTypes = [
@@ -86,15 +94,24 @@ export function extendArkTypes() {
         '',
         (path, schema, id) => {
             addFunctionsToSchemaNode(path, schema as never, id);
-        }, 
-        id
+        },
+        id,
     );
 }
 extendArkTypes.also = function (schema: UnknownType) {
     addFunctionsToSchemaNode(schema.expression, schema as never);
 };
 
-function walkTypes(moduleLike: object, path: string, callback: (path: string, schema: UnknownType, extensionId: number | undefined) => void, extensionId: number | undefined) {
+function walkTypes(
+    moduleLike: object,
+    path: string,
+    callback: (
+        path: string,
+        schema: UnknownType,
+        extensionId: number | undefined,
+    ) => void,
+    extensionId: number | undefined,
+) {
     const items = Object.entries(moduleLike);
 
     for (const [name, value] of items) {
@@ -104,17 +121,19 @@ function walkTypes(moduleLike: object, path: string, callback: (path: string, sc
 
         if ((value as WithKind)[arkKind] === 'module') {
             walkTypes(moduleLike, subPath, callback, extensionId);
-        }
-        else if (isType(value)) {
+        } else if (isType(value)) {
             callback(subPath, value, extensionId);
-        }
-        else {
+        } else {
             // Nothing to do
         }
     }
 }
 
-function addFunctionsToSchemaNode(name: string, node: SchemaNodeToExtend, id?: number | undefined) {
+function addFunctionsToSchemaNode(
+    name: string,
+    node: SchemaNodeToExtend,
+    id?: number | undefined,
+) {
     if (typeof node.annotate !== 'undefined') {
         return; // Means it's already been added
     }

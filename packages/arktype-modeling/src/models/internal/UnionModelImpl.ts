@@ -63,9 +63,7 @@ export class UnionModelImpl<TUnionSchema extends AnyTypeConstraint>
         this.#resolvedModel = resolvedModel;
     }
 
-    #resolvedModel: SpreadModel<
-        arkTypeUtilityTypes.UnionOptions<TUnionSchema>
-    >;
+    #resolvedModel: SpreadModel<arkTypeUtilityTypes.UnionOptions<TUnionSchema>>;
 
     public unknownResolve(): Model<Type<unknown>> {
         return this.#resolvedModel as never;

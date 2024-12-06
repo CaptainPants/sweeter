@@ -1,37 +1,44 @@
-import { SignalState } from "./SignalState";
-
+import { SignalBase } from './internal/Signal-implementations';
+import { type InitiatedSignalState, type SignalState } from './SignalState';
+import { type Signal } from './types';
 
 export class SignalController<T> {
-    #handlers: ((newState: SignalState<T>) => void)[] = [];
-    #disconnected = false;
+    #abort: AbortController;
+    #signal: ControlledSignal<T>;
 
-    update(signalState: SignalState<T>): void {
-        if (this.#disconnected) return;
-
-        for (const handler of this.#handlers) {
-            try {
-                handler(signalState);
-            } catch (ex) {
-                console.error(
-                    'Swallowed error in SignalController handlers',
-                    ex,
-                );
-            }
-        }
+    constructor(initialState: SignalState<T>) {
+        this.#abort = new AbortController();
+        this.#signal = new ControlledSignal(initialState);
     }
 
-    addUpdateListener(handler: (newState: SignalState<T>) => void): void {
-        if (this.#disconnected) return;
+    updateState(signalState: InitiatedSignalState<T>): void {
+        if (this.#abort.signal.aborted) return;
 
-        this.#handlers.push(handler);
+        this.#signal[notifySymbol](signalState);
     }
 
     disconnect(): void {
-        this.#disconnected = true;
-        this.#handlers = [];
+        this.#abort.abort();
     }
 
     get isDisconnected(): boolean {
-        return this.#disconnected;
+        return this.#abort.signal.aborted;
+    }
+
+    get signal(): Signal<T> {
+        return this.#signal;
+    }
+}
+
+/** Private protocol for communicating from controller to signal */
+const notifySymbol: unique symbol = Symbol('Update');
+
+class ControlledSignal<T> extends SignalBase<T> {
+    constructor(initialState: SignalState<T>) {
+        super(initialState);
+    }
+
+    [notifySymbol](newState: SignalState<T>): void {
+        this._updateAndAnnounce(newState);
     }
 }

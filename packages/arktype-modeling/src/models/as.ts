@@ -116,9 +116,7 @@ export function asUnknown(model: UnknownModel): UnknownModel {
     return model;
 }
 
-export function asConstant(
-    model: UnknownModel,
-): UnknownModel | undefined {
+export function asConstant(model: UnknownModel): UnknownModel | undefined {
     if (
         isStringLiteralType(model.type) ||
         isNumberLiteralType(model.type) ||

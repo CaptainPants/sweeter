@@ -1,9 +1,8 @@
 import {
-    $controlled,
+    $controller,
     ComponentFaultContext,
     Context,
     dev,
-    SignalController,
     SignalState,
     type PropsWithIntrinsicAttributesFor,
     type Signal,
@@ -20,18 +19,21 @@ export function createDOMElement<TElementTypeString extends string>(
     props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
     webRuntime: WebRuntime,
 ): Signal<HTMLElement | SVGElement> {
-    const resultController = new SignalController<HTMLElement | SVGElement>();
+    const resultController = $controller<HTMLElement | SVGElement>();
 
     const ele = document.createElement(type);
 
-    const result = $controlled(resultController, SignalState.success(ele));
+    const result = $controller(SignalState.success(ele));
 
     const cleanupFaultContext = ComponentFaultContext.replace({
         reportFaulted(err) {
-            console.log('Fault (createDOMElement): ', result.peekState());
+            console.log(
+                'Fault (createDOMElement): ',
+                result.signal.peekState(),
+            );
             // If its mounted to the document, we can potentially cheat
             // If its not, then we need to make the result invalid -- and currently its a raw DOM Element
-            resultController.update(SignalState.error(err));
+            resultController.updateState(SignalState.error(err));
         },
     });
     try {
@@ -71,7 +73,7 @@ export function createDOMElement<TElementTypeString extends string>(
             });
         }
 
-        return result;
+        return result.signal;
     } finally {
         cleanupFaultContext();
     }

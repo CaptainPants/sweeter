@@ -1,4 +1,3 @@
-
 import { throwError } from '@captainpants/sweeter-utilities';
 
 import { type UnknownType } from '../types.js';

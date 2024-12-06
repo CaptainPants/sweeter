@@ -1,7 +1,4 @@
-import {
-    ThemeProvider,
-    createTheme,
-} from '@captainpants/sweeter-gummybear';
+import { ThemeProvider, createTheme } from '@captainpants/sweeter-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
 
@@ -24,11 +21,9 @@ export const App: Component = (_props, _init) => {
         <ThemeProvider theme={theme}>
             {() => (
                 <Suspense fallback={() => 'Loading...'}>
-                    {() => (
-                        <Example />
-                    )}
+                    {() => <Example />}
                 </Suspense>
             )}
         </ThemeProvider>
     );
-}
+};

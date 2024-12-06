@@ -4,9 +4,7 @@ import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
-import {
-    validateAndThrow,
-} from '../../utility/validate.js';
+import { validateAndThrow } from '../../utility/validate.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
 import { type type } from 'arktype';
 
@@ -28,14 +26,13 @@ export async function validateAndMakeModel<TSchema extends AnyTypeConstraint>(
 ): Promise<Model<TSchema>> {
     let validated: type.infer<TSchema>;
     if (isModel(valueOrModel)) {
-        if (valueOrModel.type == type) { // type is the same object
+        if (valueOrModel.type == type) {
+            // type is the same object
             validated = valueOrModel.value as type.infer<TSchema>;
-        }
-        else {
+        } else {
             validated = await validateAndThrow(type, valueOrModel.value);
         }
-    }
-    else {
+    } else {
         validated = await validateAndThrow(type, valueOrModel);
     }
 

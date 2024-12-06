@@ -3,9 +3,7 @@ import {
     type ContextualValueCalculationCallback,
 } from '../../index.js';
 
-export class AnnotationsBuilderImpl
-    implements AnnotationsBuilder
-{
+export class AnnotationsBuilderImpl implements AnnotationsBuilder {
     constructor(
         attributes: Map<string, unknown> | undefined,
         labels: Set<string> | undefined,
@@ -27,9 +25,7 @@ export class AnnotationsBuilderImpl
     associatedValues?:
         | Map<string, ContextualValueCalculationCallback>
         | undefined;
-    ambientValues?:
-        | Map<string, ContextualValueCalculationCallback>
-        | undefined;
+    ambientValues?: Map<string, ContextualValueCalculationCallback> | undefined;
 
     public attr(name: string, value: unknown): this {
         (this.attributes ?? (this.attributes = new Map())).set(name, value);

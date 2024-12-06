@@ -1,4 +1,3 @@
-
 import { announceSignalUsage } from '../../ambient.js';
 import { ListenerSet } from '../ListenerSet.js';
 import { signalMarker } from '../markers.js';

@@ -198,10 +198,8 @@ export interface UnionModel<TUnion extends AnyTypeConstraint>
     extends BaseModel<type.infer<TUnion>, TUnion>,
         UnionModelMethods<TUnion> {}
 
- 
 export type SpreadModel<TUnionOfSchemas extends AnyTypeConstraint> =
     TUnionOfSchemas extends infer _ ? Model<TUnionOfSchemas> : never;
-
 
 export interface UnknownTypedModel extends BaseModel<unknown, Type<unknown>> {}
 
@@ -228,9 +226,9 @@ export type AnyModelConstraint = UnknownModel;
 //   handled before unions.
 // - Literal types need to be before their base types, as 1|2 extends number
 
-export type Model<TSchema extends AnyTypeConstraint> = [type.infer<TSchema>] extends [
-    infer TUnderlying,
-]
+export type Model<TSchema extends AnyTypeConstraint> = [
+    type.infer<TSchema>,
+] extends [infer TUnderlying]
     ? IsAny<TUnderlying> extends true
         ? UnknownTypedModel
         : [TSchema] extends [Type<unknown[]>]
@@ -260,8 +258,8 @@ export type Model<TSchema extends AnyTypeConstraint> = [type.infer<TSchema>] ext
                             : [TUnderlying] extends [object]
                               ? /* @ts-expect-error - not narrowing TSchema but we know its an object */
                                 ObjectModel<TSchema>
-                                /* eslint-disable-next-line @typescript-eslint/ban-types -- We want the model for a Function to be 'never' at the moment so need this check */
-                              : [TUnderlying] extends [Function] | [symbol]
+                              : /* eslint-disable-next-line @typescript-eslint/ban-types -- We want the model for a Function to be 'never' at the moment so need this check */
+                                [TUnderlying] extends [Function] | [symbol]
                                 ? never
                                 : BaseModel<TUnderlying, TSchema>
     : never;

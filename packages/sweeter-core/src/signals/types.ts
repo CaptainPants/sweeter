@@ -3,7 +3,7 @@ import {
     type signalMarker,
     type writableSignalMarker,
 } from './internal/markers.js';
-import { SignalState } from './SignalState.js';
+import { InitiatedSignalState, SignalState } from './SignalState.js';
 
 export type SignalListener<T> = (
     previous: SignalState<T>,

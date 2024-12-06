@@ -1,4 +1,3 @@
-
 interface InitialSignalState {
     mode: 'INITIALISING';
 }
@@ -16,15 +15,23 @@ export type SignalState<T> =
     | SuccessSignalState<T>
     | ErrorSignalState;
 
+export type InitiatedSignalState<T> = Exclude<
+    SignalState<T>,
+    InitialSignalState
+>;
+
 export namespace SignalState {
-    export function init(): InitialSignalState { return Object.freeze({ mode: 'INITIALISING' }) };
-    export function success<T>(value: T): SuccessSignalState<T> { return Object.freeze({ mode: 'SUCCESS', value: value }) };
-    export function error(error: unknown): ErrorSignalState { return Object.freeze({ mode: 'ERROR', error: error }) };
-    
-    export function isEqual<T>(
-        a: SignalState<T>,
-        b: SignalState<T>,
-    ): boolean {
+    export function init(): InitialSignalState {
+        return Object.freeze({ mode: 'INITIALISING' });
+    }
+    export function success<T>(value: T): SuccessSignalState<T> {
+        return Object.freeze({ mode: 'SUCCESS', value: value });
+    }
+    export function error(error: unknown): ErrorSignalState {
+        return Object.freeze({ mode: 'ERROR', error: error });
+    }
+
+    export function isEqual<T>(a: SignalState<T>, b: SignalState<T>): boolean {
         if (a.mode === 'INITIALISING') {
             return b.mode === 'INITIALISING';
         } else if (a.mode === 'SUCCESS') {
@@ -33,7 +40,7 @@ export namespace SignalState {
             return b.mode === 'ERROR' && Object.is(a.error, b.error);
         }
     }
-    
+
     /**
      * Extract value or rethrow error from state.
      * @param state
@@ -48,5 +55,4 @@ export namespace SignalState {
             throw state.error;
         }
     }
-    
 }

@@ -1,12 +1,30 @@
-import { SignalState } from "./SignalState";
-
+import {
+    CalculatedSignal,
+    MutableValueSignal,
+} from './internal/Signal-implementations';
+import { InitiatedSignalState, SignalState } from './SignalState';
+import { Signal } from './types';
 
 export class SignalController<T> {
     #handlers: ((newState: SignalState<T>) => void)[] = [];
-    #disconnected = false;
+    #abort: AbortController;
+    #underlying: MutableValueSignal<T>;
+    #readonlySignal: CalculatedSignal<T>;
 
-    update(signalState: SignalState<T>): void {
-        if (this.#disconnected) return;
+    constructor(initialState: SignalState<T>) {
+        this.#abort = new AbortController();
+        this.#underlying = new MutableValueSignal(initialState);
+        // Split this out just so the function object has a .name assigned
+        const readonlyCalculation = () => this.#underlying.value;
+        this.#readonlySignal = new CalculatedSignal(readonlyCalculation, {
+            release: this.#abort.signal,
+        });
+    }
+
+    updateState(signalState: InitiatedSignalState<T>): void {
+        if (this.#abort.signal.aborted) return;
+
+        this.#underlying.updateState(signalState);
 
         for (const handler of this.#handlers) {
             try {
@@ -20,18 +38,22 @@ export class SignalController<T> {
         }
     }
 
-    addUpdateListener(handler: (newState: SignalState<T>) => void): void {
-        if (this.#disconnected) return;
+    addListener(handler: (newState: SignalState<T>) => void): void {
+        if (this.#abort.signal.aborted) return;
 
         this.#handlers.push(handler);
     }
 
     disconnect(): void {
-        this.#disconnected = true;
+        this.#abort.abort();
         this.#handlers = [];
     }
 
     get isDisconnected(): boolean {
-        return this.#disconnected;
+        return this.#abort.signal.aborted;
+    }
+
+    get signal(): Signal<T> {
+        return this.#readonlySignal;
     }
 }

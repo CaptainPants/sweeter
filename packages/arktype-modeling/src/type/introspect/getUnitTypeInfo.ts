@@ -1,5 +1,5 @@
-import { UnknownType } from "../types";
-import { asUnitNode } from "./internal/arktypeInternals";
+import { UnknownType } from '../types';
+import { asUnitNode } from './internal/arktypeInternals';
 
 export interface UnitTypeInfo {
     value: unknown;

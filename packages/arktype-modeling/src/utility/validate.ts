@@ -1,7 +1,4 @@
-import {
-    type AnyTypeConstraint,
-    type ValidationResult,
-} from '../index.js';
+import { type AnyTypeConstraint, type ValidationResult } from '../index.js';
 import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
 import { safeParse, safeParseAsync } from './parse.js';
 import { type type } from 'arktype';

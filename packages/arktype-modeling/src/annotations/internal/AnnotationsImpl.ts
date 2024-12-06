@@ -41,9 +41,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     #associatedValues:
         | Map<string, ContextualValueCalculationCallback>
         | undefined;
-    #ambientValues:
-        | Map<string, ContextualValueCalculationCallback>
-        | undefined;
+    #ambientValues: Map<string, ContextualValueCalculationCallback> | undefined;
 
     public attr(name: string, fallback: unknown): unknown {
         if (!this.#attributes) return fallback;
@@ -145,7 +143,9 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         ) {
             // slightly more helpful error message, only incur cost if there is a failure.
             if (isModel(value)) {
-                throw new Error('Value was a model -- expected the value to be passed, you may be missing a .value');
+                throw new Error(
+                    'Value was a model -- expected the value to be passed, you may be missing a .value',
+                );
             }
             throw new Error('Incorrect type value provided.');
         }
@@ -182,7 +182,9 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         ) {
             // slightly more helpful error message, only incur cost if there is a failure.
             if (isModel(value)) {
-                throw new Error('Value was a model -- expected the value to be passed, you may be missing a .value');
+                throw new Error(
+                    'Value was a model -- expected the value to be passed, you may be missing a .value',
+                );
             }
             throw new Error('Incorrect type value provided.');
         }

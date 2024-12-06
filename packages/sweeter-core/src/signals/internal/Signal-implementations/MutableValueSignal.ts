@@ -8,8 +8,8 @@ export class MutableValueSignal<T>
     extends SignalBase<T>
     implements ReadWriteSignal<T>
 {
-    constructor(initialValue: T) {
-        super(SignalState.success(initialValue));
+    constructor(initialState: SignalState<T>) {
+        super(initialState);
     }
 
     readonly [writableSignalMarker] = true;
@@ -22,11 +22,15 @@ export class MutableValueSignal<T>
     }
 
     override set value(value: T) {
-        announceMutatingSignal(this);
-        super._updateAndAnnounce(SignalState.success(value));
+        this.updateState(SignalState.success(value));
     }
 
     update(value: T): void {
-        this.value = value;
+        this.updateState(SignalState.success(value));
+    }
+
+    updateState(state: SignalState<T>): void {
+        announceMutatingSignal(this);
+        super._updateAndAnnounce(state);
     }
 }

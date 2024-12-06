@@ -57,12 +57,10 @@ test('label', async () => {
 
 test('attribute', async () => {
     const typeInfo: TypeInfo = {
-        type: type.number.annotate((add) =>
-            add.attr('type', 'ham-sandwich'),
-        ),
+        type: type.number.annotate((add) => add.attr('type', 'ham-sandwich')),
         parentInfo: null,
     };
-    
+
     expect(
         matchDefinitionRulePart(
             { settings: {} },

@@ -8,11 +8,10 @@ import {
     type ComponentInit,
     type PropsWithIntrinsicAttributesFor,
     type IdGenerator,
-    SignalController,
-    $controlled,
     ComponentFaultContext,
     type Signal,
     SignalState,
+    $controller,
 } from '@captainpants/sweeter-core';
 import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
@@ -175,14 +174,14 @@ export function createComponentInstance<
     props: PropsWithIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
 ): Signal<JSX.Element> {
-    const resultController = new SignalController<JSX.Element>();
+    const resultController = $controller<JSX.Element>();
 
     const result = ComponentFaultContext.invokeWith(
         {
             reportFaulted(err) {
                 // This might be undefined
                 console.log('Faulted (createComponentInstance): ', result);
-                resultController.update(SignalState.error(err));
+                resultController.updateState(SignalState.error(err));
             },
         },
         () => {
@@ -197,11 +196,16 @@ export function createComponentInstance<
 
             // shortcut if we don't need to add in markers for mount callbacks.
             if (hookElement) {
-                return $controlled(resultController, SignalState.success([componentContent, hookElement]));
+                resultController.updateState(
+                    SignalState.success([componentContent, hookElement]),
+                );
             } else {
                 // shortcut if we don't need to add in markers for mount callbacks.
-                return $controlled(resultController, SignalState.success(componentContent));
+                resultController.updateState(
+                    SignalState.success(componentContent),
+                );
             }
+            return resultController.signal;
         },
     );
 

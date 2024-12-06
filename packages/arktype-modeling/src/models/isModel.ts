@@ -10,9 +10,7 @@ export function isModel(value: unknown): value is UnknownModel {
         isType((value as UnknownModel).type) &&
         typeof (value as UnknownModel).archetype === 'string' &&
         // unknown value may be undefined, but should be present
-        'value' in
-            (value as UnknownModel) /* including prototype chain */ &&
-        'parentInfo' in
-            (value as UnknownModel) /* including prototype chain */
+        'value' in (value as UnknownModel) /* including prototype chain */ &&
+        'parentInfo' in (value as UnknownModel) /* including prototype chain */
     );
 }

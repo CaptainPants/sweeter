@@ -3,7 +3,8 @@ import { popAndCallAll } from '../internal/popAndCallAll.js';
 import { allExecutionContextVariables } from './internal/allExecutionContextVariables.js';
 
 export type SavedExecutionContextRevertAgainCallback = () => void;
-export type SavedExecutionContextRestoreCallback = () => SavedExecutionContextRevertAgainCallback;
+export type SavedExecutionContextRestoreCallback =
+    () => SavedExecutionContextRevertAgainCallback;
 
 export interface SavedExecutionContext {
     debugLog(): void;
@@ -13,12 +14,20 @@ export interface SavedExecutionContext {
 }
 
 export function saveExecutionContext(): SavedExecutionContext {
-    const restoreList: { restore: SavedExecutionContextRestoreCallback, name: string, value: unknown }[] = [];
+    const restoreList: {
+        restore: SavedExecutionContextRestoreCallback;
+        name: string;
+        value: unknown;
+    }[] = [];
 
     for (const item of allExecutionContextVariables) {
         const saved = item.current;
         const saveExecutionContext_restore = () => item.replace(saved);
-        restoreList.push({ restore: saveExecutionContext_restore, name: item.name, value: saved });
+        restoreList.push({
+            restore: saveExecutionContext_restore,
+            name: item.name,
+            value: saved,
+        });
     }
 
     function restoreAll() {
@@ -38,7 +47,9 @@ export function saveExecutionContext(): SavedExecutionContext {
 
     return {
         getDebugString() {
-            return restoreList.map(x => `${x.name}: ${String(x.value)}`).join(';\r\n');
+            return restoreList
+                .map((x) => `${x.name}: ${String(x.value)}`)
+                .join(';\r\n');
         },
         debugLog() {
             console.log('==== Execuation Context ====');

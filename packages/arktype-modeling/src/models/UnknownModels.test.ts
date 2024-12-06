@@ -1,4 +1,3 @@
- 
 import { typeAssert } from '@captainpants/sweeter-utilities';
 import {
     type Model,

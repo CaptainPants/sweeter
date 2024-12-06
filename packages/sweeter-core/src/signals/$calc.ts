@@ -1,5 +1,5 @@
 import { type CalculatedSignalOptions, type Signal } from './types.js';
-import { CalculatedSignal } from './internal/Signal-implementations.js';
+import { CalculatedSignal } from './internal/Signal-implementations/CalculatedSignal.js';
 
 export function $calc<T>(
     calculation: () => T,

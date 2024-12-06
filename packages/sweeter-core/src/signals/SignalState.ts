@@ -20,9 +20,11 @@ export type InitiatedSignalState<T> = Exclude<
     InitialSignalState
 >;
 
+const initValue: InitialSignalState = Object.freeze({ mode: 'INITIALISING' });
+
 export namespace SignalState {
     export function init(): InitialSignalState {
-        return Object.freeze({ mode: 'INITIALISING' });
+        return initValue;
     }
     export function success<T>(value: T): SuccessSignalState<T> {
         return Object.freeze({ mode: 'SUCCESS', value: value });

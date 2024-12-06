@@ -20,7 +20,7 @@ export function $mutable<T>(
 ): ReadWriteSignal<T> & { value: T } {
     if (arguments.length === 0) {
         // arguments.length == 0 means the optional parameter was not passed
-        return new MutableValueSignal<T>(SignalState.init());
+        return new MutableValueSignal<T>();
     }
-    return new MutableValueSignal<T>(SignalState.success(initialValue as T));
+    return new MutableValueSignal<T>(initialValue);
 }

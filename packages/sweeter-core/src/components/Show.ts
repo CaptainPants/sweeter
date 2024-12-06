@@ -1,4 +1,4 @@
-import { getRuntime } from '../index.js';
+import { getRuntime } from '../runtime/Runtime.js';
 import { $calc } from '../signals/$calc.js';
 import { $val } from '../signals/$val.js';
 import {

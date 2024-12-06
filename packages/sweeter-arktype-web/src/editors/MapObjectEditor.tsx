@@ -11,7 +11,6 @@ import {
 import { type EditorProps } from '../types.js';
 import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { DraftHook, IconButton } from '../index.js';
 import {
     asObject,
     cast,
@@ -27,6 +26,8 @@ import { Box, Label } from '../../../sweeter-gummybear/build/index.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { MapObjectEditorAddModal } from './MapObjectEditorAddModal.js';
 import { MapObjectEditorRenameModal } from './MapObjectEditorRenameModal.js';
+import { DraftHook } from '../hooks/DraftHook.js';
+import { IconButton } from '../components/IconButton.js';
 
 export const MapObjectEditor: Component<EditorProps> = (
     {

@@ -1,5 +1,5 @@
 import { SignalController } from './SignalController.js';
-import { InitiatedSignalState, SignalState } from './SignalState.js';
+import { SignalState } from './SignalState.js';
 
 /**
  * Provides a readonly Signal, that can be controlled by using the provided Controller instance. This allows for cases where a Signal is passed to a callback as read only,

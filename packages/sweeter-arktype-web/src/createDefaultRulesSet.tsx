@@ -4,8 +4,8 @@ import {
     type TypeMatcherRulePart,
     introspect,
 } from '@captainpants/arktype-modeling';
-import { ModalEditorIfTooSmall } from './editors/index.js';
 import { type EditorComponentType } from './types.js';
+import { ModalEditorIfTooSmall } from './editors/ModalEditorIfTooSmall.js';
 
 export interface DefaultRulesSetOptions {
     rigidObject?: EditorComponentType;

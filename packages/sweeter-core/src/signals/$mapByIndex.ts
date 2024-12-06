@@ -1,15 +1,11 @@
 import { whenGarbageCollected } from '@captainpants/sweeter-utilities';
-import {
-    $calc,
-    $mutable,
-    $peek,
-    $invalidateOnChange,
-    $val,
-    isSignal,
-    trackingIsAnError,
-} from '../index.js';
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
+import { isSignal } from './isSignal.js';
+import { $calc } from './$calc.js';
+import { $peek, $subscribe, $val } from './$val.js';
+import { $mutable } from './$mutable.js';
+import { trackingIsAnError } from './ambient.js';
 
 export function $mapByIndex<T, U>(
     items: MightBeSignal<readonly T[]>,
@@ -34,7 +30,7 @@ export function $mapByIndex<T, U>(
 
     const resultSignal = $calc(() => {
         // subscribe to changes, but ignore the actual value for now
-        $invalidateOnChange(map);
+        $subscribe(map);
 
         // subscibes to items
         const itemsResolved = $val(items);

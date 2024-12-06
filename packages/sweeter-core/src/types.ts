@@ -1,5 +1,7 @@
 import { type UnionToIntersection } from '@captainpants/sweeter-utilities';
-import { type Context, type Runtime } from './index.js';
+
+import { type Runtime } from './runtime/Runtime.js';
+import { type Context } from './context/Context.js';
 import { type Signal, type UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;

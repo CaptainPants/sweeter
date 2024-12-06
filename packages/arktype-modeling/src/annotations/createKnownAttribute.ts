@@ -1,8 +1,9 @@
 import { type type } from 'arktype';
 
-import { type AnyTypeConstraint, notFound } from '../index.js';
 import { serializeSchemaForDisplay } from '../utility/serializeSchemaForDisplay.js';
 import { is } from '../type/introspect/is.js';
+import { AnyTypeConstraint } from '../type/types.js';
+import { notFound } from '../notFound.js';
 
 export interface KnownAttribute<
     TName extends string,

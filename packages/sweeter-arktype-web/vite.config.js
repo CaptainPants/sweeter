@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
+import circularDependency from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -18,7 +19,7 @@ export default defineConfig({
         },
         target: "ESNext",
     },
-    plugins: [dts(), nodeExternals()],
+    plugins: [dts(), nodeExternals(), circularDependency({ circleImportThrowErr: true })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

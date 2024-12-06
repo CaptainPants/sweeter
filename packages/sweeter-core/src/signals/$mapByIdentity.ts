@@ -5,11 +5,11 @@ import {
 import {
     $calc,
     $peek,
-    $invalidateOnChange,
+    $subscribe,
     $val,
     isSignal,
     $constant,
-    SignalController,
+    type SignalController,
     $controller,
     SignalState,
 } from '../index.js';
@@ -45,7 +45,7 @@ export function $mapByIdentity<T, U>(
 
     const resultSignal = $calc(() => {
         // subscribe to changes, but ignore the actual value for now
-        $invalidateOnChange(map);
+        $subscribe(map);
 
         // subscibes to items
         const itemsResolved = $val(items);

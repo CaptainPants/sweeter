@@ -27,7 +27,7 @@ it('general', async () => {
 
     expect(lazy.getResult()).toStrictEqual(1);
 
-    expect(lazy.promise).resolves.toStrictEqual(1);
+    await expect(lazy.promise).resolves.toStrictEqual(1);
 });
 
 it('error', async () => {

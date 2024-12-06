@@ -12,7 +12,7 @@ import {
 } from '@captainpants/sweeter-core';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
-import { IconButton } from '../index.js';
+import { IconButton } from '../components/IconButton.js';
 
 export function ModalEditor(
     {

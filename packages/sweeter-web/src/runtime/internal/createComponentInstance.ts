@@ -194,17 +194,21 @@ export function createComponentInstance<
 
             const hookElement = init[hookInitSymbol];
 
-            // shortcut if we don't need to add in markers for mount callbacks.
-            if (hookElement) {
-                resultController.updateState(
-                    SignalState.success([componentContent, hookElement]),
-                );
-            } else {
+            // If it failed, we don't want to overwrite the failure state
+            if (!resultController.signal.failed) {
                 // shortcut if we don't need to add in markers for mount callbacks.
-                resultController.updateState(
-                    SignalState.success(componentContent),
-                );
+                if (hookElement) {
+                    resultController.updateState(
+                        SignalState.success([componentContent, hookElement]),
+                    );
+                } else {
+                    // shortcut if we don't need to add in markers for mount callbacks.
+                    resultController.updateState(
+                        SignalState.success(componentContent),
+                    );
+                }
             }
+
             return resultController.signal;
         },
     );

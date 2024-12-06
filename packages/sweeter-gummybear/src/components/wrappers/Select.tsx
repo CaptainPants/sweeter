@@ -13,8 +13,8 @@ import {
     type TypedEvent,
 } from '@captainpants/sweeter-web';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
-import { forms } from '../../index.js';
 import { combineStyles } from '../../internal/combineStyles.js';
+import { forms } from '../../stylesheets/index.js';
 
 export interface SelectOption {
     text?: string | undefined;

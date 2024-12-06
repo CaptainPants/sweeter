@@ -1,5 +1,8 @@
-import { flattenElements } from '../index.js';
-import { $calc, $val, isSignal, type Signal } from '../signals/index.js';
+import { flattenElements } from '../utility/flattenElements.js';
+import { $calc } from '../signals/$calc.js';
+import { $val } from '../signals/$val.js';
+import { isSignal } from '../signals/isSignal.js';
+import { type Signal } from '../signals/types.js';
 import { type Component, type PropertiesMightBeSignals } from '../types.js';
 
 export type ErrorBoundaryProps = PropertiesMightBeSignals<{

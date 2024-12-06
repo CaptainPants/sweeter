@@ -10,7 +10,7 @@ import {
     $calc,
     $val,
     $peek,
-    $invalidateOnChange,
+    $subscribe,
 } from '@captainpants/sweeter-core';
 
 import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
@@ -57,7 +57,7 @@ export function PropertyEditorPart(
 
     const calculateLocal = $calc(() => {
         const propertyModelResolved = $val(propertyModel);
-        $invalidateOnChange(owner);
+        $subscribe(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
             propertyModelResolved.valueModel.type
@@ -67,7 +67,7 @@ export function PropertyEditorPart(
 
     const calculateAmbient = $calc(() => {
         const propertyModelResolved = $val(propertyModel);
-        $invalidateOnChange(owner);
+        $subscribe(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
             propertyModelResolved.valueModel.type

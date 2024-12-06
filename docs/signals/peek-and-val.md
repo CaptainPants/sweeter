@@ -4,4 +4,4 @@
   - $valEach
   - $valObjectValues
 - $wrap
-- $invalidateOnChange
+- $subscribe

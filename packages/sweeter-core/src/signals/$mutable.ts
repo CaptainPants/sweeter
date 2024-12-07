@@ -7,17 +7,13 @@ import { type ReadWriteSignal } from './types.js';
  * @param initialValue
  * @returns
  */
-export function $mutable<T>(
-    initialValue?: T,
-): ReadWriteSignal<T> & { value: T };
+export function $mutable<T>(initialValue?: T): ReadWriteSignal<T>;
 /**
  * Create a new ReadWriteSignal signal with an undefined initial value.
  * @param initialValue
  * @returns
  */
-export function $mutable<T>(
-    initialValue?: T,
-): ReadWriteSignal<T> & { value: T } {
+export function $mutable<T>(initialValue?: T): ReadWriteSignal<T> {
     if (arguments.length === 0) {
         // arguments.length == 0 means the optional parameter was not passed
         return new MutableValueSignal<T>();

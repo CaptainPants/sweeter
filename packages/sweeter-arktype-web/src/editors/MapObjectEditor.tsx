@@ -94,7 +94,7 @@ export const MapObjectEditor: Component<EditorProps> = (
             .peek()
             .unknownSetProperty(name, propertyModel);
 
-        draft.update(newDraft);
+        draft.value = newDraft;
     };
 
     const onAdd = async (name: string, type: AnyTypeConstraint) => {
@@ -104,19 +104,19 @@ export const MapObjectEditor: Component<EditorProps> = (
             .peek()
             .unknownSetProperty(name, propertyModel);
 
-        draft.update(newDraft);
+        draft.value = newDraft;
     };
 
     const onMoveProperty = async (from: string, to: string) => {
         const newDraft = await draft.peek().moveProperty(from, to, true);
 
-        draft.update(newDraft);
+        draft.value = newDraft;
     };
 
     const remove = async (name: string | symbol): Promise<void> => {
         const copy = await draft.peek().deleteProperty(name);
 
-        draft.update(copy);
+        draft.value = copy;
     };
 
     const renameKey = $mutable<string | null>(null);

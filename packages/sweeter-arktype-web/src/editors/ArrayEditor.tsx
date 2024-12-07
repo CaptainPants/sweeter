@@ -72,7 +72,7 @@ export function ArrayEditor(
             .peek()
             .unknownSpliceElements(index, 1, [value], true);
 
-        draft.update(newDraft);
+        draft.value = newDraft;
     };
 
     const add = async (type: AnyTypeConstraint): Promise<void> => {
@@ -85,7 +85,7 @@ export function ArrayEditor(
                 false,
             );
 
-        draft.update(copy);
+        draft.value = copy;
     };
 
     const remove = async (index: number): Promise<void> => {
@@ -93,13 +93,13 @@ export function ArrayEditor(
             .peek()
             .unknownSpliceElements(index, 1, [], false);
 
-        draft.update(copy);
+        draft.value = copy;
     };
 
     const move = async (oldIndex: number, newIndex: number): Promise<void> => {
         const copy = await draft.peek().moveElement(oldIndex, newIndex);
 
-        draft.update(copy);
+        draft.value = copy;
     };
 
     const allowedTypes = $calc(() => {

@@ -38,7 +38,7 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
     const elementSignal = $mutable<HTMLDivElement | undefined>(undefined);
 
     const setElement = (element: HTMLDivElement): void => {
-        elementSignal.update(element);
+        elementSignal.value = element;
     };
 
     init.trackSignals(

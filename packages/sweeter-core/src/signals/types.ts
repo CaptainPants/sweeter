@@ -3,20 +3,19 @@ import {
     type signalMarker,
     type writableSignalMarker,
 } from './internal/markers.js';
-import { SignalState } from './SignalState.js';
+import { type SignalState } from './SignalState.js';
 
 export type SignalListener<T> = (
     previous: SignalState<T>,
     next: SignalState<T>,
 ) => void;
 
-export interface Signal<T> {
-    /**
-     * Get the current value of the signal and subscribe for updates. If the result of the signal
-     * is an exception, it is rethrown.
-     */
-    readonly value: T;
-
+/**
+ * Basically Signal<T> without the .value property, so that we can share all other functionality between Signal<T> and
+ * ReadWriteSignal<T>, but have a different specification for .value. This is mostly because Unfortunately you cannot
+ * expand a readonly property on a base interface to a read/write property on a derived interface.
+ */
+export interface SignalCommon<T> {
     /**
      * Get the current value of the signal without subscribing for updates. If the result of the signal
      * is an exception, it is rethrown.
@@ -71,8 +70,6 @@ export interface Signal<T> {
      */
     readonly id: number;
 
-    readonly [signalMarker]: true;
-
     /**
      * If enabled, this will contain a stack trace created in the constructor of the signature, allowing
      * you to work out where the signal was created.
@@ -85,13 +82,28 @@ export interface Signal<T> {
     debugGetListenerTree(): DebugDependencyNode;
 }
 
-export interface WritableSignal<T> {
-    readonly [writableSignalMarker]: true;
+export interface Signal<T> extends SignalCommon<T> {
+    readonly [signalMarker]: true;
 
-    update(value: T): void; // You can't have a write only property so using a method
+    /**
+     * Get the current value of the signal and subscribe for updates. If the result of the signal
+     * is an exception, it is rethrown.
+     */
+    readonly value: T;
 }
 
-export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {}
+export interface WritableSignal<T> extends SignalCommon<T> {
+    readonly [writableSignalMarker]: true;
+
+    // there is no way to mark this as write only, but logically it is
+    value: T;
+}
+
+export interface ReadWriteSignal<T> extends WritableSignal<T> {
+    readonly [signalMarker]: true;
+
+    value: T;
+}
 
 export type Unsignal<T> = T extends Signal<infer S> ? S : T;
 export type UnsignalAll<

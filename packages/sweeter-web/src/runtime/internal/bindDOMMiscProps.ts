@@ -101,7 +101,7 @@ export function bindDOMMiscProps<TElementType extends string>(
             node.addEventListener(eventName, (evt) => {
                 const updatedValue = getDomProperty(evt.currentTarget);
 
-                value.update(updatedValue);
+                value.value = updatedValue;
             });
             const changeCallback = () => {
                 const prev = getDomProperty(node);

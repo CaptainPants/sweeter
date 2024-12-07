@@ -23,4 +23,15 @@ export const typeAssert = {
                   },
               ]
     ) {},
+    doesNotExtend<TSubType, TExtends>(
+        ..._args: TSubType extends TExtends
+            ? [
+                  error: {
+                      message: 'TSubType does not extend TExtends';
+                      subtype: TSubType;
+                      extends: TExtends;
+                  },
+              ]
+            : []
+    ) {},
 };

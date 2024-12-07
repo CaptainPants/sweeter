@@ -59,7 +59,7 @@ export function $propertyOf<TSource, TKeyOrIndex extends keyof TSource>(
                 if (typeof sourceValue === 'object' && sourceValue !== null) {
                     const copy = { ...sourceValue } as TSource;
                     copy[key] = value;
-                    source.update(copy);
+                    source.value = copy;
                 } else {
                     throw new TypeError(
                         `Unexpected type ${

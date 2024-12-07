@@ -28,8 +28,4 @@ export class MutableCalculatedSignal<T>
         announceMutatingSignal(this);
         this.#mutate(value);
     }
-
-    update(value: T): void {
-        this.value = value;
-    }
 }

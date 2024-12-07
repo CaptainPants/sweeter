@@ -37,7 +37,7 @@ export function DraftHook<TModel, TDraft>(
     const validationErrorsReadonly = $readonly(validationErrors);
 
     init.onSignalChange([modelConverted], ([latestFromModel]) => {
-        draft.update(latestFromModel);
+        draft.value = latestFromModel;
     });
 
     const asyncRunner = init.hook(AsyncRunnerHook);
@@ -53,9 +53,9 @@ export function DraftHook<TModel, TDraft>(
 
             // Failed conversion out, treated as a validation failure
             if (!convertResult.success) {
-                validationErrors.update(
-                    convertResult.error.map((x) => ({ message: x })),
-                );
+                validationErrors.value = convertResult.error.map((x) => ({
+                    message: x,
+                }));
                 return;
             }
 
@@ -63,9 +63,9 @@ export function DraftHook<TModel, TDraft>(
 
             const validationFailures = await validate(converted, abort);
 
-            validationErrors.update(
-                validationFailures ? null : validationFailures,
-            );
+            validationErrors.value = validationFailures
+                ? null
+                : validationFailures;
 
             if (validationFailures == null) {
                 onValid?.(converted);

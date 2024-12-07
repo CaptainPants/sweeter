@@ -73,7 +73,7 @@ export function ObjectEditor(
             .peek()
             .unknownSetProperty(propertyModel.name, value);
 
-        draft.update(newDraft);
+        draft.value = newDraft;
     };
 
     const calculationContext: ContextualValueCalculationContext = {

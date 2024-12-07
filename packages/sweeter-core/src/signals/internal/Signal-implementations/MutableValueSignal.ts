@@ -29,10 +29,6 @@ export class MutableValueSignal<T>
         this.#updateState(SignalState.success(value));
     }
 
-    update(value: T): void {
-        this.#updateState(SignalState.success(value));
-    }
-
     #updateState(state: SignalState<T>): void {
         // We COULD allow error values to be assigned
         // (by making this public)

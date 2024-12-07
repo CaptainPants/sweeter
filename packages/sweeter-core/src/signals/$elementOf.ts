@@ -75,7 +75,7 @@ export function $elementOf<
 
                 const copy = [...sourceValue] as unknown as TSource;
                 copy[key as TKeyOrIndex] = value;
-                source.update(copy);
+                source.value = copy;
             },
         );
     } else {

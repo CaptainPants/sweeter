@@ -49,7 +49,7 @@ export function createDOMElement<TElementTypeString extends string>(
             if (typeof props.ref === 'function') {
                 props.ref(ele);
             } else {
-                props.ref.update(ele);
+                props.ref.value = ele;
             }
         }
 

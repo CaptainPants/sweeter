@@ -17,7 +17,7 @@ import {
 } from '@captainpants/sweeter-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
 
-export type MapObjectEditorAddModalProps = PropertiesMightBeSignals<{
+export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;
 
     type: AnyTypeConstraint;
@@ -28,8 +28,8 @@ export type MapObjectEditorAddModalProps = PropertiesMightBeSignals<{
     onFinished: (name: string, type: AnyTypeConstraint) => Promise<void>;
 }>;
 
-export const MapObjectEditorAddModal: Component<
-    MapObjectEditorAddModalProps
+export const ObjectEditorAddMappedModal: Component<
+    ObjectEditorAddMappedModalProps
 > = ({ isOpen, type, validate, onCancelled, onFinished }, init) => {
     const title = $calc(() => {
         const typeResolved = $val(type);

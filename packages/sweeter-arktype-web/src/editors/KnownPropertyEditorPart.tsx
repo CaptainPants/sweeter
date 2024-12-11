@@ -2,6 +2,7 @@ import {
     type UnknownPropertyModel,
     type ContextualValueCalculationContext,
     type UnknownModel,
+    UnknownObjectModel,
 } from '@captainpants/arktype-modeling';
 import {
     LocalizerHook,
@@ -19,13 +20,14 @@ import { EditorHost } from '../components/EditorHost.js';
 import { $wrap } from '@captainpants/sweeter-core';
 import { idPaths } from '@captainpants/sweeter-utilities';
 
-export type PropertyEditorPartProps = PropertiesMightBeSignals<{
+export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
     id: string;
 
-    owner: Record<string, unknown>;
-    propertyModel: UnknownPropertyModel;
+    owner: UnknownObjectModel;
+    property: string | symbol;
+    value: UnknownModel;
     updateValue: (
-        property: UnknownPropertyModel,
+        property: string | symbol,
         value: UnknownModel,
     ) => Promise<void>;
 
@@ -33,46 +35,43 @@ export type PropertyEditorPartProps = PropertiesMightBeSignals<{
     ownerIdPath: string | undefined;
 }>;
 
-export function PropertyEditorPart(
+export function KnownPropertyEditorPart(
     {
-        id,
         owner,
-        propertyModel,
+        id,
+        property,
+        value,
         updateValue,
         indent,
         ownerIdPath,
-    }: PropertyEditorPartProps,
+    }: KnownPropertyEditorPartProps,
     init: ComponentInit,
 ): JSX.Element {
     const idPath = $calc(() => {
-        const name = $val(propertyModel).name;
-        return idPaths.key($val(ownerIdPath), String(name));
+        return idPaths.key($val(ownerIdPath), String(property));
     });
 
     const replace = async (value: UnknownModel) => {
-        await $peek(updateValue)($peek(propertyModel), value);
+        await $peek(updateValue)($peek(property), value);
     };
 
     const { localize } = init.hook(LocalizerHook);
 
     const calculateLocal = $calc(() => {
-        const propertyModelResolved = $val(propertyModel);
-        $subscribe(owner);
-
         return (name: string, context: ContextualValueCalculationContext) =>
-            propertyModelResolved.valueModel.type
+            $val(value).type
                 .annotations()
-                ?.getAssociatedValue(name, $wrap(owner), context);
+                ?.getAssociatedValue(name, $val(owner), context);
     });
 
     const calculateAmbient = $calc(() => {
-        const propertyModelResolved = $val(propertyModel);
+        const propertyModelResolved = $val(value);
         $subscribe(owner);
 
         return (name: string, context: ContextualValueCalculationContext) =>
-            propertyModelResolved.valueModel.type
+            $val(value).type
                 .annotations()
-                ?.getAmbientValue(name, $wrap(owner), context);
+                ?.getAmbientValue(name, propertyModelResolved.value, context);
     });
 
     const { local, ambient } = init.hook(
@@ -81,11 +80,11 @@ export function PropertyEditorPart(
         calculateAmbient,
     );
 
-    const valueModel = $calc(() => $val(propertyModel).valueModel);
+    const valueModel = $calc(() => $val(value));
     const displayName = $calc(
         () =>
-            $val(propertyModel).valueModel.type.annotations()?.displayName() ??
-            String($val(propertyModel).name),
+            $val(value).type.annotations()?.displayName() ??
+            String($val(property)),
     );
 
     return $calc(() => {

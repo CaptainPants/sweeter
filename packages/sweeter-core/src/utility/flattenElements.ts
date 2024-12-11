@@ -1,4 +1,6 @@
-import { type Signal, isSignal, $calc } from '../signals/index.js';
+import { type Signal } from '../signals/types.js';
+import { isSignal } from '../signals/isSignal.js';
+import { $calc } from '../signals/$calc.js';
 
 export type FlattenedElement = Exclude<
     JSX.Element,

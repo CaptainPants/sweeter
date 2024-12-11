@@ -1,4 +1,6 @@
-import { $calc, $mutable, $val } from '../signals/index.js';
+import { $calc } from '../signals/$calc.js';
+import { $mutable } from '../signals/$mutable.js';
+import { $val } from '../signals/$val.js';
 import {
     type Component,
     type ComponentInit,

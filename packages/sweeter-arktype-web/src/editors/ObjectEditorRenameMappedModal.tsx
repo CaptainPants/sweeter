@@ -15,7 +15,7 @@ import {
 } from '@captainpants/sweeter-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
 
-export type MapObjectEditorRenameModalProps = PropertiesMightBeSignals<{
+export type ObjectEditorRenameMappedModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;
 
     from: string;
@@ -26,8 +26,8 @@ export type MapObjectEditorRenameModalProps = PropertiesMightBeSignals<{
     onFinished: (from: string, to: string) => Promise<void>;
 }>;
 
-export const MapObjectEditorRenameModal: Component<
-    MapObjectEditorRenameModalProps
+export const ObjectEditorRenameMappedModal: Component<
+    ObjectEditorRenameMappedModalProps
 > = ({ isOpen, from, validate, onCancelled, onFinished }, init) => {
     const title = $calc(() => {
         return `Renaming '${from}'`;

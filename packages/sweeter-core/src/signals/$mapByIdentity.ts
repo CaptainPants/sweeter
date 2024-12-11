@@ -2,19 +2,15 @@ import {
     arrayExcept,
     whenGarbageCollected,
 } from '@captainpants/sweeter-utilities';
-import {
-    $calc,
-    $peek,
-    $subscribe,
-    $val,
-    isSignal,
-    $constant,
-    type SignalController,
-    $controller,
-    SignalState,
-} from '../index.js';
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
+import { isSignal } from './isSignal.js';
+import { $calc } from './$calc.js';
+import { $peek, $subscribe, $val } from './$val.js';
+import { $constant } from './$constant.js';
+import { SignalController } from './SignalController.js';
+import { $controller } from './$controller.js';
+import { SignalState } from './SignalState.js';
 
 export function $mapByIdentity<T, U>(
     items: MightBeSignal<readonly T[]>,

@@ -6,17 +6,17 @@ import {
     LocalizerHook,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type UnknownModel } from '@captainpants/arktype-modeling';
+import { UnknownPropertyModel, type UnknownModel } from '@captainpants/arktype-modeling';
 import { EditorHost } from '../components/EditorHost.js';
 import { idPaths } from '@captainpants/sweeter-utilities';
 
 export type MapElementEditorPartProps = PropertiesMightBeSignals<{
     id: string;
 
-    propertyName: string | symbol;
-    elementModel: UnknownModel;
+    property: string | symbol;
+    value: UnknownModel;
     updateElement: (
-        name: string | symbol,
+        property: string | symbol,
         value: UnknownModel,
     ) => Promise<void>;
 
@@ -30,8 +30,8 @@ export function MapElementEditorPart(
 ): JSX.Element;
 export function MapElementEditorPart(
     {
-        propertyName: elementKey,
-        elementModel,
+        property,
+        value,
         updateElement,
         indent,
         ownerIdPath,
@@ -39,21 +39,21 @@ export function MapElementEditorPart(
     init: ComponentInit,
 ): JSX.Element {
     const replace = async (value: UnknownModel) => {
-        await $peek(updateElement)($peek(elementKey), value);
+        await $peek(updateElement)($peek(property), value);
     };
 
     const { localize } = init.hook(LocalizerHook);
 
-    const stringKey = $calc(() => String($val(elementKey)));
+    const propertyNameAsString = $calc(() => String($val(property)));
 
     return (
         <EditorHost
-            model={elementModel}
+            model={value}
             replace={replace}
-            propertyDisplayName={$calc(() => localize($val(stringKey)))}
+            propertyDisplayName={$calc(() => localize($val(propertyNameAsString)))}
             indent={indent}
             idPath={$calc(() =>
-                idPaths.key($val(ownerIdPath), $val(stringKey)),
+                idPaths.key($val(ownerIdPath), $val(propertyNameAsString)),
             )}
         />
     );

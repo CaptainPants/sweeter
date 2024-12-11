@@ -1,6 +1,6 @@
 export * from './ModalEditor.js';
 export * from './ModalEditorIfTooSmall.js';
-export * from './PropertyEditorPart.js';
+export * from './KnownPropertyEditorPart.js';
 export * from './ObjectEditor.js';
 export * from './BooleanEditor.js';
 export * from './TextEditor.js';

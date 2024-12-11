@@ -17,7 +17,9 @@ export const stringFieldOnly = type({
     test: type.string.annotate((add) => add.displayName('Test')),
 });
 
-export const stringArray = type.string.annotate(add => add.displayName('Text Item')).array();
+export const stringArray = type.string
+    .annotate((add) => add.displayName('Text Item'))
+    .array();
 
 export const simpleHiddenField = type({
     test: type.string.annotate((add) => add.displayName('Test')),
@@ -149,7 +151,7 @@ export const exampleData = {
             schema: stringArray,
         });
         return asUnknown(res);
-    }
+    },
 } as const satisfies Record<string, () => Promise<UnknownModel>>;
 
 export const defaultExample = 'StringFieldOnly';

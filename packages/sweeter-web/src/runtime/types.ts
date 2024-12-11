@@ -16,4 +16,8 @@ export interface WebRuntime
     readonly location: Signal<string>;
 
     navigate(url: string): void;
+
+    createElement(tagName: string): HTMLElement | SVGElement;
+
+    createComment(content?: string | undefined): Comment;
 }

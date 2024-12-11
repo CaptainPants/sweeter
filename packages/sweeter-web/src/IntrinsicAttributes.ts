@@ -210,7 +210,7 @@ export type ElementAttributes<TElement extends Element> =
         SpecificElementAttributes<TElement> &
         AllElementAttributes<TElement>;
 
-export type NonSpecificElementAttributes = ElementAttributes<HTMLElement>;
+export type NonSpecificElementAttributes = ElementAttributes<Element>;
 
 export type WebSkipSignalifyingIntrinsicElementAttributes<
     _TElementTypeString extends string,

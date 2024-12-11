@@ -1,8 +1,9 @@
-import { type Signal } from '@captainpants/sweeter-core';
+import { SignalState, type Signal } from '@captainpants/sweeter-core';
 import { $calc, $val } from '@captainpants/sweeter-core';
 import { type ElementCssStyles } from '../../IntrinsicAttributes.js';
 import { translateNumericPropertyValue } from './translateNumericPropertyValue.js';
 import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';
+import { listenWhileNotCollected } from '../../runtime/internal/utility/listenWhileNotCollected.js';
 
 export function bindDOMStyleProp(
     node: HTMLElement | SVGElement,

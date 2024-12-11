@@ -21,7 +21,7 @@ export function createDOMElement<TElementTypeString extends string>(
 ): Signal<HTMLElement | SVGElement> {
     const resultController = $controller<HTMLElement | SVGElement>();
 
-    const ele = document.createElement(type);
+    const ele = webRuntime.createElement(type);
 
     const result = $controller(SignalState.success(ele));
 

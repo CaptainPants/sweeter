@@ -39,7 +39,7 @@ export function ModalEditorIfTooSmall(
             // Wrap in a model
             return <ModalEditor next={next} {...passthrough} />;
         }
-        
+
         return $val(next)(passthrough);
     });
 

@@ -14,6 +14,7 @@ import {
 import { isText } from './utility/isText.js';
 import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
+import { listenWhileNotCollected } from './utility/listenWhileNotCollected.js';
 import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';
 
 export function addJsxChildren(

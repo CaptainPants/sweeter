@@ -1,9 +1,11 @@
-import { SignalState, type Signal } from '@captainpants/sweeter-core';
+import {
+    listenWhileNotCollected,
+    SignalState,
+    type Signal,
+} from '@captainpants/sweeter-core';
 import { $calc, $val } from '@captainpants/sweeter-core';
 import { type ElementCssStyles } from '../../IntrinsicAttributes.js';
 import { translateNumericPropertyValue } from './translateNumericPropertyValue.js';
-import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';
-import { listenWhileNotCollected } from '../../runtime/internal/utility/listenWhileNotCollected.js';
 
 export function bindDOMStyleProp(
     node: HTMLElement | SVGElement,
@@ -37,8 +39,8 @@ export function bindDOMStyleProp(
         return result.join('');
     });
 
-    signal.listen(() => {
-        const styleValue = signal.peek();
+    listenWhileNotCollected(node, signal, (newState) => {
+        const styleValue = SignalState.getValue(newState);
         if (styleValue) {
             node.setAttribute('style', styleValue);
         } else {
@@ -50,6 +52,4 @@ export function bindDOMStyleProp(
     if (styleValue) {
         node.setAttribute('style', styleValue);
     }
-
-    addExplicitStrongReference(node, signal);
 }

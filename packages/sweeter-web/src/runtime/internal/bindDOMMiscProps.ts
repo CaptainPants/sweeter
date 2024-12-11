@@ -1,10 +1,7 @@
-import {
-    type PropsWithIntrinsicAttributesFor,
-} from '@captainpants/sweeter-core';
+import { listenWhileNotCollected, SignalState, type PropsWithIntrinsicAttributesFor } from '@captainpants/sweeter-core';
 import { isReadWriteSignal, isSignal } from '@captainpants/sweeter-core';
 import { type WebRuntime } from '../types.js';
 import { indeterminite } from '../../indeterminate.js';
-import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';
 
 type Untyped = Record<string, unknown>;
 
@@ -105,25 +102,23 @@ export function bindDOMMiscProps<TElementType extends string>(
 
                 value.value = updatedValue;
             });
-            const changeCallback = () => {
-                const prev = getDomProperty(node);
-                const next = value.peek();
-
-                // If the value hasn't changed, then don't. This is mostly here
-                // so that the value.update in the addEventListener above doesn't
-                // trigger a disruptive (focus/selection lost) write-back to the
-                // input field.
-                if (prev !== next) {
-                    setDomProperty(node, next);
+            listenWhileNotCollected(
+                node,
+                value,
+                newState => {
+                    const prev = getDomProperty(node);
+                    const next = SignalState.getValue(newState);
+    
+                    // If the value hasn't changed, then don't. This is mostly here
+                    // so that the value.update in the addEventListener above doesn't
+                    // trigger a disruptive (focus/selection lost) write-back to the
+                    // input field.
+                    if (prev !== next) {
+                        setDomProperty(node, next);
+                    }
                 }
-            };
+            )
 
-            // Add a weak listener (so that it will be cleaned up when no references held)
-            // we will add a strong reference to the DOM element (via WeakMap) to prevent
-            // cleanup until the DOM element is no longer reachable
-            value.listenWeak(changeCallback);
-
-            addExplicitStrongReference(node, changeCallback);
         } else if (mappedPropKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====
 
@@ -146,16 +141,14 @@ export function bindDOMMiscProps<TElementType extends string>(
             if (isSignal(value)) {
                 assignDataAttribute(node, mappedPropKey, value.peek());
 
-                const changeCallback = () => {
-                    assignDataAttribute(node, mappedPropKey, value.peek());
-                };
-
-                // Add a weak listener (so that it will be cleaned up when no references held)
-                // we will add a strong reference to the DOM element (via WeakMap) to prevent
-                // cleanup until the DOM element is no longer reachable
-                value.listenWeak(changeCallback);
-
-                addExplicitStrongReference(node, changeCallback);
+                listenWhileNotCollected(
+                    node,
+                    value,
+                    newState => {
+                        const value = SignalState.getValue(newState);
+                        assignDataAttribute(node, mappedPropKey, value);
+                    }
+                )
             } else {
                 assignDataAttribute(node, mappedPropKey, value);
             }
@@ -164,16 +157,14 @@ export function bindDOMMiscProps<TElementType extends string>(
             if (isSignal(value)) {
                 (node as unknown as Untyped)[mappedPropKey] = value.peek();
 
-                const changeCallback = () => {
-                    (node as unknown as Untyped)[mappedPropKey] = value.peek();
-                };
-
-                // Add a weak listener (so that it will be cleaned up when no references held)
-                // we will add a strong reference to the DOM element (via WeakMap) to prevent
-                // cleanup until the DOM element is no longer reachable
-                value.listenWeak(changeCallback);
-
-                addExplicitStrongReference(node, changeCallback);
+                listenWhileNotCollected(
+                    node,
+                    value,
+                    newState => {
+                        const value = SignalState.getValue(newState);
+                        (node as unknown as Untyped)[mappedPropKey] = value;
+                    }
+                )
             } else {
                 (node as unknown as Untyped)[mappedPropKey] = value;
             }

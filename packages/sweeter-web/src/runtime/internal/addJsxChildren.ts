@@ -5,6 +5,7 @@ import {
     SignalState,
     type FlattenedElement,
     afterCalculationsComplete,
+    listenWhileNotCollected,
 } from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
@@ -14,8 +15,6 @@ import {
 import { isText } from './utility/isText.js';
 import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
-import { listenWhileNotCollected } from './utility/listenWhileNotCollected.js';
-import { addExplicitStrongReference } from '@captainpants/sweeter-utilities';
 
 export function addJsxChildren(
     getContext: ContextSnapshot,
@@ -42,25 +41,21 @@ export function addJsxChildren(
 
     // ==== LISTENERS ====
 
-    const onChange = (
-        _: SignalState<FlattenedElement[]>,
-        newState: SignalState<FlattenedElement[]>,
-    ) => {
-        afterCalculationsComplete(() => {
-            try {
-                const updatedChildren = SignalState.getValue(newState); // newState might be an error state
-                replaceJsxChildren(parentNode, updatedChildren);
-            } catch (err) {
-                const faultContext = getContext(ComponentFaultContext);
-                faultContext.reportFaulted(err);
-            }
-        });
-    };
-
-    flattenedChildrenSignal.listen(onChange /* strong reference */);
-
-    // Callback lifetime linked to the parent Node
-    addExplicitStrongReference(parentNode, flattenedChildrenSignal);
+    listenWhileNotCollected(
+        parentNode,
+        flattenedChildrenSignal,
+        (newState: SignalState<FlattenedElement[]>) => {
+            afterCalculationsComplete(() => {
+                try {
+                    const updatedChildren = SignalState.getValue(newState); // newState might be an error state
+                    replaceJsxChildren(parentNode, updatedChildren);
+                } catch (err) {
+                    const faultContext = getContext(ComponentFaultContext);
+                    faultContext.reportFaulted(err);
+                }
+            });
+        },
+    );
 
     // ==== MOUNT HANDLERS ====
 

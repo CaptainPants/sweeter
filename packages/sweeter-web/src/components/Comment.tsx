@@ -5,18 +5,13 @@ import {
     Component,
     ComponentFaultContext,
     isSignal,
+    listenWhileNotCollected,
     PropertiesMightBeSignals,
     Signal,
-    SignalListener,
     SignalState,
 } from '@captainpants/sweeter-core';
-import {
-    addExplicitStrongReference,
-    whenGarbageCollected,
-} from '@captainpants/sweeter-utilities';
 
 import { getWebRuntime } from '../runtime';
-import { listenWhileNotCollected } from '../runtime/internal/utility/listenWhileNotCollected';
 
 export type CommentProps = PropertiesMightBeSignals<{
     content?: string | undefined;

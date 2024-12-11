@@ -119,7 +119,7 @@ export abstract class SignalBase<T> implements Signal<T> {
                 () => this.#getPanicContent(),
             );
             try {
-                this.#listeners.announce(previous, next);
+                this.#listeners.announce(next, previous);
             } finally {
                 reverse();
                 develChangeAnnouncerStack = saved;
@@ -129,7 +129,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
         // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
         // also prevents all kinds of cases that aren't allowed like updating a mutable signal within a recalculation
-        this.#listeners.announce(previous, next);
+        this.#listeners.announce(next, previous);
     }
 
     public listen(listener: SignalListener<T>): () => void {

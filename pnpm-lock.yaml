@@ -104,18 +104,18 @@ importers:
       '@captainpants/arktype-modeling':
         specifier: workspace:^
         version: link:../../packages/arktype-modeling
-      '@captainpants/sweeter-arktype-web':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-arktype-web
       '@captainpants/sweeter-core':
         specifier: workspace:^
         version: link:../../packages/sweeter-core
-      '@captainpants/sweeter-gummybear':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-gummybear
       '@captainpants/sweeter-web':
         specifier: workspace:^
         version: link:../../packages/sweeter-web
+      '@captainpants/sweeter-web-arktype':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-web-arktype
+      '@captainpants/sweeter-web-gummybear':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-web-gummybear
       arktype:
         specifier: 2.0.0-rc.21
         version: 2.0.0-rc.21
@@ -125,12 +125,12 @@ importers:
       '@captainpants/sweeter-core':
         specifier: workspace:^
         version: link:../../packages/sweeter-core
-      '@captainpants/sweeter-gummybear':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-gummybear
       '@captainpants/sweeter-web':
         specifier: workspace:^
         version: link:../../packages/sweeter-web
+      '@captainpants/sweeter-web-gummybear':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-web-gummybear
 
   packages/arktype-modeling:
     dependencies:
@@ -144,7 +144,27 @@ importers:
         specifier: 2.0.0-rc.21
         version: 2.0.0-rc.21
 
-  packages/sweeter-arktype-web:
+  packages/sweeter-core:
+    dependencies:
+      '@captainpants/sweeter-utilities':
+        specifier: workspace:^
+        version: link:../sweeter-utilities
+
+  packages/sweeter-utilities: {}
+
+  packages/sweeter-web:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../sweeter-core
+      '@captainpants/sweeter-utilities':
+        specifier: workspace:^
+        version: link:../sweeter-utilities
+      csstype:
+        specifier: ^3.1.3
+        version: 3.1.3
+
+  packages/sweeter-web-arktype:
     dependencies:
       '@captainpants/arktype-modeling':
         specifier: workspace:^
@@ -152,15 +172,15 @@ importers:
       '@captainpants/sweeter-core':
         specifier: workspace:^
         version: link:../sweeter-core
-      '@captainpants/sweeter-gummybear':
-        specifier: workspace:^
-        version: link:../sweeter-gummybear
       '@captainpants/sweeter-utilities':
         specifier: workspace:^
         version: link:../sweeter-utilities
       '@captainpants/sweeter-web':
         specifier: workspace:^
         version: link:../sweeter-web
+      '@captainpants/sweeter-web-gummybear':
+        specifier: workspace:^
+        version: link:../sweeter-web-gummybear
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -175,13 +195,7 @@ importers:
         specifier: ^0.319.0
         version: 0.319.0
 
-  packages/sweeter-core:
-    dependencies:
-      '@captainpants/sweeter-utilities':
-        specifier: workspace:^
-        version: link:../sweeter-utilities
-
-  packages/sweeter-gummybear:
+  packages/sweeter-web-gummybear:
     dependencies:
       '@captainpants/sweeter-core':
         specifier: workspace:^
@@ -205,20 +219,6 @@ importers:
       '@types/sortablejs':
         specifier: ^1.15.7
         version: 1.15.7
-
-  packages/sweeter-utilities: {}
-
-  packages/sweeter-web:
-    dependencies:
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../sweeter-core
-      '@captainpants/sweeter-utilities':
-        specifier: workspace:^
-        version: link:../sweeter-utilities
-      csstype:
-        specifier: ^3.1.3
-        version: 3.1.3
 
 packages:
 

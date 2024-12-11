@@ -18,7 +18,7 @@ export default defineConfig({
         exclude: [
             '@captainpants/sweeter-core',
             '@captainpants/sweeter-web',
-            '@captainpants/sweeter-gummybear'
+            '@captainpants/sweeter-web-gummybear'
         ]
     }
 });

@@ -12,9 +12,9 @@ import {
     Label,
     Row,
     Select,
-} from '@captainpants/sweeter-gummybear';
-import { EditorRoot } from '../../../packages/sweeter-arktype-web/build';
+} from '@captainpants/sweeter-web-gummybear';
 import { AnyTypeConstraint } from '@captainpants/arktype-modeling';
+import { EditorRoot } from '@captainpants/sweeter-web-arktype';
 
 export const Example: Component = (_props, _init) => {
     const typeName = $mutable<keyof typeof exampleData>('StringOnly');

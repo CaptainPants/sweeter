@@ -1,9 +1,9 @@
 import {
-    asString,
+    asBoolean,
     cast,
     ModelFactory,
+    type BooleanModel,
     validate,
-    type StringModel,
 } from '@captainpants/arktype-modeling';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
@@ -14,32 +14,32 @@ import {
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
-import { TextArea } from '@captainpants/sweeter-gummybear';
+import { CheckBox } from '@captainpants/sweeter-web-gummybear';
 import { ValidationDisplay } from './ValidationDisplay.js';
 
-export function TextEditor(
+export function BooleanEditor(
     { model, replace, propertyDisplayName, idPath }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
     const typedModel = $lastGood(() => {
-        return cast($val(model), asString);
+        return cast($val(model), asBoolean);
     });
 
     const { draft, validationErrors } = init.hook(
-        DraftHook<StringModel, string>,
+        DraftHook<BooleanModel, boolean>,
         {
             model: typedModel,
             onValid: async (validated) => {
                 await $peek(replace)(validated);
             },
             convertIn: (model) => model.value,
-            convertOut: (draft) => ({
-                success: true,
-                result: ModelFactory.createReplacement(
+            convertOut: (draft) => {
+                const asModel = ModelFactory.createReplacement(
                     draft,
                     typedModel.peek(),
-                ),
-            }),
+                );
+                return { success: true, result: asModel };
+            },
             validate: async (converted) => {
                 const res = await validate(
                     typedModel.peek().type,
@@ -58,12 +58,11 @@ export function TextEditor(
 
     return (
         <>
-            <TextArea
+            <CheckBox
                 id={idPath}
                 fillWidth
-                bind:value={draft}
+                bind:checked={draft}
                 invalid={invalid}
-                placeholder={propertyDisplayName}
             />
             <ValidationDisplay errors={validationErrors} />
         </>

@@ -14,7 +14,7 @@ import {
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
-import { Input } from '@captainpants/sweeter-gummybear';
+import { Input } from '@captainpants/sweeter-web-gummybear';
 import { ValidationDisplay } from './ValidationDisplay.js';
 
 export function NumberEditor(

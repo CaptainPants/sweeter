@@ -6,7 +6,7 @@ import {
     tags,
     Modal,
     Button,
-} from '@captainpants/sweeter-gummybear';
+} from '@captainpants/sweeter-web-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
 

@@ -12,7 +12,7 @@ import {
     type TypedEvent,
     stylesheet,
 } from '@captainpants/sweeter-web';
-import { Button } from '@captainpants/sweeter-gummybear';
+import { Button } from '@captainpants/sweeter-web-gummybear';
 
 export type IconButtonProps = PropertiesMightBeSignals<{
     icon: keyof ContextType<typeof IconProviderContext>;

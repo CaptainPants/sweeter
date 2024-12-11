@@ -28,7 +28,7 @@ import { DraftHook } from '../hooks/DraftHook.js';
 import { type EditorProps } from '../types.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { KnownPropertyEditorPart } from './KnownPropertyEditorPart.js';
-import { Row, Column, Label, Box } from '@captainpants/sweeter-gummybear';
+import { Row, Column, Label, Box } from '@captainpants/sweeter-web-gummybear';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { IconButton } from '../components/IconButton.js';

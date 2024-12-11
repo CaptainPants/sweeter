@@ -1,4 +1,4 @@
-import { Button, Modal, TextArea } from '@captainpants/sweeter-gummybear';
+import { Button, Modal, TextArea } from '@captainpants/sweeter-web-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
 

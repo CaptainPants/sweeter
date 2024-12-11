@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from '@captainpants/sweeter-gummybear';
+import { ThemeProvider, createTheme } from '@captainpants/sweeter-web-gummybear';
 
 //import typescriptLogo from "./typescript.svg";
 

@@ -25,10 +25,10 @@
     "dependencies": {
         "@captainpants/arktype-example-data": "workspace:^",
         "@captainpants/arktype-modeling": "workspace:^",
-        "@captainpants/sweeter-arktype-web": "workspace:^",
         "@captainpants/sweeter-core": "workspace:^",
-        "@captainpants/sweeter-gummybear": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
+        "@captainpants/sweeter-web-arktype": "workspace:^",
+        "@captainpants/sweeter-web-gummybear": "workspace:^",
         "arktype": "2.0.0-rc.21"
     }
 }

@@ -1,4 +1,4 @@
-import { Select } from '@captainpants/sweeter-gummybear';
+import { Select } from '@captainpants/sweeter-web-gummybear';
 import { type EditorProps } from '../types.js';
 import {
     ModelFactory,

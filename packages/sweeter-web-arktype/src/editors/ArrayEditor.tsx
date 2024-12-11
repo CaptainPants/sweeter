@@ -19,7 +19,7 @@ import {
     $lastGood,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
-import { SortableHandle, SortableList } from '@captainpants/sweeter-gummybear';
+import { SortableHandle, SortableList } from '@captainpants/sweeter-web-gummybear';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';

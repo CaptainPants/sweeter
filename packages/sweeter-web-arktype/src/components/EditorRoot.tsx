@@ -13,7 +13,7 @@ import {
     $val,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { Button, Modal } from '@captainpants/sweeter-gummybear';
+import { Button, Modal } from '@captainpants/sweeter-web-gummybear';
 
 import { AmbientValues } from './AmbientValues.js';
 import { EditorHost } from './EditorHost.js';

@@ -12,7 +12,7 @@ import {
     Input,
     Modal,
     Row,
-} from '@captainpants/sweeter-gummybear';
+} from '@captainpants/sweeter-web-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
 
 export type ObjectEditorRenameMappedModalProps = PropertiesMightBeSignals<{

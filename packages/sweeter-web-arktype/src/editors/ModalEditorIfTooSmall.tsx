@@ -33,11 +33,14 @@ export function ModalEditorIfTooSmall(
     });
 
     const content = $calc(() => {
-        return $val(useModal) ? (
-            <ModalEditor next={next} {...passthrough} />
-        ) : (
-            $val(next)(passthrough)
-        );
+        const useModelResolved = $val(useModal);
+
+        if (useModelResolved) {
+            // Wrap in a model
+            return <ModalEditor next={next} {...passthrough} />;
+        }
+        
+        return $val(next)(passthrough);
     });
 
     return (

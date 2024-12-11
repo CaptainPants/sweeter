@@ -8,8 +8,7 @@ import { type EditorComponentType } from './types.js';
 import { ModalEditorIfTooSmall } from './editors/ModalEditorIfTooSmall.js';
 
 export interface DefaultRulesSetOptions {
-    rigidObject?: EditorComponentType;
-    mapObject?: EditorComponentType;
+    object?: EditorComponentType;
     string?: EditorComponentType;
     number?: EditorComponentType;
     boolean?: EditorComponentType;
@@ -22,7 +21,7 @@ export interface DefaultRulesSetOptions {
 function addIfPresent(
     array: Array<TypeMatcherRule<EditorComponentType>>,
     matches: TypeMatcherRulePart,
-    component?: EditorComponentType,
+    component?: EditorComponentType | undefined,
 ): void {
     if (component) {
         array.push({
@@ -42,7 +41,7 @@ export function createDefaultRulesSet(
     options: DefaultRulesSetOptions,
 ): Array<TypeMatcherRule<EditorComponentType>> {
     const result: Array<TypeMatcherRule<EditorComponentType>> = [];
-    addIfPresent(result, Rules.object(), options.rigidObject);
+    addIfPresent(result, Rules.object(), options.object);
     addIfPresent(result, Rules.string(), options.string);
     addIfPresent(result, Rules.number(), options.number);
     addIfPresent(result, Rules.array(), options.array);

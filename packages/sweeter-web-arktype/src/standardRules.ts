@@ -8,7 +8,7 @@ import { TextEditor } from './editors/TextEditor.js';
 import { UnionEditor } from './editors/UnionEditor.js';
 
 export const standardRules = createDefaultRulesSet({
-    rigidObject: ObjectEditor,
+    object: ObjectEditor,
     string: TextEditor,
     number: NumberEditor,
     boolean: BooleanEditor,

@@ -9,7 +9,7 @@ import {
     introspect,
     createDefault,
     type AnyTypeConstraint,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 import {
     $calc,
     $if,

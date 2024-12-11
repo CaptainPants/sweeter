@@ -13,6 +13,7 @@ import {
 import { type Annotations } from '../types.js';
 import { serializeSchemaForDisplay } from '../../utility/serializeSchemaForDisplay.js';
 import { isModel } from '../../models/isModel.js';
+import { $calc, $val, Signal } from '@captainpants/sweeter-core';
 
 export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     implements Annotations
@@ -116,7 +117,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
 
     #getAssociatedValueTyped(
         name: string,
-        value: type.infer<TSchema>,
+        value: Signal<type.infer<TSchema>>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#associatedValues?.get(name);
@@ -130,32 +131,35 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
 
     public getAssociatedValue(
         name: string,
-        value: unknown,
+        value: Signal<unknown>,
         context: ContextualValueCalculationContext,
     ) {
-        if (
-            !shallowMatchesStructure(
-                this.#schema,
-                value,
-                true,
-                descend.defaultDepth,
-            )
-        ) {
-            // slightly more helpful error message, only incur cost if there is a failure.
-            if (isModel(value)) {
-                throw new Error(
-                    'Value was a model -- expected the value to be passed, you may be missing a .value',
-                );
+        const typed = $calc(() => {
+            if (
+                !shallowMatchesStructure(
+                    this.#schema,
+                    value.value,
+                    true,
+                    descend.defaultDepth,
+                )
+            ) {
+                // slightly more helpful error message, only incur cost if there is a failure.
+                if (isModel(value.value)) {
+                    throw new Error(
+                        'Value was a model -- expected the value to be passed, you may be missing a .value',
+                    );
+                }
+                throw new Error('Incorrect type value provided.');
             }
-            throw new Error('Incorrect type value provided.');
-        }
+            return value.value;
+        });
 
-        return this.#getAssociatedValueTyped(name, value, context);
+        return this.#getAssociatedValueTyped(name, typed, context);
     }
 
     #getAmbientValueTyped(
         name: string,
-        value: type.infer<TSchema>,
+        value: Signal<type.infer<TSchema>>,
         context: ContextualValueCalculationContext,
     ) {
         const found = this.#ambientValues?.get(name);
@@ -169,27 +173,30 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
 
     public getAmbientValue(
         name: string,
-        value: unknown,
+        value: Signal<unknown>,
         context: ContextualValueCalculationContext,
     ) {
-        if (
-            !shallowMatchesStructure(
-                this.#schema,
-                value,
-                true,
-                descend.defaultDepth,
-            )
-        ) {
-            // slightly more helpful error message, only incur cost if there is a failure.
-            if (isModel(value)) {
-                throw new Error(
-                    'Value was a model -- expected the value to be passed, you may be missing a .value',
-                );
+        const typed = $calc(() => {
+            if (
+                !shallowMatchesStructure(
+                    this.#schema,
+                    value.value,
+                    true,
+                    descend.defaultDepth,
+                )
+            ) {
+                // slightly more helpful error message, only incur cost if there is a failure.
+                if (isModel(value.value)) {
+                    throw new Error(
+                        'Value was a model -- expected the value to be passed, you may be missing a .value',
+                    );
+                }
+                throw new Error('Incorrect type value provided.');
             }
-            throw new Error('Incorrect type value provided.');
-        }
+            return value.value;
+        });
 
-        return this.#getAmbientValueTyped(name, value, context);
+        return this.#getAmbientValueTyped(name, typed, context);
     }
 
     createBuilder(): AnnotationsBuilderImpl {

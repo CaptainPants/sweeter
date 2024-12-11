@@ -4,7 +4,7 @@ import {
     createDefault,
     extendArkTypes,
     UnknownModel,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 
 import { type } from 'arktype';
 

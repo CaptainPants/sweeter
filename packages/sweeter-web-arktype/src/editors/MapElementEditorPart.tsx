@@ -6,7 +6,7 @@ import {
     LocalizerHook,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { UnknownPropertyModel, type UnknownModel } from '@captainpants/arktype-modeling';
+import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
 import { EditorHost } from '../components/EditorHost.js';
 import { idPaths } from '@captainpants/sweeter-utilities';
 
@@ -50,7 +50,9 @@ export function MapElementEditorPart(
         <EditorHost
             model={value}
             replace={replace}
-            propertyDisplayName={$calc(() => localize($val(propertyNameAsString)))}
+            propertyDisplayName={$calc(() =>
+                localize($val(propertyNameAsString)),
+            )}
             indent={indent}
             idPath={$calc(() =>
                 idPaths.key($val(ownerIdPath), $val(propertyNameAsString)),

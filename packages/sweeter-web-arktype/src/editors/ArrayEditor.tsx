@@ -6,7 +6,7 @@ import {
     createDefault,
     type AnyTypeConstraint,
     introspect,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $calc,
@@ -19,7 +19,10 @@ import {
     $lastGood,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
-import { SortableHandle, SortableList } from '@captainpants/sweeter-web-gummybear';
+import {
+    SortableHandle,
+    SortableList,
+} from '@captainpants/sweeter-web-gummybear';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';

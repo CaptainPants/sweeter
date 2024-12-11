@@ -14,6 +14,10 @@ export function $val<T>(value: T | Signal<T>): T {
     return isSignal(value) ? value.value : value;
 }
 
+/**
+ * Takes a value that might be a signal, and if it is not, wrap it in a $constant.
+ * Use this in interfaces that require a signal, often with prop values passed via MightBeSignals.
+ */
 export function $wrap<T>(value: T | Signal<T>): Signal<T> {
     return isSignal(value) ? value : $calc(() => value);
 }

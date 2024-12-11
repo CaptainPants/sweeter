@@ -8,7 +8,7 @@ import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import {
     type ValidationSingleResult,
     joinSingleValidationResults,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 
 const css = new GlobalCssClass({
     className: 'ValidationDisplay',

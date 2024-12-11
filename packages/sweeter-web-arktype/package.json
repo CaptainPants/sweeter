@@ -32,7 +32,7 @@
         "pnpm": "8.14.1"
     },
     "dependencies": {
-        "@captainpants/arktype-modeling": "workspace:^",
+        "@captainpants/sweeter-arktype-modeling": "workspace:^",
         "@captainpants/sweeter-core": "workspace:^",
         "@captainpants/sweeter-web-gummybear": "workspace:^",
         "@captainpants/sweeter-utilities": "workspace:^",

@@ -5,7 +5,7 @@ import circularDependency from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
 
 const exclude = [
-    /ModelFactory\.ts$/
+    /ModelFactory\.ts$/ // ModelFactory circularly depends on ObjectImpl and ArrayModelImpl - safely inside method calls.
 ];
 
 export default defineConfig({
@@ -21,9 +21,6 @@ export default defineConfig({
         outDir: 'build',
         minify: false,
         rollupOptions: {
-            // make sure to externalize deps that shouldn't be bundled
-            // into your library
-            external: [/^@captainpants\/.+/, /node_modules/],
         },
         target: "ESNext",
     },

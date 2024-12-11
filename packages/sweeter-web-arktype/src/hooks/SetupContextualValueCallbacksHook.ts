@@ -3,7 +3,7 @@ import {
     type AmbientValueCallback,
     type ContextualValueCalculationContext,
     type LocalValueCallback,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 
 import {
     type Signal,

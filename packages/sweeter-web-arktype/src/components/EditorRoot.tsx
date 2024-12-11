@@ -6,7 +6,7 @@ import {
     type Replacer,
     type TypeMatcherRule,
     type UnknownReplacer,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 
 import {
     $calc,

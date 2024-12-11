@@ -13,7 +13,7 @@ import {
     Row,
     Select,
 } from '@captainpants/sweeter-web-gummybear';
-import { AnyTypeConstraint } from '@captainpants/arktype-modeling';
+import { AnyTypeConstraint } from '@captainpants/sweeter-arktype-modeling';
 import { EditorRoot } from '@captainpants/sweeter-web-arktype';
 
 export const Example: Component = (_props, _init) => {

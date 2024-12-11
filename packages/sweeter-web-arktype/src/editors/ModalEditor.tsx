@@ -1,4 +1,4 @@
-import { type UnknownModel } from '@captainpants/arktype-modeling';
+import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
 
 import { type EditorProps } from '../types.js';
 import {

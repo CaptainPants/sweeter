@@ -41,7 +41,7 @@ declare module '@ark/schema' {
 
 type NodeClass = (typeof nodeClassesByKind)[NodeKind];
 
-const extensionMarkerSymbol: unique symbol = Symbol('arktype-modeling');
+const extensionMarkerSymbol: unique symbol = Symbol('sweeter-arktype-modeling');
 
 let counter = 0;
 

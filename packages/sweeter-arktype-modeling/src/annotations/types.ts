@@ -4,6 +4,7 @@ import {
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
 } from '../index.js';
+import { Signal } from '@captainpants/sweeter-core';
 
 export interface AnnotationsBuilder {
     attr(name: string, value: unknown): this;
@@ -44,13 +45,13 @@ export interface Annotations {
 
     getAssociatedValue(
         name: string,
-        value: unknown,
+        value: Signal<unknown>,
         context: ContextualValueCalculationContext,
     ): unknown;
 
     getAmbientValue(
         name: string,
-        value: unknown,
+        value: Signal<unknown>,
         context: ContextualValueCalculationContext,
     ): unknown;
 }

@@ -6,7 +6,7 @@ import {
     type LocalValueCallback,
     type UnknownReplacer,
     type UnknownModel,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 
 export type EditorLikeProps = PropertiesMightBeSignals<{
     id?: string | undefined;

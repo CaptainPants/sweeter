@@ -3,7 +3,7 @@ import {
     type ContextualValueCalculationContext,
     type UnknownModel,
     UnknownObjectModel,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 import {
     LocalizerHook,
     type ComponentInit,
@@ -14,16 +14,12 @@ import {
     $subscribe,
 } from '@captainpants/sweeter-core';
 
-import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
-import { AmbientValues } from '../components/AmbientValues.js';
 import { EditorHost } from '../components/EditorHost.js';
-import { $wrap } from '@captainpants/sweeter-core';
 import { idPaths } from '@captainpants/sweeter-utilities';
 
 export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
     id: string;
 
-    owner: UnknownObjectModel;
     property: string | symbol;
     value: UnknownModel;
     updateValue: (
@@ -37,7 +33,6 @@ export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
 
 export function KnownPropertyEditorPart(
     {
-        owner,
         id,
         property,
         value,
@@ -57,29 +52,6 @@ export function KnownPropertyEditorPart(
 
     const { localize } = init.hook(LocalizerHook);
 
-    const calculateLocal = $calc(() => {
-        return (name: string, context: ContextualValueCalculationContext) =>
-            $val(value).type
-                .annotations()
-                ?.getAssociatedValue(name, $val(owner), context);
-    });
-
-    const calculateAmbient = $calc(() => {
-        const propertyModelResolved = $val(value);
-        $subscribe(owner);
-
-        return (name: string, context: ContextualValueCalculationContext) =>
-            $val(value).type
-                .annotations()
-                ?.getAmbientValue(name, propertyModelResolved.value, context);
-    });
-
-    const { local, ambient } = init.hook(
-        SetupContextualValueCallbacksHook,
-        calculateLocal,
-        calculateAmbient,
-    );
-
     const valueModel = $calc(() => $val(value));
     const displayName = $calc(
         () =>
@@ -89,19 +61,14 @@ export function KnownPropertyEditorPart(
 
     return $calc(() => {
         return (
-            <AmbientValues callback={ambient}>
-                {() => (
-                    <EditorHost
-                        id={id}
-                        model={valueModel}
-                        replace={replace}
-                        propertyDisplayName={localize(displayName.value)}
-                        indent={indent}
-                        idPath={idPath}
-                        local={local}
-                    />
-                )}
-            </AmbientValues>
+            <EditorHost
+                id={id}
+                model={valueModel}
+                replace={replace}
+                propertyDisplayName={localize(displayName.value)}
+                indent={indent}
+                idPath={idPath}
+            />
         );
     });
 }

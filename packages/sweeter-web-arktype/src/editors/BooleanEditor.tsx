@@ -4,7 +4,7 @@ import {
     ModelFactory,
     type BooleanModel,
     validate,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $calc,

@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/arktype-modeling",
+    "name": "@captainpants/sweeter-arktype-modeling",
     "version": "0.0.5",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
@@ -33,6 +33,7 @@
     },
     "dependencies": {
         "@ark/schema": "^0.21.0",
+        "@captainpants/sweeter-core": "workspace:^",
         "@captainpants/sweeter-utilities": "workspace:^",
         "arktype": "2.0.0-rc.21"
     }

@@ -1,4 +1,4 @@
-import { type TypeMatcherRule } from '@captainpants/arktype-modeling';
+import { type TypeMatcherRule } from '@captainpants/sweeter-arktype-modeling';
 import {
     type ModalComponentType,
     type EditorSettings,

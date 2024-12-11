@@ -5,6 +5,7 @@ import {
     $mutable,
     $peek,
     $val,
+    $wrap,
     LocalizerHook,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
@@ -14,7 +15,6 @@ import {
     cast,
     categorizeProperties,
     StandardLocalValues,
-    type UnknownPropertyModel,
     type UnknownModel,
     validate,
     asObject,
@@ -22,7 +22,7 @@ import {
     createDefault,
     UnknownType,
     introspect,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
 import { type EditorProps } from '../types.js';
@@ -78,9 +78,7 @@ export function ObjectEditor(
         property: string | symbol,
         value: UnknownModel,
     ): Promise<void> => {
-        const newDraft = await draft
-            .peek()
-            .unknownSetProperty(property, value);
+        const newDraft = await draft.peek().unknownSetProperty(property, value);
 
         draft.value = newDraft;
     };
@@ -160,7 +158,7 @@ export function ObjectEditor(
 
         const anyCategories = categorizedProperties.length > 0;
 
-        const content = categorizedProperties.map(
+        const result = categorizedProperties.map(
             ({ category, properties }, categoryIndex) => {
                 const propertyVisiblePerProperty = $calc(() => {
                     const individualVisibility = properties.map(
@@ -174,7 +172,7 @@ export function ObjectEditor(
                                     .annotations()
                                     ?.getAssociatedValue(
                                         StandardLocalValues.Visible,
-                                        owner,
+                                        $wrap(propertyModel.valueModel),
                                         calculationContext,
                                     ) !== false
                             ); // likely values are notFound and false
@@ -231,7 +229,6 @@ export function ObjectEditor(
                                         </Column>
                                         <Column xs={8}>
                                             <KnownPropertyEditorPart
-                                                owner={draft}
                                                 id={id}
                                                 property={property.name}
                                                 value={$calc(
@@ -258,7 +255,7 @@ export function ObjectEditor(
             },
         );
 
-        return content;
+        return result;
     });
 
     // TODO: this is subscribing to draft.value, which means that any changes will cause it to be rebuilt
@@ -313,123 +310,116 @@ export function ObjectEditor(
         ));
     });
 
-    const content = <>
-        {$calc(() => {
-            if (renameKey.value) {
-                const visible = $mutable(true);
+    const content = (
+        <>
+            {$calc(() => {
+                if (renameKey.value) {
+                    const visible = $mutable(true);
 
-                // Note that a self to self doesn't do a
-                // validate but does trigger onFinished
-                const validate = async (to: string) => {
-                    const property = draft.value.unknownGetProperty(to);
-                    if (property !== undefined) {
-                        return 'Property is already defined';
-                    }
+                    // Note that a self to self doesn't do a
+                    // validate but does trigger onFinished
+                    const validate = async (to: string) => {
+                        const property = draft.value.unknownGetProperty(to);
+                        if (property !== undefined) {
+                            return 'Property is already defined';
+                        }
 
-                    return null;
-                };
+                        return null;
+                    };
 
-                return (
-                    <ObjectEditorRenameMappedModal
-                        from={renameKey.value}
-                        isOpen={visible}
-                        validate={(_from, to) => validate(to)}
-                        onCancelled={() => {
-                            renameKey.value = null;
-                        }}
-                        onFinished={async (from, to) => {
-                            await onMoveProperty(from, to);
-                            renameKey.value = null;
-                        }}
-                    />
-                );
-            }
-            return null;
-        })}
-        {$if(
-            $calc(() => !$val(isRoot)),
-            () => (
-                <div
-                    class={css.editorIndent}
-                    style={{ width: indentWidth }}
-                >
-                    <Child />
-                </div>
-            ),
-        )}
-        <div>
-            <div class={css.editorContainer}>
-                {fixedContent}
-            </div>
-            <div class={css.editorContainer}>
-                {mappedContent}
-            </div>
-            <div>
-                {$calc(() => {
-                    const catchallAllowedTypesResolved =
-                        catchallAllowedTypes.value;
-                    if (!catchallAllowedTypesResolved) {
-                        return <></>;
-                    }
-
-                    return catchallAllowedTypesResolved.map(
-                        (allowedType, index) => {
-                            const title =
-                                catchallAllowedTypesResolved.length ===
-                                1
-                                    ? localize('Add')
-                                    : localize('Add {0}', [
-                                            allowedType
-                                                .annotations()
-                                                ?.getBestDisplayName(),
-                                        ]);
-
-                            const isOpen = $mutable(false);
-
-                            const validate = async (name: string) => {
-                                const property =
-                                    draft.value.unknownGetProperty(
-                                        name,
-                                    );
-                                if (property !== undefined) {
-                                    return 'Property is already defined';
-                                }
-
-                                return null;
-                            };
-
-                            return (
-                                <>
-                                    <ObjectEditorAddMappedModal
-                                        isOpen={isOpen}
-                                        type={allowedType}
-                                        validate={validate}
-                                        onCancelled={() =>
-                                            (isOpen.value = false)
-                                        }
-                                        onFinished={onAdd}
-                                    />
-                                    <IconButton
-                                        icon="Add"
-                                        text={title}
-                                        onLeftClick={() => {
-                                            isOpen.value = true;
-                                        }}
-                                    />
-                                </>
-                            );
-                        },
+                    return (
+                        <ObjectEditorRenameMappedModal
+                            from={renameKey.value}
+                            isOpen={visible}
+                            validate={(_from, to) => validate(to)}
+                            onCancelled={() => {
+                                renameKey.value = null;
+                            }}
+                            onFinished={async (from, to) => {
+                                await onMoveProperty(from, to);
+                                renameKey.value = null;
+                            }}
+                        />
                     );
-                })}
+                }
+                return null;
+            })}
+            {$if(
+                $calc(() => !$val(isRoot)),
+                () => (
+                    <div
+                        class={css.editorIndent}
+                        style={{ width: indentWidth }}
+                    >
+                        <Child />
+                    </div>
+                ),
+            )}
+            <div>
+                <div class={css.editorContainer}>{fixedContent}</div>
+                <div class={css.editorContainer}>{mappedContent}</div>
+                <div>
+                    {$calc(() => {
+                        const catchallAllowedTypesResolved =
+                            catchallAllowedTypes.value;
+                        if (!catchallAllowedTypesResolved) {
+                            return <></>;
+                        }
+
+                        return catchallAllowedTypesResolved.map(
+                            (allowedType, index) => {
+                                const title =
+                                    catchallAllowedTypesResolved.length === 1
+                                        ? localize('Add')
+                                        : localize('Add {0}', [
+                                              allowedType
+                                                  .annotations()
+                                                  ?.getBestDisplayName(),
+                                          ]);
+
+                                const isOpen = $mutable(false);
+
+                                const validate = async (name: string) => {
+                                    const property =
+                                        draft.value.unknownGetProperty(name);
+                                    if (property !== undefined) {
+                                        return 'Property is already defined';
+                                    }
+
+                                    return null;
+                                };
+
+                                return (
+                                    <>
+                                        <ObjectEditorAddMappedModal
+                                            isOpen={isOpen}
+                                            type={allowedType}
+                                            validate={validate}
+                                            onCancelled={() =>
+                                                (isOpen.value = false)
+                                            }
+                                            onFinished={onAdd}
+                                        />
+                                        <IconButton
+                                            icon="Add"
+                                            text={title}
+                                            onLeftClick={() => {
+                                                isOpen.value = true;
+                                            }}
+                                        />
+                                    </>
+                                );
+                            },
+                        );
+                    })}
+                </div>
             </div>
-        </div>
-    </>
+        </>
+    );
 
     return (
         <Box level={indent} class={css.editorOuter}>
-            <div class={css.editorIndentContainer}>
-                {content}
-            </div>
+            <div class={css.editorIndentContainer}>{content}</div>
         </Box>
     );
 }
@@ -489,5 +479,5 @@ const css = {
              display: flex;
              flex-direction: row-reverse;
         `,
-    })
+    }),
 };

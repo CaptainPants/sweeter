@@ -32,7 +32,7 @@
         "pnpm": "8.14.1"
     },
     "dependencies": {
-        "@captainpants/arktype-modeling": "workspace:^",
+        "@captainpants/sweeter-arktype-modeling": "workspace:^",
         "arktype": "2.0.0-rc.21"
     }
 }

@@ -7,7 +7,7 @@ import {
     $calc,
 } from '@captainpants/sweeter-core';
 import { type Maybe } from '@captainpants/sweeter-utilities';
-import { type ValidationSingleResult } from '@captainpants/arktype-modeling';
+import { type ValidationSingleResult } from '@captainpants/sweeter-arktype-modeling';
 
 export interface DraftHookOptions<TModel, TDraft> {
     model: Signal<TModel>;

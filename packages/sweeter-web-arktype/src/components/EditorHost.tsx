@@ -5,7 +5,7 @@ import {
     createTypeMatcher,
     type TypeMatcherRule,
     notFound,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 import {
     $calc,
     $peek,
@@ -65,16 +65,17 @@ export function EditorHost(
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
 
+    const modelType = $calc(() => $val(model).type);
+    const value = $calc(() => $val(model.value));
+
     const calculateLocal = (
         name: string,
         context: ContextualValueCalculationContext,
     ) => {
-        const modelResolved = $val(model);
-
         // Look at the model, and then the parent's property model (which is passed via the localProp)
-        const found = modelResolved.type
+        const found = $val(modelType)
             .annotations()
-            ?.getAssociatedValue(name, modelResolved.value, context);
+            ?.getAssociatedValue(name, value, context);
         if (found !== notFound) {
             return found;
         }
@@ -91,11 +92,9 @@ export function EditorHost(
         name: string,
         context: ContextualValueCalculationContext,
     ) => {
-        const modelResolved = $val(model);
-
-        return modelResolved.type
+        return $val(modelType)
             .annotations()
-            ?.getAmbientValue(name, modelResolved, context);
+            ?.getAmbientValue(name, value, context);
     };
 
     const { ambient, local } = init.hook(

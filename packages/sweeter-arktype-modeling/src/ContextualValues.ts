@@ -1,16 +1,17 @@
-import { type ReadonlySignalLike } from './ReadonlySignalLike.js';
+import { Signal } from '@captainpants/sweeter-core';
+
 import { type UnknownType } from './type/types.js';
 
 export interface ContextualValueCalculationContext {
-    ambient: ReadonlySignalLike<AmbientValueCallback> | AmbientValueCallback;
+    ambient: Signal<AmbientValueCallback> | AmbientValueCallback;
     local:
-        | ReadonlySignalLike<LocalValueCallback | undefined>
+        | Signal<LocalValueCallback | undefined>
         | LocalValueCallback
         | undefined;
 }
 
 export type ContextualValueCalculationCallback = (
-    owner: UnknownType,
+    owner: Signal<UnknownType>,
     context: ContextualValueCalculationContext,
 ) => unknown;
 

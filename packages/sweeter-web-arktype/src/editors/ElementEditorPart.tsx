@@ -6,7 +6,7 @@ import {
     LocalizerHook,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type UnknownModel } from '@captainpants/arktype-modeling';
+import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
 import { EditorHost } from '../components/EditorHost.js';
 import { idPaths } from '@captainpants/sweeter-utilities';
 

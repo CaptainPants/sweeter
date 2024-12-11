@@ -3,7 +3,7 @@ import {
     type TypeMatcherRule,
     type TypeMatcherRulePart,
     introspect,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 import { type EditorComponentType } from './types.js';
 import { ModalEditorIfTooSmall } from './editors/ModalEditorIfTooSmall.js';
 

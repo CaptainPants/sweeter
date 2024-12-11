@@ -89,9 +89,9 @@ importers:
 
   examples/arktype-example-data:
     dependencies:
-      '@captainpants/arktype-modeling':
+      '@captainpants/sweeter-arktype-modeling':
         specifier: workspace:^
-        version: link:../../packages/arktype-modeling
+        version: link:../../packages/sweeter-arktype-modeling
       arktype:
         specifier: 2.0.0-rc.21
         version: 2.0.0-rc.21
@@ -101,9 +101,9 @@ importers:
       '@captainpants/arktype-example-data':
         specifier: workspace:^
         version: link:../arktype-example-data
-      '@captainpants/arktype-modeling':
+      '@captainpants/sweeter-arktype-modeling':
         specifier: workspace:^
-        version: link:../../packages/arktype-modeling
+        version: link:../../packages/sweeter-arktype-modeling
       '@captainpants/sweeter-core':
         specifier: workspace:^
         version: link:../../packages/sweeter-core
@@ -132,11 +132,14 @@ importers:
         specifier: workspace:^
         version: link:../../packages/sweeter-web-gummybear
 
-  packages/arktype-modeling:
+  packages/sweeter-arktype-modeling:
     dependencies:
       '@ark/schema':
         specifier: ^0.21.0
         version: 0.21.0
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../sweeter-core
       '@captainpants/sweeter-utilities':
         specifier: workspace:^
         version: link:../sweeter-utilities
@@ -166,9 +169,9 @@ importers:
 
   packages/sweeter-web-arktype:
     dependencies:
-      '@captainpants/arktype-modeling':
+      '@captainpants/sweeter-arktype-modeling':
         specifier: workspace:^
-        version: link:../arktype-modeling
+        version: link:../sweeter-arktype-modeling
       '@captainpants/sweeter-core':
         specifier: workspace:^
         version: link:../sweeter-core

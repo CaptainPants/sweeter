@@ -14,6 +14,7 @@ export * from './calculationDeferral.js';
 export * from './batching.js';
 export * from './types.js';
 export * from './isSignal.js';
+export * from './$mapByIdentity.js';
 export * from './$mapByIndex.js';
 export * from './$val.js';
 export * from './subscribeToChanges.js';

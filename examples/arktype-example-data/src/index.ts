@@ -4,7 +4,7 @@ import {
     createDefault,
     extendArkTypes,
     UnknownModel,
-} from '@captainpants/arktype-modeling';
+} from '@captainpants/sweeter-arktype-modeling';
 
 import { type } from 'arktype';
 
@@ -16,6 +16,10 @@ export const numberOnly = type.number;
 export const stringFieldOnly = type({
     test: type.string.annotate((add) => add.displayName('Test')),
 });
+
+export const stringArray = type.string
+    .annotate((add) => add.displayName('Text Item'))
+    .array();
 
 export const simpleHiddenField = type({
     test: type.string.annotate((add) => add.displayName('Test')),
@@ -138,6 +142,13 @@ export const exampleData = {
         const res = await ModelFactory.createModel({
             value: { test: 'Test', hidden: 'Hello' },
             schema: simpleHiddenField,
+        });
+        return asUnknown(res);
+    },
+    StringArray: async () => {
+        const res = await ModelFactory.createModel({
+            value: ['alpha', 'beta'],
+            schema: stringArray,
         });
         return asUnknown(res);
     },

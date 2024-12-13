@@ -25,6 +25,6 @@
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
-        "@captainpants/sweeter-gummybear": "workspace:^"
+        "@captainpants/sweeter-web-gummybear": "workspace:^"
     }
 }

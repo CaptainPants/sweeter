@@ -9,7 +9,7 @@ it('CalculatedSignal listeners invoked with correct value after dependency updat
     let prevStored: SignalState<number> | undefined;
     let nextStored: SignalState<number> | undefined;
 
-    calculatedSignal.listen((prev, next) => {
+    calculatedSignal.listen((next, prev) => {
         prevStored = prev;
         nextStored = next;
     });

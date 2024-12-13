@@ -3,7 +3,7 @@
         "packages/sweeter-core",
         "packages/sweeter-web",
         "packages/sweeter-gummybear",
-        "packages/arktype-modeling"
+        "packages/sweeter-arktype-modeling"
     ],
     "entryPointStrategy": "packages",
     "out": "docs/generated"

@@ -21,15 +21,15 @@ export function createDOMElement<TElementTypeString extends string>(
 ): Signal<HTMLElement | SVGElement> {
     const resultController = $controller<HTMLElement | SVGElement>();
 
-    const ele = document.createElement(type);
+    const ele = webRuntime.createElement(type);
 
     const result = $controller(SignalState.success(ele));
 
     const cleanupFaultContext = ComponentFaultContext.replace({
         reportFaulted(err) {
-            console.log(
+            console.warn(
                 'Fault (createDOMElement): ',
-                result.signal.peekState(),
+                err,
             );
             // If its mounted to the document, we can potentially cheat
             // If its not, then we need to make the result invalid -- and currently its a raw DOM Element

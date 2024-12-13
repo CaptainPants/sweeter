@@ -6,8 +6,8 @@ import {
 import { type SignalState } from './SignalState.js';
 
 export type SignalListener<T> = (
-    previous: SignalState<T>,
     next: SignalState<T>,
+    previous: SignalState<T>,
 ) => void;
 
 /**

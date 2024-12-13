@@ -13,7 +13,7 @@ import {
 import { HomePage } from './pages/HomePage.js';
 import { Page1 } from './pages/Page1.js';
 import { Page2 } from './pages/Page2.js';
-import { createTheme } from '@captainpants/sweeter-gummybear';
+import { createTheme } from '@captainpants/sweeter-web-gummybear';
 
 const { IncludeThemeStylesheets } = createTheme({});
 

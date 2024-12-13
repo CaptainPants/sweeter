@@ -182,6 +182,14 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         window.history.pushState(undefined, '', url);
         this.#locationAndDisposal.ping();
     }
+
+    createElement(tagName: string): HTMLElement | SVGElement {
+        return document.createElement(tagName);
+    }
+
+    createComment(content?: string | undefined): Comment {
+        return document.createComment('');
+    }
 }
 
 function createNestedRoot(

@@ -2,29 +2,25 @@ import {
     arrayExcept,
     whenGarbageCollected,
 } from '@captainpants/sweeter-utilities';
-import {
-    $calc,
-    $peek,
-    $subscribe,
-    $val,
-    isSignal,
-    $constant,
-    type SignalController,
-    $controller,
-    SignalState,
-} from '../index.js';
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
+import { isSignal } from './isSignal.js';
+import { $calc } from './$calc.js';
+import { $peek, $subscribe, $val } from './$val.js';
+import { $constant } from './$constant.js';
+import { SignalController } from './SignalController.js';
+import { $controller } from './$controller.js';
+import { SignalState } from './SignalState.js';
 
 export function $mapByIdentity<T, U>(
     items: MightBeSignal<readonly T[]>,
-    map: MightBeSignal<(item: T, index: Signal<number>) => U>,
-    orderBy: (obj: U) => string | number,
+    mappingFun: MightBeSignal<(item: T, index: Signal<number>) => U>,
+    orderBy: (obj: U, source: T) => string | number,
 ): Signal<readonly U[]> {
     if (!isSignal(items)) {
         // constant array, we can skip a lot of voodoo - the $calc is just because renderItem could be a signal
         return $calc(() =>
-            items.map((item, i) => $val(map)(item, $constant(i))),
+            items.map((item, i) => $val(mappingFun)(item, $constant(i))),
         );
     }
 
@@ -43,9 +39,20 @@ export function $mapByIdentity<T, U>(
     // including if it changes lengths to dispose/orphan signals that no longer
     // point to a valid index, and add new signals when necessary.
 
+    let cleanup: (() => void) | undefined;
+
+    if (isSignal(mappingFun)) {
+        // Clear the cache if the map function changes
+        const resetCache = () => {
+            elementCache.clear();
+        };
+
+        cleanup = mappingFun.listen(resetCache);
+    }
+
     const resultSignal = $calc(() => {
         // subscribe to changes, but ignore the actual value for now
-        $subscribe(map);
+        $subscribe(mappingFun);
 
         // subscibes to items
         const itemsResolved = $val(items);
@@ -59,8 +66,8 @@ export function $mapByIdentity<T, U>(
 
         const orderedKeys = [...elementCache.values()]
             .sort((a, b) => {
-                const aOrder = orderBy(a.mappedElement);
-                const bOrder = orderBy(b.mappedElement);
+                const aOrder = orderBy(a.mappedElement, a.source);
+                const bOrder = orderBy(b.mappedElement, b.source);
                 return aOrder < bOrder ? -1 : aOrder === bOrder ? 0 : 1;
             })
             .map((x) => x.source);
@@ -83,7 +90,7 @@ export function $mapByIdentity<T, U>(
                 );
                 match = {
                     source: item,
-                    mappedElement: $peek(map)(item, indexController.signal),
+                    mappedElement: $peek(mappingFun)(item, indexController.signal),
                     indexSignal: indexController.signal,
                     indexController,
                 };
@@ -96,14 +103,7 @@ export function $mapByIdentity<T, U>(
         return result;
     });
 
-    // Clear the cache if the map function changes
-    const resetCache = () => {
-        elementCache.clear();
-    };
-
-    if (isSignal(map)) {
-        const cleanup = map.listen(resetCache);
-
+    if (cleanup) {
         // When the signal is no longer reachable, stop listening
         // Nothing in this method references resultSignal so this
         // should be pretty safe.

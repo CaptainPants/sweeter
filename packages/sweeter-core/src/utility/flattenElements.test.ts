@@ -23,9 +23,9 @@ it('throws through layers', () => {
     let handlerRan = false;
     let threw = false;
 
-    flattened.listen(() => {
+    flattened.listen((newState) => {
         handlerRan = true;
-        threw = flattened.peekState().mode === 'ERROR';
+        threw = newState.mode === 'ERROR';
     });
 
     controller.updateState(SignalState.error(new Error('TEST')));

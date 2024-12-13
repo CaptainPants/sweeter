@@ -15,7 +15,7 @@ it('MutableValueSignal listeners invoked with correct value after update', () =>
     let prevStored: SignalState<number> | undefined;
     let nextStored: SignalState<number> | undefined;
 
-    signal.listen((prev, next) => {
+    signal.listen((next, prev) => {
         prevStored = prev;
         nextStored = next;
     });

@@ -11,7 +11,7 @@ import { arrayExcept } from '@captainpants/sweeter-utilities';
 
 export function bindDOMClassProp(
     contextSnapshot: ContextSnapshot,
-    ele: HTMLElement,
+    ele: HTMLElement | SVGElement,
     class_: ElementCssClasses,
     webRuntime: WebRuntime,
 ) {

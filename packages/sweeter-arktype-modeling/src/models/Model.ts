@@ -115,7 +115,7 @@ export type TypedPropertyModelForKey<
           >
         :
               | PropertyModelNoConstraint<
-                    arkTypeUtilityTypes.CatchallPropertyValueArkType<TArkObjectType>
+                    arkTypeUtilityTypes.CatchallPropertyValueSchemas<TArkObjectType>
                 >
               | undefined;
 
@@ -124,7 +124,7 @@ interface UnknownObjectModelMethods {
 
     unknownSetProperty(key: string | symbol, value: unknown): Promise<this>;
 
-    unknownGetCatchallType(): UnknownType | undefined;
+    unknownGetCatchallType(): ReadonlyMap<UnknownType, UnknownType> | undefined;
 
     deleteProperty(key: string | symbol, validate?: boolean): Promise<this>;
 
@@ -154,7 +154,7 @@ export type MapObjectEntry<TSchema extends AnyTypeConstraint> = readonly [
 export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
     extends BaseModel<type.infer<TObjectSchema>, TObjectSchema>,
         UnknownObjectModelMethods {
-    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectSchema>;
+    getCatchallType(): arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema>;
 
     getProperty<
         TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectSchema> &

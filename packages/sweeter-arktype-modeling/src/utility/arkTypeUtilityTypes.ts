@@ -3,17 +3,17 @@ import { type Type, type type } from 'arktype';
 import { type AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/types.js';
 import {
     type GetExpandoKeys,
-    type GetExpandoType,
+    type GetExpandoValueType as GetExpandoValueType,
     type GetNonExpandoKeys,
 } from '../internal/utilityTypes.js';
-import { type IsUnion } from '@captainpants/sweeter-utilities';
+import { IsNever, type IsUnion } from '@captainpants/sweeter-utilities';
 
 /**
  * Types that operate on Zod type
  */
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace arkTypeUtilityTypes {
-    type _SpreadWrapType<T> = T extends infer _ ? Type<T> : never;
+    type _DistributeType<T> = T extends infer _ ? Type<T> : never;
     type _PropertyType<T> = T[keyof T];
 
     /**
@@ -23,7 +23,7 @@ export namespace arkTypeUtilityTypes {
 
     export type AllPropertyKeys<TSchemaObjectType> =
         keyof type.infer<TSchemaObjectType>;
-    export type AllPropertyArkTypes<TSchemaObjectType> = _SpreadWrapType<
+    export type AllPropertyArkTypes<TSchemaObjectType> = _DistributeType<
         _PropertyType<type.infer<TSchemaObjectType>>
     >;
 
@@ -33,9 +33,10 @@ export namespace arkTypeUtilityTypes {
     export type CatchallPropertyKeyRawType<TSchemaObjectType> = GetExpandoKeys<
         type.infer<TSchemaObjectType>
     >;
-    export type CatchallPropertyValueArkType<TSchemaObjectType> = Type<
-        GetExpandoType<type.infer<TSchemaObjectType>>
-    >;
+    export type CatchallPropertyKeySchemas<TSchemaObjectType extends AnyTypeConstraint> = _DistributeType<CatchallPropertyKeyRawType<TSchemaObjectType>>;
+    export type CatchallPropertyValueSchemas<TSchemaObjectType extends AnyTypeConstraint> = _DistributeType<GetExpandoValueType<type.infer<TSchemaObjectType>>>;
+
+    export type CatchallPropertyMap<TSchemaObjectType extends AnyTypeConstraint> = IsNever<CatchallPropertyKeySchemas<TSchemaObjectType>> extends true ? undefined : ReadonlyMap<CatchallPropertyKeySchemas<TSchemaObjectType>, CatchallPropertyValueSchemas<TSchemaObjectType>>;
 
     export type PropertyType<TSchemaObjectType, Property extends string> =
         AllPropertyArkTypes<TSchemaObjectType> extends ReadonlyRecord<
@@ -60,8 +61,6 @@ export namespace arkTypeUtilityTypes {
         type.infer<TArrayArkType>[number];
     export type ArrayElementArkType<TArrayArkType extends Type<unknown[]>> =
         Type<ArrayElementType<TArrayArkType>>;
-
-    type _DistributeType<T> = T extends infer _ ? Type<T> : never;
 
     export type UnionOptions<TUnionArkType> =
         IsUnion<type.infer<TUnionArkType>> extends true

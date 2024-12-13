@@ -26,4 +26,4 @@ export type GetNonExpandoKeys<TObject> = Exclude<
     keyof TObject,
     GetExpandoKeys<TObject>
 >;
-export type GetExpandoType<TObject> = TObject[GetExpandoKeys<TObject>];
+export type GetExpandoValueType<TObject> = TObject[GetExpandoKeys<TObject>];

@@ -20,7 +20,6 @@ import {
 import { type Type, type type } from 'arktype';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import { introspect } from '../../type/index.js';
-import { isModel } from '../isModel.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 
 type UnknownRecord = Record<string | symbol, unknown>;
@@ -28,9 +27,9 @@ type KnownPropertyModels = {
     [key: string | symbol]: UnknownPropertyModel;
 };
 
-export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
-    extends ModelImpl<type.infer<TObjectArkType>, TObjectArkType>
-    implements ObjectModel<TObjectArkType>
+export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
+    extends ModelImpl<type.infer<TObjectSchema>, TObjectSchema>
+    implements ObjectModel<TObjectSchema>
 {
     public static createFromValue<
         TObjectArkType extends AnyObjectTypeConstraint,
@@ -76,9 +75,9 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public constructor(
-        value: type.infer<TObjectArkType>,
+        value: type.infer<TObjectSchema>,
         properties: KnownPropertyModels,
-        type: TObjectArkType,
+        type: TObjectSchema,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, 'object');
@@ -88,14 +87,12 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
 
     #properties: KnownPropertyModels;
 
-    public unknownGetCatchallType(): UnknownType | undefined {
-        throw new Error('TODO: CATCH ALL');
-        // return getObjectTypeInfo(this.type).stringMappingType;
+    public unknownGetCatchallType(): ReadonlyMap<UnknownType, UnknownType> | undefined {
+        return getObjectTypeInfo(this.type).getMappedKeys();
     }
 
-    public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyValueArkType<TObjectArkType> {
-        throw new Error('TODO: CATCH ALL');
-        // return getObjectTypeInfo(this.type).stringMappingType as never;
+    public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema> {
+        return getObjectTypeInfo(this.type).getMappedKeys() as arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema>;
     }
 
     private schemaForKey(key: string | symbol) {
@@ -104,11 +101,14 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
 
         let type: UnknownType | undefined = fixedProps.get(key);
         if (!type) {
-            const matchingKey = [...info.getMappedKeys().entries()].filter(
-                ([indexerKey, value]) => indexerKey.allows(key),
-            )[0];
-            if (matchingKey) {
-                type = matchingKey[1];
+            const mappedKeys = info.getMappedKeys();
+                if (mappedKeys) {
+                const matchingKey = [...mappedKeys.entries()].filter(
+                    ([indexerKey, value]) => indexerKey.allows(key),
+                )[0];
+                if (matchingKey) {
+                    type = matchingKey[1];
+                }
             }
         }
 
@@ -155,7 +155,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
                 valueModel: adopted,
             },
         };
-        const result = new ObjectImpl<TObjectArkType>(
+        const result = new ObjectImpl<TObjectSchema>(
             copy as never,
             propertyModels,
             this.type,
@@ -166,8 +166,8 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public async setProperty<
-        TKey extends keyof type.infer<TObjectArkType> & (string | symbol),
-        TValue extends type.infer<TObjectArkType>[TKey],
+        TKey extends keyof type.infer<TObjectSchema> & (string | symbol),
+        TValue extends type.infer<TObjectSchema>[TKey],
     >(
         key: TKey,
         /* @ts-expect-error -- Typescript can't confirm that Type<TValue> is a Type (it might be never) */
@@ -189,11 +189,11 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public getProperty<
-        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectArkType> &
+        TKey extends arkTypeUtilityTypes.AllPropertyKeys<TObjectSchema> &
             string,
-    >(key: TKey): TypedPropertyModelForKey<TObjectArkType, TKey> {
+    >(key: TKey): TypedPropertyModelForKey<TObjectSchema, TKey> {
         return this.unknownGetProperty(key) as TypedPropertyModelForKey<
-            TObjectArkType,
+            TObjectSchema,
             TKey
         >;
     }
@@ -231,7 +231,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         };
         delete propertyModels[from];
 
-        const result = new ObjectImpl<TObjectArkType>(
+        const result = new ObjectImpl<TObjectSchema>(
             copy as never,
             propertyModels,
             this.type,
@@ -268,7 +268,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
         };
         delete propertyModels[key];
 
-        const result = new ObjectImpl<TObjectArkType>(
+        const result = new ObjectImpl<TObjectSchema>(
             copy as never,
             propertyModels,
             this.type,
@@ -285,7 +285,7 @@ export class ObjectImpl<TObjectArkType extends AnyObjectTypeConstraint>
     }
 
     public getProperties(): readonly PropertyModelNoConstraint<
-        arkTypeUtilityTypes.AllPropertyArkTypes<TObjectArkType>
+        arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[] {
         return Object.values(this.#properties).sort((a, b) =>
             defaultSort(a.name, b.name),

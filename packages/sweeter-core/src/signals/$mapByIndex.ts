@@ -85,6 +85,7 @@ export function $mapByIndex<T, U>(
     };
 
     if (isSignal(map)) {
+        // TODO: this seems like it would need to be before the $calc so it runs first
         const cleanup = map.listenWeak(resetCache);
 
         // When the signal is no longer reachable, stop listening

@@ -16,11 +16,13 @@ import {
     Row,
 } from '@captainpants/sweeter-web-gummybear';
 import { type TypedEvent } from '@captainpants/sweeter-web';
+import { Type } from 'arktype';
 
 export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;
 
-    type: AnyTypeConstraint;
+    keyType: Type<string>;
+    valueType: AnyTypeConstraint;
 
     validate: (name: string) => Promise<string | null>;
 
@@ -30,9 +32,9 @@ export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
 
 export const ObjectEditorAddMappedModal: Component<
     ObjectEditorAddMappedModalProps
-> = ({ isOpen, type, validate, onCancelled, onFinished }, init) => {
+> = ({ isOpen, valueType, validate, onCancelled, onFinished }, init) => {
     const title = $calc(() => {
-        const typeResolved = $val(type);
+        const typeResolved = $val(valueType);
         const title = typeResolved.annotations()?.getBestDisplayName();
         return title;
     });
@@ -68,7 +70,7 @@ export const ObjectEditorAddMappedModal: Component<
                 return;
             }
 
-            await $peek(onFinished)(name.peek(), $peek(type));
+            await $peek(onFinished)(name.peek(), $peek(valueType));
         }
     };
 

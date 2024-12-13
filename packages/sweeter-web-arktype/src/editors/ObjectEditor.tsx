@@ -2,6 +2,7 @@ import {
     $calc,
     $if,
     $lastGood,
+    $mapByIdentity,
     $mutable,
     $peek,
     $val,
@@ -35,6 +36,7 @@ import { IconButton } from '../components/IconButton.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { ObjectEditorRenameMappedModal } from './ObjectEditorRenameMappedModal.js';
 import { ObjectEditorAddMappedModal } from './ObjectEditorAddMappedModal.js';
+import { Type } from 'arktype';
 
 export function ObjectEditor(
     { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
@@ -119,24 +121,11 @@ export function ObjectEditor(
     const owner = $calc(() => draft.value.value);
 
     const type = $calc(() => draft.value.type);
+    const mappedKeys = $calc(() => introspect.tryGetObjectTypeInfo(type.value)?.getMappedKeys());
 
     const { Child } = init.getContext(IconProviderContext);
 
     const { localize } = init.hook(LocalizerHook);
-
-    const catchallAllowedTypes = $calc(() => {
-        const catchallType = draft.value.unknownGetCatchallType();
-
-        if (!catchallType) {
-            return undefined;
-        }
-        const options = introspect.tryGetUnionTypeInfo(catchallType)?.branches;
-        if (options) {
-            return options;
-        } else {
-            return [catchallType];
-        }
-    });
 
     const fixedContent = $calc(() => {
         // AVOID SUBSCRIBING TO SIGNALS AT ROOT
@@ -257,93 +246,57 @@ export function ObjectEditor(
 
         return result;
     });
+    
 
     // TODO: this is subscribing to draft.value, which means that any changes will cause it to be rebuilt
     // this should come through $mapByIdentity (ideally).
-    const mappedContent = $calc(() => {
-        const entries = draft.value.unknownGetProperties();
-
-        // TODO: rename button, column sizes
-        const mappedProperties = entries.map((property) => ({
-            property: property,
-            render: () => {
-                const name = property.name;
-                const id = idGenerator.next(String(name));
-
-                return (
+    const mappedContent = $mapByIdentity(
+        $calc(() => draft.value.unknownGetProperties()),
+        (property, index) => {
+            const id = idGenerator.next('prop_' + property.name.toString());
+            return <div class={css.property}>
+                <div>
+                    <div class={css.propertyName}>{
+                        $calc(() => {
+                            const name = property.name;
+                            return <>
+                                <Label for={id}>{String(name)}</Label>
+                                {typeof name !== 'symbol' && (
+                                    <IconButton
+                                        icon="Edit"
+                                        onLeftClick={() => startRename(name)}
+                                    />
+                                )}
+                            </>
+                        })
+                    }</div>
                     <div>
-                        <div class={css.propertyName}>
-                            <Label for={id}>{String(name)}</Label>
-                            {typeof name !== 'symbol' && (
-                                <IconButton
-                                    icon="Edit"
-                                    onLeftClick={() => startRename(name)}
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <MapElementEditorPart
-                                id={idGenerator.next(String(name))}
-                                property={name}
-                                value={property.valueModel}
-                                updateElement={updatePropertyValue}
-                                indent={childIndent}
-                                ownerIdPath={idPath}
-                            />
-                        </div>
-                        <div class={css.deleteButtonRow}>
-                            <IconButton
-                                icon="Delete"
-                                hoverable
-                                onLeftClick={() => {
-                                    void remove(name);
-                                }}
-                            />
-                        </div>
+                        <MapElementEditorPart
+                            id={id}
+                            property={property.name}
+                            value={property.valueModel}
+                            updateElement={updatePropertyValue}
+                            indent={childIndent}
+                            ownerIdPath={idPath}
+                        />
                     </div>
-                );
-            },
-        }));
-
-        return mappedProperties.map(({ render }) => (
-            <div class={css.property}>{render()}</div>
-        ));
-    });
+                    <div class={css.deleteButtonRow}>
+                        <IconButton
+                            icon="Delete"
+                            hoverable
+                            onLeftClick={() => {
+                                void remove(property.name);
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+        },
+        (_, source) => String(source.name)
+    );
 
     const content = (
         <>
-            {$calc(() => {
-                if (renameKey.value) {
-                    const visible = $mutable(true);
-
-                    // Note that a self to self doesn't do a
-                    // validate but does trigger onFinished
-                    const validate = async (to: string) => {
-                        const property = draft.value.unknownGetProperty(to);
-                        if (property !== undefined) {
-                            return 'Property is already defined';
-                        }
-
-                        return null;
-                    };
-
-                    return (
-                        <ObjectEditorRenameMappedModal
-                            from={renameKey.value}
-                            isOpen={visible}
-                            validate={(_from, to) => validate(to)}
-                            onCancelled={() => {
-                                renameKey.value = null;
-                            }}
-                            onFinished={async (from, to) => {
-                                await onMoveProperty(from, to);
-                                renameKey.value = null;
-                            }}
-                        />
-                    );
-                }
-                return null;
-            })}
             {$if(
                 $calc(() => !$val(isRoot)),
                 () => (
@@ -360,57 +313,92 @@ export function ObjectEditor(
                 <div class={css.editorContainer}>{mappedContent}</div>
                 <div>
                     {$calc(() => {
-                        const catchallAllowedTypesResolved =
-                            catchallAllowedTypes.value;
-                        if (!catchallAllowedTypesResolved) {
+                        if (renameKey.value) {
+                            const visible = $mutable(true);
+
+                            // Note that a self to self doesn't do a
+                            // validate but does trigger onFinished
+                            const validate = async (to: string) => {
+                                const property = draft.value.unknownGetProperty(to);
+                                if (property !== undefined) {
+                                    return 'Property is already defined';
+                                }
+
+                                return null;
+                            };
+
+                            return (
+                                <ObjectEditorRenameMappedModal
+                                    from={renameKey.value}
+                                    isOpen={visible}
+                                    validate={(_from, to) => validate(to)}
+                                    onCancelled={() => {
+                                        renameKey.value = null;
+                                    }}
+                                    onFinished={async (from, to) => {
+                                        await onMoveProperty(from, to);
+                                        renameKey.value = null;
+                                    }}
+                                />
+                            );
+                        }
+                        return null;
+                    })}
+                    {$calc(() => {
+                        // ADD BUTTON
+                        if (!mappedKeys.value) {
                             return <></>;
                         }
 
-                        return catchallAllowedTypesResolved.map(
-                            (allowedType, index) => {
-                                const title =
-                                    catchallAllowedTypesResolved.length === 1
-                                        ? localize('Add')
-                                        : localize('Add {0}', [
-                                              allowedType
-                                                  .annotations()
-                                                  ?.getBestDisplayName(),
-                                          ]);
+                        const stringKeys = [...mappedKeys.value.entries()]
+                            .filter((tuple): tuple is [Type<string>, UnknownType] => introspect.isStringType(tuple[0]));
 
-                                const isOpen = $mutable(false);
+                        return stringKeys   
+                            .map(
+                                ([keyType, valueType]) => {
+                                    const title = stringKeys.length === 1
+                                            ? localize('Add')
+                                            : localize('Add {0}', [
+                                                keyType
+                                                    .annotations()
+                                                    ?.getBestDisplayName(),
+                                            ]);
 
-                                const validate = async (name: string) => {
-                                    const property =
-                                        draft.value.unknownGetProperty(name);
-                                    if (property !== undefined) {
-                                        return 'Property is already defined';
-                                    }
+                                    const isOpen = $mutable(false);
 
-                                    return null;
-                                };
+                                    const validate = async (name: string) => {
+                                        const property =
+                                            draft.value.unknownGetProperty(name);
+                                        if (property !== undefined) {
+                                            return 'Property is already defined';
+                                        }
 
-                                return (
-                                    <>
-                                        <ObjectEditorAddMappedModal
-                                            isOpen={isOpen}
-                                            type={allowedType}
-                                            validate={validate}
-                                            onCancelled={() =>
-                                                (isOpen.value = false)
-                                            }
-                                            onFinished={onAdd}
-                                        />
-                                        <IconButton
-                                            icon="Add"
-                                            text={title}
-                                            onLeftClick={() => {
-                                                isOpen.value = true;
-                                            }}
-                                        />
-                                    </>
-                                );
-                            },
-                        );
+                                        return null;
+                                    };
+
+                                    return (
+                                        <>
+                                            <ObjectEditorAddMappedModal
+                                                isOpen={isOpen}
+                                                keyType={keyType}
+                                                valueType={valueType}
+                                                validate={validate}
+                                                onCancelled={() =>
+                                                    (isOpen.value = false)
+                                                }
+                                                onFinished={onAdd}
+                                            />
+                                            <IconButton
+                                                icon="Add"
+                                                text={title}
+                                                onLeftClick={() => {
+                                                    isOpen.value = true;
+                                                }}
+                                            />
+                                        </>
+                                    );
+                                },
+                            );
                     })}
                 </div>
             </div>

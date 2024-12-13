@@ -8,7 +8,7 @@ import {
     type ElementModelNoConstraint,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
-import { type ParentTypeInfo } from '../parents.js';
+import { ParentRelationship, type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
@@ -128,12 +128,22 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
     ): Promise<this> {
         const eleDefinition = this.getElementType() as Type<unknown>;
 
-        const newModels = await mapAsync(newElements, async (item) => {
-            return await validateAndMakeModel(item, eleDefinition, {
-                type: this.type,
-                parentInfo: this.parentInfo,
-                relationship: { type: 'element' },
-            });
+        const fallback: ParentTypeInfo = {
+            type: this.type,
+            parentInfo: this.parentInfo,
+            relationship: { type: 'element' },
+        };
+
+        const newModels = await mapAsync(newElements, async (item, index) => {
+            // try and keep the previous element at this locations parentTypeInfo
+            // as we might be simply replacing the element.
+            // we might also be deleting and adding a different number of items,
+            // in which case it doesn't matter but we should try to keep
+            // referential consistency
+            const parentInfo: ParentTypeInfo =
+                this.#elementModels[index]?.parentInfo ?? fallback;
+
+            return await validateAndMakeModel(item, eleDefinition, parentInfo);
         });
 
         const newValue = [

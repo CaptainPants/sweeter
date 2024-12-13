@@ -17,6 +17,7 @@ import {
     $foreach,
     $if,
     $lastGood,
+    $mapByIndex,
 } from '@captainpants/sweeter-core';
 import { type EditorProps } from '../types.js';
 import {
@@ -123,7 +124,7 @@ export function ArrayEditor(
     return (
         <>
             <SortableList onSortEnd={move}>
-                {$foreach(
+                {$mapByIndex(
                     $derive(() => draft.value.unknownGetElements()),
                     (item, index) => {
                         return (

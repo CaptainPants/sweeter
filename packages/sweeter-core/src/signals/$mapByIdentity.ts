@@ -1,4 +1,5 @@
 import {
+    addExplicitStrongReference,
     arrayExcept,
     whenGarbageCollected,
 } from '@captainpants/sweeter-utilities';
@@ -12,11 +13,11 @@ import { SignalController } from './SignalController.js';
 import { $controller } from './$controller.js';
 import { SignalState } from './SignalState.js';
 
-export function $mapByIdentity<T, U>(
-    items: MightBeSignal<readonly T[]>,
-    mappingFun: MightBeSignal<(item: T, index: Signal<number>) => U>,
-    orderBy: (obj: U, source: T) => string | number,
-): Signal<readonly U[]> {
+export function $mapByIdentity<TInput, TMapped>(
+    items: MightBeSignal<readonly TInput[]>,
+    mappingFun: MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+    orderBy: (obj: TMapped, source: TInput) => string | number,
+): Signal<readonly TMapped[]> {
     if (!isSignal(items)) {
         // constant array, we can skip a lot of voodoo - the $derive is just because renderItem could be a signal
         return $derive(() =>
@@ -26,10 +27,10 @@ export function $mapByIdentity<T, U>(
 
     // This seems fairly abusive of the dependency tracking system - but ... eh
     const elementCache = new Map<
-        T,
+        TInput,
         {
-            source: T;
-            mappedElement: U;
+            source: TInput;
+            mappedElement: TMapped;
             indexSignal: Signal<number>;
             indexController: SignalController<number>;
         }
@@ -39,15 +40,15 @@ export function $mapByIdentity<T, U>(
     // including if it changes lengths to dispose/orphan signals that no longer
     // point to a valid index, and add new signals when necessary.
 
+    // Clear the cache if the map function changes
+    const resetCache = () => {
+        elementCache.clear();
+    };
+
     let cleanup: (() => void) | undefined;
 
     if (isSignal(mappingFun)) {
-        // Clear the cache if the map function changes
-        const resetCache = () => {
-            elementCache.clear();
-        };
-
-        cleanup = mappingFun.listen(resetCache);
+        cleanup = mappingFun.listenWeak(resetCache);
     }
 
     const resultSignal = $derive(() => {
@@ -73,7 +74,7 @@ export function $mapByIdentity<T, U>(
             .map((x) => x.source);
 
         let index = 0;
-        const result: U[] = [];
+        const result: TMapped[] = [];
 
         for (const item of orderedKeys) {
             let match = elementCache.get(item);
@@ -111,6 +112,7 @@ export function $mapByIdentity<T, U>(
         // Nothing in this method references resultSignal so this
         // should be pretty safe.
         whenGarbageCollected(resultSignal, cleanup);
+        addExplicitStrongReference(resultSignal, resetCache);
     }
 
     return resultSignal;

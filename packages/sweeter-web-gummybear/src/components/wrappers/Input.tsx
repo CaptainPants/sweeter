@@ -2,7 +2,7 @@ import {
     type IntrinsicElementProps,
     type Component,
     type PropertiesMightBeSignals,
-    $calc,
+    $derive,
     $val,
     type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
@@ -67,7 +67,7 @@ export const Input: Component<InputProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const classesFromProps = $calc(() => {
+    const classesFromProps = $derive(() => {
         const result: ElementCssClasses = [];
 
         applyStandardClasses(

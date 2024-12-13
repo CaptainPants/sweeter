@@ -1,11 +1,10 @@
-export * from './$calc.js';
+export * from './$derive.js';
 export * from './$defer.js';
 export * from './$controller.js';
 export * from './$constant.js';
 export * from './$elementOf.js';
 export * from './$lastGood.js';
 export * from './$mutable.js';
-export * from './$mutableFromCallbacks.js';
 export * from './$propertyOf.js';
 export * from './$readonly.js';
 

@@ -9,7 +9,7 @@ import {
 } from '@captainpants/sweeter-arktype-modeling';
 
 import {
-    $calc,
+    $derive,
     $val,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
@@ -59,13 +59,13 @@ export function EditorRoot<TSchema extends AnyTypeConstraint>({
     getAmbientValue,
     rules: rulesProp,
 }: Readonly<EditorRootProps<TSchema>>): JSX.Element {
-    const typedModel = $calc(() => {
+    const typedModel = $derive(() => {
         const val = $val(model);
         const result = asUnknown(val);
         return result;
     });
 
-    const newAmbientValuesCallback = $calc(() => {
+    const newAmbientValuesCallback = $derive(() => {
         const getAmbientValueResolved = $val(getAmbientValue);
 
         let newAmbientValuesCallback: AmbientValueCallback | undefined;
@@ -79,7 +79,7 @@ export function EditorRoot<TSchema extends AnyTypeConstraint>({
         return newAmbientValuesCallback;
     });
 
-    return $calc(() => {
+    return $derive(() => {
         const hostContext: EditorRootContextType = {
             settings: $val(settings) ?? defaultSettings,
             Modal: ({
@@ -107,7 +107,9 @@ export function EditorRoot<TSchema extends AnyTypeConstraint>({
                                 <Button
                                     variant="primary"
                                     onclick={onCommit}
-                                    disabled={$calc(() => !$val(commitEnabled))}
+                                    disabled={$derive(
+                                        () => !$val(commitEnabled),
+                                    )}
                                 >
                                     Ok
                                 </Button>

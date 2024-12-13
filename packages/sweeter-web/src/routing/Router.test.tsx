@@ -5,7 +5,7 @@ import {
     $mutable,
     Suspense,
     type Component,
-    $calc,
+    $derive,
 } from '@captainpants/sweeter-core';
 import { testRender } from '../test/testRender.js';
 import { Router } from './Router.js';
@@ -35,7 +35,7 @@ it('General', async () => {
                 <Router
                     routes={routes}
                     basePath={path}
-                    url={$calc(() => `https://google.com${path.value}`)}
+                    url={$derive(() => `https://google.com${path.value}`)}
                 />
             )}
         </Suspense>

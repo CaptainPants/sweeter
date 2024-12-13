@@ -1,4 +1,4 @@
-import { SignalBase } from './internal/Signal-implementations';
+import { SignalBase } from './internal/Signal-implementations/SignalBase';
 import { type InitiatedSignalState, type SignalState } from './SignalState';
 import { type Signal } from './types';
 

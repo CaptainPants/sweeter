@@ -1,5 +1,4 @@
-import { MutableValueSignal } from './internal/Signal-implementations.js';
-import { SignalState } from './SignalState.js';
+import { MutableValueSignal } from './internal/Signal-implementations/MutableValueSignal.js';
 import { type ReadWriteSignal } from './types.js';
 
 /**

@@ -1,9 +1,14 @@
-import { $calc, $controller, SignalState, flattenElements } from '../index.js';
+import {
+    $derive,
+    $controller,
+    SignalState,
+    flattenElements,
+} from '../index.js';
 
 it('throws through layers', () => {
     const controller = $controller<boolean>(SignalState.success(false));
 
-    const throws = $calc(() => {
+    const throws = $derive(() => {
         if (controller.signal.value) {
             throw new Error('ERROR');
         }
@@ -11,10 +16,10 @@ it('throws through layers', () => {
         return 'TEST';
     });
 
-    const calculated1 = $calc(() => {
+    const calculated1 = $derive(() => {
         return throws;
     });
-    const calculated2 = $calc(() => {
+    const calculated2 = $derive(() => {
         return calculated1;
     });
 

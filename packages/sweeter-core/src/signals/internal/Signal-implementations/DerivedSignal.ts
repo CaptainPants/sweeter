@@ -6,7 +6,7 @@ import {
     callAndReturnDependencies,
 } from '../../ambient.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
-import { type Signal, type CalculatedSignalOptions } from '../../types.js';
+import { type Signal, type DerivedSignalOptions } from '../../types.js';
 import { type ListenerSetCallback } from '../ListenerSet.js';
 import {
     finishCalculation,
@@ -14,8 +14,8 @@ import {
 } from '../../calculationDeferral.js';
 import { SignalState } from '../../SignalState.js';
 
-export class CalculatedSignal<T> extends SignalBase<T> {
-    constructor(calculation: () => T, options?: CalculatedSignalOptions) {
+export class DerivedSignal<T> extends SignalBase<T> {
+    constructor(calculation: () => T, options?: DerivedSignalOptions) {
         // Capture execution context before we do anything else
         const savedContext = saveExecutionContext();
 
@@ -25,7 +25,7 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         this.#capturedContext = savedContext;
 
         // Giving the function a name for debugging purposes
-        const calculatedSignalListener = () => {
+        const derivedSignalListener = () => {
             if (isBatching()) {
                 this.#dirty = true;
                 deferForBatchEnd(this);
@@ -36,10 +36,10 @@ export class CalculatedSignal<T> extends SignalBase<T> {
         };
         // For building debug tree. The 'as' just gets us type safety for the property.
         (
-            calculatedSignalListener as ListenerSetCallback<T>
+            derivedSignalListener as ListenerSetCallback<T>
         ).debugListenerForSignal = this;
 
-        this.#dependencyListener = calculatedSignalListener;
+        this.#dependencyListener = derivedSignalListener;
 
         this.#calculation = calculation;
 

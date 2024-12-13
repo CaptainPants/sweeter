@@ -11,7 +11,7 @@ import {
     $mutable,
     Suspense,
     type ComponentInit,
-    $calc,
+    $derive,
     Component,
 } from '@captainpants/sweeter-core';
 import { exampleData } from '@captainpants/arktype-example-data';

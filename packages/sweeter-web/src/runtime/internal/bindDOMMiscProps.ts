@@ -1,4 +1,8 @@
-import { listenWhileNotCollected, SignalState, type PropsWithIntrinsicAttributesFor } from '@captainpants/sweeter-core';
+import {
+    listenWhileNotCollected,
+    SignalState,
+    type PropsWithIntrinsicAttributesFor,
+} from '@captainpants/sweeter-core';
 import { isReadWriteSignal, isSignal } from '@captainpants/sweeter-core';
 import { type WebRuntime } from '../types.js';
 import { indeterminite } from '../../indeterminate.js';
@@ -102,23 +106,18 @@ export function bindDOMMiscProps<TElementType extends string>(
 
                 value.value = updatedValue;
             });
-            listenWhileNotCollected(
-                node,
-                value,
-                newState => {
-                    const prev = getDomProperty(node);
-                    const next = SignalState.getValue(newState);
-    
-                    // If the value hasn't changed, then don't. This is mostly here
-                    // so that the value.update in the addEventListener above doesn't
-                    // trigger a disruptive (focus/selection lost) write-back to the
-                    // input field.
-                    if (prev !== next) {
-                        setDomProperty(node, next);
-                    }
-                }
-            )
+            listenWhileNotCollected(node, value, (newState) => {
+                const prev = getDomProperty(node);
+                const next = SignalState.getValue(newState);
 
+                // If the value hasn't changed, then don't. This is mostly here
+                // so that the value.update in the addEventListener above doesn't
+                // trigger a disruptive (focus/selection lost) write-back to the
+                // input field.
+                if (prev !== next) {
+                    setDomProperty(node, next);
+                }
+            });
         } else if (mappedPropKey.startsWith('on')) {
             // ==== EVENT HANDLER BINDING ====
 
@@ -141,14 +140,10 @@ export function bindDOMMiscProps<TElementType extends string>(
             if (isSignal(value)) {
                 assignDataAttribute(node, mappedPropKey, value.peek());
 
-                listenWhileNotCollected(
-                    node,
-                    value,
-                    newState => {
-                        const value = SignalState.getValue(newState);
-                        assignDataAttribute(node, mappedPropKey, value);
-                    }
-                )
+                listenWhileNotCollected(node, value, (newState) => {
+                    const value = SignalState.getValue(newState);
+                    assignDataAttribute(node, mappedPropKey, value);
+                });
             } else {
                 assignDataAttribute(node, mappedPropKey, value);
             }
@@ -157,14 +152,10 @@ export function bindDOMMiscProps<TElementType extends string>(
             if (isSignal(value)) {
                 (node as unknown as Untyped)[mappedPropKey] = value.peek();
 
-                listenWhileNotCollected(
-                    node,
-                    value,
-                    newState => {
-                        const value = SignalState.getValue(newState);
-                        (node as unknown as Untyped)[mappedPropKey] = value;
-                    }
-                )
+                listenWhileNotCollected(node, value, (newState) => {
+                    const value = SignalState.getValue(newState);
+                    (node as unknown as Untyped)[mappedPropKey] = value;
+                });
             } else {
                 (node as unknown as Untyped)[mappedPropKey] = value;
             }

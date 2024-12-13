@@ -1,5 +1,5 @@
 import {
-    $calc,
+    $derive,
     $val,
     type ComponentInit,
     type PropertiesMightBeSignals,
@@ -22,7 +22,7 @@ export function AmbientValues(
 ): JSX.Element {
     const existingContext = init.getContext(AmbientValuesContext);
 
-    const ambientValueCallback = $calc<AmbientValueCallback>(() => {
+    const ambientValueCallback = $derive<AmbientValueCallback>(() => {
         const newCallbackResolved = $val(newCallback);
         const existingContextResolved = $val(existingContext);
 
@@ -46,7 +46,7 @@ export function AmbientValues(
     });
 
     return AmbientValuesContext.invokeWith(ambientValueCallback, () => {
-        return $calc(() => {
+        return $derive(() => {
             return $val(children)?.();
         });
     });

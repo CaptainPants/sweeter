@@ -27,10 +27,7 @@ export function createDOMElement<TElementTypeString extends string>(
 
     const cleanupFaultContext = ComponentFaultContext.replace({
         reportFaulted(err) {
-            console.warn(
-                'Fault (createDOMElement): ',
-                err,
-            );
+            console.warn('Fault (createDOMElement): ', err);
             // If its mounted to the document, we can potentially cheat
             // If its not, then we need to make the result invalid -- and currently its a raw DOM Element
             resultController.updateState(SignalState.error(err));

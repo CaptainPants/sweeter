@@ -32,7 +32,7 @@ export class MutableValueSignal<T>
     #updateState(state: SignalState<T>): void {
         // We COULD allow error values to be assigned
         // (by making this public)
-        // but thats hard for MutableCalculatedSignal and it
+        // but thats hard for MutableDerivedSignal and it
         // would be good to be consistent between
         // implementations of ReadWriteSignal
         announceMutatingSignal(this);

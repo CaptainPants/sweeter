@@ -11,10 +11,9 @@ import {
     type AnyTypeConstraint,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
-    $calc,
+    $derive,
     $if,
     $lastGood,
-    $mutableFromCallbacks,
     $peek,
     $val,
 } from '@captainpants/sweeter-core';
@@ -30,9 +29,9 @@ export function UnionEditor({
 }: Readonly<EditorProps>): JSX.Element {
     const typedModel = $lastGood(() => cast($val(model), asUnion));
 
-    const type = $calc(() => typedModel.value.type);
+    const type = $derive(() => typedModel.value.type);
 
-    const alternatives = $calc(() => {
+    const alternatives = $derive(() => {
         const options = introspect.getUnionTypeInfo(type.value).branches;
         // Only depends on 'type' signal
         return options.map((alternative) => {
@@ -43,7 +42,7 @@ export function UnionEditor({
         });
     });
 
-    const selectOptions = $calc(() => {
+    const selectOptions = $derive(() => {
         // Only depends on 'alternatives' signal
         return alternatives.value.map((x, index) => ({
             text: x.label,
@@ -60,7 +59,7 @@ export function UnionEditor({
         await $peek(replace)(defaultModel);
     };
 
-    const resolved = $calc(() => typedModel.value.unknownResolve());
+    const resolved = $derive(() => typedModel.value.unknownResolve());
 
     const replaceResolved = async (
         newResolvedModel: UnknownModel,
@@ -71,11 +70,11 @@ export function UnionEditor({
         await $peek(replace)(defaultModel);
     };
 
-    const typeIndex = $calc(() =>
+    const typeIndex = $derive(() =>
         findUnionOptionIndexForValue(typedModel.value.value, type.value),
     );
 
-    const typeValue = $mutableFromCallbacks(
+    const typeValue = $derive(
         () => (typeIndex.value ?? -1).toString(),
         (value) => {
             const index = Number(value);
@@ -95,13 +94,13 @@ export function UnionEditor({
                 />
             </div>
             {$if(
-                $calc(() => !introspect.isLiteralType(resolved.value.type)),
+                $derive(() => !introspect.isLiteralType(resolved.value.type)),
                 () => (
                     <EditorHost
                         model={resolved}
                         replace={replaceResolved}
                         indent={indent}
-                        idPath={$calc(() =>
+                        idPath={$derive(() =>
                             idPaths.union($val(idPath), typeIndex.value ?? -1),
                         )}
                     />

@@ -2,7 +2,7 @@ import {
     type IntrinsicElementProps,
     type Component,
     type PropertiesMightBeSignals,
-    $calc,
+    $derive,
     $val,
 } from '@captainpants/sweeter-core';
 import { type VariantName } from '../../internal/constants.js';
@@ -53,7 +53,7 @@ export const Button: Component<ButtonProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const classesFromProps = $calc(() => {
+    const classesFromProps = $derive(() => {
         const result: ElementCssClasses = [];
 
         applyStandardClasses(

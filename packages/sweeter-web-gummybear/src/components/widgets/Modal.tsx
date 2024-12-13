@@ -1,7 +1,7 @@
 import {
     type Component,
     Portal,
-    $calc,
+    $derive,
     $val,
     type PropertiesMightBeSignals,
     $children,
@@ -156,7 +156,7 @@ export const Modal: Component<ModalProps> = (
         };
     });
 
-    return $calc(() => {
+    return $derive(() => {
         if ($val(isOpen) === false) {
             // Is it OK not to mount(/invoke callback) the children?
             return undefined;

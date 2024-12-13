@@ -1,24 +1,24 @@
-import { type CalculatedSignalOptions, type Signal } from './types.js';
-import { CalculatedSignal } from './internal/Signal-implementations.js';
+import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
+import { type DerivedSignalOptions, type Signal } from './types.js';
 
 const noLastValidValue = Symbol('notSet');
 
 /**
- * Similar to $calc. The signal resulting from calling this function will keep track of the most recent 'good' value, and if the calculation starts throwing errors, will return the last good value. If the first time the calculation throws, then
+ * Similar to $derive. The signal resulting from calling this function will keep track of the most recent 'good' value, and if the calculation starts throwing errors, will return the last good value. If the first time the calculation throws, then
  * $lastGood will throw - this is intentional and prevents a case where there is no 'last good' value.
- * @param calculation
+ * @param derivationCallback
  * @param options
  * @returns
  */
 export function $lastGood<T>(
-    calculation: () => T,
-    options?: CalculatedSignalOptions,
+    derivationCallback: () => T,
+    options?: DerivedSignalOptions,
 ): Signal<T> {
     let lastValid: typeof noLastValidValue | T = noLastValidValue;
 
     const inner = () => {
         try {
-            lastValid = calculation();
+            lastValid = derivationCallback();
             return lastValid;
         } catch (err) {
             if (lastValid === noLastValidValue) {
@@ -28,9 +28,9 @@ export function $lastGood<T>(
             return lastValid;
         }
     };
-    const result = new CalculatedSignal(inner, options);
+    const result = new DerivedSignal(inner, options);
 
-    // Force the $calc to initialize, and throw if its an exception
+    // Force the $derive to initialize, and throw if its an exception
     // this prevents a case where there is no 'last good' value and
     // therefore you can trust that a $lastGood signal once created
     // will always have a value and not throw.

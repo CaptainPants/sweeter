@@ -1,4 +1,4 @@
-import { $calc, $val } from '@captainpants/sweeter-core';
+import { $derive, $val } from '@captainpants/sweeter-core';
 import {
     type ReadWriteSignal,
     type IntrinsicElementProps,
@@ -64,7 +64,7 @@ export const TextArea: Component<TextAreaProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const classesFromProps = $calc(() => {
+    const classesFromProps = $derive(() => {
         const result: ElementCssClasses = [];
 
         applyStandardClasses(

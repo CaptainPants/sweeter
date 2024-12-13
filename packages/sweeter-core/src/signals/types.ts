@@ -29,7 +29,7 @@ export interface SignalCommon<T> {
     peekState(ensureInit?: boolean): SignalState<T>;
 
     /**
-     * Use this to check if a signal has been initialized. This can be useful in a $calc that references itself.
+     * Use this to check if a signal has been initialized. This can be useful in a $derive that references itself.
      */
     readonly inited: boolean;
     readonly failed: boolean;
@@ -99,7 +99,7 @@ export interface WritableSignal<T> extends SignalCommon<T> {
     value: T;
 }
 
-export interface ReadWriteSignal<T> extends WritableSignal<T> {
+export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {
     readonly [signalMarker]: true;
 
     value: T;
@@ -114,7 +114,7 @@ export type UnsignalAll<
 
 export type CallbackDelayedRunner = (callback: () => void) => void;
 
-export interface CalculatedSignalOptions {
+export interface DerivedSignalOptions {
     /**
      * If this AbortSignal is aborted then the calculated signal 'release' - meaning that it stops being updated when
      * its dependencies are updated.

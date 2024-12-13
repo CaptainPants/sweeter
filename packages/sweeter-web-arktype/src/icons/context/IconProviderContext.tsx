@@ -1,7 +1,7 @@
 import {
     type Component,
     Context,
-    $calc,
+    $derive,
     $val,
 } from '@captainpants/sweeter-core';
 
@@ -27,7 +27,9 @@ function createIconComponent(icon: IconNode): Component<IconProps> {
 
         const classes: ElementCssClasses[] = [classProp, css.iconContainer];
         if (hoverable) {
-            classes.push($calc(() => ($val(hoverable) ? css.hoverable : null)));
+            classes.push(
+                $derive(() => ($val(hoverable) ? css.hoverable : null)),
+            );
         }
 
         return (

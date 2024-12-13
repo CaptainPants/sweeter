@@ -4,7 +4,7 @@ import {
     type PropertiesMightBeSignals,
 } from '../types.js';
 import { type Signal } from '../signals/types.js';
-import { $calc } from '../signals/$calc.js';
+import { $derive } from '../signals/$derive.js';
 import { $mutable } from '../signals/$mutable.js';
 import { $val } from '../signals/$val.js';
 import { SuspenseContext } from './SuspenseContext.js';
@@ -13,7 +13,7 @@ import { getRuntime } from '../runtime/Runtime.js';
 export type AsyncProps<T> = PropertiesMightBeSignals<{
     loadData: (abort: AbortSignal) => Promise<T>;
     /**
-     * Note that this is called inside a $calc, so signals can be subscribed without additionally wrapping in another $calc.
+     * Note that this is called inside a $derive, so signals can be subscribed without additionally wrapping in another $derive.
      * @param data
      * @returns
      */
@@ -38,9 +38,9 @@ export function Async<T>(
         resolution: 'LOADING',
     });
 
-    const resolution = $calc(() => data.value.resolution); // So that our result $calc can subscribe to just the resolution type, not the value/error
+    const resolution = $derive(() => data.value.resolution); // So that our result $derive can subscribe to just the resolution type, not the value/error
 
-    const latestResult: Signal<T> = $calc<T>(() => {
+    const latestResult: Signal<T> = $derive<T>(() => {
         if (data.value.resolution === 'SUCCESS') {
             return data.value.result;
         } else if (data.value.resolution === 'ERROR') {
@@ -100,7 +100,7 @@ export function Async<T>(
         },
     );
 
-    return $calc(() => {
+    return $derive(() => {
         if (resolution.value === 'LOADING') {
             // Suspense should be showing
             return undefined;
@@ -119,7 +119,7 @@ export function Async<T>(
 export function $async<T>(
     loadData: MightBeSignal<(abort: AbortSignal) => Promise<T>>,
     /**
-     * Note that this is called inside a $calc, so signals can be subscribed without additionally wrapping in another $calc.
+     * Note that this is called inside a $derive, so signals can be subscribed without additionally wrapping in another $derive.
      */
     render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
 ): JSX.Element {

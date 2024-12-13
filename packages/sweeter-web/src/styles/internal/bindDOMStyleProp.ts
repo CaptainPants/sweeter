@@ -3,7 +3,7 @@ import {
     SignalState,
     type Signal,
 } from '@captainpants/sweeter-core';
-import { $calc, $val } from '@captainpants/sweeter-core';
+import { $derive, $val } from '@captainpants/sweeter-core';
 import { type ElementCssStyles } from '../../IntrinsicAttributes.js';
 import { translateNumericPropertyValue } from './translateNumericPropertyValue.js';
 
@@ -11,7 +11,7 @@ export function bindDOMStyleProp(
     node: HTMLElement | SVGElement,
     styles: ElementCssStyles | Signal<ElementCssStyles | undefined>,
 ) {
-    const signal = $calc(() => {
+    const signal = $derive(() => {
         const result: string[] = [];
 
         const stylesValue = $val(styles);

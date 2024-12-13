@@ -33,7 +33,7 @@ export function trackingIsAnError<T>(callback: () => T): T {
 export function announceMutatingSignal(signal: Signal<unknown>) {
     if (_ambientChangesBlocked) {
         throw new TypeError(
-            'Mutating a signal inside a CalculatedSignal is not allowed.',
+            'Mutating a signal inside a DerivedSignal is not allowed.',
         );
     }
 }

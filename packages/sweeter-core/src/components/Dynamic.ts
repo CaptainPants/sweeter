@@ -1,11 +1,11 @@
-import { $calc } from '../signals/$calc.js';
+import { $derive } from '../signals/$derive.js';
 import { $val } from '../signals/$val.js';
 import { type PropertiesMightBeSignals } from '../types.js';
 
 export type DynamicProps<T> = PropertiesMightBeSignals<{
     value: T;
     /**
-     * This is called inside a $calc, so 1) you cannot directly mutate signals in the children callback unless you use untrack, and 2) any signals used will be subscribed to.
+     * This is called inside a $derive, so 1) you cannot directly mutate signals in the children callback unless you use untrack, and 2) any signals used will be subscribed to.
      * @param value
      * @returns
      */
@@ -24,7 +24,7 @@ export function Dynamic<T>({ children, value }: DynamicProps<T>): JSX.Element {
         return $val(children)(actualValue);
     };
 
-    return $calc(showCalculation);
+    return $derive(showCalculation);
 }
 
-// No shortcut here as you can just use $calc directly
+// No shortcut here as you can just use $derive directly

@@ -1,5 +1,5 @@
 import { getRuntime } from '../runtime/Runtime.js';
-import { $calc } from '../signals/$calc.js';
+import { $derive } from '../signals/$derive.js';
 import { $val } from '../signals/$val.js';
 import {
     type Component,
@@ -16,7 +16,7 @@ export type ShowProps = PropertiesMightBeSignals<{
     /**
      * Content to render if condition is met.
      *
-     * This is invoked inside a $calc.
+     * This is invoked inside a $derive.
      * @returns
      */
     children: () => JSX.Element;
@@ -24,7 +24,7 @@ export type ShowProps = PropertiesMightBeSignals<{
     /**
      * Content to render if condition is not met.
      *
-     * This is invoked inside a $calc.
+     * This is invoked inside a $derive.
      */
     otherwise?: (() => JSX.Element) | undefined;
 }>;
@@ -47,14 +47,14 @@ export const Show: Component<ShowProps> = ({
         }
     };
 
-    return $calc(showCalculation);
+    return $derive(showCalculation);
 };
 
 /**
  * Conditionally render some content.
  * @param condition Condition, used to decide whether or not to render 'children'.
- * @param ifTrue Content to render if condition is met. This is invoked inside a $calc.
- * @param otherwise Content to render if condition is not met. This is invoked inside a $calc.
+ * @param ifTrue Content to render if condition is met. This is invoked inside a $derive.
+ * @param otherwise Content to render if condition is not met. This is invoked inside a $derive.
  * @returns
  */
 export function $if(

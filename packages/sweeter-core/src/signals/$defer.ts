@@ -1,4 +1,4 @@
-import { DeferredSignal } from './internal/Signal-implementations.js';
+import { DeferredSignal } from './internal/Signal-implementations/DeferredSignal.js';
 import { type CallbackDelayedRunner, type Signal } from './types.js';
 
 export function $defer<T>(

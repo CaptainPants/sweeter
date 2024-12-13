@@ -2,7 +2,7 @@ import {
     type ComponentInit,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { $calc, $val } from '@captainpants/sweeter-core';
+import { $derive, $val } from '@captainpants/sweeter-core';
 import { type Route } from './types.js';
 import { pathDoesNotMatch } from './pathDoesNotMatch.js';
 
@@ -19,9 +19,9 @@ export function Router(
     { basePath, url, routes, fallback }: PropertiesMightBeSignals<RouterProps>,
     init: ComponentInit,
 ): JSX.Element {
-    const asUrl = $calc(() => new URL($val(url)));
+    const asUrl = $derive(() => new URL($val(url)));
 
-    return $calc(() => {
+    return $derive(() => {
         const path = asUrl.value.pathname; // Should use $val(basePath) to create a root relative path;
 
         for (const route of $val(routes)) {

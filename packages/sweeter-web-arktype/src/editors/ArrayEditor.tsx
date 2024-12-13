@@ -9,7 +9,7 @@ import {
 } from '@captainpants/sweeter-arktype-modeling';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
-    $calc,
+    $derive,
     $peek,
     $val,
     LocalizerHook,
@@ -105,7 +105,7 @@ export function ArrayEditor(
         draft.value = copy;
     };
 
-    const allowedTypes = $calc(() => {
+    const allowedTypes = $derive(() => {
         const elementType = draft.value.unknownGetElementType();
 
         const unionTypeInfo = introspect.tryGetUnionTypeInfo(elementType);
@@ -124,7 +124,7 @@ export function ArrayEditor(
         <>
             <SortableList onSortEnd={move}>
                 {$foreach(
-                    $calc(() => draft.value.unknownGetElements()),
+                    $derive(() => draft.value.unknownGetElements()),
                     (item, index) => {
                         return (
                             <div class={css.item}>
@@ -158,7 +158,7 @@ export function ArrayEditor(
                 )}
             </SortableList>
             {$if(
-                $calc(() => (validationErrors.value?.length ?? 0) > 0),
+                $derive(() => (validationErrors.value?.length ?? 0) > 0),
                 () => (
                     <div>
                         <ValidationDisplay errors={validationErrors} />
@@ -166,7 +166,7 @@ export function ArrayEditor(
                 ),
             )}
             <div>
-                {$calc(() =>
+                {$derive(() =>
                     allowedTypes.value.map((allowedType, index) => {
                         const title =
                             allowedTypes.value.length === 1

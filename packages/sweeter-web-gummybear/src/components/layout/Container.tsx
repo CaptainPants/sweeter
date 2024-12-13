@@ -3,7 +3,7 @@ import {
     type Component,
     type IntrinsicElementAttributes,
     type PropertiesMightBeSignals,
-    $calc,
+    $derive,
 } from '@captainpants/sweeter-core';
 import {
     breakpointNameToSizeMap,
@@ -44,7 +44,7 @@ export const Container: Component<ContainerProps> = ({
 }) => {
     const sizeStyle: ElementCssStyles = {
         'max-width': isSignal(size)
-            ? $calc(() =>
+            ? $derive(() =>
                   size.value
                       ? `${breakpointNameToSizeMap[size.value]}px`
                       : undefined,

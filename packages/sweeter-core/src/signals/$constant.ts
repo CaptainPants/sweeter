@@ -1,5 +1,5 @@
-import { $calc } from './$calc.js';
+import { $derive } from './$derive.js';
 
 export function $constant<T>(value: T) {
-    return $calc(() => value);
+    return $derive(() => value);
 }

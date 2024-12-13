@@ -2,7 +2,7 @@ import { type EditorProps } from '../types.js';
 
 import { ModalEditor } from './ModalEditor.js';
 import {
-    $calc,
+    $derive,
     $mutable,
     $val,
     type PropertiesMightBeSignals,
@@ -22,19 +22,18 @@ export function ModalEditorIfTooSmall(
     init: ComponentInit,
 ): JSX.Element {
     const measuredWidth = $mutable(0);
-    const useModal = $calc(() => {
+    const useModal = $derive(() => {
         const minWidthResolved = $val(minWidth);
 
-        const result = (
+        const result =
             // minWidgthResolved === undefined is not a sensible condition, but if it is the case then we never use a modal
             minWidthResolved !== undefined &&
-            measuredWidth.value <= minWidthResolved
-        );
-        
+            measuredWidth.value <= minWidthResolved;
+
         return result;
     });
 
-    const content = $calc(() => {
+    const content = $derive(() => {
         const useModelResolved = $val(useModal);
 
         if (useModelResolved) {

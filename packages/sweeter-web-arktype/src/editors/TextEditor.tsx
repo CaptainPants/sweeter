@@ -7,7 +7,7 @@ import {
 } from '@captainpants/sweeter-arktype-modeling';
 import { DraftHook } from '../hooks/DraftHook.js';
 import {
-    $calc,
+    $derive,
     $lastGood,
     $peek,
     $val,
@@ -50,7 +50,7 @@ export function TextEditor(
         },
     );
 
-    const invalid = $calc(
+    const invalid = $derive(
         () =>
             validationErrors.value !== null &&
             validationErrors.value.length > 0,

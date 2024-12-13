@@ -1,7 +1,7 @@
 import { exampleData } from '@captainpants/arktype-example-data';
 import {
     $async,
-    $calc,
+    $derive,
     $mutable,
     Component,
     WithId,
@@ -18,7 +18,7 @@ import { EditorRoot } from '@captainpants/sweeter-web-arktype';
 
 export const Example: Component = (_props, _init) => {
     const typeName = $mutable<keyof typeof exampleData>('StringOnly');
-    const type = $calc(() => exampleData[typeName.value]);
+    const type = $derive(() => exampleData[typeName.value]);
 
     const keys = Object.keys(
         exampleData,
@@ -50,7 +50,7 @@ export const Example: Component = (_props, _init) => {
                     )}
                 </WithId>
                 {$async(type, (model) => {
-                    return $calc(() => {
+                    return $derive(() => {
                         // This is a little fruity - we're returning a mutable signal
                         // that can be updated by UI elements.
                         const state = $mutable(model.value);

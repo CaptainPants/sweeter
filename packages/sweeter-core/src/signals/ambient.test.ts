@@ -1,7 +1,7 @@
 import { $mutable } from './$mutable.js';
 import { callAndReturnDependencies } from './ambient.js';
 
-it('CalculatedSignal listeners invoked with correct value after update', () => {
+it('DerivedSignal listeners invoked with correct value after update', () => {
     const mutableSignal1 = $mutable(1);
     const mutableSignal2 = $mutable(2);
 

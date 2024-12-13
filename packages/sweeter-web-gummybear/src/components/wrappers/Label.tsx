@@ -2,7 +2,7 @@ import {
     type IntrinsicElementProps,
     type Component,
     type PropertiesMightBeSignals,
-    $calc,
+    $derive,
     $val,
 } from '@captainpants/sweeter-core';
 import {
@@ -43,7 +43,7 @@ export const Label: Component<LabelProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const classesFromProps = $calc(() => {
+    const classesFromProps = $derive(() => {
         const result: ElementCssClasses = [];
 
         applyStandardClasses(result, {

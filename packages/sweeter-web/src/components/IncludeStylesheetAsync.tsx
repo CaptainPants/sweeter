@@ -1,7 +1,7 @@
 /* @jsxImportSource .. */
 
 import {
-    $calc,
+    $derive,
     $val,
     Async,
     type PropertiesMightBeSignals,
@@ -18,7 +18,7 @@ export type IncludeStylesheetAsyncProps = PropertiesMightBeSignals<{
 export const IncludeStylesheetAsync: Component<IncludeStylesheetAsyncProps> = ({
     stylesheet,
 }) => {
-    return $calc(() => {
+    return $derive(() => {
         return (
             <Async loadData={() => $val(stylesheet).promise}>
                 {(stylesheet) => {

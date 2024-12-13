@@ -1,5 +1,5 @@
 import {
-    $calc,
+    $derive,
     $if,
     $lastGood,
     $mapByIdentity,
@@ -48,7 +48,7 @@ export function ObjectEditor(
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $calc(() => $val(indent) + 1);
+    const childIndent = $derive(() => $val(indent) + 1);
 
     const idGenerator = init.idGenerator;
 
@@ -118,16 +118,18 @@ export function ObjectEditor(
         local,
     };
 
-    const owner = $calc(() => draft.value.value);
+    const owner = $derive(() => draft.value.value);
 
-    const type = $calc(() => draft.value.type);
-    const mappedKeys = $calc(() => introspect.tryGetObjectTypeInfo(type.value)?.getMappedKeys());
+    const type = $derive(() => draft.value.type);
+    const mappedKeys = $derive(() =>
+        introspect.tryGetObjectTypeInfo(type.value)?.getMappedKeys(),
+    );
 
     const { Child } = init.getContext(IconProviderContext);
 
     const { localize } = init.hook(LocalizerHook);
 
-    const fixedContent = $calc(() => {
+    const fixedContent = $derive(() => {
         // AVOID SUBSCRIBING TO SIGNALS AT ROOT
         // As it will rebuild the structure completely, and you will lose element focus/selection etc.
         // We necessarily subscribe to the type signal, as we use its structure to build the editor structure.
@@ -149,7 +151,7 @@ export function ObjectEditor(
 
         const result = categorizedProperties.map(
             ({ category, properties }, categoryIndex) => {
-                const propertyVisiblePerProperty = $calc(() => {
+                const propertyVisiblePerProperty = $derive(() => {
                     const individualVisibility = properties.map(
                         ({ property }) => {
                             const propertyModel =
@@ -171,7 +173,7 @@ export function ObjectEditor(
                     return individualVisibility;
                 });
 
-                const anyVisibleInCategory = $calc(() =>
+                const anyVisibleInCategory = $derive(() =>
                     propertyVisiblePerProperty.value.some((x) => x),
                 );
 
@@ -197,7 +199,7 @@ export function ObjectEditor(
                             so will not be re-calculated when the model is updated. */}
                         {properties.map(({ property, id }, index) => {
                             return $if(
-                                $calc(
+                                $derive(
                                     () =>
                                         propertyVisiblePerProperty.value[
                                             index
@@ -220,7 +222,7 @@ export function ObjectEditor(
                                             <KnownPropertyEditorPart
                                                 id={id}
                                                 property={property.name}
-                                                value={$calc(
+                                                value={$derive(
                                                     // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
                                                     // No other signals are referenced
                                                     () =>
@@ -246,59 +248,64 @@ export function ObjectEditor(
 
         return result;
     });
-    
 
     // TODO: this is subscribing to draft.value, which means that any changes will cause it to be rebuilt
     // this should come through $mapByIdentity (ideally).
     const mappedContent = $mapByIdentity(
-        $calc(() => draft.value.unknownGetProperties()),
+        $derive(() => draft.value.unknownGetProperties()),
         (property, index) => {
             const id = idGenerator.next('prop_' + property.name.toString());
-            return <div class={css.property}>
-                <div>
-                    <div class={css.propertyName}>{
-                        $calc(() => {
-                            const name = property.name;
-                            return <>
-                                <Label for={id}>{String(name)}</Label>
-                                {typeof name !== 'symbol' && (
-                                    <IconButton
-                                        icon="Edit"
-                                        onLeftClick={() => startRename(name)}
-                                    />
-                                )}
-                            </>
-                        })
-                    }</div>
+            return (
+                <div class={css.property}>
                     <div>
-                        <MapElementEditorPart
-                            id={id}
-                            property={property.name}
-                            value={property.valueModel}
-                            updateElement={updatePropertyValue}
-                            indent={childIndent}
-                            ownerIdPath={idPath}
-                        />
-                    </div>
-                    <div class={css.deleteButtonRow}>
-                        <IconButton
-                            icon="Delete"
-                            hoverable
-                            onLeftClick={() => {
-                                void remove(property.name);
-                            }}
-                        />
+                        <div class={css.propertyName}>
+                            {$derive(() => {
+                                const name = property.name;
+                                return (
+                                    <>
+                                        <Label for={id}>{String(name)}</Label>
+                                        {typeof name !== 'symbol' && (
+                                            <IconButton
+                                                icon="Edit"
+                                                onLeftClick={() =>
+                                                    startRename(name)
+                                                }
+                                            />
+                                        )}
+                                    </>
+                                );
+                            })}
+                        </div>
+                        <div>
+                            <MapElementEditorPart
+                                id={id}
+                                property={property.name}
+                                value={property.valueModel}
+                                updateElement={updatePropertyValue}
+                                indent={childIndent}
+                                ownerIdPath={idPath}
+                            />
+                        </div>
+                        <div class={css.deleteButtonRow}>
+                            <IconButton
+                                icon="Delete"
+                                hoverable
+                                onLeftClick={() => {
+                                    void remove(property.name);
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
+            );
         },
-        (_, source) => String(source.name)
+        (_, source) => String(source.name),
     );
 
     const content = (
         <>
             {$if(
-                $calc(() => !$val(isRoot)),
+                $derive(() => !$val(isRoot)),
                 () => (
                     <div
                         class={css.editorIndent}
@@ -312,14 +319,15 @@ export function ObjectEditor(
                 <div class={css.editorContainer}>{fixedContent}</div>
                 <div class={css.editorContainer}>{mappedContent}</div>
                 <div>
-                    {$calc(() => {
+                    {$derive(() => {
                         if (renameKey.value) {
                             const visible = $mutable(true);
 
                             // Note that a self to self doesn't do a
                             // validate but does trigger onFinished
                             const validate = async (to: string) => {
-                                const property = draft.value.unknownGetProperty(to);
+                                const property =
+                                    draft.value.unknownGetProperty(to);
                                 if (property !== undefined) {
                                     return 'Property is already defined';
                                 }
@@ -344,61 +352,63 @@ export function ObjectEditor(
                         }
                         return null;
                     })}
-                    {$calc(() => {
+                    {$derive(() => {
                         // ADD BUTTON
                         if (!mappedKeys.value) {
                             return <></>;
                         }
 
-                        const stringKeys = [...mappedKeys.value.entries()]
-                            .filter((tuple): tuple is [Type<string>, UnknownType] => introspect.isStringType(tuple[0]));
+                        const stringKeys = [
+                            ...mappedKeys.value.entries(),
+                        ].filter(
+                            (tuple): tuple is [Type<string>, UnknownType] =>
+                                introspect.isStringType(tuple[0]),
+                        );
 
-                        return stringKeys   
-                            .map(
-                                ([keyType, valueType]) => {
-                                    const title = stringKeys.length === 1
-                                            ? localize('Add')
-                                            : localize('Add {0}', [
-                                                keyType
-                                                    .annotations()
-                                                    ?.getBestDisplayName(),
-                                            ]);
+                        return stringKeys.map(([keyType, valueType]) => {
+                            const title =
+                                stringKeys.length === 1
+                                    ? localize('Add')
+                                    : localize('Add {0}', [
+                                          keyType
+                                              .annotations()
+                                              ?.getBestDisplayName(),
+                                      ]);
 
-                                    const isOpen = $mutable(false);
+                            const isOpen = $mutable(false);
 
-                                    const validate = async (name: string) => {
-                                        const property =
-                                            draft.value.unknownGetProperty(name);
-                                        if (property !== undefined) {
-                                            return 'Property is already defined';
+                            const validate = async (name: string) => {
+                                const property =
+                                    draft.value.unknownGetProperty(name);
+                                if (property !== undefined) {
+                                    return 'Property is already defined';
+                                }
+
+                                return null;
+                            };
+
+                            return (
+                                <>
+                                    <ObjectEditorAddMappedModal
+                                        isOpen={isOpen}
+                                        keyType={keyType}
+                                        valueType={valueType}
+                                        validate={validate}
+                                        onCancelled={() =>
+                                            (isOpen.value = false)
                                         }
-
-                                        return null;
-                                    };
-
-                                    return (
-                                        <>
-                                            <ObjectEditorAddMappedModal
-                                                isOpen={isOpen}
-                                                keyType={keyType}
-                                                valueType={valueType}
-                                                validate={validate}
-                                                onCancelled={() =>
-                                                    (isOpen.value = false)
-                                                }
-                                                onFinished={onAdd}
-                                            />
-                                            <IconButton
-                                                icon="Add"
-                                                text={title}
-                                                onLeftClick={() => {
-                                                    isOpen.value = true;
-                                                }}
-                                            />
-                                        </>
-                                    );
-                                },
+                                        onFinished={onAdd}
+                                    />
+                                    <IconButton
+                                        icon="Add"
+                                        text={title}
+                                        onLeftClick={() => {
+                                            isOpen.value = true;
+                                        }}
+                                    />
+                                </>
                             );
+                        });
                     })}
                 </div>
             </div>

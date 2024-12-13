@@ -1,7 +1,7 @@
 import {
     type PropertiesMightBeSignals,
     type Component,
-    $calc,
+    $derive,
     $mutable,
     $peek,
 } from '@captainpants/sweeter-core';
@@ -29,7 +29,7 @@ export type ObjectEditorRenameMappedModalProps = PropertiesMightBeSignals<{
 export const ObjectEditorRenameMappedModal: Component<
     ObjectEditorRenameMappedModalProps
 > = ({ isOpen, from, validate, onCancelled, onFinished }, init) => {
-    const title = $calc(() => {
+    const title = $derive(() => {
         return `Renaming '${from}'`;
     });
 

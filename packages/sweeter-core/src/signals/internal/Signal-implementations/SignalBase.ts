@@ -101,7 +101,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     #announceChange(previous: SignalState<T>, next: SignalState<T>) {
         // It is reasonably common that there might not be any listeners yet, e.g. during
-        // delayed initialisation of a CalculatedSignal
+        // delayed initialisation of a DerivedSignal
         if (!this.#listeners.any()) {
             return;
         }

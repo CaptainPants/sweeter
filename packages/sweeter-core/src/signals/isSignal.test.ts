@@ -1,18 +1,12 @@
-import {
-    $calc,
-    $mutableFromCallbacks,
-    $mutable,
-    $propertyOf,
-    $elementOf,
-} from './index.js';
+import { $derive, $mutable, $propertyOf, $elementOf } from './index.js';
 import { isReadWriteSignal, isSignal } from './isSignal.js';
 
 it('isSignal for all signal types return true', () => {
     const a = $mutable(0);
-    const b = $calc(() => 1);
+    const b = $derive(() => 1);
 
     const c = $mutable({ prop: 1 });
-    const d = $mutableFromCallbacks(
+    const d = $derive(
         () => 1,
         () => {},
     );
@@ -34,7 +28,7 @@ it('isReadWriteSignal for mutable signal types return true', () => {
     const a = $mutable(0);
 
     const c = $mutable({ prop: 1 });
-    const d = $mutableFromCallbacks(
+    const d = $derive(
         () => 1,
         () => {},
     );
@@ -50,8 +44,8 @@ it('isReadWriteSignal for mutable signal types return true', () => {
     expect(isReadWriteSignal(g)).toBe(true);
 });
 
-it('isReadWriteSignal for CalculatedSignal returns false', () => {
-    const a = $calc(() => 1);
+it('isReadWriteSignal for DerivedSignal returns false', () => {
+    const a = $derive(() => 1);
 
     expect(isReadWriteSignal(a)).toBe(false);
 });

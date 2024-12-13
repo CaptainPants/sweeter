@@ -1,14 +1,18 @@
-import { CalculatedSignal } from './CalculatedSignal.js';
+import { DerivedSignal } from './DerivedSignal.js';
 import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
 import { writableSignalMarker } from '../markers.js';
-import { type ReadWriteSignal } from '../../types.js';
+import { DerivedSignalOptions, type ReadWriteSignal } from '../../types.js';
 
-export class MutableCalculatedSignal<T>
-    extends CalculatedSignal<T>
+export class MutableDerivedSignal<T>
+    extends DerivedSignal<T>
     implements ReadWriteSignal<T>
 {
-    constructor(calculation: () => T, mutate: (value: T) => void) {
-        super(calculation);
+    constructor(
+        calculation: () => T,
+        mutate: (value: T) => void,
+        options?: DerivedSignalOptions,
+    ) {
+        super(calculation, options);
 
         this.#mutate = mutate;
     }

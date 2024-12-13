@@ -87,12 +87,16 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
     #properties: KnownPropertyModels;
 
-    public unknownGetCatchallType(): ReadonlyMap<UnknownType, UnknownType> | undefined {
+    public unknownGetCatchallType():
+        | ReadonlyMap<UnknownType, UnknownType>
+        | undefined {
         return getObjectTypeInfo(this.type).getMappedKeys();
     }
 
     public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema> {
-        return getObjectTypeInfo(this.type).getMappedKeys() as arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema>;
+        return getObjectTypeInfo(
+            this.type,
+        ).getMappedKeys() as arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema>;
     }
 
     private schemaForKey(key: string | symbol) {
@@ -102,7 +106,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         let type: UnknownType | undefined = fixedProps.get(key);
         if (!type) {
             const mappedKeys = info.getMappedKeys();
-                if (mappedKeys) {
+            if (mappedKeys) {
                 const matchingKey = [...mappedKeys.entries()].filter(
                     ([indexerKey, value]) => indexerKey.allows(key),
                 )[0];

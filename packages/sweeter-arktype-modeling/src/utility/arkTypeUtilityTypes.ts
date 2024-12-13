@@ -33,10 +33,22 @@ export namespace arkTypeUtilityTypes {
     export type CatchallPropertyKeyRawType<TSchemaObjectType> = GetExpandoKeys<
         type.infer<TSchemaObjectType>
     >;
-    export type CatchallPropertyKeySchemas<TSchemaObjectType extends AnyTypeConstraint> = _DistributeType<CatchallPropertyKeyRawType<TSchemaObjectType>>;
-    export type CatchallPropertyValueSchemas<TSchemaObjectType extends AnyTypeConstraint> = _DistributeType<GetExpandoValueType<type.infer<TSchemaObjectType>>>;
+    export type CatchallPropertyKeySchemas<
+        TSchemaObjectType extends AnyTypeConstraint,
+    > = _DistributeType<CatchallPropertyKeyRawType<TSchemaObjectType>>;
+    export type CatchallPropertyValueSchemas<
+        TSchemaObjectType extends AnyTypeConstraint,
+    > = _DistributeType<GetExpandoValueType<type.infer<TSchemaObjectType>>>;
 
-    export type CatchallPropertyMap<TSchemaObjectType extends AnyTypeConstraint> = IsNever<CatchallPropertyKeySchemas<TSchemaObjectType>> extends true ? undefined : ReadonlyMap<CatchallPropertyKeySchemas<TSchemaObjectType>, CatchallPropertyValueSchemas<TSchemaObjectType>>;
+    export type CatchallPropertyMap<
+        TSchemaObjectType extends AnyTypeConstraint,
+    > =
+        IsNever<CatchallPropertyKeySchemas<TSchemaObjectType>> extends true
+            ? undefined
+            : ReadonlyMap<
+                  CatchallPropertyKeySchemas<TSchemaObjectType>,
+                  CatchallPropertyValueSchemas<TSchemaObjectType>
+              >;
 
     export type PropertyType<TSchemaObjectType, Property extends string> =
         AllPropertyArkTypes<TSchemaObjectType> extends ReadonlyRecord<

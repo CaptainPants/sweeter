@@ -2,7 +2,7 @@ import { whenGarbageCollected } from '@captainpants/sweeter-utilities';
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
 import { isSignal } from './isSignal.js';
-import { $calc } from './$calc.js';
+import { $derive } from './$derive.js';
 import { $peek, $subscribe, $val } from './$val.js';
 import { $mutable } from './$mutable.js';
 import { trackingIsAnError } from './ambient.js';
@@ -12,8 +12,8 @@ export function $mapByIndex<T, U>(
     map: MightBeSignal<(item: Signal<T>, index: number) => U>,
 ): Signal<readonly U[]> {
     if (!isSignal(items)) {
-        // constant array, we can skip a lot of voodoo - the $calc is just because renderItem could be a signal
-        return $calc(() =>
+        // constant array, we can skip a lot of voodoo - the $derive is just because renderItem could be a signal
+        return $derive(() =>
             items.map((item, i) => $val(map)($mutable(item), i)),
         );
     }
@@ -28,7 +28,7 @@ export function $mapByIndex<T, U>(
     // including if it changes lengths to dispose/orphan signals that no longer
     // point to a valid index, and add new signals when necessary.
 
-    const resultSignal = $calc(() => {
+    const resultSignal = $derive(() => {
         // subscribe to changes, but ignore the actual value for now
         $subscribe(map);
 
@@ -56,7 +56,7 @@ export function $mapByIndex<T, U>(
                         const index = elementCache.length;
                         const detach = new AbortController();
 
-                        const elementSignal = $calc<T>(
+                        const elementSignal = $derive<T>(
                             () => {
                                 return $val(items)[index]!;
                             },
@@ -85,7 +85,7 @@ export function $mapByIndex<T, U>(
     };
 
     if (isSignal(map)) {
-        // TODO: this seems like it would need to be before the $calc so it runs first
+        // TODO: this seems like it would need to be before the $derive so it runs first
         const cleanup = map.listenWeak(resetCache);
 
         // When the signal is no longer reachable, stop listening

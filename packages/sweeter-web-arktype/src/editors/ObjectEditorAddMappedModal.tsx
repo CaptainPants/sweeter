@@ -2,7 +2,7 @@ import { type AnyTypeConstraint } from '@captainpants/sweeter-arktype-modeling';
 import {
     type PropertiesMightBeSignals,
     type Component,
-    $calc,
+    $derive,
     $val,
     $mutable,
     $peek,
@@ -33,7 +33,7 @@ export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
 export const ObjectEditorAddMappedModal: Component<
     ObjectEditorAddMappedModalProps
 > = ({ isOpen, valueType, validate, onCancelled, onFinished }, init) => {
-    const title = $calc(() => {
+    const title = $derive(() => {
         const typeResolved = $val(valueType);
         const title = typeResolved.annotations()?.getBestDisplayName();
         return title;

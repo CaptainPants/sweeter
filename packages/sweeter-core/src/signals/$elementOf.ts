@@ -1,7 +1,5 @@
-import {
-    CalculatedSignal,
-    MutableCalculatedSignal,
-} from './internal/Signal-implementations.js';
+import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
+import { MutableDerivedSignal } from './internal/Signal-implementations/MutableDerivedSignal.js';
 import { isReadWriteSignal } from './isSignal.js';
 import { type Signal, type ReadWriteSignal } from './types.js';
 
@@ -63,7 +61,7 @@ export function $elementOf<
     readonly: boolean = false,
 ): Signal<unknown> {
     if (isReadWriteSignal(source) && !readonly) {
-        return new MutableCalculatedSignal<TSource[TKeyOrIndex]>(
+        return new MutableDerivedSignal<TSource[TKeyOrIndex]>(
             () => source.value[key],
             (value) => {
                 const sourceValue = source.value;
@@ -79,8 +77,6 @@ export function $elementOf<
             },
         );
     } else {
-        return new CalculatedSignal<TSource[TKeyOrIndex]>(
-            () => source.value[key],
-        );
+        return new DerivedSignal<TSource[TKeyOrIndex]>(() => source.value[key]);
     }
 }

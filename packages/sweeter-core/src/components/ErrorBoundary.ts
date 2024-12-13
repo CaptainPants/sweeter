@@ -1,5 +1,5 @@
 import { flattenElements } from '../utility/flattenElements.js';
-import { $calc } from '../signals/$calc.js';
+import { $derive } from '../signals/$derive.js';
 import { $val } from '../signals/$val.js';
 import { isSignal } from '../signals/isSignal.js';
 import { type Signal } from '../signals/types.js';
@@ -11,7 +11,7 @@ export type ErrorBoundaryProps = PropertiesMightBeSignals<{
     /**
      * We don't take a constant as that defeats the purpose of an ErrorBoundary, but it can be the result of a function call or a signal.
      *
-     * Note that a function here will be wrapped in a $calc.
+     * Note that a function here will be wrapped in a $derive.
      */
     children: (() => JSX.Element) | Signal<JSX.Element>;
 };
@@ -20,10 +20,10 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
     renderError,
     children,
 }) => {
-    const childrenSignal = isSignal(children) ? children : $calc(children);
+    const childrenSignal = isSignal(children) ? children : $derive(children);
 
     // Calls .value on any signals, which should cause the catch to trigger
-    const flattennedChildrenSignal = $calc(() => {
+    const flattennedChildrenSignal = $derive(() => {
         const flattened = flattenElements(childrenSignal);
         return flattened.value;
     });
@@ -43,5 +43,5 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
         }
     };
 
-    return $calc(errorBoundaryCalculation);
+    return $derive(errorBoundaryCalculation);
 };

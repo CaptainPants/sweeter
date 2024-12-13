@@ -1,4 +1,4 @@
-import { $mutableFromCallbacks } from './$mutableFromCallbacks.js';
+import { $derive } from './$derive.js';
 import { $mutable } from './$mutable.js';
 
 it('mutableCalc mutations are visible on original object', () => {
@@ -6,7 +6,7 @@ it('mutableCalc mutations are visible on original object', () => {
 
     expect(signal.value).toStrictEqual({ prop: 1 });
 
-    const calculated = $mutableFromCallbacks(
+    const calculated = $derive(
         () => signal.value.prop,
         (value) => (signal.value = { prop: value }),
     );

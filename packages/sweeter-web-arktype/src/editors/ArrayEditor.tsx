@@ -74,7 +74,7 @@ export function ArrayEditor(
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .unknownSpliceElements(index, 1, [value], true);
+            .unknownSetIndex(index, value);
 
         draft.value = newDraft;
     };

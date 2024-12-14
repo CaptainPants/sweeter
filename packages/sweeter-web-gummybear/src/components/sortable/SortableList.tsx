@@ -27,7 +27,7 @@ export const SortableList: Component<SortableListProps> = (
     init,
 ) => {
     const style = $derive<ElementCssStyles>(() => {
-        const result = $val(styleProp) ?? {};
+        const result = {...$val(styleProp)};
 
         result.position = 'relative';
 

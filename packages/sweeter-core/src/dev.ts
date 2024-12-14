@@ -47,7 +47,7 @@ function ping() {
     for (const current of nodes) {
         if (now - current.date > current.timeout) {
             // problem
-            console.error(
+            console.warn(
                 `Operation exceeded expected time window (${
                     current.timeout
                 }ms): ${current.name} \n${current.content?.()}`,

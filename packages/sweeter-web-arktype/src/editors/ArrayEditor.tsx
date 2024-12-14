@@ -123,7 +123,7 @@ export function ArrayEditor(
 
     return (
         <>
-            <SortableList onSortEnd={move}>
+            <SortableList onSortEnd={move} useHandle>
                 {$mapByIndex(
                     $derive(() => draft.value.unknownGetElements()),
                     (item, index) => {

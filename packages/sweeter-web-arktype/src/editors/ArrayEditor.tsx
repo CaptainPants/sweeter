@@ -74,7 +74,7 @@ export function ArrayEditor(
     ): Promise<void> => {
         const newDraft = await draft
             .peek()
-            .unknownSpliceElements(index, 1, [value], true);
+            .unknownSetIndex(index, value);
 
         draft.value = newDraft;
     };
@@ -123,7 +123,7 @@ export function ArrayEditor(
 
     return (
         <>
-            <SortableList onSortEnd={move}>
+            <SortableList onSortEnd={move} useHandle>
                 {$mapByIndex(
                     $derive(() => draft.value.unknownGetElements()),
                     (item, index) => {

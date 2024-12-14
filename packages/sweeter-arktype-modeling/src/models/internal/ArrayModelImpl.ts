@@ -5,7 +5,7 @@ import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
 import {
     type UnknownModel,
     type ArrayModel,
-    type ElementModelNoConstraint,
+    type ElementModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { ParentRelationship, type ParentTypeInfo } from '../parents.js';
@@ -19,9 +19,9 @@ import { getArrayTypeInfo } from '../../type/introspect/getArrayTypeInfo.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
 import { parseAsync } from '../../utility/parse.js';
 
-export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
-    extends ModelImpl<type.infer<TArrayArkType>, TArrayArkType>
-    implements ArrayModel<TArrayArkType>
+export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
+    extends ModelImpl<type.infer<TArraySchema>, TArraySchema>
+    implements ArrayModel<TArraySchema>
 {
     public static createFromValue<TArrayArkType extends ArrayType<unknown[]>>(
         value: type.infer<TArrayArkType>,
@@ -31,12 +31,12 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
     ): ArrayModelImpl<TArrayArkType> {
         const info = getArrayTypeInfo(schema);
         const elementType =
-            info.elementType as arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
+            info.elementType as arkTypeUtilityTypes.ArrayElementSchema<TArrayArkType>;
 
         const elementModels = (value as readonly unknown[]).map((item, index) =>
             ModelFactory.createModelPart<
                 /* @ts-expect-error - Type system doesn't know that this is always a Type<?> */
-                arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>
+                arkTypeUtilityTypes.ArrayElementSchema<TArrayArkType>
             >({
                 value: item as never,
                 schema: elementType as never,
@@ -59,10 +59,10 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
     }
 
     public constructor(
-        value: type.infer<TArrayArkType>,
-        elementType: arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>,
-        elementModels: readonly ElementModelNoConstraint<TArrayArkType>[],
-        type: TArrayArkType,
+        value: type.infer<TArraySchema>,
+        elementType: arkTypeUtilityTypes.ArrayElementSchema<TArraySchema>,
+        elementModels: readonly ElementModel<TArraySchema>[],
+        type: TArraySchema,
         parentInfo: ParentTypeInfo | null,
     ) {
         super(value, type, parentInfo, 'array');
@@ -72,10 +72,10 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         this.#elementModels = elementModels;
     }
 
-    #elementType: arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
-    #elementModels: ReadonlyArray<ElementModelNoConstraint<TArrayArkType>>;
+    #elementType: arkTypeUtilityTypes.ArrayElementSchema<TArraySchema>;
+    #elementModels: ReadonlyArray<ElementModel<TArraySchema>>;
 
-    public getElementType(): arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType> {
+    public getElementType(): arkTypeUtilityTypes.ArrayElementSchema<TArraySchema> {
         return this.#elementType;
     }
 
@@ -85,7 +85,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
 
     public getElement(
         index: number,
-    ): ElementModelNoConstraint<TArrayArkType> | undefined {
+    ): ElementModel<TArraySchema> | undefined {
         return this.#elementModels[index];
     }
 
@@ -94,7 +94,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
     }
 
     public getElements(): ReadonlyArray<
-        ElementModelNoConstraint<TArrayArkType>
+        ElementModel<TArraySchema>
     > {
         return this.#elementModels;
     }
@@ -107,8 +107,8 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            | type.infer<arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>>
-            | ElementModelNoConstraint<TArrayArkType>
+            | type.infer<arkTypeUtilityTypes.ArrayElementSchema<TArraySchema>>
+            | ElementModel<TArraySchema>
         >,
         validate: boolean = true,
     ): Promise<this> {
@@ -120,6 +120,10 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         );
     }
 
+    public setIndex(index: number, value: ElementModel<TArraySchema>, validate: boolean = true): Promise<this> {
+        return this.unknownSetIndex(index, value, validate);
+    }
+
     public async unknownSpliceElements(
         start: number,
         deleteCount: number,
@@ -128,34 +132,26 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
     ): Promise<this> {
         const eleDefinition = this.getElementType() as Type<unknown>;
 
-        const fallback: ParentTypeInfo = {
-            type: this.type,
-            parentInfo: this.parentInfo,
-            relationship: { type: 'element' },
-        };
-
-        const newModels = await mapAsync(newElements, async (item, index) => {
-            // try and keep the previous element at this locations parentTypeInfo
-            // as we might be simply replacing the element.
-            // we might also be deleting and adding a different number of items,
-            // in which case it doesn't matter but we should try to keep
-            // referential consistency
-            const parentInfo: ParentTypeInfo =
-                this.#elementModels[index]?.parentInfo ?? fallback;
+        const newModels = await mapAsync(newElements, async (item) => {
+            const parentInfo: ParentTypeInfo = {
+                type: this.type,
+                parentInfo: this.parentInfo,
+                relationship: { type: 'element' },
+            }
 
             return await validateAndMakeModel(item, eleDefinition, parentInfo);
         });
 
         const newValue = [
             ...(this
-                .value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[]),
+                .value as arkTypeUtilityTypes.ArrayElementType<TArraySchema>[]),
         ];
         newValue.splice(
             start,
             deleteCount,
             ...newModels.map(
                 (x) =>
-                    x.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>,
+                    x.value as arkTypeUtilityTypes.ArrayElementType<TArraySchema>,
             ),
         );
 
@@ -167,8 +163,41 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         newElementModels.splice(
             start,
             deleteCount,
-            ...(newModels as ElementModelNoConstraint<TArrayArkType>[]),
+            ...(newModels as ElementModel<TArraySchema>[]),
         );
+
+        const res = new ArrayModelImpl(
+            newValue,
+            this.#elementType as never,
+            newElementModels,
+            this.type,
+            this.parentInfo,
+        );
+
+        return res as unknown as this;
+    }
+
+    public async unknownSetIndex(index: number, value: unknown | UnknownModel, validate: boolean = true): Promise<this> {
+        const eleDefinition = this.getElementType() as Type<unknown>;
+
+        const existing = this.#elementModels[index];
+        if (!existing) {
+            throw new Error('You may only assign values with an index < length');
+        }
+
+        const model = await validateAndMakeModel(value, eleDefinition, existing.parentInfo);
+
+        const newValue = [
+            ...(this.value as unknown[])
+        ];
+        newValue[1] = model.value;
+
+        if (validate) {
+            await parseAsync(newValue, this.type);
+        }
+
+        const newElementModels = [...this.#elementModels];
+        newElementModels[index] = model as ElementModel<TArraySchema>;
 
         const res = new ArrayModelImpl(
             newValue,
@@ -187,7 +216,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
         validate: boolean = true,
     ): Promise<this> {
         const newValue = arrayMoveImmutable(
-            this.value as arkTypeUtilityTypes.ArrayElementType<TArrayArkType>[],
+            this.value as arkTypeUtilityTypes.ArrayElementType<TArraySchema>[],
             from,
             to,
         );
@@ -202,7 +231,7 @@ export class ArrayModelImpl<TArrayArkType extends Type<unknown[]>>
             to,
         );
 
-        return new ArrayModelImpl<TArrayArkType>(
+        return new ArrayModelImpl<TArraySchema>(
             newValue as never,
             this.#elementType as never,
             newElementModels,

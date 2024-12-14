@@ -71,6 +71,8 @@ export interface UnknownArrayModelMethods {
         validate?: boolean,
     ) => Promise<this>;
 
+    unknownSetIndex: (index: number, value: unknown | UnknownModel, validate?: boolean) => Promise<this>;
+
     moveElement: (
         from: number,
         to: number,
@@ -83,26 +85,28 @@ export interface UnknownArrayModel
         UnknownArrayModelMethods {}
 ``;
 // eslint-disable-next-line@typescript-eslint/no-explicit-any
-export interface ArrayModel<TArrayArkType extends Type<unknown[]>>
-    extends BaseModel<type.infer<TArrayArkType>, TArrayArkType>,
+export interface ArrayModel<TArraySchema extends Type<unknown[]>>
+    extends BaseModel<type.infer<TArraySchema>, TArraySchema>,
         UnknownArrayModelMethods {
-    getElementType: () => arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>;
+    getElementType: () => arkTypeUtilityTypes.ArrayElementSchema<TArraySchema>;
 
     getElement: (
         index: number,
-    ) => ElementModelNoConstraint<TArrayArkType> | undefined;
+    ) => ElementModel<TArraySchema> | undefined;
 
-    getElements: () => ReadonlyArray<ElementModelNoConstraint<TArrayArkType>>;
+    getElements: () => ReadonlyArray<ElementModel<TArraySchema>>;
 
     spliceElements: (
         start: number,
         deleteCount: number,
         newElements: ReadonlyArray<
-            | type.infer<arkTypeUtilityTypes.ArrayElementArkType<TArrayArkType>>
-            | ElementModelNoConstraint<TArrayArkType>
+            | type.infer<arkTypeUtilityTypes.ArrayElementSchema<TArraySchema>>
+            | ElementModel<TArraySchema>
         >,
         validate?: boolean,
     ) => Promise<this>;
+
+    setIndex: (index: number, value: ElementModel<TArraySchema>, validate?: boolean) => Promise<this>;
 }
 
 export type TypedPropertyModelForKey<
@@ -269,7 +273,7 @@ export type PropertyModelNoConstraint<TType> = [TType] extends [
 ]
     ? PropertyModel<TType>
     : never;
-export type ElementModelNoConstraint<TType> = [TType] extends [
+export type ElementModel<TType extends AnyTypeConstraint> = [TType] extends [
     Type<(infer S)[]>,
 ]
     ? [Type<S>] extends [AnyTypeConstraint]

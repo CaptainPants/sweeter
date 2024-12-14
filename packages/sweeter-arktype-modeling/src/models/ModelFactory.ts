@@ -88,7 +88,7 @@ function setup(
     };
 }
 
-const defaults = [
+const builtinFactories = [
     setup(isUnionType, function union(value, type, parentInfo, depth) {
         return UnionModelImpl.createFromValue(value, type, parentInfo, depth);
     }),
@@ -195,7 +195,7 @@ function doCreateModelPart<TSchema extends AnyTypeConstraint>(
 ): UnknownModel {
     parentInfo ??= null;
 
-    for (const item of defaults) {
+    for (const item of builtinFactories) {
         const currentResult = item(value, schema, parentInfo, depth);
         if (currentResult) {
             return currentResult;

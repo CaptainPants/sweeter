@@ -1,0 +1,17 @@
+{
+    "extends": "../../common-config/tsconfig.base.json",
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx"
+    ],
+    "compilerOptions": {
+        "rootDir": "src",
+        "lib": [
+            "ES2022",
+            "DOM" // DOM used, but this library is intended to be consumable by non-DOM libraries so special care to be taken
+        ],
+        "noEmit": true,
+        "paths":{
+        }
+    }
+}

@@ -20,7 +20,7 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
     const serverValue = $mutable<unknown>(null);
 
     // You can also have a calculated signal
-    const textValueWithSuffix = $calc(() => textValue.value + ' + suffix');
+    const textValueWithSuffix = $derive(() => textValue.value + ' + suffix');
 
     // AsyncRunnerHook does 2 things: 1) it provides a Signal<boolean> asyncRunner.running to make 
     // visible when the runner is currently executing a callback, and 2) optionally cancel an 
@@ -49,10 +49,6 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
 
         // Assign value to the signal
         serverValue.value = data;
-        // OR
-        serverValue.update(data);
-        // The .value version is nicer but isn't part of the ReadWriteSignal interface due to some 
-        // challenges in the type-system
     }
     
 
@@ -75,7 +71,7 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
         <br />
         Current value: {textValue}<br />
         Added a suffix {textValueWithSuffix}<br />
-        Or inline {$calc(() => textValue.value + ' + suffix')}<br />
+        Or inline {$derive(() => textValue.value + ' + suffix')}<br />
         <br />
         <button 
             disabled={asyncRunner.running} 

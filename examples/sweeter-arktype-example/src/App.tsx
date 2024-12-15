@@ -8,13 +8,9 @@ import {
 //import viteLogo from "/vite.svg";
 
 import {
-    $mutable,
     Suspense,
-    type ComponentInit,
-    $derive,
     Component,
 } from '@captainpants/sweeter-core';
-import { exampleData } from '@captainpants/arktype-example-data';
 import { Example } from './Example';
 
 const theme = createTheme({});

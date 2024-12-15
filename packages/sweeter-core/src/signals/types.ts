@@ -91,6 +91,10 @@ export interface Signal<T> extends SignalCommon<T> {
      * is an exception, it is rethrown.
      */
     readonly value: T;
+
+    identify(name: string, sourceFile?: string, sourceMethod?: string): this;
+
+    getDebugIdentity(): string;
 }
 
 export interface WritableSignal<T> extends SignalCommon<T> {
@@ -131,13 +135,11 @@ export interface DerivedSignalOptions {
 export type DebugDependencyNode =
     | {
           type: 'signal';
-          signalId: number;
-          state: unknown;
+          signal: Signal<unknown>;
           dependents: DebugDependencyNode[];
-          signalCreatedAtStack: string[] | undefined;
       }
     | {
           type: 'listener';
-          listener: () => void;
-          addedAtStack: string[];
+          listener: Function;
+          addedAtStack: string[] | undefined;
       };

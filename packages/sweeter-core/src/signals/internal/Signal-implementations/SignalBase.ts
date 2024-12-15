@@ -191,7 +191,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
         const dependents = this.#listeners
             .debugGetAllListeners()
-            .map((child) => {
+            .map((child): DebugDependencyNode => {
                 // If its a signal:
                 if (child.listener.debugListenerForSignal) {
                     return child.listener.debugListenerForSignal.debugGetListenerTree();
@@ -201,19 +201,16 @@ export abstract class SignalBase<T> implements Signal<T> {
                 // when it was added (and its name).
                 return {
                     type: 'listener',
+                    listener: child.listener,
                     addedAtStack: child.addedStackTrace
                         ?.getNice({ truncate: truncateStackTraces })
                         .split('\n'),
-                } as DebugDependencyNode;
+                };
             });
 
         return {
             type: 'signal',
-            signalId: this.id,
-            state: this.peekState(false),
-            signalCreatedAtStack: this.createdAtStack
-                ?.getNice({ truncate: truncateStackTraces })
-                .split('\n'),
+            signal: this,
             dependents,
         };
     }
@@ -222,7 +219,25 @@ export abstract class SignalBase<T> implements Signal<T> {
      * This is basically just convenience in your chrome developer console.
      */
     debugLogListenerTree(): void {
-        console.log('debugListenerTree: ', this.debugGetListenerTree());
+        const writeToConsole = (node: DebugDependencyNode) => {
+            if (node.type === 'signal') {
+                console.group(`Signal ${node.signal.getDebugIdentity()}`);
+
+                for (const item of node.dependents) {
+                    writeToConsole(item);
+                }
+
+                console.groupEnd();
+            }
+            else {
+                // TODO:
+                console.log('Listener');
+            }
+        }
+
+        const node = this.debugGetListenerTree();
+        
+        writeToConsole(node);
     }
 
     identify(name: string, sourceFile?: string, sourceMethod?: string): this {
@@ -230,5 +245,9 @@ export abstract class SignalBase<T> implements Signal<T> {
         this.sourceFile = sourceFile;
         this.sourceMethod = sourceMethod;
         return this;
+    }
+
+    getDebugIdentity() {
+        return `[${this.name}: ${this.sourceMethod}, ${this.sourceFile}]`;
     }
 }

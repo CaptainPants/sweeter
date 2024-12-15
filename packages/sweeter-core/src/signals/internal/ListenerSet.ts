@@ -47,7 +47,7 @@ export class ListenerSet<T> {
             this.#listenerRefs.add(weakRef);
         }
 
-        if (dev.flag('signalStacks')) {
+        if (dev.flag('signal.debugStackTraces')) {
             this.#debugStackTraces?.set(
                 listener,
                 new StackTrace({ context: 'Generated from ListenerSet.add' }),

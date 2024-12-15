@@ -8,6 +8,7 @@ import { type SignalState } from './SignalState.js';
 export type SignalListener<T> = (
     next: SignalState<T>,
     previous: SignalState<T>,
+    trigger: Signal<unknown> | undefined
 ) => void;
 
 /**

@@ -19,7 +19,7 @@ export class MutableDerivedSignal<T>
 
     #mutate: (value: T) => void;
 
-    public readonly [writableSignalMarker] = true;
+    public get [writableSignalMarker]() { return true as const; }
 
     override get value(): T {
         // Weirdly, if you don't override the getter as well you end up with an undefined result

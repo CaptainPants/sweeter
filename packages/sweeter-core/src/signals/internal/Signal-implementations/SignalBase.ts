@@ -23,7 +23,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
         this.#state = state;
 
-        if (dev.flag('signalStacks')) {
+        if (dev.flag('signal.debugStackTraces')) {
             this.createdAtStack = new StackTrace({ skipFrames: 1 });
         }
     }
@@ -31,10 +31,13 @@ export abstract class SignalBase<T> implements Signal<T> {
     #state: SignalState<T>;
     #listeners = new ListenerSet<T>();
 
-    public readonly [signalMarker] = true;
+    public get [signalMarker]() { return true as const; };
 
     public readonly id: number = ++signalCounter;
 
+    public name?: string | undefined;
+    public sourceFile?: string | undefined;
+    public sourceMethod?: string | undefined;
     public readonly createdAtStack?: StackTrace;
 
     public get value(): T {
@@ -119,7 +122,7 @@ export abstract class SignalBase<T> implements Signal<T> {
                 () => this.#getPanicContent(),
             );
             try {
-                this.#listeners.announce(next, previous);
+                this.#listeners.announce(next, previous, this);
             } finally {
                 reverse();
                 develChangeAnnouncerStack = saved;
@@ -129,7 +132,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
         // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
         // also prevents all kinds of cases that aren't allowed like updating a mutable signal within a recalculation
-        this.#listeners.announce(next, previous);
+        this.#listeners.announce(next, previous, this);
     }
 
     public listen(listener: SignalListener<T>): () => void {
@@ -220,5 +223,12 @@ export abstract class SignalBase<T> implements Signal<T> {
      */
     debugLogListenerTree(): void {
         console.log('debugListenerTree: ', this.debugGetListenerTree());
+    }
+
+    identify(name: string, sourceFile?: string, sourceMethod?: string): this {
+        this.name = name;
+        this.sourceFile = sourceFile;
+        this.sourceMethod = sourceMethod;
+        return this;
     }
 }

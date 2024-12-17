@@ -37,14 +37,15 @@ export default function sweeterRollupPlugin({ include, exclude }: SweeterRollupP
                         
                         if (node && is.identifier(node.callee)) {
                             if (sigilizedSignalFunctions.has(node.callee.name)) {
-                                const endIndex = node.range?.[1];
-                                outerThis.warn('Range: ' + JSON.stringify(node.range));
-
                                 const name = getVariableName(path, node.callee.name, next);
                                 const funcName = getDeclaringMethod(path);
+                                // TODO: id is an absolute path, we would preferrably use a project relative path possibly prefixed with the project name
+                                // E.g. @captainpanges/sweeter-core:folder1/file.ts
+                                const filename = id; 
 
-                                if (endIndex) {
-                                    magicString.appendRight(endIndex, `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, zzz)`);
+                                if (node.range) {
+                                    const [, endIndex] = node.range;
+                                    magicString.appendRight(endIndex, `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, ${JSON.stringify(filename)})`);
                                 }
                             }
                         }

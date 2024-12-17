@@ -1,0 +1,10 @@
+{
+    "extends": "../../common-config/tsconfig.base.json",
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+    ],
+    "compilerOptions": {
+        "rootDir": "src",
+    }
+}

@@ -7,10 +7,7 @@ import {
 
 //import viteLogo from "/vite.svg";
 
-import {
-    Suspense,
-    Component,
-} from '@captainpants/sweeter-core';
+import { Suspense, Component } from '@captainpants/sweeter-core';
 import { Example } from './Example';
 
 const theme = createTheme({});

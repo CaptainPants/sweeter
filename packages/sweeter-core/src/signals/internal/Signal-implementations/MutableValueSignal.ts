@@ -16,7 +16,9 @@ export class MutableValueSignal<T>
         );
     }
 
-    public get [writableSignalMarker]() { return true as const; }
+    public get [writableSignalMarker]() {
+        return true as const;
+    }
 
     override get value(): T {
         // Weirdly, if you don't override the getter as well you end up with an undefined result

@@ -33,6 +33,7 @@
     },
     "devDependencies": {
         "@types/estraverse": "^5.1.7",
+        "@types/node": "^22.10.2",
         "rollup": "^4.27.4",
         "vite-plugin-inspect": "^0.10.3"
     },

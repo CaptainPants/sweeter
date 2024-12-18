@@ -1,4 +1,4 @@
-import { $defer, $derive, $mutable } from "@captainpants/sweeter-core";
+import { $defer, $derive, $mutable } from '@captainpants/sweeter-core';
 
 export function signalExample() {
     const signal = $mutable(1);
@@ -18,7 +18,5 @@ function ignore(subj: Function) {
 }
 
 function test() {
-    function test2() {
-
-    }
+    function test2() {}
 }

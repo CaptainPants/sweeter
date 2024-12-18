@@ -19,7 +19,7 @@ export default defineConfig({
         },
         target: "ESNext"
     },
-    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterRollupPlugin()],
+    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterRollupPlugin({ projectName: '@captainpants/sweeter-rollup-plugin-usage', roots: [__dirname] })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

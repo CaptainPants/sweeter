@@ -31,7 +31,9 @@ export abstract class SignalBase<T> implements Signal<T> {
     #state: SignalState<T>;
     #listeners = new ListenerSet<T>();
 
-    public get [signalMarker]() { return true as const; };
+    public get [signalMarker]() {
+        return true as const;
+    }
 
     public readonly id: number = ++signalCounter;
 
@@ -228,15 +230,14 @@ export abstract class SignalBase<T> implements Signal<T> {
                 }
 
                 console.groupEnd();
-            }
-            else {
+            } else {
                 // TODO:
                 console.log('Listener');
             }
-        }
+        };
 
         const node = this.debugGetListenerTree();
-        
+
         writeToConsole(node);
     }
 

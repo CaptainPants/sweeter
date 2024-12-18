@@ -36,14 +36,20 @@ export default function sweeterPlugin({
 
         transform(code, id) {
             if (!filter(id)) {
+                this.info(`Ignoring file as it doesn't match include/exclude filters ${id}`);
                 return; // no action
             }
             if (!search(code)) {
-                this.warn('Exiting 2');
+                this.info(`Ignoring file as it doesn't contain any sigils ${id}`);
                 return; // doesn't contain any of the sigils (text search)
             }
+            this.info(`Processing file ${id}`);
 
-            return tranform(code, id, this);
+            const result = tranform(code, id, this);
+
+            this.info(`Finished processing file ${id}`);
+
+            return result;
         },
     };
 }

@@ -3,7 +3,7 @@ import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
 import circularDependency from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
-import sweeterRollupPlugin from '@captainpants/sweeter-rollup-plugin';
+import sweeterRollupPlugin from '@captainpants/rollup-plugin-sweeter';
 
 export default defineConfig({
     build: {

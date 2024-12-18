@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/sweeter-rollup-plugin-usage",
+    "name": "@captainpants/rollup-plugin-sweeter-usage",
     "version": "0.0.5",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
@@ -32,7 +32,7 @@
         "pnpm": "8.14.1"
     },
     "devDependencies": {
-        "@captainpants/sweeter-rollup-plugin": "workspace:^"
+        "@captainpants/rollup-plugin-sweeter": "workspace:^"
     },
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^"

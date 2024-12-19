@@ -92,7 +92,13 @@ export interface Signal<T> extends SignalCommon<T> {
      */
     readonly value: T;
 
-    identify(name: string, sourceFile?: string, sourceMethod?: string): this;
+    identify(
+        name: string,
+        sourceFile?: string,
+        sourceMethod?: string,
+        row?: number,
+        col?: number,
+    ): this;
 
     getDebugIdentity(): string;
 }

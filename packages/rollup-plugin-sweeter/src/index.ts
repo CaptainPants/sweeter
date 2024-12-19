@@ -12,7 +12,12 @@ export interface SweeterRollupPluginOptions {
     projectName: string;
 }
 
-const standardSigils = ['$mutable', '$derive', '$defer'] as const;
+const standardSigils = [
+    '$mutable',
+    '$derive',
+    '$defer',
+    '$controller',
+] as const;
 
 export default function sweeterPlugin({
     include,
@@ -36,11 +41,15 @@ export default function sweeterPlugin({
 
         transform(code, id) {
             if (!filter(id)) {
-                this.info(`Ignoring file as it doesn't match include/exclude filters ${id}`);
+                this.info(
+                    `Ignoring file as it doesn't match include/exclude filters ${id}`,
+                );
                 return; // no action
             }
             if (!search(code)) {
-                this.info(`Ignoring file as it doesn't contain any sigils ${id}`);
+                this.info(
+                    `Ignoring file as it doesn't contain any sigils ${id}`,
+                );
                 return; // doesn't contain any of the sigils (text search)
             }
             this.info(`Processing file ${id}`);

@@ -54,11 +54,7 @@ export function createTransform({
             }
         };
 
-        const filename = getUsefulFilenameFromId(
-            id,
-            roots,
-            projectName + ':',
-        );
+        const filename = getUsefulFilenameFromId(id, roots, projectName + ':');
 
         traverse(ast, {
             CallExpression(path) {
@@ -72,10 +68,11 @@ export function createTransform({
                             next,
                         );
                         const funcName = getDeclaringMethod(path);
+                        const [row, col] = getRowAndCol(code, node.start);
 
                         magicString.appendRight(
                             node.end,
-                            `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, ${JSON.stringify(filename)})`,
+                            `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, ${JSON.stringify(filename)}, ${row}, ${col})`,
                         );
                     }
                 }
@@ -156,9 +153,25 @@ function getUsefulFilenameFromId(
         }
     }
 
-    if (!matched) {// <unknown>/<filenameOnly>
+    if (!matched) {
+        // <unknown>/<filenameOnly>
         filePath = '<unknown>/' + path.basename(filePath);
     }
 
     return prefix + filePath;
+}
+
+function getRowAndCol(
+    code: string,
+    offset: number,
+): [row: number, col: number] {
+    const upToOffset = code.substring(0, offset);
+
+    const row = upToOffset.split('\n').length; // number of lines = number of \n + 1
+
+    let startOfLine = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
+
+    const col = offset - startOfLine;
+
+    return [row, col + 1 /* 1-based */];
 }

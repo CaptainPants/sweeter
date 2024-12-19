@@ -40,6 +40,8 @@ export abstract class SignalBase<T> implements Signal<T> {
     public name?: string | undefined;
     public sourceFile?: string | undefined;
     public sourceMethod?: string | undefined;
+    public sourceRow?: number | undefined;
+    public sourceCol?: number | undefined;
     public readonly createdAtStack?: StackTrace;
 
     public get value(): T {
@@ -241,14 +243,22 @@ export abstract class SignalBase<T> implements Signal<T> {
         writeToConsole(node);
     }
 
-    identify(name: string, sourceFile?: string, sourceMethod?: string): this {
+    identify(
+        name: string,
+        sourceFile?: string,
+        sourceMethod?: string,
+        row?: number,
+        col?: number,
+    ): this {
         this.name = name;
         this.sourceFile = sourceFile;
         this.sourceMethod = sourceMethod;
+        this.sourceRow = row;
+        this.sourceCol = col;
         return this;
     }
 
     getDebugIdentity() {
-        return `[${this.name}: ${this.sourceMethod}, ${this.sourceFile}]`;
+        return `[${this.name}: ${this.sourceMethod}, ${this.sourceFile} at ${this.sourceRow}:${this.sourceCol}]`;
     }
 }

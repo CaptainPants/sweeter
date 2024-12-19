@@ -1,10 +1,17 @@
-import { $defer, $derive, $mutable } from '@captainpants/sweeter-core';
+import {
+    $controller,
+    $defer,
+    $derive,
+    $mutable,
+    SignalState,
+} from '@captainpants/sweeter-core';
 
 export function signalExample() {
     const signal = $mutable(1);
     const derived = $derive(() => signal.value + 2);
     const deferred1 = $defer(derived);
     const deferred2 = $defer(deferred1);
+    $controller(SignalState.success(1)).signal;
 
     function unused() {
         deferred2.peek();

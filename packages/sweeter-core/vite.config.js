@@ -1,3 +1,4 @@
+import sweeterPlugin from '@captainpants/rollup-plugin-sweeter';
 import { resolve } from 'path';
 import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
@@ -20,5 +21,5 @@ export default defineConfig({
         },
         target: "ESNext",
     },
-    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true })]
+    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-core', roots: [__dirname] })]
 });

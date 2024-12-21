@@ -34,14 +34,17 @@
     "dependencies": {
         "@captainpants/sweeter-arktype-modeling": "workspace:^",
         "@captainpants/sweeter-core": "workspace:^",
-        "@captainpants/sweeter-web-gummybear": "workspace:^",
         "@captainpants/sweeter-utilities": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
+        "@captainpants/sweeter-web-gummybear": "workspace:^",
         "@popperjs/core": "^2.11.8",
         "arktype": "2.0.0-rc.21",
         "tinycolor2": "^1.6.0"
     },
     "optionalDependencies": {
         "lucide": "^0.319.0"
+    },
+    "devDependencies": {
+        "@captainpants/rollup-plugin-sweeter": "workspace:^"
     }
 }

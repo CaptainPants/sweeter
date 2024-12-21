@@ -13,10 +13,18 @@ export interface SweeterRollupPluginOptions {
 }
 
 const standardSigils = [
-    '$mutable',
-    '$derive',
-    '$defer',
+    '$constant',
     '$controller',
+    '$defer',
+    '$derive',
+    '$elementOf',
+    '$lastGood',
+    '$mapByIdentity',
+    '$mapByIndex',
+    '$mutable',
+    '$propertyOf',
+    '$readonly',
+    '$wrap',
 ] as const;
 
 export default function sweeterPlugin({

@@ -187,6 +187,10 @@ importers:
       '@captainpants/sweeter-utilities':
         specifier: workspace:^
         version: link:../sweeter-utilities
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../rollup-plugin-sweeter
 
   packages/sweeter-utilities: {}
 
@@ -201,6 +205,10 @@ importers:
       csstype:
         specifier: ^3.1.3
         version: 3.1.3
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../rollup-plugin-sweeter
 
   packages/sweeter-web-arktype:
     dependencies:
@@ -232,6 +240,10 @@ importers:
       lucide:
         specifier: ^0.319.0
         version: 0.319.0
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../rollup-plugin-sweeter
 
   packages/sweeter-web-gummybear:
     dependencies:
@@ -254,6 +266,9 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
     devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../rollup-plugin-sweeter
       '@types/sortablejs':
         specifier: ^1.15.7
         version: 1.15.7

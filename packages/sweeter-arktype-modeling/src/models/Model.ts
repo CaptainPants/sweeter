@@ -71,7 +71,11 @@ export interface UnknownArrayModelMethods {
         validate?: boolean,
     ) => Promise<this>;
 
-    unknownSetIndex: (index: number, value: unknown | UnknownModel, validate?: boolean) => Promise<this>;
+    unknownSetIndex: (
+        index: number,
+        value: unknown | UnknownModel,
+        validate?: boolean,
+    ) => Promise<this>;
 
     moveElement: (
         from: number,
@@ -90,9 +94,7 @@ export interface ArrayModel<TArraySchema extends Type<unknown[]>>
         UnknownArrayModelMethods {
     getElementType: () => arkTypeUtilityTypes.ArrayElementSchema<TArraySchema>;
 
-    getElement: (
-        index: number,
-    ) => ElementModel<TArraySchema> | undefined;
+    getElement: (index: number) => ElementModel<TArraySchema> | undefined;
 
     getElements: () => ReadonlyArray<ElementModel<TArraySchema>>;
 
@@ -106,7 +108,11 @@ export interface ArrayModel<TArraySchema extends Type<unknown[]>>
         validate?: boolean,
     ) => Promise<this>;
 
-    setIndex: (index: number, value: ElementModel<TArraySchema>, validate?: boolean) => Promise<this>;
+    setIndex: (
+        index: number,
+        value: ElementModel<TArraySchema>,
+        validate?: boolean,
+    ) => Promise<this>;
 }
 
 export type TypedPropertyModelForKey<

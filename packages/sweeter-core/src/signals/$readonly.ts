@@ -1,6 +1,7 @@
 import { type Signal } from './types.js';
 import { isReadWriteSignal } from './isSignal.js';
 import { $derive } from './$derive.js';
+import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
 
 /**
  * Returns a read only promise linked to the source signal.
@@ -13,5 +14,5 @@ export function $readonly<T>(source: Signal<T>) {
     }
 
     const readonlyCalculation = () => source.value;
-    return $derive(readonlyCalculation);
+    return new DerivedSignal(readonlyCalculation);
 }

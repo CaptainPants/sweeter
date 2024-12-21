@@ -23,7 +23,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
         this.#state = state;
 
-        if (dev.flag('signalStacks')) {
+        if (dev.flag('signal.debugStackTraces')) {
             this.createdAtStack = new StackTrace({ skipFrames: 1 });
         }
     }
@@ -31,10 +31,17 @@ export abstract class SignalBase<T> implements Signal<T> {
     #state: SignalState<T>;
     #listeners = new ListenerSet<T>();
 
-    public readonly [signalMarker] = true;
+    public get [signalMarker]() {
+        return true as const;
+    }
 
     public readonly id: number = ++signalCounter;
 
+    public name?: string | undefined;
+    public sourceFile?: string | undefined;
+    public sourceMethod?: string | undefined;
+    public sourceRow?: number | undefined;
+    public sourceCol?: number | undefined;
     public readonly createdAtStack?: StackTrace;
 
     public get value(): T {
@@ -119,7 +126,7 @@ export abstract class SignalBase<T> implements Signal<T> {
                 () => this.#getPanicContent(),
             );
             try {
-                this.#listeners.announce(next, previous);
+                this.#listeners.announce(next, previous, this);
             } finally {
                 reverse();
                 develChangeAnnouncerStack = saved;
@@ -129,7 +136,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
         // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
         // also prevents all kinds of cases that aren't allowed like updating a mutable signal within a recalculation
-        this.#listeners.announce(next, previous);
+        this.#listeners.announce(next, previous, this);
     }
 
     public listen(listener: SignalListener<T>): () => void {
@@ -188,7 +195,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
         const dependents = this.#listeners
             .debugGetAllListeners()
-            .map((child) => {
+            .map((child): DebugDependencyNode => {
                 // If its a signal:
                 if (child.listener.debugListenerForSignal) {
                     return child.listener.debugListenerForSignal.debugGetListenerTree();
@@ -198,19 +205,16 @@ export abstract class SignalBase<T> implements Signal<T> {
                 // when it was added (and its name).
                 return {
                     type: 'listener',
+                    listener: child.listener,
                     addedAtStack: child.addedStackTrace
                         ?.getNice({ truncate: truncateStackTraces })
                         .split('\n'),
-                } as DebugDependencyNode;
+                };
             });
 
         return {
             type: 'signal',
-            signalId: this.id,
-            state: this.peekState(false),
-            signalCreatedAtStack: this.createdAtStack
-                ?.getNice({ truncate: truncateStackTraces })
-                .split('\n'),
+            signal: this,
             dependents,
         };
     }
@@ -219,6 +223,46 @@ export abstract class SignalBase<T> implements Signal<T> {
      * This is basically just convenience in your chrome developer console.
      */
     debugLogListenerTree(): void {
-        console.log('debugListenerTree: ', this.debugGetListenerTree());
+        const writeToConsole = (node: DebugDependencyNode) => {
+            if (node.type === 'signal') {
+                console.group(`Signal ${node.signal.getDebugIdentity()}`);
+
+                for (const item of node.dependents) {
+                    writeToConsole(item);
+                }
+
+                console.groupEnd();
+            } else {
+                // TODO:
+                console.log('Listener');
+            }
+        };
+
+        const node = this.debugGetListenerTree();
+
+        writeToConsole(node);
+    }
+
+    identify(
+        name: string,
+        sourceFile?: string,
+        sourceMethod?: string,
+        row?: number,
+        col?: number,
+    ): this {
+        this.name = name;
+        this.sourceFile = sourceFile;
+        this.sourceMethod = sourceMethod;
+        this.sourceRow = row;
+        this.sourceCol = col;
+        return this;
+    }
+
+    doNotIdentify(): this {
+        return this;
+    }
+
+    getDebugIdentity() {
+        return `[${this.name}: ${this.sourceMethod}, ${this.sourceFile} at ${this.sourceRow}:${this.sourceCol}]`;
     }
 }

@@ -13,8 +13,9 @@ This is the callback signature for listening for signal updates.
  * Signature for signal listeners that are manually registered.
  */
 export type SignalListener<T> = (
-    previous: SignalState<T>,
     next: SignalState<T>,
+    previous: SignalState<T>,
+    trigger: Signal<unknown> | undefined
 ) => void;
 ```
 

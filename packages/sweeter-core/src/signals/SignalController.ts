@@ -28,6 +28,11 @@ export class SignalController<T> {
     get signal(): Signal<T> {
         return this.#signal;
     }
+
+    identify(...params: Parameters<Signal<T>['identify']>): this {
+        this.#signal.identify(...params);
+        return this;
+    }
 }
 
 /** Private protocol for communicating from controller to signal */

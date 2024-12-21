@@ -83,9 +83,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
         return this.#elementType as never;
     }
 
-    public getElement(
-        index: number,
-    ): ElementModel<TArraySchema> | undefined {
+    public getElement(index: number): ElementModel<TArraySchema> | undefined {
         return this.#elementModels[index];
     }
 
@@ -93,9 +91,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
         return this.getElement(index) as never;
     }
 
-    public getElements(): ReadonlyArray<
-        ElementModel<TArraySchema>
-    > {
+    public getElements(): ReadonlyArray<ElementModel<TArraySchema>> {
         return this.#elementModels;
     }
 
@@ -120,7 +116,11 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
         );
     }
 
-    public setIndex(index: number, value: ElementModel<TArraySchema>, validate: boolean = true): Promise<this> {
+    public setIndex(
+        index: number,
+        value: ElementModel<TArraySchema>,
+        validate: boolean = true,
+    ): Promise<this> {
         return this.unknownSetIndex(index, value, validate);
     }
 
@@ -137,7 +137,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
                 type: this.type,
                 parentInfo: this.parentInfo,
                 relationship: { type: 'element' },
-            }
+            };
 
             return await validateAndMakeModel(item, eleDefinition, parentInfo);
         });
@@ -177,19 +177,27 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
         return res as unknown as this;
     }
 
-    public async unknownSetIndex(index: number, value: unknown | UnknownModel, validate: boolean = true): Promise<this> {
+    public async unknownSetIndex(
+        index: number,
+        value: unknown | UnknownModel,
+        validate: boolean = true,
+    ): Promise<this> {
         const eleDefinition = this.getElementType() as Type<unknown>;
 
         const existing = this.#elementModels[index];
         if (!existing) {
-            throw new Error('You may only assign values with an index < length');
+            throw new Error(
+                'You may only assign values with an index < length',
+            );
         }
 
-        const model = await validateAndMakeModel(value, eleDefinition, existing.parentInfo);
+        const model = await validateAndMakeModel(
+            value,
+            eleDefinition,
+            existing.parentInfo,
+        );
 
-        const newValue = [
-            ...(this.value as unknown[])
-        ];
+        const newValue = [...(this.value as unknown[])];
         newValue[1] = model.value;
 
         if (validate) {

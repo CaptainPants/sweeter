@@ -6,13 +6,15 @@ import {
 } from './types.js';
 
 export function isSignal(value: unknown): value is Signal<unknown> {
-    return !!value && Object.hasOwn(value, signalMarker);
+    return !!value && typeof value === 'object' && signalMarker in value;
 }
 
 export function isWritableSignal(
     value: unknown,
 ): value is WritableSignal<unknown> {
-    return !!value && Object.hasOwn(value, writableSignalMarker);
+    return (
+        !!value && typeof value === 'object' && writableSignalMarker in value
+    );
 }
 
 export function isReadWriteSignal(
@@ -20,7 +22,8 @@ export function isReadWriteSignal(
 ): value is ReadWriteSignal<unknown> {
     return (
         !!value &&
-        Object.hasOwn(value, signalMarker) &&
-        Object.hasOwn(value, writableSignalMarker)
+        typeof value === 'object' &&
+        signalMarker in value &&
+        writableSignalMarker in value
     );
 }

@@ -72,9 +72,7 @@ export function ArrayEditor(
         index: number,
         value: unknown,
     ): Promise<void> => {
-        const newDraft = await draft
-            .peek()
-            .unknownSetIndex(index, value);
+        const newDraft = await draft.peek().unknownSetIndex(index, value);
 
         draft.value = newDraft;
     };

@@ -50,9 +50,10 @@ export type CallAndReturnDependenciesResult<T> =
           dependencies: Set<Signal<unknown>>;
       };
 
-export function callAndReturnDependencies<T>(
-    callback: () => T,
+export function callAndReturnDependencies<T, TArgs extends readonly unknown[]>(
+    callback: (...args: TArgs) => T,
     readonly: boolean,
+    ...args: TArgs
 ): CallAndReturnDependenciesResult<T> {
     const dependencies = new Set<Signal<unknown>>();
 
@@ -65,6 +66,7 @@ export function callAndReturnDependencies<T>(
             callback,
             listener,
             readonly,
+            ...args,
         );
 
         return {
@@ -81,10 +83,14 @@ export function callAndReturnDependencies<T>(
     }
 }
 
-export function callAndInvokeListenerForEachDependency<T>(
-    callback: () => T,
+export function callAndInvokeListenerForEachDependency<
+    T,
+    TArgs extends readonly unknown[],
+>(
+    callback: (...args: TArgs) => T,
     listener: AmbientSignalUsageListener,
     readonly: boolean,
+    ...args: TArgs
 ): T {
     // Save
     const saved_ambientUsageListener = _ambientUsageListener;
@@ -95,7 +101,7 @@ export function callAndInvokeListenerForEachDependency<T>(
     _ambientChangesBlocked = readonly;
 
     try {
-        return callback();
+        return callback(...args);
     } finally {
         // Restore
         _ambientUsageListener = saved_ambientUsageListener;

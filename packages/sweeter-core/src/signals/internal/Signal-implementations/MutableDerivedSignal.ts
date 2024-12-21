@@ -2,13 +2,14 @@ import { DerivedSignal } from './DerivedSignal.js';
 import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
 import { writableSignalMarker } from '../markers.js';
 import { DerivedSignalOptions, type ReadWriteSignal } from '../../types.js';
+import { type DerivationCallback } from '../../$derive.js';
 
 export class MutableDerivedSignal<T>
     extends DerivedSignal<T>
     implements ReadWriteSignal<T>
 {
     constructor(
-        calculation: () => T,
+        calculation: DerivationCallback<T>,
         mutate: (value: T) => void,
         options?: DerivedSignalOptions,
     ) {
@@ -19,7 +20,9 @@ export class MutableDerivedSignal<T>
 
     #mutate: (value: T) => void;
 
-    public readonly [writableSignalMarker] = true;
+    public get [writableSignalMarker]() {
+        return true as const;
+    }
 
     override get value(): T {
         // Weirdly, if you don't override the getter as well you end up with an undefined result

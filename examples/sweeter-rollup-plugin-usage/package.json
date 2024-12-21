@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/sweeter-web-gummybear",
+    "name": "@captainpants/rollup-plugin-sweeter-usage",
     "version": "0.0.5",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
@@ -12,11 +12,11 @@
     "exports": {
         ".": {
             "import": "./build/index.js",
-            "require": "./build/index.js"
+            "require": "./build/index.cjs"
         }
     },
     "scripts": {
-        "trace": "pnpm exec tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
+        "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",
@@ -31,16 +31,10 @@
     "engines": {
         "pnpm": "8.14.1"
     },
-    "dependencies": {
-        "@captainpants/sweeter-core": "workspace:^",
-        "@captainpants/sweeter-utilities": "workspace:^",
-        "@captainpants/sweeter-web": "workspace:^",
-        "@popperjs/core": "^2.11.8",
-        "sortablejs": "^1.15.2",
-        "tinycolor2": "^1.6.0"
-    },
     "devDependencies": {
-        "@captainpants/rollup-plugin-sweeter": "workspace:^",
-        "@types/sortablejs": "^1.15.7"
+        "@captainpants/rollup-plugin-sweeter": "workspace:^"
+    },
+    "dependencies": {
+        "@captainpants/sweeter-core": "workspace:^"
     }
 }

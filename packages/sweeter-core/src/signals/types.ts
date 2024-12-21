@@ -100,6 +100,11 @@ export interface Signal<T> extends SignalCommon<T> {
         col?: number,
     ): this;
 
+    /**
+     * Marks that this signal should not be annotated with information about where it was created. This is used by the rollup plugin.
+     */
+    doNotIdentify(): this;
+
     getDebugIdentity(): string;
 }
 

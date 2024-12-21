@@ -258,6 +258,10 @@ export abstract class SignalBase<T> implements Signal<T> {
         return this;
     }
 
+    doNotIdentify(): this {
+        return this;
+    }
+
     getDebugIdentity() {
         return `[${this.name}: ${this.sourceMethod}, ${this.sourceFile} at ${this.sourceRow}:${this.sourceCol}]`;
     }

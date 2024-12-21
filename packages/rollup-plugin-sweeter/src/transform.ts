@@ -7,6 +7,9 @@ import {
     SourceMap,
     TransformPluginContext,
 } from 'rollup';
+import { newlinesBetween } from './newlinesBetween';
+import { getRowAndCol } from './getRowAndCol';
+import { Node } from 'estree-toolkit/dist/helpers';
 
 export type Transformer = (
     code: string,
@@ -58,22 +61,31 @@ export function createTransform({
 
         traverse(ast, {
             CallExpression(path) {
-                const node = path.node as typeof path.node & AstNodeLocation;
+                if (!path.node) {
+                    return;
+                }
+                assertAstLocation(path.node);
 
-                if (node && is.identifier(node.callee)) {
-                    if (sigilizedSignalFunctions.has(node.callee.name)) {
-                        const name = getVariableName(
-                            path,
-                            node.callee.name,
-                            next,
-                        );
-                        const funcName = getDeclaringMethod(path);
-                        const [row, col] = getRowAndCol(code, node.start);
-
-                        magicString.appendRight(
-                            node.end,
-                            `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, ${JSON.stringify(filename)}, ${row}, ${col})`,
-                        );
+                if (is.identifier(path.node.callee)) {
+                    if (sigilizedSignalFunctions.has(path.node.callee.name)) {
+                        const ignore = shouldIgnore(path);
+                        if (ignore) {
+                            magicString.remove(...ignore);
+                        }
+                        else {
+                            const name = getVariableName(
+                                path,
+                                path.node.callee.name,
+                                next,
+                            );
+                            const funcName = getDeclaringMethod(path);
+                            const [row, col] = getRowAndCol(code, path.node.start);
+    
+                            magicString.appendRight(
+                                path.node.end,
+                                `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, ${JSON.stringify(filename)}, ${row}, ${col})`,
+                            );
+                        }
                     }
                 }
             },
@@ -161,17 +173,38 @@ function getUsefulFilenameFromId(
     return prefix + filePath;
 }
 
-function getRowAndCol(
-    code: string,
-    offset: number,
-): [row: number, col: number] {
-    const upToOffset = code.substring(0, offset);
+function assertAstLocation(node: Node): asserts node is Node & AstNodeLocation {
+    const hasProperties = typeof (node as Node & AstNodeLocation).start === 'number' && typeof (node as Node & AstNodeLocation).end === 'number'
+    if (!hasProperties) throw new TypeError('Node did not have start and end property.');
+}
 
-    const row = upToOffset.split('\n').length; // number of lines = number of \n + 1
+function shouldIgnore(pathOfSigilCall: NodePath): undefined | [start: number, end: number] {
+    // $mutable(1).doNotIdentify()
+    // in this case the pathOfSigilCall is $mutable(1)
+    // where the callee would be a MemberExpression inside 
+    // a CallExpression
+    
+    const memberExpression = pathOfSigilCall.parentPath;
+    if (!memberExpression || !is.memberExpression(memberExpression.node)) {
+        return undefined;
+    }
 
-    let startOfLine = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
+    if (!is.identifier(memberExpression.node.property) || memberExpression.node.property.name !== 'doNotIdentify') {
+        return undefined;
+    }
 
-    const col = offset - startOfLine;
+    const callExpression = memberExpression.parentPath;
+    if (!callExpression || !is.callExpression(callExpression.node)) {
+        return undefined;
+    }
 
-    return [row, col + 1 /* 1-based */];
+    // parent exists and is a MemberExpression
+    // the member property is an identify with name 'doNotIdentify'
+    // the next parent is a call expression
+    // So we should be matching $sigil().doNotIdentify()
+
+    assertAstLocation(memberExpression.node.object);
+    assertAstLocation(callExpression.node);
+
+    return [memberExpression.node.object.end, callExpression.node.end];
 }

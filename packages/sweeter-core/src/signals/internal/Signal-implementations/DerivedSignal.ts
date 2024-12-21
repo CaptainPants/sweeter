@@ -6,16 +6,24 @@ import {
     callAndReturnDependencies,
 } from '../../ambient.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
-import { type Signal, type DerivedSignalOptions } from '../../types.js';
+import {
+    type Signal,
+    type DerivedSignalOptions,
+    SignalListener,
+} from '../../types.js';
 import { type ListenerSetCallback } from '../ListenerSet.js';
 import {
     finishCalculation,
     startCalculation,
 } from '../../calculationDeferral.js';
 import { SignalState } from '../../SignalState.js';
+import { DerivationCallback } from '../../$derive.js';
 
 export class DerivedSignal<T> extends SignalBase<T> {
-    constructor(calculation: () => T, options?: DerivedSignalOptions) {
+    constructor(
+        calculation: DerivationCallback<T>,
+        options?: DerivedSignalOptions,
+    ) {
         // Capture execution context before we do anything else
         const savedContext = saveExecutionContext();
 
@@ -25,14 +33,19 @@ export class DerivedSignal<T> extends SignalBase<T> {
         this.#capturedContext = savedContext;
 
         // Giving the function a name for debugging purposes
-        const derivedSignalListener = () => {
+        const derivedSignalListener: SignalListener<unknown> = (
+            _1,
+            _2,
+            trigger,
+        ) => {
             if (isBatching()) {
                 this.#dirty = true;
+                this.#dirtyCause = trigger;
                 deferForBatchEnd(this);
                 return;
             }
 
-            this.#recalculate();
+            this.#recalculate(trigger);
         };
         // For building debug tree. The 'as' just gets us type safety for the property.
         (
@@ -56,11 +69,13 @@ export class DerivedSignal<T> extends SignalBase<T> {
 
     #capturedContext: SavedExecutionContext;
 
-    #calculation: () => T;
+    #calculation: DerivationCallback<T>;
 
     // Not included by default to represent 'false' so we don't need to add the actual property until we need to
     #released?: boolean;
-    #dirty?: boolean;
+
+    #dirty?: boolean | undefined;
+    #dirtyCause?: Signal<unknown> | undefined;
 
     #recalculating: boolean = false;
 
@@ -75,16 +90,16 @@ export class DerivedSignal<T> extends SignalBase<T> {
     /**
      * Bound as its used as its passed to .listen calls.
      */
-    #dependencyListener: () => void;
+    #dependencyListener: SignalListener<unknown>;
 
     protected override _peeking(): void {
         if (this.#dirty) {
-            this.#recalculate();
+            this.#recalculate(this.#dirtyCause);
         }
     }
 
     protected override _init(): void {
-        this.#recalculate();
+        this.#recalculate(this.#dirtyCause);
     }
 
     #deriveState(result: CallAndReturnDependenciesResult<T>): SignalState<T> {
@@ -95,7 +110,7 @@ export class DerivedSignal<T> extends SignalBase<T> {
         }
     }
 
-    #recalculate() {
+    #recalculate(cause: Signal<unknown> | undefined) {
         // if already initialized and has been orphaned then end here.
         if (this.inited && this.#released) {
             return;
@@ -114,6 +129,7 @@ export class DerivedSignal<T> extends SignalBase<T> {
                 const result = callAndReturnDependencies(
                     this.#calculation,
                     true,
+                    cause,
                 );
 
                 const nextState = this.#deriveState(result);
@@ -129,6 +145,7 @@ export class DerivedSignal<T> extends SignalBase<T> {
                 }
 
                 this.#dirty = false;
+                this.#dirtyCause = undefined;
                 this._updateAndAnnounce(nextState);
             } finally {
                 revert();
@@ -141,8 +158,9 @@ export class DerivedSignal<T> extends SignalBase<T> {
 
     public batchComplete() {
         if (this.#dirty) {
-            this.#recalculate();
+            this.#recalculate(this.#dirtyCause);
             this.#dirty = false;
+            this.#dirtyCause = undefined;
         }
     }
 

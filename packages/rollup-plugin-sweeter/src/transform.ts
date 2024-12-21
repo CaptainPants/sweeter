@@ -71,16 +71,18 @@ export function createTransform({
                         const ignore = shouldIgnore(path);
                         if (ignore) {
                             magicString.remove(...ignore);
-                        }
-                        else {
+                        } else {
                             const name = getVariableName(
                                 path,
                                 path.node.callee.name,
                                 next,
                             );
                             const funcName = getDeclaringMethod(path);
-                            const [row, col] = getRowAndCol(code, path.node.start);
-    
+                            const [row, col] = getRowAndCol(
+                                code,
+                                path.node.start,
+                            );
+
                             magicString.appendRight(
                                 path.node.end,
                                 `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, ${JSON.stringify(filename)}, ${row}, ${col})`,
@@ -174,22 +176,30 @@ function getUsefulFilenameFromId(
 }
 
 function assertAstLocation(node: Node): asserts node is Node & AstNodeLocation {
-    const hasProperties = typeof (node as Node & AstNodeLocation).start === 'number' && typeof (node as Node & AstNodeLocation).end === 'number'
-    if (!hasProperties) throw new TypeError('Node did not have start and end property.');
+    const hasProperties =
+        typeof (node as Node & AstNodeLocation).start === 'number' &&
+        typeof (node as Node & AstNodeLocation).end === 'number';
+    if (!hasProperties)
+        throw new TypeError('Node did not have start and end property.');
 }
 
-function shouldIgnore(pathOfSigilCall: NodePath): undefined | [start: number, end: number] {
+function shouldIgnore(
+    pathOfSigilCall: NodePath,
+): undefined | [start: number, end: number] {
     // $mutable(1).doNotIdentify()
     // in this case the pathOfSigilCall is $mutable(1)
-    // where the callee would be a MemberExpression inside 
+    // where the callee would be a MemberExpression inside
     // a CallExpression
-    
+
     const memberExpression = pathOfSigilCall.parentPath;
     if (!memberExpression || !is.memberExpression(memberExpression.node)) {
         return undefined;
     }
 
-    if (!is.identifier(memberExpression.node.property) || memberExpression.node.property.name !== 'doNotIdentify') {
+    if (
+        !is.identifier(memberExpression.node.property) ||
+        memberExpression.node.property.name !== 'doNotIdentify'
+    ) {
         return undefined;
     }
 

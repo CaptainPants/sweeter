@@ -2,19 +2,19 @@ import { toSearcher } from './toSearcher';
 
 it('Search matches', () => {
     expect(toSearcher(['banana'])('This is an example banana.')).toStrictEqual(
-        true,
+        19,
     );
     expect(
         toSearcher(['banana'])('This is an example without the word.'),
-    ).toStrictEqual(false);
+    ).toStrictEqual(undefined);
 
     expect(toSearcher(['alpha', 'beta'])('Some words alpha.')).toStrictEqual(
-        true,
+        11,
     );
     expect(toSearcher(['alpha', 'beta'])('Some words beta.')).toStrictEqual(
-        true,
+        11,
     );
     expect(toSearcher(['alpha', 'beta'])('Some words gamma.')).toStrictEqual(
-        false,
+        undefined,
     );
 });

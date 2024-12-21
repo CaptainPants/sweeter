@@ -12,7 +12,7 @@ export function signalExample() {
     const deferred1 = $defer(derived);
     const deferred2 = $defer(deferred1);
     $controller(SignalState.success(1)).signal;
-    
+
     const dontIdentify = $mutable(2).doNotIdentify();
 
     function unused() {

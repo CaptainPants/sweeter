@@ -1,4 +1,4 @@
-import { newlinesBetween } from "./newlinesBetween";
+import { newlinesBetween } from './newlinesBetween';
 
 export function getRowAndCol(
     code: string,

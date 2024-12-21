@@ -11,9 +11,7 @@ it('Search matches', () => {
     expect(toSearcher(['alpha', 'beta'])('Some words alpha.')).toStrictEqual(
         11,
     );
-    expect(toSearcher(['alpha', 'beta'])('Some words beta.')).toStrictEqual(
-        11,
-    );
+    expect(toSearcher(['alpha', 'beta'])('Some words beta.')).toStrictEqual(11);
     expect(toSearcher(['alpha', 'beta'])('Some words gamma.')).toStrictEqual(
         undefined,
     );

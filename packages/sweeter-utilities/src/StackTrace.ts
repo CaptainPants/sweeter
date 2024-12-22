@@ -15,7 +15,7 @@ Error:
     at callAndInvokeListenerForEachDependency (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:152:12)
 */
 const chromeRegex =
-    /^\s*at (?:(?<func>(?:new )?[^(]+) \((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\)\s*)$/gim;
+/^\s*at (?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_]*) \((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\)\s*)$/gmi;
 
 /*
 Example:
@@ -88,11 +88,11 @@ finishCalculation@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweet
 recalculate_fn@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:545:5
  */
 const firefoxRegex =
-    /^(?<func>[^@]+)@(?<location>[^@]+@[^@]+):(?<row>[0-9]+):(?<col>[0-9]+)$/gim;
+    /^(?<func>[^@]+)@(?<location>[^@]+@[^@]+):(?<row>[0-9]+):(?<col>[0-9]+)$/gmi;
 
 function normalizeFunctionName(name: string | undefined) {
     if (!name) {
-        return '';
+        return '(anonymous/top level function)';
     }
 
     if (name.startsWith('#')) {

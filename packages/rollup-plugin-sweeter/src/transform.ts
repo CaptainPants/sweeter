@@ -83,27 +83,23 @@ export function createTransform({
                                 path.node,
                             );
 
-                            magicString.appendRight(
-                                path.node.end,
-                                `.${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${row}, ${col})`,
-                            );
+                            // magicString.appendRight(
+                            //     path.node.end,
+                            //     `.${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${row}, ${col})`,
+                            // );
                         }
                     } else if (
                         path.node.callee.name == constants.insertLocation
                     ) {
                         const parent = path.parent;
-                        if (is.callExpression(parent)) {
-                            assertAstLocation(parent);
+                        const location = getLocation(code, path, path.node);
+                        const toInject = [filename, ...location];
 
-                            const location = getLocation(code, path, path.node);
-                            const toInject = [filename, ...location];
-
-                            magicString.overwrite(
-                                parent.start,
-                                parent.end,
-                                JSON.stringify(toInject),
-                            );
-                        }
+                        magicString.update(
+                            path.node.start,
+                            path.node.end,
+                            JSON.stringify(toInject),
+                        );
                     }
                 }
             },

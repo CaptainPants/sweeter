@@ -4,6 +4,7 @@ import {
     $val,
     type Component,
     type PropertiesMightBeSignals,
+    $insertLocation,
 } from '@captainpants/sweeter-core';
 import { type Theme } from './types.js';
 import { ThemeContext } from './context.js';
@@ -20,7 +21,7 @@ export const ThemeProvider: Component<ThemeProviderProps> = ({
     return $derive(() => {
         const themeValue = $val(theme);
 
-        return ThemeContext.invokeWith({ theme: themeValue }, () => (
+        return ThemeContext.invokeWith({ theme: themeValue }, $insertLocation(), () => (
             <>
                 <themeValue.IncludeThemeStylesheets />
                 {$children(children)}

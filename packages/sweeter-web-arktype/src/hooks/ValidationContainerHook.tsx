@@ -1,6 +1,7 @@
 import { type ValidationListener } from '../types.js';
 import { ValidationContainerContext } from '../context/ValidationContainerContext.js';
 import {
+    $insertLocation,
     $mutable,
     $readonly,
     type ComponentInit,
@@ -42,7 +43,7 @@ export function ValidationContainerHook(
     };
 
     const validated = (children: () => JSX.Element | undefined): JSX.Element =>
-        ValidationContainerContext.invokeWith(context, children);
+        ValidationContainerContext.invokeWith(context, $insertLocation(), children);
 
     init.onMount(() => {
         firstMountComplete = true;

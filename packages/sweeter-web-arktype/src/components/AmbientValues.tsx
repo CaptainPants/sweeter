@@ -1,5 +1,6 @@
 import {
     $derive,
+    $insertLocation,
     $val,
     type ComponentInit,
     type PropertiesMightBeSignals,
@@ -45,7 +46,7 @@ export function AmbientValues(
         };
     });
 
-    return AmbientValuesContext.invokeWith(ambientValueCallback, () => {
+    return AmbientValuesContext.invokeWith(ambientValueCallback, $insertLocation(), () => {
         return $derive(() => {
             return $val(children)?.();
         });

@@ -46,9 +46,13 @@ export function AmbientValues(
         };
     });
 
-    return AmbientValuesContext.invokeWith(ambientValueCallback, $insertLocation(), () => {
-        return $derive(() => {
-            return $val(children)?.();
-        });
-    });
+    return AmbientValuesContext.invokeWith(
+        ambientValueCallback,
+        $insertLocation(),
+        () => {
+            return $derive(() => {
+                return $val(children)?.();
+            });
+        },
+    );
 }

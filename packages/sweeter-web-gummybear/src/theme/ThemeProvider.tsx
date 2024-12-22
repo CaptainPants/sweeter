@@ -21,11 +21,15 @@ export const ThemeProvider: Component<ThemeProviderProps> = ({
     return $derive(() => {
         const themeValue = $val(theme);
 
-        return ThemeContext.invokeWith({ theme: themeValue }, $insertLocation(), () => (
-            <>
-                <themeValue.IncludeThemeStylesheets />
-                {$children(children)}
-            </>
-        ));
+        return ThemeContext.invokeWith(
+            { theme: themeValue },
+            $insertLocation(),
+            () => (
+                <>
+                    <themeValue.IncludeThemeStylesheets />
+                    {$children(children)}
+                </>
+            ),
+        );
     });
 };

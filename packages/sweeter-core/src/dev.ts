@@ -107,9 +107,3 @@ const dev = {
     ping,
 };
 export { dev };
-
-// Make this easily accessible from the window object
-declare global {
-    var sweeterDev: typeof dev;
-}
-globalThis.sweeterDev = dev;

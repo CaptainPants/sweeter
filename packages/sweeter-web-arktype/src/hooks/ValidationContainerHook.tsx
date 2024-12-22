@@ -43,7 +43,11 @@ export function ValidationContainerHook(
     };
 
     const validated = (children: () => JSX.Element | undefined): JSX.Element =>
-        ValidationContainerContext.invokeWith(context, $insertLocation(), children);
+        ValidationContainerContext.invokeWith(
+            context,
+            $insertLocation(),
+            children,
+        );
 
     init.onMount(() => {
         firstMountComplete = true;

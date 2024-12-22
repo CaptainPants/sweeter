@@ -1,6 +1,8 @@
+import { throwError } from './throwError';
+
 /*
 Example:
-Error
+Error: 
     at getNiceStackTrace (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-utilities/build/index.js?t=1705104034061:141:17)
     at new DerivedSignal (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:448:20)
     at $derive (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:630:10)
@@ -13,7 +15,7 @@ Error
     at callAndInvokeListenerForEachDependency (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:152:12)
 */
 const chromeRegex =
-    /^\s*at (?:(?<func>(?:new )?[^(]+) \((?<location>[^)]+):([0-9]+):([0-9]+)\)\s*|(?<location_alt>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*)$/gim;
+    /^\s*at (?:(?<func>(?:new )?[^(]+) \((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\)\s*)$/gim;
 
 /*
 Example:
@@ -139,20 +141,36 @@ export class StackTrace {
     readonly context?: string | undefined;
     readonly previous?: StackTrace | undefined;
 
-    getNice({ padding, truncate }: NiceFormatOptions = defaultOptions) {
-        padding ??= '';
+    prepare(): { regExp: RegExp; raw: string; isChromey: boolean } {
+        let raw = this.raw ?? '';
 
-        const raw = this.#error.stack;
-        if (!raw) {
-            return (
-                (this.context ? this.context + '\n' : '') +
-                '<no stack trace found>'
-            );
+        const isChromey = raw.startsWith('Error: \n') ?? false;
+        if (isChromey) {
+            raw = raw.substring('Error: \n'.length); // Skip the 'Error' line
         }
 
-        const chromey = raw.startsWith('Error') ?? false;
+        const toSkip = 1 + this.skipFrames;
+        let indexToStartAt = 0;
 
-        const regex = chromey ? chromeRegex : firefoxRegex;
+        let counter = 0;
+        for (let i = 0; i < raw.length; ++i) {
+            if (raw[i] === '\n' && ++counter === toSkip) {
+                indexToStartAt = i + 1;
+                break;
+            }
+        }
+
+        raw = raw.substring(indexToStartAt);
+
+        return {
+            regExp: isChromey ? chromeRegex : firefoxRegex,
+            raw: raw,
+            isChromey: isChromey,
+        };
+    }
+
+    getNice({ padding, truncate }: NiceFormatOptions = defaultOptions) {
+        padding ??= '';
 
         const rows: string[] = [];
 
@@ -160,7 +178,9 @@ export class StackTrace {
             rows.push(this.context);
         }
 
-        const matches = [...raw.matchAll(regex)].slice(1 + this.skipFrames);
+        const { regExp, raw } = this.prepare();
+
+        const matches = [...raw.matchAll(regExp)];
         let counter = 0;
         for (const match of matches) {
             if (!match.groups) continue;
@@ -169,20 +189,40 @@ export class StackTrace {
                 break;
             }
 
-            const func = normalizeFunctionName(match.groups['func']);
-            const location =
+            const file =
                 match.groups['location'] ?? match.groups['location_alt'];
-            const row = match.groups['row'];
-            const col = match.groups['col'];
+            const func = normalizeFunctionName(match.groups['func']);
+            const row = match.groups['row'] ?? match.groups['row_alt'];
+            const col = match.groups['col'] ?? match.groups['col_alt'];
 
-            rows.push(
-                `${padding}${func} ${location} (row: ${row} col: ${col})`,
-            );
+            rows.push(`${padding}${func} ${file} (row: ${row} col: ${col})`);
 
             ++counter;
         }
 
         return rows.join('\n');
+    }
+
+    getFirstLocation():
+        | [file: string, function: string, row: number, col: number]
+        | undefined {
+        const { regExp, raw } = this.prepare();
+        const match = regExp.exec(raw);
+
+        if (match?.groups) {
+            const file =
+                match.groups['location'] ?? match.groups['location_alt'];
+            const func = normalizeFunctionName(match.groups['func']);
+            const row = match.groups['row'] ?? match.groups['row_alt'];
+            const col = match.groups['col'] ?? match.groups['col_alt'];
+            return [
+                file ?? throwError(new Error('File expected')),
+                func,
+                parseInt(row ?? throwError(new Error('Row number expected'))),
+                parseInt(col ?? throwError(new Error('Col number expected'))),
+            ];
+        }
+        return undefined;
     }
 
     get raw(): string | undefined {

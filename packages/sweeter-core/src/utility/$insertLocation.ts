@@ -1,3 +1,5 @@
+import { StackTrace } from '@captainpants/sweeter-utilities';
+
 export type CodeLocation = [
     file: string,
     method: string,
@@ -10,7 +12,8 @@ export type CodeLocation = [
  * This is performed by the rollup plugin.
  */
 export function $insertLocation(): CodeLocation {
-    throw new Error(
-        'TODO: implement a fallback runtime version of this function using stack trace',
-    );
+    const stackTrace = new StackTrace({ skipFrames: 1 });
+    const top = stackTrace.getFirstLocation();
+    if (!top) throw new Error('Location not found');
+    return top;
 }

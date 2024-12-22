@@ -98,7 +98,8 @@ export function createTransform({
                         magicString.update(
                             path.node.start,
                             path.node.end,
-                            '/* rollup-plugin-sweeter: */' + JSON.stringify(toInject),
+                            '/* rollup-plugin-sweeter: */' +
+                                JSON.stringify(toInject),
                         );
                     }
                 }

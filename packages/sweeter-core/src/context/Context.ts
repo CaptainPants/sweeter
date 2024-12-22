@@ -80,6 +80,47 @@ export class Context<T> {
         result.snapshot = snapshot;
         return result;
     }
+
+    private static *walkStack(): IterableIterator<ContextNode> {
+        let current = contextStack.current;
+        while (current) {
+            yield current;
+            current = current.parent;
+        }
+    }
+
+    static debugLogCurrent(): void {
+        const map = new Map<symbol, ContextNode>();
+
+        for (const item of Context.walkStack()) {
+            if (!map.has(item.id)) {
+                map.set(item.id, item);
+            }
+        }
+
+        console.group('Current contexts');
+
+        for (const [
+            id,
+            {
+                type: { name },
+                codeLocation: [file, method, row, col],
+            },
+        ] of map) {
+            console.log(
+                '%c%s: %c%s %s (%i:%i)',
+                'font-weight: bold;',
+                name,
+                'font-weight: inherit',
+                file,
+                method,
+                row,
+                col,
+            );
+        }
+
+        console.groupEnd();
+    }
 }
 
 export interface ContextSummary {

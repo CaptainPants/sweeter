@@ -83,22 +83,22 @@ export function createTransform({
                                 path.node,
                             );
 
-                            // magicString.appendRight(
-                            //     path.node.end,
-                            //     `.${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${row}, ${col})`,
-                            // );
+                            magicString.appendRight(
+                                path.node.end,
+                                `./* rollup-plugin-sweeter: */${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${row}, ${col})`,
+                            );
                         }
                     } else if (
                         path.node.callee.name == constants.insertLocation
                     ) {
-                        const parent = path.parent;
+                        context.warn('FOUND MATCH');
                         const location = getLocation(code, path, path.node);
                         const toInject = [filename, ...location];
 
                         magicString.update(
                             path.node.start,
                             path.node.end,
-                            JSON.stringify(toInject),
+                            '/* rollup-plugin-sweeter: */' + JSON.stringify(toInject),
                         );
                     }
                 }

@@ -1,4 +1,5 @@
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
+import { CodeLocation } from '../utility/$insertLocation.js';
 import { stringifyForDiagnostics } from '../utility/stringifyForDiagnostics.js';
 
 interface ContextNode {
@@ -6,6 +7,7 @@ interface ContextNode {
     value: unknown;
     type: Context<unknown>;
     parent: ContextNode | undefined;
+    codeLocation: CodeLocation;
 }
 
 const contextStack = new ExecutionContextVariable<ContextNode | undefined>(
@@ -35,17 +37,19 @@ export class Context<T> {
 
     readonly defaultValue: T;
 
-    replace(value: T): () => void {
+    replace(value: T, codeLocation: CodeLocation): () => void {
         return contextStack.replace({
             id: this.id,
             value: value,
             type: this,
             parent: contextStack.current,
+            codeLocation: codeLocation,
         });
     }
 
     invokeWith<TCallbackResult>(
         value: T,
+        codeLocation: CodeLocation,
         callback: () => TCallbackResult,
     ): TCallbackResult {
         return contextStack.invokeWith(
@@ -54,6 +58,7 @@ export class Context<T> {
                 value: value,
                 type: this,
                 parent: contextStack.current,
+                codeLocation: codeLocation,
             },
             callback,
         );

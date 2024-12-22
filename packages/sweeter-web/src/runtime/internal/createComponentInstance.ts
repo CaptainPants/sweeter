@@ -12,6 +12,7 @@ import {
     type Signal,
     SignalState,
     $controller,
+    $insertLocation,
 } from '@captainpants/sweeter-core';
 import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 import { type WebRuntime } from '../types.js';
@@ -184,6 +185,7 @@ export function createComponentInstance<
                 resultController.updateState(SignalState.error(err));
             },
         },
+        $insertLocation(),
         () => {
             const init = createComponentInstanceInit(Component, webRuntime);
 

@@ -7,9 +7,9 @@ import {
     SourceMap,
     TransformPluginContext,
 } from 'rollup';
-import { newlinesBetween } from './newlinesBetween';
-import { getRowAndCol } from './getRowAndCol';
-import { Node } from 'estree-toolkit/dist/helpers';
+import { assertAstLocation } from './assertAstLocation';
+import { getLocation } from './getLocation';
+import { constants } from './constants';
 
 export type Transformer = (
     code: string,
@@ -18,17 +18,17 @@ export type Transformer = (
 ) => { code: string; map: SourceMap; ast: ProgramNode };
 
 export interface TransformSetup {
-    sigils: readonly string[];
+    identifiableSigils: readonly string[];
     roots: readonly string[];
     projectName: string;
 }
 
 export function createTransform({
-    sigils,
+    identifiableSigils,
     roots: rawRoots,
     projectName,
 }: TransformSetup) {
-    const sigilizedSignalFunctions = new Set(sigils);
+    const identifiableFunctions = new Set(identifiableSigils);
 
     const roots = rawRoots.map((x) =>
         path.isAbsolute(x) ? x : path.resolve(x),
@@ -67,7 +67,7 @@ export function createTransform({
                 assertAstLocation(path.node);
 
                 if (is.identifier(path.node.callee)) {
-                    if (sigilizedSignalFunctions.has(path.node.callee.name)) {
+                    if (identifiableFunctions.has(path.node.callee.name)) {
                         const ignore = shouldIgnore(path);
                         if (ignore) {
                             magicString.remove(...ignore);
@@ -77,15 +77,31 @@ export function createTransform({
                                 path.node.callee.name,
                                 next,
                             );
-                            const funcName = getDeclaringMethod(path);
-                            const [row, col] = getRowAndCol(
+                            const [funcName, row, col] = getLocation(
                                 code,
-                                path.node.start,
+                                path,
+                                path.node,
                             );
 
                             magicString.appendRight(
                                 path.node.end,
-                                `.identify(${JSON.stringify(name)}, ${JSON.stringify(funcName)}, ${JSON.stringify(filename)}, ${row}, ${col})`,
+                                `.${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${row}, ${col})`,
+                            );
+                        }
+                    } else if (
+                        path.node.callee.name == constants.insertLocation
+                    ) {
+                        const parent = path.parent;
+                        if (is.callExpression(parent)) {
+                            assertAstLocation(parent);
+
+                            const location = getLocation(code, path, path.node);
+                            const toInject = [filename, ...location];
+
+                            magicString.overwrite(
+                                parent.start,
+                                parent.end,
+                                JSON.stringify(toInject),
                             );
                         }
                     }
@@ -118,38 +134,6 @@ function getVariableName(
     }
 }
 
-function getDeclaringMethod(path: NodePath): string | undefined {
-    const enclosingMethodDeclaration = path.findParent(
-        (x) =>
-            is.functionDeclaration(x.node) ||
-            is.functionExpression(x.node) ||
-            is.arrowFunctionExpression(x.node),
-    );
-
-    if (!enclosingMethodDeclaration?.node) {
-        return '(top level)';
-    }
-
-    if (is.functionDeclaration(enclosingMethodDeclaration.node)) {
-        return enclosingMethodDeclaration.node.id.name;
-    }
-    if (
-        is.functionExpression(enclosingMethodDeclaration.node) ||
-        is.arrowFunctionExpression(enclosingMethodDeclaration.node)
-    ) {
-        if (
-            is.variableDeclarator(enclosingMethodDeclaration.parent) &&
-            is.identifier(enclosingMethodDeclaration.parent.id)
-        ) {
-            return enclosingMethodDeclaration.parent.id.name;
-        }
-
-        return '(anonymous function)';
-    }
-
-    return '(not found)';
-}
-
 function getUsefulFilenameFromId(
     id: string,
     resolvedRoots: readonly string[],
@@ -175,14 +159,6 @@ function getUsefulFilenameFromId(
     return prefix + filePath;
 }
 
-function assertAstLocation(node: Node): asserts node is Node & AstNodeLocation {
-    const hasProperties =
-        typeof (node as Node & AstNodeLocation).start === 'number' &&
-        typeof (node as Node & AstNodeLocation).end === 'number';
-    if (!hasProperties)
-        throw new TypeError('Node did not have start and end property.');
-}
-
 function shouldIgnore(
     pathOfSigilCall: NodePath,
 ): undefined | [start: number, end: number] {
@@ -198,7 +174,7 @@ function shouldIgnore(
 
     if (
         !is.identifier(memberExpression.node.property) ||
-        memberExpression.node.property.name !== 'doNotIdentify'
+        memberExpression.node.property.name !== constants.doNotIdentify
     ) {
         return undefined;
     }

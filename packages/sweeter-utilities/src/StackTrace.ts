@@ -15,7 +15,7 @@ Error:
     at callAndInvokeListenerForEachDependency (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:152:12)
 */
 const chromeRegex =
-/^\s*at (?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_]*) \((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\)\s*)$/gmi;
+/^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gmi;
 
 /*
 Example:

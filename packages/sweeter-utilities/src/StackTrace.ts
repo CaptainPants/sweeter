@@ -121,6 +121,9 @@ export interface StackTraceOptions {
 }
 
 export interface NiceFormatOptions {
+    /**
+     * Keep only this number of lines. Useful for unit tests among other things.
+     */
     truncate?: number | undefined;
     padding?: string | undefined;
 }
@@ -185,7 +188,7 @@ export class StackTrace {
         for (const match of matches) {
             if (!match.groups) continue;
 
-            if (truncate !== undefined && counter > truncate) {
+            if (truncate !== undefined && counter >= truncate) {
                 break;
             }
 

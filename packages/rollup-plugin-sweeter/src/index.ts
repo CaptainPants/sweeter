@@ -41,7 +41,7 @@ export default function sweeterPlugin({
     const tranform = createTransform({
         roots: roots ?? [],
         projectName,
-        sigils,
+        identifiableSigils: sigils,
     });
 
     return {

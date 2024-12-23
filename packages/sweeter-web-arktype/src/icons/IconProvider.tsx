@@ -1,4 +1,4 @@
-import { type Component } from '@captainpants/sweeter-core';
+import { $insertLocation, type Component } from '@captainpants/sweeter-core';
 import { IconProviderContext } from './context/IconProviderContext.js';
 import { type IconSet } from './types.js';
 
@@ -11,7 +11,7 @@ export const IconProvider: Component<IconProviderProps> = ({
     icons,
     children,
 }) => {
-    return IconProviderContext.invokeWith(icons, () => {
+    return IconProviderContext.invokeWith(icons, $insertLocation(), () => {
         return children;
     });
 };

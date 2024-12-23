@@ -6,6 +6,7 @@ import {
 import { isReadWriteSignal, isSignal } from '@captainpants/sweeter-core';
 import { type WebRuntime } from '../types.js';
 import { indeterminite } from '../../indeterminate.js';
+import { hasOwnProperty } from '@captainpants/sweeter-utilities';
 
 type Untyped = Record<string, unknown>;
 
@@ -74,7 +75,7 @@ export function bindDOMMiscProps<TElementType extends string>(
         }
 
         // Deal with class (className) and for (htmlFor)
-        const mappedPropKey = Object.hasOwn(mappedProperties, propKey)
+        const mappedPropKey = hasOwnProperty(mappedProperties, propKey)
             ? mappedProperties[propKey]!
             : propKey;
 

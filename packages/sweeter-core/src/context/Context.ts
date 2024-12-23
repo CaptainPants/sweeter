@@ -1,4 +1,5 @@
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
+import { CodeLocation } from '../utility/$insertLocation.js';
 import { stringifyForDiagnostics } from '../utility/stringifyForDiagnostics.js';
 
 interface ContextNode {
@@ -6,6 +7,7 @@ interface ContextNode {
     value: unknown;
     type: Context<unknown>;
     parent: ContextNode | undefined;
+    codeLocation: CodeLocation;
 }
 
 const contextStack = new ExecutionContextVariable<ContextNode | undefined>(
@@ -35,17 +37,19 @@ export class Context<T> {
 
     readonly defaultValue: T;
 
-    replace(value: T): () => void {
+    replace(value: T, codeLocation: CodeLocation): () => void {
         return contextStack.replace({
             id: this.id,
             value: value,
             type: this,
             parent: contextStack.current,
+            codeLocation: codeLocation,
         });
     }
 
     invokeWith<TCallbackResult>(
         value: T,
+        codeLocation: CodeLocation,
         callback: () => TCallbackResult,
     ): TCallbackResult {
         return contextStack.invokeWith(
@@ -54,6 +58,7 @@ export class Context<T> {
                 value: value,
                 type: this,
                 parent: contextStack.current,
+                codeLocation: codeLocation,
             },
             callback,
         );
@@ -74,6 +79,47 @@ export class Context<T> {
         };
         result.snapshot = snapshot;
         return result;
+    }
+
+    private static *walkStack(): IterableIterator<ContextNode> {
+        let current = contextStack.current;
+        while (current) {
+            yield current;
+            current = current.parent;
+        }
+    }
+
+    static debugLogCurrent(): void {
+        const map = new Map<symbol, ContextNode>();
+
+        for (const item of Context.walkStack()) {
+            if (!map.has(item.id)) {
+                map.set(item.id, item);
+            }
+        }
+
+        console.group('Current contexts');
+
+        for (const [
+            id,
+            {
+                type: { name },
+                codeLocation: [file, method, row, col],
+            },
+        ] of map) {
+            console.log(
+                '%c%s: %c%s %s (%i:%i)',
+                'font-weight: bold;',
+                name,
+                'font-weight: inherit',
+                file,
+                method,
+                row,
+                col,
+            );
+        }
+
+        console.groupEnd();
     }
 }
 

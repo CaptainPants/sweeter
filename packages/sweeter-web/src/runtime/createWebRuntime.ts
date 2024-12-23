@@ -12,6 +12,7 @@ import {
     type Signal,
     Context,
     ComponentFaultContext,
+    $insertLocation,
 } from '@captainpants/sweeter-core';
 import { addJsxChildren } from './internal/addJsxChildren.js';
 import { jsx } from './jsx.js';
@@ -197,11 +198,14 @@ function createNestedRoot(
     render: () => JSX.Element,
     webRuntime: WebRuntimeImplementation,
 ) {
-    const cleanup = ComponentFaultContext.replace({
-        reportFaulted: (err) => {
-            webRuntime.topLevelError(err);
+    const cleanup = ComponentFaultContext.replace(
+        {
+            reportFaulted: (err) => {
+                webRuntime.topLevelError(err);
+            },
         },
-    });
+        $insertLocation(),
+    );
     try {
         const content = render();
 

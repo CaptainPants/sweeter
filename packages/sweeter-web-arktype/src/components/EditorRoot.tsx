@@ -10,6 +10,7 @@ import {
 
 import {
     $derive,
+    $insertLocation,
     $val,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
@@ -128,16 +129,20 @@ export function EditorRoot<TSchema extends AnyTypeConstraint>({
         return (
             <AmbientValues callback={newAmbientValuesCallback}>
                 {() =>
-                    EditorRootContext.invokeWith(hostContext, () => (
-                        <EditorHost
-                            id={id}
-                            model={typedModel}
-                            replace={replace as unknown as UnknownReplacer}
-                            indent={0}
-                            isRoot
-                            idPath={idPath}
-                        />
-                    ))
+                    EditorRootContext.invokeWith(
+                        hostContext,
+                        $insertLocation(),
+                        () => (
+                            <EditorHost
+                                id={id}
+                                model={typedModel}
+                                replace={replace as unknown as UnknownReplacer}
+                                indent={0}
+                                isRoot
+                                idPath={idPath}
+                            />
+                        ),
+                    )
                 }
             </AmbientValues>
         );

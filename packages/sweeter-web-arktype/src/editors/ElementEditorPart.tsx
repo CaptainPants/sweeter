@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $peek,
     $val,
     type ComponentInit,
@@ -43,11 +43,11 @@ export function ElementEditorPart(
         <EditorHost
             model={elementModel}
             replace={replace}
-            propertyDisplayName={$derive(() =>
+            propertyDisplayName={$derived(() =>
                 localize('Element {0}', [$val(index) + 1]),
             )}
             indent={indent}
-            idPath={$derive(() =>
+            idPath={$derived(() =>
                 idPaths.index($val(ownerIdPath), $val(index)),
             )}
         />

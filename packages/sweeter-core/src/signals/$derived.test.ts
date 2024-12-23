@@ -1,10 +1,10 @@
 import { $mutable } from './$mutable.js';
-import { $derive } from './$derive.js';
+import { $derived } from './$derived.js';
 import { SignalState } from './SignalState.js';
 
-it('$derive listeners invoked with correct value after dependency updated', () => {
+it('$derived listeners invoked with correct value after dependency updated', () => {
     const mutableSignal = $mutable(1);
-    const derivedSignal = $derive(() => mutableSignal.value + 1);
+    const derivedSignal = $derived(() => mutableSignal.value + 1);
 
     let prevStored: SignalState<number> | undefined;
     let nextStored: SignalState<number> | undefined;
@@ -22,11 +22,11 @@ it('$derive listeners invoked with correct value after dependency updated', () =
     expect(derivedSignal.value).toEqual(3);
 });
 
-it('$derive can be released', () => {
+it('$derived can be released', () => {
     const releaseController = new AbortController();
 
     const mutableSignal = $mutable(1);
-    const derivedSignal = $derive(() => mutableSignal.value + 1, {
+    const derivedSignal = $derived(() => mutableSignal.value + 1, {
         release: releaseController.signal,
     });
 

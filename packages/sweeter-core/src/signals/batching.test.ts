@@ -1,9 +1,9 @@
-import { batch, $derive, $mutable, startBatch } from './index.js';
+import { batch, $derived, $mutable, startBatch } from './index.js';
 
 it('Starting a batch blocks updates', () => {
     const mutable1 = $mutable(1);
     const mutable2 = $mutable(2);
-    const calculated = $derive(() => mutable1.value + mutable2.value);
+    const calculated = $derived(() => mutable1.value + mutable2.value);
 
     let called = false;
     const unlisten = calculated.listen(() => {
@@ -28,7 +28,7 @@ it('Starting a batch blocks updates', () => {
 it('Starting a batch blocks updates (callback)', () => {
     const mutable1 = $mutable(1);
     const mutable2 = $mutable(2);
-    const calculated = $derive(() => mutable1.value + mutable2.value);
+    const calculated = $derived(() => mutable1.value + mutable2.value);
 
     let called = false;
     const unlisten = calculated.listen(() => {
@@ -51,7 +51,7 @@ it('Starting a batch blocks updates (callback)', () => {
 it('When required a calculation can be updated during a batch', () => {
     const mutable1 = $mutable(1);
     const mutable2 = $mutable(2);
-    const calculated = $derive(() => mutable1.value + mutable2.value);
+    const calculated = $derived(() => mutable1.value + mutable2.value);
 
     let called = false;
     const unlisten = calculated.listen(() => {

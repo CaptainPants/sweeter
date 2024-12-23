@@ -1,12 +1,12 @@
-import { $derive, $mutable, $propertyOf, $elementOf } from './index.js';
+import { $derived, $mutable, $propertyOf, $elementOf } from './index.js';
 import { isReadWriteSignal, isSignal } from './isSignal.js';
 
 it('isSignal for all signal types return true', () => {
     const a = $mutable(0);
-    const b = $derive(() => 1);
+    const b = $derived(() => 1);
 
     const c = $mutable({ prop: 1 });
-    const d = $derive(
+    const d = $derived(
         () => 1,
         () => {},
     );
@@ -28,7 +28,7 @@ it('isReadWriteSignal for mutable signal types return true', () => {
     const a = $mutable(0);
 
     const c = $mutable({ prop: 1 });
-    const d = $derive(
+    const d = $derived(
         () => 1,
         () => {},
     );
@@ -45,7 +45,7 @@ it('isReadWriteSignal for mutable signal types return true', () => {
 });
 
 it('isReadWriteSignal for DerivedSignal returns false', () => {
-    const a = $derive(() => 1);
+    const a = $derived(() => 1);
 
     expect(isReadWriteSignal(a)).toBe(false);
 });

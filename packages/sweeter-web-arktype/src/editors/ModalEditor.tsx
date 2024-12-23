@@ -2,7 +2,7 @@ import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
 
 import { type EditorProps } from '../types.js';
 import {
-    $derive,
+    $derived,
     $mutable,
     $peek,
     $val,
@@ -38,7 +38,7 @@ export function ModalEditor(
 
     const { validated, isValid } = init.hook(ValidationContainerHook);
 
-    const nextProps = $derive(() => {
+    const nextProps = $derived(() => {
         return Object.assign({}, $valProperties(passthrough), {
             indent: 0,
             model: modelSnapshot,
@@ -72,20 +72,20 @@ export function ModalEditor(
 
     const { localize } = init.hook(LocalizerHook);
 
-    const content = $derive(() => {
+    const content = $derived(() => {
         return validated(() => {
             return $val(next)(nextProps.value);
         });
     });
 
-    const title = $derive(
+    const title = $derived(
         () =>
             localize('Edit') +
             ' ' +
             ($val(isRoot) ? 'root' : (propertyDisplayName ?? 'unknown')),
     );
 
-    return $derive(() => {
+    return $derived(() => {
         return (
             <>
                 <IconButton

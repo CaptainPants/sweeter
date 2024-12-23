@@ -2,7 +2,7 @@ import { type EditorProps } from '../types.js';
 
 import { ModalEditor } from './ModalEditor.js';
 import {
-    $derive,
+    $derived,
     $mutable,
     $val,
     type PropertiesMightBeSignals,
@@ -22,7 +22,7 @@ export function ModalEditorIfTooSmall(
     init: ComponentInit,
 ): JSX.Element {
     const measuredWidth = $mutable(0);
-    const useModal = $derive(() => {
+    const useModal = $derived(() => {
         const minWidthResolved = $val(minWidth);
 
         const result =
@@ -33,7 +33,7 @@ export function ModalEditorIfTooSmall(
         return result;
     });
 
-    const content = $derive(() => {
+    const content = $derived(() => {
         const useModelResolved = $val(useModal);
 
         if (useModelResolved) {

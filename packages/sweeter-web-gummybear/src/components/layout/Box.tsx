@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $val,
     type ComponentInit,
     type PropertiesMightBeSignals,
@@ -22,7 +22,7 @@ export function Box(
     { children, level, class: classProp, style }: BoxProps,
     init: ComponentInit,
 ) {
-    const className = $derive(() => {
+    const className = $derived(() => {
         const resolvedLevel = $val(level);
 
         if (

@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $if,
     $lastGood,
     $mapByIdentity,
@@ -48,7 +48,7 @@ export function ObjectEditor(
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $derive(() => $val(indent) + 1);
+    const childIndent = $derived(() => $val(indent) + 1);
 
     const idGenerator = init.idGenerator;
 
@@ -118,10 +118,10 @@ export function ObjectEditor(
         local,
     };
 
-    const owner = $derive(() => draft.value.value);
+    const owner = $derived(() => draft.value.value);
 
-    const type = $derive(() => draft.value.type);
-    const mappedKeys = $derive(() =>
+    const type = $derived(() => draft.value.type);
+    const mappedKeys = $derived(() =>
         introspect.tryGetObjectTypeInfo(type.value)?.getMappedKeys(),
     );
 
@@ -129,7 +129,7 @@ export function ObjectEditor(
 
     const { localize } = init.hook(LocalizerHook);
 
-    const fixedContent = $derive(() => {
+    const fixedContent = $derived(() => {
         // AVOID SUBSCRIBING TO SIGNALS AT ROOT
         // As it will rebuild the structure completely, and you will lose element focus/selection etc.
         // We necessarily subscribe to the type signal, as we use its structure to build the editor structure.
@@ -151,7 +151,7 @@ export function ObjectEditor(
 
         const result = categorizedProperties.map(
             ({ category, properties }, categoryIndex) => {
-                const propertyVisiblePerProperty = $derive(() => {
+                const propertyVisiblePerProperty = $derived(() => {
                     const individualVisibility = properties.map(
                         ({ property }) => {
                             const propertyModel =
@@ -173,7 +173,7 @@ export function ObjectEditor(
                     return individualVisibility;
                 });
 
-                const anyVisibleInCategory = $derive(() =>
+                const anyVisibleInCategory = $derived(() =>
                     propertyVisiblePerProperty.value.some((x) => x),
                 );
 
@@ -199,7 +199,7 @@ export function ObjectEditor(
                             so will not be re-calculated when the model is updated. */}
                         {properties.map(({ property, id }, index) => {
                             return $if(
-                                $derive(
+                                $derived(
                                     () =>
                                         propertyVisiblePerProperty.value[
                                             index
@@ -222,7 +222,7 @@ export function ObjectEditor(
                                             <KnownPropertyEditorPart
                                                 id={id}
                                                 property={property.name}
-                                                value={$derive(
+                                                value={$derived(
                                                     // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
                                                     // No other signals are referenced
                                                     () =>
@@ -252,14 +252,14 @@ export function ObjectEditor(
     // TODO: this is subscribing to draft.value, which means that any changes will cause it to be rebuilt
     // this should come through $mapByIdentity (ideally).
     const mappedContent = $mapByIdentity(
-        $derive(() => draft.value.unknownGetProperties()),
+        $derived(() => draft.value.unknownGetProperties()),
         (property, index) => {
             const id = idGenerator.next('prop_' + property.name.toString());
             return (
                 <div class={css.property}>
                     <div>
                         <div class={css.propertyName}>
-                            {$derive(() => {
+                            {$derived(() => {
                                 const name = property.name;
                                 return (
                                     <>
@@ -305,7 +305,7 @@ export function ObjectEditor(
     const content = (
         <>
             {$if(
-                $derive(() => !$val(isRoot)),
+                $derived(() => !$val(isRoot)),
                 () => (
                     <div
                         class={css.editorIndent}
@@ -319,7 +319,7 @@ export function ObjectEditor(
                 <div class={css.editorContainer}>{fixedContent}</div>
                 <div class={css.editorContainer}>{mappedContent}</div>
                 <div>
-                    {$derive(() => {
+                    {$derived(() => {
                         if (renameKey.value) {
                             const visible = $mutable(true);
 
@@ -352,7 +352,7 @@ export function ObjectEditor(
                         }
                         return null;
                     })}
-                    {$derive(() => {
+                    {$derived(() => {
                         // ADD BUTTON
                         if (!mappedKeys.value) {
                             return <></>;

@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $val,
     isSignal,
     type Signal,
@@ -19,7 +19,7 @@ export function combineStyles(
     }
 
     // If there are any signals we need to subscribe to them all with $val and merge the results
-    return $derive(() => {
+    return $derived(() => {
         return Object.assign({}, ...styles.map((x) => $val(x)));
     });
 }

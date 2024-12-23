@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $val,
     type Component,
     type IntrinsicElementAttributes,
@@ -51,7 +51,7 @@ export const Column: Component<ColumnProps> = ({
     class: classProp,
     passthrough: { class: classFromPassthroughProps, ...passthroughProps } = {},
 }) => {
-    const classesFromProps = $derive(() => {
+    const classesFromProps = $derived(() => {
         const result: ElementCssClasses[] = [];
 
         [xs, sm, md, lg, xl].forEach((numberOfColumns, index) => {

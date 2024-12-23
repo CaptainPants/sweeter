@@ -8,7 +8,7 @@ import {
     LocalizerHook,
     type ComponentInit,
     type PropertiesMightBeSignals,
-    $derive,
+    $derived,
     $val,
     $peek,
     $subscribe,
@@ -42,7 +42,7 @@ export function KnownPropertyEditorPart(
     }: KnownPropertyEditorPartProps,
     init: ComponentInit,
 ): JSX.Element {
-    const idPath = $derive(() => {
+    const idPath = $derived(() => {
         return idPaths.key($val(ownerIdPath), String(property));
     });
 
@@ -52,14 +52,14 @@ export function KnownPropertyEditorPart(
 
     const { localize } = init.hook(LocalizerHook);
 
-    const valueModel = $derive(() => $val(value));
-    const displayName = $derive(
+    const valueModel = $derived(() => $val(value));
+    const displayName = $derived(
         () =>
             $val(value).type.annotations()?.displayName() ??
             String($val(property)),
     );
 
-    return $derive(() => {
+    return $derived(() => {
         return (
             <EditorHost
                 id={id}

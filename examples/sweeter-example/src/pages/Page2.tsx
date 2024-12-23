@@ -5,7 +5,7 @@ import { Button, Modal, TextArea } from '@captainpants/sweeter-web-gummybear';
 //import viteLogo from "/vite.svg";
 
 import {
-    $derive,
+    $derived,
     $mutable,
     type NoProps,
     type ComponentInit,
@@ -21,9 +21,9 @@ export function Page2(props: NoProps, init: ComponentInit): JSX.Element {
                     open.value = !open.peek();
                 }}
             >
-                {$derive(() => (open.value ? 'Close' : 'Open'))}
+                {$derived(() => (open.value ? 'Close' : 'Open'))}
             </Button>
-            {$derive(() => {
+            {$derived(() => {
                 if (open.value) {
                     return (
                         <Modal

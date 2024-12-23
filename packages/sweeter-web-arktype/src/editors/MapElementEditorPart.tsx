@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $peek,
     $val,
     type ComponentInit,
@@ -44,17 +44,17 @@ export function MapElementEditorPart(
 
     const { localize } = init.hook(LocalizerHook);
 
-    const propertyNameAsString = $derive(() => String($val(property)));
+    const propertyNameAsString = $derived(() => String($val(property)));
 
     return (
         <EditorHost
             model={value}
             replace={replace}
-            propertyDisplayName={$derive(() =>
+            propertyDisplayName={$derived(() =>
                 localize($val(propertyNameAsString)),
             )}
             indent={indent}
-            idPath={$derive(() =>
+            idPath={$derived(() =>
                 idPaths.key($val(ownerIdPath), $val(propertyNameAsString)),
             )}
         />

@@ -13,7 +13,7 @@ import {
 import { type Annotations } from '../types.js';
 import { serializeSchemaForDisplay } from '../../utility/serializeSchemaForDisplay.js';
 import { isModel } from '../../models/isModel.js';
-import { $derive, $val, Signal } from '@captainpants/sweeter-core';
+import { $derived, $val, Signal } from '@captainpants/sweeter-core';
 
 export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     implements Annotations
@@ -134,7 +134,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         value: Signal<unknown>,
         context: ContextualValueCalculationContext,
     ) {
-        const typed = $derive(() => {
+        const typed = $derived(() => {
             if (
                 !shallowMatchesStructure(
                     this.#schema,
@@ -176,7 +176,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         value: Signal<unknown>,
         context: ContextualValueCalculationContext,
     ) {
-        const typed = $derive(() => {
+        const typed = $derived(() => {
             if (
                 !shallowMatchesStructure(
                     this.#schema,

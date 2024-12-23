@@ -6,7 +6,7 @@ import {
     type Component,
     type MightBeSignal,
     type PropertiesMightBeSignals,
-    $derive,
+    $derived,
 } from '@captainpants/sweeter-core';
 import {
     type AbstractGlobalCssStylesheet,
@@ -63,7 +63,7 @@ export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
 function flatten(
     value: MightBeSignal<StylesheetInclude>,
 ): Signal<AbstractGlobalCssStylesheet[]> {
-    return $derive(() => {
+    return $derived(() => {
         value = $val(value);
 
         if (Array.isArray(value)) {

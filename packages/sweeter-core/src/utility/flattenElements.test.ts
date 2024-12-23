@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $controller,
     SignalState,
     flattenElements,
@@ -8,7 +8,7 @@ import {
 it('throws through layers', () => {
     const controller = $controller<boolean>(SignalState.success(false));
 
-    const throws = $derive(() => {
+    const throws = $derived(() => {
         if (controller.signal.value) {
             throw new Error('ERROR');
         }
@@ -16,10 +16,10 @@ it('throws through layers', () => {
         return 'TEST';
     });
 
-    const calculated1 = $derive(() => {
+    const calculated1 = $derived(() => {
         return throws;
     });
-    const calculated2 = $derive(() => {
+    const calculated2 = $derived(() => {
         return calculated1;
     });
 

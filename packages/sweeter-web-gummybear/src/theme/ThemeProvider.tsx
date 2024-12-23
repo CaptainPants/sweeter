@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $children,
     $val,
     type Component,
@@ -18,7 +18,7 @@ export const ThemeProvider: Component<ThemeProviderProps> = ({
     theme,
     children,
 }) => {
-    return $derive(() => {
+    return $derived(() => {
         const themeValue = $val(theme);
 
         return ThemeContext.invokeWith(

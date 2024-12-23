@@ -40,7 +40,7 @@ export interface Signal<T> {
     peekState(ensureInited?: boolean = true): SignalState<T>;
 
     /**
-     * Use this to check if a signal has been initialized. This can be useful in a $derive that references itself.
+     * Use this to check if a signal has been initialized. This can be useful in a $derived that references itself.
      */
     readonly inited: boolean;
 
@@ -125,32 +125,32 @@ const mutable = $mutable<string | null>(null);
 mutable.value = 'example';
 ```
 
-### $derive
+### $derived
 This creates a `Signal<T>` that is derived from others via a derivation function.
 
 Example:
 ```tsx
-import { $mutable, $derive } from '@captainpants/sweeter-core';
+import { $mutable, $derived } from '@captainpants/sweeter-core';
 
 const a = $mutable(1);
 const b = $mutable(2);
 
-const c = $derive(() => a.value + b.value);
+const c = $derived(() => a.value + b.value);
 
 a.value = 3; // This will trigger any subscribers to c to be updated with the new value of 5
 ```
 
-### $derive (with updates)
-This is a lot like `$derive`, but is a `ReadWriteSignal<T>`. Writes to this signal will call a callback function.
+### $derived (with updates)
+This is a lot like `$derived`, but is a `ReadWriteSignal<T>`. Writes to this signal will call a callback function.
 
 Example:
 ```tsx
-import { $derive, $mutable } from '@captainpants/sweeter-core';
+import { $derived, $mutable } from '@captainpants/sweeter-core';
 
 const a = $mutable(1);
 const b = $mutable(2);
 
-const mutable = $derive(
+const mutable = $derived(
     () => a.value + b.value, 
     newValue => {
         a.value = newValue - b.peek();
@@ -200,7 +200,7 @@ const mutable  = $mutable(1);
 
 const readonly = $readonly(mutable);
 ```
-This is basically an alias for `$derive(() => mutable.value)` to make your intention clearer.
+This is basically an alias for `$derived(() => mutable.value)` to make your intention clearer.
 
 ### $constant
 This creates a readonly signal whose value never changes.

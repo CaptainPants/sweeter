@@ -1,5 +1,7 @@
-import { throwError } from "./throwError"
+import { throwError } from './throwError';
 
 it('throwError throws', () => {
-    expect(() => throwError(new Error('Example'))).toThrow(new Error('Example'));
-})
+    expect(() => throwError(new Error('Example'))).toThrow(
+        new Error('Example'),
+    );
+});

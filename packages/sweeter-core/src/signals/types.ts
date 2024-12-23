@@ -30,7 +30,7 @@ export interface SignalCommon<T> {
     peekState(ensureInit?: boolean): SignalState<T>;
 
     /**
-     * Use this to check if a signal has been initialized. This can be useful in a $derive that references itself.
+     * Use this to check if a signal has been initialized. This can be useful in a $derived that references itself.
      */
     readonly inited: boolean;
     readonly failed: boolean;

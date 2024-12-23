@@ -5,7 +5,7 @@ Example:
 Error: 
     at getNiceStackTrace (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-utilities/build/index.js?t=1705104034061:141:17)
     at new DerivedSignal (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:448:20)
-    at $derive (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:630:10)
+    at $derived (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:630:10)
     at http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:1112:33
     at ExecutionContextVariable.invokeWith (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:765:14)
     at Context.invokeWith (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:813:25)
@@ -15,14 +15,14 @@ Error:
     at callAndInvokeListenerForEachDependency (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:152:12)
 */
 const chromeRegex =
-/^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gmi;
+    /^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gim;
 
 /*
 Example:
 getNiceStackTrace/<@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-utilities/build/index.js:146:19
 SignalBase@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:256:29
 DerivedSignal@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:454:5
-$derive@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:674:10
+$derived@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:674:10
 createCssClassSignal@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-web/build/index.js?t=1705145534111:1174:10
 bindDOMClassProp@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-web/build/index.js?t=1705145534111:1212:43
 createDOMElement@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-web/build/index.js?t=1705145534111:1290:21
@@ -88,7 +88,7 @@ finishCalculation@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweet
 recalculate_fn@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:545:5
  */
 const firefoxRegex =
-    /^(?<func>[^@]+)@(?<location>[^@]+@[^@]+):(?<row>[0-9]+):(?<col>[0-9]+)$/gmi;
+    /^(?<func>[^@]+)@(?<location>[^@]+@[^@]+):(?<row>[0-9]+):(?<col>[0-9]+)$/gim;
 
 function normalizeFunctionName(name: string | undefined) {
     if (!name) {

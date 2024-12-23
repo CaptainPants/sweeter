@@ -2,7 +2,7 @@ import {
     type IntrinsicElementProps,
     type Component,
     type PropertiesMightBeSignals,
-    $derive,
+    $derived,
     $val,
     type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
@@ -62,7 +62,7 @@ export const CheckBox: Component<CheckBoxProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const classesFromProps = $derive(() => {
+    const classesFromProps = $derived(() => {
         const result: ElementCssClasses = [];
 
         applyStandardClasses(

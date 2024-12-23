@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $insertLocation,
     $val,
     type ComponentInit,
@@ -23,7 +23,7 @@ export function AmbientValues(
 ): JSX.Element {
     const existingContext = init.getContext(AmbientValuesContext);
 
-    const ambientValueCallback = $derive<AmbientValueCallback>(() => {
+    const ambientValueCallback = $derived<AmbientValueCallback>(() => {
         const newCallbackResolved = $val(newCallback);
         const existingContextResolved = $val(existingContext);
 
@@ -50,7 +50,7 @@ export function AmbientValues(
         ambientValueCallback,
         $insertLocation(),
         () => {
-            return $derive(() => {
+            return $derived(() => {
                 return $val(children)?.();
             });
         },

@@ -1,7 +1,7 @@
 import { type ComponentInit, type HookFactory } from '../types.js';
 import { $mutable } from '../signals/$mutable.js';
 import { type Signal } from '../signals/types.js';
-import { $derive } from '../signals/$derive.js';
+import { $derived } from '../signals/$derived.js';
 
 export interface AsyncRunnerHookOptions {
     abortOnUnMount?: boolean;
@@ -38,7 +38,7 @@ export const AsyncRunnerHook: HookFactory<
 
     return {
         // Readonly version of running .value
-        running: $derive(() => running.value),
+        running: $derived(() => running.value),
         abort,
         run: async (
             func: (abort: AbortSignal) => Promise<void>,

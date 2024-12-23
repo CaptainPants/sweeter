@@ -2,7 +2,7 @@ import { DerivedSignal } from './DerivedSignal.js';
 import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
 import { writableSignalMarker } from '../markers.js';
 import { DerivedSignalOptions, type ReadWriteSignal } from '../../types.js';
-import { type DerivationCallback } from '../../$derive.js';
+import { type DerivationCallback } from '../../$derived.js';
 
 export class MutableDerivedSignal<T>
     extends DerivedSignal<T>

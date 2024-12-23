@@ -1,4 +1,4 @@
-import { $derive } from '../signals/$derive.js';
+import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
 import { $val } from '../signals/$val.js';
 import {
@@ -42,7 +42,7 @@ export const Suspense: Component<SuspenseProps> = (
         },
         $insertLocation(),
         () => {
-            const evaluatedChildren = $derive(() => {
+            const evaluatedChildren = $derived(() => {
                 return $val(children)();
             });
 
@@ -63,7 +63,7 @@ export const Suspense: Component<SuspenseProps> = (
             };
 
             // calc captures the ambient executionContext
-            return $derive(suspenseCalculation);
+            return $derived(suspenseCalculation);
         },
     );
 };

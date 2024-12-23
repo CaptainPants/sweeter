@@ -1,6 +1,6 @@
 import { type Signal } from './types.js';
 import { isReadWriteSignal } from './isSignal.js';
-import { $derive } from './$derive.js';
+import { $derived } from './$derived.js';
 import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
 
 /**

@@ -16,7 +16,7 @@ const standardSigils = [
     '$constant',
     '$controller',
     '$defer',
-    '$derive',
+    '$derived',
     '$elementOf',
     '$lastGood',
     '$mapByIdentity',

@@ -17,7 +17,7 @@ import {
     startCalculation,
 } from '../../calculationDeferral.js';
 import { SignalState } from '../../SignalState.js';
-import { DerivationCallback } from '../../$derive.js';
+import { DerivationCallback } from '../../$derived.js';
 
 export class DerivedSignal<T> extends SignalBase<T> {
     constructor(

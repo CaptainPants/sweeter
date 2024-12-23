@@ -152,5 +152,5 @@ export type DebugDependencyNode =
     | {
           type: 'listener';
           listener: Function;
-          addedAtStack: string[] | undefined;
+          addedAtStack: StackTrace | undefined;
       };

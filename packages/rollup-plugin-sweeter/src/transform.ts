@@ -91,7 +91,6 @@ export function createTransform({
                     } else if (
                         path.node.callee.name == constants.insertLocation
                     ) {
-                        context.warn('FOUND MATCH');
                         const location = getLocation(code, path, path.node);
                         const toInject = [filename, ...location];
 

@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $val,
     type Component,
     type PropertiesMightBeSignals,
@@ -36,7 +36,7 @@ export const IconButton: Component<IconButtonProps> = (
 
     return (
         <Button class={css.addButton} onclick={callback} outline>
-            {$derive(() => {
+            {$derived(() => {
                 const iconValue = $val(icon);
                 const Icon = icons[iconValue];
                 return <Icon hoverable={hoverable} />;

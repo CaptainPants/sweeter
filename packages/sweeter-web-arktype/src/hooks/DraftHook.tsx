@@ -4,7 +4,7 @@ import {
     $mutable,
     $readonly,
     AsyncRunnerHook,
-    $derive,
+    $derived,
 } from '@captainpants/sweeter-core';
 import { type Maybe } from '@captainpants/sweeter-utilities';
 import { type ValidationSingleResult } from '@captainpants/sweeter-arktype-modeling';
@@ -30,7 +30,7 @@ export function DraftHook<TModel, TDraft>(
         onValid,
     }: DraftHookOptions<TModel, TDraft>,
 ) {
-    const modelConverted = $derive(() => convertIn(model.value));
+    const modelConverted = $derived(() => convertIn(model.value));
     const draft = $mutable<TDraft>(modelConverted.peek());
 
     const validationErrors = $mutable<ValidationSingleResult[] | null>(null);

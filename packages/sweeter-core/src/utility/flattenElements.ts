@@ -1,6 +1,6 @@
 import { type Signal } from '../signals/types.js';
 import { isSignal } from '../signals/isSignal.js';
-import { $derive } from '../signals/$derive.js';
+import { $derived } from '../signals/$derived.js';
 
 export type FlattenedElement = Exclude<
     JSX.Element,
@@ -39,7 +39,7 @@ export function flattenElements(
 
         return (previous = next);
     };
-    const result = $derive(flattenElements_calc);
+    const result = $derived(flattenElements_calc);
     return result;
 }
 

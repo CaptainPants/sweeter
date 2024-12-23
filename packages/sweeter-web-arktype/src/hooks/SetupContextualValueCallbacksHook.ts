@@ -9,7 +9,7 @@ import {
     type Signal,
     type ComponentInit,
     $peek,
-    $derive,
+    $derived,
     $val,
 } from '@captainpants/sweeter-core';
 import { descend } from '@captainpants/sweeter-utilities';
@@ -46,7 +46,7 @@ export function SetupContextualValueCallbacksHook(
 } {
     const parentAmbient = init.getContext(AmbientValuesContext);
 
-    const results = $derive(() => {
+    const results = $derived(() => {
         const localResolved = $val(local);
         const ambientResolved = $val(ambient);
         const parentAmbientResolved = $val(parentAmbient);
@@ -104,8 +104,8 @@ export function SetupContextualValueCallbacksHook(
     });
 
     // All memoized so should never trigger changes
-    const localResult = $derive(() => results.value.localResult);
-    const ambientResult = $derive(() => results.value.ambientResult);
+    const localResult = $derived(() => results.value.localResult);
+    const ambientResult = $derived(() => results.value.ambientResult);
 
     return {
         local: localResult,

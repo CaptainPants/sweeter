@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $val,
     type ComponentInit,
     type PropertiesMightBeSignals,
@@ -25,7 +25,7 @@ export function ValidationDisplay(
     props: ValidationDisplayProps,
     init: ComponentInit,
 ): JSX.Element {
-    return $derive(() => {
+    return $derived(() => {
         const errors = $val(props.errors);
 
         if (!errors) return undefined;

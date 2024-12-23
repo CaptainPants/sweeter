@@ -8,16 +8,16 @@ import { MutableDerivedSignal } from './internal/Signal-implementations/MutableD
 
 export type DerivationCallback<T> = (trigger: Signal<unknown> | undefined) => T;
 
-export function $derive<T>(
+export function $derived<T>(
     derivationCallback: DerivationCallback<T>,
     options?: DerivedSignalOptions,
 ): Signal<T>;
-export function $derive<T>(
+export function $derived<T>(
     derivationCallback: DerivationCallback<T>,
     mutate: (newValue: T) => void,
     options?: DerivedSignalOptions,
 ): ReadWriteSignal<T>;
-export function $derive<T>(
+export function $derived<T>(
     derivationCallback: DerivationCallback<T>,
     optionsOrMutate: DerivedSignalOptions | undefined | ((newValue: T) => void),
     options?: DerivedSignalOptions,

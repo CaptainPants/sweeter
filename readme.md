@@ -20,7 +20,7 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
     const serverValue = $mutable<unknown>(null);
 
     // You can also have a calculated signal
-    const textValueWithSuffix = $derive(() => textValue.value + ' + suffix');
+    const textValueWithSuffix = $derived(() => textValue.value + ' + suffix');
 
     // AsyncRunnerHook does 2 things: 1) it provides a Signal<boolean> asyncRunner.running to make 
     // visible when the runner is currently executing a callback, and 2) optionally cancel an 
@@ -71,7 +71,7 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
         <br />
         Current value: {textValue}<br />
         Added a suffix {textValueWithSuffix}<br />
-        Or inline {$derive(() => textValue.value + ' + suffix')}<br />
+        Or inline {$derived(() => textValue.value + ' + suffix')}<br />
         <br />
         <button 
             disabled={asyncRunner.running} 

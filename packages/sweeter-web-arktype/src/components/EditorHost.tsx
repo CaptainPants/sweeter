@@ -7,7 +7,7 @@ import {
     notFound,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
-    $derive,
+    $derived,
     $peek,
     $val,
     $valProperties,
@@ -65,8 +65,8 @@ export function EditorHost(
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
 
-    const modelType = $derive(() => $val(model).type);
-    const value = $derive(() => $val(model.value));
+    const modelType = $derived(() => $val(model).type);
+    const value = $derived(() => $val(model.value));
 
     const calculateLocal = (
         name: string,
@@ -103,10 +103,10 @@ export function EditorHost(
         calculateAmbient,
     );
 
-    const type = $derive(() => $val(model).type);
-    const parentInfo = $derive(() => $val(model).parentInfo);
+    const type = $derived(() => $val(model).type);
+    const parentInfo = $derived(() => $val(model).parentInfo);
 
-    const render = $derive(() => {
+    const render = $derived(() => {
         const matches = createTypeMatcher<EditorComponentType>(
             rules,
         ).findAllMatches(
@@ -120,7 +120,7 @@ export function EditorHost(
         return createRenderFunction(matches);
     });
 
-    return $derive(() => {
+    return $derived(() => {
         const args: RenderNextFunctionArgs = Object.assign(
             {},
             $valProperties(passThroughToRenderProps),

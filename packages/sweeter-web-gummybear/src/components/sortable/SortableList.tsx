@@ -1,5 +1,5 @@
 import {
-    $derive,
+    $derived,
     $peek,
     $val,
     type Component,
@@ -26,7 +26,7 @@ export const SortableList: Component<SortableListProps> = (
     { children, style: styleProp, class: classNames, onSortEnd, useHandle },
     init,
 ) => {
-    const style = $derive<ElementCssStyles>(() => {
+    const style = $derived<ElementCssStyles>(() => {
         const result = { ...$val(styleProp) };
 
         result.position = 'relative';

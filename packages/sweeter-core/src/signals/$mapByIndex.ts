@@ -5,7 +5,7 @@ import {
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
 import { isSignal } from './isSignal.js';
-import { $derive } from './$derive.js';
+import { $derived } from './$derived.js';
 import { $peek, $subscribe, $val } from './$val.js';
 import { $mutable } from './$mutable.js';
 import { trackingIsAnError } from './ambient.js';
@@ -15,8 +15,8 @@ export function $mapByIndex<TInput, TMapped>(
     mappingFun: MightBeSignal<(item: Signal<TInput>, index: number) => TMapped>,
 ): Signal<readonly TMapped[]> {
     if (!isSignal(items)) {
-        // constant array, we can skip a lot of voodoo - the $derive is just because renderItem could be a signal
-        return $derive(() =>
+        // constant array, we can skip a lot of voodoo - the $derived is just because renderItem could be a signal
+        return $derived(() =>
             items.map((item, i) => $val(mappingFun)($mutable(item), i)),
         );
     }
@@ -45,7 +45,7 @@ export function $mapByIndex<TInput, TMapped>(
         cleanup = mappingFun.listenWeak(resetCache);
     }
 
-    const resultSignal = $derive(() => {
+    const resultSignal = $derived(() => {
         // subscribe to changes, but ignore the actual value for now
         $subscribe(mappingFun);
 
@@ -73,7 +73,7 @@ export function $mapByIndex<TInput, TMapped>(
                         const index = elementCache.length;
                         const detach = new AbortController();
 
-                        const elementSignal = $derive<TInput>(
+                        const elementSignal = $derived<TInput>(
                             () => {
                                 return $val(items)[index]!;
                             },

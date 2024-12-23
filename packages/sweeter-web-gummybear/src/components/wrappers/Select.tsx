@@ -2,7 +2,7 @@ import {
     type IntrinsicElementProps,
     type Component,
     type PropertiesMightBeSignals,
-    $derive,
+    $derived,
     $val,
     type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
@@ -66,7 +66,7 @@ export const Select: Component<SelectProps> = ({
         ...passthroughProps
     } = {},
 }) => {
-    const classesFromProps = $derive(() => {
+    const classesFromProps = $derived(() => {
         const result: ElementCssClasses = [];
 
         applyStandardClasses(
@@ -82,7 +82,7 @@ export const Select: Component<SelectProps> = ({
         return result;
     });
 
-    const children = $derive(() => {
+    const children = $derived(() => {
         const optionsResolved = $val(options);
         return optionsResolved.map((item) => (
             <option value={item.value} disabled={item.disabled}>

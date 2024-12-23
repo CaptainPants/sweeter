@@ -231,14 +231,15 @@ export abstract class SignalBase<T> implements Signal<T> {
 
                 console.groupEnd();
             } else {
-                const [file, func, row, col] = node.addedAtStack?.getFirstLocation() ?? [];
+                const [file, func, row, col] =
+                    node.addedAtStack?.getFirstLocation() ?? [];
 
                 console.log(
                     'Listener: %s %s (row: %i, col: %i)',
                     func,
                     file,
                     row,
-                    col
+                    col,
                 );
             }
         };

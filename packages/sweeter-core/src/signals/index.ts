@@ -1,4 +1,4 @@
-export * from './$derive.js';
+export * from './$derived.js';
 export * from './$defer.js';
 export * from './$controller.js';
 export * from './$constant.js';

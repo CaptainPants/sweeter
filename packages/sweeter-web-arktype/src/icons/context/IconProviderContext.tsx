@@ -1,7 +1,7 @@
 import {
     type Component,
     Context,
-    $derive,
+    $derived,
     $val,
 } from '@captainpants/sweeter-core';
 
@@ -28,7 +28,7 @@ function createIconComponent(icon: IconNode): Component<IconProps> {
         const classes: ElementCssClasses[] = [classProp, css.iconContainer];
         if (hoverable) {
             classes.push(
-                $derive(() => ($val(hoverable) ? css.hoverable : null)),
+                $derived(() => ($val(hoverable) ? css.hoverable : null)),
             );
         }
 

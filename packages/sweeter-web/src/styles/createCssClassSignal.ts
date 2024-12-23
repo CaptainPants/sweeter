@@ -1,5 +1,5 @@
 import { type Signal } from '@captainpants/sweeter-core';
-import { $derive, isSignal, $val } from '@captainpants/sweeter-core';
+import { $derived, isSignal, $val } from '@captainpants/sweeter-core';
 import { type AbstractGlobalCssClass } from './index.js';
 import { GlobalCssClass } from './index.js';
 import { type ElementCssClasses } from '../IntrinsicAttributes.js';
@@ -19,7 +19,7 @@ export function createCssClassSignal(
 
     let previous: (string | GlobalCssClass)[] | undefined;
 
-    return $derive(() => {
+    return $derived(() => {
         const result: (string | GlobalCssClass)[] = [];
         createCssClassSignalImplementation(classes, result);
 

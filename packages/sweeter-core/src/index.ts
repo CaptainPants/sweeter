@@ -1,5 +1,6 @@
 import './jsx-globals.js';
 import './SweeterExtensionPoints.js';
+import './global.js';
 
 export * from './components/index.js';
 export * from './context/index.js';

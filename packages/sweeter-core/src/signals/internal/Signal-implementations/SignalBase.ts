@@ -206,9 +206,7 @@ export abstract class SignalBase<T> implements Signal<T> {
                 return {
                     type: 'listener',
                     listener: child.listener,
-                    addedAtStack: child.addedStackTrace
-                        ?.getNice({ truncate: truncateStackTraces })
-                        .split('\n'),
+                    addedAtStack: child.addedStackTrace,
                 };
             });
 
@@ -233,8 +231,15 @@ export abstract class SignalBase<T> implements Signal<T> {
 
                 console.groupEnd();
             } else {
-                // TODO:
-                console.log('Listener');
+                const [file, func, row, col] = node.addedAtStack?.getFirstLocation() ?? [];
+
+                console.log(
+                    'Listener: %s %s (row: %i, col: %i)',
+                    func,
+                    file,
+                    row,
+                    col
+                );
             }
         };
 

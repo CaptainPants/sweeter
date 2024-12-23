@@ -104,16 +104,16 @@ export class Context<T> {
             id,
             {
                 type: { name },
-                codeLocation: [file, method, row, col],
+                codeLocation: [file, func, row, col],
             },
         ] of map) {
             console.log(
-                '%c%s: %c%s %s (%i:%i)',
+                '%c%s:%c %s %s (row: %i, col: %i)',
                 'font-weight: bold;',
                 name,
                 'font-weight: inherit',
+                func,
                 file,
-                method,
                 row,
                 col,
             );

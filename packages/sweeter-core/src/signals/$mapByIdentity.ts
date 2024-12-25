@@ -25,47 +25,24 @@ export function $mapByIdentity<TInput, TMapped>(
         );
     }
 
-    // This seems fairly abusive of the dependency tracking system - but ... eh
-    const elementCache = new Map<
-        TInput,
-        {
-            source: TInput;
-            mappedElement: TMapped;
-            indexSignal: Signal<number>;
-            indexController: SignalController<number>;
-        }
-    >();
-
-    // items is a signal, we need to keep track of a signal for every item
-    // including if it changes lengths to dispose/orphan signals that no longer
-    // point to a valid index, and add new signals when necessary.
-
-    // Clear the cache if the map function changes
-    const resetCache = () => {
-        elementCache.clear();
-    };
-
-    let cleanup: (() => void) | undefined;
+    const cache = createIdentityCache<TInput, TMapped>();
 
     if (isSignal(mappingFun)) {
-        cleanup = mappingFun.listenWeak(resetCache);
+        cache.clearOnChange(mappingFun);
+    }
+
+    if (isSignal(items)) {
+        cache.removeOtherItemsOnChange(items);
     }
 
     const resultSignal = $derived(() => {
         // subscribe to changes, but ignore the actual value for now
         $subscribe(mappingFun);
-
         // subscibes to items
-        const itemsResolved = $val(items);
+        $subscribe(items); // we actually read from this via cache, so don't access its .value ourselves
 
-        for (const removed of arrayExcept(
-            [...elementCache.keys()],
-            itemsResolved,
-        )) {
-            elementCache.delete(removed);
-        }
-
-        const orderedKeys = [...elementCache.values()]
+        const orderedKeys = cache
+            .cacheEntries()
             .sort((a, b) => {
                 const aOrder = orderBy(a.mappedElement, a.source);
                 const bOrder = orderBy(b.mappedElement, b.source);
@@ -77,29 +54,12 @@ export function $mapByIdentity<TInput, TMapped>(
         const result: TMapped[] = [];
 
         for (const item of orderedKeys) {
-            let match = elementCache.get(item);
-            if (match) {
-                // Avoid the object allocation here if the index is already correct
-                if (match.indexSignal.value !== index) {
-                    match.indexController.updateState(
-                        SignalState.success(index),
-                    );
-                }
-            } else {
-                const indexController = $controller<number>(
-                    SignalState.success(index),
-                );
-                match = {
-                    source: item,
-                    mappedElement: $peek(mappingFun)(
-                        item,
-                        indexController.signal,
-                    ),
-                    indexSignal: indexController.signal,
-                    indexController,
-                };
+            let match = cache.get(item, index, $peek(mappingFun));
+
+            // Avoid the object allocation here if the index is already correct
+            if (match.indexSignal.peek() !== index) {
+                match.indexController.updateState(SignalState.success(index));
             }
-            result.push(match.mappedElement);
 
             ++index;
         }
@@ -107,13 +67,75 @@ export function $mapByIdentity<TInput, TMapped>(
         return result;
     });
 
-    if (cleanup) {
-        // When the signal is no longer reachable, stop listening
-        // Nothing in this method references resultSignal so this
-        // should be pretty safe.
-        whenGarbageCollected(resultSignal, cleanup);
-        addExplicitStrongReference(resultSignal, resetCache);
-    }
+    cache.keepAliveWith(resultSignal);
 
     return resultSignal;
+}
+
+type CacheItem<TInput, TMapped> = {
+    source: TInput;
+    mappedElement: TMapped;
+    indexSignal: Signal<number>;
+    indexController: SignalController<number>;
+};
+
+function createIdentityCache<TInput, TMapped>() {
+    const cache = new Map<TInput, CacheItem<TInput, TMapped>>();
+
+    const res = {
+        clearOnChange(signal: Signal<unknown>) {
+            signal.listenWeak(this.__clear); // kept alive by this.keepAliveWith
+        },
+        keepAliveWith(signal: Signal<unknown>) {
+            addExplicitStrongReference(signal, this);
+            whenGarbageCollected(signal, () => this.clearOnChange(signal));
+        },
+        removeOtherItemsOnChange(inputValues: Signal<readonly TInput[]>) {
+            const cleanup = inputValues.listenWeak(this.__removeUnusedListener); // kept alive by this.keepAliveWith
+
+            whenGarbageCollected(this, cleanup);
+        },
+        cacheEntries() {
+            return [...cache.values()];
+        },
+        get(
+            input: TInput,
+            initialIndex: number,
+            mappingFun: (input: TInput, index: Signal<number>) => TMapped,
+        ): CacheItem<TInput, TMapped> {
+            let match = cache.get(input);
+
+            if (!match) {
+                const indexController = $controller<number>(
+                    SignalState.success(initialIndex),
+                );
+                match = {
+                    source: input,
+                    mappedElement: $peek(mappingFun)(
+                        input,
+                        indexController.signal,
+                    ),
+                    indexSignal: indexController.signal,
+                    indexController,
+                };
+            }
+
+            return match;
+        },
+        // Assigned to this object so that it can be implicitly kept alive with it (via .keepAliveWith)
+        __removeUnusedListener: (newState: SignalState<readonly TInput[]>) => {
+            const inputValues = SignalState.getValue(newState);
+
+            for (const removed of arrayExcept([...cache.keys()], inputValues)) {
+                cache.delete(removed);
+            }
+        },
+        // Assigned to this object so that it can be implicitly kept alive with it (via .keepAliveWith)
+        __clear: () => {
+            cache.clear();
+        },
+        __cache: cache,
+    };
+
+    return res;
 }

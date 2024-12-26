@@ -1,5 +1,5 @@
 
-import { LogLevel, LogLevelOrdinal, LogLevels } from "../LogLevels";
+import { LogLevel } from "../LogLevels";
 import { Logger, LogMethod } from "../types";
 import { globalLogRules } from "./globalLogRules";
 
@@ -13,23 +13,45 @@ function createLogMethod(logLevel: LogLevel): LogMethod {
         else {
             globalLogRules.log(logLevel, this.category, errOrMessage);
         }
-
     };
-    res.format = function (this: { category: string }, err: unknown) {
-        if (!globalLogRules.isEnabled(logLevel, this.category)) {
-            return doNothing;
+    Object.defineProperty(
+        res,
+        'formatted',
+        {
+            get() {
+                const self = this as Logger;
+                
+                if (!globalLogRules.isEnabled(logLevel, self.category)) {
+                    return doNothing;
+                }
+        
+                return (template: TemplateStringsArray, ...parms: readonly unknown[]) => {
+                    const formatted = template.map((item, i) => item + (parms[i] ?? '')).join('');
+        
+                    return (err?: unknown | undefined) => {
+                        globalLogRules.log(logLevel, self.category, formatted, err)
+                    }
+                }
+            },
+            configurable: false,
+            enumerable: true
         }
+    );
+    Object.defineProperty(
+        res,
+        'isEnabled',
+        {
+            get() {
+                const self = this as Logger;
 
-        return (template: TemplateStringsArray, ...parms: readonly unknown[]) => {
-            const formatted = template.map((item, i) => item + (parms[i] ?? '')).join('');
-
-            return () => {
-                globalLogRules.log(logLevel, this.category, formatted, err)
-            }
+                return globalLogRules.isEnabled(logLevel, self.category);
+            },
+            configurable: false,
+            enumerable: true
         }
-    };
+    );
 
-    return res;
+    return res as never;
 }
 
 const doNothing = () => () => void 0;

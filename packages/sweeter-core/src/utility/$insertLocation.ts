@@ -7,6 +7,8 @@ import { CodeLocation, StackTrace } from '@captainpants/sweeter-utilities';
 export function $insertLocation(): CodeLocation {
     const stackTrace = new StackTrace({ skipFrames: 1 });
     const top = stackTrace.getFirstLocation();
-    if (!top) throw new Error('Location not found');
+    if (!top) {
+        throw new Error('Location not found');
+    }
     return top;
 }

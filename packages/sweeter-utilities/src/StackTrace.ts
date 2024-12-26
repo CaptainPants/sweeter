@@ -15,7 +15,7 @@ Error:
     at callAndInvokeListenerForEachDependency (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:152:12)
 */
 const chromeRegex =
-    /^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gim;
+/^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_\.]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gmi;
 
 /*
 Example:
@@ -165,8 +165,10 @@ export class StackTrace {
 
         raw = raw.substring(indexToStartAt);
 
+        const regExp = isChromey ? chromeRegex : firefoxRegex;
+
         return {
-            regExp: isChromey ? chromeRegex : firefoxRegex,
+            regExp: regExp,
             raw: raw,
             isChromey: isChromey,
         };
@@ -210,6 +212,8 @@ export class StackTrace {
         | [file: string, function: string, row: number, col: number]
         | undefined {
         const { regExp, raw } = this.prepare();
+        
+        regExp.lastIndex = 0; // Reset so we can use exec
         const match = regExp.exec(raw);
 
         if (match?.groups) {

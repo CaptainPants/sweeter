@@ -6,6 +6,7 @@ import {
     type FlattenedElement,
     afterCalculationsComplete,
     listenWhileNotCollected,
+    $insertLocation,
 } from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
@@ -15,6 +16,9 @@ import {
 import { isText } from './utility/isText.js';
 import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
+import { createLogger } from '@captainpants/sweeter-utilities';
+
+const logger = createLogger($insertLocation(), addJsxChildren);
 
 export function addJsxChildren(
     getContext: ContextSnapshot,
@@ -24,6 +28,8 @@ export function addJsxChildren(
 ): () => void {
     const flattenedChildrenSignal = flattenElements(children);
     const original = flattenedChildrenSignal.peek();
+
+    logger.trace('Adding children');
 
     const newlyMountedNodes: Node[] = [];
 
@@ -45,6 +51,8 @@ export function addJsxChildren(
         parentNode,
         flattenedChildrenSignal,
         (newState: SignalState<FlattenedElement[]>) => {
+            logger.trace('Updating children');
+
             afterCalculationsComplete(() => {
                 try {
                     const updatedChildren = SignalState.getValue(newState); // newState might be an error state
@@ -61,7 +69,7 @@ export function addJsxChildren(
 
     if (isMounted(parentNode)) {
         // Note that these functions use afterCalculationsComplete so won't cause the nodelist to change
-        announceChildrenMountedRecursive(parentNode);
+        announceChildrenMountedRecursive(logger, parentNode);
     }
 
     // ==== CLEANUP ====
@@ -74,7 +82,7 @@ export function addJsxChildren(
         ) {
             current.remove();
             // Note that these functions use afterCalculationsComplete so won't cause the nodelist to change
-            announceUnMountedRecursive(current);
+            announceUnMountedRecursive(logger, current);
         }
     };
 }

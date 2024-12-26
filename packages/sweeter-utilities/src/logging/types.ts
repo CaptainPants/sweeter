@@ -3,7 +3,8 @@ import { LogLevel } from "./LogLevels";
 export type LogMethod = {
     (message: string): void;
     (err: unknown, message: string): void;
-    format(error?: unknown): (parts: TemplateStringsArray, ...parms: readonly unknown[]) => () => void;
+    formatted: (parts: TemplateStringsArray, ...parms: readonly unknown[]) => (error?: unknown) => void;
+    isEnabled: boolean;
 }
 
 export interface Logger {

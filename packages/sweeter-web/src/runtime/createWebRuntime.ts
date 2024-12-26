@@ -28,6 +28,7 @@ import {
     announceMountedRecursive,
     announceUnMountedRecursive,
 } from './internal/mounting.js';
+import { createLogger } from '@captainpants/sweeter-utilities';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -193,6 +194,8 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     }
 }
 
+const createNestedRootLogger = createLogger($insertLocation(), createNestedRoot);
+
 function createNestedRoot(
     target: RuntimeRootHostElement,
     render: () => JSX.Element,
@@ -211,7 +214,7 @@ function createNestedRoot(
 
         const getContext = Context.createSnapshot();
 
-        announceMountedRecursive(target);
+        announceMountedRecursive(createNestedRootLogger, target);
 
         const unmount = addJsxChildren(getContext, target, content, webRuntime);
 
@@ -226,7 +229,7 @@ function createNestedRoot(
                 unmount();
 
                 // This will mostly unmount the parent
-                announceUnMountedRecursive(target);
+                announceUnMountedRecursive(createNestedRootLogger, target);
             }
         };
     } finally {

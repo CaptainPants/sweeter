@@ -194,7 +194,10 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     }
 }
 
-const createNestedRootLogger = createLogger($insertLocation(), createNestedRoot);
+const createNestedRootLogger = createLogger(
+    $insertLocation(),
+    createNestedRoot,
+);
 
 function createNestedRoot(
     target: RuntimeRootHostElement,

@@ -1,15 +1,18 @@
-import { applyLogRules } from "./internal/applyLogRules";
-import { LogLevel, LogLevelOrdinal, LogLevels } from "./LogLevels";
-import { LogSink } from "./types";
+import { applyLogRules } from './internal/applyLogRules';
+import { LogLevel, LogLevelOrdinal, LogLevels } from './LogLevels';
+import { LogSink } from './types';
 
 export class LoggingBuilder {
-    constructor() {
-    }
+    constructor() {}
 
     minLevel: LogLevelOrdinal | undefined;
     maxLevel: LogLevelOrdinal | undefined;
 
-    rules: { category: string, minLevel: LogLevelOrdinal | undefined, maxLevel: LogLevelOrdinal | undefined }[] = [];
+    rules: {
+        category: string;
+        minLevel: LogLevelOrdinal | undefined;
+        maxLevel: LogLevelOrdinal | undefined;
+    }[] = [];
 
     sinks: LogSink[] = [];
 
@@ -21,8 +24,16 @@ export class LoggingBuilder {
         this.maxLevel = LogLevels[level];
         return this;
     }
-    public addRule(category: string, minLevel: LogLevel | undefined, maxLevel: LogLevel | undefined): this {
-        this.rules.push({ category, minLevel: minLevel === undefined ? undefined : LogLevels[minLevel], maxLevel: maxLevel === undefined ? undefined : LogLevels[maxLevel] });
+    public addRule(
+        category: string,
+        minLevel: LogLevel | undefined,
+        maxLevel: LogLevel | undefined,
+    ): this {
+        this.rules.push({
+            category,
+            minLevel: minLevel === undefined ? undefined : LogLevels[minLevel],
+            maxLevel: maxLevel === undefined ? undefined : LogLevels[maxLevel],
+        });
         return this;
     }
     public addSink(sink: LogSink): this {

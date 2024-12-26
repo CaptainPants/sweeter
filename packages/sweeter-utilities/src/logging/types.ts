@@ -1,11 +1,14 @@
-import { LogLevel } from "./LogLevels";
+import { LogLevel } from './LogLevels';
 
 export type LogMethod = {
     (message: string): void;
     (err: unknown, message: string): void;
-    formatted: (parts: TemplateStringsArray, ...parms: readonly unknown[]) => (error?: unknown) => void;
+    formatted: (
+        parts: TemplateStringsArray,
+        ...parms: readonly unknown[]
+    ) => (error?: unknown) => void;
     isEnabled: boolean;
-}
+};
 
 export interface Logger {
     fatal: LogMethod;
@@ -19,5 +22,10 @@ export interface Logger {
 }
 
 export interface LogSink {
-    log(logLevel: LogLevel, category: string, message: string, err: unknown): void
+    log(
+        logLevel: LogLevel,
+        category: string,
+        message: string,
+        err: unknown,
+    ): void;
 }

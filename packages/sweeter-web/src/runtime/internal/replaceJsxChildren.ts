@@ -1,4 +1,7 @@
-import { $insertLocation, type FlattenedElement } from '@captainpants/sweeter-core';
+import {
+    $insertLocation,
+    type FlattenedElement,
+} from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
     announceUnMountedRecursive,
@@ -63,7 +66,7 @@ export function replaceJsxChildren(
     removeSelfAndLaterSiblings(removeNodeAndLaterSiblings, (removed) => {
         // This should do onUnMount recursively
         if (parentMounted) {
-            announceUnMountedRecursive(logger,removed);
+            announceUnMountedRecursive(logger, removed);
         }
     });
 

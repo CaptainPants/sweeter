@@ -45,7 +45,10 @@ function nodeAssociatedCallbacks<T extends object>(name: string) {
                     try {
                         callback();
                     } catch (ex) {
-                        logger.warning.formatted`Error swallowed while invoking callback ${callback.name}`(ex);
+                        logger.warning
+                            .formatted`Error swallowed while invoking callback ${callback.name}`(
+                            ex,
+                        );
                     }
                 }
 

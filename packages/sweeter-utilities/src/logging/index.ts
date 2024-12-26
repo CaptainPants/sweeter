@@ -1,4 +1,3 @@
-
 export * from './ConsoleLogSink.js';
 export * from './createLogger.js';
 export * from './LogLevels.js';

@@ -1,11 +1,4 @@
-import { StackTrace } from '@captainpants/sweeter-utilities';
-
-export type CodeLocation = [
-    file: string,
-    method: string,
-    row: number,
-    col: number,
-];
+import { CodeLocation, StackTrace } from '@captainpants/sweeter-utilities';
 
 /**
  * Inject the filename/function name, row and column at the location of this function call.

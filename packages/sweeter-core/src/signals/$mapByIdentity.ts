@@ -1,17 +1,11 @@
-import {
-    addExplicitStrongReference,
-    arrayExcept,
-    whenGarbageCollected,
-} from '@captainpants/sweeter-utilities';
 import { type Signal } from '../signals/types.js';
 import { type MightBeSignal } from '../types.js';
 import { isSignal } from './isSignal.js';
 import { $derived } from './$derived.js';
 import { $peek, $subscribe, $val } from './$val.js';
 import { $constant } from './$constant.js';
-import { SignalController } from './SignalController.js';
-import { $controller } from './$controller.js';
 import { SignalState } from './SignalState.js';
+import { createIdentityCache } from './internal/createIdentityCache.js';
 
 export function $mapByIdentity<TInput, TMapped>(
     items: MightBeSignal<readonly TInput[]>,
@@ -28,11 +22,11 @@ export function $mapByIdentity<TInput, TMapped>(
     const cache = createIdentityCache<TInput, TMapped>();
 
     if (isSignal(mappingFun)) {
-        cache.clearOnChange(mappingFun);
+        cache.clearOnChange(mappingFun); // If the mapping function changes, clear the cache
     }
 
     if (isSignal(items)) {
-        cache.removeOtherItemsOnChange(items);
+        cache.removeOtherItemsOnChange(items); // If the input signal changes, remove any items that are no longer in the input
     }
 
     const resultSignal = $derived(() => {
@@ -67,75 +61,7 @@ export function $mapByIdentity<TInput, TMapped>(
         return result;
     });
 
-    cache.keepAliveWith(resultSignal);
+    cache.keepAliveWith(resultSignal); // Keep the cache object alive as long as resultSignal is alive
 
     return resultSignal;
-}
-
-type CacheItem<TInput, TMapped> = {
-    source: TInput;
-    mappedElement: TMapped;
-    indexSignal: Signal<number>;
-    indexController: SignalController<number>;
-};
-
-function createIdentityCache<TInput, TMapped>() {
-    const cache = new Map<TInput, CacheItem<TInput, TMapped>>();
-
-    const res = {
-        clearOnChange(signal: Signal<unknown>) {
-            signal.listenWeak(this.__clear); // kept alive by this.keepAliveWith
-        },
-        keepAliveWith(signal: Signal<unknown>) {
-            addExplicitStrongReference(signal, this);
-            whenGarbageCollected(signal, () => this.clearOnChange(signal));
-        },
-        removeOtherItemsOnChange(inputValues: Signal<readonly TInput[]>) {
-            const cleanup = inputValues.listenWeak(this.__removeUnusedListener); // kept alive by this.keepAliveWith
-
-            whenGarbageCollected(this, cleanup);
-        },
-        cacheEntries() {
-            return [...cache.values()];
-        },
-        get(
-            input: TInput,
-            initialIndex: number,
-            mappingFun: (input: TInput, index: Signal<number>) => TMapped,
-        ): CacheItem<TInput, TMapped> {
-            let match = cache.get(input);
-
-            if (!match) {
-                const indexController = $controller<number>(
-                    SignalState.success(initialIndex),
-                );
-                match = {
-                    source: input,
-                    mappedElement: $peek(mappingFun)(
-                        input,
-                        indexController.signal,
-                    ),
-                    indexSignal: indexController.signal,
-                    indexController,
-                };
-            }
-
-            return match;
-        },
-        // Assigned to this object so that it can be implicitly kept alive with it (via .keepAliveWith)
-        __removeUnusedListener: (newState: SignalState<readonly TInput[]>) => {
-            const inputValues = SignalState.getValue(newState);
-
-            for (const removed of arrayExcept([...cache.keys()], inputValues)) {
-                cache.delete(removed);
-            }
-        },
-        // Assigned to this object so that it can be implicitly kept alive with it (via .keepAliveWith)
-        __clear: () => {
-            cache.clear();
-        },
-        __cache: cache,
-    };
-
-    return res;
 }

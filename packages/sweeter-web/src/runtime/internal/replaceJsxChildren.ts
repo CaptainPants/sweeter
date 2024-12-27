@@ -1,4 +1,7 @@
-import { type FlattenedElement } from '@captainpants/sweeter-core';
+import {
+    $insertLocation,
+    type FlattenedElement,
+} from '@captainpants/sweeter-core';
 import {
     announceChildrenMountedRecursive,
     announceUnMountedRecursive,
@@ -6,6 +9,9 @@ import {
 } from './mounting.js';
 import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 import { isText } from './utility/isText.js';
+import { createLogger } from '@captainpants/sweeter-utilities';
+
+const logger = createLogger($insertLocation(), replaceJsxChildren);
 
 export function replaceJsxChildren(
     parentNode: Node,
@@ -60,11 +66,11 @@ export function replaceJsxChildren(
     removeSelfAndLaterSiblings(removeNodeAndLaterSiblings, (removed) => {
         // This should do onUnMount recursively
         if (parentMounted) {
-            announceUnMountedRecursive(removed);
+            announceUnMountedRecursive(logger, removed);
         }
     });
 
     if (parentMounted) {
-        announceChildrenMountedRecursive(parentNode);
+        announceChildrenMountedRecursive(logger, parentNode);
     }
 }

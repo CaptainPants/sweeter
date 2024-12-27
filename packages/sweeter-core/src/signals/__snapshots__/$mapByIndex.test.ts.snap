@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Does stuff 1`] = `
+[
+  "alpha_TEST",
+  "beta_TEST",
+]
+`;
+
+exports[`Does stuff 2`] = `
+[
+  "alpha_TEST",
+  "beta_TEST",
+  "gamma_TEST",
+]
+`;

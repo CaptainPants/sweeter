@@ -1,5 +1,5 @@
+import { CodeLocation } from '@captainpants/sweeter-utilities';
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
-import { CodeLocation } from '../utility/$insertLocation.js';
 import { stringifyForDiagnostics } from '../utility/stringifyForDiagnostics.js';
 
 interface ContextNode {

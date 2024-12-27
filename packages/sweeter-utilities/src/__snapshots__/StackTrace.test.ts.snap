@@ -3,11 +3,5 @@
 exports[`StackTrace returns a consistent result 1`] = `
 "test2 C:\\workspace\\sweeter\\packages\\sweeter-utilities\\src\\StackTrace.test.ts (row: 5 col: 16)
 test1 C:\\workspace\\sweeter\\packages\\sweeter-utilities\\src\\StackTrace.test.ts (row: 9 col: 16)
-(anonymous/top level function) C:\\workspace\\sweeter\\packages\\sweeter-utilities\\src\\StackTrace.test.ts (row: 12 col: 19)
-(anonymous/top level function) file:///C:/workspace/sweeter/node_modules/.pnpm/@vitest+runner@2.1.6/node_modules/@vitest/runner/dist/index.js (row: 146 col: 14)
-(anonymous/top level function) file:///C:/workspace/sweeter/node_modules/.pnpm/@vitest+runner@2.1.6/node_modules/@vitest/runner/dist/index.js (row: 533 col: 11)
-runWithTimeout file:///C:/workspace/sweeter/node_modules/.pnpm/@vitest+runner@2.1.6/node_modules/@vitest/runner/dist/index.js (row: 39 col: 7)
-runTest file:///C:/workspace/sweeter/node_modules/.pnpm/@vitest+runner@2.1.6/node_modules/@vitest/runner/dist/index.js (row: 1056 col: 17)
-processTicksAndRejections node:internal/process/task_queues (row: 105 col: 5)
-runSuite file:///C:/workspace/sweeter/node_modules/.pnpm/@vitest+runner@2.1.6/node_modules/@vitest/runner/dist/index.js (row: 1205 col: 15)"
+(anonymous/top level function) C:\\workspace\\sweeter\\packages\\sweeter-utilities\\src\\StackTrace.test.ts (row: 12 col: 19)"
 `;

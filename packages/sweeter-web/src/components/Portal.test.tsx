@@ -13,9 +13,15 @@ import {
     IncludeStylesheet,
     stylesheet,
 } from '../index.js';
+import {
+    ConsoleLogSink,
+    LoggingBuilder,
+} from '@captainpants/sweeter-utilities';
 
 afterEach(() => {
     document.getElementsByTagName('html')[0]!.innerHTML = '';
+
+    new LoggingBuilder().addSink(new ConsoleLogSink()).apply();
 });
 
 it('Portal element content is added', () => {
@@ -73,50 +79,52 @@ it('Portal elements unmount correctly', () => {
 
     const { dispose } = testRender(() => (
         <Dynamic<boolean> value={shouldMount}>
-            {(visible) =>
-                visible ? (
-                    <>
-                        MOUNTED
-                        <Portal target={target}>
-                            <div>MOUNTED</div>
-                            <IncludeStylesheet stylesheet={style} />
-                        </Portal>
-                        <TestComponent />
-                    </>
-                ) : (
-                    'NOT MOUNTED'
-                )
-            }
+            {(visible) => {
+                if (visible) {
+                    return (
+                        <>
+                            MOUNTED
+                            <Portal target={target}>
+                                <div>MOUNTED</div>
+                                <IncludeStylesheet stylesheet={style} />
+                            </Portal>
+                            <TestComponent />
+                        </>
+                    );
+                } else {
+                    return 'NOT MOUNTED';
+                }
+            }}
         </Dynamic>
     ));
 
     shouldMount.value = true;
     expect(mounted).toStrictEqual(true);
 
-    expect(document.head.outerHTML).toMatchSnapshot();
-    expect(document.body.outerHTML).toMatchSnapshot();
+    expect(document.head.outerHTML).toMatchSnapshot(); //1
+    expect(document.body.outerHTML).toMatchSnapshot(); //2
 
     shouldMount.value = false;
     expect(mounted).toStrictEqual(false);
 
     // Should have been cleared
-    expect(document.head.outerHTML).toMatchSnapshot();
-    expect(document.body.outerHTML).toMatchSnapshot();
+    expect(document.head.outerHTML).toMatchSnapshot(); //3
+    expect(document.body.outerHTML).toMatchSnapshot(); //4
 
     shouldMount.value = true;
     expect(mounted).toStrictEqual(true);
 
     // Everything should be back
-    expect(document.head.outerHTML).toMatchSnapshot();
-    expect(document.body.outerHTML).toMatchSnapshot();
+    expect(document.head.outerHTML).toMatchSnapshot(); //5
+    expect(document.body.outerHTML).toMatchSnapshot(); //6
 
     dispose();
 
     // Everything should be cleared
     expect(mounted).toStrictEqual(false);
 
-    expect(document.head.outerHTML).toMatchSnapshot();
-    expect(document.body.outerHTML).toMatchSnapshot();
+    expect(document.head.outerHTML).toMatchSnapshot(); //7
+    expect(document.body.outerHTML).toMatchSnapshot(); //8
 
     target.remove();
 });

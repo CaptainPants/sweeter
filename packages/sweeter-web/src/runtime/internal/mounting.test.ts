@@ -1,9 +1,12 @@
+import { createLogger } from '@captainpants/sweeter-utilities';
 import {
     addMountedCallback,
     addUnMountedCallback,
     announceMountedRecursive,
     announceUnMountedRecursive,
 } from './mounting.js';
+
+const logger = createLogger('mounting.test.js', 'dummy');
 
 it('Mount callbacks fired', () => {
     const obj = document.createComment('Mounted');
@@ -22,7 +25,7 @@ it('Mount callbacks fired', () => {
         callback,
     );
 
-    announceMountedRecursive(obj);
+    announceMountedRecursive(logger, obj);
 
     expect(fired).toStrictEqual(true);
 });
@@ -37,7 +40,7 @@ it('Un-mount callbacks fired', () => {
     };
 
     // We have to make sure the mounted flag is set
-    announceMountedRecursive(obj);
+    announceMountedRecursive(logger, obj);
 
     addUnMountedCallback(
         () => {
@@ -47,7 +50,7 @@ it('Un-mount callbacks fired', () => {
         callback,
     );
 
-    announceUnMountedRecursive(obj);
+    announceUnMountedRecursive(logger, obj);
 
     expect(fired).toStrictEqual(true);
 });

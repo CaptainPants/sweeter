@@ -29,6 +29,7 @@ export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
 
     const flattened = flatten(stylesheet);
 
+    // Remember that this is called on mount as well as when the subscribed signals change.
     init.trackSignals([flattened], ([thisTime]) => {
         if (previousTime) {
             const added = arrayExcept(thisTime, previousTime);

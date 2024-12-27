@@ -1,10 +1,12 @@
 import {
+    $insertLocation,
     ComponentFaultContext,
     afterCalculationsComplete,
     type ContextSnapshot,
 } from '@captainpants/sweeter-core';
+import { Logger } from '@captainpants/sweeter-utilities';
 
-function callbacks<T extends object>(name: string) {
+function nodeAssociatedCallbacks<T extends object>(name: string) {
     const map = new WeakMap<T, (() => void)[]>();
     const running = new WeakSet<T>();
 
@@ -29,7 +31,7 @@ function callbacks<T extends object>(name: string) {
             }
             return false;
         },
-        execute: (obj: T): void => {
+        execute: (logger: Logger, obj: T): void => {
             const callbacks = map.get(obj);
             if (callbacks) {
                 if (running.has(obj)) {
@@ -43,9 +45,8 @@ function callbacks<T extends object>(name: string) {
                     try {
                         callback();
                     } catch (ex) {
-                        console.warn(
-                            'Error swallowed while invoking callback',
-                            callback,
+                        logger.warning
+                            .formatted`Error swallowed while invoking callback ${callback.name}`(
                             ex,
                         );
                     }
@@ -58,8 +59,8 @@ function callbacks<T extends object>(name: string) {
     } as const;
 }
 
-const mountedCallbacks = callbacks<Node>('mounted');
-const unMountedCallbacks = callbacks<Node>('unmounted');
+const mountedCallbacks = nodeAssociatedCallbacks<Node>('mounted');
+const unMountedCallbacks = nodeAssociatedCallbacks<Node>('unmounted');
 const isMountedMap = new WeakSet<Node>();
 
 /**
@@ -122,9 +123,9 @@ export function addUnMountedCallback(
  * as each has a flag to detect remounts.
  * @param node
  */
-export function announceChildrenMountedRecursive(node: Node) {
+export function announceChildrenMountedRecursive(logger: Logger, node: Node) {
     for (const child of node.childNodes) {
-        announceMountedRecursive(child);
+        announceMountedRecursive(logger, child);
     }
 }
 
@@ -132,15 +133,15 @@ export function announceChildrenMountedRecursive(node: Node) {
  * Note that this runs inside a afterCalculationsComplete.
  * @param node
  */
-export function announceMountedRecursive(node: Node): void {
+export function announceMountedRecursive(logger: Logger, node: Node): void {
     // reverse order
     // TODO: we can make this stack-based to avoid recursion
-    announceChildrenMountedRecursive(node);
+    announceChildrenMountedRecursive(logger, node);
 
     // Call callbacks on current
     if (!isMountedMap.has(node)) {
         afterCalculationsComplete(() => {
-            mountedCallbacks.execute(node);
+            mountedCallbacks.execute(logger, node);
         });
         isMountedMap.add(node);
     }
@@ -150,10 +151,10 @@ export function announceMountedRecursive(node: Node): void {
  * Note that this runs inside a afterCalculationsComplete.
  * @param node
  */
-export function announceUnMountedRecursive(node: Node): void {
+export function announceUnMountedRecursive(logger: Logger, node: Node): void {
     if (isMountedMap.has(node)) {
         afterCalculationsComplete(() => {
-            unMountedCallbacks.execute(node);
+            unMountedCallbacks.execute(logger, node);
         });
         isMountedMap.delete(node);
     }
@@ -165,7 +166,7 @@ export function announceUnMountedRecursive(node: Node): void {
         current;
         current = current.previousSibling
     ) {
-        announceUnMountedRecursive(current);
+        announceUnMountedRecursive(logger, current);
     }
 }
 

@@ -11,5 +11,5 @@ it('StackTrace returns a consistent result', () => {
 
     const trace = test1();
 
-    expect(trace.getNice()).toMatchSnapshot();
+    expect(trace.getNice({ truncate: 3 })).toMatchSnapshot();
 });

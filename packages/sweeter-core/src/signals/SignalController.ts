@@ -8,7 +8,7 @@ export class SignalController<T> {
 
     constructor(initialState: SignalState<T>) {
         this.#abort = new AbortController();
-        this.#signal = new ControlledSignal(initialState);
+        this.#signal = new ControlledSignal(this, initialState);
     }
 
     updateState(signalState: InitiatedSignalState<T>): void {
@@ -39,9 +39,17 @@ export class SignalController<T> {
 const notifySymbol: unique symbol = Symbol('Update');
 
 class ControlledSignal<T> extends SignalBase<T> {
-    constructor(initialState: SignalState<T>) {
+    constructor(owner: SignalController<T>, initialState: SignalState<T>) {
         super(initialState);
+
+        this.#owner = owner;
     }
+
+    /**
+     * This primarily exists to make sure that the controller is not garbage collected
+     * as long as the signal itself does -- which is important in a chain of signals.
+     */
+    #owner: SignalController<T>;
 
     [notifySymbol](newState: SignalState<T>): void {
         this._updateAndAnnounce(newState);

@@ -30,7 +30,10 @@ import { type EditorProps } from '../types.js';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import { KnownPropertyEditorPart } from './KnownPropertyEditorPart.js';
 import { Row, Column, Label, Box } from '@captainpants/sweeter-web-gummybear';
-import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
+import {
+    assertNotNullOrUndefined,
+    defaultCompare,
+} from '@captainpants/sweeter-utilities';
 import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import { IconButton } from '../components/IconButton.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
@@ -252,8 +255,12 @@ export function ObjectEditor(
     // TODO: this is subscribing to draft.value, which means that any changes will cause it to be rebuilt
     // this should come through $mapByIdentity (ideally).
     const mappedContent = $mapByIdentity(
-        $derived(() => draft.value.unknownGetProperties()),
-        (property, index) => {
+        $derived(() => {
+            const props = [...draft.value.unknownGetProperties()];
+            props.sort((x, y) => defaultCompare(x.name, y.name));
+            return props;
+        }),
+        (property, _index) => {
             const id = idGenerator.next('prop_' + property.name.toString());
             return (
                 <div class={css.property}>
@@ -299,7 +306,6 @@ export function ObjectEditor(
                 </div>
             );
         },
-        (_, source) => String(source.name),
     );
 
     const content = (

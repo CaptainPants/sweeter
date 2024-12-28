@@ -9,7 +9,6 @@ import { SignalState } from '../SignalState';
 import { $val } from '../$val';
 import { $derived } from '../$derived';
 import { MightBeSignal } from '../../types';
-import { $controller } from '../$controller';
 
 export type IndexCacheItem<TMapped> = {
     mappedElement: Signal<TMapped>;

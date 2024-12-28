@@ -35,14 +35,11 @@ export function createIdentityCache<TInput, TMapped>() {
             mappingFun: MightBeSignal<
                 (item: TInput, index: Signal<number>) => TMapped
             >,
-            orderBy: MightBeSignal<
-                (obj: TMapped, source: TInput) => string | number
-            >,
         ) {
             const cleanup = subscribeToChanges(
-                [items, mappingFun, orderBy],
-                ([items, mappingFun, orderBy]) => {
-                    this.update(items, mappingFun, orderBy);
+                [items, mappingFun],
+                ([items, mappingFun]) => {
+                    this.update(items, mappingFun);
                 },
                 false,
                 false, // weak
@@ -62,7 +59,6 @@ export function createIdentityCache<TInput, TMapped>() {
         update(
             items: readonly TInput[],
             mappingFun: (item: TInput, index: Signal<number>) => TMapped,
-            orderBy: (obj: TMapped, source: TInput) => string | number,
         ) {
             // Any items that no longer exist, detach their index signal and remove them
             for (const removed of arrayExcept([...cache.keys()], items)) {
@@ -70,27 +66,19 @@ export function createIdentityCache<TInput, TMapped>() {
                 cache.delete(removed);
             }
 
-            const ordered = items
-                .map((item, index) => {
-                    let found = cache.get(item);
-                    if (!found) {
-                        const controller = $controller(
-                            SignalState.success(index),
-                        );
-                        found = {
-                            source: item,
-                            mappedElement: mappingFun(item, controller.signal),
-                            indexController: controller,
-                        };
-                        cache.set(item, found);
-                    }
-                    return found;
-                })
-                .sort((a, b) => {
-                    const aOrder = orderBy(a.mappedElement, a.source);
-                    const bOrder = orderBy(b.mappedElement, b.source);
-                    return aOrder < bOrder ? -1 : aOrder === bOrder ? 0 : 1;
-                });
+            const ordered = items.map((item, index) => {
+                let found = cache.get(item);
+                if (!found) {
+                    const controller = $controller(SignalState.success(index));
+                    found = {
+                        source: item,
+                        mappedElement: mappingFun(item, controller.signal),
+                        indexController: controller,
+                    };
+                    cache.set(item, found);
+                }
+                return found;
+            });
 
             let index = 0;
 

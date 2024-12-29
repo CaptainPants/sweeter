@@ -15,7 +15,7 @@ export interface SweeterRollupPluginOptions {
 const standardSigils = [
     '$constant',
     '$controller',
-    '$defer',
+    '$deferred',
     '$derived',
     '$elementOf',
     '$lastGood',

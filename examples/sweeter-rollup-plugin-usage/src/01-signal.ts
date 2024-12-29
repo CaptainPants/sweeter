@@ -1,6 +1,6 @@
 import {
     $controller,
-    $defer,
+    $deferred,
     $derived,
     $mutable,
     SignalState,
@@ -9,8 +9,8 @@ import {
 export function signalExample() {
     const signal = $mutable(1);
     const derived = $derived(() => signal.value + 2);
-    const deferred1 = $defer(derived);
-    const deferred2 = $defer(deferred1);
+    const deferred1 = $deferred(derived);
+    const deferred2 = $deferred(deferred1);
     $controller(SignalState.success(1)).signal;
 
     const dontIdentify = $mutable(2).doNotIdentify();

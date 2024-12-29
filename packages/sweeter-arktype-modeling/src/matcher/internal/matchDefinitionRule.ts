@@ -1,4 +1,4 @@
-import { descend, deepEqual } from '@captainpants/sweeter-utilities';
+import { descend, equals } from '@captainpants/sweeter-utilities';
 import { and, or } from '../../internal/logical.js';
 import { type ParentTypeInfo, type TypeInfo } from '../../models/parents.js';
 import {
@@ -43,10 +43,10 @@ export function matchDefinitionRulePart(
 
     switch (part.type) {
         case 'setting':
-            res = deepEqual(part.value, context.settings[part.name]);
+            res = equals.deep(part.value, context.settings[part.name]);
             break;
         case 'attr':
-            res = deepEqual(
+            res = equals.deep(
                 part.value,
                 typeInfo.type.annotations()?.attr(part.name, notFound),
             );

@@ -5,11 +5,13 @@ import { $derived } from './$derived.js';
 import {
     addExplicitStrongReference,
     assertNotNullOrUndefined,
+    equals,
 } from '@captainpants/sweeter-utilities';
 import { SignalController } from './SignalController.js';
 import { $controller } from './$controller.js';
 import { SignalState } from './SignalState.js';
 import { $peek } from './$val.js';
+import { $filtered } from './$filtered.js';
 
 type IdentityCacheItem<TInput, TMapped> = {
     source: TInput;
@@ -127,5 +129,7 @@ export function $mapByIdentity<TInput, TMapped>(
 
     addExplicitStrongReference(resultSignal, callbacks);
 
-    return resultSignal;
+    // Its entirely possible we've generated the same array
+    // in which case we want to avoid updating anything
+    return $filtered(resultSignal, equals.arrayElements);
 }

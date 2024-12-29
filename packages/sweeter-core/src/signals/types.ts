@@ -130,6 +130,8 @@ export type UnsignalAll<
 
 export type CallbackDelayedRunner = (callback: () => void) => void;
 
+export type SignalUpdateValuesAreEqualCallback<T> = (from: T, to: T) => boolean;
+
 export interface DerivedSignalOptions {
     /**
      * If this AbortSignal is aborted then the calculated signal 'release' - meaning that it stops being updated when

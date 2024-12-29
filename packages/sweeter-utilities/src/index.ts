@@ -14,6 +14,7 @@ export * from './interpolatePlaceholders.js';
 export * from './idPaths.js';
 export * from './throwError.js';
 
+export * from './equals/index.js';
 export * from './utilityTypes/index.js';
 export * from './test/index.js';
 export * from './lifetime/index.js';

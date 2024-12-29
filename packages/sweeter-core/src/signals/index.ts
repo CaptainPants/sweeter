@@ -1,5 +1,5 @@
 export * from './$derived.js';
-export * from './$defer.js';
+export * from './$deferred.js';
 export * from './$controller.js';
 export * from './$constant.js';
 export * from './$elementOf.js';

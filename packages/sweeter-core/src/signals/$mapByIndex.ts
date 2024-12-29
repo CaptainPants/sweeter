@@ -51,8 +51,8 @@ export function $mapByIndex<TInput, TMapped>(
             if (clear) { // Act as if the previous cache was empty, and detach every item in the cache
                 updatedCacheResolved = [];
 
-                for (let index = 0; index < cacheResolved.length; ++index) {
-                    cacheResolved[index]?.detacher.abort();
+                for (const item of cacheResolved) {
+                    item.detacher.abort();
                 }
             }
             else {

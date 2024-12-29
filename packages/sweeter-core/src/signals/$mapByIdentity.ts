@@ -36,11 +36,9 @@ export function $mapByIdentity<TInput, TMapped>(
 
     const callbacks = {
         reset: () => {
-            cache.updateState(SignalState.success([]));
-
-            callbacks.update();
+            callbacks.update(true);
         },
-        update: () => {
+        update: (clear = true) => {
             const mappingFunResolved = $peek(mappingFun);
 
             const oldCache = cache.signal.peek();
@@ -49,17 +47,25 @@ export function $mapByIdentity<TInput, TMapped>(
                 TInput,
                 IdentityCacheItem<TInput, TMapped>[]
             >();
-            for (let index = 0; index < oldCache.length; ++index) {
-                const item = oldCache[index];
-                assertNotNullOrUndefined(item);
-
-                let found = oldCacheMap.get(item.source);
-                if (!found) {
-                    found = [];
-                    oldCacheMap.set(item.source, found);
+            if (clear) {
+                for (const item of oldCache) {
+                    item.indexController.disconnect();
                 }
-
-                found.push(item);
+                // do not populate oldCacheMap
+            }
+            else {
+                for (let index = 0; index < oldCache.length; ++index) {
+                    const item = oldCache[index];
+                    assertNotNullOrUndefined(item);
+    
+                    let found = oldCacheMap.get(item.source);
+                    if (!found) {
+                        found = [];
+                        oldCacheMap.set(item.source, found);
+                    }
+    
+                    found.push(item);
+                }
             }
 
             function getAndRemoveFromCache(input: TInput) {

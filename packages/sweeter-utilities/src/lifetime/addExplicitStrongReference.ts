@@ -2,6 +2,12 @@ import { arrayRemove } from '../arrayRemove.js';
 
 const strongReferences = new WeakMap<object, unknown[]>();
 
+/**
+ * Add a reference from 'from' to 'to', using a weakmap. This will mean that 'to' will
+ * not become available for garbage collection while 'from' is still reachable.
+ * @param from
+ * @param to
+ */
 export function addExplicitStrongReference(from: object, to: unknown): void {
     const found = strongReferences.get(from);
     if (found) {

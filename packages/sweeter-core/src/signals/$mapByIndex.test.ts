@@ -13,7 +13,7 @@ it('Does stuff', () => {
     let counter = 0;
     mapped.listen(() => {
         counter++;
-    })
+    });
 
     expect(mapped.peek().map((x) => x.peek())).toMatchSnapshot();
 
@@ -36,7 +36,7 @@ it('Changing mapping function rebuilds', () => {
     let counter = 0;
     mapped.listen(() => {
         counter++;
-    })
+    });
 
     expect(mapped.peek().map((x) => x.peek())).toMatchSnapshot();
 

@@ -1,4 +1,4 @@
-import { descend, deepEqual, equals } from '@captainpants/sweeter-utilities';
+import { descend, equals } from '@captainpants/sweeter-utilities';
 import { and, or } from '../../internal/logical.js';
 import { type ParentTypeInfo, type TypeInfo } from '../../models/parents.js';
 import {

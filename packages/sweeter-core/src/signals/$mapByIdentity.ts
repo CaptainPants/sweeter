@@ -10,7 +10,7 @@ import {
 import { SignalController } from './SignalController.js';
 import { $controller } from './$controller.js';
 import { SignalState } from './SignalState.js';
-import { $peek } from './$val.js';
+import { $peek, $val, $wrap } from './$val.js';
 import { $filtered } from './$filtered.js';
 
 type IdentityCacheItem<TInput, TMapped> = {
@@ -30,15 +30,25 @@ export function $mapByIdentity<TInput, TMapped>(
     items: MightBeSignal<readonly TInput[]>,
     mappingFun: MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
 ): Signal<readonly TMapped[]> {
+    if (!isSignal(items)) {
+        // constant array, we can skip a lot of voodoo - the $derived is just because renderItem could be a signal
+        return $derived(() =>
+            items.map((item, i) => $val(mappingFun)(item, $wrap(i))),
+        );
+    }
+
     const cache = $controller(
         SignalState.success<IdentityCacheItem<TInput, TMapped>[]>([]),
     );
 
     const callbacks = {
         reset: () => {
-            callbacks.update(true);
+            callbacks.change(true);
         },
-        update: (clear = true) => {
+        update: () => {
+            callbacks.change(false);
+        },
+        change: (clear = true) => {
             const mappingFunResolved = $peek(mappingFun);
 
             const oldCache = cache.signal.peek();
@@ -52,18 +62,17 @@ export function $mapByIdentity<TInput, TMapped>(
                     item.indexController.disconnect();
                 }
                 // do not populate oldCacheMap
-            }
-            else {
+            } else {
                 for (let index = 0; index < oldCache.length; ++index) {
                     const item = oldCache[index];
                     assertNotNullOrUndefined(item);
-    
+
                     let found = oldCacheMap.get(item.source);
                     if (!found) {
                         found = [];
                         oldCacheMap.set(item.source, found);
                     }
-    
+
                     found.push(item);
                 }
             }
@@ -119,15 +128,13 @@ export function $mapByIdentity<TInput, TMapped>(
     };
 
     // Initially fill the cache
-    callbacks.update();
+    callbacks.reset();
 
     if (isSignal(mappingFun)) {
         mappingFun.listenWeak(callbacks.reset);
     }
 
-    if (isSignal(items)) {
-        items.listenWeak(callbacks.update);
-    }
+    items.listenWeak(callbacks.update);
 
     const resultSignal = $derived(() => {
         return cache.signal.value.map((x) => x.mappedElement);

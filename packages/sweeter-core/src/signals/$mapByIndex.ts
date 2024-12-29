@@ -9,10 +9,11 @@ import {
 } from '@captainpants/sweeter-utilities';
 import { $controller } from './$controller.js';
 import { SignalState } from './SignalState.js';
+import { SignalController } from './SignalController.js';
 
-export type IndexCacheItem<TMapped> = {
+export type IndexCacheItem<TInput, TMapped> = {
     mappedElement: TMapped;
-    detacher: AbortController;
+    input: SignalController<TInput>;
 };
 
 export function $mapByIndex<TInput, TMapped>(
@@ -31,7 +32,7 @@ export function $mapByIndex<TInput, TMapped>(
     // point to a valid index, and add new signals when necessary.
 
     const cache = $controller(
-        SignalState.success<IndexCacheItem<TMapped>[]>([]),
+        SignalState.success<IndexCacheItem<TInput, TMapped>[]>([]),
     );
 
     // store these on an object that is then referenced from the result signal
@@ -39,23 +40,28 @@ export function $mapByIndex<TInput, TMapped>(
         reset: () => {
             callbacks.update(true);
         },
-        update: (clear = false) => {
+        change: () => {
+            callbacks.update(false);
+        },
+        update: (clear: boolean) => {
             const mappingFunResolved = $peek(mappingFun);
             const updatedInputs = items.peek(); // cloned
 
             const cacheResolved = cache.signal.peek();
-            let updatedCacheResolved: IndexCacheItem<TMapped>[];
+            let updatedCacheResolved: IndexCacheItem<TInput, TMapped>[];
 
             let meaningfullyChanged = false;
 
-            if (clear) { // Act as if the previous cache was empty, and detach every item in the cache
+            if (clear) {
+                // Act as if the previous cache was empty, and detach every item in the cache
                 updatedCacheResolved = [];
 
                 for (const item of cacheResolved) {
-                    item.detacher.abort();
+                    item.input.disconnect();
                 }
-            }
-            else {
+
+                meaningfullyChanged = true;
+            } else {
                 updatedCacheResolved = [...cacheResolved];
 
                 if (updatedInputs.length < updatedCacheResolved.length) {
@@ -66,30 +72,37 @@ export function $mapByIndex<TInput, TMapped>(
                     ) {
                         const item = updatedCacheResolved[index];
                         assertNotNullOrUndefined(item);
-    
+
                         // Releases the calculated signal (preserving its last value so that
                         // dependencies don't fail in unexpected ways before updating)
-                        item.detacher.abort();
+                        item.input.disconnect();
                     }
-    
+
                     updatedCacheResolved.length = updatedInputs.length;
                     meaningfullyChanged = true;
                 }
             }
 
             for (let index = 0; index < updatedInputs.length; ++index) {
-                let entry = updatedCacheResolved[index];
-                if (!entry) {
-                    const detach = new AbortController();
+                const item = updatedInputs[index] as TInput;
 
-                    const input = $derived(() => $val(items)[index] as TInput, {
-                        release: detach.signal,
-                    });
-                    const mapped = mappingFunResolved(input, index);
+                let entry = updatedCacheResolved[index];
+                if (entry) {
+                    const previousState = entry.input.signal.peekState();
+                    if (
+                        previousState.mode === 'SUCCESS' &&
+                        !Object.is(previousState.value, item)
+                    ) {
+                        // Update the input signal if needed
+                        entry.input.updateState(SignalState.success(item));
+                    }
+                } else {
+                    const input = $controller(SignalState.success(item));
+                    const mapped = mappingFunResolved(input.signal, index);
 
                     entry = {
                         mappedElement: mapped,
-                        detacher: detach,
+                        input: input,
                     };
 
                     updatedCacheResolved[index] = entry;
@@ -104,13 +117,13 @@ export function $mapByIndex<TInput, TMapped>(
     };
 
     // Initially fill the cache
-    callbacks.update();
+    callbacks.reset();
 
     if (isSignal(mappingFun)) {
         mappingFun.listenWeak(callbacks.reset);
     }
 
-    items.listenWeak(callbacks.update);
+    items.listenWeak(callbacks.change);
 
     const resultSignal = $derived(() => {
         return cache.signal.value.map((x) => x.mappedElement);

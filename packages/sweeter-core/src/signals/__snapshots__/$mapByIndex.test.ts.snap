@@ -1,5 +1,19 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Changing mapping function rebuilds 1`] = `
+[
+  "alpha_TEST1",
+  "beta_TEST1",
+]
+`;
+
+exports[`Changing mapping function rebuilds 2`] = `
+[
+  "alpha_TEST2",
+  "beta_TEST2",
+]
+`;
+
 exports[`Does stuff 1`] = `
 [
   "alpha_TEST",

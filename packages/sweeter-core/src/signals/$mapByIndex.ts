@@ -37,34 +37,44 @@ export function $mapByIndex<TInput, TMapped>(
     // store these on an object that is then referenced from the result signal
     const callbacks = {
         reset: () => {
-            cache.updateState(SignalState.success([]));
-
-            callbacks.update();
+            callbacks.update(true);
         },
-        update: () => {
-            const cacheResolved = cache.signal.peek();
-            const updatedCacheResolved = [...cacheResolved];
+        update: (clear = false) => {
             const mappingFunResolved = $peek(mappingFun);
             const updatedInputs = items.peek(); // cloned
 
+            const cacheResolved = cache.signal.peek();
+            let updatedCacheResolved: IndexCacheItem<TMapped>[];
+
             let meaningfullyChanged = false;
 
-            if (updatedInputs.length < updatedCacheResolved.length) {
-                for (
-                    let index = updatedInputs.length;
-                    index < updatedCacheResolved.length;
-                    ++index
-                ) {
-                    const item = updatedCacheResolved[index];
-                    assertNotNullOrUndefined(item);
+            if (clear) { // Act as if the previous cache was empty, and detach every item in the cache
+                updatedCacheResolved = [];
 
-                    // Releases the calculated signal (preserving its last value so that
-                    // dependencies don't fail in unexpected ways before updating)
-                    item.detacher.abort();
+                for (let index = 0; index < cacheResolved.length; ++index) {
+                    cacheResolved[index]?.detacher.abort();
                 }
+            }
+            else {
+                updatedCacheResolved = [...cacheResolved];
 
-                updatedCacheResolved.length = updatedInputs.length;
-                meaningfullyChanged = true;
+                if (updatedInputs.length < updatedCacheResolved.length) {
+                    for (
+                        let index = updatedInputs.length;
+                        index < updatedCacheResolved.length;
+                        ++index
+                    ) {
+                        const item = updatedCacheResolved[index];
+                        assertNotNullOrUndefined(item);
+    
+                        // Releases the calculated signal (preserving its last value so that
+                        // dependencies don't fail in unexpected ways before updating)
+                        item.detacher.abort();
+                    }
+    
+                    updatedCacheResolved.length = updatedInputs.length;
+                    meaningfullyChanged = true;
+                }
             }
 
             for (let index = 0; index < updatedInputs.length; ++index) {

@@ -1,6 +1,6 @@
-import { equals } from "@captainpants/sweeter-utilities";
-import { $filtered } from "./$filtered";
-import { $mutable } from "./$mutable"
+import { equals } from '@captainpants/sweeter-utilities';
+import { $filtered } from './$filtered';
+import { $mutable } from './$mutable';
 
 it('Updates are skipped as expected', () => {
     const input = $mutable([1, 2, 3]);
@@ -22,4 +22,4 @@ it('Updates are skipped as expected', () => {
 
     expect(counter).toStrictEqual(1);
     expect(filtered.peek()).toStrictEqual([1, 2, 3, 4]);
-})
+});

@@ -20,5 +20,12 @@ export default defineConfig({
         },
         target: "ESNext",
     },
+    test: {
+        poolOptions: {
+            forks: {
+                execArgv: ["--allow-natives-syntax"]
+            }
+        }
+    },
     plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true })]
 });

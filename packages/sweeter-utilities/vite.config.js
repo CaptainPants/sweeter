@@ -23,7 +23,7 @@ export default defineConfig({
     test: {
         poolOptions: {
             forks: {
-                execArgv: ["--allow-natives-syntax"]
+                execArgv: ["--expose-gc"]
             }
         }
     },

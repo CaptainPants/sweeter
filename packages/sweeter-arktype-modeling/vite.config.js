@@ -24,7 +24,12 @@ export default defineConfig({
         },
         target: "ESNext",
     },
-    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true, exclude: exclude })],
     test: {
-    }
+        poolOptions: {
+            forks: {
+                execArgv: ["--expose-gc"]
+            }
+        },
+    },
+    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true, exclude: exclude })]
 });

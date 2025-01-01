@@ -1,9 +1,10 @@
 import { StackTrace } from '@captainpants/sweeter-utilities';
 
 import { announceSignalUsage } from '../../ambient.js';
-import { ListenerSet } from '../ListenerSet.js';
+import { SignalChangeListenerSet } from '../SignalChangeListenerSet.js';
 import { signalMarker } from '../markers.js';
 import {
+    DebugListenerInfo,
     type DebugDependencyNode,
     type Signal,
     type SignalListener,
@@ -19,17 +20,19 @@ interface ChangeAnnouncerStackNode {
 let develChangeAnnouncerStack: ChangeAnnouncerStackNode | undefined;
 let signalCounter = 0;
 
+const debugStackTracesFlag = 'signal.debugStackTraces';
+
 export abstract class SignalBase<T> implements Signal<T> {
     constructor(state: SignalState<T>) {
         this.#state = state;
 
-        if (dev.flag('signal.debugStackTraces')) {
+        if (dev.flag(debugStackTracesFlag)) {
             this.createdAtStack = new StackTrace({ skipFrames: 1 });
         }
     }
 
     #state: SignalState<T>;
-    #listeners = new ListenerSet<T>();
+    #listeners = new SignalChangeListenerSet<T>();
 
     public get [signalMarker]() {
         return true as const;
@@ -113,7 +116,7 @@ export abstract class SignalBase<T> implements Signal<T> {
             return;
         }
 
-        if (dev.isEnabled) {
+        if (dev.flag(debugStackTracesFlag)) {
             const saved = develChangeAnnouncerStack;
             develChangeAnnouncerStack = {
                 signal: this,
@@ -270,5 +273,12 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     getDebugIdentity() {
         return `[${this.name}: ${this.sourceMethod}, ${this.sourceFile} at ${this.sourceRow}:${this.sourceCol}]`;
+    }
+
+    getDebugListenerInfo(): DebugListenerInfo {
+        return {
+            liveCount: this.#listeners.getLiveCount(),
+            getDetail: () => this.#listeners.getDebugDetail(),
+        };
     }
 }

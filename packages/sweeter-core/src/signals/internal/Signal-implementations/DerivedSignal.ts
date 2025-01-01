@@ -11,7 +11,7 @@ import {
     type DerivedSignalOptions,
     SignalListener,
 } from '../../types.js';
-import { type ListenerSetCallback } from '../ListenerSet.js';
+import { type SignalChangeListenerSetCallback } from '../SignalChangeListenerSet.js';
 import {
     finishCalculation,
     startCalculation,
@@ -49,7 +49,7 @@ export class DerivedSignal<T> extends SignalBase<T> {
         };
         // For building debug tree. The 'as' just gets us type safety for the property.
         (
-            derivedSignalListener as ListenerSetCallback<T>
+            derivedSignalListener as SignalChangeListenerSetCallback<T>
         ).debugListenerForSignal = this;
 
         this.#dependencyListener = derivedSignalListener;

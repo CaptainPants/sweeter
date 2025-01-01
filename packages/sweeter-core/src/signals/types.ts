@@ -4,12 +4,18 @@ import {
     type writableSignalMarker,
 } from './internal/markers.js';
 import { type SignalState } from './SignalState.js';
+import { SignalChangeListenerSet } from './internal/SignalChangeListenerSet.js';
 
 export type SignalListener<T> = (
     next: SignalState<T>,
     previous: SignalState<T>,
     trigger: Signal<unknown> | undefined,
 ) => void;
+
+export interface DebugListenerInfo {
+    liveCount: number;
+    getDetail(): string;
+}
 
 /**
  * Basically Signal<T> without the .value property, so that we can share all other functionality between Signal<T> and
@@ -106,6 +112,8 @@ export interface Signal<T> extends SignalCommon<T> {
     doNotIdentify(): this;
 
     getDebugIdentity(): string;
+
+    getDebugListenerInfo(): DebugListenerInfo;
 }
 
 export interface WritableSignal<T> extends SignalCommon<T> {

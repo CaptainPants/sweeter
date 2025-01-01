@@ -278,7 +278,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     getDebugListenerInfo(): DebugListenerInfo {
         return {
             liveCount: this.#listeners.getLiveCount(),
-            getDetail: () => this.#listeners.getDebugDetail()
-        }
+            getDetail: () => this.#listeners.getDebugDetail(),
+        };
     }
 }

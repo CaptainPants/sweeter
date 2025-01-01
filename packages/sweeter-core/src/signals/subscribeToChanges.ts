@@ -28,17 +28,17 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
      */
     strong = true,
 ): () => void {
-    let lastCleanup: void | (() => void);
+    let lastCleanupFromCallbackResult: void | (() => void);
 
     // The lifetime of this method has to be at minimum as long as callback,
     // so we add an explicit reference between them.
     const innerCallback = () => {
-        if (lastCleanup) {
-            lastCleanup?.();
+        if (lastCleanupFromCallbackResult) {
+            lastCleanupFromCallbackResult?.();
         }
 
         // callback can return a cleanup method to be called next change.
-        lastCleanup = callback($valElements(dependencies));
+        lastCleanupFromCallbackResult = callback($valElements(dependencies));
     };
     addExplicitStrongReference(callback, innerCallback);
 
@@ -64,9 +64,19 @@ export function subscribeToChanges<TArgs extends readonly unknown[]>(
         innerCallback();
     }
 
+    let cleanedUp = false;
+
     return () => {
+        if (cleanedUp) {
+            return;
+        }
+
+        cleanedUp = true;
+
+        // Unlisten from all
         popAndCallAll(unlisten);
-        lastCleanup?.();
+
+        lastCleanupFromCallbackResult?.();
 
         removeExplicitStrongReference(callback, innerCallback);
     };

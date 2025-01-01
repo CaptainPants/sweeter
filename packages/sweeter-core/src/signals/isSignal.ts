@@ -13,7 +13,10 @@ export function isWritableSignal(
     value: unknown,
 ): value is WritableSignal<unknown> {
     return (
-        !!value && typeof value === 'object' && writableSignalMarker in value
+        !!value &&
+        typeof value === 'object' &&
+        writableSignalMarker in value &&
+        !!value[writableSignalMarker]
     );
 }
 
@@ -24,6 +27,8 @@ export function isReadWriteSignal(
         !!value &&
         typeof value === 'object' &&
         signalMarker in value &&
-        writableSignalMarker in value
+        !!value[signalMarker] &&
+        writableSignalMarker in value &&
+        !!value[writableSignalMarker]
     );
 }

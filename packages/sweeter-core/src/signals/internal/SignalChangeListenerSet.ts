@@ -23,7 +23,8 @@ export class SignalChangeListenerSet<T> {
     }
 
     #listenerRefs = new Set<
-        WeakRef<SignalChangeListenerSetCallback<T>> | SignalChangeListenerSetCallback<T>
+        | WeakRef<SignalChangeListenerSetCallback<T>>
+        | SignalChangeListenerSetCallback<T>
     >();
 
     #debugStackTraces?: WeakMap<object, StackTrace>;
@@ -52,7 +53,9 @@ export class SignalChangeListenerSet<T> {
         if (dev.flag(stackTraceFlag)) {
             this.#debugStackTraces?.set(
                 listener,
-                new StackTrace({ context: 'Generated from SignalChangeListenerSet.add' }),
+                new StackTrace({
+                    context: 'Generated from SignalChangeListenerSet.add',
+                }),
             );
         }
     }
@@ -94,6 +97,7 @@ export class SignalChangeListenerSet<T> {
                     const res: ListenerSetDebugItem<T> = {
                         listener: derefed,
                         addedStackTrace: this.#debugStackTraces?.get(derefed),
+                        weak: listener instanceof WeakRef,
                     };
                     return res;
                 })
@@ -125,12 +129,15 @@ export class SignalChangeListenerSet<T> {
             .map((item, i) => {
                 const stackTrace =
                     item.addedStackTrace?.getNice() ?? '<no stack trace>\n';
-                return `== Listener ${i} ==\n${stackTrace}== END Listener ${i} ==`;
+                return `== Listener ${i} (${item.weak ? 'Weak' : 'Strong'}) ==\n${stackTrace}== END Listener ${i} ==`;
             })
             .join('\n\n');
     }
 
-    public remove(listener: SignalChangeListenerSetCallback<T>, strong: boolean) {
+    public remove(
+        listener: SignalChangeListenerSetCallback<T>,
+        strong: boolean,
+    ) {
         if (strong) {
             this.#listenerRefs.delete(listener);
         } else {
@@ -180,4 +187,5 @@ export class SignalChangeListenerSet<T> {
 export interface ListenerSetDebugItem<T> {
     listener: SignalChangeListenerSetCallback<T>;
     addedStackTrace?: StackTrace | undefined;
+    weak: boolean;
 }

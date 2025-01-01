@@ -49,7 +49,7 @@ it('Derived signals keep alive their dependencies', async () => {
 
     await global.gc!({ execution: 'async', type: 'major' });
 
-    // The signal that isn't referenced from derived should be GC-d 
+    // The signal that isn't referenced from derived should be GC-d
     expect(bits.soloWeakRef.deref()).toStrictEqual(undefined);
     // The signal that is referenced should not
     expect(bits.dependencyWeakRef.deref()).not.toStrictEqual(undefined);

@@ -74,23 +74,6 @@ export class SignalChangeListenerSet<T> {
         return this.#listenerRefs.size > 0;
     }
 
-    public get summarized(): string {
-        const strongRefs = [...this.#listenerRefs.values()]
-            .map((x) => (x instanceof WeakRef ? undefined : x))
-            .filter((x) => x);
-        const weakRefsAlive = [...this.#listenerRefs.values()]
-            .map((x) => (x instanceof WeakRef ? x.deref() : undefined))
-            .filter((x) => x);
-
-        const topLine = `SignalChangeListenerSet(strong: ${strongRefs.length} {${strongRefs
-            .map((x) => x?.name ?? '?')
-            .join(', ')}}, weak: ${weakRefsAlive.length} {${weakRefsAlive
-            .map((x) => x?.name ?? '?')
-            .join(', ')}})`;
-
-        return topLine + (dev.isEnabled ? '\n\n' + this.getDebugDetail() : '');
-    }
-
     /**
      * This is intended for debug only. Retaining references to the results of this call will prevent garbage collection.
      * @returns
@@ -117,6 +100,23 @@ export class SignalChangeListenerSet<T> {
                 // Some derefed items may have been garbage collected
                 .filter((x): x is ListenerSetDebugItem<T> => Boolean(x))
         );
+    }
+
+    public get getDebugSummary(): string {
+        const strongRefs = [...this.#listenerRefs.values()]
+            .map((x) => (x instanceof WeakRef ? undefined : x))
+            .filter((x) => x);
+        const weakRefsAlive = [...this.#listenerRefs.values()]
+            .map((x) => (x instanceof WeakRef ? x.deref() : undefined))
+            .filter((x) => x);
+
+        const topLine = `SignalChangeListenerSet(strong: ${strongRefs.length} {${strongRefs
+            .map((x) => x?.name ?? '?')
+            .join(', ')}}, weak: ${weakRefsAlive.length} {${weakRefsAlive
+            .map((x) => x?.name ?? '?')
+            .join(', ')}})`;
+
+        return topLine + (dev.isEnabled ? '\n\n' + this.getDebugDetail() : '');
     }
 
     public getDebugDetail(): string {

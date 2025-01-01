@@ -33,6 +33,6 @@ export function hasExplicitStrongReference(from: object, to: unknown): boolean {
 
 const empty = Object.freeze([]);
 
-export function getExplicitStrongReferencesFrom(from: object) {
+export function getExplicitStrongReferencesFrom(from: object): readonly unknown[] {
     return strongReferences.get(from) ?? empty;
 }

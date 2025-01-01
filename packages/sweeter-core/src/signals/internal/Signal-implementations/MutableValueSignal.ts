@@ -10,7 +10,7 @@ export class MutableValueSignal<T>
 {
     constructor(value?: T) {
         super(
-            arguments.length === 0
+            arguments.length === 0 // Because undefined might be passed
                 ? SignalState.init()
                 : SignalState.success(value as T),
         );

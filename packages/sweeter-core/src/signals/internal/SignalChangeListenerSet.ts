@@ -9,19 +9,21 @@ import { dev } from '../../dev.js';
  */
 const weakRefCache = new WeakMap<object, WeakRef<object>>();
 
-export type ListenerSetCallback<T> = SignalListener<T> & {
+export type SignalChangeListenerSetCallback<T> = SignalListener<T> & {
     debugListenerForSignal?: Signal<unknown>;
 };
 
-export class ListenerSet<T> {
+const stackTraceFlag = 'signal.debugStackTraces';
+
+export class SignalChangeListenerSet<T> {
     constructor() {
-        if (dev.isEnabled) {
+        if (dev.flag(stackTraceFlag)) {
             this.#debugStackTraces = new WeakMap();
         }
     }
 
     #listenerRefs = new Set<
-        WeakRef<ListenerSetCallback<T>> | ListenerSetCallback<T>
+        WeakRef<SignalChangeListenerSetCallback<T>> | SignalChangeListenerSetCallback<T>
     >();
 
     #debugStackTraces?: WeakMap<object, StackTrace>;
@@ -33,12 +35,12 @@ export class ListenerSet<T> {
      * @param listener A callback to be called later, when using 'announce'.
      * @param strong If this is false, only a weak reference will be held to the listener. If there are no other references to this callback it may be garbage collected.
      */
-    public add(listener: ListenerSetCallback<T>, strong: boolean) {
+    public add(listener: SignalChangeListenerSetCallback<T>, strong: boolean) {
         if (strong) {
             this.#listenerRefs.add(listener);
         } else {
             let weakRef = weakRefCache.get(listener) as WeakRef<
-                ListenerSetCallback<T>
+                SignalChangeListenerSetCallback<T>
             >;
             if (!weakRef) {
                 weakRef = new WeakRef(listener);
@@ -47,10 +49,10 @@ export class ListenerSet<T> {
             this.#listenerRefs.add(weakRef);
         }
 
-        if (dev.flag('signal.debugStackTraces')) {
+        if (dev.flag(stackTraceFlag)) {
             this.#debugStackTraces?.set(
                 listener,
-                new StackTrace({ context: 'Generated from ListenerSet.add' }),
+                new StackTrace({ context: 'Generated from SignalChangeListenerSet.add' }),
             );
         }
     }
@@ -80,7 +82,7 @@ export class ListenerSet<T> {
             .map((x) => (x instanceof WeakRef ? x.deref() : undefined))
             .filter((x) => x);
 
-        const topLine = `ListenerSet(strong: ${strongRefs.length} {${strongRefs
+        const topLine = `SignalChangeListenerSet(strong: ${strongRefs.length} {${strongRefs
             .map((x) => x?.name ?? '?')
             .join(', ')}}, weak: ${weakRefsAlive.length} {${weakRefsAlive
             .map((x) => x?.name ?? '?')
@@ -128,12 +130,12 @@ export class ListenerSet<T> {
             .join('\n\n');
     }
 
-    public remove(listener: ListenerSetCallback<T>, strong: boolean) {
+    public remove(listener: SignalChangeListenerSetCallback<T>, strong: boolean) {
         if (strong) {
             this.#listenerRefs.delete(listener);
         } else {
             const weakRef = weakRefCache.get(listener) as WeakRef<
-                ListenerSetCallback<T>
+                SignalChangeListenerSetCallback<T>
             >;
             if (weakRef) {
                 this.#listenerRefs.delete(weakRef);
@@ -146,7 +148,7 @@ export class ListenerSet<T> {
      * errors, catch them in the callback.
      * @param args
      */
-    public announce(...args: Parameters<ListenerSetCallback<T>>) {
+    public announce(...args: Parameters<SignalChangeListenerSetCallback<T>>) {
         const listeners = this.#listenerRefs;
 
         for (const ref of listeners) {
@@ -176,6 +178,6 @@ export class ListenerSet<T> {
 }
 
 export interface ListenerSetDebugItem<T> {
-    listener: ListenerSetCallback<T>;
+    listener: SignalChangeListenerSetCallback<T>;
     addedStackTrace?: StackTrace | undefined;
 }

@@ -24,7 +24,12 @@ export default defineConfig({
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],
-        ]
+        ],
+        poolOptions: {
+            forks: {
+                execArgv: ["--expose-gc"]
+            }
+        },
     },
     optimizeDeps: {
         exclude: [

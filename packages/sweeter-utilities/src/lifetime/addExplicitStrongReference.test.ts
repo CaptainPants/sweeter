@@ -32,7 +32,7 @@ it('correctly blocks collection', async () => {
 
     target = undefined; // This is our only root pointing to the target object
 
-    await global.gc?.({ execution: 'async', type: 'major' });
+    await global.gc!({ execution: 'async', type: 'major' });
 
     // But there is a single explicit strong reference so it shouldn't be collected
 
@@ -40,11 +40,9 @@ it('correctly blocks collection', async () => {
 
     removeExplicitStrongReference(referencer, weakRef.deref()); // Remove the only strong reference
 
-    await global.gc?.({ execution: 'async', type: 'major' });
+    await global.gc!({ execution: 'async', type: 'major' });
 
     // And it should be collected
-    
+
     expect(weakRef.deref()).toStrictEqual(undefined);
 });
-
-

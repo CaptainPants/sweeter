@@ -28,7 +28,7 @@ export interface AmbientValueCallback {
     parent?: ((name: string) => unknown) | undefined;
 }
 
-export const StandardLocalValues = {
+export const StandardAssociatedValues = {
     /**
      * Controls visibility of a property.
      */

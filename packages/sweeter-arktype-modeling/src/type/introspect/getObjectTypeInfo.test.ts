@@ -14,7 +14,7 @@ test('general', () => {
     });
 
     const info = getObjectTypeInfo(schema);
-    const fixedProps = info.getProperties();
+    const fixedProps = info.getFixedProperties();
 
     expect(fixedProps.size).toStrictEqual(1);
     expect(

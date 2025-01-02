@@ -14,8 +14,8 @@ import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import {
     type ContextualValueCalculationContext,
     cast,
-    categorizeProperties,
-    StandardLocalValues,
+    categorizeFixedProperties,
+    StandardAssociatedValues,
     type UnknownModel,
     validate,
     asObject,
@@ -137,7 +137,7 @@ export function ObjectEditor(
         // As it will rebuild the structure completely, and you will lose element focus/selection etc.
         // We necessarily subscribe to the type signal, as we use its structure to build the editor structure.
 
-        const categorizedProperties = categorizeProperties(
+        const categorizedProperties = categorizeFixedProperties(
             // SIGNAL HERE
             type.value,
             (property) => {
@@ -161,15 +161,15 @@ export function ObjectEditor(
                                 draft.value.unknownGetProperty(property.name);
                             assertNotNullOrUndefined(propertyModel);
 
-                            return (
-                                propertyModel.valueModel.type
-                                    .annotations()
-                                    ?.getAssociatedValue(
-                                        StandardLocalValues.Visible,
-                                        $wrap(propertyModel.valueModel),
-                                        calculationContext,
-                                    ) !== false
-                            ); // likely values are notFound and false
+                            const visibility = propertyModel.valueModel.type
+                                .annotations()
+                                ?.getAssociatedValue(
+                                    StandardAssociatedValues.Visible,
+                                    $wrap(propertyModel.valueModel),
+                                    calculationContext,
+                                ) !== false;
+
+                            return visibility; // likely values are notFound and false
                         },
                     );
 
@@ -256,7 +256,7 @@ export function ObjectEditor(
     // this should come through $mapByIdentity (ideally).
     const mappedContent = $mapByIdentity(
         $derived(() => {
-            const props = [...draft.value.unknownGetProperties()];
+            const props = [...draft.value.unknownGetProperties('mapped')];
             props.sort((x, y) => defaultCompare(x.name, y.name));
             return props;
         }),

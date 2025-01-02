@@ -41,8 +41,6 @@ export interface Annotations {
     displayName(): string | null;
     getBestDisplayName(): string;
 
-    visible(): boolean;
-
     getAssociatedValue(
         name: string,
         value: Signal<unknown>,

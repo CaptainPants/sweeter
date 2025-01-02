@@ -107,14 +107,6 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         return serializeSchemaForDisplay(this.#schema);
     }
 
-    public visible(): boolean {
-        return this.getAttrValidated(
-            'property:visible',
-            schemas.propertyVisible,
-            true,
-        );
-    }
-
     #getAssociatedValueTyped(
         name: string,
         value: Signal<type.infer<TSchema>>,

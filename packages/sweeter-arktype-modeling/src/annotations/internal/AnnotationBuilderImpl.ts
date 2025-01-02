@@ -52,7 +52,7 @@ export class AnnotationsBuilderImpl implements AnnotationsBuilder {
     }
 
     public visible(visibility: boolean): this {
-        return this.attr('property:visible', visibility);
+        return this.withAssociatedValue('property:visible', visibility);
     }
 
     public withAssociatedValue(

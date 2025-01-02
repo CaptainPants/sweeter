@@ -30,5 +30,8 @@
         "@captainpants/sweeter-web-arktype": "workspace:^",
         "@captainpants/sweeter-web-gummybear": "workspace:^",
         "arktype": "2.0.0-rc.21"
+    },
+    "devDependencies": {
+        "@captainpants/rollup-plugin-sweeter": "workspace:^"
     }
 }

@@ -32,8 +32,9 @@ export function UnionEditor({
     const type = $derived(() => typedModel.value.type);
 
     const alternatives = $derived(() => {
-        const options = introspect.getUnionTypeInfo(type.value).branches;
         // Only depends on 'type' signal
+        const options = introspect.getUnionTypeInfo(type.value).branches;
+        
         return options.map((alternative) => {
             return {
                 label: alternative.annotations()?.getBestDisplayName(),

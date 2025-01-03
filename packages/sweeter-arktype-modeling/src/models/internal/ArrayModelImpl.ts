@@ -198,7 +198,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
         );
 
         const newValue = [...(this.value as unknown[])];
-        newValue[1] = model.value;
+        newValue[index] = model.value;
 
         if (validate) {
             await parseAsync(newValue, this.type);

@@ -65,8 +65,12 @@ export function EditorHost(
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
 
-    const modelType = $derived(() => $val(model).type);
-    const value = $derived(() => $val(model.value));
+    const modelType = $derived(() => {
+        return $val(model).type;
+    });
+    const value = $derived(() => {
+        return $val(model.value);
+    });
 
     const calculateLocal = (
         name: string,

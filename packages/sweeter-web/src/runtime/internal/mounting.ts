@@ -2,6 +2,7 @@ import {
     $insertLocation,
     ComponentFaultContext,
     afterCalculationsComplete,
+    dev,
     type ContextSnapshot,
 } from '@captainpants/sweeter-core';
 import { Logger } from '@captainpants/sweeter-utilities';
@@ -45,9 +46,10 @@ function nodeAssociatedCallbacks<T extends object>(name: string) {
                     try {
                         callback();
                     } catch (ex) {
-                        logger.warning
-                            .formatted`Error swallowed while invoking callback ${callback.name}`(
+                        dev.swallowedError(
+                            'Error swallowed while invoking listener',
                             ex,
+                            callback,
                         );
                     }
                 }

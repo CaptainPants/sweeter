@@ -78,6 +78,8 @@ declare global {
             monitorInvokesDebugger: boolean;
 
             componentMounting: boolean;
+
+            breakpointOnSwallowedError: boolean;
         }
     }
 }

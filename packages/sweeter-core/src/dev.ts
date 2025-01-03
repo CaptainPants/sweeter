@@ -66,11 +66,18 @@ function ping() {
     }
 }
 
-let globalEnabledFlags: DebugFlags | undefined;
+function swallowedError(message: string, err: unknown, ...args: unknown[]) {
+    console.warn(message, err, ...args);
+    if (dev.flag('breakpointOnSwallowedError')) {
+        debugger; // Invoke debugger breakpoint here yay
+    }
+}
+
+let globalEnabledFlags: DebugFlagValues | undefined;
 let globalInterval: ReturnType<typeof setInterval> | undefined;
 
-export type DebugFlags = Partial<SweeterExtensionPoints.DebugFlags> &
-    Record<string, boolean>;
+export type DebugFlagKey = (keyof SweeterExtensionPoints.DebugFlags) | (string & {} /* The &{} here is to allow intellisense */);
+export type DebugFlagValues = Partial<Record<DebugFlagKey, boolean>>;
 
 /**
  * Developer tools object.
@@ -79,14 +86,14 @@ const dev = {
     get isEnabled() {
         return globalEnabledFlags;
     },
-    flag<TKey extends keyof DebugFlags>(flag: TKey): boolean {
+    flag(flag: DebugFlagKey): boolean {
         return globalEnabledFlags?.all ?? globalEnabledFlags?.[flag] ?? false;
     },
     /**
      * Enable/disable developer tooling.
      * @param flags
      */
-    enable(flags: DebugFlags) {
+    enable(flags: DebugFlagValues) {
         dev.disable();
 
         globalEnabledFlags = flags;
@@ -105,5 +112,6 @@ const dev = {
     },
     monitorOperation,
     ping,
+    swallowedError,
 };
 export { dev };

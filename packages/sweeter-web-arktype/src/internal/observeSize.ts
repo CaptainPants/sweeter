@@ -1,3 +1,5 @@
+import { dev } from "@captainpants/sweeter-core";
+
 export type ObserveSizeCallback = (entry: ResizeObserverEntry) => void;
 
 const callbackMap = new Map<Element, ObserveSizeCallback[]>();
@@ -17,7 +19,10 @@ function getSingletonResizeObserver() {
                             callback(entry);
                         } catch (ex) {
                             // Swallow errors so that later callbacks are still invoked
-                            console.log('Swallowed exception', ex);
+                            dev.swallowedError(
+                                'Swallowed error',
+                                ex,
+                            );
                         }
                     }
                 }

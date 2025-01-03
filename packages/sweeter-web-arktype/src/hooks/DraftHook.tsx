@@ -30,7 +30,9 @@ export function DraftHook<TModel, TDraft>(
         onValid,
     }: DraftHookOptions<TModel, TDraft>,
 ) {
-    const modelConverted = $derived(() => convertIn(model.value));
+    const modelConverted = $derived(() => {
+        return convertIn(model.value);
+    });
     const draft = $mutable<TDraft>(modelConverted.peek());
 
     const validationErrors = $mutable<ValidationSingleResult[] | null>(null);

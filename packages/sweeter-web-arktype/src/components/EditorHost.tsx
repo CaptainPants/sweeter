@@ -7,10 +7,12 @@ import {
     notFound,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
+    $constant,
     $derived,
     $peek,
     $val,
     $valProperties,
+    isSignal,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
 
@@ -65,11 +67,14 @@ export function EditorHost(
 ): JSX.Element {
     const { rules, settings } = init.getContext(EditorRootContext);
 
+    if (!isSignal(model)) {
+        model = $constant(model);
+    }
     const modelType = $derived(() => {
         return $val(model).type;
     });
-    const value = $derived(() => {
-        return $val(model.value);
+    const parentInfo = $derived(() => {
+        return $val(model).parentInfo;
     });
 
     const calculateLocal = (
@@ -79,7 +84,7 @@ export function EditorHost(
         // Look at the model, and then the parent's property model (which is passed via the localProp)
         const found = $val(modelType)
             .annotations()
-            ?.getAssociatedValue(name, value, context);
+            ?.getAssociatedValue(name, model, context);
         if (found !== notFound) {
             return found;
         }
@@ -98,7 +103,7 @@ export function EditorHost(
     ) => {
         return $val(modelType)
             .annotations()
-            ?.getAmbientValue(name, value, context);
+            ?.getAmbientValue(name, model, context);
     };
 
     const { ambient, local } = init.hook(
@@ -107,16 +112,13 @@ export function EditorHost(
         calculateAmbient,
     );
 
-    const type = $derived(() => $val(model).type);
-    const parentInfo = $derived(() => $val(model).parentInfo);
-
     const render = $derived(() => {
         const matches = createTypeMatcher<EditorComponentType>(
             rules,
         ).findAllMatches(
             { settings },
             {
-                type: type.value,
+                type: modelType.value,
                 parentInfo: parentInfo.value,
             },
         );

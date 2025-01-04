@@ -83,7 +83,7 @@ export function createTransform({
                             log('Removing ignore marker');
                             magicString.remove(...ignore);
                         } else {
-                            const name = getVariableName(
+                            const name = getVariableOrPropertyName(
                                 path,
                                 path.node.callee.name,
                                 next,
@@ -140,13 +140,15 @@ export function createTransform({
     };
 }
 
-function getVariableName(
+function getVariableOrPropertyName(
     path: NodePath,
     sigil: string,
     nextCount: (name: string) => number,
 ): string | undefined {
     if (is.variableDeclarator(path.parent) && is.identifier(path.parent.id)) {
         return path.parent.id.name;
+    } else if (is.property(path.parent) && path.parent.kind === 'init' && is.identifier(path.parent.key)) {
+        return path.parent.key.name;
     } else {
         return `${sigil}-${nextCount(sigil)}`;
     }

@@ -87,12 +87,20 @@ export function createTransform({
                                 path.node.callee.name,
                                 next,
                             );
+
+                            log(`Found ${name} at offset ${path.node.start}`);
+
                             const [funcName, mappedLine, mappedColumn] = getLocation(
                                 code,
                                 path,
                                 path.node,
                             );
+
+                            log(`Transformed location ${mappedLine}:${mappedColumn} function ${funcName}`);
+
                             const { line, column } = sourceMap.originalPositionFor({ line: mappedLine, column: mappedColumn })
+
+                            log(`Original location ${line}:${column}`);
 
                             magicString.appendRight(
                                 path.node.end,

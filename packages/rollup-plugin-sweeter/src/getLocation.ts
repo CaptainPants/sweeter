@@ -22,13 +22,13 @@ function getRowAndCol(
 ): [row: number, col: number] {
     const upToOffset = code.substring(0, offset);
 
-    const row = newlinesBetween(code, 0, offset); // number of lines = number of \n + 1
+    const row = 1 + newlinesBetween(code, 0, offset); // number of lines = number of \n + 1
 
-    let startOfLine = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
+    let startOfLineOffset = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
 
-    const col = offset - startOfLine;
+    const col = 1 + (offset - startOfLineOffset);
 
-    return [row, col + 1 /* 1-based */];
+    return [row, col /* 1-based */];
 }
 
 function getDeclaringMethod(path: NodePath): string | undefined {

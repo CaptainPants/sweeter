@@ -10,6 +10,7 @@ export interface SweeterRollupPluginOptions {
     sigils?: readonly string[];
     roots?: readonly string[];
     projectName: string;
+    debugMatching?: RegExp;
 }
 
 const standardSigils = [
@@ -33,6 +34,7 @@ export default function sweeterPlugin({
     sigils,
     roots,
     projectName,
+    debugMatching,
 }: SweeterRollupPluginOptions): RollupPlugin {
     const filter = createFilter(include, exclude);
 
@@ -62,7 +64,10 @@ export default function sweeterPlugin({
             }
             this.info(`Processing file ${id}`);
 
-            const result = tranform(code, id, this);
+            const debugLogging = debugMatching ? !!id.match(debugMatching) : false;
+            const log = debugLogging ? (message: string) => this.info(message) : () => void 0;
+
+            const result = tranform(code, id, this, log);
 
             this.info(`Finished processing file ${id}`);
 

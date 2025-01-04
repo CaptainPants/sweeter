@@ -2,7 +2,6 @@ import { is, NodePath, traverse } from 'estree-toolkit';
 import MagicString from 'magic-string';
 import path from 'node:path';
 import {
-    AstNodeLocation,
     ProgramNode,
     SourceMap,
     TransformPluginContext,
@@ -10,12 +9,16 @@ import {
 import { assertAstLocation } from './assertAstLocation';
 import { getLocation } from './getLocation';
 import { constants } from './constants';
+import { SourceMapConsumer } from 'source-map';
+
+export type TransformResult = { code: string; map: SourceMap; ast?: ProgramNode } | undefined;
 
 export type Transformer = (
     code: string,
     id: string,
     context: TransformPluginContext,
-) => { code: string; map: SourceMap; ast: ProgramNode };
+    log: (message: string) => void,
+) => TransformResult | Promise<TransformResult>;
 
 export interface TransformSetup {
     identifiableSigils: readonly string[];
@@ -27,19 +30,26 @@ export function createTransform({
     identifiableSigils,
     roots: rawRoots,
     projectName,
-}: TransformSetup) {
+}: TransformSetup): Transformer {
     const identifiableFunctions = new Set(identifiableSigils);
 
     const roots = rawRoots.map((x) =>
         path.isAbsolute(x) ? x : path.resolve(x),
     );
 
-    return (
+    return async (
         code: string,
         id: string,
         context: TransformPluginContext,
-    ): { code: string; map: SourceMap } | undefined => {
+        log: (message: string) => void,
+    ) => {
         const ast = context.parse(code);
+
+        log(`== Transforming code == \n${code}\n== End code ==`);
+
+        const rawSourceMap = context.getCombinedSourcemap();
+        const sourceMap = await new SourceMapConsumer(rawSourceMap);
+        
         const magicString = new MagicString(code);
 
         // This is used for assigning incremental identifiers when the signal
@@ -77,15 +87,16 @@ export function createTransform({
                                 path.node.callee.name,
                                 next,
                             );
-                            const [funcName, row, col] = getLocation(
+                            const [funcName, mappedLine, mappedColumn] = getLocation(
                                 code,
                                 path,
                                 path.node,
                             );
+                            const { line, column } = sourceMap.originalPositionFor({ line: mappedLine, column: mappedColumn })
 
                             magicString.appendRight(
                                 path.node.end,
-                                `./* rollup-plugin-sweeter: */${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${row}, ${col})`,
+                                `./* rollup-plugin-sweeter: */${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${line}, ${column})`,
                             );
                         }
                     } else if (

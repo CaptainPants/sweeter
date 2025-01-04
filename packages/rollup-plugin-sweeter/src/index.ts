@@ -18,6 +18,7 @@ const standardSigils = [
     '$controller',
     '$deferred',
     '$derived',
+    '$filtered',
     '$elementOf',
     '$lastGood',
     '$mapByIdentity',
@@ -26,6 +27,8 @@ const standardSigils = [
     '$propertyOf',
     '$readonly',
     '$wrap',
+    '$mapByIdentity',
+    '$mapByIndex',
 ] as const;
 
 export default function sweeterPlugin({

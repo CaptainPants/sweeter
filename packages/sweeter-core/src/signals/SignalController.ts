@@ -33,6 +33,10 @@ export class SignalController<T> {
         this.#signal.identify(...params);
         return this;
     }
+
+    doNotIdentify(): this {
+        return this;
+    }
 }
 
 /** Private protocol for communicating from controller to signal */

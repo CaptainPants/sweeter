@@ -80,6 +80,7 @@ export function createTransform({
                     if (identifiableFunctions.has(path.node.callee.name)) {
                         const ignore = shouldIgnore(path);
                         if (ignore) {
+                            log('Removing ignore marker');
                             magicString.remove(...ignore);
                         } else {
                             const name = getVariableName(
@@ -98,7 +99,8 @@ export function createTransform({
 
                             log(`Transformed location ${mappedLine}:${mappedColumn} function ${funcName}`);
 
-                            const { line, column } = sourceMap.originalPositionFor({ line: mappedLine, column: mappedColumn })
+                            let { line, column } = sourceMap.originalPositionFor({ line: mappedLine, column: mappedColumn - 1 /* We're using 1-based, but the library is 0-based */ })
+                            if (column !== null) column += 1; // The SourceMap library uses 0-based columns, and we want 1-based
 
                             log(`Original location ${line}:${column}`);
 
@@ -133,6 +135,7 @@ export function createTransform({
             return { code: magicString.toString(), map };
         }
 
+        log('Finished');
         return;
     };
 }

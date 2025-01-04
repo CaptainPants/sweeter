@@ -88,7 +88,7 @@ export function createTransform({
                                 next,
                             );
 
-                            log(`Found ${name} at offset ${path.node.start}`);
+                            log(`Found ${path.node.callee.name} named ${name} at offset ${path.node.start}`);
 
                             const [funcName, mappedLine, mappedColumn] = getLocation(
                                 code,

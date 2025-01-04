@@ -49,7 +49,7 @@ export default function sweeterPlugin({
     return {
         name: 'rollup-plugin-sweeter',
 
-        transform(code, id) {
+        async transform(code, id) {
             if (!filter(id)) {
                 // this.info(
                 //     `Ignoring file as it doesn't match include/exclude filters ${id}`,
@@ -67,7 +67,7 @@ export default function sweeterPlugin({
             const debugLogging = debugMatching ? !!id.match(debugMatching) : false;
             const log = debugLogging ? (message: string) => this.info(message) : () => void 0;
 
-            const result = tranform(code, id, this, log);
+            const result = await tranform(code, id, this, log);
 
             this.info(`Finished processing file ${id}`);
 

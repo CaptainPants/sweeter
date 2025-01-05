@@ -208,8 +208,17 @@ export function ObjectEditor(
                                             index
                                         ] ?? true,
                                 ),
-                                () => (
-                                    <Row
+                                () => {
+                                    const value = $derived(
+                                        // NOTE: this depends on draft.value
+                                        () => {
+                                            const res = draft.value.unknownGetProperty(
+                                                property.name,
+                                            )?.valueModel!;
+                                            return res;
+                                        }
+                                    );
+                                    return <Row
                                         class={css.property}
                                         key={`prop-${String(property.name)}`}
                                     >
@@ -225,14 +234,7 @@ export function ObjectEditor(
                                             <KnownPropertyEditorPart
                                                 id={id}
                                                 property={property.name}
-                                                value={$derived(
-                                                    // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
-                                                    // No other signals are referenced
-                                                    () =>
-                                                        draft.value.unknownGetProperty(
-                                                            property.name,
-                                                        )?.valueModel!,
-                                                )}
+                                                value={value}
                                                 updateValue={
                                                     updatePropertyValue
                                                 }
@@ -241,7 +243,7 @@ export function ObjectEditor(
                                             />
                                         </Column>
                                     </Row>
-                                ),
+                                }
                             );
                         })}
                     </div>

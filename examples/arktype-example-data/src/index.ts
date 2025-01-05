@@ -21,6 +21,12 @@ export const stringArray = type.string
     .annotate((add) => add.displayName('Text Item'))
     .array();
 
+export const stringArrayField = type({
+    field: type.string
+        .annotate((add) => add.displayName('Text Item'))
+        .array()
+})
+
 export const simpleHiddenField = type({
     test: type.string.annotate((add) => add.displayName('Test')),
     hidden: type.string.annotate((add) => add.visible(false)),
@@ -142,6 +148,13 @@ export const exampleData = {
         const res = await ModelFactory.createModel({
             value: { test: 'Test', hidden: 'Hello' },
             schema: simpleHiddenField,
+        });
+        return asUnknown(res);
+    },
+    StringArrayField: async () => {
+        const res = await ModelFactory.createModel({
+            value: { field: ['alpha', 'beta'] },
+            schema: stringArrayField,
         });
         return asUnknown(res);
     },

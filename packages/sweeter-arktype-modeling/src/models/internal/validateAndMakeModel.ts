@@ -3,10 +3,10 @@ import { descend } from '@captainpants/sweeter-utilities';
 import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
-import { type ParentTypeInfo } from '../parents.js';
+import { isEquivalentParentInfo, type ParentTypeInfo } from '../parents.js';
 import { validateAndThrow } from '../../utility/validate.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
-import { type type } from 'arktype';
+import { type } from 'arktype';
 
 /**
  * For a given value (raw or model) validate that the value matches the type (using validateOrThrow). Throw if it does not.
@@ -26,9 +26,9 @@ export async function validateAndMakeModel<TSchema extends AnyTypeConstraint>(
 ): Promise<Model<TSchema>> {
     let validated: type.infer<TSchema>;
     if (isModel(valueOrModel)) {
-        if (valueOrModel.type == type) {
+        if (valueOrModel.type == type && isEquivalentParentInfo(valueOrModel.parentInfo, parentInfo)) {
             // type is the same object
-            validated = valueOrModel.value as type.infer<TSchema>;
+            return valueOrModel as Model<TSchema>; // Keep model and e.g. its parentInfo with their original identity
         } else {
             validated = await validateAndThrow(type, valueOrModel.value);
         }

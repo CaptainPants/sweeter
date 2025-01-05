@@ -8,7 +8,7 @@ import {
     type ElementModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
-import { ParentRelationship, type ParentTypeInfo } from '../parents.js';
+import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';

@@ -14,6 +14,7 @@ import { type Annotations } from '../types.js';
 import { serializeSchemaForDisplay } from '../../utility/serializeSchemaForDisplay.js';
 import { isModel } from '../../models/isModel.js';
 import { $derived, $val, Signal } from '@captainpants/sweeter-core';
+import { StandardAttributes } from '../StandardValues.js';
 
 export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     implements Annotations
@@ -85,7 +86,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
 
     public category(): string | null;
     public category(): string | null {
-        const res = this.attr('property:category', undefined);
+        const res = this.attr(StandardAttributes.property_category, undefined);
         const parsed = safeParse(res, schemas.propertyCategory);
         if (parsed.success) {
             return parsed.data;
@@ -94,7 +95,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     }
 
     public displayName(): string | null {
-        const res = this.attr('displayName', undefined);
+        const res = this.attr(StandardAttributes.displayName, undefined);
         const parsed = safeParse(res, schemas.displayName);
         if (parsed.success) {
             return parsed.data;

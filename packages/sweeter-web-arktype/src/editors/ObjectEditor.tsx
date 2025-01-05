@@ -15,7 +15,6 @@ import {
     type ContextualValueCalculationContext,
     cast,
     categorizeFixedProperties,
-    StandardAssociatedValues,
     type UnknownModel,
     validate,
     asObject,
@@ -23,6 +22,7 @@ import {
     createDefault,
     UnknownType,
     introspect,
+    StandardAssociatedValueKeys,
 } from '@captainpants/sweeter-arktype-modeling';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -164,7 +164,7 @@ export function ObjectEditor(
                             const visibility = propertyModel.valueModel.type
                                 .annotations()
                                 ?.getAssociatedValue(
-                                    StandardAssociatedValues.Visible,
+                                    StandardAssociatedValueKeys.property_visible,
                                     $wrap(propertyModel.valueModel),
                                     calculationContext,
                                 ) !== false;

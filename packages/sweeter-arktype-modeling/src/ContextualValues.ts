@@ -27,10 +27,3 @@ export interface AmbientValueCallback {
     get: (name: string) => unknown;
     parent?: ((name: string) => unknown) | undefined;
 }
-
-export const StandardAssociatedValues = {
-    /**
-     * Controls visibility of a property.
-     */
-    Visible: 'property:visible',
-};

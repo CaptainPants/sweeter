@@ -3,6 +3,11 @@ import {
     type ContextualValueCalculationCallback,
 } from '../../index.js';
 
+import {
+    StandardAssociatedValueKeys,
+    StandardAttributes
+} from '../../annotations/StandardValues.js';
+
 export class AnnotationsBuilderImpl implements AnnotationsBuilder {
     constructor(
         attributes: Map<string, unknown> | undefined,
@@ -44,15 +49,15 @@ export class AnnotationsBuilderImpl implements AnnotationsBuilder {
     }
 
     public category(category?: string | null | undefined): this {
-        return this.attr('property:category', category);
+        return this.attr(StandardAttributes.property_category, category);
     }
 
     public displayName(displayName: string | undefined | null): this {
-        return this.attr('displayName', displayName);
+        return this.attr(StandardAttributes.displayName, displayName);
     }
 
     public visible(visibility: boolean): this {
-        return this.withAssociatedValue('property:visible', visibility);
+        return this.withAssociatedValue(StandardAssociatedValueKeys.property_visible, visibility);
     }
 
     public withAssociatedValue(

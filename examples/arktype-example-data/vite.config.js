@@ -20,16 +20,7 @@ export default defineConfig({
         },
         target: "ESNext",
     },
-    test:{ 
-        
-        poolOptions: {
-            forks: {
-                execArgv: ["--expose-gc"]
-            }
-        },
-    },
     test:{
-        
         poolOptions: {
             forks: {
                 execArgv: ["--expose-gc"]

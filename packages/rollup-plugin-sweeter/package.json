@@ -40,6 +40,7 @@
     "dependencies": {
         "@rollup/pluginutils": "^5.1.4",
         "estree-toolkit": "^1.7.8",
-        "magic-string": "^0.30.15"
+        "magic-string": "^0.30.15",
+        "source-map": "^0.7.4"
     }
 }

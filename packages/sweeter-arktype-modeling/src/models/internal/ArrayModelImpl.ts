@@ -8,7 +8,7 @@ import {
     type ElementModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
-import { ParentRelationship, type ParentTypeInfo } from '../parents.js';
+import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
@@ -198,7 +198,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
         );
 
         const newValue = [...(this.value as unknown[])];
-        newValue[1] = model.value;
+        newValue[index] = model.value;
 
         if (validate) {
             await parseAsync(newValue, this.type);

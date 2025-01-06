@@ -1,6 +1,6 @@
 export * from './applyTypeToModel.js';
 export * from './as.js';
-export * from './categorizeProperties.js';
+export * from './categorizeFixedProperties.js';
 export * from './findUnionOptionForValue.js';
 export * from './isModel.js';
 export * from './Model.js';

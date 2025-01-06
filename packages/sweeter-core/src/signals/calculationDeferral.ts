@@ -1,3 +1,5 @@
+import { dev } from "../dev";
+
 let calculationCount = 0;
 let runningCallbacks = false;
 
@@ -29,10 +31,10 @@ export function finishCalculation() {
                 try {
                     callback!();
                 } catch (ex) {
-                    console.warn(
+                    dev.swallowedError(
                         'Error swallowed while invoking callback',
-                        callback,
                         ex,
+                        callback,
                     );
                 }
             }

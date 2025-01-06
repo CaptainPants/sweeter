@@ -1,3 +1,4 @@
+import { dev } from '@captainpants/sweeter-core';
 import { type AbstractGlobalCssStylesheet } from './index.js';
 
 export class StylesheetDependencyProvider {
@@ -13,7 +14,10 @@ export class StylesheetDependencyProvider {
             try {
                 callback(dependency);
             } catch (ex) {
-                console.error('Swallowed error', ex);
+                dev.swallowedError(
+                    'Swallowed error',
+                    ex,
+                );
             }
         }
         return this;

@@ -115,6 +115,8 @@ export interface ArrayModel<TArraySchema extends Type<unknown[]>>
     ) => Promise<this>;
 }
 
+export type ObjectPropertyType = 'fixed' | 'mapped';
+
 export type TypedPropertyModelForKey<
     TArkObjectType extends AnyTypeConstraint,
     TKey extends arkTypeUtilityTypes.AllPropertyKeys<TArkObjectType>,
@@ -144,7 +146,7 @@ interface UnknownObjectModelMethods {
         validate?: boolean,
     ): Promise<this>;
 
-    unknownGetProperties(): readonly UnknownPropertyModel[];
+    unknownGetProperties(filter?: ObjectPropertyType | undefined): readonly UnknownPropertyModel[];
 }
 
 export interface UnknownObjectModel
@@ -173,7 +175,7 @@ export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
         key: TKey,
     ): TypedPropertyModelForKey<TObjectSchema, TKey>;
 
-    getProperties(): readonly PropertyModelNoConstraint<
+    getProperties(filter?: ObjectPropertyType | undefined): readonly PropertyModelNoConstraint<
         arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[];
 

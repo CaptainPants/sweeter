@@ -10,6 +10,7 @@ export interface SweeterRollupPluginOptions {
     sigils?: readonly string[];
     roots?: readonly string[];
     projectName: string;
+    debugMatching?: RegExp;
 }
 
 const standardSigils = [
@@ -17,6 +18,7 @@ const standardSigils = [
     '$controller',
     '$deferred',
     '$derived',
+    '$filtered',
     '$elementOf',
     '$lastGood',
     '$mapByIdentity',
@@ -25,6 +27,8 @@ const standardSigils = [
     '$propertyOf',
     '$readonly',
     '$wrap',
+    '$mapByIdentity',
+    '$mapByIndex',
 ] as const;
 
 export default function sweeterPlugin({
@@ -33,6 +37,7 @@ export default function sweeterPlugin({
     sigils,
     roots,
     projectName,
+    debugMatching,
 }: SweeterRollupPluginOptions): RollupPlugin {
     const filter = createFilter(include, exclude);
 
@@ -47,7 +52,7 @@ export default function sweeterPlugin({
     return {
         name: 'rollup-plugin-sweeter',
 
-        transform(code, id) {
+        async transform(code, id) {
             if (!filter(id)) {
                 // this.info(
                 //     `Ignoring file as it doesn't match include/exclude filters ${id}`,
@@ -60,11 +65,14 @@ export default function sweeterPlugin({
                 // );
                 return; // doesn't contain any of the sigils (text search)
             }
-            this.info(`Processing file ${id}`);
+            this.info(`Processing file`);
 
-            const result = tranform(code, id, this);
+            const debugLogging = debugMatching ? !!id.match(debugMatching) : false;
+            const log = debugLogging ? (message: string) => this.info(message) : () => void 0;
 
-            this.info(`Finished processing file ${id}`);
+            const result = await tranform(code, id, this, log);
+
+            this.info(`Finished processing file`);
 
             return result;
         },

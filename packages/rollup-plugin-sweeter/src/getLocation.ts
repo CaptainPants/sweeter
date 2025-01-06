@@ -10,7 +10,7 @@ export function getLocation(
 ): [method: string | undefined, row: number, col: number] {
     assertAstLocation(node);
 
-    const funcName = getDeclaringMethod(path);
+    const funcName = getDeclaringMethodName(path);
     const [row, col] = getRowAndCol(code, node.start);
 
     return [funcName, row, col];
@@ -21,22 +21,20 @@ function getRowAndCol(
     offset: number,
 ): [row: number, col: number] {
     const upToOffset = code.substring(0, offset);
+    let startOfLineOffset = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
 
-    const row = newlinesBetween(code, 0, offset); // number of lines = number of \n + 1
+    const row = 1 /* 1-based */ + newlinesBetween(code, 0, offset); // number of lines = number of \n + 1
+    const col = 1 /* 1-based */ + (offset - startOfLineOffset);
 
-    let startOfLine = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
-
-    const col = offset - startOfLine;
-
-    return [row, col + 1 /* 1-based */];
+    return [row, col];
 }
 
-function getDeclaringMethod(path: NodePath): string | undefined {
+function getDeclaringMethodName(path: NodePath): string | undefined {
     const enclosingMethodDeclaration = path.findParent(
         (x) =>
             is.functionDeclaration(x.node) ||
             is.functionExpression(x.node) ||
-            is.arrowFunctionExpression(x.node),
+            is.arrowFunctionExpression(x.node)
     );
 
     if (!enclosingMethodDeclaration?.node) {
@@ -46,6 +44,7 @@ function getDeclaringMethod(path: NodePath): string | undefined {
     if (is.functionDeclaration(enclosingMethodDeclaration.node)) {
         return enclosingMethodDeclaration.node.id.name;
     }
+
     if (
         is.functionExpression(enclosingMethodDeclaration.node) ||
         is.arrowFunctionExpression(enclosingMethodDeclaration.node)
@@ -55,6 +54,10 @@ function getDeclaringMethod(path: NodePath): string | undefined {
             is.identifier(enclosingMethodDeclaration.parent.id)
         ) {
             return enclosingMethodDeclaration.parent.id.name;
+        }
+
+        if (is.property(enclosingMethodDeclaration.parent) && enclosingMethodDeclaration.parent.kind === 'init' && is.identifier(enclosingMethodDeclaration.parent.key)) {
+            return enclosingMethodDeclaration.parent.key.name;
         }
 
         return '(anonymous function)';

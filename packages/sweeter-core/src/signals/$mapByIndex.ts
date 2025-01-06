@@ -24,7 +24,7 @@ export function $mapByIndex<TInput, TMapped>(
         // constant array, we can skip a lot of voodoo - the $derived is just because renderItem could be a signal
         return $derived(() =>
             items.map((item, i) => $val(mappingFun)($wrap(item), i)),
-        );
+        ).doNotIdentify();
     }
 
     // items is a signal, we need to keep track of a signal for every item
@@ -127,7 +127,7 @@ export function $mapByIndex<TInput, TMapped>(
 
     const resultSignal = $derived(() => {
         return cache.signal.value.map((x) => x.mappedElement);
-    });
+    }).doNotIdentify();
 
     addExplicitStrongReference(resultSignal, callbacks);
 

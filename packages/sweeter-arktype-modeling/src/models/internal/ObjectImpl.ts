@@ -5,6 +5,7 @@ import {
     type Model,
     type TypedPropertyModelForKey,
     type PropertyModelNoConstraint,
+    type ObjectPropertyType,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -44,7 +45,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         const typeInfo = introspect.getObjectTypeInfo(schema);
 
         // Object.keys lets us avoid prototype pollution
-        for (const [propertyName, propertyType] of typeInfo.getProperties()) {
+        for (const [propertyName, propertyType] of typeInfo.getFixedProperties()) {
             const propertyValue = (value as UnknownRecord)[propertyName];
 
             // TODO: this should potentially unwrap out ZodOptional
@@ -101,7 +102,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
     private schemaForKey(key: string | symbol) {
         const info = getObjectTypeInfo(this.type);
-        const fixedProps = info.getProperties();
+        const fixedProps = info.getFixedProperties();
 
         let type: UnknownType | undefined = fixedProps.get(key);
         if (!type) {
@@ -208,7 +209,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         validate: boolean = true,
     ): Promise<this> {
         const typeInfo = getObjectTypeInfo(this.type);
-        const fixedProps = typeInfo.getProperties();
+        const fixedProps = typeInfo.getFixedProperties();
 
         if (fixedProps.has(from)) {
             throw new Error(
@@ -250,7 +251,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         validate: boolean = true,
     ): Promise<this> {
         const typeInfo = getObjectTypeInfo(this.type);
-        const fixedProps = typeInfo.getProperties();
+        const fixedProps = typeInfo.getFixedProperties();
 
         if (fixedProps.has(key)) {
             throw new Error(
@@ -282,18 +283,29 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         return result as this;
     }
 
-    public unknownGetProperties(): readonly UnknownPropertyModel[] {
-        return Object.values(this.#properties).sort((a, b) =>
-            defaultSort(a.name, b.name),
-        );
+    public unknownGetProperties(filter?: ObjectPropertyType | undefined): readonly UnknownPropertyModel[] {
+        if (filter) {
+            const typeInfo = getObjectTypeInfo(this.type);
+            const fixedProps = typeInfo.getFixedProperties();
+
+            const callback: (prop: UnknownPropertyModel) => boolean = filter === 'fixed' ? (prop => fixedProps.has(prop.name)) : (prop => !fixedProps.has(prop.name)); 
+
+            return Object.values(this.#properties).filter(callback).sort((a, b) =>
+                defaultSort(a.name, b.name),
+            );
+        }
+        else {
+            // Unfiltered
+            return Object.values(this.#properties).sort((a, b) =>
+                defaultSort(a.name, b.name),
+            );
+        }
     }
 
-    public getProperties(): readonly PropertyModelNoConstraint<
+    public getProperties(filter?: ObjectPropertyType | undefined): readonly PropertyModelNoConstraint<
         arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[] {
-        return Object.values(this.#properties).sort((a, b) =>
-            defaultSort(a.name, b.name),
-        ) as never;
+        return this.unknownGetProperties(filter) as never;
     }
 }
 

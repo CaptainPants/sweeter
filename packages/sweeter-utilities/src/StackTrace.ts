@@ -14,6 +14,10 @@ Error:
     at http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-web/build/index.js?t=1705105456481:1560:18
     at callAndInvokeListenerForEachDependency (http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705105456481:152:12)
 */
+/*
+Notes:
+- Anonymous functions and top level code will not have a function name, and instead will have the normally bracketed content unbracketed
+*/
 const chromeRegex =
     /^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_\.]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gim;
 
@@ -87,8 +91,13 @@ SignalBase_announceChange@http://localhost:5173/@fs/K:/Workspaces/sweeter/packag
 finishCalculation@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:84:9
 recalculate_fn@http://localhost:5173/@fs/K:/Workspaces/sweeter/packages/sweeter-core/build/index.js?t=1705145534111:545:5
  */
+
+/**
+ * Notes:
+ * - Top level code will not have a function name, hence the ? around func
+ */
 const firefoxRegex =
-    /^(?<func>[^@]+)@(?<location>[^@]+@[^@]+):(?<row>[0-9]+):(?<col>[0-9]+)$/gim;
+    /^(?<func>[^@]+)?@(?<location>[^@]+@[^@]+):(?<row>[0-9]+):(?<col>[0-9]+)$/gim;
 
 function normalizeFunctionName(name: string | undefined) {
     if (!name) {

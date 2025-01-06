@@ -26,5 +26,8 @@
         "@captainpants/sweeter-core": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
         "@captainpants/sweeter-web-gummybear": "workspace:^"
+    },
+    "devDependencies": {
+        "@captainpants/rollup-plugin-sweeter": "workspace:^"
     }
 }

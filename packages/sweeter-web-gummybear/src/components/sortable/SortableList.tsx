@@ -66,6 +66,7 @@ export const SortableList: Component<SortableListProps> = (
 
         return () => {
             sortable?.destroy();
+            sortable = undefined; // Make sure we don't keep around a reference to the destroyed sortable and try to use it..
         };
     });
 

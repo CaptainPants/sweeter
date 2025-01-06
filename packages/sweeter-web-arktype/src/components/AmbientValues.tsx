@@ -50,6 +50,7 @@ export function AmbientValues(
         ambientValueCallback,
         $insertLocation(),
         () => {
+            // $derived is here is partly to capture the execution context (which includes the AmbientValuesContext)
             return $derived(() => {
                 return $val(children)?.();
             });

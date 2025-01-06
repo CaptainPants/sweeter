@@ -34,7 +34,7 @@ export function $mapByIdentity<TInput, TMapped>(
         // constant array, we can skip a lot of voodoo - the $derived is just because renderItem could be a signal
         return $derived(() =>
             items.map((item, i) => $val(mappingFun)(item, $wrap(i))),
-        );
+        ).doNotIdentify();
     }
 
     const cache = $controller(
@@ -144,5 +144,5 @@ export function $mapByIdentity<TInput, TMapped>(
 
     // Its entirely possible we've generated the same array
     // in which case we want to avoid updating anything
-    return $filtered(resultSignal, equals.arrayElements);
+    return $filtered(resultSignal, equals.arrayElements).doNotIdentify();
 }

@@ -119,6 +119,10 @@ importers:
       arktype:
         specifier: 2.0.0-rc.21
         version: 2.0.0-rc.21
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../../packages/rollup-plugin-sweeter
 
   examples/sweeter-example:
     dependencies:
@@ -131,6 +135,10 @@ importers:
       '@captainpants/sweeter-web-gummybear':
         specifier: workspace:^
         version: link:../../packages/sweeter-web-gummybear
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../../packages/rollup-plugin-sweeter
 
   examples/sweeter-rollup-plugin-usage:
     dependencies:
@@ -153,6 +161,9 @@ importers:
       magic-string:
         specifier: ^0.30.15
         version: 0.30.15
+      source-map:
+        specifier: ^0.7.4
+        version: 0.7.4
     devDependencies:
       '@types/estraverse':
         specifier: ^5.1.7
@@ -6221,6 +6232,11 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /source-map@0.7.4:
+    resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
+    engines: {node: '>= 8'}
+    dev: false
 
   /spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}

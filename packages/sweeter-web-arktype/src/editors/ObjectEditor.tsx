@@ -14,8 +14,7 @@ import { EditorSizesContext } from '../context/EditorSizesContext.js';
 import {
     type ContextualValueCalculationContext,
     cast,
-    categorizeProperties,
-    StandardLocalValues,
+    categorizeFixedProperties,
     type UnknownModel,
     validate,
     asObject,
@@ -23,6 +22,7 @@ import {
     createDefault,
     UnknownType,
     introspect,
+    StandardAssociatedValueKeys,
 } from '@captainpants/sweeter-arktype-modeling';
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -137,7 +137,7 @@ export function ObjectEditor(
         // As it will rebuild the structure completely, and you will lose element focus/selection etc.
         // We necessarily subscribe to the type signal, as we use its structure to build the editor structure.
 
-        const categorizedProperties = categorizeProperties(
+        const categorizedProperties = categorizeFixedProperties(
             // SIGNAL HERE
             type.value,
             (property) => {
@@ -161,15 +161,15 @@ export function ObjectEditor(
                                 draft.value.unknownGetProperty(property.name);
                             assertNotNullOrUndefined(propertyModel);
 
-                            return (
-                                propertyModel.valueModel.type
-                                    .annotations()
-                                    ?.getAssociatedValue(
-                                        StandardLocalValues.Visible,
-                                        $wrap(propertyModel.valueModel),
-                                        calculationContext,
-                                    ) !== false
-                            ); // likely values are notFound and false
+                            const visibility = propertyModel.valueModel.type
+                                .annotations()
+                                ?.getAssociatedValue(
+                                    StandardAssociatedValueKeys.property_visible,
+                                    $wrap(propertyModel.valueModel),
+                                    calculationContext,
+                                ) !== false;
+
+                            return visibility; // likely values are notFound and false
                         },
                     );
 
@@ -208,8 +208,17 @@ export function ObjectEditor(
                                             index
                                         ] ?? true,
                                 ),
-                                () => (
-                                    <Row
+                                () => {
+                                    const value = $derived(
+                                        // NOTE: this depends on draft.value
+                                        () => {
+                                            const res = draft.value.unknownGetProperty(
+                                                property.name,
+                                            )?.valueModel!;
+                                            return res;
+                                        }
+                                    );
+                                    return <Row
                                         class={css.property}
                                         key={`prop-${String(property.name)}`}
                                     >
@@ -225,14 +234,7 @@ export function ObjectEditor(
                                             <KnownPropertyEditorPart
                                                 id={id}
                                                 property={property.name}
-                                                value={$derived(
-                                                    // NOTE: this depends on draft.value, so if that value changes it will get a new PropertyModel
-                                                    // No other signals are referenced
-                                                    () =>
-                                                        draft.value.unknownGetProperty(
-                                                            property.name,
-                                                        )?.valueModel!,
-                                                )}
+                                                value={value}
                                                 updateValue={
                                                     updatePropertyValue
                                                 }
@@ -241,7 +243,7 @@ export function ObjectEditor(
                                             />
                                         </Column>
                                     </Row>
-                                ),
+                                }
                             );
                         })}
                     </div>
@@ -256,7 +258,7 @@ export function ObjectEditor(
     // this should come through $mapByIdentity (ideally).
     const mappedContent = $mapByIdentity(
         $derived(() => {
-            const props = [...draft.value.unknownGetProperties()];
+            const props = [...draft.value.unknownGetProperties('mapped')];
             props.sort((x, y) => defaultCompare(x.name, y.name));
             return props;
         }),

@@ -165,10 +165,10 @@ export class SignalChangeListenerSet<T> {
                 try {
                     listener(...args);
                 } catch (ex) {
-                    console.warn(
+                    dev.swallowedError(
                         'Error swallowed while invoking listener',
-                        listener,
                         ex,
+                        listener,
                     );
                 }
             } else {

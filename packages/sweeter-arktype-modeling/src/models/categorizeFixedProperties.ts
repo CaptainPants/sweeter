@@ -15,7 +15,7 @@ export interface CategorizedPropertyDefinition {
  * @param model
  * @returns
  */
-export function categorizeProperties(
+export function categorizeFixedProperties(
     objectType: UnknownObjectType,
 ): Array<{ category: string; properties: CategorizedPropertyDefinition[] }>;
 
@@ -24,11 +24,11 @@ export function categorizeProperties(
  * @param transform
  * @returns
  */
-export function categorizeProperties<TPropertyResult>(
+export function categorizeFixedProperties<TPropertyResult>(
     objectType: UnknownObjectType,
     transform?: (property: CategorizedPropertyDefinition) => TPropertyResult,
 ): Array<{ category: string; properties: TPropertyResult[] }>;
-export function categorizeProperties(
+export function categorizeFixedProperties(
     objectType: UnknownObjectType,
     transform?: (property: CategorizedPropertyDefinition) => unknown,
 ): Array<{ category: string; properties: unknown[] }> {
@@ -36,7 +36,7 @@ export function categorizeProperties(
 
     for (const [name, propertyTyped] of introspect
         .getObjectTypeInfo(objectType)
-        .getProperties()) {
+        .getFixedProperties()) {
         const category =
             (propertyTyped.hasAnnotations()
                 ? propertyTyped.annotations()?.category()

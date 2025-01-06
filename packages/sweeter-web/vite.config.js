@@ -11,7 +11,7 @@ export default defineConfig({
             // Could also be a dictionary or array of multiple entry points
             // eslint-disable-next-line no-undef
             entry: [resolve(__dirname, './src/index.ts'), resolve(__dirname, './src/jsx-runtime.ts'), resolve(__dirname, './src/jsx-dev-runtime.ts')],
-            formats: ['es', 'cjs'],
+            formats: ['es'],
         },
         outDir: 'build',
         minify: false,

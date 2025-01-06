@@ -20,7 +20,8 @@ export default defineConfig({
         exclude: [
             '@captainpants/sweeter-core',
             '@captainpants/sweeter-web',
-            '@captainpants/sweeter-web-gummybear'
+            '@captainpants/sweeter-web-gummybear',
+            '@captainpants/sweeter-arktype-modeling'
         ]
     }
 });

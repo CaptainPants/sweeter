@@ -1,3 +1,6 @@
+
+import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
+
 import { type } from 'arktype';
 import { ModelFactory } from '../models/ModelFactory.js';
 import { type TypeInfo } from '../models/parents.js';
@@ -7,11 +10,7 @@ import { matchDefinitionRule } from './internal/matchDefinitionRule.js';
 import { Matcher } from './Matcher.js';
 import { Rules } from './Rules.js';
 import { type TypeMatcherRule } from './types.js';
-import { extendArkTypes } from '../index.js';
 
-beforeAll(() => {
-    extendArkTypes();
-});
 
 test('test', async () => {
     const rules: Array<TypeMatcherRule<number>> = [

@@ -1,14 +1,14 @@
+import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
+
 import {
     asUnknown,
     ModelFactory,
     createDefault,
-    extendArkTypes,
     UnknownModel,
+    introspect,
 } from '@captainpants/sweeter-arktype-modeling';
 
 import { type } from 'arktype';
-
-extendArkTypes();
 
 export const stringOnly = type.string;
 export const numberOnly = type.number;
@@ -172,6 +172,13 @@ export const exampleData = {
             value: { alpha: 1, beta: 2 },
             schema: mapObject,
         });
+        
+        const schema = type({ '[string]': 'number' });
+        const thing = schema.get("test");
+        const branches = introspect.getUnionTypeInfo(thing);
+
+        console.log(branches, thing);
+
         return asUnknown(res);
     },
 } as const satisfies Record<string, () => Promise<UnknownModel>>;

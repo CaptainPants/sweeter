@@ -28,6 +28,15 @@ type KnownPropertyModels = {
     [key: string | symbol]: UnknownPropertyModel;
 };
 
+function *entries(obj: object): Iterable<readonly [string | symbol, unknown]> {
+    for (const tuple of Object.entries(obj)) {
+        yield tuple as never;
+    }
+    for (const symbol of Object.getOwnPropertySymbols(obj)) {
+        yield [symbol, (obj as any)[symbol]] as never;
+    }
+}
+
 export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
     extends ModelImpl<type.infer<TObjectSchema>, TObjectSchema>
     implements ObjectModel<TObjectSchema>
@@ -44,11 +53,12 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
         const typeInfo = introspect.getObjectTypeInfo(schema);
 
-        // Object.keys lets us avoid prototype pollution
-        for (const [propertyName, propertyType] of typeInfo.getFixedProperties()) {
-            const propertyValue = (value as UnknownRecord)[propertyName];
+        const source = { ...value as UnknownRecord };
 
-            // TODO: this should potentially unwrap out ZodOptional
+        for (const [propertyName, propertyType] of typeInfo.getFixedProperties()) {
+            const propertyValue = source[propertyName];
+            delete source[propertyName];
+
             const propertyValueModel = ModelFactory.createModelPart({
                 value: propertyValue,
                 schema: propertyType,
@@ -64,6 +74,32 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
                 name: propertyName,
                 valueModel: propertyValueModel,
                 isOptional: propertyType.meta.optional ?? false,
+            };
+        }
+
+        const mapped = [...typeInfo.getMappedKeys().entries()];
+        for (const [propertyName, propertyValue] of entries(source)) {
+            const match = mapped.find(([schema]) => schema.allows(propertyName));
+            if (!match) {
+                throw new Error(`Could not find matching type.`);
+            }
+            const [_properyNameSchema, propertyValueSchema] = match;
+
+            const propertyValueModel = ModelFactory.createModelPart({
+                value: propertyValue,
+                schema: propertyValueSchema,
+                parentInfo: {
+                    relationship: { type: 'property', property: propertyName },
+                    type: schema,
+                    parentInfo,
+                },
+                depth: descend(depth),
+            })
+            
+            propertyModels[propertyName] = {
+                name: propertyName,
+                valueModel: propertyValueModel,
+                isOptional: propertyValueSchema.meta.optional ?? false,
             };
         }
 

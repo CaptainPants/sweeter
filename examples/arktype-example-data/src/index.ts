@@ -101,6 +101,8 @@ export const nestedObjects = type({
 
 export const constantUnion = type.unit(true).or(type.unit('test'));
 
+export const mapObject = type({ '[string]': 'number' });
+
 export const exampleData = {
     Complex: async () => {
         const res = await ModelFactory.createModel({
@@ -162,6 +164,13 @@ export const exampleData = {
         const res = await ModelFactory.createModel({
             value: ['alpha', 'beta'],
             schema: stringArray,
+        });
+        return asUnknown(res);
+    },
+    MapObject: async () => {
+        const res = await ModelFactory.createModel({
+            value: { alpha: 1, beta: 2 },
+            schema: mapObject,
         });
         return asUnknown(res);
     },

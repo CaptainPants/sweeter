@@ -30,6 +30,7 @@ import { validateAndThrow } from '../utility/validate.js';
 import { type AnyTypeConstraint, type UnknownType } from '../type/types.js';
 import { safeParse } from '../utility/parse.js';
 import { type ValueTypeFromModel } from '../types.js';
+import { stringForError } from '../internal/stringForError.js';
 
 export interface CreateModelArgs<TSchema extends AnyTypeConstraint> {
     schema: TSchema; // putting this at the top seems to help with type inference
@@ -83,7 +84,7 @@ function setup(
         }
 
         throw new Error(
-            `Failed to parse value as ${schema.expression}. ${parsed.issues.summary}`,
+            `Failed to parse value ${stringForError(input)} as ${schema.expression}. ${parsed.issues.summary}`,
         );
     };
 }

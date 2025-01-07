@@ -8,7 +8,7 @@ import { type AnnotationDispatcher } from "./types.js";
 import { AnnotationsImpl } from "../annotations/internal/AnnotationsImpl.js";
 import { AnnotationsBuilderImpl } from "../annotations/internal/AnnotationBuilderImpl.js";
 
-export class RealAnnotationDispatcher implements AnnotationDispatcher {
+export class AnnotationDispatcherImpl implements AnnotationDispatcher {
     annotate<TSchema extends AnyTypeConstraint>(
         schema: TSchema,
         callback: AnnotationSetter,

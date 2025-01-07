@@ -16,6 +16,7 @@ import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
 import { introspect } from '../../type/index.js';
+import { isModel } from '../isModel.js';
 
 export class UnionModelImpl<TUnionSchema extends AnyTypeConstraint>
     extends ModelImpl<type.infer<TUnionSchema>, TUnionSchema>
@@ -82,7 +83,8 @@ export class UnionModelImpl<TUnionSchema extends AnyTypeConstraint>
         value: unknown,
         validate: boolean = true,
     ): Promise<this> {
-        const type = findUnionOptionForValue(value, this.type);
+        const searchWithValue = isModel(value) ? value.value : value;
+        const type = findUnionOptionForValue(searchWithValue, this.type);
 
         if (!type) {
             throw new TypeError(

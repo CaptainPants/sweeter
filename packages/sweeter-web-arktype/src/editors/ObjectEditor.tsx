@@ -405,7 +405,10 @@ export function ObjectEditor(
                                         onCancelled={() =>
                                             (isOpen.value = false)
                                         }
-                                        onFinished={onAdd}
+                                        onFinished={async (name, type) => {
+                                            isOpen.value = false; // hide the modal
+                                            onAdd(name, type);
+                                        }}
                                     />
                                     <IconButton
                                         icon="Add"

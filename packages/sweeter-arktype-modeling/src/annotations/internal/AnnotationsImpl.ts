@@ -13,7 +13,7 @@ import {
 import { type Annotations } from '../types.js';
 import { serializeSchemaForDisplay } from '../../utility/serializeSchemaForDisplay.js';
 import { isModel } from '../../models/isModel.js';
-import { $derived, $val, Signal } from '@captainpants/sweeter-core';
+import { $derived, Signal } from '@captainpants/sweeter-core';
 import { StandardAttributes } from '../StandardValues.js';
 
 export class AnnotationsImpl<TSchema extends AnyTypeConstraint>

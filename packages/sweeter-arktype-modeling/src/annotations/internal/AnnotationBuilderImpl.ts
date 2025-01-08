@@ -5,7 +5,7 @@ import {
 
 import {
     StandardAssociatedValueKeys,
-    StandardAttributes
+    StandardAttributes,
 } from '../../annotations/StandardValues.js';
 
 export class AnnotationsBuilderImpl implements AnnotationsBuilder {
@@ -57,7 +57,10 @@ export class AnnotationsBuilderImpl implements AnnotationsBuilder {
     }
 
     public visible(visibility: boolean): this {
-        return this.withAssociatedValue(StandardAssociatedValueKeys.property_visible, visibility);
+        return this.withAssociatedValue(
+            StandardAssociatedValueKeys.property_visible,
+            visibility,
+        );
     }
 
     public withAssociatedValue(

@@ -1,5 +1,5 @@
 import { $mutable } from './$mutable.js';
-import { callAndReturnDependencies } from './ambient.js';
+import { callAndReturnDependencies, trackingIsAnError, untrack } from './ambient.js';
 
 it('DerivedSignal listeners invoked with correct value after update', () => {
     const mutableSignal1 = $mutable(1);
@@ -18,4 +18,43 @@ it('DerivedSignal listeners invoked with correct value after update', () => {
 
     expect(result).toEqual(3);
     expect(dependencies).toEqual(new Set([mutableSignal1, mutableSignal2]));
+});
+
+it('trackingIsAnError throws', () => {
+    const signal = $mutable(1);
+
+    expect(() => {   
+        trackingIsAnError(
+            () => {
+                signal.value;
+            }
+        );
+    }).toThrowError();
+});
+
+it('untrack blocks dependency tracking', () => {
+    const signal = $mutable(1);
+
+    trackingIsAnError(
+        () => {
+            untrack(
+                () => {
+                    signal.value;
+                }
+            );
+        }
+    );
+
+    const res = callAndReturnDependencies(
+        () => {
+            untrack(
+                () => {
+                    signal.value;
+                }
+            );
+        },
+        false
+    );
+
+    expect(res.dependencies).to.have.lengthOf(0);
 });

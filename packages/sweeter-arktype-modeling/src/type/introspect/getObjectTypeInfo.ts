@@ -9,7 +9,7 @@ export interface ObjectTypeInfo {
      * Map of properties by name (excludes indexers).
      */
     getFixedProperties(): ReadonlyMap<string | symbol, UnknownType>;
-    getMappedKeys(): ReadonlyMap<UnknownType, UnknownType> | undefined;
+    getMappedKeys(): ReadonlyMap<UnknownType, UnknownType>;
 }
 
 export function tryGetObjectTypeInfo(

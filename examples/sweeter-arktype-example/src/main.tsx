@@ -1,11 +1,11 @@
+import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
+
 import { dev } from '@captainpants/sweeter-core';
 import { App } from './App.js';
 
 import { createWebRuntime } from '@captainpants/sweeter-web';
-import { extendArkTypes } from '@captainpants/sweeter-arktype-modeling';
 
 dev.enable({ all: true });
-extendArkTypes();
 
 createWebRuntime({
     root: document.getElementById('app')!,

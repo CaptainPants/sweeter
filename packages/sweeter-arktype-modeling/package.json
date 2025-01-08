@@ -13,6 +13,10 @@
         ".": {
             "import": "./build/index.js",
             "require": "./build/index.cjs"
+        },
+        "./extendArkTypes": {
+            "import": "./build/extendArkTypes.js",
+            "require": "./build/extendArkTypes.cjs"
         }
     },
     "scripts": {

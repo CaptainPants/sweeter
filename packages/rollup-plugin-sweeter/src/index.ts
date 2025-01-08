@@ -65,14 +65,19 @@ export default function sweeterPlugin({
                 // );
                 return; // doesn't contain any of the sigils (text search)
             }
-            this.info(`Processing file`);
 
-            const debugLogging = debugMatching ? !!id.match(debugMatching) : false;
-            const log = debugLogging ? (message: string) => this.info(message) : () => void 0;
+            const debugLogging = debugMatching
+                ? !!id.match(debugMatching)
+                : false;
+            const log = debugLogging
+                ? (message: string) => this.info(message)
+                : () => void 0;
+
+            log(`Processing file`);
 
             const result = await tranform(code, id, this, log);
 
-            this.info(`Finished processing file`);
+            log(`Finished processing file`);
 
             return result;
         },

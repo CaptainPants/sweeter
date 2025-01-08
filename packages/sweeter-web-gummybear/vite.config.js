@@ -12,7 +12,7 @@ export default defineConfig({
             // eslint-disable-next-line no-undef
             entry: resolve(__dirname, './src/index.ts'),
             fileName: 'index',
-            formats: ['es', 'cjs'],
+            formats: ['es'],
         },
         outDir: 'build',
         minify: false,

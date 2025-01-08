@@ -14,10 +14,7 @@ export class StylesheetDependencyProvider {
             try {
                 callback(dependency);
             } catch (ex) {
-                dev.swallowedError(
-                    'Swallowed error',
-                    ex,
-                );
+                dev.swallowedError('Swallowed error', ex);
             }
         }
         return this;

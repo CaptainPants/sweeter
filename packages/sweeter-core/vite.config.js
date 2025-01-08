@@ -13,7 +13,7 @@ export default defineConfig({
             entry: resolve(__dirname, './src/index.ts'),
             fileName: 'index',
             name: 'index',
-            formats: ['es', 'cjs'],
+            formats: ['es'],
         },
         outDir: 'build',
         minify: false,
@@ -29,5 +29,5 @@ export default defineConfig({
             }
         },
     },
-    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-core', roots: [__dirname], debugMatching: /components\/Async\.ts/ })]
+    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-core', roots: [__dirname] })]
 });

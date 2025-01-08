@@ -1,14 +1,14 @@
+import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
+
 import {
     asUnknown,
     ModelFactory,
     createDefault,
-    extendArkTypes,
     UnknownModel,
+    introspect,
 } from '@captainpants/sweeter-arktype-modeling';
 
 import { type } from 'arktype';
-
-extendArkTypes();
 
 export const stringOnly = type.string;
 export const numberOnly = type.number;
@@ -22,10 +22,8 @@ export const stringArray = type.string
     .array();
 
 export const stringArrayField = type({
-    field: type.string
-        .annotate((add) => add.displayName('Text Item'))
-        .array()
-})
+    field: type.string.annotate((add) => add.displayName('Text Item')).array(),
+});
 
 export const simpleHiddenField = type({
     test: type.string.annotate((add) => add.displayName('Test')),
@@ -101,6 +99,8 @@ export const nestedObjects = type({
 
 export const constantUnion = type.unit(true).or(type.unit('test'));
 
+export const mapObject = type({ '[string]': 'number' });
+
 export const exampleData = {
     Complex: async () => {
         const res = await ModelFactory.createModel({
@@ -163,6 +163,20 @@ export const exampleData = {
             value: ['alpha', 'beta'],
             schema: stringArray,
         });
+        return asUnknown(res);
+    },
+    MapObject: async () => {
+        const res = await ModelFactory.createModel({
+            value: { alpha: 1, beta: 2 },
+            schema: mapObject,
+        });
+
+        const schema = type({ '[string]': 'number' });
+        const thing = schema.get('test');
+        const branches = introspect.getUnionTypeInfo(thing);
+
+        console.log(branches, thing);
+
         return asUnknown(res);
     },
 } as const satisfies Record<string, () => Promise<UnknownModel>>;

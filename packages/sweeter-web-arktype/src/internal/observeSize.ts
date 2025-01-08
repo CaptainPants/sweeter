@@ -1,4 +1,4 @@
-import { dev } from "@captainpants/sweeter-core";
+import { dev } from '@captainpants/sweeter-core';
 
 export type ObserveSizeCallback = (entry: ResizeObserverEntry) => void;
 
@@ -19,10 +19,7 @@ function getSingletonResizeObserver() {
                             callback(entry);
                         } catch (ex) {
                             // Swallow errors so that later callbacks are still invoked
-                            dev.swallowedError(
-                                'Swallowed error',
-                                ex,
-                            );
+                            dev.swallowedError('Swallowed error', ex);
                         }
                     }
                 }

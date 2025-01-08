@@ -13,14 +13,44 @@ import { SignalState } from './SignalState.js';
 import { $peek, $val, $wrap } from './$val.js';
 import { $filtered } from './$filtered.js';
 
-type IdentityCacheItem<TInput, TMapped> = {
+type IdentityCacheItem<TInput, TIdentity, TMapped> = {
     source: TInput;
+    identity: TIdentity;
     mappedElement: TMapped;
     indexController: SignalController<number>;
 };
 
+function providedIdentityFun<TInput, TIdentity, TMapped>(
+    args:
+        | [
+              MightBeSignal<(input: TInput) => TIdentity>,
+              MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+          ]
+        | [MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>],
+): args is [
+    MightBeSignal<(input: TInput) => TIdentity>,
+    MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+] {
+    return args.length >= 2;
+}
+
 /**
  * Create a new signal by mapping each element of an input signal, using a mapping function.
+ * @param items
+ * @param getIdentity
+ * @param mappingFun
+ * @param orderBy
+ * @returns
+ */
+export function $mapByIdentity<TInput, TIdentity, TMapped>(
+    items: MightBeSignal<readonly TInput[]>,
+    getIdentity: (input: TInput) => TIdentity,
+    mappingFun: MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+): Signal<readonly TMapped[]>;
+/**
+ * Create a new signal by mapping each element of an input signal, using a mapping function.
+ *
+ * The input itself is used as the identity for caching.
  * @param items
  * @param mappingFun
  * @param orderBy
@@ -28,6 +58,27 @@ type IdentityCacheItem<TInput, TMapped> = {
  */
 export function $mapByIdentity<TInput, TMapped>(
     items: MightBeSignal<readonly TInput[]>,
+    mappingFun: MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+): Signal<readonly TMapped[]>;
+export function $mapByIdentity<TInput, TIdentity, TMapped>(
+    items: MightBeSignal<readonly TInput[]>,
+    ...rest:
+        | [
+              MightBeSignal<(input: TInput) => TIdentity>,
+              MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+          ]
+        | [MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>]
+): Signal<readonly TMapped[]> {
+    if (providedIdentityFun(rest)) {
+        return mapByIdentity(items, ...rest);
+    } else {
+        return mapByIdentity(items, (x) => x, ...rest);
+    }
+}
+
+function mapByIdentity<TInput, TIdentity, TMapped>(
+    items: MightBeSignal<readonly TInput[]>,
+    getIdentity: MightBeSignal<(input: TInput) => TIdentity>,
     mappingFun: MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
 ): Signal<readonly TMapped[]> {
     if (!isSignal(items)) {
@@ -38,7 +89,9 @@ export function $mapByIdentity<TInput, TMapped>(
     }
 
     const cache = $controller(
-        SignalState.success<IdentityCacheItem<TInput, TMapped>[]>([]),
+        SignalState.success<IdentityCacheItem<TInput, TIdentity, TMapped>[]>(
+            [],
+        ),
     );
 
     const callbacks = {
@@ -54,8 +107,8 @@ export function $mapByIdentity<TInput, TMapped>(
             const oldCache = cache.signal.peek();
 
             const oldCacheMap = new Map<
-                TInput,
-                IdentityCacheItem<TInput, TMapped>[]
+                TIdentity,
+                IdentityCacheItem<TInput, TIdentity, TMapped>[]
             >();
             if (clear) {
                 for (const item of oldCache) {
@@ -67,38 +120,46 @@ export function $mapByIdentity<TInput, TMapped>(
                     const item = oldCache[index];
                     assertNotNullOrUndefined(item);
 
-                    let found = oldCacheMap.get(item.source);
+                    let found = oldCacheMap.get(item.identity);
                     if (!found) {
                         found = [];
-                        oldCacheMap.set(item.source, found);
+                        oldCacheMap.set(item.identity, found);
                     }
 
                     found.push(item);
                 }
             }
 
-            function getAndRemoveFromCache(input: TInput) {
-                const fromCache = oldCacheMap.get(input);
+            function getAndRemoveFromCache(identity: TIdentity) {
+                const fromCache = oldCacheMap.get(identity);
                 if (fromCache) {
                     const result = fromCache[0];
                     if (fromCache.length > 1) {
                         // If more than once, remove the first one
                         fromCache.shift();
                     } else {
-                        oldCacheMap.delete(input);
+                        oldCacheMap.delete(identity);
                     }
                     return result;
                 }
                 return undefined;
             }
 
-            const newCacheContent: IdentityCacheItem<TInput, TMapped>[] = [];
+            const newCacheContent: IdentityCacheItem<
+                TInput,
+                TIdentity,
+                TMapped
+            >[] = [];
 
             const updatedInputs = $peek(items);
+            const getIdentityResolved = $peek(getIdentity);
+
             for (let index = 0; index < updatedInputs.length; ++index) {
                 const input = updatedInputs[index] as TInput;
 
-                let entry = getAndRemoveFromCache(input);
+                const identity = getIdentityResolved(input);
+
+                let entry = getAndRemoveFromCache(identity);
                 if (entry) {
                     // If already in cache, update the index signal if needed
                     if (entry.indexController.signal.peek() !== index) {
@@ -113,6 +174,7 @@ export function $mapByIdentity<TInput, TMapped>(
                     );
                     entry = {
                         source: input,
+                        identity: identity,
                         mappedElement: mappingFunResolved(
                             input,
                             indexController.signal,
@@ -131,9 +193,15 @@ export function $mapByIdentity<TInput, TMapped>(
     callbacks.reset();
 
     if (isSignal(mappingFun)) {
+        // mappingFun is kept alive by its usage in callbacks
         mappingFun.listenWeak(callbacks.reset);
     }
+    if (isSignal(getIdentity)) {
+        // getIdentity is kept alive by its usage in callbacks
+        getIdentity.listenWeak(callbacks.reset);
+    }
 
+    // items is kept alive by its usage in callbacks
     items.listenWeak(callbacks.update);
 
     const resultSignal = $derived(() => {

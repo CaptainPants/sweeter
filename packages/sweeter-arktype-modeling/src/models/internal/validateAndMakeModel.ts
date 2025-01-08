@@ -27,7 +27,10 @@ export async function validateAndMakeModel<TSchema extends AnyTypeConstraint>(
     let validated: type.infer<TSchema>;
     if (isModel(valueOrModel)) {
         // type is the same object, and parentInfo is the same
-        if (valueOrModel.type == type && isEquivalentParentInfo(valueOrModel.parentInfo, parentInfo)) {
+        if (
+            valueOrModel.type == type &&
+            isEquivalentParentInfo(valueOrModel.parentInfo, parentInfo)
+        ) {
             return valueOrModel as Model<TSchema>; // Keep model and e.g. its parentInfo with their original identity
         } else {
             validated = await validateAndThrow(type, valueOrModel.value);

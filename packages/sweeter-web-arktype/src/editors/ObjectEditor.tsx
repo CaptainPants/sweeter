@@ -161,13 +161,14 @@ export function ObjectEditor(
                                 draft.value.unknownGetProperty(property.name);
                             assertNotNullOrUndefined(propertyModel);
 
-                            const visibility = propertyModel.valueModel.type
-                                .annotations()
-                                ?.getAssociatedValue(
-                                    StandardAssociatedValueKeys.property_visible,
-                                    $wrap(propertyModel.valueModel),
-                                    calculationContext,
-                                ) !== false;
+                            const visibility =
+                                propertyModel.valueModel.type
+                                    .annotations()
+                                    ?.getAssociatedValue(
+                                        StandardAssociatedValueKeys.property_visible,
+                                        $wrap(propertyModel.valueModel),
+                                        calculationContext,
+                                    ) !== false;
 
                             return visibility; // likely values are notFound and false
                         },
@@ -212,38 +213,41 @@ export function ObjectEditor(
                                     const value = $derived(
                                         // NOTE: this depends on draft.value
                                         () => {
-                                            const res = draft.value.unknownGetProperty(
-                                                property.name,
-                                            )?.valueModel!;
+                                            const res =
+                                                draft.value.unknownGetProperty(
+                                                    property.name,
+                                                )?.valueModel!;
                                             return res;
-                                        }
+                                        },
                                     );
-                                    return <Row
-                                        class={css.property}
-                                        key={`prop-${String(property.name)}`}
-                                    >
-                                        <Column xs={4}>
-                                            <Label for={id}>
-                                                {property.propertyType
-                                                    .annotations()
-                                                    ?.displayName() ??
-                                                    String(property.name)}
-                                            </Label>
-                                        </Column>
-                                        <Column xs={8}>
-                                            <KnownPropertyEditorPart
-                                                id={id}
-                                                property={property.name}
-                                                value={value}
-                                                updateValue={
-                                                    updatePropertyValue
-                                                }
-                                                indent={childIndent}
-                                                ownerIdPath={idPath}
-                                            />
-                                        </Column>
-                                    </Row>
-                                }
+                                    return (
+                                        <Row
+                                            class={css.property}
+                                            key={`prop-${String(property.name)}`}
+                                        >
+                                            <Column xs={4}>
+                                                <Label for={id}>
+                                                    {property.propertyType
+                                                        .annotations()
+                                                        ?.displayName() ??
+                                                        String(property.name)}
+                                                </Label>
+                                            </Column>
+                                            <Column xs={8}>
+                                                <KnownPropertyEditorPart
+                                                    id={id}
+                                                    property={property.name}
+                                                    value={value}
+                                                    updateValue={
+                                                        updatePropertyValue
+                                                    }
+                                                    indent={childIndent}
+                                                    ownerIdPath={idPath}
+                                                />
+                                            </Column>
+                                        </Row>
+                                    );
+                                },
                             );
                         })}
                     </div>
@@ -262,33 +266,29 @@ export function ObjectEditor(
             props.sort((x, y) => defaultCompare(x.name, y.name));
             return props;
         }),
-        (property, _index) => {
-            const id = idGenerator.next('prop_' + property.name.toString());
+        (x) => x.name,
+        (property) => {
+            const propertyName = property.name;
+            const id = idGenerator.next('prop_' + propertyName.toString());
+
             return (
                 <div class={css.property}>
                     <div>
                         <div class={css.propertyName}>
-                            {$derived(() => {
-                                const name = property.name;
-                                return (
-                                    <>
-                                        <Label for={id}>{String(name)}</Label>
-                                        {typeof name !== 'symbol' && (
-                                            <IconButton
-                                                icon="Edit"
-                                                onLeftClick={() =>
-                                                    startRename(name)
-                                                }
-                                            />
-                                        )}
-                                    </>
-                                );
-                            })}
+                            <Label for={id}>{String(propertyName)}</Label>
+                            {typeof propertyName !== 'symbol' && (
+                                <IconButton
+                                    icon="Edit"
+                                    onLeftClick={() =>
+                                        startRename(propertyName)
+                                    }
+                                />
+                            )}
                         </div>
                         <div>
                             <MapElementEditorPart
                                 id={id}
-                                property={property.name}
+                                property={propertyName}
                                 value={property.valueModel}
                                 updateElement={updatePropertyValue}
                                 indent={childIndent}
@@ -300,7 +300,7 @@ export function ObjectEditor(
                                 icon="Delete"
                                 hoverable
                                 onLeftClick={() => {
-                                    void remove(property.name);
+                                    void remove(propertyName);
                                 }}
                             />
                         </div>
@@ -405,7 +405,10 @@ export function ObjectEditor(
                                         onCancelled={() =>
                                             (isOpen.value = false)
                                         }
-                                        onFinished={onAdd}
+                                        onFinished={async (name, type) => {
+                                            isOpen.value = false; // hide the modal
+                                            onAdd(name, type);
+                                        }}
                                     />
                                     <IconButton
                                         icon="Add"

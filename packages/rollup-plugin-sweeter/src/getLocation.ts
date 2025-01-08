@@ -34,7 +34,7 @@ function getDeclaringMethodName(path: NodePath): string | undefined {
         (x) =>
             is.functionDeclaration(x.node) ||
             is.functionExpression(x.node) ||
-            is.arrowFunctionExpression(x.node)
+            is.arrowFunctionExpression(x.node),
     );
 
     if (!enclosingMethodDeclaration?.node) {
@@ -56,7 +56,11 @@ function getDeclaringMethodName(path: NodePath): string | undefined {
             return enclosingMethodDeclaration.parent.id.name;
         }
 
-        if (is.property(enclosingMethodDeclaration.parent) && enclosingMethodDeclaration.parent.kind === 'init' && is.identifier(enclosingMethodDeclaration.parent.key)) {
+        if (
+            is.property(enclosingMethodDeclaration.parent) &&
+            enclosingMethodDeclaration.parent.kind === 'init' &&
+            is.identifier(enclosingMethodDeclaration.parent.key)
+        ) {
             return enclosingMethodDeclaration.parent.key.name;
         }
 

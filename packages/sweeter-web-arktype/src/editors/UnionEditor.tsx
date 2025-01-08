@@ -34,7 +34,7 @@ export function UnionEditor({
     const alternatives = $derived(() => {
         // Only depends on 'type' signal
         const options = introspect.getUnionTypeInfo(type.value).branches;
-        
+
         return options.map((alternative) => {
             return {
                 label: alternative.annotations()?.getBestDisplayName(),

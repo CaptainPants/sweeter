@@ -28,7 +28,7 @@ type KnownPropertyModels = {
     [key: string | symbol]: UnknownPropertyModel;
 };
 
-function *entries(obj: object): Iterable<readonly [string | symbol, unknown]> {
+function* entries(obj: object): Iterable<readonly [string | symbol, unknown]> {
     for (const tuple of Object.entries(obj)) {
         yield tuple as never;
     }
@@ -53,9 +53,12 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
         const typeInfo = introspect.getObjectTypeInfo(schema);
 
-        const source = { ...value as UnknownRecord };
+        const source = { ...(value as UnknownRecord) };
 
-        for (const [propertyName, propertyType] of typeInfo.getFixedProperties()) {
+        for (const [
+            propertyName,
+            propertyType,
+        ] of typeInfo.getFixedProperties()) {
             const propertyValue = source[propertyName];
             delete source[propertyName];
 
@@ -79,7 +82,9 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
         const mapped = [...typeInfo.getMappedKeys().entries()];
         for (const [propertyName, propertyValue] of entries(source)) {
-            const match = mapped.find(([keySchema]) => keySchema.allows(propertyName));
+            const match = mapped.find(([keySchema]) =>
+                keySchema.allows(propertyName),
+            );
 
             // If we don't have type information, so unknown is the best we can do
             const propertyValueSchema = match ? match[1] : type.unknown;
@@ -93,8 +98,8 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
                     parentInfo,
                 },
                 depth: descend(depth),
-            })
-            
+            });
+
             propertyModels[propertyName] = {
                 name: propertyName,
                 valueModel: propertyValueModel,
@@ -318,18 +323,22 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         return result as this;
     }
 
-    public unknownGetProperties(filter?: ObjectPropertyType | undefined): readonly UnknownPropertyModel[] {
+    public unknownGetProperties(
+        filter?: ObjectPropertyType | undefined,
+    ): readonly UnknownPropertyModel[] {
         if (filter) {
             const typeInfo = getObjectTypeInfo(this.type);
             const fixedProps = typeInfo.getFixedProperties();
 
-            const callback: (prop: UnknownPropertyModel) => boolean = filter === 'fixed' ? (prop => fixedProps.has(prop.name)) : (prop => !fixedProps.has(prop.name)); 
+            const callback: (prop: UnknownPropertyModel) => boolean =
+                filter === 'fixed'
+                    ? (prop) => fixedProps.has(prop.name)
+                    : (prop) => !fixedProps.has(prop.name);
 
-            return Object.values(this.#properties).filter(callback).sort((a, b) =>
-                defaultSort(a.name, b.name),
-            );
-        }
-        else {
+            return Object.values(this.#properties)
+                .filter(callback)
+                .sort((a, b) => defaultSort(a.name, b.name));
+        } else {
             // Unfiltered
             return Object.values(this.#properties).sort((a, b) =>
                 defaultSort(a.name, b.name),
@@ -337,7 +346,9 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         }
     }
 
-    public getProperties(filter?: ObjectPropertyType | undefined): readonly PropertyModelNoConstraint<
+    public getProperties(
+        filter?: ObjectPropertyType | undefined,
+    ): readonly PropertyModelNoConstraint<
         arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[] {
         return this.unknownGetProperties(filter) as never;

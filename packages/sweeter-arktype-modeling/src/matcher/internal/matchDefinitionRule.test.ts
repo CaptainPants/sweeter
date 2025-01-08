@@ -1,4 +1,3 @@
-
 import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
 import { type } from 'arktype';
 

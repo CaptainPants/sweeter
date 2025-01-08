@@ -161,13 +161,14 @@ export function ObjectEditor(
                                 draft.value.unknownGetProperty(property.name);
                             assertNotNullOrUndefined(propertyModel);
 
-                            const visibility = propertyModel.valueModel.type
-                                .annotations()
-                                ?.getAssociatedValue(
-                                    StandardAssociatedValueKeys.property_visible,
-                                    $wrap(propertyModel.valueModel),
-                                    calculationContext,
-                                ) !== false;
+                            const visibility =
+                                propertyModel.valueModel.type
+                                    .annotations()
+                                    ?.getAssociatedValue(
+                                        StandardAssociatedValueKeys.property_visible,
+                                        $wrap(propertyModel.valueModel),
+                                        calculationContext,
+                                    ) !== false;
 
                             return visibility; // likely values are notFound and false
                         },
@@ -212,38 +213,41 @@ export function ObjectEditor(
                                     const value = $derived(
                                         // NOTE: this depends on draft.value
                                         () => {
-                                            const res = draft.value.unknownGetProperty(
-                                                property.name,
-                                            )?.valueModel!;
+                                            const res =
+                                                draft.value.unknownGetProperty(
+                                                    property.name,
+                                                )?.valueModel!;
                                             return res;
-                                        }
+                                        },
                                     );
-                                    return <Row
-                                        class={css.property}
-                                        key={`prop-${String(property.name)}`}
-                                    >
-                                        <Column xs={4}>
-                                            <Label for={id}>
-                                                {property.propertyType
-                                                    .annotations()
-                                                    ?.displayName() ??
-                                                    String(property.name)}
-                                            </Label>
-                                        </Column>
-                                        <Column xs={8}>
-                                            <KnownPropertyEditorPart
-                                                id={id}
-                                                property={property.name}
-                                                value={value}
-                                                updateValue={
-                                                    updatePropertyValue
-                                                }
-                                                indent={childIndent}
-                                                ownerIdPath={idPath}
-                                            />
-                                        </Column>
-                                    </Row>
-                                }
+                                    return (
+                                        <Row
+                                            class={css.property}
+                                            key={`prop-${String(property.name)}`}
+                                        >
+                                            <Column xs={4}>
+                                                <Label for={id}>
+                                                    {property.propertyType
+                                                        .annotations()
+                                                        ?.displayName() ??
+                                                        String(property.name)}
+                                                </Label>
+                                            </Column>
+                                            <Column xs={8}>
+                                                <KnownPropertyEditorPart
+                                                    id={id}
+                                                    property={property.name}
+                                                    value={value}
+                                                    updateValue={
+                                                        updatePropertyValue
+                                                    }
+                                                    indent={childIndent}
+                                                    ownerIdPath={idPath}
+                                                />
+                                            </Column>
+                                        </Row>
+                                    );
+                                },
                             );
                         })}
                     </div>
@@ -262,7 +266,7 @@ export function ObjectEditor(
             props.sort((x, y) => defaultCompare(x.name, y.name));
             return props;
         }),
-        x => x.name,
+        (x) => x.name,
         (property) => {
             const propertyName = property.name;
             const id = idGenerator.next('prop_' + propertyName.toString());

@@ -25,10 +25,7 @@ test('Something', async () => {
 
     const partType = type({ type: type.unit('b') });
 
-    const retyped = await applyTypeToModel(
-        model,
-        partType,
-    );
+    const retyped = await applyTypeToModel(model, partType);
 
     const typeProperty = retyped.getProperty('type');
 

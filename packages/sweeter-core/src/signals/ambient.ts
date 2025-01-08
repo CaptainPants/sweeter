@@ -5,6 +5,15 @@ export type AmbientSignalUsageListener = (signal: Signal<unknown>) => void;
 let _ambientUsageListener: AmbientSignalUsageListener | undefined;
 let _ambientChangesBlocked: boolean = false;
 
+/** Listener used by trackingIsAnError to throw if any signals are depended on */
+const blockTrackingListener = (signal: Signal<unknown>): never => {
+    throw new Error(
+        `Tracking is blocked here, meaning you have probably inadvertantly used .value when you should use .peek().`,
+    );
+};
+/** Listener used by untrack to ignore any dependencies */
+const ignoreTrackingListener = () => {};
+
 export function announceSignalUsage(signal: Signal<unknown>): void {
     _ambientUsageListener?.(signal);
 }
@@ -15,17 +24,18 @@ export function announceSignalUsage(signal: Signal<unknown>): void {
  * @returns
  */
 export function untrack<T>(callback: () => T): T {
-    return callAndInvokeListenerForEachDependency(callback, () => {}, false);
+    return callAndInvokeListenerForEachDependency(callback, ignoreTrackingListener, false);
 }
 
 export function trackingIsAnError<T>(callback: () => T): T {
+    // Save a small amount of effort when the blocking listener is already in place
+    if (_ambientUsageListener === blockTrackingListener) {
+        return callback();
+    }
+
     return callAndInvokeListenerForEachDependency(
         callback,
-        (signal) => {
-            throw new Error(
-                `Tracking is blocked here, meaning you have probably inadvertantly used .value when you should use .peek().`,
-            );
-        },
+        blockTrackingListener,
         false,
     );
 }
@@ -78,7 +88,7 @@ export function callAndReturnDependencies<T, TArgs extends readonly unknown[]>(
         return {
             succeeded: false,
             error: err,
-            dependencies,
+            dependencies: dependencies,
         };
     }
 }

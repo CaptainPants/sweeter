@@ -20,7 +20,17 @@ type IdentityCacheItem<TInput, TIdentity, TMapped> = {
     indexController: SignalController<number>;
 };
 
-function providedIdentityFun<TInput, TIdentity, TMapped>(args: [MightBeSignal<(input: TInput) => TIdentity>, MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>] | [MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>]): args is [MightBeSignal<(input: TInput) => TIdentity>, MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>] {
+function providedIdentityFun<TInput, TIdentity, TMapped>(
+    args:
+        | [
+              MightBeSignal<(input: TInput) => TIdentity>,
+              MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+          ]
+        | [MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>],
+): args is [
+    MightBeSignal<(input: TInput) => TIdentity>,
+    MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+] {
     return args.length >= 2;
 }
 
@@ -39,7 +49,7 @@ export function $mapByIdentity<TInput, TIdentity, TMapped>(
 ): Signal<readonly TMapped[]>;
 /**
  * Create a new signal by mapping each element of an input signal, using a mapping function.
- * 
+ *
  * The input itself is used as the identity for caching.
  * @param items
  * @param mappingFun
@@ -52,15 +62,17 @@ export function $mapByIdentity<TInput, TMapped>(
 ): Signal<readonly TMapped[]>;
 export function $mapByIdentity<TInput, TIdentity, TMapped>(
     items: MightBeSignal<readonly TInput[]>,
-    ...rest: 
-        | [MightBeSignal<(input: TInput) => TIdentity>, MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>] 
+    ...rest:
+        | [
+              MightBeSignal<(input: TInput) => TIdentity>,
+              MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>,
+          ]
         | [MightBeSignal<(item: TInput, index: Signal<number>) => TMapped>]
-): Signal<readonly TMapped[]>{
+): Signal<readonly TMapped[]> {
     if (providedIdentityFun(rest)) {
         return mapByIdentity(items, ...rest);
-    }
-    else {
-        return mapByIdentity(items, x => x, ...rest);
+    } else {
+        return mapByIdentity(items, (x) => x, ...rest);
     }
 }
 
@@ -77,7 +89,9 @@ function mapByIdentity<TInput, TIdentity, TMapped>(
     }
 
     const cache = $controller(
-        SignalState.success<IdentityCacheItem<TInput, TIdentity, TMapped>[]>([]),
+        SignalState.success<IdentityCacheItem<TInput, TIdentity, TMapped>[]>(
+            [],
+        ),
     );
 
     const callbacks = {
@@ -131,7 +145,11 @@ function mapByIdentity<TInput, TIdentity, TMapped>(
                 return undefined;
             }
 
-            const newCacheContent: IdentityCacheItem<TInput, TIdentity, TMapped>[] = [];
+            const newCacheContent: IdentityCacheItem<
+                TInput,
+                TIdentity,
+                TMapped
+            >[] = [];
 
             const updatedInputs = $peek(items);
             const getIdentityResolved = $peek(getIdentity);

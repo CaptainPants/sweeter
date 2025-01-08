@@ -22,10 +22,8 @@ export const stringArray = type.string
     .array();
 
 export const stringArrayField = type({
-    field: type.string
-        .annotate((add) => add.displayName('Text Item'))
-        .array()
-})
+    field: type.string.annotate((add) => add.displayName('Text Item')).array(),
+});
 
 export const simpleHiddenField = type({
     test: type.string.annotate((add) => add.displayName('Test')),
@@ -172,9 +170,9 @@ export const exampleData = {
             value: { alpha: 1, beta: 2 },
             schema: mapObject,
         });
-        
+
         const schema = type({ '[string]': 'number' });
-        const thing = schema.get("test");
+        const thing = schema.get('test');
         const branches = introspect.getUnionTypeInfo(thing);
 
         console.log(branches, thing);

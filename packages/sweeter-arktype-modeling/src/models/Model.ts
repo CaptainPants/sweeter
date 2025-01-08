@@ -146,7 +146,9 @@ interface UnknownObjectModelMethods {
         validate?: boolean,
     ): Promise<this>;
 
-    unknownGetProperties(filter?: ObjectPropertyType | undefined): readonly UnknownPropertyModel[];
+    unknownGetProperties(
+        filter?: ObjectPropertyType | undefined,
+    ): readonly UnknownPropertyModel[];
 }
 
 export interface UnknownObjectModel
@@ -175,7 +177,9 @@ export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
         key: TKey,
     ): TypedPropertyModelForKey<TObjectSchema, TKey>;
 
-    getProperties(filter?: ObjectPropertyType | undefined): readonly PropertyModelNoConstraint<
+    getProperties(
+        filter?: ObjectPropertyType | undefined,
+    ): readonly PropertyModelNoConstraint<
         arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[];
 

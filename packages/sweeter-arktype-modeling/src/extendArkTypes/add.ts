@@ -1,7 +1,10 @@
-import { type Type } from "arktype";
-import { type Annotations, type AnnotationSetter } from "../annotations/types.js";
+import { type Type } from 'arktype';
+import {
+    type Annotations,
+    type AnnotationSetter,
+} from '../annotations/types.js';
 
-import { dispatcher } from "./dispatcher.js";
+import { dispatcher } from './dispatcher.js';
 
 export interface SchemaNodeToExtend {
     annotate(this: Type<unknown>, callback: AnnotationSetter): unknown;
@@ -11,9 +14,7 @@ export interface SchemaNodeToExtend {
     readonly expression: string;
 }
 
-export function addFunctionsToSchemaNode(
-    node: SchemaNodeToExtend,
-) {
+export function addFunctionsToSchemaNode(node: SchemaNodeToExtend) {
     if (typeof node.annotate !== 'undefined') {
         return; // Means it's already been added
     }

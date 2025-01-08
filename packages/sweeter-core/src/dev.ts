@@ -76,7 +76,9 @@ function swallowedError(message: string, err: unknown, ...args: unknown[]) {
 let globalEnabledFlags: DebugFlagValues | undefined;
 let globalInterval: ReturnType<typeof setInterval> | undefined;
 
-export type DebugFlagKey = (keyof SweeterExtensionPoints.DebugFlags) | (string & {} /* The &{} here is to allow intellisense */);
+export type DebugFlagKey =
+    | keyof SweeterExtensionPoints.DebugFlags
+    | (string & {}) /* The &{} here is to allow intellisense */;
 export type DebugFlagValues = Partial<Record<DebugFlagKey, boolean>>;
 
 /**

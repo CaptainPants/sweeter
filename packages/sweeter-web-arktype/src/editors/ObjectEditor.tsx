@@ -262,33 +262,29 @@ export function ObjectEditor(
             props.sort((x, y) => defaultCompare(x.name, y.name));
             return props;
         }),
-        (property, _index) => {
-            const id = idGenerator.next('prop_' + property.name.toString());
+        x => x.name,
+        (property) => {
+            const propertyName = property.name;
+            const id = idGenerator.next('prop_' + propertyName.toString());
+
             return (
                 <div class={css.property}>
                     <div>
                         <div class={css.propertyName}>
-                            {$derived(() => {
-                                const name = property.name;
-                                return (
-                                    <>
-                                        <Label for={id}>{String(name)}</Label>
-                                        {typeof name !== 'symbol' && (
-                                            <IconButton
-                                                icon="Edit"
-                                                onLeftClick={() =>
-                                                    startRename(name)
-                                                }
-                                            />
-                                        )}
-                                    </>
-                                );
-                            })}
+                            <Label for={id}>{String(propertyName)}</Label>
+                            {typeof propertyName !== 'symbol' && (
+                                <IconButton
+                                    icon="Edit"
+                                    onLeftClick={() =>
+                                        startRename(propertyName)
+                                    }
+                                />
+                            )}
                         </div>
                         <div>
                             <MapElementEditorPart
                                 id={id}
-                                property={property.name}
+                                property={propertyName}
                                 value={property.valueModel}
                                 updateElement={updatePropertyValue}
                                 indent={childIndent}
@@ -300,7 +296,7 @@ export function ObjectEditor(
                                 icon="Delete"
                                 hoverable
                                 onLeftClick={() => {
-                                    void remove(property.name);
+                                    void remove(propertyName);
                                 }}
                             />
                         </div>

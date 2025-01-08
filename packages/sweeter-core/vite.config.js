@@ -29,5 +29,5 @@ export default defineConfig({
             }
         },
     },
-    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-core', roots: [__dirname], debugMatching: /components\/Async\.ts/ })]
+    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-core', roots: [__dirname] })]
 });

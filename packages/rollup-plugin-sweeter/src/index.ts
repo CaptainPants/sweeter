@@ -65,9 +65,13 @@ export default function sweeterPlugin({
                 // );
                 return; // doesn't contain any of the sigils (text search)
             }
-            
-            const debugLogging = debugMatching ? !!id.match(debugMatching) : false;
-            const log = debugLogging ? (message: string) => this.info(message) : () => void 0;
+
+            const debugLogging = debugMatching
+                ? !!id.match(debugMatching)
+                : false;
+            const log = debugLogging
+                ? (message: string) => this.info(message)
+                : () => void 0;
 
             log(`Processing file`);
 

@@ -1,17 +1,15 @@
 import { is, NodePath, traverse } from 'estree-toolkit';
 import MagicString from 'magic-string';
 import path from 'node:path';
-import {
-    ProgramNode,
-    SourceMap,
-    TransformPluginContext,
-} from 'rollup';
+import { ProgramNode, SourceMap, TransformPluginContext } from 'rollup';
 import { assertAstLocation } from './assertAstLocation';
 import { getLocation } from './getLocation';
 import { constants } from './constants';
 import { SourceMapConsumer } from 'source-map';
 
-export type TransformResult = { code: string; map: SourceMap; ast?: ProgramNode } | undefined;
+export type TransformResult =
+    | { code: string; map: SourceMap; ast?: ProgramNode }
+    | undefined;
 
 export type Transformer = (
     code: string,
@@ -49,7 +47,7 @@ export function createTransform({
 
         const rawSourceMap = context.getCombinedSourcemap();
         const sourceMap = await new SourceMapConsumer(rawSourceMap);
-        
+
         const magicString = new MagicString(code);
 
         // This is used for assigning incremental identifiers when the signal
@@ -89,17 +87,24 @@ export function createTransform({
                                 next,
                             );
 
-                            log(`Found ${path.node.callee.name} named ${name} at offset ${path.node.start}`);
-
-                            const [funcName, mappedLine, mappedColumn] = getLocation(
-                                code,
-                                path,
-                                path.node,
+                            log(
+                                `Found ${path.node.callee.name} named ${name} at offset ${path.node.start}`,
                             );
 
-                            log(`Transformed location ${mappedLine}:${mappedColumn} function ${funcName}`);
+                            const [funcName, mappedLine, mappedColumn] =
+                                getLocation(code, path, path.node);
 
-                            let { line, column } = sourceMap.originalPositionFor({ line: mappedLine, column: mappedColumn - 1 /* We're using 1-based, but the library is 0-based */ })
+                            log(
+                                `Transformed location ${mappedLine}:${mappedColumn} function ${funcName}`,
+                            );
+
+                            let { line, column } =
+                                sourceMap.originalPositionFor({
+                                    line: mappedLine,
+                                    column:
+                                        mappedColumn -
+                                        1 /* We're using 1-based, but the library is 0-based */,
+                                });
                             if (column !== null) column += 1; // The SourceMap library uses 0-based columns, and we want 1-based
 
                             log(`Original location ${line}:${column}`);
@@ -147,7 +152,11 @@ function getVariableOrPropertyName(
 ): string | undefined {
     if (is.variableDeclarator(path.parent) && is.identifier(path.parent.id)) {
         return path.parent.id.name;
-    } else if (is.property(path.parent) && path.parent.kind === 'init' && is.identifier(path.parent.key)) {
+    } else if (
+        is.property(path.parent) &&
+        path.parent.kind === 'init' &&
+        is.identifier(path.parent.key)
+    ) {
         return path.parent.key.name;
     } else {
         return `${sigil}-${nextCount(sigil)}`;

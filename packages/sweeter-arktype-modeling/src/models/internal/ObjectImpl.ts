@@ -18,7 +18,7 @@ import {
     type AnyObjectTypeConstraint,
     type UnknownType,
 } from '../../type/types.js';
-import { type Type, type type } from 'arktype';
+import { type Type, type } from 'arktype';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import { introspect } from '../../type/index.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
@@ -79,11 +79,10 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
         const mapped = [...typeInfo.getMappedKeys().entries()];
         for (const [propertyName, propertyValue] of entries(source)) {
-            const match = mapped.find(([schema]) => schema.allows(propertyName));
-            if (!match) {
-                throw new Error(`Could not find matching type.`);
-            }
-            const [_properyNameSchema, propertyValueSchema] = match;
+            const match = mapped.find(([keySchema]) => keySchema.allows(propertyName));
+
+            // If we don't have type information, so unknown is the best we can do
+            const propertyValueSchema = match ? match[1] : type.unknown;
 
             const propertyValueModel = ModelFactory.createModelPart({
                 value: propertyValue,

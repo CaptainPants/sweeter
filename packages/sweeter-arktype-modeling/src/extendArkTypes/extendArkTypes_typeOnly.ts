@@ -1,4 +1,4 @@
-import { $ark, BaseRoot } from "@ark/schema";
+import { BaseRoot } from "@ark/schema";
 
 import { addFunctionsToSchemaNode } from "./add.js";
 

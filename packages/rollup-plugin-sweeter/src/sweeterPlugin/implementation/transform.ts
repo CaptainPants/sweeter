@@ -2,10 +2,11 @@ import { is, NodePath, traverse } from 'estree-toolkit';
 import MagicString from 'magic-string';
 import path from 'node:path';
 import { ProgramNode, SourceMap, TransformPluginContext } from 'rollup';
-import { assertAstLocation } from './assertAstLocation';
-import { getLocation } from './getLocation';
-import { constants } from './constants';
 import { SourceMapConsumer } from 'source-map';
+
+import { assertAstLocation } from '../../utility/implementation/assertAstLocation.js';
+import { getLocation } from '../../utility/implementation/getLocation.js';
+import { constants } from './constants.js';
 
 export type TransformResult =
     | { code: string; map: SourceMap; ast?: ProgramNode }

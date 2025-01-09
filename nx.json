@@ -1,43 +1,63 @@
 {
-  "targetDefaults": {
-    "test": {
-      "dependsOn": [
-        "build"
-      ]
+    "targetDefaults": {
+        "test": {
+            "dependsOn": [
+                "build"
+            ]
+        },
+        "verify": {
+            "dependsOn": [
+                "build"
+            ]
+        },
+        "verify:fix": {
+            "dependsOn": [
+                "build"
+            ]
+        },
+        "build": {
+            "dependsOn": [
+                "^build",
+                {
+                    "projects": ["@captainpants/rollup-plugin-sweeter"],
+                    "target": "build",
+                    "params": "ignore"
+                }
+            ],
+            "outputs": [
+                "{projectRoot}/build"
+            ]
+        },
+        "watch": {
+            "dependsOn": [
+                "^build",
+                {
+                    "projects": ["@captainpants/rollup-plugin-sweeter"],
+                    "target": "build",
+                    "params": "ignore"
+                }
+            ]
+        },
+        "watch-test": {
+            "dependsOn": [
+                {
+                    "projects": ["@captainpants/rollup-plugin-sweeter"],
+                    "target": "build",
+                    "params": "ignore"
+                },
+                "^build"
+            ]
+        }
     },
-    "verify": {
-      "dependsOn": [
-        "build"
-      ]
-    },
-    "verify:fix": {
-      "dependsOn": [
-        "build"
-      ]
-    },
-    "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "{projectRoot}/build"
-      ]
-    },
-    "watch": {
-      "dependsOn": [
-        "build"
-      ]
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "namedInputs": {
+        "default": [
+            "{projectRoot}/**/*",
+            "sharedGlobals"
+        ],
+        "sharedGlobals": [],
+        "production": [
+            "default"
+        ]
     }
-  },
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
-    "sharedGlobals": [],
-    "production": [
-      "default"
-    ]
-  }
 }

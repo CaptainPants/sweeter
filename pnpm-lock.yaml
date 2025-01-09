@@ -203,7 +203,11 @@ importers:
         specifier: workspace:^
         version: link:../rollup-plugin-sweeter
 
-  packages/sweeter-utilities: {}
+  packages/sweeter-utilities:
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../rollup-plugin-sweeter
 
   packages/sweeter-web:
     dependencies:

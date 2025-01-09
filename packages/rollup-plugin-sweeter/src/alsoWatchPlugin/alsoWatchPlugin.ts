@@ -1,11 +1,16 @@
 import { Plugin as RollupPlugin } from 'rollup';
 import { glob } from 'glob';
-import path from 'node:path';
+import fs from 'node:fs/promises';
 
 export interface AlsoWatchPluginOptions {
     globs: string[];
     debug?: boolean;
 }
+
+module global {
+
+}
+
 
 export function alsoWatchPlugin(options: AlsoWatchPluginOptions): RollupPlugin;
 export function alsoWatchPlugin({
@@ -18,22 +23,28 @@ export function alsoWatchPlugin({
         async buildStart() {
             const log: (message: string) => void = debug ? message => this.info(message) : () => { };
 
-            if (debug) {
-                log(`Adding files to watch based on globs:`);
-                for (const current of globs) {
-                    log(`- ${current}`);
+            if (process.argv.includes('--watch')) {
+                if (debug) {
+                    log(`Adding files to watch based on globs:`);
+                    for (const current of globs) {
+                        log(`- ${current}`);
+                    }
+                }
+    
+                for await (const file of glob.globIterate(globs, { nodir: true })) {
+                    // Example id: 
+                    //   C:/workspace/sweeter/packages/sweeter-core/src/signals/internal/Signal-implementations/DerivedSignal.ts
+                    //   C:/workspace/sweeter/packages/sweeter-core/node_modules/@captainpants/rollup-plugin-sweeter/build/index.js
+                    const resolved = (await fs.realpath(file)).replace(/\\/g, '/');
+    
+                    log(`+ Watching ${resolved}`);
+                    // According to the rollup docs, you can use a relative path https://rollupjs.org/plugin-development/#this-addwatchfile
+                    this.addWatchFile(resolved);
                 }
             }
-
-            for await (const file of glob.globIterate(globs, { nodir: true })) {
-                // Example id: 
-                //   C:/workspace/sweeter/packages/sweeter-core/src/signals/internal/Signal-implementations/DerivedSignal.ts
-                //   C:/workspace/sweeter/packages/sweeter-core/node_modules/@captainpants/rollup-plugin-sweeter/build/index.js
-                const resolved = path.resolve(file).replace(/\\/g, '/');
-
-                log(`Watching ${resolved}`);
-                this.addWatchFile(resolved);
-            }
+        },
+        watchChange(id) {
+            this.info(`File ${id} changed..`)
         }
     }
 }

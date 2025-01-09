@@ -31,5 +31,8 @@
     },
     "engines": {
         "pnpm": "8.14.1"
+    },
+    "devDependencies": {
+        "@captainpants/rollup-plugin-sweeter": "workspace:^"
     }
 }

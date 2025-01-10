@@ -1,6 +1,6 @@
+import { createFilter } from '@rollup/pluginutils';
 import { Plugin as RollupPlugin } from 'rollup';
 
-import { createFilter } from '@rollup/pluginutils';
 import { toSearcher } from './toSearcher.js';
 import { createTransform } from './transform.js';
 

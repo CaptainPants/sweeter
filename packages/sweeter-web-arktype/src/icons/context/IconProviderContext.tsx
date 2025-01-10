@@ -1,25 +1,26 @@
 import {
-    type Component,
-    Context,
-    $derived,
-    $val,
-} from '@captainpants/sweeter-core';
-
-import {
     ArrowDownRight,
+    createElement,
     Grip,
     type IconNode,
-    Trash2,
-    createElement,
-    Pencil,
     ListPlus,
+    Pencil,
+    Trash2,
 } from 'lucide';
-import { type IconProps, type IconSet } from '../types.js';
+
+import {
+    $derived,
+    $val,
+    type Component,
+    Context,
+} from '@captainpants/sweeter-core';
 import {
     type ElementCssClasses,
     GlobalCssClass,
     stylesheet,
 } from '@captainpants/sweeter-web';
+
+import { type IconProps, type IconSet } from '../types.js';
 
 function createIconComponent(icon: IconNode): Component<IconProps> {
     return ({ hoverable, style, class: classProp }) => {

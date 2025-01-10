@@ -1,22 +1,24 @@
 import {
-    subscribeToChanges,
-    Context,
-    initializeHook,
-    untrack,
-    type ComponentTypeConstraint,
-    type UnsignalAll,
-    type ComponentInit,
-    type PropsWithIntrinsicAttributesFor,
-    type IdGenerator,
-    ComponentFaultContext,
-    type Signal,
-    SignalState,
     $controller,
     $insertLocation,
+    ComponentFaultContext,
+    type ComponentInit,
+    type ComponentTypeConstraint,
+    Context,
+    type IdGenerator,
+    initializeHook,
+    type PropsWithIntrinsicAttributesFor,
+    type Signal,
+    SignalState,
+    subscribeToChanges,
+    type UnsignalAll,
+    untrack,
 } from '@captainpants/sweeter-core';
-import { addMountedCallback, addUnMountedCallback } from './mounting.js';
-import { type WebRuntime } from '../types.js';
 import { whenGarbageCollected } from '@captainpants/sweeter-utilities';
+
+import { type WebRuntime } from '../types.js';
+
+import { addMountedCallback, addUnMountedCallback } from './mounting.js';
 
 const hookInitSymbol = Symbol('hook');
 

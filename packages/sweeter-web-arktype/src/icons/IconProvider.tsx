@@ -1,4 +1,5 @@
 import { $insertLocation, type Component } from '@captainpants/sweeter-core';
+
 import { IconProviderContext } from './context/IconProviderContext.js';
 import { type IconSet } from './types.js';
 

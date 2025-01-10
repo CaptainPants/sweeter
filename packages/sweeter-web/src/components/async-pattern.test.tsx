@@ -6,6 +6,7 @@ import {
     type Component,
     Suspense,
 } from '@captainpants/sweeter-core';
+
 import { testRender } from '../test/testRender.js';
 
 interface Component1Props {
@@ -13,9 +14,9 @@ interface Component1Props {
     rendered: AbortController;
 }
 
-const Component1: Component<Component1Props> = (props, init) => {
+const Component1: Component<Component1Props> = (props, _init) => {
     return $async(
-        (abort) => {
+        (_abort) => {
             return new Promise<string>((resolve) => {
                 props.dataLoadComplete.addEventListener('abort', () => {
                     resolve('RESOLVED!');

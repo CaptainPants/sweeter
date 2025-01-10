@@ -1,6 +1,7 @@
 import { type ComponentInit, type Signal } from '@captainpants/sweeter-core';
-import { type ValidationListener } from '../types.js';
+
 import { ValidationContainerContext } from '../context/ValidationContainerContext.js';
+import { type ValidationListener } from '../types.js';
 
 export function ValidationListenerHook(
     init: ComponentInit,

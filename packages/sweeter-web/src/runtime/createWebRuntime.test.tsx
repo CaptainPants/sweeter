@@ -1,6 +1,7 @@
 /* @jsxImportSource ../. */
 
 import { type JSXElement } from '@captainpants/sweeter-core';
+
 import { createWebRuntime } from './index.js';
 
 function Component(): JSXElement {

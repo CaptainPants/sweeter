@@ -1,4 +1,5 @@
 import { $mutable } from '@captainpants/sweeter-core';
+
 import { createCssClassSignal } from './createCssClassSignal.js';
 
 it('single static', () => {

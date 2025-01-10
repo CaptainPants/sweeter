@@ -1,14 +1,12 @@
-import { Select } from '@captainpants/sweeter-web-gummybear';
-import { type EditorProps } from '../types.js';
 import {
-    ModelFactory,
+    type AnyTypeConstraint,
     asUnion,
     cast,
-    type UnknownModel,
+    createDefault,
     findUnionOptionIndexForValue,
     introspect,
-    createDefault,
-    type AnyTypeConstraint,
+    ModelFactory,
+    type UnknownModel,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
     $derived,
@@ -18,7 +16,10 @@ import {
     $val,
 } from '@captainpants/sweeter-core';
 import { idPaths } from '@captainpants/sweeter-utilities';
+import { Select } from '@captainpants/sweeter-web-gummybear';
+
 import { EditorHost } from '../components/EditorHost.js';
+import { type EditorProps } from '../types.js';
 
 export function UnionEditor(props: Readonly<EditorProps>): JSX.Element;
 export function UnionEditor({

@@ -1,22 +1,23 @@
 import {
-    type IntrinsicElementProps,
-    type Component,
-    type PropertiesMightBeSignals,
     $derived,
     $val,
+    type Component,
+    type IntrinsicElementProps,
+    type PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
-import { type VariantName } from '../../internal/constants.js';
 import {
-    type TypedEvent,
     type ElementCssClasses,
-    type ThreeValueBoolean,
     type ElementCssStyles,
+    type ThreeValueBoolean,
+    type TypedEvent,
 } from '@captainpants/sweeter-web';
+
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
-import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 import { combineStyles } from '../../internal/combineStyles.js';
+import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
 export type CheckBoxProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;

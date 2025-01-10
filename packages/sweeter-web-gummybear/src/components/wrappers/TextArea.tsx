@@ -1,20 +1,21 @@
 import { $derived, $val } from '@captainpants/sweeter-core';
 import {
-    type ReadWriteSignal,
-    type IntrinsicElementProps,
     type Component,
+    type IntrinsicElementProps,
     type PropertiesMightBeSignals,
+    type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
-import { type VariantName } from '../../internal/constants.js';
 import {
-    type TypedEvent,
     type ElementCssClasses,
     type ElementCssStyles,
+    type TypedEvent,
 } from '@captainpants/sweeter-web';
+
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
-import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 import { combineStyles } from '../../internal/combineStyles.js';
+import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
 export type TextAreaProps = PropertiesMightBeSignals<{
     variant?: VariantName | undefined;

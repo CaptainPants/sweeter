@@ -1,6 +1,7 @@
 /* @jsxImportSource .. */
 
 import { Suspense } from '@captainpants/sweeter-core';
+
 import { testRender } from '../test/testRender.js';
 
 it('Suspense displays children', () => {

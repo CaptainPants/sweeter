@@ -1,4 +1,4 @@
-import { LogLevel } from './LogLevels';
+import { LogLevel } from './LogLevels.js';
 
 export type LogMethod = {
     (message: string): void;

@@ -1,4 +1,5 @@
-import { type Signal, type Runtime } from '@captainpants/sweeter-core';
+import { type Runtime, type Signal } from '@captainpants/sweeter-core';
+
 import {
     type AbstractGlobalCssStylesheet,
     type GlobalStyleSheetContentGeneratorContext,
@@ -19,5 +20,5 @@ export interface WebRuntime
 
     createElement(tagName: string): HTMLElement | SVGElement;
 
-    createComment(content?: string | undefined): Comment;
+    createComment(content?: string): Comment;
 }

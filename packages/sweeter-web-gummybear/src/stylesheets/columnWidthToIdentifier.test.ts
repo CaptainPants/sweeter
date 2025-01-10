@@ -1,4 +1,5 @@
 import { type ColumnWidth } from '../types.js';
+
 import { columnWidthToIdentifier } from './columnWidthToIdentifier.js';
 
 it('General', () => {

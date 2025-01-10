@@ -11,7 +11,7 @@ import {
     SignalState,
 } from '@captainpants/sweeter-core';
 
-import { getWebRuntime } from '../runtime';
+import { getWebRuntime } from '../runtime/getWebRuntime.js';
 
 export type CommentProps = PropertiesMightBeSignals<{
     content?: string | undefined;

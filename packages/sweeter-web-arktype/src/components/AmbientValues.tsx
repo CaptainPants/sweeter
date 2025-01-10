@@ -1,4 +1,8 @@
 import {
+    type AmbientValueCallback,
+    notFound,
+} from '@captainpants/sweeter-arktype-modeling';
+import {
     $derived,
     $insertLocation,
     $val,
@@ -7,10 +11,6 @@ import {
 } from '@captainpants/sweeter-core';
 
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
-import {
-    type AmbientValueCallback,
-    notFound,
-} from '@captainpants/sweeter-arktype-modeling';
 
 export type AmbientValuesProps = PropertiesMightBeSignals<{
     callback: AmbientValueCallback | undefined;
@@ -29,7 +29,7 @@ export function AmbientValues(
 
         // Shortcut for the 'do nothing' flow variation
         if (!newCallbackResolved) {
-            return existingContextResolved as AmbientValueCallback;
+            return existingContextResolved;
         }
 
         return {

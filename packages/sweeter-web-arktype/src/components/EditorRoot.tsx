@@ -7,7 +7,6 @@ import {
     type TypeMatcherRule,
     type UnknownReplacer,
 } from '@captainpants/sweeter-arktype-modeling';
-
 import {
     $derived,
     $insertLocation,
@@ -16,14 +15,15 @@ import {
 } from '@captainpants/sweeter-core';
 import { Button, Modal } from '@captainpants/sweeter-web-gummybear';
 
-import { AmbientValues } from './AmbientValues.js';
-import { EditorHost } from './EditorHost.js';
-import { type EditorComponentType, type EditorSettings } from '../types.js';
 import {
     EditorRootContext,
     type EditorRootContextType,
 } from '../context/EditorRootContext.js';
 import { standardRules } from '../standardRules.js';
+import { type EditorComponentType, type EditorSettings } from '../types.js';
+
+import { AmbientValues } from './AmbientValues.js';
+import { EditorHost } from './EditorHost.js';
 
 export type EditorRootProps<TSchema extends AnyTypeConstraint> =
     PropertiesMightBeSignals<{

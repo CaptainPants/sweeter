@@ -1,4 +1,4 @@
-import { typeAssert, type IsUnion } from '../index.js';
+import { type IsUnion, typeAssert } from '../index.js';
 
 it('IsUnion works', () => {
     typeAssert.extends<IsUnion<{ a: 1 } | { b: 2 }>, true>();

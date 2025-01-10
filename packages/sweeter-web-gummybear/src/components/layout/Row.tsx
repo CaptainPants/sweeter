@@ -3,11 +3,12 @@ import {
     type IntrinsicElementAttributes,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { row } from '../../stylesheets/grid.js';
 import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
+
+import { row } from '../../stylesheets/grid.js';
 
 export type RowProps = PropertiesMightBeSignals<{
     id?: string | undefined;

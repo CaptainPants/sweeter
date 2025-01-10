@@ -1,4 +1,5 @@
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+
 import { createConstantMap } from '../internal/createConstantMap.js';
 
 const keys = [

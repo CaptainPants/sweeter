@@ -1,5 +1,6 @@
-import { type ValidationListener } from '../types.js';
 import { Context } from '@captainpants/sweeter-core';
+
+import { type ValidationListener } from '../types.js';
 
 export interface ValidationContainerContextType {
     register: (listener: ValidationListener) => void;

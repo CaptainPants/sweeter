@@ -1,5 +1,5 @@
-import { Context, type MightBeSignal } from '@captainpants/sweeter-core';
 import { type AmbientValueCallback } from '@captainpants/sweeter-arktype-modeling';
+import { Context, type MightBeSignal } from '@captainpants/sweeter-core';
 
 export interface AmbientValuesContextType {
     ambientValueCallback: MightBeSignal<(name: string) => unknown>;

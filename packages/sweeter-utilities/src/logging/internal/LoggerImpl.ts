@@ -1,7 +1,8 @@
-import { assertNotNullOrUndefined } from '../../assertNotNullOrUndefined';
-import { LogLevel } from '../LogLevels';
-import { Logger, LogMethod } from '../types';
-import { globalLogRules } from './globalLogRules';
+import { assertNotNullOrUndefined } from '../../assertNotNullOrUndefined.js';
+import { LogLevel } from '../LogLevels.js';
+import { Logger, LogMethod } from '../types.js';
+
+import { globalLogRules } from './globalLogRules.js';
 
 function createLogMethod(logLevel: LogLevel): LogMethod {
     function res(this: { category: string }, message: string): void;
@@ -12,7 +13,7 @@ function createLogMethod(logLevel: LogLevel): LogMethod {
     ): void;
     function res(
         this: { category: string },
-        errOrMessage: unknown | string,
+        errOrMessage: unknown,
         message?: string,
     ) {
         if (typeof errOrMessage !== 'string') {
@@ -37,11 +38,11 @@ function createLogMethod(logLevel: LogLevel): LogMethod {
                     .map((item, i) => {
                         const val = parms[i];
                         assertNotNullOrUndefined(val);
-                        return item + String(val)
+                        return item + String(val);
                     })
                     .join('');
 
-                return (err?: unknown  ) => {
+                return (err?: unknown) => {
                     globalLogRules.log(logLevel, self.category, formatted, err);
                 };
             };

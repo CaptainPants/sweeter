@@ -1,11 +1,12 @@
-import { stylesheet } from '../stylesheet.js';
 import { GlobalCssClass } from '../GlobalCssClass.js';
+import { stylesheet } from '../stylesheet.js';
+
 import { getTransitiveReferences } from './getTransitiveReferences.js';
 
 it('Transitive references work', () => {
     const classA = new GlobalCssClass({
         className: 'a',
-        content: (self) => {
+        content: (_self) => {
             return stylesheet`
                 color: red;
             `;

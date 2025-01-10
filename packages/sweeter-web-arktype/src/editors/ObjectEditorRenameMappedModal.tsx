@@ -1,10 +1,11 @@
 import {
-    type PropertiesMightBeSignals,
-    type Component,
     $derived,
     $mutable,
     $peek,
+    type Component,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+import { type TypedEvent } from '@captainpants/sweeter-web';
 import {
     Button,
     Column,
@@ -13,7 +14,6 @@ import {
     Modal,
     Row,
 } from '@captainpants/sweeter-web-gummybear';
-import { type TypedEvent } from '@captainpants/sweeter-web';
 
 export type ObjectEditorRenameMappedModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;

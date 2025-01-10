@@ -1,14 +1,14 @@
-import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
+import { type } from 'arktype';
 
 import {
     asUnknown,
-    ModelFactory,
     createDefault,
-    UnknownModel,
     introspect,
+    ModelFactory,
+    UnknownModel,
 } from '@captainpants/sweeter-arktype-modeling';
 
-import { type } from 'arktype';
+import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
 
 export const stringOnly = type.string;
 export const numberOnly = type.number;

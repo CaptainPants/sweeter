@@ -1,11 +1,12 @@
 import {
+    introspect,
     Rules,
     type TypeMatcherRule,
     type TypeMatcherRulePart,
-    introspect,
 } from '@captainpants/sweeter-arktype-modeling';
-import { type EditorComponentType } from './types.js';
+
 import { ModalEditorIfTooSmall } from './editors/ModalEditorIfTooSmall.js';
+import { type EditorComponentType } from './types.js';
 
 export interface DefaultRulesSetOptions {
     object?: EditorComponentType;
@@ -21,7 +22,7 @@ export interface DefaultRulesSetOptions {
 function addIfPresent(
     array: Array<TypeMatcherRule<EditorComponentType>>,
     matches: TypeMatcherRulePart,
-    component?: EditorComponentType | undefined,
+    component?: EditorComponentType,
 ): void {
     if (component) {
         array.push({

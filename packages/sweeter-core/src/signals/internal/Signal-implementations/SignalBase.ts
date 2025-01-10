@@ -1,16 +1,16 @@
 import { StackTrace } from '@captainpants/sweeter-utilities';
 
+import { dev } from '../../../dev.js';
 import { announceSignalUsage } from '../../ambient.js';
-import { SignalChangeListenerSet } from '../SignalChangeListenerSet.js';
-import { signalMarker } from '../markers.js';
+import { SignalState } from '../../SignalState.js';
 import {
-    DebugListenerInfo,
     type DebugDependencyNode,
+    DebugListenerInfo,
     type Signal,
     type SignalListener,
 } from '../../types.js';
-import { dev } from '../../../dev.js';
-import { SignalState } from '../../SignalState.js';
+import { signalMarker } from '../markers.js';
+import { SignalChangeListenerSet } from '../SignalChangeListenerSet.js';
 
 interface ChangeAnnouncerStackNode {
     signal: Signal<unknown>;
@@ -194,8 +194,6 @@ export abstract class SignalBase<T> implements Signal<T> {
     }
 
     debugGetListenerTree(): DebugDependencyNode {
-        const truncateStackTraces = 30;
-
         const dependents = this.#listeners
             .debugGetAllListeners()
             .map((child): DebugDependencyNode => {

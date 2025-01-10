@@ -1,18 +1,18 @@
 import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
-
-import { type EditorProps } from '../types.js';
 import {
     $derived,
     $mutable,
     $peek,
     $val,
     $valProperties,
-    LocalizerHook,
     type ComponentInit,
+    LocalizerHook,
 } from '@captainpants/sweeter-core';
+
+import { IconButton } from '../components/IconButton.js';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
-import { IconButton } from '../components/IconButton.js';
+import { type EditorProps } from '../types.js';
 
 export function ModalEditor(
     {

@@ -1,4 +1,4 @@
-import { writableSignalMarker, signalMarker } from './internal/markers.js';
+import { signalMarker, writableSignalMarker } from './internal/markers.js';
 import {
     type ReadWriteSignal,
     type Signal,

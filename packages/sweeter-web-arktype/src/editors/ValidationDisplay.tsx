@@ -1,14 +1,14 @@
 import {
+    joinSingleValidationResults,
+    type ValidationSingleResult,
+} from '@captainpants/sweeter-arktype-modeling';
+import {
     $derived,
     $val,
     type ComponentInit,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import {
-    type ValidationSingleResult,
-    joinSingleValidationResults,
-} from '@captainpants/sweeter-arktype-modeling';
 
 const css = new GlobalCssClass({
     className: 'ValidationDisplay',

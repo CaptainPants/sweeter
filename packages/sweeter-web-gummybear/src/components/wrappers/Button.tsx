@@ -1,20 +1,21 @@
 import {
-    type IntrinsicElementProps,
-    type Component,
-    type PropertiesMightBeSignals,
     $derived,
     $val,
+    type Component,
+    type IntrinsicElementProps,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type VariantName } from '../../internal/constants.js';
 import {
-    type TypedEvent,
     type ElementCssClasses,
     type ElementCssStyles,
+    type TypedEvent,
 } from '@captainpants/sweeter-web';
+
 import { combineEventHandlers } from '../../internal/combineEventHandlers.js';
+import { combineStyles } from '../../internal/combineStyles.js';
+import { type VariantName } from '../../internal/constants.js';
 import { button } from '../../stylesheets/button.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
-import { combineStyles } from '../../internal/combineStyles.js';
 
 export type ButtonProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;

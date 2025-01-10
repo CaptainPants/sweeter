@@ -1,8 +1,8 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import {
-    type PropertiesMightBeSignals,
     type Component,
     type MightBeSignal,
+    type PropertiesMightBeSignals,
 } from '../types.js';
 
 export type OffscreenProps = PropertiesMightBeSignals<{

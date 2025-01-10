@@ -1,5 +1,5 @@
-import { $mutable } from './$mutable.js';
 import { $lastGood } from './$lastGood.js';
+import { $mutable } from './$mutable.js';
 
 it('General', () => {
     const throws = $mutable(false);

@@ -2,13 +2,15 @@ import {
     GlobalCssStylesheet,
     IncludeStylesheet,
 } from '@captainpants/sweeter-web';
+
 import { themeBase } from '../stylesheets/base.js';
 import { reset } from '../stylesheets/reset.js';
-import { themeStructure, type ThemeOptions } from './themeStructure.js';
 import {
     type ThemeOptionDefinition,
     type ThemeOptionOrGroupDefinition,
 } from '../types.js';
+
+import { type ThemeOptions, themeStructure } from './themeStructure.js';
 import { type Theme } from './types.js';
 
 export function createTheme(options: ThemeOptions): Theme {

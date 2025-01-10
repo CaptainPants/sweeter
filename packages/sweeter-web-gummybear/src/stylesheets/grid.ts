@@ -1,18 +1,20 @@
 import {
     GlobalCssClass,
     GlobalCssStylesheet,
+    stylesheet,
     StylesheetDependencyProvider,
     StylesheetFragmentBuilder,
-    stylesheet,
 } from '@captainpants/sweeter-web';
+
 import { createConstantMap } from '../internal/createConstantMap.js';
+import { themeStructure } from '../theme/themeStructure.js';
+
 import {
     breakpointNames,
     breakpointSizes,
     columnWidthIdentifiers,
     columnWidthNames,
 } from './internal/constants.js';
-import { themeStructure } from '../theme/themeStructure.js';
 
 export const container = new GlobalCssClass({
     className: 'container',
@@ -88,7 +90,7 @@ for (
     ) {
         const columnWidthIdentifier = columnWidthIdentifiers[columnIndex]!;
 
-        const currentClass = columns[breakpointName][columnWidthIdentifier]!;
+        const currentClass = columns[breakpointName][columnWidthIdentifier];
         allColClasses.push(currentClass);
 
         if (columnWidthIdentifier === 'auto') {

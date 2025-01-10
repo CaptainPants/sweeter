@@ -1,13 +1,13 @@
 import {
-    type Component,
-    Portal,
+    $children,
     $derived,
     $val,
+    type Component,
+    Portal,
     type PropertiesMightBeSignals,
-    $children,
 } from '@captainpants/sweeter-core';
-
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+
 import { themeStructure } from '../../theme/themeStructure.js';
 
 const classes = {

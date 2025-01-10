@@ -3,8 +3,9 @@ import {
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { $derived, $val } from '@captainpants/sweeter-core';
-import { type Route } from './types.js';
+
 import { pathDoesNotMatch } from './pathDoesNotMatch.js';
+import { type Route } from './types.js';
 
 export interface RouterProps {
     basePath: string;
@@ -17,8 +18,10 @@ export interface RouterProps {
 
 export function Router(
     { basePath, url, routes, fallback }: PropertiesMightBeSignals<RouterProps>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     init: ComponentInit,
 ): JSX.Element {
+    // TODO: currently not using basePath
     const asUrl = $derived(() => new URL($val(url)));
 
     return $derived(() => {

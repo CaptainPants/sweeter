@@ -1,21 +1,22 @@
 import {
-    isSignal,
+    $derived,
     type Component,
     type IntrinsicElementAttributes,
+    isSignal,
     type PropertiesMightBeSignals,
-    $derived,
 } from '@captainpants/sweeter-core';
+import {
+    type ElementCssClasses,
+    type ElementCssStyles,
+    GlobalCssClass,
+    stylesheet,
+} from '@captainpants/sweeter-web';
+
+import { combineStyles } from '../../internal/combineStyles.js';
 import {
     breakpointNameToSizeMap,
     type BreakpointSizeName,
 } from '../../stylesheets/internal/constants.js';
-import {
-    GlobalCssClass,
-    type ElementCssStyles,
-    stylesheet,
-    type ElementCssClasses,
-} from '@captainpants/sweeter-web';
-import { combineStyles } from '../../internal/combineStyles.js';
 
 export type ContainerProps = PropertiesMightBeSignals<{
     id?: string | undefined;

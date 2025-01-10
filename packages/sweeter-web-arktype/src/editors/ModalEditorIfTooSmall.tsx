@@ -1,14 +1,15 @@
-import { type EditorProps } from '../types.js';
-
-import { ModalEditor } from './ModalEditor.js';
 import {
     $derived,
     $mutable,
     $val,
-    type PropertiesMightBeSignals,
     type ComponentInit,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+
 import { MeasuredBox } from '../components/MeasuredBox.js';
+import { type EditorProps } from '../types.js';
+
+import { ModalEditor } from './ModalEditor.js';
 
 export type ConditionalModelEditorProps = EditorProps &
     PropertiesMightBeSignals<{ minWidth?: number }>;

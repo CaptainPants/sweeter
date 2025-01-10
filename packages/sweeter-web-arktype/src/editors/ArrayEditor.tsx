@@ -1,34 +1,36 @@
 import {
+    type AnyTypeConstraint,
     asArray,
     cast,
+    createDefault,
+    introspect,
     type UnknownArrayModel,
     validate,
-    createDefault,
-    type AnyTypeConstraint,
-    introspect,
 } from '@captainpants/sweeter-arktype-modeling';
-import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $derived,
-    $peek,
-    $val,
-    LocalizerHook,
-    type ComponentInit,
     $foreach,
     $if,
     $lastGood,
     $mapByIndex,
+    $peek,
+    $val,
+    type ComponentInit,
+    LocalizerHook,
 } from '@captainpants/sweeter-core';
-import { type EditorProps } from '../types.js';
+import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import {
     SortableHandle,
     SortableList,
 } from '@captainpants/sweeter-web-gummybear';
-import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+
+import { IconButton } from '../components/IconButton.js';
+import { DraftHook } from '../hooks/DraftHook.js';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { type EditorProps } from '../types.js';
+
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
-import { IconProviderContext } from '../icons/context/IconProviderContext.js';
-import { IconButton } from '../components/IconButton.js';
 
 export function ArrayEditor(
     {

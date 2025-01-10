@@ -1,12 +1,15 @@
+import { Type } from 'arktype';
+
 import { type AnyTypeConstraint } from '@captainpants/sweeter-arktype-modeling';
 import {
-    type PropertiesMightBeSignals,
-    type Component,
     $derived,
-    $val,
     $mutable,
     $peek,
+    $val,
+    type Component,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+import { type TypedEvent } from '@captainpants/sweeter-web';
 import {
     Button,
     Column,
@@ -15,8 +18,6 @@ import {
     Modal,
     Row,
 } from '@captainpants/sweeter-web-gummybear';
-import { type TypedEvent } from '@captainpants/sweeter-web';
-import { Type } from 'arktype';
 
 export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;

@@ -1,3 +1,18 @@
+import { Type } from 'arktype';
+
+import {
+    asObject,
+    cast,
+    categorizeFixedProperties,
+    type ContextualValueCalculationContext,
+    createDefault,
+    introspect,
+    StandardAssociatedValueKeys,
+    type UnknownModel,
+    type UnknownObjectModel,
+    UnknownType,
+    validate,
+} from '@captainpants/sweeter-arktype-modeling';
 import {
     $derived,
     $if,
@@ -7,39 +22,27 @@ import {
     $peek,
     $val,
     $wrap,
-    LocalizerHook,
     type ComponentInit,
+    LocalizerHook,
 } from '@captainpants/sweeter-core';
-import { EditorSizesContext } from '../context/EditorSizesContext.js';
-import {
-    type ContextualValueCalculationContext,
-    cast,
-    categorizeFixedProperties,
-    type UnknownModel,
-    validate,
-    asObject,
-    type UnknownObjectModel,
-    createDefault,
-    UnknownType,
-    introspect,
-    StandardAssociatedValueKeys,
-} from '@captainpants/sweeter-arktype-modeling';
-import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
-import { DraftHook } from '../hooks/DraftHook.js';
-import { type EditorProps } from '../types.js';
-import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { KnownPropertyEditorPart } from './KnownPropertyEditorPart.js';
-import { Row, Column, Label, Box } from '@captainpants/sweeter-web-gummybear';
 import {
     assertNotNullOrUndefined,
     defaultCompare,
 } from '@captainpants/sweeter-utilities';
-import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+import { Box, Column, Label, Row } from '@captainpants/sweeter-web-gummybear';
+
 import { IconButton } from '../components/IconButton.js';
+import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
+import { EditorSizesContext } from '../context/EditorSizesContext.js';
+import { DraftHook } from '../hooks/DraftHook.js';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { type EditorProps } from '../types.js';
+
+import { KnownPropertyEditorPart } from './KnownPropertyEditorPart.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
-import { ObjectEditorRenameMappedModal } from './ObjectEditorRenameMappedModal.js';
 import { ObjectEditorAddMappedModal } from './ObjectEditorAddMappedModal.js';
-import { Type } from 'arktype';
+import { ObjectEditorRenameMappedModal } from './ObjectEditorRenameMappedModal.js';
 
 export function ObjectEditor(
     { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,

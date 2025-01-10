@@ -1,9 +1,8 @@
 import {
-    $insertLocation,
-    ComponentFaultContext,
     afterCalculationsComplete,
-    dev,
+    ComponentFaultContext,
     type ContextSnapshot,
+    dev,
 } from '@captainpants/sweeter-core';
 import { Logger } from '@captainpants/sweeter-utilities';
 
@@ -32,7 +31,7 @@ function nodeAssociatedCallbacks<T extends object>(name: string) {
             }
             return false;
         },
-        execute: (logger: Logger, obj: T): void => {
+        execute: (obj: T): void => {
             const callbacks = map.get(obj);
             if (callbacks) {
                 if (running.has(obj)) {
@@ -143,7 +142,7 @@ export function announceMountedRecursive(logger: Logger, node: Node): void {
     // Call callbacks on current
     if (!isMountedMap.has(node)) {
         afterCalculationsComplete(() => {
-            mountedCallbacks.execute(logger, node);
+            mountedCallbacks.execute(node);
         });
         isMountedMap.add(node);
     }
@@ -156,7 +155,7 @@ export function announceMountedRecursive(logger: Logger, node: Node): void {
 export function announceUnMountedRecursive(logger: Logger, node: Node): void {
     if (isMountedMap.has(node)) {
         afterCalculationsComplete(() => {
-            unMountedCallbacks.execute(logger, node);
+            unMountedCallbacks.execute(node);
         });
         isMountedMap.delete(node);
     }

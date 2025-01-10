@@ -1,6 +1,6 @@
-import { type StylesheetContentGenerator } from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 import { stylesheet } from './stylesheet.js';
+import { type StylesheetContentGenerator } from './types.js';
 
 function evaluate(thing: StylesheetContentGenerator) {
     return thing.generate({

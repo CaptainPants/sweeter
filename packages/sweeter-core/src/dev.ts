@@ -69,7 +69,8 @@ function ping() {
 function swallowedError(message: string, err: unknown, ...args: unknown[]) {
     console.warn(message, err, ...args);
     if (dev.flag('breakpointOnSwallowedError')) {
-        debugger; // Invoke debugger breakpoint here yay
+        // Invoke debugger breakpoint here yay
+        debugger; // eslint-disable-line no-debugger
     }
 }
 

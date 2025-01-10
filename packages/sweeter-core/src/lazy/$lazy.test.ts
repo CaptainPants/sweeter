@@ -35,7 +35,7 @@ it('error', async () => {
 
     const lazy = $lazy(
         () =>
-            new Promise((resolve, reject) => {
+            new Promise((_resolve, reject) => {
                 release.signal.addEventListener('abort', () => {
                     reject(new Error('FAILED'));
                 });

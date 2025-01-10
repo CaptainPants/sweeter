@@ -6,7 +6,7 @@ let _ambientUsageListener: AmbientSignalUsageListener | undefined;
 let _ambientChangesBlocked: boolean = false;
 
 /** Listener used by trackingIsAnError to throw if any signals are depended on */
-const blockTrackingListener = (signal: Signal<unknown>): never => {
+const blockTrackingListener = (_signal: Signal<unknown>): never => {
     throw new Error(
         `Tracking is blocked here, meaning you have probably inadvertantly used .value when you should use .peek().`,
     );
@@ -24,7 +24,11 @@ export function announceSignalUsage(signal: Signal<unknown>): void {
  * @returns
  */
 export function untrack<T>(callback: () => T): T {
-    return callAndInvokeListenerForEachDependency(callback, ignoreTrackingListener, false);
+    return callAndInvokeListenerForEachDependency(
+        callback,
+        ignoreTrackingListener,
+        false,
+    );
 }
 
 export function trackingIsAnError<T>(callback: () => T): T {
@@ -40,7 +44,7 @@ export function trackingIsAnError<T>(callback: () => T): T {
     );
 }
 
-export function announceMutatingSignal(signal: Signal<unknown>) {
+export function announceMutatingSignal(_signal: Signal<unknown>) {
     if (_ambientChangesBlocked) {
         throw new TypeError(
             'Mutating a signal inside a DerivedSignal is not allowed.',

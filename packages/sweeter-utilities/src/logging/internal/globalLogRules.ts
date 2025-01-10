@@ -1,5 +1,5 @@
-import { LogLevel, LogLevelOrdinal, LogLevels } from '../LogLevels';
-import { LogSink } from '../types';
+import { LogLevel, LogLevelOrdinal, LogLevels } from '../LogLevels.js';
+import { LogSink } from '../types.js';
 
 export const globalLogRules = {
     minLevel: undefined as LogLevelOrdinal | undefined,

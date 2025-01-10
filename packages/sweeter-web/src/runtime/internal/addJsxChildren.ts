@@ -1,22 +1,24 @@
 import {
-    type ContextSnapshot,
-    flattenElements,
-    ComponentFaultContext,
-    SignalState,
-    type FlattenedElement,
-    afterCalculationsComplete,
-    listenWhileNotCollected,
     $insertLocation,
+    afterCalculationsComplete,
+    ComponentFaultContext,
+    type ContextSnapshot,
+    type FlattenedElement,
+    flattenElements,
+    listenWhileNotCollected,
+    SignalState,
 } from '@captainpants/sweeter-core';
+import { createLogger } from '@captainpants/sweeter-utilities';
+
+import { type WebRuntime } from '../types.js';
+
 import {
     announceChildrenMountedRecursive,
     announceUnMountedRecursive,
     isMounted,
 } from './mounting.js';
-import { isText } from './utility/isText.js';
-import { type WebRuntime } from '../types.js';
 import { replaceJsxChildren } from './replaceJsxChildren.js';
-import { createLogger } from '@captainpants/sweeter-utilities';
+import { isText } from './utility/isText.js';
 
 const logger = createLogger($insertLocation(), addJsxChildren);
 
@@ -24,6 +26,7 @@ export function addJsxChildren(
     getContext: ContextSnapshot,
     parentNode: Node,
     children: JSX.Element,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     webRuntime: WebRuntime,
 ): () => void {
     const flattenedChildrenSignal = flattenElements(children);

@@ -1,8 +1,8 @@
 import {
-    typeAssert,
     type IsBooleanLiteral,
     type IsNumberLiteral,
     type IsStringLiteral,
+    typeAssert,
 } from '../index.js';
 
 it('IsBooleanLiteral works', () => {

@@ -1,4 +1,5 @@
 import { Context } from '@captainpants/sweeter-core';
+
 import { type Theme } from './types.js';
 
 export interface ThemeContextType {

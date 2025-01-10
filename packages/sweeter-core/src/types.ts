@@ -1,7 +1,7 @@
 import { type UnionToIntersection } from '@captainpants/sweeter-utilities';
 
-import { type Runtime } from './runtime/Runtime.js';
 import { type Context } from './context/Context.js';
+import { type Runtime } from './runtime/Runtime.js';
 import { type Signal, type UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;
@@ -12,6 +12,7 @@ export type JSXElement =
     | readonly JSXElement[];
 
 export type JSXIntrinsicElements = {
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     [Key in SweeterExtensionPoints.IntrinsicElementNames[keyof SweeterExtensionPoints.IntrinsicElementNames] &
         string]: IntrinsicElementProps<Key>;
 };
@@ -87,7 +88,7 @@ export interface ComponentInit {
     isValid: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- utility to represent that a component has no props
 export type NoProps = {};
 
 export type Component<TProps = NoProps> = (
@@ -148,6 +149,7 @@ export type PropertiesMightBeSignals<TProps> = {
  */
 export type IntrinsicElementAttributes<TElementTypeString extends string> =
     JSXIntrinsicAttributes &
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
         UnionToIntersection<
             SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof SweeterExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
         >;
@@ -167,12 +169,14 @@ export type IntrinsicElementProps<TElementTypeString extends string> =
     PropertiesMightBeSignals<
         Omit<
             IntrinsicElementAttributes<TElementTypeString>,
+            // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
             IntrinsicElementDoNotSignalifyAttributes<TElementTypeString> &
                 keyof IntrinsicElementAttributes<TElementTypeString>
         >
     > &
         Pick<
             IntrinsicElementAttributes<TElementTypeString>,
+            // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
             IntrinsicElementDoNotSignalifyAttributes<TElementTypeString> &
                 keyof IntrinsicElementAttributes<TElementTypeString>
         >;

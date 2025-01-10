@@ -1,11 +1,13 @@
-import { isSignal } from './isSignal.js';
-import { $valElements } from './$val.js';
-import { type UnsignalAll } from './types.js';
-import { popAndCallAll } from '../internal/popAndCallAll.js';
 import {
     addExplicitStrongReference,
     removeExplicitStrongReference,
 } from '@captainpants/sweeter-utilities';
+
+import { popAndCallAll } from '../internal/popAndCallAll.js';
+
+import { $valElements } from './$val.js';
+import { isSignal } from './isSignal.js';
+import { type UnsignalAll } from './types.js';
 
 /**
  * Subscribe to multiple signals, with a callback to remove that subscription.

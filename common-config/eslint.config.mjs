@@ -46,11 +46,9 @@ export default (tsconfigPath) => tseslint.config(
                 },
             ],
             "simple-import-sort/exports": "error",
-            // "import/extensions": ['error', "ignorePackages", {
-            //     "ts": "ignorePackages",
-            //     "tsx": "ignorePackages",
-            //     "checkTypeImports": true
-            // }]
+            "import/extensions": ['error', "ignorePackages", {
+                "checkTypeImports": true
+            }]
         }
     },
     {

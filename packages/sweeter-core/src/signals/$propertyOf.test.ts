@@ -1,5 +1,5 @@
-import { $propertyOf } from './$propertyOf.js';
 import { $mutable } from './$mutable.js';
+import { $propertyOf } from './$propertyOf.js';
 
 interface Example {
     prop: number;

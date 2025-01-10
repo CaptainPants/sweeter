@@ -1,9 +1,10 @@
 /* @jsxImportSource ../.. */
 
 import { $mutable } from '@captainpants/sweeter-core';
-import { testRender } from '../../test/testRender.js';
-import { type ThreeValueBoolean, indeterminite } from '../../indeterminate.js';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
+
+import { indeterminite, type ThreeValueBoolean } from '../../indeterminate.js';
+import { testRender } from '../../test/testRender.js';
 
 it('changing value updates original signal', () => {
     let storedRef: HTMLInputElement | undefined;

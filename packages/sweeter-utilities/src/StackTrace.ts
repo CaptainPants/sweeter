@@ -1,4 +1,4 @@
-import { throwError } from './throwError';
+import { throwError } from './throwError.js';
 
 /*
 Example:

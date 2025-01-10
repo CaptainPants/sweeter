@@ -1,21 +1,21 @@
 import {
-    type UnknownPropertyModel,
     type ContextualValueCalculationContext,
     type UnknownModel,
     UnknownObjectModel,
+    type UnknownPropertyModel,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
-    LocalizerHook,
-    type ComponentInit,
-    type PropertiesMightBeSignals,
     $derived,
-    $val,
     $peek,
     $subscribe,
+    $val,
+    type ComponentInit,
+    LocalizerHook,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+import { idPaths } from '@captainpants/sweeter-utilities';
 
 import { EditorHost } from '../components/EditorHost.js';
-import { idPaths } from '@captainpants/sweeter-utilities';
 
 export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
     id: string;

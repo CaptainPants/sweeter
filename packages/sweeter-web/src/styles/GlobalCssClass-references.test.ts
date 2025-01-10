@@ -40,7 +40,7 @@ it('Self reference', () => {
 it('Reference to another class', () => {
     const classA = new GlobalCssClass({
         className: 'a',
-        content: (self) => {
+        content: (_self) => {
             return stylesheet`
                 color: red;
             `;
@@ -72,7 +72,7 @@ it('Reference to another class', () => {
 it('Transitive reference to a 3rd class', () => {
     const classA = new GlobalCssClass({
         className: 'a',
-        content: (self) => {
+        content: (_self) => {
             return stylesheet`
                 color: red;
             `;

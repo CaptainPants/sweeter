@@ -1,4 +1,5 @@
 import { CodeLocation } from '@captainpants/sweeter-utilities';
+
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
 import { stringifyForDiagnostics } from '../utility/stringifyForDiagnostics.js';
 
@@ -101,7 +102,7 @@ export class Context<T> {
         console.group('Current contexts');
 
         for (const [
-            id,
+            _id,
             {
                 type: { name },
                 codeLocation: [file, func, row, col],

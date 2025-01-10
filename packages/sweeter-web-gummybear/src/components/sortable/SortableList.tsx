@@ -1,3 +1,5 @@
+import Sortable from 'sortablejs';
+
 import {
     $derived,
     $peek,
@@ -5,12 +7,11 @@ import {
     type Component,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
-import Sortable from 'sortablejs';
-import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 export type SortableListProps = PropertiesMightBeSignals<{
     class?: ElementCssClasses;
@@ -20,7 +21,7 @@ export type SortableListProps = PropertiesMightBeSignals<{
     onSortEnd?: (fromIndex: number, toIndex: number) => void;
 }>;
 
-const handleSelector = '[data-is-knob]' as const;
+const handleSelector = '[data-is-knob]';
 
 export const SortableList: Component<SortableListProps> = (
     { children, style: styleProp, class: classNames, onSortEnd, useHandle },

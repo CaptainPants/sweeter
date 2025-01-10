@@ -1,17 +1,18 @@
 import {
-    type IntrinsicElementProps,
-    type Component,
-    type PropertiesMightBeSignals,
     $derived,
     $val,
+    type Component,
+    type IntrinsicElementProps,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import {
-    type ElementCssStyles,
     type ElementCssClasses,
+    type ElementCssStyles,
 } from '@captainpants/sweeter-web';
+
+import { combineStyles } from '../../internal/combineStyles.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
-import { combineStyles } from '../../internal/combineStyles.js';
 
 export type LabelProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;

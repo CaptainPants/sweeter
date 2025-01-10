@@ -1,6 +1,7 @@
 import { GlobalCssClass } from '@captainpants/sweeter-web';
-import { createConstantMap } from '../internal/createConstantMap.js';
+
 import { sizeNames, tagNames, variantNames } from '../internal/constants.js';
+import { createConstantMap } from '../internal/createConstantMap.js';
 
 export const variants = createConstantMap(
     variantNames,

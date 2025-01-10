@@ -1,6 +1,6 @@
 import {
-    type PropertiesMightBeSignals,
     type Component,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import {
     type ElementCssClasses,

@@ -1,13 +1,12 @@
-import { dev } from '../dev';
-import { $mutable } from './$mutable';
-import { subscribeToChanges } from './subscribeToChanges';
+import { $mutable } from './$mutable.js';
+import { subscribeToChanges } from './subscribeToChanges.js';
 
 it('Subscription cleaned up when callback is GC-d', async () => {
     const signal = $mutable(1);
 
     let counter = 0;
 
-    let callback: ((vals: [number]) => void) | undefined = ([val]) => {
+    let callback: ((val: [number]) => void) | undefined = ([_val]) => {
         ++counter;
     };
 

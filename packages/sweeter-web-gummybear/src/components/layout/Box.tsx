@@ -4,11 +4,12 @@ import {
     type ComponentInit,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { box } from '../../stylesheets/box.js';
 import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
+
+import { box } from '../../stylesheets/box.js';
 
 export type BoxProps = PropertiesMightBeSignals<{
     level?: number | undefined;

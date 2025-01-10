@@ -1,6 +1,7 @@
 import { typeAssert } from '@captainpants/sweeter-utilities';
-import { ReadWriteSignal, Signal, WritableSignal } from './types';
-import { $mutable } from './$mutable';
+
+import { $mutable } from './$mutable.js';
+import { ReadWriteSignal, Signal, WritableSignal } from './types.js';
 
 test('Signal expansion works right', () => {
     typeAssert.extends<ReadWriteSignal<number>, Signal<number>>();

@@ -9,7 +9,7 @@ export function deepEqual(a: unknown, b: unknown): boolean {
         return (
             a.length === b.length &&
             a.every((aItem, i): boolean => {
-                return deepEqual(aItem, b[i]!);
+                return deepEqual(aItem, b[i]);
             })
         );
     }
@@ -59,6 +59,7 @@ function keys(obj: object): readonly (string | symbol)[] {
             res.push(symbol);
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         obj = Object.getPrototypeOf(obj);
     }
 

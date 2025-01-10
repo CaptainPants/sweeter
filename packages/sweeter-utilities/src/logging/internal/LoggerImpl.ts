@@ -1,3 +1,4 @@
+import { assertNotNullOrUndefined } from '../../assertNotNullOrUndefined';
 import { LogLevel } from '../LogLevels';
 import { Logger, LogMethod } from '../types';
 import { globalLogRules } from './globalLogRules';
@@ -33,10 +34,14 @@ function createLogMethod(logLevel: LogLevel): LogMethod {
                 ...parms: readonly unknown[]
             ) => {
                 const formatted = template
-                    .map((item, i) => item + (parms[i] ?? ''))
+                    .map((item, i) => {
+                        const val = parms[i];
+                        assertNotNullOrUndefined(val);
+                        return item + String(val)
+                    })
                     .join('');
 
-                return (err?: unknown | undefined) => {
+                return (err?: unknown  ) => {
                     globalLogRules.log(logLevel, self.category, formatted, err);
                 };
             };

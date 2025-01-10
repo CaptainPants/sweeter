@@ -35,5 +35,6 @@ function toString(obj: unknown) {
     if (typeof obj === 'symbol') throw new TypeError();
 
     //we know we have an object. perhaps return JSON.stringify?
+    // eslint-disable-next-line  @typescript-eslint/no-base-to-string
     return obj.toString();
 }

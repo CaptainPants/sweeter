@@ -20,7 +20,7 @@
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",
-        "lint": "eslint --report-unused-disable-directives --max-warnings 0",
+        "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
         "test:watch": "vitest --globals",
         "test": "vitest --globals --watch=false",
         "verify:fix": "corepack pnpm run lint --fix && corepack pnpm run format && corepack pnpm run test && corepack pnpm run typecheck",

@@ -1,7 +1,10 @@
-import { type AnyTypeConstraint, type ValidationResult } from '../index.js';
-import { Maybe, idPaths } from '@captainpants/sweeter-utilities';
-import { safeParse, safeParseAsync } from './parse.js';
 import { type type } from 'arktype';
+
+import { descend, idPaths, Maybe } from '@captainpants/sweeter-utilities';
+
+import { type AnyTypeConstraint, type ValidationResult } from '../index.js';
+
+import { safeParse, safeParseAsync } from './parse.js';
 
 export interface ValidateAndThrowArgs {
     /**
@@ -14,7 +17,8 @@ export interface ValidateAndThrowArgs {
 export async function validate<TSchema extends AnyTypeConstraint>(
     schema: TSchema,
     value: unknown,
-    args: ValidateAndThrowArgs = { deep: true },
+    // TODO: we probably need to just remove this feature as it doesn't work since ArkType
+    _args: ValidateAndThrowArgs = { deep: true },
 ): Promise<ValidationResult<type.infer<TSchema>>> {
     const res = await safeParseAsync(value, schema);
     if (res.success) return Maybe.success(res.data);
@@ -33,7 +37,7 @@ export async function validate<TSchema extends AnyTypeConstraint>(
 export async function validateAndThrow<TSchema extends AnyTypeConstraint>(
     schema: TSchema,
     value: unknown,
-    args: ValidateAndThrowArgs = { deep: true },
+    _args: ValidateAndThrowArgs = { deep: true },
 ): Promise<type.infer<TSchema>> {
     const res = await safeParseAsync(value, schema);
 
@@ -47,8 +51,8 @@ export async function validateAndThrow<TSchema extends AnyTypeConstraint>(
 export function shallowMatchesStructure<TSchema extends AnyTypeConstraint>(
     schema: TSchema,
     value: unknown,
-    deep = true,
-    depth = 25,
+    _deep = true,
+    _depth = descend.defaultDepth,
 ): value is type.infer<TSchema> {
     return safeParse(value, schema).success;
 }

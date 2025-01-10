@@ -1,4 +1,5 @@
 import { type } from 'arktype';
+
 import { isModel } from './isModel.js';
 import { ModelFactory } from './ModelFactory.js';
 
@@ -10,7 +11,7 @@ test('isModel should be true for an example model', async () => {
     expect(isModel(numberModel)).toStrictEqual(true);
 });
 
-test('isModel should be false for arbitrary values', async () => {
+test('isModel should be false for arbitrary values', () => {
     expect(isModel(1)).toStrictEqual(false);
     expect(isModel({ test: 1 })).toStrictEqual(false);
 });

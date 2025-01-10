@@ -1,12 +1,13 @@
 import { descend, equals } from '@captainpants/sweeter-utilities';
+
 import { and, or } from '../../internal/logical.js';
 import { type ParentTypeInfo, type TypeInfo } from '../../models/parents.js';
+import { notFound } from '../../notFound.js';
 import {
     type MatcherContext,
     type TypeMatcherRule,
     type TypeMatcherRulePart,
 } from '../types.js';
-import { notFound } from '../../notFound.js';
 
 function traverseAncestors(
     node: TypeInfo,

@@ -1,4 +1,5 @@
 import { type } from 'arktype';
+
 import { ModelFactory } from './ModelFactory.js';
 
 test('array', async () => {

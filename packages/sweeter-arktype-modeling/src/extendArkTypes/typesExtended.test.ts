@@ -1,6 +1,6 @@
-import { $ark } from '@ark/schema';
-import '../extendArkTypes.js';
 import { Type, type } from 'arktype';
+
+import '../extendArkTypes.js';
 
 const cases: [string, Type<unknown>][] = [
     type.string,
@@ -16,7 +16,7 @@ const cases: [string, Type<unknown>][] = [
     type([type.string, type.string]),
 ].map((x) => [x.expression, x] as const);
 
-it.each(cases)('basic types are extended correctly %s', (expr, current) => {
+it.each(cases)('basic types are extended correctly %s', (_expr, current) => {
     const annotated = current.annotate((x) =>
         x.displayName('NAME_' + current.expression),
     );

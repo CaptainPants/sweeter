@@ -278,7 +278,6 @@ class Parser {
             // nested rule OR at-rule
             else {
                 const nestedRule = this.#parseRuleOrAtRule(); // positions #index at the next character
-                this.#moveNextSkippingWhitespaceAndComments();
 
                 if (nestedRule) {
                     nestedRules.push(nestedRule);

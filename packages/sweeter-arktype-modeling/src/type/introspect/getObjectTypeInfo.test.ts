@@ -1,10 +1,12 @@
 import { type } from 'arktype';
+
+import { throwError } from '@captainpants/sweeter-utilities';
+
 import {
     getObjectTypeInfo,
     tryGetObjectTypeInfo,
 } from './getObjectTypeInfo.js';
 import { isLiteralValue } from './is.js';
-import { throwError } from '@captainpants/sweeter-utilities';
 
 test('general', () => {
     const schema = type({

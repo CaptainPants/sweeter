@@ -1,4 +1,5 @@
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
+
 import { type MatcherContext } from './types.js';
 
 export interface MatcherRuleConstraint {

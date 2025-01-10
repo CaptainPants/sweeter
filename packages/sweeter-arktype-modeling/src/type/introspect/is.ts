@@ -1,8 +1,9 @@
-import { type type, type Type } from 'arktype';
 import { BaseNode } from '@ark/schema';
+import { type Type, type type } from 'arktype';
 
 import { safeParse } from '../../utility/parse.js';
 import { type AnyTypeConstraint } from '../types.js';
+
 import {
     asDomainNode,
     asIntersectionNode,

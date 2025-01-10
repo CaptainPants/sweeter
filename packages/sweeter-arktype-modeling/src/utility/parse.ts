@@ -1,4 +1,5 @@
 import { type ArkErrors, type } from 'arktype';
+
 import { type AnyTypeConstraint } from '../type/index.js';
 
 export type SafeParseResult<TSchema extends AnyTypeConstraint> =

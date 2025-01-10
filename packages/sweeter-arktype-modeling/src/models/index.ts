@@ -1,3 +1,4 @@
+export * from '../utility/validate.js';
 export * from './applyTypeToModel.js';
 export * from './as.js';
 export * from './categorizeFixedProperties.js';
@@ -8,4 +9,3 @@ export * from './ModelFactory.js';
 export * from './parents.js';
 export * from './PropertyModel.js';
 export * from './sortProperties.js';
-export * from '../utility/validate.js';

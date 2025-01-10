@@ -1,12 +1,13 @@
-import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
 import { type } from 'arktype';
 
+import { TypeInfo } from '../../models/parents.js';
 import { Rules } from '../Rules.js';
 
 import { matchDefinitionRulePart } from './matchDefinitionRule.js';
-import { TypeInfo } from '../../models/parents.js';
 
-test('label', async () => {
+import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
+
+test('label', () => {
     const exampleType = type.number.annotate((add) => add.label('test-label'));
 
     expect(

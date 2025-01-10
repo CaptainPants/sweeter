@@ -2,11 +2,11 @@ import { type type } from 'arktype';
 
 import { descend } from '@captainpants/sweeter-utilities';
 
-import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
-
+import { getUnitTypeInfo } from '../type/introspect/getUnitTypeInfo.js';
 import { introspect } from '../type/introspect/index.js';
 import { type AnyTypeConstraint } from '../type/types.js';
-import { getUnitTypeInfo } from '../type/introspect/getUnitTypeInfo.js';
+
+import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
 
 export function createDefault<TSchema extends AnyTypeConstraint>(
     schema: TSchema,

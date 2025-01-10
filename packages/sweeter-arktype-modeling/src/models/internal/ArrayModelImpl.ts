@@ -1,23 +1,24 @@
+import { type Type, type type } from 'arktype';
+import { type ArrayType } from 'arktype/internal/methods/array.ts';
+
 import { descend } from '@captainpants/sweeter-utilities';
 
 import { mapAsync } from '../../internal/mapAsync.js';
+import { getArrayTypeInfo } from '../../type/introspect/getArrayTypeInfo.js';
+import { type AnyTypeConstraint } from '../../type/types.js';
+import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { arrayMoveImmutable } from '../../utility/arrayMoveImmutable.js';
+import { parseAsync } from '../../utility/parse.js';
 import {
-    type UnknownModel,
     type ArrayModel,
     type ElementModel,
+    type UnknownModel,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
-import { type type, type Type } from 'arktype';
-import { type ArrayType } from 'arktype/internal/methods/array.ts';
-import { getArrayTypeInfo } from '../../type/introspect/getArrayTypeInfo.js';
-import { type AnyTypeConstraint } from '../../type/types.js';
-import { parseAsync } from '../../utility/parse.js';
 
 export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
     extends ModelImpl<type.infer<TArraySchema>, TArraySchema>

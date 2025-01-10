@@ -1,4 +1,5 @@
 import { equals } from '@captainpants/sweeter-utilities';
+
 import { ParentTypeInfo } from '../parents.js';
 
 export function isEquivalentParentInfo(

@@ -1,8 +1,9 @@
-import {
-    type UnknownObjectType,
-    type AnyTypeConstraint,
-} from '../type/types.js';
 import { introspect } from '../type/index.js';
+import {
+    type AnyTypeConstraint,
+    type UnknownObjectType,
+} from '../type/types.js';
+
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {

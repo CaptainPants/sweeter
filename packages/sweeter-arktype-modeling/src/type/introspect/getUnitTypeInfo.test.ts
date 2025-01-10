@@ -1,5 +1,6 @@
 import { type } from 'arktype';
-import { getUnitTypeInfo } from './getUnitTypeInfo';
+
+import { getUnitTypeInfo } from './getUnitTypeInfo.js';
 
 it('getUnitTypeInfo', () => {
     expect(getUnitTypeInfo(type.unit(1))?.value).toStrictEqual(1);

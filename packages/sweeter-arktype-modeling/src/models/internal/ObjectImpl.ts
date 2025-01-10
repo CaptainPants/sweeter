@@ -1,26 +1,27 @@
+import { type Type, type } from 'arktype';
+
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 
-import {
-    type ObjectModel,
-    type Model,
-    type TypedPropertyModelForKey,
-    type PropertyModelNoConstraint,
-    type ObjectPropertyType,
-} from '../Model.js';
-import { ModelFactory } from '../ModelFactory.js';
-import { type ParentTypeInfo } from '../parents.js';
-
-import { ModelImpl } from './ModelImpl.js';
-import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
-import { validateAndThrow } from '../../utility/validate.js';
-import { type UnknownPropertyModel } from '../PropertyModel.js';
+import { introspect } from '../../type/index.js';
+import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import {
     type AnyObjectTypeConstraint,
     type UnknownType,
 } from '../../type/types.js';
-import { type Type, type } from 'arktype';
-import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
-import { introspect } from '../../type/index.js';
+import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
+import { validateAndThrow } from '../../utility/validate.js';
+import {
+    type Model,
+    type ObjectModel,
+    type ObjectPropertyType,
+    type PropertyModelNoConstraint,
+    type TypedPropertyModelForKey,
+} from '../Model.js';
+import { ModelFactory } from '../ModelFactory.js';
+import { type ParentTypeInfo } from '../parents.js';
+import { type UnknownPropertyModel } from '../PropertyModel.js';
+
+import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
 
 type UnknownRecord = Record<string | symbol, unknown>;
@@ -33,7 +34,7 @@ function* entries(obj: object): Iterable<readonly [string | symbol, unknown]> {
         yield tuple as never;
     }
     for (const symbol of Object.getOwnPropertySymbols(obj)) {
-        yield [symbol, (obj as any)[symbol]] as never;
+        yield [symbol, (obj as Record<symbol, unknown>)[symbol]] as never;
     }
 }
 
@@ -324,7 +325,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
     }
 
     public unknownGetProperties(
-        filter?: ObjectPropertyType | undefined,
+        filter?: ObjectPropertyType,
     ): readonly UnknownPropertyModel[] {
         if (filter) {
             const typeInfo = getObjectTypeInfo(this.type);
@@ -347,7 +348,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
     }
 
     public getProperties(
-        filter?: ObjectPropertyType | undefined,
+        filter?: ObjectPropertyType,
     ): readonly PropertyModelNoConstraint<
         arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[] {

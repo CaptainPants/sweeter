@@ -1,4 +1,8 @@
 import { type Type } from 'arktype';
+
+import { notFound } from '../notFound.js';
+import { getArrayTypeInfo } from '../type/introspect/getArrayTypeInfo.js';
+import { getUnionTypeInfo } from '../type/introspect/getUnionTypeInfo.js';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -9,10 +13,7 @@ import {
     isUndefinedConstant,
     isUnionType,
 } from '../type/introspect/is.js';
-import { notFound } from '../notFound.js';
 import { type AnyTypeConstraint } from '../type/types.js';
-import { getUnionTypeInfo } from '../type/introspect/getUnionTypeInfo.js';
-import { getArrayTypeInfo } from '../type/introspect/getArrayTypeInfo.js';
 
 function createTyped<TCheckedArkType extends AnyTypeConstraint>(
     check: (schema: AnyTypeConstraint) => schema is TCheckedArkType,
@@ -79,7 +80,7 @@ const convertors = [
     create(isNumberLiteralType, (val) => JSON.stringify(val)),
     create(isBooleanLiteralType, (val) => JSON.stringify(val)),
     create(isNullConstant, (val) => JSON.stringify(val)),
-    create(isUndefinedConstant, (val) => 'undefined'),
+    create(isUndefinedConstant, () => 'undefined'),
     createTyped(isObjectType, (val, depth) =>
         objectForDisplay(val, deeper(depth)),
     ),

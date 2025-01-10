@@ -1,12 +1,11 @@
 import {
-    type AnnotationsBuilder,
-    type ContextualValueCalculationCallback,
-} from '../../index.js';
-
-import {
     StandardAssociatedValueKeys,
     StandardAttributes,
 } from '../../annotations/StandardValues.js';
+import {
+    type AnnotationsBuilder,
+    type ContextualValueCalculationCallback,
+} from '../../index.js';
 
 export class AnnotationsBuilderImpl implements AnnotationsBuilder {
     constructor(
@@ -48,7 +47,7 @@ export class AnnotationsBuilderImpl implements AnnotationsBuilder {
         return this;
     }
 
-    public category(category?: string | null | undefined): this {
+    public category(category?: string | null): this {
         return this.attr(StandardAttributes.property_category, category);
     }
 

@@ -1,12 +1,14 @@
+import { type } from 'arktype';
+
 import { descend } from '@captainpants/sweeter-utilities';
 
+import { type AnyTypeConstraint } from '../../type/types.js';
+import { validateAndThrow } from '../../utility/validate.js';
 import { isModel } from '../isModel.js';
 import { type Model } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
-import { validateAndThrow } from '../../utility/validate.js';
-import { type AnyTypeConstraint } from '../../type/types.js';
-import { type } from 'arktype';
+
 import { isEquivalentParentInfo } from './isEquivalentParentInfo.js';
 
 /**

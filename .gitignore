@@ -1,4 +1,3 @@
-
 node_modules
 
 # build output
@@ -17,3 +16,5 @@ msbuild.binlog
 **/vite.config.js.timestamp-*.mjs
 
 .nx
+vite.config.*.timestamp*
+vitest.config.*.timestamp*

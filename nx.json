@@ -19,7 +19,9 @@
             "dependsOn": [
                 "^build",
                 {
-                    "projects": ["@captainpants/rollup-plugin-sweeter"],
+                    "projects": [
+                        "@captainpants/rollup-plugin-sweeter"
+                    ],
                     "target": "build",
                     "params": "ignore"
                 }
@@ -32,7 +34,9 @@
             "dependsOn": [
                 "^build",
                 {
-                    "projects": ["@captainpants/rollup-plugin-sweeter"],
+                    "projects": [
+                        "@captainpants/rollup-plugin-sweeter"
+                    ],
                     "target": "build",
                     "params": "ignore"
                 }
@@ -41,11 +45,39 @@
         "watch-test": {
             "dependsOn": [
                 {
-                    "projects": ["@captainpants/rollup-plugin-sweeter"],
+                    "projects": [
+                        "@captainpants/rollup-plugin-sweeter"
+                    ],
                     "target": "build",
                     "params": "ignore"
                 },
                 "^build"
+            ]
+        },
+        "@nx/js:tsc": {
+            "cache": true,
+            "dependsOn": [
+                "^build"
+            ],
+            "inputs": [
+                "production",
+                "^production"
+            ]
+        },
+        "@nx/eslint:lint": {
+            "cache": true,
+            "inputs": [
+                "default",
+                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/.eslintignore",
+                "{workspaceRoot}/eslint.config.cjs"
+            ]
+        },
+        "@nx/vite:test": {
+            "cache": true,
+            "inputs": [
+                "default",
+                "^production"
             ]
         }
     },
@@ -57,7 +89,11 @@
         ],
         "sharedGlobals": [],
         "production": [
-            "default"
+            "default",
+            "!{projectRoot}/eslint.config.mjs",
+            "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+            "!{projectRoot}/tsconfig.spec.json",
+            "!{projectRoot}/src/test-setup.[jt]s"
         ]
     }
 }

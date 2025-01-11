@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "watch-and-return": {
+      "implementation": "./src/watch-and-return",
+      "schema": "./src/schema.json",
+      "description": "watch-and-return executor"
+    }
+  }
+}

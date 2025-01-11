@@ -1,4 +1,4 @@
-import { Maybe } from "@captainpants/sweeter-utilities";
+import { Maybe } from '@captainpants/sweeter-utilities';
 
 export type ValidatorResult =
     | string[]

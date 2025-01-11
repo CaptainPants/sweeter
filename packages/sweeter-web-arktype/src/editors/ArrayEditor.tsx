@@ -32,12 +32,7 @@ import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
 
 export function ArrayEditor(
-    {
-        model,
-        replace,
-        idPath,
-        indent,
-    }: Readonly<EditorProps>,
+    { model, replace, idPath, indent }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
     const typedModel = $lastGood(() => {
@@ -121,7 +116,12 @@ export function ArrayEditor(
 
     return (
         <>
-            <SortableList onSortEnd={(oldIndex, newIndex) => void move(oldIndex, newIndex)} useHandle>
+            <SortableList
+                onSortEnd={(oldIndex, newIndex) =>
+                    void move(oldIndex, newIndex)
+                }
+                useHandle
+            >
                 {$mapByIndex(
                     $derived(() => draft.value.unknownGetElements()),
                     (item, index) => {

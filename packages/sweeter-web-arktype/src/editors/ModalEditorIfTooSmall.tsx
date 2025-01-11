@@ -14,13 +14,11 @@ import { ModalEditor } from './ModalEditor.js';
 export type ConditionalModelEditorProps = EditorProps &
     PropertiesMightBeSignals<{ minWidth?: number }>;
 
-export const ModalEditorIfTooSmall: Component<ConditionalModelEditorProps> = (
-    {
-        minWidth = 200,
-        next,
-        ...passthrough
-    }
-) => {
+export const ModalEditorIfTooSmall: Component<ConditionalModelEditorProps> = ({
+    minWidth = 200,
+    next,
+    ...passthrough
+}) => {
     const measuredWidth = $mutable(0);
     const useModal = $derived(() => {
         const minWidthResolved = $val(minWidth);
@@ -56,4 +54,4 @@ export const ModalEditorIfTooSmall: Component<ConditionalModelEditorProps> = (
             {content}
         </MeasuredBox>
     );
-}
+};

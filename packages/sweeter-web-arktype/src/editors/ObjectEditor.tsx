@@ -339,7 +339,9 @@ export function ObjectEditor(
                                 const property =
                                     draft.value.unknownGetProperty(to);
                                 if (property !== undefined) {
-                                    return Promise.resolve('Property is already defined');
+                                    return Promise.resolve(
+                                        'Property is already defined',
+                                    );
                                 }
 
                                 return Promise.resolve(null);
@@ -391,7 +393,9 @@ export function ObjectEditor(
                                 const property =
                                     draft.value.unknownGetProperty(name);
                                 if (property !== undefined) {
-                                    return Promise.resolve('Property is already defined');
+                                    return Promise.resolve(
+                                        'Property is already defined',
+                                    );
                                 }
 
                                 return Promise.resolve(null);

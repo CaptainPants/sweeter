@@ -21,9 +21,7 @@ export type ValidationDisplayProps = PropertiesMightBeSignals<{
     errors: ValidationSingleResult[] | null | undefined;
 }>;
 
-export const ValidationDisplay: Component<ValidationDisplayProps> = (
-    props
-) => {
+export const ValidationDisplay: Component<ValidationDisplayProps> = (props) => {
     return $derived(() => {
         const errors = $val(props.errors);
 
@@ -31,4 +29,4 @@ export const ValidationDisplay: Component<ValidationDisplayProps> = (
 
         return <div class={css}>{joinSingleValidationResults(errors)}</div>;
     });
-}
+};

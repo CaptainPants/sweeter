@@ -115,7 +115,10 @@ export const ObjectEditorRenameMappedModal: Component<
                                 <Button onclick={onCancelClicked}>
                                     Cancel
                                 </Button>
-                                <Button variant="primary" onclick={(evt) => void onOK(evt)}>
+                                <Button
+                                    variant="primary"
+                                    onclick={(evt) => void onOK(evt)}
+                                >
                                     OK
                                 </Button>
                             </Column>

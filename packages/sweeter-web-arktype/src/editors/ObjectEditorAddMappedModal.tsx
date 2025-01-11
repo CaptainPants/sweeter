@@ -96,7 +96,10 @@ export const ObjectEditorAddMappedModal: Component<
                             <Column sm={4}></Column>
                             <Column sm={8}>
                                 <Button onclick={onCancelClick}>Cancel</Button>
-                                <Button variant="primary" onclick={(evt) => void onOK(evt)}>
+                                <Button
+                                    variant="primary"
+                                    onclick={(evt) => void onOK(evt)}
+                                >
                                     OK
                                 </Button>
                             </Column>

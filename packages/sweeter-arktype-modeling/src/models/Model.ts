@@ -146,9 +146,9 @@ export type TypedPropertyModelForKey<
 interface UnknownObjectModelMethods {
     unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
     unknownSetProperty(
         key: string | symbol,
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
         value: unknown | UnknownModel,
     ): Promise<this>;
 
@@ -207,7 +207,6 @@ export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
 
     setProperty<TKey extends keyof type.infer<TObjectSchema> & string>(
         key: TKey,
-        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
         value:
             | type.infer<TObjectSchema>[TKey]
             | ValueModelForProperty<TObjectSchema, TKey>,

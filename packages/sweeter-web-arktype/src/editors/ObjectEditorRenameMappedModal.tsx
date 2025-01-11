@@ -2,6 +2,7 @@ import {
     $derived,
     $mutable,
     $peek,
+    $val,
     type Component,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
@@ -28,9 +29,9 @@ export type ObjectEditorRenameMappedModalProps = PropertiesMightBeSignals<{
 
 export const ObjectEditorRenameMappedModal: Component<
     ObjectEditorRenameMappedModalProps
-> = ({ isOpen, from, validate, onCancelled, onFinished }, init) => {
+> = ({ isOpen, from, validate, onCancelled, onFinished }) => {
     const title = $derived(() => {
-        return `Renaming '${from}'`;
+        return `Renaming '${$val(from)}'`;
     });
 
     const to = $mutable('');
@@ -114,7 +115,7 @@ export const ObjectEditorRenameMappedModal: Component<
                                 <Button onclick={onCancelClicked}>
                                     Cancel
                                 </Button>
-                                <Button variant="primary" onclick={onOK}>
+                                <Button variant="primary" onclick={(evt) => void onOK(evt)}>
                                     OK
                                 </Button>
                             </Column>

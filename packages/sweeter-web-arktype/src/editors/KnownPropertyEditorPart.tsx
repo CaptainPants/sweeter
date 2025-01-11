@@ -1,13 +1,9 @@
 import {
-    type ContextualValueCalculationContext,
     type UnknownModel,
-    UnknownObjectModel,
-    type UnknownPropertyModel,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
     $derived,
     $peek,
-    $subscribe,
     $val,
     type ComponentInit,
     LocalizerHook,
@@ -43,11 +39,12 @@ export function KnownPropertyEditorPart(
     init: ComponentInit,
 ): JSX.Element {
     const idPath = $derived(() => {
-        return idPaths.key($val(ownerIdPath), String(property));
+        return idPaths.key($val(ownerIdPath), String($val(property)));
     });
 
     const replace = async (value: UnknownModel) => {
-        await $peek(updateValue)($peek(property), value);
+        const name = $peek(property);
+        await $peek(updateValue)(name, value);
     };
 
     const { localize } = init.hook(LocalizerHook);

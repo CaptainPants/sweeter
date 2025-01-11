@@ -124,8 +124,6 @@ export function ObjectEditor(
         local,
     };
 
-    const owner = $derived(() => draft.value.value);
-
     const type = $derived(() => draft.value.type);
     const mappedKeys = $derived(() =>
         introspect.tryGetObjectTypeInfo(type.value)?.getMappedKeys(),
@@ -219,7 +217,8 @@ export function ObjectEditor(
                                             const res =
                                                 draft.value.unknownGetProperty(
                                                     property.name,
-                                                )?.valueModel!;
+                                                )?.valueModel;
+                                            assertNotNullOrUndefined(res);
                                             return res;
                                         },
                                     );
@@ -336,14 +335,14 @@ export function ObjectEditor(
 
                             // Note that a self to self doesn't do a
                             // validate but does trigger onFinished
-                            const validate = async (to: string) => {
+                            const validate = (to: string) => {
                                 const property =
                                     draft.value.unknownGetProperty(to);
                                 if (property !== undefined) {
-                                    return 'Property is already defined';
+                                    return Promise.resolve('Property is already defined');
                                 }
 
-                                return null;
+                                return Promise.resolve(null);
                             };
 
                             return (
@@ -388,14 +387,14 @@ export function ObjectEditor(
 
                             const isOpen = $mutable(false);
 
-                            const validate = async (name: string) => {
+                            const validate = (name: string) => {
                                 const property =
                                     draft.value.unknownGetProperty(name);
                                 if (property !== undefined) {
-                                    return 'Property is already defined';
+                                    return Promise.resolve('Property is already defined');
                                 }
 
-                                return null;
+                                return Promise.resolve(null);
                             };
 
                             return (
@@ -410,7 +409,7 @@ export function ObjectEditor(
                                         }
                                         onFinished={async (name, type) => {
                                             isOpen.value = false; // hide the modal
-                                            onAdd(name, type);
+                                            await onAdd(name, type);
                                         }}
                                     />
                                     <IconButton

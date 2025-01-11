@@ -2,7 +2,7 @@ import {
     $derived,
     $mutable,
     $val,
-    type ComponentInit,
+    Component,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 
@@ -14,14 +14,13 @@ import { ModalEditor } from './ModalEditor.js';
 export type ConditionalModelEditorProps = EditorProps &
     PropertiesMightBeSignals<{ minWidth?: number }>;
 
-export function ModalEditorIfTooSmall(
+export const ModalEditorIfTooSmall: Component<ConditionalModelEditorProps> = (
     {
         minWidth = 200,
         next,
         ...passthrough
-    }: Readonly<ConditionalModelEditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+    }
+) => {
     const measuredWidth = $mutable(0);
     const useModal = $derived(() => {
         const minWidthResolved = $val(minWidth);

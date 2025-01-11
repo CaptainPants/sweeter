@@ -42,8 +42,9 @@ export function ModalEditor(
         return Object.assign({}, $valProperties(passthrough), {
             indent: 0,
             model: modelSnapshot,
-            replace: async (replacement: UnknownModel): Promise<void> => {
+            replace: (replacement: UnknownModel): Promise<void> => {
                 modelSnapshot.value = replacement;
+                return Promise.resolve();
             },
             isRoot: true,
         });
@@ -82,7 +83,7 @@ export function ModalEditor(
         () =>
             localize('Edit') +
             ' ' +
-            ($val(isRoot) ? 'root' : (propertyDisplayName ?? 'unknown')),
+            ($val(isRoot) ? 'root' : ($val(propertyDisplayName) ?? 'unknown')),
     );
 
     return $derived(() => {
@@ -100,7 +101,7 @@ export function ModalEditor(
                     isOpen={isOpen}
                     title={propertyDisplayName}
                     commitEnabled={isValid}
-                    onCommit={onCommit}
+                    onCommit={() => void onCommit()}
                     onClose={onCancel}
                 >
                     {content}

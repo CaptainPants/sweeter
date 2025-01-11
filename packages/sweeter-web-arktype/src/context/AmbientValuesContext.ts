@@ -8,6 +8,7 @@ export interface AmbientValuesContextType {
 export const AmbientValuesContext = new Context<
     MightBeSignal<AmbientValueCallback>
 >('AmbientValues', {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- default implementation doesn't use the parameter
     get: (name: string): unknown => {
         throw new TypeError('Not implemented');
     },

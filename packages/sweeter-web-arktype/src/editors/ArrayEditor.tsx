@@ -9,7 +9,6 @@ import {
 } from '@captainpants/sweeter-arktype-modeling';
 import {
     $derived,
-    $foreach,
     $if,
     $lastGood,
     $mapByIndex,
@@ -36,7 +35,6 @@ export function ArrayEditor(
     {
         model,
         replace,
-        propertyDisplayName,
         idPath,
         indent,
     }: Readonly<EditorProps>,
@@ -123,7 +121,7 @@ export function ArrayEditor(
 
     return (
         <>
-            <SortableList onSortEnd={move} useHandle>
+            <SortableList onSortEnd={(oldIndex, newIndex) => void move(oldIndex, newIndex)} useHandle>
                 {$mapByIndex(
                     $derived(() => draft.value.unknownGetElements()),
                     (item, index) => {
@@ -168,7 +166,7 @@ export function ArrayEditor(
             )}
             <div>
                 {$derived(() =>
-                    allowedTypes.value.map((allowedType, index) => {
+                    allowedTypes.value.map((allowedType) => {
                         const title =
                             allowedTypes.value.length === 1
                                 ? localize('Add')

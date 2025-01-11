@@ -1,5 +1,4 @@
 import {
-    type AnyTypeConstraint,
     asUnion,
     cast,
     createDefault,
@@ -7,6 +6,7 @@ import {
     introspect,
     ModelFactory,
     type UnknownModel,
+    UnknownType,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
     $derived,
@@ -52,7 +52,7 @@ export function UnionEditor({
         }));
     });
 
-    const changeType = async (type: AnyTypeConstraint): Promise<void> => {
+    const changeType = async (type: UnknownType): Promise<void> => {
         const defaultValue = createDefault(type);
         const defaultModel = await ModelFactory.createModel({
             value: defaultValue,

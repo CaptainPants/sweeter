@@ -217,11 +217,9 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         TKey extends keyof type.infer<TObjectSchema> & (string | symbol),
     >(
         key: TKey,
-        /* @ts-expect-error -- Typescript can't confirm that Type<TValue> is a Type (it might be never) */
-
         value:
-            | type.infer<TObjectSchema>[Key]
-            | ValueModelForProperty<TObjectSchema, Key>,
+            | type.infer<TObjectSchema>[TKey]
+            | ValueModelForProperty<TObjectSchema, TKey>,
     ): Promise<this> {
         return this.unknownSetProperty(key, value);
     }

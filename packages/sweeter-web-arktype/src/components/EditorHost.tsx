@@ -12,6 +12,7 @@ import {
     $peek,
     $val,
     $valProperties,
+    Component,
     type ComponentInit,
     isSignal,
 } from '@captainpants/sweeter-core';
@@ -27,8 +28,7 @@ import {
 
 import { AmbientValues } from './AmbientValues.js';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-const Last = (props: {}, init: ComponentInit): JSX.Element => {
+const Last: Component = (): JSX.Element => {
     return <div>No match</div>;
 };
 

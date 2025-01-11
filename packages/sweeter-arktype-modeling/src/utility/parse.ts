@@ -32,7 +32,7 @@ export function parse<TSchema extends AnyTypeConstraint>(
 
 // TODO: not sure that there is an async model in ArkType (where Zod has one)
 // so will have to see if these can have a meaningful implementation
- 
+
 export const parseAsync = async <TSchema extends AnyTypeConstraint>(
     value: unknown,
     schema: TSchema,

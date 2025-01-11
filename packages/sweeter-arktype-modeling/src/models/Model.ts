@@ -147,7 +147,10 @@ interface UnknownObjectModelMethods {
     unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
-    unknownSetProperty(key: string | symbol, value: unknown | UnknownModel): Promise<this>;
+    unknownSetProperty(
+        key: string | symbol,
+        value: unknown | UnknownModel,
+    ): Promise<this>;
 
     unknownGetCatchallType(): ReadonlyMap<UnknownType, UnknownType> | undefined;
 
@@ -179,7 +182,10 @@ export type MapObjectEntry<TSchema extends AnyTypeConstraint> = readonly [
 ];
 
 // @ts-expect-error -- Typescript is choking on the Model<Type<xxxx>> but we know its ok
-export type ValueModelForProperty<TSchema extends AnyObjectTypeConstraint, Key extends keyof type.infer<TSchema>> = Model<Type<type.infer<TSchema>[Key]>>;
+export type ValueModelForProperty<
+    TSchema extends AnyObjectTypeConstraint,
+    Key extends keyof type.infer<TSchema>,
+> = Model<Type<type.infer<TSchema>[Key]>>;
 
 export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
     extends BaseModel<type.infer<TObjectSchema>, TObjectSchema>,
@@ -199,13 +205,13 @@ export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
         arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[];
 
-    setProperty<
-        TKey extends keyof type.infer<TObjectSchema> & string
-    >(
+    setProperty<TKey extends keyof type.infer<TObjectSchema> & string>(
         key: TKey,
         /* @ts-expect-error -- Typescript can't confirm that Type<TValue> is a Type (it might be never) */
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
-        value: type.infer<TObjectSchema>[Key] | ValueModelForProperty<type.infer<TObjectSchema>[Key]>,
+        value:
+            | type.infer<TObjectSchema>[Key]
+            | ValueModelForProperty<type.infer<TObjectSchema>[Key]>,
     ): Promise<this>;
 }
 

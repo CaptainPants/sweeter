@@ -16,7 +16,10 @@ test('map-object', async () => {
 
     expect(updated1.value).toStrictEqual({ a: 1, b: 2, c: 3 });
 
-    const dModel = await ModelFactory.createModel({ value: 4, schema: type.number });
+    const dModel = await ModelFactory.createModel({
+        value: 4,
+        schema: type.number,
+    });
     const updated2 = await model.setProperty('c', dModel);
 
     expect(updated2.value).toStrictEqual({ a: 1, b: 2, d: 4 });

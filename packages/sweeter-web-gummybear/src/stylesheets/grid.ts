@@ -48,7 +48,7 @@ export const columns = createConstantMap(
         if (breakpointSize === undefined) {
             return createConstantMap(
                 columnWidthIdentifiers,
-                (columnSizeName, i) => {
+                (_columnWidthId, i) => {
                     return new GlobalCssClass({
                         className: 'col-' + columnWidthNames[i],
                         extraDependencies: dependencies,
@@ -59,7 +59,7 @@ export const columns = createConstantMap(
 
         return createConstantMap(
             columnWidthIdentifiers,
-            (columnSizeName, i) => {
+            (_columnWidthId, i) => {
                 return new GlobalCssClass({
                     className:
                         'col-' + breakpointName + '-' + columnWidthNames[i],

@@ -13,7 +13,7 @@ import {
     isUndefinedConstant,
     isUnionType,
 } from '../type/introspect/is.js';
-import { type AnyTypeConstraint,type UnknownType } from '../type/types.js';
+import { type AnyTypeConstraint, type UnknownType } from '../type/types.js';
 
 function createTyped<TCheckedSchema extends AnyTypeConstraint>(
     check: (schema: UnknownType) => schema is TCheckedSchema,

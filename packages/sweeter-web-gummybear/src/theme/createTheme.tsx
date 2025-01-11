@@ -15,6 +15,7 @@ import { type Theme } from './types.js';
 
 export function createTheme(options: ThemeOptions): Theme {
     const propertiesCss: string[] = [];
+
     function process(obj: ThemeOptionOrGroupDefinition) {
         if ((obj as ThemeOptionDefinition).cssVar) {
             const typed = obj as ThemeOptionDefinition;
@@ -29,6 +30,7 @@ export function createTheme(options: ThemeOptions): Theme {
             }
         }
     }
+
     process(themeStructure);
 
     const variables = new GlobalCssStylesheet({

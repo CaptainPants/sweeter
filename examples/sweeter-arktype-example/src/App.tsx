@@ -1,14 +1,12 @@
+//import typescriptLogo from "./typescript.svg";
+//import viteLogo from "/vite.svg";
+import { Component, Suspense } from '@captainpants/sweeter-core';
 import {
-    ThemeProvider,
     createTheme,
+    ThemeProvider,
 } from '@captainpants/sweeter-web-gummybear';
 
-//import typescriptLogo from "./typescript.svg";
-
-//import viteLogo from "/vite.svg";
-
-import { Suspense, Component } from '@captainpants/sweeter-core';
-import { Example } from './Example';
+import { Example } from './Example.js';
 
 const theme = createTheme({});
 

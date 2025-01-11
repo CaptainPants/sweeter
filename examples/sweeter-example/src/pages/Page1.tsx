@@ -1,26 +1,23 @@
-import {
-    grid,
-    forms,
-    button,
-    variants,
-    tags,
-    Modal,
-    Button,
-} from '@captainpants/sweeter-web-gummybear';
-
 //import typescriptLogo from "./typescript.svg";
-
 //import viteLogo from "/vite.svg";
-
 import {
     $mutable,
     $propertyOf,
     type ComponentInit,
+    NoProps,
 } from '@captainpants/sweeter-core';
 import { type ThreeValueBoolean } from '@captainpants/sweeter-web';
+import {
+    Button,
+    button,
+    forms,
+    grid,
+    Modal,
+    tags,
+    variants,
+} from '@captainpants/sweeter-web-gummybear';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function Page1(props: {}, init: ComponentInit): JSX.Element {
+export function Page1(_props: NoProps, init: ComponentInit): JSX.Element {
     const state = $mutable({
         textInput: 'test',
         select: 'Option 3',

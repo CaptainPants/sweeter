@@ -1,9 +1,15 @@
+export type ConstantMap<TKeys extends readonly (string | symbol)[], TValues> = {
+    [Key in TKeys[number]]: TValues;
+};
+
 export function createConstantMap<
-    const TKeys extends readonly (string | number | symbol)[],
+    const TKeys extends readonly (string | symbol)[],
     TValues,
 >(keys: TKeys, callback: (key: TKeys[number], index: number) => TValues) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result: { [Key in TKeys[number]]: TValues } = {} as any;
+    const result: ConstantMap<TKeys, TValues> = {} as ConstantMap<
+        TKeys,
+        TValues
+    >;
 
     let index = 0;
     for (const key of keys) {

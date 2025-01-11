@@ -151,7 +151,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
             const mappedKeys = info.getMappedKeys();
             if (mappedKeys) {
                 const matchingKey = [...mappedKeys.entries()].filter(
-                    ([indexerKey, ]) => indexerKey.allows(key),
+                    ([indexerKey]) => indexerKey.allows(key),
                 )[0];
                 if (matchingKey) {
                     type = matchingKey[1];
@@ -214,12 +214,14 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
     }
 
     public async setProperty<
-        TKey extends keyof type.infer<TObjectSchema> & (string | symbol)
+        TKey extends keyof type.infer<TObjectSchema> & (string | symbol),
     >(
         key: TKey,
         /* @ts-expect-error -- Typescript can't confirm that Type<TValue> is a Type (it might be never) */
-         
-        value: type.infer<TObjectSchema>[Key] | ValueModelForProperty<TObjectSchema, Key>,
+
+        value:
+            | type.infer<TObjectSchema>[Key]
+            | ValueModelForProperty<TObjectSchema, Key>,
     ): Promise<this> {
         return this.unknownSetProperty(key, value);
     }

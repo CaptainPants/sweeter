@@ -74,19 +74,25 @@ export function asString(model: AnyModelConstraint): StringModel | undefined {
 export function asNumberLiteral(
     model: AnyModelConstraint,
 ): NumberConstantModel<Type<number>> | undefined {
-    return isNumberLiteralType(model.type) ? (model as NumberConstantModel<Type<number>>) : undefined;
+    return isNumberLiteralType(model.type)
+        ? (model as NumberConstantModel<Type<number>>)
+        : undefined;
 }
 
 export function asStringConstant(
     model: AnyModelConstraint,
 ): StringConstantModel<Type<string>> | undefined {
-    return isStringLiteralType(model.type) ? (model as StringConstantModel<Type<string>>) : undefined;
+    return isStringLiteralType(model.type)
+        ? (model as StringConstantModel<Type<string>>)
+        : undefined;
 }
 
 export function asBooleanConstant(
     model: AnyModelConstraint,
 ): BooleanConstantModel<Type<boolean>> | undefined {
-    return isBooleanLiteralType(model.type) ? (model as BooleanConstantModel<Type<boolean>>) : undefined;
+    return isBooleanLiteralType(model.type)
+        ? (model as BooleanConstantModel<Type<boolean>>)
+        : undefined;
 }
 
 export function asNullConstant(
@@ -98,7 +104,9 @@ export function asNullConstant(
 export function asUndefinedConstant(
     model: AnyModelConstraint,
 ): UndefinedModel | undefined {
-    return isUndefinedConstant(model.type) ? (model as UndefinedModel) : undefined;
+    return isUndefinedConstant(model.type)
+        ? (model as UndefinedModel)
+        : undefined;
 }
 
 export function asUnknown(model: UnknownModel): UnknownModel {

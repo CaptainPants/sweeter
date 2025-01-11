@@ -1,4 +1,7 @@
 import { type Type } from 'arktype';
+
+import { typeAssert } from '@captainpants/sweeter-utilities';
+
 import {
     type ArrayModel,
     type LiteralModel,
@@ -6,7 +9,6 @@ import {
     type ObjectModel,
     type UnionModel,
 } from '../index.js';
-import { typeAssert } from '@captainpants/sweeter-utilities';
 
 it('All model types match expected results', () => {
     typeAssert.equal<Model<Type<object>>, ObjectModel<Type<object>>>();

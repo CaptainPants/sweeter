@@ -13,10 +13,11 @@ export type SortableHandleProps = PropertiesMightBeSignals<{
     children?: JSX.Element;
 }>;
 
-export const SortableHandle: Component<SortableHandleProps> = (
-    { children, class: classNames, style },
-    init,
-) => {
+export const SortableHandle: Component<SortableHandleProps> = ({
+    children,
+    class: classNames,
+    style,
+}) => {
     return (
         <div class={classNames} style={style} data-is-knob="true">
             {children}

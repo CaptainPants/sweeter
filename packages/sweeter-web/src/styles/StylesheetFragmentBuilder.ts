@@ -1,6 +1,6 @@
 import {
-    type StylesheetContentGenerator,
     type AbstractGlobalCssStylesheet,
+    type StylesheetContentGenerator,
 } from './types.js';
 
 export interface StylesheetFragmentBuilderState {

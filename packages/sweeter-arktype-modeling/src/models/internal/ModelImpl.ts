@@ -1,6 +1,6 @@
-import { type UnknownModel, type BaseModel } from '../Model.js';
-import { type ParentTypeInfo } from '../parents.js';
 import { type AnyTypeConstraint } from '../../type/types.js';
+import { type BaseModel, type UnknownModel } from '../Model.js';
+import { type ParentTypeInfo } from '../parents.js';
 
 export class ModelImpl<TValue, TSchema extends AnyTypeConstraint>
     implements BaseModel<TValue, TSchema>

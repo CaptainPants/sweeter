@@ -1,8 +1,9 @@
 /* @jsxImportSource .. */
 
-import { Show, $mutable } from '@captainpants/sweeter-core';
-import { expectDOMMatching } from '../test/internal/expectDOMMatching.js';
+import { $mutable, Show } from '@captainpants/sweeter-core';
+
 import { createWebRuntime } from '../runtime/createWebRuntime.js';
+import { expectDOMMatching } from '../test/internal/expectDOMMatching.js';
 
 it('Show initially displays and then hides content when signal updated', () => {
     const cond = $mutable(true);

@@ -1,13 +1,14 @@
 import {
-    $derived,
     $children,
+    $derived,
+    $insertLocation,
     $val,
     type Component,
     type PropertiesMightBeSignals,
-    $insertLocation,
 } from '@captainpants/sweeter-core';
-import { type Theme } from './types.js';
+
 import { ThemeContext } from './context.js';
+import { type Theme } from './types.js';
 
 export type ThemeProviderProps = PropertiesMightBeSignals<{
     theme: Theme;

@@ -1,23 +1,24 @@
 import { type SavedExecutionContext } from '../../../executionContext/saveExecutionContext.js';
 import { saveExecutionContext } from '../../../executionContext/saveExecutionContext.js';
-import { SignalBase } from './SignalBase.js';
+import { DerivationCallback } from '../../$derived.js';
 import {
-    type CallAndReturnDependenciesResult,
     callAndReturnDependencies,
+    type CallAndReturnDependenciesResult,
 } from '../../ambient.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
-import {
-    type Signal,
-    type DerivedSignalOptions,
-    SignalListener,
-} from '../../types.js';
-import { type SignalChangeListenerSetCallback } from '../SignalChangeListenerSet.js';
 import {
     finishCalculation,
     startCalculation,
 } from '../../calculationDeferral.js';
 import { SignalState } from '../../SignalState.js';
-import { DerivationCallback } from '../../$derived.js';
+import {
+    type DerivedSignalOptions,
+    type Signal,
+    SignalListener,
+} from '../../types.js';
+import { type SignalChangeListenerSetCallback } from '../SignalChangeListenerSet.js';
+
+import { SignalBase } from './SignalBase.js';
 
 export class DerivedSignal<T> extends SignalBase<T> {
     constructor(

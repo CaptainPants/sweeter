@@ -1,4 +1,4 @@
-import { batch, $derived, $mutable, startBatch } from './index.js';
+import { $derived, $mutable, batch, startBatch } from './index.js';
 
 it('Starting a batch blocks updates', () => {
     const mutable1 = $mutable(1);

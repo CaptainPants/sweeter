@@ -1,18 +1,19 @@
 import {
     $derived,
+    $peek,
     $val,
     type Component,
-    type PropertiesMightBeSignals,
     type ContextType,
-    $peek,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 import {
     GlobalCssClass,
-    type TypedEvent,
     stylesheet,
+    type TypedEvent,
 } from '@captainpants/sweeter-web';
 import { Button } from '@captainpants/sweeter-web-gummybear';
+
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
 
 export type IconButtonProps = PropertiesMightBeSignals<{
     icon: keyof ContextType<typeof IconProviderContext>;

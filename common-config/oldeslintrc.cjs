@@ -17,17 +17,6 @@ module.exports = {
     },
     plugins: ['require-extensions', 'simple-import-sort'],
     rules: {
-        '@typescript-eslint/no-unused-vars': ['error', {
-            "varsIgnorePattern": '^_',
-            "args": "none"
-        }],
-        "@typescript-eslint/consistent-type-imports": [
-            'error', {
-                'prefer': 'type-imports',
-                'fixStyle': 'inline-type-imports'
-            }
-        ],
-        "import/consistent-type-specifier-style": ['error', "prefer-inline"]
     },
     settings: {
         "import/resolver": {

@@ -1,6 +1,7 @@
 import { equals } from '@captainpants/sweeter-utilities';
-import { $filtered } from './$filtered';
-import { $mutable } from './$mutable';
+
+import { $filtered } from './$filtered.js';
+import { $mutable } from './$mutable.js';
 
 it('Updates are skipped as expected', () => {
     const input = $mutable([1, 2, 3]);

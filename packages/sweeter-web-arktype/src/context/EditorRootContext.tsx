@@ -1,10 +1,11 @@
 import { type TypeMatcherRule } from '@captainpants/sweeter-arktype-modeling';
-import {
-    type ModalComponentType,
-    type EditorSettings,
-    type EditorComponentType,
-} from '../types.js';
 import { Context } from '@captainpants/sweeter-core';
+
+import {
+    type EditorComponentType,
+    type EditorSettings,
+    type ModalComponentType,
+} from '../types.js';
 
 export interface EditorRootContextType {
     settings: EditorSettings;

@@ -1,7 +1,8 @@
 import { is, NodePath } from 'estree-toolkit';
-import { newlinesBetween } from './newlinesBetween';
-import { assertAstLocation } from './assertAstLocation';
 import { Node } from 'estree-toolkit/dist/helpers';
+
+import { assertAstLocation } from './assertAstLocation.js';
+import { newlinesBetween } from './newlinesBetween.js';
 
 export function getLocation(
     code: string,
@@ -21,7 +22,7 @@ function getRowAndCol(
     offset: number,
 ): [row: number, col: number] {
     const upToOffset = code.substring(0, offset);
-    let startOfLineOffset = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
+    const startOfLineOffset = upToOffset.lastIndexOf('\n') + 1; // move beyond the newline character and (-1 => 0)
 
     const row = 1 /* 1-based */ + newlinesBetween(code, 0, offset); // number of lines = number of \n + 1
     const col = 1 /* 1-based */ + (offset - startOfLineOffset);

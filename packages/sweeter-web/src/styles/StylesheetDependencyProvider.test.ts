@@ -1,7 +1,7 @@
 import { GlobalCssClass } from './GlobalCssClass.js';
 import { GlobalCssStylesheet } from './GlobalCssStylesheet.js';
-import { StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
 import { stylesheet } from './stylesheet.js';
+import { StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
 
 it('Circular dependency works', () => {
     const dependencies = new StylesheetDependencyProvider();

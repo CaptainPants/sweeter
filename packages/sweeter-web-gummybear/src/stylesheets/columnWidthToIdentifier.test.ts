@@ -1,4 +1,5 @@
 import { type ColumnWidth } from '../types.js';
+
 import { columnWidthToIdentifier } from './columnWidthToIdentifier.js';
 
 it('General', () => {
@@ -15,15 +16,16 @@ it('General', () => {
     expect(columnWidthToIdentifier(11)).toStrictEqual('_11');
     expect(columnWidthToIdentifier(12)).toStrictEqual('_12');
     expect(columnWidthToIdentifier('auto')).toStrictEqual('auto');
-}),
-    it('Failure', () => {
-        expect(() =>
-            columnWidthToIdentifier(undefined as unknown as ColumnWidth),
-        ).toThrow(new TypeError(`Unexpected value ${undefined}`));
-        expect(() => columnWidthToIdentifier(13 as ColumnWidth)).toThrow(
-            new TypeError(`Unexpected value 13`),
-        );
-        expect(() => columnWidthToIdentifier(-1 as ColumnWidth)).toThrow(
-            new TypeError(`Unexpected value -1`),
-        );
-    });
+});
+
+it('Failure', () => {
+    expect(() =>
+        columnWidthToIdentifier(undefined as unknown as ColumnWidth),
+    ).toThrow(new TypeError(`Unexpected value ${undefined}`));
+    expect(() => columnWidthToIdentifier(13 as ColumnWidth)).toThrow(
+        new TypeError(`Unexpected value 13`),
+    );
+    expect(() => columnWidthToIdentifier(-1 as ColumnWidth)).toThrow(
+        new TypeError(`Unexpected value -1`),
+    );
+});

@@ -1,4 +1,5 @@
 import { $insertLocation } from '../utility/$insertLocation.js';
+
 import { Context } from './Context.js';
 
 const context = new Context<number>('Test', 1);

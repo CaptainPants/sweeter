@@ -1,5 +1,5 @@
-import { StylesheetFragmentBuilder } from './StylesheetFragmentBuilder.js';
 import { stylesheet } from './stylesheet.js';
+import { StylesheetFragmentBuilder } from './StylesheetFragmentBuilder.js';
 
 it('Circular dependency works', () => {
     const builder = new StylesheetFragmentBuilder();

@@ -2,10 +2,12 @@
 
 import { type Type, type } from 'arktype';
 
-import { ModelFactory } from './ModelFactory.js';
 import { typeAssert } from '@captainpants/sweeter-utilities';
-import { SpreadModel } from './Model.js';
+
 import { arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
+
+import { SpreadModel } from './Model.js';
+import { ModelFactory } from './ModelFactory.js';
 
 test('union', async () => {
     const expected = type.unit(1);

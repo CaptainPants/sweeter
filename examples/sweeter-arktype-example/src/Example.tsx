@@ -1,4 +1,5 @@
 import { exampleData } from '@captainpants/arktype-example-data';
+import { AnyTypeConstraint } from '@captainpants/sweeter-arktype-modeling';
 import {
     $async,
     $derived,
@@ -6,6 +7,7 @@ import {
     Component,
     WithId,
 } from '@captainpants/sweeter-core';
+import { EditorRoot } from '@captainpants/sweeter-web-arktype';
 import {
     Column,
     Container,
@@ -13,8 +15,6 @@ import {
     Row,
     Select,
 } from '@captainpants/sweeter-web-gummybear';
-import { AnyTypeConstraint } from '@captainpants/sweeter-arktype-modeling';
-import { EditorRoot } from '@captainpants/sweeter-web-arktype';
 
 export const Example: Component = (_props, _init) => {
     const typeName = $mutable<keyof typeof exampleData>('StringOnly');

@@ -1,6 +1,7 @@
 import { throwError } from '@captainpants/sweeter-utilities';
 
 import { type UnknownType } from '../types.js';
+
 import { asIntersectionNode } from './internal/arktypeInternals.js';
 
 export interface ArrayTypeInfo {

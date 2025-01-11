@@ -11,9 +11,10 @@ export function signalExample() {
     const derived = $derived(() => signal.value + 2);
     const deferred1 = $deferred(derived);
     const deferred2 = $deferred(deferred1);
-    $controller(SignalState.success(1)).signal;
+    void $controller(SignalState.success(1)).signal;
 
     const dontIdentify = $mutable(2).doNotIdentify();
+    ignore(dontIdentify);
 
     function unused() {
         deferred2.peek();
@@ -22,10 +23,6 @@ export function signalExample() {
     ignore(unused);
 }
 
-function ignore(subj: Function) {
-    console.log('Cannot ignore this function', subj.name);
-}
-
-function test() {
-    function test2() {}
+function ignore(subj: unknown) {
+    console.log('Cannot ignore', subj);
 }

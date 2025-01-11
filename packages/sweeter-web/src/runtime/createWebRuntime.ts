@@ -1,34 +1,36 @@
 import {
-    type PropsWithIntrinsicAttributesFor,
-    type RuntimeRootHostElement,
-    type Runtime,
-    callWithRuntime,
-    type ComponentOrIntrinsicElementTypeConstraint,
-    type JSXResultForComponentOrElementType,
-    trackingIsAnError,
-    type JSXMiddleware,
-    createMiddlewarePipeline,
-    type JSXMiddlewareCallback,
-    type Signal,
-    Context,
-    ComponentFaultContext,
     $insertLocation,
+    callWithRuntime,
+    ComponentFaultContext,
+    type ComponentOrIntrinsicElementTypeConstraint,
+    Context,
+    createMiddlewarePipeline,
+    type JSXMiddleware,
+    type JSXMiddlewareCallback,
+    type JSXResultForComponentOrElementType,
+    type PropsWithIntrinsicAttributesFor,
+    type Runtime,
+    type RuntimeRootHostElement,
+    type Signal,
+    trackingIsAnError,
 } from '@captainpants/sweeter-core';
-import { addJsxChildren } from './internal/addJsxChildren.js';
-import { jsx } from './jsx.js';
-import { type AbstractGlobalCssStylesheet } from '../styles/types.js';
+import { createLogger } from '@captainpants/sweeter-utilities';
+
 import { type GlobalCssClass } from '../styles/GlobalCssClass.js';
-import { createDOMElement } from './internal/createDOMElement.js';
-import { createComponentInstance } from './internal/createComponentInstance.js';
-import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
-import { type WebRuntime } from './types.js';
-import { createLocationSignal } from './internal/createLocationSignal.js';
 import { StylesheetManager } from '../styles/internal/StylesheetManager.js';
+import { type AbstractGlobalCssStylesheet } from '../styles/types.js';
+
+import { addJsxChildren } from './internal/addJsxChildren.js';
+import { createComponentInstance } from './internal/createComponentInstance.js';
+import { createDOMElement } from './internal/createDOMElement.js';
+import { createLocationSignal } from './internal/createLocationSignal.js';
 import {
     announceMountedRecursive,
     announceUnMountedRecursive,
 } from './internal/mounting.js';
-import { createLogger } from '@captainpants/sweeter-utilities';
+import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
+import { jsx } from './jsx.js';
+import { type WebRuntime } from './types.js';
 
 /**
  * Placeholder interface for future options to be provided to the root.
@@ -165,7 +167,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
                 }
 
                 default:
-                    throw new TypeError(`Unexpected type ${type}`);
+                    throw new TypeError(`Unexpected type ${String(type)}`);
             }
         });
 
@@ -176,7 +178,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         return webRuntimeSymbol;
     }
 
-    nextId(basis?: string | undefined): string {
+    nextId(basis?: string): string {
         return `${basis ?? 'generated'}_${++this.#idCounter}`;
     }
 
@@ -189,8 +191,8 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         return document.createElement(tagName);
     }
 
-    createComment(content?: string | undefined): Comment {
-        return document.createComment('');
+    createComment(content?: string): Comment {
+        return document.createComment(content ?? '');
     }
 }
 

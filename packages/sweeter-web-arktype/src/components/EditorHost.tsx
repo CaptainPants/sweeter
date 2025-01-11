@@ -3,8 +3,8 @@ import * as assert from 'typed-assert';
 import {
     type ContextualValueCalculationContext,
     createTypeMatcher,
-    type TypeMatcherRule,
     notFound,
+    type TypeMatcherRule,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
     $constant,
@@ -12,22 +12,23 @@ import {
     $peek,
     $val,
     $valProperties,
-    isSignal,
+    Component,
     type ComponentInit,
+    isSignal,
 } from '@captainpants/sweeter-core';
 
-import { AmbientValues } from './AmbientValues.js';
+import { EditorRootContext } from '../context/EditorRootContext.js';
+import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
 import {
     type EditorComponentType,
     type EditorHostProps,
     type RenderNextFunction,
     type RenderNextFunctionArgs,
 } from '../types.js';
-import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
-import { EditorRootContext } from '../context/EditorRootContext.js';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-const Last = (props: {}, init: ComponentInit): JSX.Element => {
+import { AmbientValues } from './AmbientValues.js';
+
+const Last: Component = (): JSX.Element => {
     return <div>No match</div>;
 };
 

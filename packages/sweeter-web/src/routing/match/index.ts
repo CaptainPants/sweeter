@@ -1,4 +1,5 @@
 import { type ArgumentMatcher } from '../types.js';
+
 import { RestMatcher } from './RestMatcher.js';
 import { SinglePartMatcher } from './SinglePartMatcher.js';
 

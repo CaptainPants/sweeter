@@ -1,7 +1,7 @@
 /* @jsxImportSource ../.. */
 
-import { testRender } from '../../test/testRender.js';
 import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
+import { testRender } from '../../test/testRender.js';
 
 const class_ = new GlobalCssClass({
     className: 'Test1',

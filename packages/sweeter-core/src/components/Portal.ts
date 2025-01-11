@@ -1,9 +1,9 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import {
-    type PropertiesMightBeSignals,
-    type RuntimeRootHostElement,
     type Component,
     type MightBeSignal,
+    type PropertiesMightBeSignals,
+    type RuntimeRootHostElement,
 } from '../types.js';
 
 export type PortalProps = PropertiesMightBeSignals<{

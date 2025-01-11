@@ -1,11 +1,12 @@
 /* @jsxImportSource .. */
 
-import { ErrorBoundary, $derived } from '@captainpants/sweeter-core';
+import { $derived, ErrorBoundary } from '@captainpants/sweeter-core';
+
 import { testRender } from '../test/testRender.js';
 
 it('ErrorBoundary displays content when no error', () => {
     const res = testRender(() => (
-        <ErrorBoundary renderError={(err) => <div>ERROR</div>}>
+        <ErrorBoundary renderError={(_err) => <div>ERROR</div>}>
             {() => <div>Nothing to see here</div>}
         </ErrorBoundary>
     ));

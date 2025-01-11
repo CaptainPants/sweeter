@@ -1,5 +1,5 @@
-import { $mutable } from './$mutable.js';
 import { $derived } from './$derived.js';
+import { $mutable } from './$mutable.js';
 import { SignalState } from './SignalState.js';
 
 it('$derived listeners invoked with correct value after dependency updated', () => {

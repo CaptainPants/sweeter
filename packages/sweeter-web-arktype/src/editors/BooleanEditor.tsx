@@ -1,11 +1,10 @@
 import {
     asBoolean,
+    type BooleanModel,
     cast,
     ModelFactory,
-    type BooleanModel,
     validate,
 } from '@captainpants/sweeter-arktype-modeling';
-import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $derived,
     $lastGood,
@@ -13,12 +12,15 @@ import {
     $val,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
-import { type EditorProps } from '../types.js';
 import { CheckBox } from '@captainpants/sweeter-web-gummybear';
+
+import { DraftHook } from '../hooks/DraftHook.js';
+import { type EditorProps } from '../types.js';
+
 import { ValidationDisplay } from './ValidationDisplay.js';
 
 export function BooleanEditor(
-    { model, replace, propertyDisplayName, idPath }: Readonly<EditorProps>,
+    { model, replace, idPath }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
     const typedModel = $lastGood(() => {

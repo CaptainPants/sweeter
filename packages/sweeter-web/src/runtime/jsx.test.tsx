@@ -1,11 +1,13 @@
 /* @jsxImportSource ../. */
 
-import { jsx } from './jsx.js';
-import { testRender } from '../test/testRender.js';
 import {
     assertNotNullOrUndefined,
     type TypeMatchAssert,
 } from '@captainpants/sweeter-utilities';
+
+import { testRender } from '../test/testRender.js';
+
+import { jsx } from './jsx.js';
 
 it('basic div creates with props (function syntax)', () => {
     let div: HTMLDivElement | undefined;

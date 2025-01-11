@@ -1,10 +1,10 @@
 import { type StackTrace } from '@captainpants/sweeter-utilities';
+
 import {
     type signalMarker,
     type writableSignalMarker,
 } from './internal/markers.js';
 import { type SignalState } from './SignalState.js';
-import { SignalChangeListenerSet } from './internal/SignalChangeListenerSet.js';
 
 export type SignalListener<T> = (
     next: SignalState<T>,
@@ -161,6 +161,7 @@ export type DebugDependencyNode =
       }
     | {
           type: 'listener';
-          listener: Function;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          listener: (...args: readonly any[]) => any;
           addedAtStack: StackTrace | undefined;
       };

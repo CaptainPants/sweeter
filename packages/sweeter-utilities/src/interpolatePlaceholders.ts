@@ -5,7 +5,7 @@ function defaultFormat(value: unknown, _format: string | null): string {
 }
 
 export function interpolatePlaceholders(
-    template: string | string | null,
+    template: string | null,
     args: unknown[] | undefined,
     formatCallback = defaultFormat,
 ): string {

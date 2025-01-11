@@ -1,4 +1,5 @@
 import { type } from 'arktype';
+
 import { getArrayTypeInfo } from './getArrayTypeInfo.js';
 
 test('Single element type', () => {

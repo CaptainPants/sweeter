@@ -1,4 +1,5 @@
 import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+
 import { themeStructure } from '../theme/themeStructure.js';
 
 const focusMixin = stylesheet`

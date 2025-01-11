@@ -1,12 +1,14 @@
 /* @jsxImportSource .. */
 
 import {
+    $peek,
     type Component,
     type IntrinsicElementAttributes,
     type PropertiesMightBeSignals,
-    $peek,
 } from '@captainpants/sweeter-core';
+
 import { type TypedEvent } from '../IntrinsicAttributes.js';
+
 import { NavigateHook } from './NavigateHook.js';
 
 export type RouterLinkProps = PropertiesMightBeSignals<{

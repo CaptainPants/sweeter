@@ -4,19 +4,21 @@ import {
     $mutable,
     type ComponentInit,
     Dynamic,
+    NoProps,
     Portal,
 } from '@captainpants/sweeter-core';
-import { testRender } from '../test/testRender.js';
+import {
+    ConsoleLogSink,
+    LoggingBuilder,
+} from '@captainpants/sweeter-utilities';
+
 import {
     GlobalCssClass,
     GlobalCssStylesheet,
     IncludeStylesheet,
     stylesheet,
 } from '../index.js';
-import {
-    ConsoleLogSink,
-    LoggingBuilder,
-} from '@captainpants/sweeter-utilities';
+import { testRender } from '../test/testRender.js';
 
 afterEach(() => {
     document.getElementsByTagName('html')[0]!.innerHTML = '';
@@ -60,8 +62,7 @@ it('Portal elements unmount correctly', () => {
 
     let mounted = false;
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    function TestComponent(props: {}, init: ComponentInit) {
+    function TestComponent(_props: NoProps, init: ComponentInit) {
         init.onMount(() => {
             mounted = true;
 
@@ -143,8 +144,7 @@ it('Portal elements unmount correctly (css class ref)', () => {
 
     let mounted = false;
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    function TestComponent(props: {}, init: ComponentInit) {
+    function TestComponent(_props: NoProps, init: ComponentInit) {
         init.onMount(() => {
             mounted = true;
 

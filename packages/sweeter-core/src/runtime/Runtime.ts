@@ -1,9 +1,9 @@
 import { ExecutionContextVariable } from '../executionContext/ExecutionContextVariable.js';
 import {
-    type JSXResultForComponentOrElementType,
     type ComponentOrIntrinsicElementTypeConstraint,
-    type RuntimeRootHostElement,
+    type JSXResultForComponentOrElementType,
     type PropsWithIntrinsicAttributesFor,
+    type RuntimeRootHostElement,
 } from '../types.js';
 
 export interface Runtime {

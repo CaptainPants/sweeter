@@ -1,5 +1,5 @@
-import { type StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
 import { preprocess } from './preprocessor/preprocess.js';
+import { type StylesheetDependencyProvider } from './StylesheetDependencyProvider.js';
 import {
     type AbstractGlobalCssStylesheet,
     type GlobalStyleSheetContentGeneratorContext,

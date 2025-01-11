@@ -1,4 +1,4 @@
-import { $derived, $mutable, $propertyOf, $elementOf } from './index.js';
+import { $derived, $elementOf, $mutable, $propertyOf } from './index.js';
 import { isReadWriteSignal, isSignal } from './isSignal.js';
 
 it('isSignal for all signal types return true', () => {

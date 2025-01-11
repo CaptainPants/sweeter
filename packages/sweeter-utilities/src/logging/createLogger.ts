@@ -1,27 +1,29 @@
-import { assertNotNullOrUndefined } from '../assertNotNullOrUndefined.js';
 import { CodeLocation } from '../CodeLocation.js';
+
 import { LoggerImpl } from './internal/LoggerImpl.js';
 import { type Logger } from './types.js';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyFunction = (...args: readonly any[]) => any;
+
 export function createLogger(
     namespace: string,
-    category: string | Function,
+    category: string | AnyFunction,
 ): Logger;
 export function createLogger(
     codeLocation: CodeLocation,
-    category: string | Function,
+    category: string | AnyFunction,
 ): Logger;
 export function createLogger(
     namespace: string | CodeLocation,
-    category: string | Function,
+    category: string | AnyFunction,
 ): Logger {
-    let name: string;
     if (Array.isArray(namespace)) {
-        const [file, func, row, col] = namespace;
+        const [file, , ,] = namespace;
         namespace = file;
     }
 
-    name = typeof category === 'string' ? category : category.name;
+    const name = typeof category === 'string' ? category : category.name;
 
     return new LoggerImpl(namespace + ': ' + name);
 }

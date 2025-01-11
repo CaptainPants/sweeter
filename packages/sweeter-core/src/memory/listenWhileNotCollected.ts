@@ -2,7 +2,9 @@ import {
     addExplicitStrongReference,
     whenGarbageCollected,
 } from '@captainpants/sweeter-utilities';
-import { Signal, SignalState } from '../signals';
+
+import { SignalState } from '../signals/SignalState.js';
+import { Signal } from '../signals/types.js';
 
 /**
  * Utility function for correctly setting up a state listener callback on a signal that is limited to the lifetime

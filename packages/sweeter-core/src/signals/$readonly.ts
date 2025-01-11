@@ -1,7 +1,6 @@
-import { type Signal } from './types.js';
-import { isReadWriteSignal } from './isSignal.js';
-import { $derived } from './$derived.js';
 import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
+import { isReadWriteSignal } from './isSignal.js';
+import { type Signal } from './types.js';
 
 /**
  * Returns a read only promise linked to the source signal.

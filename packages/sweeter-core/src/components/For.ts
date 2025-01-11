@@ -2,8 +2,8 @@ import { getRuntime } from '../runtime/Runtime.js';
 import { $mapByIndex } from '../signals/$mapByIndex.js';
 import { type Signal } from '../signals/types.js';
 import {
-    type MightBeSignal,
     type ComponentInit,
+    type MightBeSignal,
     type PropertiesMightBeSignals,
 } from '../types.js';
 

@@ -1,5 +1,5 @@
-import { subscribeToChanges } from './subscribeToChanges.js';
 import { $mutable } from './$mutable.js';
+import { subscribeToChanges } from './subscribeToChanges.js';
 
 it('subscribeToChanges', () => {
     const signal = $mutable(1);
@@ -7,7 +7,7 @@ it('subscribeToChanges', () => {
     let calls = 0,
         cleanups = 0;
 
-    const cleanup = subscribeToChanges([signal], ([value]) => {
+    const cleanup = subscribeToChanges([signal], ([_value]) => {
         calls += 1;
         return () => {
             cleanups += 1;

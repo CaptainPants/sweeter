@@ -1,6 +1,6 @@
-import { $derived } from './$derived';
-import { $mutable } from './$mutable';
-import { Signal } from './types';
+import { $derived } from './$derived.js';
+import { $mutable } from './$mutable.js';
+import { Signal } from './types.js';
 
 interface Bits {
     dependency?: Signal<number>;

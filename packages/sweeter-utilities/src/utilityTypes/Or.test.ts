@@ -1,9 +1,9 @@
-import { type Or, type TypeMatchAssert } from '../index.js';
+import { type Or, typeAssert } from '../index.js';
 
 it('IsUnion works', () => {
-    const _1: TypeMatchAssert<Or<[true, false]>, true> = true;
+    typeAssert.extends<Or<[true, false]>, true>();
 
-    const _2: TypeMatchAssert<Or<[false, true, false]>, true> = true;
+    typeAssert.extends<Or<[false, true, false]>, true>();
 
-    const _3: TypeMatchAssert<Or<[false, false, false]>, false> = true;
+    typeAssert.extends<Or<[false, false, false]>, false>();
 });

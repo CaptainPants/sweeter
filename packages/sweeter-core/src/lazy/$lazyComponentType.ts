@@ -1,10 +1,11 @@
 import { $async } from '../components/Async.js';
-import { $val } from '../signals/$val.js';
 import { getRuntime } from '../runtime/Runtime.js';
+import { $val } from '../signals/$val.js';
 import {
     type Component,
     type PropsWithIntrinsicAttributesFor,
 } from '../types.js';
+
 import { $lazy } from './$lazy.js';
 
 /**
@@ -17,7 +18,7 @@ export function $lazyComponentType<TProps>(
 ): Component<TProps> {
     const lazy = $lazy(callback);
 
-    const result: Component<TProps> = (props, init) => {
+    const result: Component<TProps> = (props) => {
         return $async(
             () => lazy.promise,
             (LoadedComponent) => {

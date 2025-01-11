@@ -1,26 +1,24 @@
-import { type EditorProps } from '../types.js';
-
-import { ModalEditor } from './ModalEditor.js';
 import {
     $derived,
     $mutable,
     $val,
+    Component,
     type PropertiesMightBeSignals,
-    type ComponentInit,
 } from '@captainpants/sweeter-core';
+
 import { MeasuredBox } from '../components/MeasuredBox.js';
+import { type EditorProps } from '../types.js';
+
+import { ModalEditor } from './ModalEditor.js';
 
 export type ConditionalModelEditorProps = EditorProps &
     PropertiesMightBeSignals<{ minWidth?: number }>;
 
-export function ModalEditorIfTooSmall(
-    {
-        minWidth = 200,
-        next,
-        ...passthrough
-    }: Readonly<ConditionalModelEditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const ModalEditorIfTooSmall: Component<ConditionalModelEditorProps> = ({
+    minWidth = 200,
+    next,
+    ...passthrough
+}) => {
     const measuredWidth = $mutable(0);
     const useModal = $derived(() => {
         const minWidthResolved = $val(minWidth);
@@ -56,4 +54,4 @@ export function ModalEditorIfTooSmall(
             {content}
         </MeasuredBox>
     );
-}
+};

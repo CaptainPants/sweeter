@@ -1,13 +1,13 @@
+import { type ValidationSingleResult } from '@captainpants/sweeter-arktype-modeling';
 import {
-    type ComponentInit,
-    type Signal,
+    $derived,
     $mutable,
     $readonly,
     AsyncRunnerHook,
-    $derived,
+    type ComponentInit,
+    type Signal,
 } from '@captainpants/sweeter-core';
 import { type Maybe } from '@captainpants/sweeter-utilities';
-import { type ValidationSingleResult } from '@captainpants/sweeter-arktype-modeling';
 
 export interface DraftHookOptions<TModel, TDraft> {
     model: Signal<TModel>;
@@ -49,8 +49,8 @@ export function DraftHook<TModel, TDraft>(
             return; // If the draft matches our current view of the incoming model, then don't try to update back up the tree
         }
 
-        // Should this be debounced?
-        asyncRunner.run(async (abort) => {
+        // TODO: Should this be debounced?
+        void asyncRunner.run(async (abort) => {
             const convertResult = convertOut(draft);
 
             // Failed conversion out, treated as a validation failure
@@ -70,7 +70,7 @@ export function DraftHook<TModel, TDraft>(
                 : validationFailures;
 
             if (validationFailures == null) {
-                onValid?.(converted);
+                await onValid?.(converted);
             }
         });
     });

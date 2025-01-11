@@ -1,4 +1,4 @@
-import { arrayElementsEqual } from './arrayElementsEqual';
+import { arrayElementsEqual } from './arrayElementsEqual.js';
 
 it('Looks right', () => {
     expect(arrayElementsEqual([1, 2, 3], [1, 2, 3])).toStrictEqual(true);

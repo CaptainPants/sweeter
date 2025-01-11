@@ -1,3 +1,18 @@
+import { Type } from 'arktype';
+
+import {
+    asObject,
+    cast,
+    categorizeFixedProperties,
+    type ContextualValueCalculationContext,
+    createDefault,
+    introspect,
+    StandardAssociatedValueKeys,
+    type UnknownModel,
+    type UnknownObjectModel,
+    UnknownType,
+    validate,
+} from '@captainpants/sweeter-arktype-modeling';
 import {
     $derived,
     $if,
@@ -7,39 +22,27 @@ import {
     $peek,
     $val,
     $wrap,
-    LocalizerHook,
     type ComponentInit,
+    LocalizerHook,
 } from '@captainpants/sweeter-core';
-import { EditorSizesContext } from '../context/EditorSizesContext.js';
-import {
-    type ContextualValueCalculationContext,
-    cast,
-    categorizeFixedProperties,
-    type UnknownModel,
-    validate,
-    asObject,
-    type UnknownObjectModel,
-    createDefault,
-    UnknownType,
-    introspect,
-    StandardAssociatedValueKeys,
-} from '@captainpants/sweeter-arktype-modeling';
-import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
-import { DraftHook } from '../hooks/DraftHook.js';
-import { type EditorProps } from '../types.js';
-import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
-import { KnownPropertyEditorPart } from './KnownPropertyEditorPart.js';
-import { Row, Column, Label, Box } from '@captainpants/sweeter-web-gummybear';
 import {
     assertNotNullOrUndefined,
     defaultCompare,
 } from '@captainpants/sweeter-utilities';
-import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+import { Box, Column, Label, Row } from '@captainpants/sweeter-web-gummybear';
+
 import { IconButton } from '../components/IconButton.js';
+import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
+import { EditorSizesContext } from '../context/EditorSizesContext.js';
+import { DraftHook } from '../hooks/DraftHook.js';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { type EditorProps } from '../types.js';
+
+import { KnownPropertyEditorPart } from './KnownPropertyEditorPart.js';
 import { MapElementEditorPart } from './MapElementEditorPart.js';
-import { ObjectEditorRenameMappedModal } from './ObjectEditorRenameMappedModal.js';
 import { ObjectEditorAddMappedModal } from './ObjectEditorAddMappedModal.js';
-import { Type } from 'arktype';
+import { ObjectEditorRenameMappedModal } from './ObjectEditorRenameMappedModal.js';
 
 export function ObjectEditor(
     { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
@@ -120,8 +123,6 @@ export function ObjectEditor(
         ambient,
         local,
     };
-
-    const owner = $derived(() => draft.value.value);
 
     const type = $derived(() => draft.value.type);
     const mappedKeys = $derived(() =>
@@ -216,7 +217,8 @@ export function ObjectEditor(
                                             const res =
                                                 draft.value.unknownGetProperty(
                                                     property.name,
-                                                )?.valueModel!;
+                                                )?.valueModel;
+                                            assertNotNullOrUndefined(res);
                                             return res;
                                         },
                                     );
@@ -333,14 +335,16 @@ export function ObjectEditor(
 
                             // Note that a self to self doesn't do a
                             // validate but does trigger onFinished
-                            const validate = async (to: string) => {
+                            const validate = (to: string) => {
                                 const property =
                                     draft.value.unknownGetProperty(to);
                                 if (property !== undefined) {
-                                    return 'Property is already defined';
+                                    return Promise.resolve(
+                                        'Property is already defined',
+                                    );
                                 }
 
-                                return null;
+                                return Promise.resolve(null);
                             };
 
                             return (
@@ -385,14 +389,16 @@ export function ObjectEditor(
 
                             const isOpen = $mutable(false);
 
-                            const validate = async (name: string) => {
+                            const validate = (name: string) => {
                                 const property =
                                     draft.value.unknownGetProperty(name);
                                 if (property !== undefined) {
-                                    return 'Property is already defined';
+                                    return Promise.resolve(
+                                        'Property is already defined',
+                                    );
                                 }
 
-                                return null;
+                                return Promise.resolve(null);
                             };
 
                             return (
@@ -407,7 +413,7 @@ export function ObjectEditor(
                                         }
                                         onFinished={async (name, type) => {
                                             isOpen.value = false; // hide the modal
-                                            onAdd(name, type);
+                                            await onAdd(name, type);
                                         }}
                                     />
                                     <IconButton

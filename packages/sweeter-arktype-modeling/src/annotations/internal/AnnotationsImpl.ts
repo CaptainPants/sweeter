@@ -1,20 +1,22 @@
-import { descend } from '@captainpants/sweeter-utilities';
 import { type type } from 'arktype';
 
-import { shallowMatchesStructure } from '../../utility/validate.js';
-import { safeParse } from '../../utility/parse.js';
-import { AnnotationsBuilderImpl } from './AnnotationBuilderImpl.js';
-import { schemas } from './schemas.js';
-import { AnyTypeConstraint } from '../../type/types.js';
+import { $derived, Signal } from '@captainpants/sweeter-core';
+import { descend } from '@captainpants/sweeter-utilities';
+
 import {
     ContextualValueCalculationCallback,
     ContextualValueCalculationContext,
 } from '../../ContextualValues.js';
-import { type Annotations } from '../types.js';
-import { serializeSchemaForDisplay } from '../../utility/serializeSchemaForDisplay.js';
 import { isModel } from '../../models/isModel.js';
-import { $derived, Signal } from '@captainpants/sweeter-core';
+import { AnyTypeConstraint } from '../../type/types.js';
+import { safeParse } from '../../utility/parse.js';
+import { serializeSchemaForDisplay } from '../../utility/serializeSchemaForDisplay.js';
+import { shallowMatchesStructure } from '../../utility/validate.js';
 import { StandardAttributes } from '../StandardValues.js';
+import { type Annotations } from '../types.js';
+
+import { AnnotationsBuilderImpl } from './AnnotationBuilderImpl.js';
+import { schemas } from './schemas.js';
 
 export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
     implements Annotations

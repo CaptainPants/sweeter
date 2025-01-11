@@ -1,5 +1,7 @@
 import { GlobalCssStylesheet, stylesheet } from '@captainpants/sweeter-web';
+
 import { themeStructure } from '../theme/themeStructure.js';
+
 import { tags } from './markers.js';
 
 export const themeBase = new GlobalCssStylesheet({

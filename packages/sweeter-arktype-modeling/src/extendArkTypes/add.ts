@@ -1,4 +1,5 @@
 import { type Type } from 'arktype';
+
 import {
     type Annotations,
     type AnnotationSetter,

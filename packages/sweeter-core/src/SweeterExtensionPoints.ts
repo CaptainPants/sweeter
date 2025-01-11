@@ -13,6 +13,7 @@ declare global {
          * Merge into this interface using properties with structure:
          * '{library-name}': ComponentProps
          */
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         interface IntrinsicElementAttributeByElementNameString<
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TElementTypeString extends string,
@@ -24,6 +25,7 @@ declare global {
          * Merge into this interface using properties with structure:
          * '{library-name}': ResultType
          */
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         interface IntrinsicElementNameToType<
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TElementTypeString extends string,
@@ -36,6 +38,7 @@ declare global {
          * Merge into this interface using properties with structure:
          * '{library-name}': 'div' | 'span';
          */
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         interface IntrinsicElementNames {}
 
         /**
@@ -44,7 +47,7 @@ declare global {
          * Merge into this interface using properties with structure:
          * '{library-name}': 'attribute-1' | 'attribute-2'
          */
-
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         interface SkipSignalifyingIntrinsicElementAttributes<
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TElementTypeString extends string,
@@ -67,6 +70,7 @@ declare global {
          * Merge into this interface using properties with structure:
          * '{library-name}': BackendSpecificJSXRoot1 | BackendSpecificJSXRoot2;
          */
+        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         interface RuntimeRootHostElementTypes {}
 
         interface DebugFlags {

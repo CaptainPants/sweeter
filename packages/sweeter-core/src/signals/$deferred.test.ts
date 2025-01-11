@@ -1,5 +1,5 @@
-import { $mutable } from './$mutable.js';
 import { $deferred } from './$deferred.js';
+import { $mutable } from './$mutable.js';
 
 it('DeferredSignal updated after microtask (default deferral mechanism)', async () => {
     const mutable = $mutable(1);

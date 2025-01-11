@@ -33,6 +33,8 @@ export function depthFirstSearch<TNode>(
 
 function reversed<T>(iterable: Iterable<T>): T[] {
     return (
-        Array.isArray(iterable) ? iterable.slice() : Array.from(iterable)
+        Array.isArray(iterable)
+            ? (iterable as T[]).slice()
+            : Array.from(iterable)
     ).reverse();
 }

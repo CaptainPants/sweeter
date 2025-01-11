@@ -1,5 +1,5 @@
-import { dev } from '../dev.js';
 import { popAndCallAll } from '../internal/popAndCallAll.js';
+
 import { allExecutionContextVariables } from './internal/allExecutionContextVariables.js';
 
 export type SavedExecutionContextRevertAgainCallback = () => void;

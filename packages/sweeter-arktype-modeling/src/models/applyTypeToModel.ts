@@ -1,7 +1,8 @@
-import { type AnyModelConstraint, type Model } from './Model.js';
-import { ModelFactory } from './ModelFactory.js';
 import { type AnyTypeConstraint } from '../type/types.js';
 import { parseAsync, safeParseAsync } from '../utility/parse.js';
+
+import { type AnyModelConstraint, type Model } from './Model.js';
+import { ModelFactory } from './ModelFactory.js';
 
 /**
  * Attempt to validate the given models' value against the new type, returning undefined on failure.

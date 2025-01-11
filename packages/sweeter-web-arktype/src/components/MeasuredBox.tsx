@@ -1,14 +1,15 @@
 import {
     $mutable,
-    type PropertiesMightBeSignals,
-    type Component,
     $peek,
+    type Component,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+import { debounce } from '@captainpants/sweeter-utilities';
 import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
-import { debounce } from '@captainpants/sweeter-utilities';
+
 import { observeSize } from '../internal/observeSize.js';
 
 export type MeasuredBoxProps = PropertiesMightBeSignals<{

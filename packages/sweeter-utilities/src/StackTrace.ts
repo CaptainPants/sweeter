@@ -1,4 +1,4 @@
-import { throwError } from './throwError';
+import { throwError } from './throwError.js';
 
 /*
 Example:
@@ -19,7 +19,7 @@ Notes:
 - Anonymous functions and top level code will not have a function name, and instead will have the normally bracketed content unbracketed
 */
 const chromeRegex =
-    /^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_\.]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gim;
+    /^\s*at\s+(?:(?<func>(?:new )?[A-Z$_][A-Z0-9$_.]*)\s+\((?<location>[^)]+):(?<row>[0-9]+):(?<col>[0-9]+)\)\s*|(?<location_alt>[^)\n]+):(?<row_alt>[0-9]+):(?<col_alt>[0-9]+)\s*)$/gim;
 
 /*
 Example:

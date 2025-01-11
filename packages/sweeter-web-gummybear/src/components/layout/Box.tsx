@@ -1,14 +1,15 @@
 import {
     $derived,
     $val,
-    type ComponentInit,
+    Component,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { box } from '../../stylesheets/box.js';
 import {
     type ElementCssClasses,
     type ElementCssStyles,
 } from '@captainpants/sweeter-web';
+
+import { box } from '../../stylesheets/box.js';
 
 export type BoxProps = PropertiesMightBeSignals<{
     level?: number | undefined;
@@ -18,10 +19,12 @@ export type BoxProps = PropertiesMightBeSignals<{
     class?: ElementCssClasses | undefined;
 }>;
 
-export function Box(
-    { children, level, class: classProp, style }: BoxProps,
-    init: ComponentInit,
-) {
+export const Box: Component<BoxProps> = ({
+    children,
+    level,
+    class: classProp,
+    style,
+}) => {
     const className = $derived(() => {
         const resolvedLevel = $val(level);
 
@@ -43,4 +46,4 @@ export function Box(
             {children}
         </div>
     );
-}
+};

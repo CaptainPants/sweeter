@@ -1,8 +1,8 @@
-import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 import {
     type ElementAttributesByName,
     type WebSkipSignalifyingIntrinsicElementAttributes,
 } from './IntrinsicAttributes.js';
+import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace

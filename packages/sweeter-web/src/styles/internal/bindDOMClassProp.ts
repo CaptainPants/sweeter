@@ -2,12 +2,13 @@ import {
     type ContextSnapshot,
     subscribeToChanges,
 } from '@captainpants/sweeter-core';
-import { createCssClassSignal } from '../../styles/createCssClassSignal.js';
-import { type WebRuntime } from '../../runtime/types.js';
-import { addMountedCallback } from '../../runtime/internal/mounting.js';
-import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
-import { type ElementCssClasses } from '../../IntrinsicAttributes.js';
 import { arrayExcept } from '@captainpants/sweeter-utilities';
+
+import { type ElementCssClasses } from '../../IntrinsicAttributes.js';
+import { addMountedCallback } from '../../runtime/internal/mounting.js';
+import { type WebRuntime } from '../../runtime/types.js';
+import { createCssClassSignal } from '../../styles/createCssClassSignal.js';
+import { GlobalCssClass } from '../../styles/GlobalCssClass.js';
 
 export function bindDOMClassProp(
     contextSnapshot: ContextSnapshot,
@@ -54,9 +55,9 @@ export function bindDOMClassProp(
 
                 const className = thisTime
                     .map((x) =>
-                        x instanceof GlobalCssClass
-                            ? webRuntime.getPrefixedClassName(x)
-                            : x,
+                        typeof x === 'string'
+                            ? x
+                            : webRuntime.getPrefixedClassName(x),
                     )
                     .join(' ');
 

@@ -1,14 +1,15 @@
+import { type StandardPropertiesHyphen } from 'csstype';
+
 import {
-    type WritableSignal,
+    type MightBeSignal,
     type ReadWriteSignal,
     type Signal,
-    type MightBeSignal,
+    type WritableSignal,
 } from '@captainpants/sweeter-core';
-import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
-import { type StandardPropertiesHyphen } from 'csstype';
-import { type AbstractGlobalCssClass } from './styles/index.js';
 import { type ThreeValueBoolean } from './indeterminate.js';
+import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
+import { type AbstractGlobalCssClass } from './styles/index.js';
 import { type SpecialNumericPropertyName } from './styles/internal/translateNumericPropertyValue.js';
 
 // ==== EVENTS
@@ -50,11 +51,9 @@ type EventHandlerProperties<TElement extends Element> = {
 // ==== CSS
 
 export type StyleProperties = Omit<
-    // eslint-disable-next-line @typescript-eslint/ban-types
     StandardPropertiesHyphen<string & {}>,
     SpecialNumericPropertyName
 > & {
-    // eslint-disable-next-line @typescript-eslint/ban-types
     [Key in SpecialNumericPropertyName]?: (string & {}) | number | undefined;
 };
 
@@ -154,7 +153,7 @@ export type InputType =
     | 'time'
     | 'url'
     | 'week'
-    // eslint-disable-next-line @typescript-eslint/ban-types -- This allows custom values but also autocomplete. If you specify | string, the whole thing just becomes 'string'
+    // This allows custom values but also autocomplete. If you specify | string, the whole thing just becomes 'string'
     | (string & {});
 
 type HTMLInputElementAttributes = {
@@ -197,7 +196,7 @@ type SpecificElementAttributes<TElement> = TElement extends HTMLAnchorElement
               ? HTMLSelectElementAttributes
               : TElement extends HTMLOptionElement
                 ? HTMLOptionElementAttributes
-                : // eslint-disable-next-line @typescript-eslint/ban-types
+                : // eslint-disable-next-line @typescript-eslint/no-empty-object-type
                   {};
 
 export type ElementAttributesByName<TElementTypeString extends string> =

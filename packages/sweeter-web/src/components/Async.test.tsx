@@ -1,11 +1,12 @@
 /* @jsxImportSource .. */
 
 import { Async, Suspense } from '@captainpants/sweeter-core';
+
 import { testRender } from '../test/testRender.js';
 
 it('Fallback is shown', () => {
-    function neverFinishes(signal: AbortSignal) {
-        return new Promise<number>((resolve, reject) => {
+    function neverFinishes(_signal: AbortSignal) {
+        return new Promise<number>((_resolve, _reject) => {
             // Never resolves/rejects
         });
     }
@@ -30,8 +31,8 @@ it('Fallback is shown', () => {
 it('Fallback is shown and then content once loaded', async () => {
     const release = new AbortController();
 
-    function load(signal: AbortSignal) {
-        return new Promise<number>((resolve, reject) => {
+    function load(_signal: AbortSignal) {
+        return new Promise<number>((resolve, _reject) => {
             release.signal.addEventListener('abort', () => {
                 resolve(27);
             });

@@ -1,5 +1,3 @@
-import { type ValidationListener } from '../types.js';
-import { ValidationContainerContext } from '../context/ValidationContainerContext.js';
 import {
     $insertLocation,
     $mutable,
@@ -7,6 +5,9 @@ import {
     type ComponentInit,
     type Signal,
 } from '@captainpants/sweeter-core';
+
+import { ValidationContainerContext } from '../context/ValidationContainerContext.js';
+import { type ValidationListener } from '../types.js';
 
 export interface ValidationContainerHookResult {
     validated: (children: () => JSX.Element | undefined) => JSX.Element;

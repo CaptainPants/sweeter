@@ -1,12 +1,14 @@
-import { type ReadonlyRecord } from '../types.js';
 import { type Type, type type } from 'arktype';
-import { type AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/types.js';
+
+import { IsNever, type IsUnion } from '@captainpants/sweeter-utilities';
+
 import {
     type GetExpandoKeys,
     type GetExpandoValueType as GetExpandoValueType,
     type GetNonExpandoKeys,
 } from '../internal/utilityTypes.js';
-import { IsNever, type IsUnion } from '@captainpants/sweeter-utilities';
+import { type AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/types.js';
+import { type ReadonlyRecord } from '../types.js';
 
 /**
  * Types that operate on Zod type
@@ -65,7 +67,7 @@ export namespace arkTypeUtilityTypes {
             | keyof AllPropertyArkTypes<TSchemaObjectType>
             | keyof CatchallPropertyKeyRawType<TSchemaObjectType>
         ),
-        ValuesOfObject<TSchemaObjectType> | ValuesOfObject<TSchemaObjectType>,
+        ValuesOfObject<TSchemaObjectType>,
     ];
 
     export type ArrayElementType<TArrayArkType extends Type<unknown[]>> =

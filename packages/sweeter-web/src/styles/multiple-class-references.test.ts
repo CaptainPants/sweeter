@@ -1,5 +1,5 @@
-import { stylesheet, GlobalCssStylesheet } from './index.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
+import { GlobalCssStylesheet, stylesheet } from './index.js';
 
 it('Multiple class references produce sane output', () => {
     const classA = new GlobalCssClass({ className: 'ClassA' });

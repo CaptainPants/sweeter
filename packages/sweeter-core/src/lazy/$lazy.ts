@@ -34,7 +34,7 @@ export interface Lazy<T> {
     /**
      * Get the exception thrown as the result of the lazy load immediately, returning undefined if it is not yet available. Throws a TypeError if the result was not an error.
      */
-    tryGetError(): unknown | undefined;
+    tryGetError(): unknown;
 
     /**
      * Get the exception thrown as the result of the lazy load immediately, throwing a TypeError if it is not yet available. Throws a TypeError if the result was not an error.
@@ -68,7 +68,7 @@ class LazyImplementation<T> implements Lazy<T> {
     }
 
     ensure(): void {
-        this.#getOrCreatePromise();
+        void this.#getOrCreatePromise();
     }
 
     #getOrCreatePromise(): Promise<T> {
@@ -122,7 +122,7 @@ class LazyImplementation<T> implements Lazy<T> {
         );
     }
 
-    tryGetError(): unknown | undefined {
+    tryGetError(): unknown {
         if (this.#outcome === 'ERROR') {
             return this.#error!;
         } else if (this.#outcome === 'SUCCESS') {

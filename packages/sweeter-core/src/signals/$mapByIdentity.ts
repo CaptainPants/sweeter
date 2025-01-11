@@ -1,17 +1,19 @@
-import { type Signal } from '../signals/types.js';
-import { type MightBeSignal } from '../types.js';
-import { isSignal } from './isSignal.js';
-import { $derived } from './$derived.js';
 import {
     addExplicitStrongReference,
     assertNotNullOrUndefined,
     equals,
 } from '@captainpants/sweeter-utilities';
-import { SignalController } from './SignalController.js';
+
+import { type Signal } from '../signals/types.js';
+import { type MightBeSignal } from '../types.js';
+
 import { $controller } from './$controller.js';
-import { SignalState } from './SignalState.js';
-import { $peek, $val, $wrap } from './$val.js';
+import { $derived } from './$derived.js';
 import { $filtered } from './$filtered.js';
+import { $peek, $val, $wrap } from './$val.js';
+import { isSignal } from './isSignal.js';
+import { SignalController } from './SignalController.js';
+import { SignalState } from './SignalState.js';
 
 type IdentityCacheItem<TInput, TIdentity, TMapped> = {
     source: TInput;

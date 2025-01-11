@@ -1,5 +1,4 @@
 import { extendArkTypes_typeOnly } from './extendArkTypes/extendArkTypes_typeOnly.js';
-
 // Just so we import the interface extensions
 import type {} from './extendArkTypes/globals.js';
 

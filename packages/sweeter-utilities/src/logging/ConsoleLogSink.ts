@@ -1,5 +1,5 @@
-import { LogLevel } from './LogLevels';
-import { LogSink } from './types';
+import { LogLevel } from './LogLevels.js';
+import { LogSink } from './types.js';
 
 export class ConsoleLogSink implements LogSink {
     log(logLevel: LogLevel, message: string, err: unknown): void {

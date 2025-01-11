@@ -1,4 +1,4 @@
-import { $constant, type Signal, isSignal } from './index.js';
+import { isSignal, type Signal } from './index.js';
 import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
 
 /**

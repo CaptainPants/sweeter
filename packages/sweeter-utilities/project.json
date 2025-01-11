@@ -5,6 +5,19 @@
                 "projects": "@captainpants/rollup-plugin-sweeter",
                 "target": "build"
             }]
+        },
+        "watch": {
+            "dependsOn": [{
+                "projects": "@captainpants/rollup-plugin-sweeter",
+                "target": "build"
+            }]
+        },
+        "watch-test": {
+            "dependsOn": [{
+                "projects": "@captainpants/rollup-plugin-sweeter",
+                "target": "build"
+            }],
+            "executor": "@captainpants/nx-fire-and-forget:watch-and-return"
         }
     }
   }

@@ -44,15 +44,9 @@
         },
         "watch-test": {
             "dependsOn": [
-                {
-                    "projects": [
-                        "@captainpants/rollup-plugin-sweeter"
-                    ],
-                    "target": "build",
-                    "params": "ignore"
-                },
                 "^build"
-            ]
+            ],
+            "executor": "@captainpants/nx-fire-and-forget"
         },
         "@nx/js:tsc": {
             "cache": true,

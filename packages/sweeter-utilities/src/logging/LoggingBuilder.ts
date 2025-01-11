@@ -1,6 +1,6 @@
-import { applyLogRules } from './internal/applyLogRules';
-import { LogLevel, LogLevelOrdinal, LogLevels } from './LogLevels';
-import { LogSink } from './types';
+import { applyLogRules } from './internal/applyLogRules.js';
+import { LogLevel, LogLevelOrdinal, LogLevels } from './LogLevels.js';
+import { LogSink } from './types.js';
 
 export class LoggingBuilder {
     constructor() {}

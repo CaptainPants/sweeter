@@ -12,7 +12,7 @@ declare global {
          * This tells typescript what property to use for children.
          */
         interface ElementChildrenAttribute {
-            // eslint-disable-next-line @typescript-eslint/ban-types
+            // eslint-disable-next-line  @typescript-eslint/no-empty-object-type -- This is the structure required for JSX.ElementChildrenAttribute
             children: {}; // specify children name to use
         }
 

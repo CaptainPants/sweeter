@@ -1,12 +1,13 @@
 import {
     listenWhileNotCollected,
-    SignalState,
     type PropsWithIntrinsicAttributesFor,
+    SignalState,
 } from '@captainpants/sweeter-core';
 import { isReadWriteSignal, isSignal } from '@captainpants/sweeter-core';
-import { type WebRuntime } from '../types.js';
-import { indeterminite } from '../../indeterminate.js';
 import { hasOwnProperty } from '@captainpants/sweeter-utilities';
+
+import { indeterminite } from '../../indeterminate.js';
+import { type WebRuntime } from '../types.js';
 
 type Untyped = Record<string, unknown>;
 
@@ -67,7 +68,8 @@ const specialHandlingProps = ['children', 'ref', 'class', 'style'];
 export function bindDOMMiscProps<TElementType extends string>(
     node: SVGElement | HTMLElement,
     props: PropsWithIntrinsicAttributesFor<TElementType>,
-    runtime: WebRuntime,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    webRuntime: WebRuntime,
 ): void {
     for (const propKey of Object.getOwnPropertyNames(props)) {
         if (specialHandlingProps.includes(propKey)) {

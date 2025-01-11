@@ -1,3 +1,4 @@
+import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
 import {
     $derived,
     $peek,
@@ -6,9 +7,9 @@ import {
     LocalizerHook,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
-import { EditorHost } from '../components/EditorHost.js';
 import { idPaths } from '@captainpants/sweeter-utilities';
+
+import { EditorHost } from '../components/EditorHost.js';
 
 export type ElementEditorPartProps = PropertiesMightBeSignals<{
     index: number;

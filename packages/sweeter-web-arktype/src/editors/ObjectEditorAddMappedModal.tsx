@@ -1,12 +1,15 @@
-import { type AnyTypeConstraint } from '@captainpants/sweeter-arktype-modeling';
+import { Type } from 'arktype';
+
+import { type UnknownType } from '@captainpants/sweeter-arktype-modeling';
 import {
-    type PropertiesMightBeSignals,
-    type Component,
     $derived,
-    $val,
     $mutable,
     $peek,
+    $val,
+    type Component,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+import { type TypedEvent } from '@captainpants/sweeter-web';
 import {
     Button,
     Column,
@@ -15,24 +18,22 @@ import {
     Modal,
     Row,
 } from '@captainpants/sweeter-web-gummybear';
-import { type TypedEvent } from '@captainpants/sweeter-web';
-import { Type } from 'arktype';
 
 export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
     isOpen: boolean;
 
     keyType: Type<string>;
-    valueType: AnyTypeConstraint;
+    valueType: UnknownType;
 
     validate: (name: string) => Promise<string | null>;
 
     onCancelled: () => void;
-    onFinished: (name: string, type: AnyTypeConstraint) => Promise<void>;
+    onFinished: (name: string, type: UnknownType) => Promise<void>;
 }>;
 
 export const ObjectEditorAddMappedModal: Component<
     ObjectEditorAddMappedModalProps
-> = ({ isOpen, valueType, validate, onCancelled, onFinished }, init) => {
+> = ({ isOpen, valueType, validate, onCancelled, onFinished }) => {
     const title = $derived(() => {
         const typeResolved = $val(valueType);
         const title = typeResolved.annotations()?.getBestDisplayName();
@@ -95,7 +96,10 @@ export const ObjectEditorAddMappedModal: Component<
                             <Column sm={4}></Column>
                             <Column sm={8}>
                                 <Button onclick={onCancelClick}>Cancel</Button>
-                                <Button variant="primary" onclick={onOK}>
+                                <Button
+                                    variant="primary"
+                                    onclick={(evt) => void onOK(evt)}
+                                >
                                     OK
                                 </Button>
                             </Column>

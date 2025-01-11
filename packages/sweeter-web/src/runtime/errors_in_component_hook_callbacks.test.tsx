@@ -2,6 +2,7 @@
 
 import { type Component } from '@captainpants/sweeter-core';
 import { ErrorBoundary } from '@captainpants/sweeter-core';
+
 import { testRender } from '../test/testRender.js';
 
 const OnMountThrows: Component = (_, init) => {

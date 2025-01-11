@@ -2,10 +2,9 @@ import {
     asNumber,
     cast,
     ModelFactory,
-    validate,
     type NumberModel,
+    validate,
 } from '@captainpants/sweeter-arktype-modeling';
-import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $derived,
     $lastGood,
@@ -13,8 +12,11 @@ import {
     $val,
     type ComponentInit,
 } from '@captainpants/sweeter-core';
-import { type EditorProps } from '../types.js';
 import { Input } from '@captainpants/sweeter-web-gummybear';
+
+import { DraftHook } from '../hooks/DraftHook.js';
+import { type EditorProps } from '../types.js';
+
 import { ValidationDisplay } from './ValidationDisplay.js';
 
 export function NumberEditor(

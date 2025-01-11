@@ -1,8 +1,8 @@
 import {
     type ComponentInit,
     type HookConstructor,
-    type HookInitializer,
     type HookFactory,
+    type HookInitializer,
 } from '../types.js';
 
 export function initializeHook<TArgs extends readonly unknown[], TResult>(

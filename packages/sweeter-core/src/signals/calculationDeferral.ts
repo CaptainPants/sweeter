@@ -1,4 +1,4 @@
-import { dev } from '../dev';
+import { dev } from '../dev.js';
 
 let calculationCount = 0;
 let runningCallbacks = false;

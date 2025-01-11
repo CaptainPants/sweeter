@@ -1,4 +1,7 @@
-import { type Annotations, type AnnotationSetter } from '../annotations';
+import {
+    type Annotations,
+    type AnnotationSetter,
+} from '../annotations/types.js';
 
 declare module 'arktype/internal/methods/base.ts' {
     /** @ts-expect-error cast variance */ /* eslint-disable-next-line -- Multiple issues with the signature (but we have to match the original) */

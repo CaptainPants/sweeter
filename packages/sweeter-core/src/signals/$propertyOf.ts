@@ -1,7 +1,7 @@
 import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
 import { MutableDerivedSignal } from './internal/Signal-implementations/MutableDerivedSignal.js';
 import { isReadWriteSignal } from './isSignal.js';
-import { type Signal, type ReadWriteSignal } from './types.js';
+import { type ReadWriteSignal, type Signal } from './types.js';
 
 /**
  * Create a new signal pointing to a property of an existing signal.

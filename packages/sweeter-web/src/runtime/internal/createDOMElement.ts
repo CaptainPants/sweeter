@@ -4,15 +4,17 @@ import {
     ComponentFaultContext,
     Context,
     dev,
-    SignalState,
     type PropsWithIntrinsicAttributesFor,
     type Signal,
+    SignalState,
 } from '@captainpants/sweeter-core';
-import { bindDOMMiscProps } from './bindDOMMiscProps.js';
-import { addJsxChildren } from './addJsxChildren.js';
-import { type WebRuntime } from '../types.js';
+
 import { bindDOMClassProp } from '../../styles/internal/bindDOMClassProp.js';
 import { bindDOMStyleProp } from '../../styles/internal/bindDOMStyleProp.js';
+import { type WebRuntime } from '../types.js';
+
+import { addJsxChildren } from './addJsxChildren.js';
+import { bindDOMMiscProps } from './bindDOMMiscProps.js';
 import { addMountedCallback } from './mounting.js';
 
 export function createDOMElement<TElementTypeString extends string>(

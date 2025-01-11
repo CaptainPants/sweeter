@@ -1,6 +1,7 @@
-import { LogLevelOrdinal } from '../LogLevels';
-import { LogSink } from '../types';
-import { globalLogRules } from './globalLogRules';
+import { LogLevelOrdinal } from '../LogLevels.js';
+import { LogSink } from '../types.js';
+
+import { globalLogRules } from './globalLogRules.js';
 
 export function applyLogRules(
     minLevel: LogLevelOrdinal | undefined,

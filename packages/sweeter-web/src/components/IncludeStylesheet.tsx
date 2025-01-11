@@ -1,19 +1,20 @@
 /* @jsxImportSource .. */
 
 import {
+    $derived,
     $val,
-    type Signal,
     type Component,
     type MightBeSignal,
     type PropertiesMightBeSignals,
-    $derived,
+    type Signal,
 } from '@captainpants/sweeter-core';
+import { arrayExcept } from '@captainpants/sweeter-utilities';
+
+import { getWebRuntime } from '../runtime/getWebRuntime.js';
 import {
     type AbstractGlobalCssStylesheet,
     type StylesheetInclude,
 } from '../styles/index.js';
-import { getWebRuntime } from '../runtime/getWebRuntime.js';
-import { arrayExcept } from '@captainpants/sweeter-utilities';
 
 export type IncludeStylesheetProps = PropertiesMightBeSignals<{
     stylesheet: StylesheetInclude;

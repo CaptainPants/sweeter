@@ -1,5 +1,5 @@
-import { type Unsignal } from '../signals/types.js';
 import { $val } from '../signals/$val.js';
+import { type Unsignal } from '../signals/types.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CallParameters<T> = T extends (...args: infer S) => any ? S : [];

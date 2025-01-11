@@ -1,4 +1,5 @@
 import { type } from 'arktype';
+
 import { type TypeInfo } from '../models/parents.js';
 
 import { matchDefinitionRule } from './internal/matchDefinitionRule.js';
@@ -6,7 +7,7 @@ import { Matcher } from './Matcher.js';
 import { Rules } from './Rules.js';
 import { type TypeMatcherRule } from './types.js';
 
-test('test', async () => {
+test('test', () => {
     const rules: Array<TypeMatcherRule<number>> = [
         {
             name: 'rule1',

@@ -1,12 +1,12 @@
 import {
+    type LocalValueCallback,
+    type UnknownModel,
+    type UnknownReplacer,
+} from '@captainpants/sweeter-arktype-modeling';
+import {
     type Component,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import {
-    type LocalValueCallback,
-    type UnknownReplacer,
-    type UnknownModel,
-} from '@captainpants/sweeter-arktype-modeling';
 
 export type EditorLikeProps = PropertiesMightBeSignals<{
     id?: string | undefined;

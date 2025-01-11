@@ -1,19 +1,5 @@
-import { type type, type Type } from 'arktype';
+import { type Type, type type } from 'arktype';
 
-import {
-    type AnyObjectTypeConstraint,
-    type AnyTypeConstraint,
-    type UnknownObjectType,
-    type UnknownType,
-    type ReadonlyRecord,
-} from '../index.js';
-
-import { type ParentTypeInfo } from './parents.js';
-import {
-    type UnknownPropertyModel,
-    type PropertyModel,
-} from './PropertyModel.js';
-import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
 import {
     type IsAny,
     type IsBooleanLiteral,
@@ -21,6 +7,21 @@ import {
     type IsStringLiteral,
     type IsUnion,
 } from '@captainpants/sweeter-utilities';
+
+import {
+    type AnyObjectTypeConstraint,
+    type AnyTypeConstraint,
+    type ReadonlyRecord,
+    type UnknownObjectType,
+    type UnknownType,
+} from '../index.js';
+import { type arkTypeUtilityTypes } from '../utility/arkTypeUtilityTypes.js';
+
+import { type ParentTypeInfo } from './parents.js';
+import {
+    type PropertyModel,
+    type UnknownPropertyModel,
+} from './PropertyModel.js';
 
 export interface BaseModel<TValue, TSchema extends AnyTypeConstraint> {
     readonly value: TValue;
@@ -34,27 +35,36 @@ export interface SimpleModel<T, TSchema extends AnyTypeConstraint>
     readonly archetype: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface StringModel extends SimpleModel<string, Type<string>> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface NumberModel extends SimpleModel<number, Type<number>> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface BooleanModel extends SimpleModel<boolean, Type<boolean>> {}
 
 // Constants
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface LiteralModel<
     TSchema extends Type<string | number | boolean | null | undefined>,
 > extends SimpleModel<type.infer<TSchema>, TSchema> {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface StringConstantModel<TLiteralArkType extends Type<string>>
     extends LiteralModel<TLiteralArkType> {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface NumberConstantModel<TLiteralArkType extends Type<number>>
     extends LiteralModel<TLiteralArkType> {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface BooleanConstantModel<TLiteralArkType extends Type<boolean>>
     extends LiteralModel<TLiteralArkType> {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface NullModel extends LiteralModel<Type<null>> {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface UndefinedModel extends LiteralModel<Type<undefined>> {}
 
 export interface UnknownArrayModelMethods {
@@ -67,12 +77,14 @@ export interface UnknownArrayModelMethods {
     unknownSpliceElements: (
         start: number,
         deleteCount: number,
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The unknown | is just documentation really
         newElements: ReadonlyArray<unknown | UnknownModel>,
         validate?: boolean,
     ) => Promise<this>;
 
     unknownSetIndex: (
         index: number,
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The unknown | is just documentation really
         value: unknown | UnknownModel,
         validate?: boolean,
     ) => Promise<this>;
@@ -87,7 +99,7 @@ export interface UnknownArrayModelMethods {
 export interface UnknownArrayModel
     extends BaseModel<readonly unknown[], Type<unknown[]>>,
         UnknownArrayModelMethods {}
-``;
+
 // eslint-disable-next-line@typescript-eslint/no-explicit-any
 export interface ArrayModel<TArraySchema extends Type<unknown[]>>
     extends BaseModel<type.infer<TArraySchema>, TArraySchema>,
@@ -134,7 +146,11 @@ export type TypedPropertyModelForKey<
 interface UnknownObjectModelMethods {
     unknownGetProperty(key: string | symbol): UnknownPropertyModel | undefined;
 
-    unknownSetProperty(key: string | symbol, value: unknown): Promise<this>;
+    unknownSetProperty(
+        key: string | symbol,
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
+        value: unknown | UnknownModel,
+    ): Promise<this>;
 
     unknownGetCatchallType(): ReadonlyMap<UnknownType, UnknownType> | undefined;
 
@@ -147,7 +163,7 @@ interface UnknownObjectModelMethods {
     ): Promise<this>;
 
     unknownGetProperties(
-        filter?: ObjectPropertyType | undefined,
+        filter?: ObjectPropertyType,
     ): readonly UnknownPropertyModel[];
 }
 
@@ -165,6 +181,12 @@ export type MapObjectEntry<TSchema extends AnyTypeConstraint> = readonly [
     model: PropertyModel<TSchema>,
 ];
 
+export type ValueModelForProperty<
+    TSchema extends AnyObjectTypeConstraint,
+    Key extends keyof type.infer<TSchema>,
+    // @ts-expect-error -- Typescript is choking on the Model<Type<xxxx>> but we know its ok
+> = Model<Type<type.infer<TSchema>[Key]>>;
+
 export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
     extends BaseModel<type.infer<TObjectSchema>, TObjectSchema>,
         UnknownObjectModelMethods {
@@ -178,14 +200,16 @@ export interface ObjectModel<TObjectSchema extends AnyObjectTypeConstraint>
     ): TypedPropertyModelForKey<TObjectSchema, TKey>;
 
     getProperties(
-        filter?: ObjectPropertyType | undefined,
+        filter?: ObjectPropertyType,
     ): readonly PropertyModelNoConstraint<
         arkTypeUtilityTypes.AllPropertyArkTypes<TObjectSchema>
     >[];
 
     setProperty<TKey extends keyof type.infer<TObjectSchema> & string>(
         key: TKey,
-        value: type.infer<TObjectSchema>[TKey],
+        value:
+            | type.infer<TObjectSchema>[TKey]
+            | ValueModelForProperty<TObjectSchema, TKey>,
     ): Promise<this>;
 }
 
@@ -217,6 +241,7 @@ export interface UnionModel<TUnion extends AnyTypeConstraint>
 export type SpreadModel<TUnionOfSchemas extends AnyTypeConstraint> =
     TUnionOfSchemas extends infer _ ? Model<TUnionOfSchemas> : never;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface UnknownTypedModel extends BaseModel<unknown, Type<unknown>> {}
 
 export type UnknownModel = BaseModel<unknown, Type<unknown>>;
@@ -274,7 +299,7 @@ export type Model<TSchema extends AnyTypeConstraint> = [
                             : [TUnderlying] extends [object]
                               ? /* @ts-expect-error - not narrowing TSchema but we know its an object */
                                 ObjectModel<TSchema>
-                              : /* eslint-disable-next-line @typescript-eslint/ban-types -- We want the model for a Function to be 'never' at the moment so need this check */
+                              : /* eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- We want the model for a Function to be 'never' at the moment so need this check */
                                 [TUnderlying] extends [Function] | [symbol]
                                 ? never
                                 : BaseModel<TUnderlying, TSchema>

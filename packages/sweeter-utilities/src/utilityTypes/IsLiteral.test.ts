@@ -2,25 +2,25 @@ import {
     type IsBooleanLiteral,
     type IsNumberLiteral,
     type IsStringLiteral,
-    type TypeMatchAssert,
+    typeAssert,
 } from '../index.js';
 
 it('IsBooleanLiteral works', () => {
-    const _1: TypeMatchAssert<IsBooleanLiteral<true>, true> = true;
+    typeAssert.extends<IsBooleanLiteral<true>, true>();
 
-    const _2: TypeMatchAssert<IsBooleanLiteral<false>, true> = true;
+    typeAssert.extends<IsBooleanLiteral<false>, true>();
 
-    const _3: TypeMatchAssert<IsBooleanLiteral<boolean>, false> = true;
+    typeAssert.extends<IsBooleanLiteral<boolean>, false>();
 });
 
 it('IsStringLiteral works', () => {
-    const _1: TypeMatchAssert<IsStringLiteral<'test'>, true> = true;
+    typeAssert.extends<IsStringLiteral<'test'>, true>();
 
-    const _2: TypeMatchAssert<IsStringLiteral<string>, false> = true;
+    typeAssert.extends<IsStringLiteral<string>, false>();
 });
 
 it('IsNumberLiteral works', () => {
-    const _1: TypeMatchAssert<IsNumberLiteral<1>, true> = true;
+    typeAssert.extends<IsNumberLiteral<1>, true>();
 
-    const _2: TypeMatchAssert<IsNumberLiteral<number>, false> = true;
+    typeAssert.extends<IsNumberLiteral<number>, false>();
 });

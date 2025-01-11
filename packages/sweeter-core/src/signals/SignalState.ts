@@ -22,6 +22,7 @@ export type InitiatedSignalState<T> = Exclude<
 
 const initValue: InitialSignalState = Object.freeze({ mode: 'INITIALISING' });
 
+// eslint-disable-next-line @typescript-eslint/no-namespace -- We are using a namespace here to add 'static functions' to an interface
 export namespace SignalState {
     export function init(): InitialSignalState {
         return initValue;

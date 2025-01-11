@@ -1,6 +1,9 @@
-import { type UnknownType } from '../types.js';
-import { throwError } from '@captainpants/sweeter-utilities';
 import { type Type } from 'arktype';
+
+import { throwError } from '@captainpants/sweeter-utilities';
+
+import { type UnknownType } from '../types.js';
+
 import { asUnionNode } from './internal/arktypeInternals.js';
 
 export function tryGetUnionTypeInfo(schema: UnknownType) {

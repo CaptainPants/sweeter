@@ -1,4 +1,4 @@
-import { type AnyTypeConstraint } from '../type/index.js';
+import { UnknownType } from '../type/index.js';
 
 export type ParentRelationship =
     | {
@@ -13,7 +13,7 @@ export type ParentRelationship =
       };
 
 export interface TypeInfo {
-    type: AnyTypeConstraint;
+    type: UnknownType;
     parentInfo: ParentTypeInfo | null;
 }
 export interface ParentTypeInfo extends TypeInfo {

@@ -5,14 +5,15 @@ import {
     type IntrinsicElementAttributes,
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
-import { columns } from '../../stylesheets/grid.js';
-import {
-    type ElementCssStyles,
-    type ElementCssClasses,
-} from '@captainpants/sweeter-web';
 import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
-import { type ColumnWidth } from '../../types.js';
+import {
+    type ElementCssClasses,
+    type ElementCssStyles,
+} from '@captainpants/sweeter-web';
+
 import { columnWidthToIdentifier } from '../../stylesheets/columnWidthToIdentifier.js';
+import { columns } from '../../stylesheets/grid.js';
+import { type ColumnWidth } from '../../types.js';
 
 export type ColumnProps = PropertiesMightBeSignals<{
     id?: string | undefined;

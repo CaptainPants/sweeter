@@ -1,18 +1,17 @@
-import {
-    type AbstractGlobalCssStylesheet,
-    type GlobalStyleSheetContentGeneratorContext,
-    type AbstractGlobalCssClass,
-    type StylesheetContentGenerator,
-} from './types.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
 import { isStylesheetContentGenerator } from './isStylesheetContentGenerator.js';
+import {
+    type AbstractGlobalCssClass,
+    type AbstractGlobalCssStylesheet,
+    type GlobalStyleSheetContentGeneratorContext,
+    type StylesheetContentGenerator,
+} from './types.js';
 
 export type StylesheetParametersType =
     | AbstractGlobalCssClass
     | StylesheetContentGenerator
     | string
     | number
-    | string
     | StylesheetParametersType[];
 
 /**

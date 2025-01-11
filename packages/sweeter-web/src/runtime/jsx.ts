@@ -1,8 +1,9 @@
 import {
-    type PropsWithIntrinsicAttributesFor,
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXResultForComponentOrElementType,
+    type PropsWithIntrinsicAttributesFor,
 } from '@captainpants/sweeter-core';
+
 import { getWebRuntime } from './getWebRuntime.js';
 
 export function jsx<

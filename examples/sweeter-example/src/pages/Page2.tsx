@@ -1,17 +1,14 @@
-import { Button, Modal, TextArea } from '@captainpants/sweeter-web-gummybear';
-
 //import typescriptLogo from "./typescript.svg";
-
 //import viteLogo from "/vite.svg";
-
 import {
     $derived,
     $mutable,
-    type NoProps,
     type ComponentInit,
+    type NoProps,
 } from '@captainpants/sweeter-core';
+import { Button, Modal, TextArea } from '@captainpants/sweeter-web-gummybear';
 
-export function Page2(props: NoProps, init: ComponentInit): JSX.Element {
+export function Page2(_props: NoProps, _init: ComponentInit): JSX.Element {
     const open = $mutable(false);
 
     return (

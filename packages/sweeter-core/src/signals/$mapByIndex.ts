@@ -1,15 +1,17 @@
-import { type Signal } from '../signals/types.js';
-import { type MightBeSignal } from '../types.js';
-import { isSignal } from './isSignal.js';
-import { $derived } from './$derived.js';
-import { $peek, $val, $wrap } from './$val.js';
 import {
     addExplicitStrongReference,
     assertNotNullOrUndefined,
 } from '@captainpants/sweeter-utilities';
+
+import { type Signal } from '../signals/types.js';
+import { type MightBeSignal } from '../types.js';
+
 import { $controller } from './$controller.js';
-import { SignalState } from './SignalState.js';
+import { $derived } from './$derived.js';
+import { $peek, $val, $wrap } from './$val.js';
+import { isSignal } from './isSignal.js';
 import { SignalController } from './SignalController.js';
+import { SignalState } from './SignalState.js';
 
 export type IndexCacheItem<TInput, TMapped> = {
     mappedElement: TMapped;

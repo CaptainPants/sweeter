@@ -1,8 +1,9 @@
-import { waitFor } from '../test';
-import { whenGarbageCollected } from './whenGarbageCollected';
+import { waitFor } from '../test/waitFor.js';
+
+import { whenGarbageCollected } from './whenGarbageCollected.js';
 
 it('First attempt at garbage collection aware unit test', async () => {
-    let collected = new AbortController();
+    const collected = new AbortController();
 
     let thing: object | undefined = {};
 

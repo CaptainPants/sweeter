@@ -2,17 +2,7 @@ import { type type } from 'arktype';
 
 import { descend } from '@captainpants/sweeter-utilities';
 
-import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
-import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
-import { UnionModelImpl } from './internal/UnionModelImpl.js';
-import { UnknownTypedModelImpl } from './internal/UnknownTypedModelImpl.js';
-import { ObjectImpl } from './internal/ObjectImpl.js';
-import {
-    type UnknownModel,
-    type Model,
-    type AnyModelConstraint,
-} from './Model.js';
-import { type ParentTypeInfo } from './parents.js';
+import { stringForError } from '../internal/stringForError.js';
 import {
     isArrayType,
     isBooleanLiteralType,
@@ -26,11 +16,22 @@ import {
     isUnionType,
     isUnknownType,
 } from '../type/introspect/is.js';
-import { validateAndThrow } from '../utility/validate.js';
 import { type AnyTypeConstraint, type UnknownType } from '../type/types.js';
-import { safeParse } from '../utility/parse.js';
 import { type ValueTypeFromModel } from '../types.js';
-import { stringForError } from '../internal/stringForError.js';
+import { safeParse } from '../utility/parse.js';
+import { validateAndThrow } from '../utility/validate.js';
+
+import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
+import { ObjectImpl } from './internal/ObjectImpl.js';
+import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
+import { UnionModelImpl } from './internal/UnionModelImpl.js';
+import { UnknownTypedModelImpl } from './internal/UnknownTypedModelImpl.js';
+import {
+    type AnyModelConstraint,
+    type Model,
+    type UnknownModel,
+} from './Model.js';
+import { type ParentTypeInfo } from './parents.js';
 
 export interface CreateModelArgs<TSchema extends AnyTypeConstraint> {
     schema: TSchema; // putting this at the top seems to help with type inference
@@ -48,14 +49,14 @@ export interface CreateModelPartArgs<TSchema extends AnyTypeConstraint> {
 
 type ModelFactoryMethod<TSchema extends AnyTypeConstraint> = (
     value: type.infer<TSchema>,
-    arkType: TSchema,
+    schema: TSchema,
     parentInfo: ParentTypeInfo | null,
     depth: number,
 ) => UnknownModel;
 
 type UnknownModelFactoryMethod = (
     value: unknown,
-    arkType: AnyTypeConstraint,
+    schema: UnknownType,
     parentInfo: ParentTypeInfo | null,
     depth: number,
 ) => UnknownModel | undefined;
@@ -187,8 +188,6 @@ function createModelPart<TSchema extends AnyTypeConstraint>(
     const { value, schema: type, parentInfo, depth } = args;
     return doCreateModelPart(value, type, parentInfo, depth) as never;
 }
-
-let count = 0;
 
 function doCreateModelPart<TSchema extends AnyTypeConstraint>(
     value: unknown,

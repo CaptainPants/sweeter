@@ -1,4 +1,5 @@
 import { getRuntime } from '@captainpants/sweeter-core';
+
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
 import { type WebRuntime } from './types.js';
 

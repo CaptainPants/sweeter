@@ -1,9 +1,15 @@
-import { descend } from '@captainpants/sweeter-utilities';
 import { type Type, type type } from 'arktype';
 
+import { descend } from '@captainpants/sweeter-utilities';
+
+import { introspect } from '../../type/index.js';
+import { type AnyTypeConstraint } from '../../type/types.js';
+import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
+import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
+import { isModel } from '../isModel.js';
 import {
-    type SpreadModel,
     type Model,
+    type SpreadModel,
     type UnionModel,
     type UnknownModel,
 } from '../Model.js';
@@ -12,11 +18,6 @@ import { type ParentTypeInfo } from '../parents.js';
 
 import { ModelImpl } from './ModelImpl.js';
 import { validateAndMakeModel } from './validateAndMakeModel.js';
-import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
-import { findUnionOptionForValue } from '../findUnionOptionForValue.js';
-import { type AnyTypeConstraint } from '../../type/types.js';
-import { introspect } from '../../type/index.js';
-import { isModel } from '../isModel.js';
 
 export class UnionModelImpl<TUnionSchema extends AnyTypeConstraint>
     extends ModelImpl<type.infer<TUnionSchema>, TUnionSchema>
@@ -81,7 +82,7 @@ export class UnionModelImpl<TUnionSchema extends AnyTypeConstraint>
 
     public async replace(
         value: unknown,
-        validate: boolean = true,
+        _validate: boolean = true,
     ): Promise<this> {
         const searchWithValue = isModel(value) ? value.value : value;
         const type = findUnionOptionForValue(searchWithValue, this.type);

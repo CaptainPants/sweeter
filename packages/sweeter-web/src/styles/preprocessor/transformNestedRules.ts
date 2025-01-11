@@ -1,6 +1,6 @@
 import {
-    type RuleAstNode,
     type AtRuleAstNode,
+    type RuleAstNode,
     type RuleOrAtRule,
 } from './types.js';
 

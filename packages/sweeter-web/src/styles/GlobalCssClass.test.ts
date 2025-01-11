@@ -1,5 +1,5 @@
-import { stylesheet } from './stylesheet.js';
 import { GlobalCssClass } from './GlobalCssClass.js';
+import { stylesheet } from './stylesheet.js';
 
 it('Common case produces sensible result', () => {
     const class_ = new GlobalCssClass({

@@ -1,10 +1,12 @@
 import { type Type } from 'arktype';
+
+import { Signal } from '@captainpants/sweeter-core';
+
 import {
     type AnyTypeConstraint,
     type ContextualValueCalculationCallback,
     type ContextualValueCalculationContext,
 } from '../index.js';
-import { Signal } from '@captainpants/sweeter-core';
 
 export interface AnnotationsBuilder {
     attr(name: string, value: unknown): this;

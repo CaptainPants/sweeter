@@ -1,6 +1,7 @@
 /* @jsxImportSource .. */
 
 import { Offscreen } from '@captainpants/sweeter-core';
+
 import { testRender } from '../test/testRender.js';
 
 it('Matches snapshot', () => {

@@ -1,10 +1,10 @@
-import { SignalBase } from './SignalBase.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
 import {
-    SignalUpdateValuesAreEqualCallback,
-    type CallbackDelayedRunner,
     type Signal,
+    SignalUpdateValuesAreEqualCallback,
 } from '../../types.js';
+
+import { SignalBase } from './SignalBase.js';
 
 export class FilteredSignal<T> extends SignalBase<T> {
     constructor(

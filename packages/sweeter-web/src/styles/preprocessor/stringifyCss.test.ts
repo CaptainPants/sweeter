@@ -1,5 +1,5 @@
-import { stringifyCss } from './stringifyCss.js';
 import { parse } from './parse.js';
+import { stringifyCss } from './stringifyCss.js';
 
 it('stringify 1', () => {
     const css = `

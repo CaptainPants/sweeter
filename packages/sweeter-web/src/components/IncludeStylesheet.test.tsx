@@ -1,8 +1,10 @@
 /* @jsxImportSource .. */
 
 import { type Component } from '@captainpants/sweeter-core';
+
 import { GlobalCssClass } from '../styles/index.js';
 import { testRender } from '../test/testRender.js';
+
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
 const example = new GlobalCssClass({
@@ -32,7 +34,7 @@ const component1Stylesheet = new GlobalCssClass({
     `,
 });
 
-const Component1: Component = (props, init) => {
+const Component1: Component = (_props, _init) => {
     return (
         <>
             <IncludeStylesheet stylesheet={component1Stylesheet} />
@@ -64,7 +66,7 @@ const component2Stylesheet = new GlobalCssClass({
     `,
 });
 
-const Component2: Component = (props, init) => {
+const Component2: Component = (_props, _init) => {
     return (
         <>
             <IncludeStylesheet stylesheet={component2Stylesheet} />

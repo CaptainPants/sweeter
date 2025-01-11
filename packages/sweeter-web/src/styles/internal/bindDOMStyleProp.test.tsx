@@ -1,6 +1,7 @@
 /* @jsxImportSource ../.. */
 
 import { $mutable } from '@captainpants/sweeter-core';
+
 import { testRender } from '../../test/testRender.js';
 
 it('bindStyle', () => {

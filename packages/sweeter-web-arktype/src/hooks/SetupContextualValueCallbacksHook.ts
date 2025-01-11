@@ -1,16 +1,15 @@
 import {
-    notFound,
     type AmbientValueCallback,
     type ContextualValueCalculationContext,
     type LocalValueCallback,
+    notFound,
 } from '@captainpants/sweeter-arktype-modeling';
-
 import {
-    type Signal,
-    type ComponentInit,
-    $peek,
     $derived,
+    $peek,
     $val,
+    type ComponentInit,
+    type Signal,
 } from '@captainpants/sweeter-core';
 import { descend } from '@captainpants/sweeter-utilities';
 

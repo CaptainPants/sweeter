@@ -1,9 +1,9 @@
-import { type IsUnion, type TypeMatchAssert } from '../index.js';
+import { type IsUnion, typeAssert } from '../index.js';
 
 it('IsUnion works', () => {
-    const _1: TypeMatchAssert<IsUnion<{ a: 1 } | { b: 2 }>, true> = true;
+    typeAssert.extends<IsUnion<{ a: 1 } | { b: 2 }>, true>();
 
-    const _2: TypeMatchAssert<IsUnion<{ a: 1 }>, false> = true;
+    typeAssert.extends<IsUnion<{ a: 1 }>, false>();
 
-    const _3: TypeMatchAssert<IsUnion<1 | 2>, true> = true;
+    typeAssert.extends<IsUnion<1 | 2>, true>();
 });

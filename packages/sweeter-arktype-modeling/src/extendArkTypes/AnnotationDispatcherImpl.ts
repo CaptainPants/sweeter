@@ -1,15 +1,15 @@
 import { BaseNode } from '@ark/schema';
 
-import {
-    type AnnotationSetter,
-    type Annotations,
-} from '../annotations/types.js';
-import { type AnyTypeConstraint } from '../type/types.js';
-import { type AnnotationDispatcher } from './types.js';
-
+import { AnnotationsBuilderImpl } from '../annotations/internal/AnnotationBuilderImpl.js';
 // Concrete classes here will cause arktype to be imported in full
 import { AnnotationsImpl } from '../annotations/internal/AnnotationsImpl.js';
-import { AnnotationsBuilderImpl } from '../annotations/internal/AnnotationBuilderImpl.js';
+import {
+    type Annotations,
+    type AnnotationSetter,
+} from '../annotations/types.js';
+import { type AnyTypeConstraint } from '../type/types.js';
+
+import { type AnnotationDispatcher } from './types.js';
 
 export class AnnotationDispatcherImpl implements AnnotationDispatcher {
     annotate<TSchema extends AnyTypeConstraint>(

@@ -1,4 +1,4 @@
-import { toSearcher } from './toSearcher';
+import { toSearcher } from './toSearcher.js';
 
 it('Search matches', () => {
     expect(toSearcher(['banana'])('This is an example banana.')).toStrictEqual(

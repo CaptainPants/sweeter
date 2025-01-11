@@ -1,8 +1,10 @@
+import * as assert from 'typed-assert';
+
 import {
     type ContextualValueCalculationContext,
     createTypeMatcher,
-    type TypeMatcherRule,
     notFound,
+    type TypeMatcherRule,
 } from '@captainpants/sweeter-arktype-modeling';
 import {
     $constant,
@@ -10,23 +12,23 @@ import {
     $peek,
     $val,
     $valProperties,
-    isSignal,
+    Component,
     type ComponentInit,
+    isSignal,
 } from '@captainpants/sweeter-core';
 
-import { AmbientValues } from './AmbientValues.js';
+import { EditorRootContext } from '../context/EditorRootContext.js';
+import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
 import {
     type EditorComponentType,
     type EditorHostProps,
     type RenderNextFunction,
     type RenderNextFunctionArgs,
 } from '../types.js';
-import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
-import { EditorRootContext } from '../context/EditorRootContext.js';
-import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-const Last = (props: {}, init: ComponentInit): JSX.Element => {
+import { AmbientValues } from './AmbientValues.js';
+
+const Last: Component = (): JSX.Element => {
     return <div>No match</div>;
 };
 
@@ -41,7 +43,7 @@ function createRenderFunction(
     // In reverse order from last to first, create a render function that calls the next ('previous' in reverse) render function as its 'next'
     for (let i = matches.length - 1; i >= 0; --i) {
         const Editor = matches[i]?.result;
-        assertNotNullOrUndefined(Editor);
+        assert.isNotUndefined(Editor);
 
         const innerNext = renderFunction;
 

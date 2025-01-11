@@ -1,6 +1,6 @@
-import { SignalBase } from './internal/Signal-implementations/SignalBase';
-import { type InitiatedSignalState, type SignalState } from './SignalState';
-import { type Signal } from './types';
+import { SignalBase } from './internal/Signal-implementations/SignalBase.js';
+import { type InitiatedSignalState, type SignalState } from './SignalState.js';
+import { type Signal } from './types.js';
 
 export class SignalController<T> {
     #abort: AbortController;
@@ -53,6 +53,7 @@ class ControlledSignal<T> extends SignalBase<T> {
      * This primarily exists to make sure that the controller is not garbage collected
      * as long as the signal itself does -- which is important in a chain of signals.
      */
+    // eslint-disable-next-line no-unused-private-class-members -- This keeps the controller alive
     #owner: SignalController<T>;
 
     [notifySymbol](newState: SignalState<T>): void {

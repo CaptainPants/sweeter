@@ -7,6 +7,7 @@ import {
     type PropertiesMightBeSignals,
 } from '../types.js';
 import { $insertLocation } from '../utility/$insertLocation.js';
+
 import { SuspenseContext } from './SuspenseContext.js';
 
 export type SuspenseProps = PropertiesMightBeSignals<{

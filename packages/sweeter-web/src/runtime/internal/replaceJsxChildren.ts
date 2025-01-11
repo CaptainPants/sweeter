@@ -2,14 +2,15 @@ import {
     $insertLocation,
     type FlattenedElement,
 } from '@captainpants/sweeter-core';
+import { createLogger } from '@captainpants/sweeter-utilities';
+
 import {
     announceChildrenMountedRecursive,
     announceUnMountedRecursive,
     isMounted,
 } from './mounting.js';
-import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 import { isText } from './utility/isText.js';
-import { createLogger } from '@captainpants/sweeter-utilities';
+import { removeSelfAndLaterSiblings } from './utility/removeSelfAndLaterSiblings.js';
 
 const logger = createLogger($insertLocation(), replaceJsxChildren);
 

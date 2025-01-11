@@ -1,10 +1,12 @@
 import {
     listenWhileNotCollected,
-    SignalState,
     type Signal,
+    SignalState,
 } from '@captainpants/sweeter-core';
 import { $derived, $val } from '@captainpants/sweeter-core';
+
 import { type ElementCssStyles } from '../../IntrinsicAttributes.js';
+
 import { translateNumericPropertyValue } from './translateNumericPropertyValue.js';
 
 export function bindDOMStyleProp(

@@ -1,16 +1,18 @@
 /* @jsxImportSource .. */
 
 import {
+    $derived,
     $lazyComponentType,
     $mutable,
-    Suspense,
     type Component,
-    $derived,
+    Suspense,
 } from '@captainpants/sweeter-core';
+
 import { testRender } from '../test/testRender.js';
-import { Router } from './Router.js';
-import { match, pathTemplate } from './index.js';
+
 import { $route } from './$route.js';
+import { match, pathTemplate } from './index.js';
+import { Router } from './Router.js';
 
 it('General', async () => {
     const routes = [
@@ -21,7 +23,7 @@ it('General', async () => {
                 }),
             );
 
-            return ([arg], path, url) => {
+            return ([_arg], _path, _url) => {
                 return <Component text="Test" />;
             };
         }),

@@ -1,6 +1,6 @@
 import { assertNotNullOrUndefined } from './assertNotNullOrUndefined.js';
 
-test('assertNotNullOrUndefined', async () => {
+test('assertNotNullOrUndefined', () => {
     assertNotNullOrUndefined(1);
 
     expect(() => {

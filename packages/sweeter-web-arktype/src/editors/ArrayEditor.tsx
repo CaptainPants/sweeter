@@ -1,43 +1,38 @@
 import {
+    type AnyTypeConstraint,
     asArray,
     cast,
+    createDefault,
+    introspect,
     type UnknownArrayModel,
     validate,
-    createDefault,
-    type AnyTypeConstraint,
-    introspect,
 } from '@captainpants/sweeter-arktype-modeling';
-import { DraftHook } from '../hooks/DraftHook.js';
 import {
     $derived,
-    $peek,
-    $val,
-    LocalizerHook,
-    type ComponentInit,
-    $foreach,
     $if,
     $lastGood,
     $mapByIndex,
+    $peek,
+    $val,
+    type ComponentInit,
+    LocalizerHook,
 } from '@captainpants/sweeter-core';
-import { type EditorProps } from '../types.js';
+import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
 import {
     SortableHandle,
     SortableList,
 } from '@captainpants/sweeter-web-gummybear';
-import { GlobalCssClass, stylesheet } from '@captainpants/sweeter-web';
+
+import { IconButton } from '../components/IconButton.js';
+import { DraftHook } from '../hooks/DraftHook.js';
+import { IconProviderContext } from '../icons/context/IconProviderContext.js';
+import { type EditorProps } from '../types.js';
+
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
-import { IconProviderContext } from '../icons/context/IconProviderContext.js';
-import { IconButton } from '../components/IconButton.js';
 
 export function ArrayEditor(
-    {
-        model,
-        replace,
-        propertyDisplayName,
-        idPath,
-        indent,
-    }: Readonly<EditorProps>,
+    { model, replace, idPath, indent }: Readonly<EditorProps>,
     init: ComponentInit,
 ): JSX.Element {
     const typedModel = $lastGood(() => {
@@ -121,7 +116,12 @@ export function ArrayEditor(
 
     return (
         <>
-            <SortableList onSortEnd={move} useHandle>
+            <SortableList
+                onSortEnd={(oldIndex, newIndex) =>
+                    void move(oldIndex, newIndex)
+                }
+                useHandle
+            >
                 {$mapByIndex(
                     $derived(() => draft.value.unknownGetElements()),
                     (item, index) => {
@@ -166,7 +166,7 @@ export function ArrayEditor(
             )}
             <div>
                 {$derived(() =>
-                    allowedTypes.value.map((allowedType, index) => {
+                    allowedTypes.value.map((allowedType) => {
                         const title =
                             allowedTypes.value.length === 1
                                 ? localize('Add')

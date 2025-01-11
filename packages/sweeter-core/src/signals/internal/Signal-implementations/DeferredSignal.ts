@@ -1,6 +1,7 @@
-import { SignalBase } from './SignalBase.js';
 import { deferForBatchEnd, isBatching } from '../../batching.js';
 import { type CallbackDelayedRunner, type Signal } from '../../types.js';
+
+import { SignalBase } from './SignalBase.js';
 
 export class DeferredSignal<T> extends SignalBase<T> {
     constructor(

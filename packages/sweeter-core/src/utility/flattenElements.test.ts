@@ -1,8 +1,8 @@
 import {
-    $derived,
     $controller,
-    SignalState,
+    $derived,
     flattenElements,
+    SignalState,
 } from '../index.js';
 
 it('throws through layers', () => {

@@ -1,19 +1,19 @@
 import {
-    $route,
-    Router,
-    getWebRuntime,
-    pathTemplate,
-} from '@captainpants/sweeter-web';
-import {
-    type NoProps,
     type ComponentInit,
     ErrorBoundary,
+    type NoProps,
 } from '@captainpants/sweeter-core';
+import {
+    $route,
+    getWebRuntime,
+    pathTemplate,
+    Router,
+} from '@captainpants/sweeter-web';
+import { createTheme } from '@captainpants/sweeter-web-gummybear';
 
 import { HomePage } from './pages/HomePage.js';
 import { Page1 } from './pages/Page1.js';
 import { Page2 } from './pages/Page2.js';
-import { createTheme } from '@captainpants/sweeter-web-gummybear';
 
 const { IncludeThemeStylesheets } = createTheme({});
 
@@ -25,7 +25,7 @@ const routes = () => {
     ];
 };
 
-export function App(props: NoProps, init: ComponentInit) {
+export function App(_props: NoProps, _init: ComponentInit) {
     const path = getWebRuntime().location;
 
     return (

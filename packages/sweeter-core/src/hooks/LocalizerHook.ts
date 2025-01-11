@@ -1,4 +1,5 @@
 import { interpolatePlaceholders } from '@captainpants/sweeter-utilities';
+
 import { type ComponentInit } from '../types.js';
 
 export type LocalizationTemplateCallback = (key: string) => string;
@@ -32,6 +33,7 @@ function localizeImplementation(
     return interpolatePlaceholders(template, args);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function LocalizerHook(init: ComponentInit): Localizer {
     return {
         localize: localizeImplementation,

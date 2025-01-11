@@ -5,7 +5,7 @@ interface Node {
     children: Node[];
 }
 
-test('searches in correct order', async () => {
+test('searches in correct order', () => {
     const tree: Node[] = [
         {
             value: 1,

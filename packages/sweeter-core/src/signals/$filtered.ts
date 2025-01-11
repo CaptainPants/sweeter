@@ -1,5 +1,5 @@
-import { FilteredSignal } from './internal/Signal-implementations/FilteredSignal';
-import { Signal, SignalUpdateValuesAreEqualCallback } from './types';
+import { FilteredSignal } from './internal/Signal-implementations/FilteredSignal.js';
+import { Signal, SignalUpdateValuesAreEqualCallback } from './types.js';
 
 export function $filtered<T>(
     inner: Signal<T>,

@@ -1,4 +1,5 @@
 import { isType } from '../type/introspect/is.js';
+
 import { type UnknownModel } from './Model.js';
 
 type OnlyModels<T> = T extends UnknownModel ? T : never;

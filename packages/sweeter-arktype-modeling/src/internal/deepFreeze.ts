@@ -11,7 +11,7 @@ export function deepFreeze<T>(value: T): T {
 
     if (typeof value === 'object') {
         if (Array.isArray(value)) {
-            value.forEach((item) => deepFreeze(item));
+            value.forEach((item: unknown) => deepFreeze(item));
         } else {
             Object.getOwnPropertyNames(value).forEach((key) => {
                 deepFreeze((value as Record<string, unknown>)[key]);

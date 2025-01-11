@@ -1,7 +1,7 @@
-import { type ComponentInit, type HookFactory } from '../types.js';
+import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
 import { type Signal } from '../signals/types.js';
-import { $derived } from '../signals/$derived.js';
+import { type ComponentInit, type HookFactory } from '../types.js';
 
 export interface AsyncRunnerHookOptions {
     abortOnUnMount?: boolean;

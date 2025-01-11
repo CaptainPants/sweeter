@@ -1,20 +1,21 @@
 import {
-    type IntrinsicElementProps,
-    type Component,
-    type PropertiesMightBeSignals,
     $derived,
     $val,
+    type Component,
+    type IntrinsicElementProps,
+    type PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@captainpants/sweeter-core';
-import { type VariantName } from '../../internal/constants.js';
 import {
-    type ElementCssStyles,
     type ElementCssClasses,
+    type ElementCssStyles,
     type TypedEvent,
 } from '@captainpants/sweeter-web';
-import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+
 import { combineStyles } from '../../internal/combineStyles.js';
+import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
+import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
 export interface SelectOption {
     text?: string | undefined;

@@ -1,18 +1,18 @@
 import { type UnknownModel } from '@captainpants/sweeter-arktype-modeling';
-
-import { type EditorProps } from '../types.js';
 import {
     $derived,
     $mutable,
     $peek,
     $val,
     $valProperties,
-    LocalizerHook,
     type ComponentInit,
+    LocalizerHook,
 } from '@captainpants/sweeter-core';
+
+import { IconButton } from '../components/IconButton.js';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
-import { IconButton } from '../components/IconButton.js';
+import { type EditorProps } from '../types.js';
 
 export function ModalEditor(
     {
@@ -42,8 +42,9 @@ export function ModalEditor(
         return Object.assign({}, $valProperties(passthrough), {
             indent: 0,
             model: modelSnapshot,
-            replace: async (replacement: UnknownModel): Promise<void> => {
+            replace: (replacement: UnknownModel): Promise<void> => {
                 modelSnapshot.value = replacement;
+                return Promise.resolve();
             },
             isRoot: true,
         });
@@ -82,7 +83,7 @@ export function ModalEditor(
         () =>
             localize('Edit') +
             ' ' +
-            ($val(isRoot) ? 'root' : (propertyDisplayName ?? 'unknown')),
+            ($val(isRoot) ? 'root' : ($val(propertyDisplayName) ?? 'unknown')),
     );
 
     return $derived(() => {
@@ -100,7 +101,7 @@ export function ModalEditor(
                     isOpen={isOpen}
                     title={propertyDisplayName}
                     commitEnabled={isValid}
-                    onCommit={onCommit}
+                    onCommit={() => void onCommit()}
                     onClose={onCancel}
                 >
                     {content}

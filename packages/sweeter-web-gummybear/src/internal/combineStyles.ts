@@ -15,11 +15,15 @@ export function combineStyles(
 ): ElementCssStyles | Signal<ElementCssStyles> {
     // If no signals, merge the simple way
     if (styles.every((x) => !isSignal(x))) {
-        return Object.assign({}, ...styles);
+        const result: ElementCssStyles = {};
+        Object.assign(result, ...styles);
+        return result;
     }
 
     // If there are any signals we need to subscribe to them all with $val and merge the results
-    return $derived(() => {
-        return Object.assign({}, ...styles.map((x) => $val(x)));
+    return $derived<ElementCssStyles>(() => {
+        const result: ElementCssStyles = {};
+        Object.assign(result, ...styles.map((x) => $val(x)));
+        return result;
     });
 }

@@ -5,6 +5,7 @@ import {
     type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
 import { $val } from '@captainpants/sweeter-core';
+
 import { testRender } from '../../test/testRender.js';
 
 type TestingComponentWithChildrenProps = PropertiesMightBeSignals<{

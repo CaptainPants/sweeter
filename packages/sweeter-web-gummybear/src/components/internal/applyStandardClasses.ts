@@ -2,8 +2,9 @@ import {
     type ElementCssClasses,
     type GlobalCssClass,
 } from '@captainpants/sweeter-web';
-import { tags, variants } from '../../stylesheets/markers.js';
+
 import { type VariantName } from '../../internal/constants.js';
+import { tags, variants } from '../../stylesheets/markers.js';
 
 export interface StandardClasses {
     outline?: boolean | undefined;
@@ -22,7 +23,7 @@ const map = {
 export function applyStandardClasses(
     result: ElementCssClasses[],
     classes: StandardClasses,
-    variant?: VariantName | undefined,
+    variant?: VariantName,
 ) {
     for (const key of Object.keys(classes) as (keyof StandardClasses)[]) {
         const value = classes[key];

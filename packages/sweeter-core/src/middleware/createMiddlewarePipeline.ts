@@ -1,5 +1,7 @@
 import { StackTrace } from '@captainpants/sweeter-utilities';
+
 import { dev } from '../dev.js';
+
 import { type JSXMiddleware, type JSXMiddlewareCallback } from './types.js';
 
 export function createMiddlewarePipeline(

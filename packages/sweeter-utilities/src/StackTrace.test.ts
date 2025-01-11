@@ -1,4 +1,4 @@
-import { StackTrace } from './StackTrace';
+import { StackTrace } from './StackTrace.js';
 
 it('StackTrace returns a consistent result', () => {
     function test2() {

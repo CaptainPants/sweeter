@@ -4,9 +4,9 @@ import path from 'node:path';
 import { ProgramNode, SourceMap, TransformPluginContext } from 'rollup';
 import { SourceMapConsumer } from 'source-map';
 
-import { assertAstLocation } from '../../utility/implementation/assertAstLocation.js';
-import { getLocation } from '../../utility/implementation/getLocation.js';
+import { assertAstLocation } from './assertAstLocation.js';
 import { constants } from './constants.js';
+import { getLocation } from './getLocation.js';
 
 export type TransformResult =
     | { code: string; map: SourceMap; ast?: ProgramNode }
@@ -99,20 +99,23 @@ export function createTransform({
                                 `Transformed location ${mappedLine}:${mappedColumn} function ${funcName}`,
                             );
 
-                            let { line, column } =
+                            const { line, column: columnZeroBased } =
                                 sourceMap.originalPositionFor({
                                     line: mappedLine,
                                     column:
                                         mappedColumn -
                                         1 /* We're using 1-based, but the library is 0-based */,
                                 });
-                            if (column !== null) column += 1; // The SourceMap library uses 0-based columns, and we want 1-based
+                            const column =
+                                columnZeroBased === null
+                                    ? null
+                                    : columnZeroBased + 1; // The SourceMap library uses 0-based columns, and we want 1-based
 
                             log(`Original location ${line}:${column}`);
 
                             magicString.appendRight(
                                 path.node.end,
-                                `./* rollup-plugin-sweeter: */${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${line}, ${column})`,
+                                `./* rollup-plugin-sweeter: */${constants.identify}(${JSON.stringify(name)}, ${JSON.stringify(filename)}, ${JSON.stringify(funcName)}, ${JSON.stringify(line)}, ${JSON.stringify(column)})`,
                             );
                         }
                     } else if (

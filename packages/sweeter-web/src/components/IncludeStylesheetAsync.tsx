@@ -4,11 +4,13 @@ import {
     $derived,
     $val,
     Async,
-    type PropertiesMightBeSignals,
     type Component,
     type Lazy,
+    type PropertiesMightBeSignals,
 } from '@captainpants/sweeter-core';
+
 import { type StylesheetInclude } from '../styles/index.js';
+
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
 export type IncludeStylesheetAsyncProps = PropertiesMightBeSignals<{

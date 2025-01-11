@@ -1,14 +1,16 @@
+import { type Type } from 'arktype';
+
 import { typeAssert } from '@captainpants/sweeter-utilities';
+
 import {
     type Model,
-    type PropertyModel,
-    type UnknownPropertyModel,
-    type UnionModel,
-    type UnknownUnionModel,
-    type UnknownModel,
     type ObjectModel,
+    type PropertyModel,
+    type UnionModel,
+    type UnknownModel,
+    type UnknownPropertyModel,
+    type UnknownUnionModel,
 } from '../index.js';
-import { type Type } from 'arktype';
 
 it('Specific models conform to', () => {
     typeAssert.extends<
@@ -19,6 +21,7 @@ it('Specific models conform to', () => {
     typeAssert.extends<Model<Type<object>>, ObjectModel<Type<object>>>();
 
     typeAssert.extends<
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
         UnionModel<Type<{ test: string } | number | 1>>,
         UnknownUnionModel
     >();

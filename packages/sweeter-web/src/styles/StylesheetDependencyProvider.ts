@@ -1,4 +1,5 @@
 import { dev } from '@captainpants/sweeter-core';
+
 import { type AbstractGlobalCssStylesheet } from './index.js';
 
 export class StylesheetDependencyProvider {

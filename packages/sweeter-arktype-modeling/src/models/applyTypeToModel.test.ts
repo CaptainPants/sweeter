@@ -1,9 +1,10 @@
 import { type Type, type } from 'arktype';
 
+import { typeAssert } from '@captainpants/sweeter-utilities';
+
 import { applyTypeToModel } from './applyTypeToModel.js';
 import { ModelFactory } from './ModelFactory.js';
 import { type PropertyModel } from './PropertyModel.js';
-import { typeAssert } from '@captainpants/sweeter-utilities';
 
 test('Something', async () => {
     const unionType = type({

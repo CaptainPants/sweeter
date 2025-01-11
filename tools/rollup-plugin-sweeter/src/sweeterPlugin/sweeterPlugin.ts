@@ -1,8 +1,7 @@
 import { createFilter } from '@rollup/pluginutils';
 import { Plugin as RollupPlugin } from 'rollup';
-
-import { toSearcher } from './toSearcher.js';
-import { createTransform } from './transform.js';
+import { toSearcher } from '../utility/implementation/toSearcher.js';
+import { createTransform } from './implementation/transform.js';
 
 export interface SweeterRollupPluginOptions {
     include?: readonly string[];
@@ -31,7 +30,7 @@ const standardSigils = [
     '$mapByIndex',
 ] as const;
 
-export default function sweeterPlugin({
+function sweeterPlugin({
     include,
     exclude,
     sigils,
@@ -83,3 +82,6 @@ export default function sweeterPlugin({
         },
     };
 }
+
+export default sweeterPlugin;
+export { sweeterPlugin };

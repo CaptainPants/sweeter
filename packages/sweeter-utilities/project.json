@@ -1,0 +1,10 @@
+{
+    "targets": {
+        "build": {
+            "dependsOn": [{
+                "projects": "@captainpants/rollup-plugin-sweeter",
+                "target": "build"
+            }]
+        }
+    }
+  }

@@ -4,9 +4,9 @@ import path from 'node:path';
 import { ProgramNode, SourceMap, TransformPluginContext } from 'rollup';
 import { SourceMapConsumer } from 'source-map';
 
-import { assertAstLocation } from './assertAstLocation.js';
 import { constants } from './constants.js';
-import { getLocation } from './getLocation.js';
+import { assertAstLocation } from '../../utility/implementation/assertAstLocation.js';
+import { getLocation } from '../../utility/implementation/getLocation.js';
 
 export type TransformResult =
     | { code: string; map: SourceMap; ast?: ProgramNode }

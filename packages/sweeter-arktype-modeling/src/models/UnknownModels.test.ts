@@ -21,6 +21,7 @@ it('Specific models conform to', () => {
     typeAssert.extends<Model<Type<object>>, ObjectModel<Type<object>>>();
 
     typeAssert.extends<
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
         UnionModel<Type<{ test: string } | number | 1>>,
         UnknownUnionModel
     >();

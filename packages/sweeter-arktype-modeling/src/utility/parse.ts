@@ -27,27 +27,24 @@ export function parse<TSchema extends AnyTypeConstraint>(
     if (res instanceof type.errors) {
         throw new TypeError(res.summary);
     }
-    return res as type.infer<TSchema>;
+    return res;
 }
 
 // TODO: not sure that there is an async model in ArkType (where Zod has one)
 // so will have to see if these can have a meaningful implementation
-export const parseAsync = (
-    ...args: Parameters<typeof parse>
-): Promise<ReturnType<typeof parse>> => {
-    try {
-        return Promise.resolve(parse(...args));
-    } catch (err) {
-        return Promise.reject(err);
-    }
+ 
+export const parseAsync = async <TSchema extends AnyTypeConstraint>(
+    value: unknown,
+    schema: TSchema,
+    // eslint-disable-next-line  @typescript-eslint/require-await -- We currently fake the async-ness of this, but will be investigating if there is a proper way to do it
+): Promise<type.infer<TSchema>> => {
+    return parse(value, schema);
 };
 
-export const safeParseAsync = (
-    ...args: Parameters<typeof safeParse>
-): Promise<ReturnType<typeof safeParse>> => {
-    try {
-        return Promise.resolve(safeParse(...args));
-    } catch (err) {
-        return Promise.reject(err);
-    }
+export const safeParseAsync = async <TSchema extends AnyTypeConstraint>(
+    value: unknown,
+    schema: TSchema,
+    // eslint-disable-next-line  @typescript-eslint/require-await -- We currently fake the async-ness of this, but will be investigating if there is a proper way to do it
+): Promise<SafeParseResult<TSchema>> => {
+    return safeParse(value, schema);
 };

@@ -52,7 +52,7 @@ test('label', () => {
     );
 });
 
-test('attribute', async () => {
+test('attribute', () => {
     const typeInfo: TypeInfo = {
         type: type.number.annotate((add) => add.attr('type', 'ham-sandwich')),
         parentInfo: null,

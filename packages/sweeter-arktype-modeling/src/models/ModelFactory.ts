@@ -189,8 +189,6 @@ function createModelPart<TSchema extends AnyTypeConstraint>(
     return doCreateModelPart(value, type, parentInfo, depth) as never;
 }
 
-const count = 0;
-
 function doCreateModelPart<TSchema extends AnyTypeConstraint>(
     value: unknown,
     schema: TSchema,

@@ -13,12 +13,12 @@ import {
     isUndefinedConstant,
     isUnionType,
 } from '../type/introspect/is.js';
-import { type AnyTypeConstraint } from '../type/types.js';
+import { type AnyTypeConstraint,type UnknownType } from '../type/types.js';
 
-function createTyped<TCheckedArkType extends AnyTypeConstraint>(
-    check: (schema: AnyTypeConstraint) => schema is TCheckedArkType,
-    convert: (schema: TCheckedArkType, depth: number) => string,
-): (schema: AnyTypeConstraint, depth: number) => string | typeof notFound {
+function createTyped<TCheckedSchema extends AnyTypeConstraint>(
+    check: (schema: UnknownType) => schema is TCheckedSchema,
+    convert: (schema: TCheckedSchema, depth: number) => string,
+): (schema: UnknownType, depth: number) => string | typeof notFound {
     return (schema, depth) => {
         if (check(schema)) {
             return convert(schema, depth);
@@ -28,9 +28,9 @@ function createTyped<TCheckedArkType extends AnyTypeConstraint>(
 }
 
 function create(
-    check: (schema: AnyTypeConstraint) => boolean,
-    convert: (schema: Type<unknown>, depth: number) => string,
-): (schema: AnyTypeConstraint, depth: number) => string | typeof notFound {
+    check: (schema: UnknownType) => boolean,
+    convert: (schema: UnknownType, depth: number) => string,
+): (schema: UnknownType, depth: number) => string | typeof notFound {
     return (schema, depth) => {
         if (check(schema)) {
             return convert(schema, depth);
@@ -56,7 +56,7 @@ function objectForDisplay(
     return '{' + res.join(',') + '}';
 }
 
-function unionForDisplay(union: AnyTypeConstraint, depth: number): string {
+function unionForDisplay(union: UnknownType, depth: number): string {
     const res: string[] = [];
 
     const { branches } = getUnionTypeInfo(union);
@@ -96,7 +96,7 @@ const convertors = [
 ];
 
 export function serializeSchemaForDisplay(
-    schema: AnyTypeConstraint,
+    schema: UnknownType,
     depthLimit: number = 20,
 ): string {
     for (const convertor of convertors) {

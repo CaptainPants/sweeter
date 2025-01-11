@@ -34,7 +34,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
         const elementType =
             info.elementType as arkTypeUtilityTypes.ArrayElementSchema<TArrayArkType>;
 
-        const elementModels = (value as readonly unknown[]).map((item, index) =>
+        const elementModels = (value as readonly unknown[]).map((item) =>
             ModelFactory.createModelPart<
                 /* @ts-expect-error - Type system doesn't know that this is always a Type<?> */
                 arkTypeUtilityTypes.ArrayElementSchema<TArrayArkType>
@@ -128,6 +128,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
     public async unknownSpliceElements(
         start: number,
         deleteCount: number,
+        // eslint-disable-next-line  @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
         newElements: ReadonlyArray<unknown | UnknownModel>,
         validate: boolean = true,
     ): Promise<this> {
@@ -180,6 +181,7 @@ export class ArrayModelImpl<TArraySchema extends Type<unknown[]>>
 
     public async unknownSetIndex(
         index: number,
+        // eslint-disable-next-line  @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
         value: unknown | UnknownModel,
         validate: boolean = true,
     ): Promise<this> {

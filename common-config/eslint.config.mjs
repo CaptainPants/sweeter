@@ -48,7 +48,8 @@ export default (tsconfigPath) => tseslint.config(
             "simple-import-sort/exports": "error",
             "import/extensions": ['error', "ignorePackages", {
                 "checkTypeImports": true
-            }]
+            }],
+            "import/consistent-type-specifier-style": ['error', 'prefer-inline']
         }
     },
     {

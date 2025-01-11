@@ -1,4 +1,4 @@
-import { type Type, type } from 'arktype';
+import { type } from 'arktype';
 
 import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 
@@ -11,11 +11,12 @@ import {
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
 import { validateAndThrow } from '../../utility/validate.js';
 import {
-    type Model,
     type ObjectModel,
     type ObjectPropertyType,
     type PropertyModelNoConstraint,
     type TypedPropertyModelForKey,
+    type UnknownModel,
+    type ValueModelForProperty,
 } from '../Model.js';
 import { ModelFactory } from '../ModelFactory.js';
 import { type ParentTypeInfo } from '../parents.js';
@@ -150,7 +151,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
             const mappedKeys = info.getMappedKeys();
             if (mappedKeys) {
                 const matchingKey = [...mappedKeys.entries()].filter(
-                    ([indexerKey, value]) => indexerKey.allows(key),
+                    ([indexerKey, ]) => indexerKey.allows(key),
                 )[0];
                 if (matchingKey) {
                     type = matchingKey[1];
@@ -169,7 +170,8 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
     public async unknownSetProperty(
         key: string | symbol,
-        value: unknown,
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
+        value: unknown | UnknownModel,
     ): Promise<this> {
         const schema = this.schemaForKey(key);
 
@@ -212,12 +214,12 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
     }
 
     public async setProperty<
-        TKey extends keyof type.infer<TObjectSchema> & (string | symbol),
-        TValue extends type.infer<TObjectSchema>[TKey],
+        TKey extends keyof type.infer<TObjectSchema> & (string | symbol)
     >(
         key: TKey,
         /* @ts-expect-error -- Typescript can't confirm that Type<TValue> is a Type (it might be never) */
-        value: TValue | Model<Type<TValue>>,
+         
+        value: type.infer<TObjectSchema>[Key] | ValueModelForProperty<TObjectSchema, Key>,
     ): Promise<this> {
         return this.unknownSetProperty(key, value);
     }

@@ -20,7 +20,7 @@
         "preview": "vite preview"
     },
     "engines": {
-        "pnpm": "8.14.1"
+        "pnpm": "9.15.3"
     },
     "dependencies": {
         "@captainpants/arktype-example-data": "workspace:^",

@@ -30,7 +30,7 @@
         "build": "pnpm run typecheck && vite build"
     },
     "engines": {
-        "pnpm": "8.14.1"
+        "pnpm": "9.15.3"
     },
     "devDependencies": {
         "@types/estraverse": "^5.1.7",

@@ -14,7 +14,7 @@ export default defineConfig({
             fileName: 'index',
             formats: ['es'],
         },
-        outDir: 'build',
+        outDir: 'dist',
         minify: false,
         rollupOptions: {
         },

@@ -13,7 +13,7 @@ export default defineConfig({
             entry: [resolve(__dirname, './src/index.ts'), resolve(__dirname, './src/jsx-runtime.ts'), resolve(__dirname, './src/jsx-dev-runtime.ts')],
             formats: ['es'],
         },
-        outDir: 'build',
+        outDir: 'dist',
         minify: false,
         rollupOptions: {
         },

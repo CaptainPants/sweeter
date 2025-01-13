@@ -13,7 +13,7 @@ export default defineConfig({
             entry: [resolve(__dirname, './src/index.ts')],
             formats: ['es'],
         },
-        outDir: 'build',
+        outDir: 'dist',
         minify: false,
         rollupOptions: {
         },

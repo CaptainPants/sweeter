@@ -16,6 +16,7 @@
             ]
         },
         "build": {
+            "cache": true,
             "dependsOn": [
                 "^build",
                 {
@@ -27,7 +28,7 @@
                 }
             ],
             "outputs": [
-                "{projectRoot}/build"
+                "{projectRoot}/dist"
             ]
         },
         "watch": {

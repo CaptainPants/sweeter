@@ -4,7 +4,7 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
 export default defineConfig({
     build: {
-        outDir: 'build'
+        outDir: 'dist'
     },
     root: __dirname,
     cacheDir: '../../node_modules/.vite/tools/nx-fire-and-forget',

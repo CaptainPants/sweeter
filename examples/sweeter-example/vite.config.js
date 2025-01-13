@@ -4,7 +4,7 @@ import sweeterPlugin from '@captainpants/rollup-plugin-sweeter';
 
 export default defineConfig({
     build: {
-        outDir: 'build',
+        outDir: 'dist',
         minify: false,
         rollupOptions: {
         },

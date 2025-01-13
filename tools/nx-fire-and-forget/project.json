@@ -1,41 +1,43 @@
 {
-  "name": "nx-fire-and-forget",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "tools/nx-fire-and-forget/src",
-  "projectType": "library",
-  "tags": [],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "{projectRoot}/build",
-        "main": "tools/nx-fire-and-forget/src/index.ts",
-        "tsConfig": "tools/nx-fire-and-forget/tsconfig.lib.json",
-        "assets": [
-          "tools/nx-fire-and-forget/*.md",
-          {
-            "input": "./tools/nx-fire-and-forget/src",
-            "glob": "**/!(*.ts)",
-            "output": "./src"
-          },
-          {
-            "input": "./tools/nx-fire-and-forget/src",
-            "glob": "**/*.d.ts",
-            "output": "./src"
-          },
-          {
-            "input": "./tools/nx-fire-and-forget",
-            "glob": "generators.json",
-            "output": "."
-          },
-          {
-            "input": "./tools/nx-fire-and-forget",
-            "glob": "executors.json",
-            "output": "."
-          }
-        ]
-      }
+    "name": "@captainpants/nx-fire-and-forget",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "tools/nx-fire-and-forget/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "tools/nx-fire-and-forget/dist",
+                "main": "tools/nx-fire-and-forget/src/index.ts",
+                "tsConfig": "tools/nx-fire-and-forget/tsconfig.lib.json",
+                "assets": [
+                    "./tools/nx-fire-and-forget/*.md",
+                    {
+                        "input": "./tools/nx-fire-and-forget/src",
+                        "glob": "**/!(*.ts)",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./tools/nx-fire-and-forget/src",
+                        "glob": "**/*.d.ts",
+                        "output": "./src"
+                    },
+                    {
+                        "input": "./tools/nx-fire-and-forget",
+                        "glob": "generators.json",
+                        "output": "."
+                    },
+                    {
+                        "input": "./tools/nx-fire-and-forget",
+                        "glob": "executors.json",
+                        "output": "."
+                    }
+                ]
+            }
+        }
     }
-  }
 }

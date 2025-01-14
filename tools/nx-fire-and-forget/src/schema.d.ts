@@ -1,1 +1,4 @@
-export interface WatchAndReturnExecutorSchema {} // eslint-disable-line
+export interface WatchAndReturnExecutorSchema {
+    command: string;
+    successPattern?: string;
+} // eslint-disable-line

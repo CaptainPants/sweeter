@@ -1,0 +1,17 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx"
+    ],
+    "compilerOptions": {
+        "rootDir": "src",
+        "lib": [
+            "ES2022",
+        ],
+        "noEmit": true,
+        "paths":{
+        },
+        "allowImportingTsExtensions": true,
+    }
+}

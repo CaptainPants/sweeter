@@ -1,15 +1,9 @@
 
-import * as child_process from 'node:child_process';
 import path from 'node:path';
-import { promisify } from 'node:util';
 import PackageJson from '@npmcli/package-json';
-
-export interface Project {
-    name: string;
-    version: string;
-    private: boolean;
-    location: string;
-}
+import { findWorkspacePackages } from '@pnpm/find-workspace-packages';
+import { stat } from 'node:fs/promises';
+import fs, { Stats } from 'node:fs';
 
 export interface GraphNode {
     name: string;
@@ -19,29 +13,56 @@ export interface GraphNode {
     dependencies: string[]
 }
 
-export async function readProjectsFromLerna(): Promise<Project[]> {
-    const result = await promisify(child_process.exec)('pnpm exec lerna list --json', { cwd: process.cwd() });
-    return JSON.parse(result.stdout);
+function checkFileExists(filepath: string): Promise<boolean> {
+    return new Promise((resolve) => {
+        fs.access(filepath, fs.constants.F_OK, error => {
+            resolve(!error);
+        });
+    });
 }
 
-// This doesn't consider dev dependencies which is a pain in the neck
-export async function donotuse_readDependenciesFromLerna(): Promise<{ [project: string]: string[] }> {
-    const result = await promisify(child_process.exec)('pnpm exec lerna list --graph', { cwd: process.cwd() });
-     return JSON.parse(result.stdout);
+async function findWorkspaceRoot() {
+    const filename = 'pnpm-workspace.yaml';
+
+    const startFrom = process.cwd();
+
+    let current = startFrom;
+    while (current) {
+        const candidate = path.join(current, filename);
+
+        if (await checkFileExists(candidate)) {
+            let stats: Stats;
+            try {
+                stats = await stat(candidate)
+            } catch (err) {
+                continue; // probably means it doesn't exist
+            }
+
+            if (stats.isFile()) {
+                return path.dirname(candidate);
+            }
+        }
+
+        current = path.dirname(current);
+    }
+
+    throw new Error('Could not find a pnpm workspace.yaml file');
 }
 
 export async function getDependencyGraph(): Promise<GraphNode[]> {
-    const projects = await readProjectsFromLerna();
+    const root = await findWorkspaceRoot();
+
+    const projects = await findWorkspacePackages(root);
 
     const res: GraphNode[] = [];
 
     for (const project of projects) {
         // Note this seems to want the project folder, not the actual package.json file path
-        const packageJson = await PackageJson.load(project.location, { create: false });
+        const packageJson = await PackageJson.load(project.dir, { create: false });
 
         const mergedDependencies = {
-            ...packageJson.content.dependencies,
-            ...packageJson.content.devDependencies
+            ...project.manifest.dependencies,
+            ...project.manifest.devDependencies
         };
         const dependencies: string[] = [];
         for (const [key, version] of Object.entries(mergedDependencies)) {
@@ -52,7 +73,10 @@ export async function getDependencyGraph(): Promise<GraphNode[]> {
         }
 
         const node: GraphNode = {
-            ...project,
+            location: project.dir,
+            name: project.manifest.name ?? '',
+            version: project.manifest.version ?? '',
+            private: project.manifest.private ?? false,
             dependencies
         }
 

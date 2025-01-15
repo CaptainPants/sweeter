@@ -22,7 +22,8 @@
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
         "watch": "vite build --watch",
         "watch-test": "vite build --watch",
-        "build": "pnpm run typecheck && vite build"
+        "build": "pnpm run typecheck && vite build",
+        "test-run": "node --experimental-strip-types ./src/index.ts --target watch"
     },
     "engines": {
         "pnpm": "9.15.3"
@@ -32,7 +33,7 @@
         "@types/npmcli__package-json": "^4.0.4"
     },
     "dependencies": {
-        "@npmcli/package-json": "^6.1.0",
+        "@pnpm/find-workspace-packages": "^6.0.9",
         "chalk": "^5.4.1",
         "commander": "^13.0.0",
         "ora": "^8.1.1",

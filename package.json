@@ -21,8 +21,7 @@
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
     "set-versions": "pnpm -r exec npm version",
     "generate-docs": "pnpm run build && typedoc --options typedoc.json",
-    "rebuild": "pnpm run clean && pnpm run build",
-    "test-run": "node --experimental-strip-types ./tools/watch-tree/src/index.ts --target watch"
+    "rebuild": "pnpm run clean && pnpm run build"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",

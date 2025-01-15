@@ -20,7 +20,7 @@
             "executor": "@captainpants/nx-fire-and-forget:watch-and-return",
             "options": {
                 "command": "pnpm run watch",
-                "successPattern": "9\\.15\\.3"
+                "successPattern": "^built in ([0-9]+)ms\\."
             }
         }
     }

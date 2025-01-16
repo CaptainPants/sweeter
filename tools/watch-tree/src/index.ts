@@ -5,6 +5,7 @@ import { loadProjects } from "./loadProjects.ts";
 import { runWatch } from "./runWatch.ts";
 
 interface Options {
+    successPattern: string;
 }
 
 const abortController = new AbortController();
@@ -19,14 +20,16 @@ program
 
 program
     .command('run <target>')
-    .action(async (target: string, _options: Options) => {
+    .requiredOption('--successPattern <successPattern>')
+    .action(async (target: string, { successPattern }: Options) => {
         const projects = await loadProjects();
         const filtered = filterProjects(projects, target);
         
         await runWatch({
             projects: filtered,
             target: target,
-            signal: abortController.signal
+            signal: abortController.signal,
+            successPattern: successPattern
         });
     });
 

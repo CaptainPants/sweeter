@@ -23,14 +23,13 @@
         "watch": "vite build --watch",
         "watch-test": "vite build --watch",
         "build": "pnpm run typecheck && vite build",
-        "test-run": "node --experimental-strip-types ./src/index.ts --target watch"
+        "test-run": "node --experimental-strip-types ./src/index.ts run watch"
     },
     "engines": {
         "pnpm": "9.15.3"
     },
     "devDependencies": {
-        "@types/node": "^22.10.5",
-        "@types/npmcli__package-json": "^4.0.4"
+        "@types/node": "^22.10.5"
     },
     "dependencies": {
         "@pnpm/find-workspace-packages": "^6.0.9",

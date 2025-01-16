@@ -1,17 +1,33 @@
 import { program } from "commander";
-import { getDependencyGraph } from "./readStuff.ts";
+
+import { filterProjects } from "./filterProjects.ts";
+import { loadProjects } from "./loadProjects.ts";
+import { runWatch } from "./runWatch.ts";
 
 interface Options {
-    target: string;
 }
+
+const abortController = new AbortController();
+
+process.on('SIGINT', function() {
+    abortController.abort('SIGINT');
+});
 
 program
     .version("1.0.0")
-    .description("watch-tree")
-    .requiredOption<string>('--target <target>', 'The name of the script to run on each project', value => value)
-    .action(async (options: Options) => {
-        const graph = await getDependencyGraph();
-        console.log(JSON.stringify(graph, undefined, 4));
+    .description("watch-tree");
+
+program
+    .command('run <target>')
+    .action(async (target: string, _options: Options) => {
+        const projects = await loadProjects();
+        const filtered = filterProjects(projects, target);
+        
+        await runWatch({
+            projects: filtered,
+            target: target,
+            signal: abortController.signal
+        });
     });
 
-const res = program.parse();
+await program.parseAsync();

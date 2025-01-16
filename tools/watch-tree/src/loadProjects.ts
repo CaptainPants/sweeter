@@ -1,24 +1,19 @@
 
-import path from 'node:path';
-import PackageJson from '@npmcli/package-json';
 import { findWorkspacePackages } from '@pnpm/find-workspace-packages';
-import { stat } from 'node:fs/promises';
-import fs, { Stats } from 'node:fs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
-export interface GraphNode {
-    name: string;
-    version: string;
-    private: boolean;
-    location: string;
-    dependencies: string[]
-}
+import { type Project } from './types.ts';
 
-function checkFileExists(filepath: string): Promise<boolean> {
-    return new Promise((resolve) => {
-        fs.access(filepath, fs.constants.F_OK, error => {
-            resolve(!error);
-        });
-    });
+
+async function checkFileExists(filepath: string): Promise<boolean> {
+    try {
+        await fs.access(filepath, fs.constants.F_OK);
+        return true;
+    }
+    catch {
+        return false;
+    }
 }
 
 async function findWorkspaceRoot() {
@@ -31,12 +26,7 @@ async function findWorkspaceRoot() {
         const candidate = path.join(current, filename);
 
         if (await checkFileExists(candidate)) {
-            let stats: Stats;
-            try {
-                stats = await stat(candidate)
-            } catch (err) {
-                continue; // probably means it doesn't exist
-            }
+            const stats = await fs.stat(candidate);
 
             if (stats.isFile()) {
                 return path.dirname(candidate);
@@ -49,35 +39,33 @@ async function findWorkspaceRoot() {
     throw new Error('Could not find a pnpm workspace.yaml file');
 }
 
-export async function getDependencyGraph(): Promise<GraphNode[]> {
+export async function loadProjects(): Promise<Project[]> {
     const root = await findWorkspaceRoot();
 
     const projects = await findWorkspacePackages(root);
 
-    const res: GraphNode[] = [];
+    const res: Project[] = [];
 
     for (const project of projects) {
-        // Note this seems to want the project folder, not the actual package.json file path
-        const packageJson = await PackageJson.load(project.dir, { create: false });
-
         const mergedDependencies = {
             ...project.manifest.dependencies,
             ...project.manifest.devDependencies
         };
-        const dependencies: string[] = [];
+        const workspaceDependencies: string[] = [];
         for (const [key, version] of Object.entries(mergedDependencies)) {
             // This is the pnpm convention
             if (version?.startsWith('workspace:')) {
-                dependencies.push(key);
+                workspaceDependencies.push(key);
             }
         }
 
-        const node: GraphNode = {
+        const node: Project = {
             location: project.dir,
             name: project.manifest.name ?? '',
             version: project.manifest.version ?? '',
             private: project.manifest.private ?? false,
-            dependencies
+            workspaceDependencies: workspaceDependencies,
+            scripts: project.manifest.scripts ? Object.keys(project.manifest.scripts) : []
         }
 
         res.push(node);

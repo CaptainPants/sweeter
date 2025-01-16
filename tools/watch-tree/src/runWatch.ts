@@ -1,10 +1,8 @@
 import chalk, { type ChalkInstance } from "chalk";
-import { stdout } from "node:process";
 
-import  { type Project } from "./types.ts";
-import ora from "ora";
-import child_process from 'node:child_process';
-import { createPassthrough } from "./createPassthrough.ts";
+import { type Project } from "./types.ts";
+import { runOne } from "./runOne.ts";
+import { createChalkLibrary } from "./createChalkLibrary.ts";
 
 export interface WatchOptions {
     projects: Project[];
@@ -28,41 +26,28 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
     const currentlyProcessing = new Map<string, Promise<Project>>();
     const processed: Project[] = [];
 
-    console.log(chalk.green('Using roots ' + roots.map(x => x.name).join(', ')));
+    const chalks = createChalkLibrary();
 
-    const chalks: Set<ChalkInstance> = new Set([
-        chalk.blue,
-        chalk.cyan,
-        chalk.magenta,
-        chalk.yellow,
-        //chalk.white
-    ]);
+    async function start(project: Project) {
+        const loan = chalks.loan();
 
-    function start(project: Project) {
-        const rent = (chalks.size !== 0);
-
-        let useChalk: ChalkInstance;
-        if (rent) {
-            const temp = first(chalks);
-            if (temp === undefined) throw new Error('Unexpected');
-            chalks.delete(temp);
-            useChalk = temp;
-        } else {
-            useChalk = chalk.grey;
-        }
-        
         try {
             const prefix = `[${project.name}] `;
 
             const log = (data: string) => {
-                console.log(chalk.red(prefix) + data);
+                console.log(loan.chalk(prefix) + data);
             }
-            return runOne(project, target, successPatternRegExp, log, signal).then(() => project);
+
+            return await runOne({
+                project,
+                target,
+                successPatternRegExp,
+                log,
+                signal
+            }).then(() => project);
         }
         finally {
-            if (rent) {
-                chalks.add(useChalk);
-            }
+            loan.return();
         }
     }
 
@@ -70,7 +55,7 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
         currentlyProcessing.set(root.name, start(root));
         notProcessed.delete(root.name);
     }
-    
+
     while (currentlyProcessing.size > 0) {
         // Wait for any to complete
         const finished = await Promise.any(currentlyProcessing.values());
@@ -90,14 +75,7 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
         // Something didn't get processed
     }
 
-    console.log(chalk.green('FINISHED'));
+    console.log(chalk.green('==== All watchers have been started ===='));
 
     return;
-}
-
-function first<T>(iterable: Iterable<T>): T | undefined {
-    for (const item of iterable) {
-        return item;
-    }
-    return undefined;
 }

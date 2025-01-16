@@ -1,13 +1,13 @@
 import child_process from 'node:child_process';
 import { createPassthrough } from "./createPassthrough.ts";
 
-import { Project } from "./types.ts";
+import { type Project } from "./types.ts";
 import chalk from 'chalk';
 
 export interface RunOneArgs {
     project: Project;
     target: string;
-    successPattern: RegExp | null;
+    successPatternRegExp: RegExp | null;
     log: (text: string) => void;
     signal: AbortSignal;
 }
@@ -16,7 +16,7 @@ export interface RunOneCleanupHandle {
     cleanup(): void;
 }
 
-export function runOne({ project, target, successPattern, log, signal }: RunOneArgs): Promise<RunOneCleanupHandle> {
+export function runOne({ project, target, successPatternRegExp: successPattern, log, signal }: RunOneArgs): Promise<RunOneCleanupHandle> {
     log(chalk.green('== STARTING =='))
 
     return new Promise<RunOneCleanupHandle>(

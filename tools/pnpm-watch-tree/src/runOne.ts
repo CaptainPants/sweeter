@@ -17,22 +17,43 @@ export interface RunOneCleanupHandle {
 }
 
 export function runOne({ project, target, successPatternRegExp: successPattern, log, signal }: RunOneArgs): Promise<RunOneCleanupHandle> {
-    log(chalk.green('== STARTING =='))
+    log(chalk.green('== STARTING =='));
 
     return new Promise<RunOneCleanupHandle>(
         (resolve, reject) => {            
             const child = child_process.spawn(`pnpm run ${target}`, { shell: true, cwd: project.location, stdio: ['inherit', 'pipe', 'inherit'] });
 
+            const abortHandler = () => {
+                child.kill('SIGINT');
+                unsubscribeFromAbort();
+            }
             signal.addEventListener(
                 'abort',
-                () => {
-                    child.kill();
-                }
+                abortHandler
             );
+            const unsubscribeFromAbort = () => void signal.removeEventListener('abort', abortHandler);
 
-            function finish() {
+            function finish(becauseOfSuccess: boolean) {
+                unsubscribeFromAbort();
+
+                if (becauseOfSuccess) {
+                    log(chalk.green('== SUCCESS!! =='));
+                }
+                let cleanedUp = false;
                 resolve({
-                    cleanup: () => child.kill()
+                    cleanup: () => {
+                        if (cleanedUp) return;
+
+                        log(chalk.red('== TERMINATING!! =='));
+                        cleanedUp = true;
+                        
+                        if (child.kill('SIGINT')) {
+                            log('== TERMINATED ==')
+                        }
+                        else {
+                            log('== FAILED TO TERMINATE ==');
+                        }
+                    }
                 });
             }
 
@@ -43,19 +64,19 @@ export function runOne({ project, target, successPatternRegExp: successPattern, 
                     // console.error('Testing ', JSON.stringify(line));
                     const match = line.match(successPattern);
                     if (match) {
-                        log('Matched success pattern.');
-                        
-                        finish();
+                        finish(true);
                     }
                 }
             });
 
             child.addListener('close', (code, signal) => {
+                unsubscribeFromAbort();
                 flush();
-                if (code !== 0) {
+                
+                if (signal != 'SIGINT' && code !== 0) {
                     reject(`Child process closed with status ${code}`);
                 }
-                finish();
+                finish(false);
             })
             child.unref();
         }

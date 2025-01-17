@@ -44,9 +44,15 @@ export async function loadProjects(): Promise<Project[]> {
 
     const projects = await findWorkspacePackages(root);
 
+    const rootIsADependency = projects.some(x => Object.keys(x.manifest.dependencies ?? {}).concat(Object.keys(x.manifest.devDependencies ?? {})).includes('root'));
+
     const res: Project[] = [];
 
     for (const project of projects) {
+        if (project.manifest.name === 'root' && !rootIsADependency) {
+            continue; // skip the root project if its not a dependency
+        }
+
         const mergedDependencies = {
             ...project.manifest.dependencies,
             ...project.manifest.devDependencies

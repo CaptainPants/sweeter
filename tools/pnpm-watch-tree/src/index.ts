@@ -4,6 +4,7 @@ import { filterProjects } from "./filterProjects.ts";
 import { loadProjects } from "./loadProjects.ts";
 import { runWatch } from "./runWatch.ts";
 import { setMaxListeners } from "node:events";
+import chalk from "chalk";
 
 interface Options {
     successPattern: string;
@@ -36,7 +37,7 @@ program
             successPattern: successPattern
         });
 
-        console.warn('EXITING');
+        console.log(chalk.green('Finished'));
     });
 
 await program.parseAsync();

@@ -1,23 +1,35 @@
 import chalk, { type ChalkInstance } from "chalk";
 
+export interface ChalkSet {
+    prefix: ChalkInstance;
+    header: ChalkInstance;
+}
+
 export interface ChalkLoan {
-    chalk: ChalkInstance;
+    chalk: Readonly<ChalkSet>;
     return(): void;
 }
 
+const baseSets: ChalkSet[] = [
+    { prefix: chalk.blue, header: chalk.bgBlue },
+    { prefix: chalk.cyan, header: chalk.bgCyan },
+    { prefix: chalk.magenta, header: chalk.bgMagenta },
+    { prefix: chalk.yellow, header: chalk.bgYellow },
+    { prefix: chalk.white, header: chalk.bgWhite },
+];
+
+const fallback: ChalkSet = {
+    prefix: chalk.white,
+    header: chalk.black.bgWhite
+};
+
 export function createChalkLibrary() {
-    const chalks: Set<ChalkInstance> = new Set([
-        chalk.blue,
-        chalk.cyan,
-        chalk.magenta,
-        chalk.yellow,
-        chalk.white
-    ]);
+    const chalks = new Set(baseSets);
 
     function rent(): ChalkLoan {
         if (chalks.size === 0) {
             return {
-                chalk: chalk.white,
+                chalk: fallback,
                 return: () => void 0
             };
         }

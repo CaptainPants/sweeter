@@ -1,7 +1,7 @@
-import chalk, { type ChalkInstance } from "chalk";
+import chalk from "chalk";
 
 import { type Project } from "./types.ts";
-import { runOne } from "./runOne.ts";
+import { runOne, type RunOneCleanupHandle } from "./runOne.ts";
 import { createChalkLibrary } from "./createChalkLibrary.ts";
 
 export interface WatchOptions {
@@ -28,7 +28,7 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
 
     const chalks = createChalkLibrary();
 
-    const cleanups: (() => void)[] = [];
+    const cleanups: RunOneCleanupHandle[] = [];
     try {
         async function start(project: Project) {
             const loan = chalks.loan();
@@ -37,7 +37,10 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
                 const prefix = `[${project.name}] `;
 
                 const log = (data: string) => {
-                    console.log(loan.chalk(prefix) + data);
+                    console.log(loan.chalk.prefix(prefix) + data);
+                }
+                const header = (data: string) => {
+                    console.log(loan.chalk.prefix(prefix) + loan.chalk.header('== ' + data + ' =='));
                 }
 
                 const handle = await runOne({
@@ -45,10 +48,11 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
                     target,
                     successPatternRegExp,
                     log,
+                    header,
                     signal
                 });
 
-                cleanups.push(handle.cleanup);
+                cleanups.push(handle);
 
                 return project;
             }
@@ -85,12 +89,12 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
 
         console.log(chalk.green('==== All watchers have been started ===='));
 
+        // Wait for the abort signal
         await new Promise(
             resolve => {
                 signal.addEventListener(
                     'abort', 
                     () => {
-                        console.warn(chalk.yellowBright('ABORTING'));
                         void resolve(void 0)
                     }
                 );
@@ -98,15 +102,17 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
         )
     }
     finally {
-        console.warn(chalk.yellowBright('TERMINATING CHILD PROCESSES'));
+        console.log(chalk.yellowBright('Terminating all child processes'));
 
-        for (const cleanup of cleanups) {
+        for (const current of cleanups) {
             try {
-                cleanup();
+                await current.cleanup();
             }
             catch (ex) {
                 console.error('Error caught while cleaning up', ex);
             }
         }
+
+        console.log(chalk.yellowBright('All child processes have been terminated'));
     }
 }

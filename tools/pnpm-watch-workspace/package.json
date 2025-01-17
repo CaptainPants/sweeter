@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/pnpm-watch-tree",
+    "name": "@captainpants/pnpm-watch-workspace",
     "version": "0.0.5",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",

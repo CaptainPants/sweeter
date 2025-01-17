@@ -63,7 +63,6 @@ export function runOne({
             log(original);
 
             if (successPattern) {
-                // console.error('Testing ', JSON.stringify(line));
                 const match = line.match(successPattern);
                 if (match) {
                     finishedStartup(true);

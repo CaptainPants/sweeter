@@ -50,8 +50,7 @@ export async function runWatch({
                 };
                 const header = (data: string) => {
                     console.log(
-                        loan.chalk.prefix(prefix) +
-                            loan.chalk.header('== ' + data + ' =='),
+                        loan.chalk.prefix(prefix) + loan.chalk.header('== ' + data + ' =='),
                     );
                 };
 

@@ -5,6 +5,7 @@ import { loadProjects } from './loadProjects.ts';
 import { runWatch } from './runWatch.ts';
 import { setMaxListeners } from 'node:events';
 import chalk from 'chalk';
+import { loadWatchJson } from './loadWatchJson.ts';
 
 interface Options {
     successPattern: string;
@@ -25,7 +26,13 @@ program
     .command('run <target>')
     .requiredOption('--successPattern <successPattern>')
     .action(async (target: string, { successPattern }: Options) => {
-        const projects = await loadProjects();
+        const cwd = process.cwd();
+
+        const projects = await loadProjects(cwd);
+        const watchJson = await loadWatchJson(cwd);
+
+        console.error(JSON.stringify(watchJson));
+
         const filtered = filterProjects(projects, target);
 
         await runWatch({

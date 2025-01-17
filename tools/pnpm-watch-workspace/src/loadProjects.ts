@@ -1,43 +1,10 @@
 import { findWorkspacePackages } from '@pnpm/find-workspace-packages';
-import fs from 'node:fs/promises';
-import path from 'node:path';
 
 import { type Project } from './types.ts';
+import { findWorkspaceRoot } from './findWorkspaceRoot.ts';
 
-async function checkFileExists(filepath: string): Promise<boolean> {
-    try {
-        await fs.access(filepath, fs.constants.F_OK);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-async function findWorkspaceRoot() {
-    const filename = 'pnpm-workspace.yaml';
-
-    const startFrom = process.cwd();
-
-    let current = startFrom;
-    while (current) {
-        const candidate = path.join(current, filename);
-
-        if (await checkFileExists(candidate)) {
-            const stats = await fs.stat(candidate);
-
-            if (stats.isFile()) {
-                return path.dirname(candidate);
-            }
-        }
-
-        current = path.dirname(current);
-    }
-
-    throw new Error('Could not find a pnpm workspace.yaml file');
-}
-
-export async function loadProjects(): Promise<Project[]> {
-    const root = await findWorkspaceRoot();
+export async function loadProjects(workspaceRoot: string): Promise<Project[]> {
+    const root = await findWorkspaceRoot(workspaceRoot);
 
     const projects = await findWorkspacePackages(root);
 

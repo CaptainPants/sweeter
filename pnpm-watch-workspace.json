@@ -1,0 +1,45 @@
+{
+    "groups": {
+        "example": [
+            "@captainpants/sweeter-example"
+        ],
+        "arktype-example": [
+            "@captainpants/sweeter-arktype-example"
+        ],
+        "rollup-plugin-usage": [
+            "@captainpants/sweeter-rollup-plugin-usage"
+        ]
+    },
+    "projects": {
+        "@captainpants/sweeter-utilities": {
+            "successPattern": "^built in [1-9][0-9]*ms\\.$"
+        },
+        "@captainpants/sweeter-core": {
+            "successPattern": "^built in [1-9][0-9]*ms\\.$"
+        },
+        "@captainpants/sweeter-arktype-modeling": {
+            "successPattern": "^built in [1-9][0-9]*ms\\.$"
+        },
+        "@captainpants/sweeter-web": {
+            "successPattern": "^built in [1-9][0-9]*ms\\.$"
+        },
+        "@captainpants/sweeter-web-arktype": {
+            "successPattern": "^built in [1-9][0-9]*ms\\.$"
+        },
+        "@captainpants/sweeter-web-gummybear": {
+            "successPattern": "^built in [1-9][0-9]*ms\\.$"
+        },
+        "@captainpants/arktype-example-data": {
+            "successPattern": "^built in [1-9][0-9]*ms\\.$"
+        },
+        "@captainpants/sweeter-example": {
+            "successPattern": "press h \\+ enter to show help'"
+        },
+        "@captainpants/sweeter-arktype-example": {
+            "successPattern": "press h \\+ enter to show help'"
+        },
+        "@captainpants/sweeter-rollup-plugin-usage": {
+            "successPattern": "press h \\+ enter to show help'"
+        }
+    }
+}

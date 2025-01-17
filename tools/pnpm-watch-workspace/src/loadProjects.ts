@@ -1,17 +1,14 @@
-
 import { findWorkspacePackages } from '@pnpm/find-workspace-packages';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { type Project } from './types.ts';
 
-
 async function checkFileExists(filepath: string): Promise<boolean> {
     try {
         await fs.access(filepath, fs.constants.F_OK);
         return true;
-    }
-    catch {
+    } catch {
         return false;
     }
 }
@@ -44,7 +41,11 @@ export async function loadProjects(): Promise<Project[]> {
 
     const projects = await findWorkspacePackages(root);
 
-    const rootIsADependency = projects.some(x => Object.keys(x.manifest.dependencies ?? {}).concat(Object.keys(x.manifest.devDependencies ?? {})).includes('root'));
+    const rootIsADependency = projects.some((x) =>
+        Object.keys(x.manifest.dependencies ?? {})
+            .concat(Object.keys(x.manifest.devDependencies ?? {}))
+            .includes('root'),
+    );
 
     const res: Project[] = [];
 
@@ -55,7 +56,7 @@ export async function loadProjects(): Promise<Project[]> {
 
         const mergedDependencies = {
             ...project.manifest.dependencies,
-            ...project.manifest.devDependencies
+            ...project.manifest.devDependencies,
         };
         const workspaceDependencies: string[] = [];
         for (const [key, version] of Object.entries(mergedDependencies)) {
@@ -71,8 +72,10 @@ export async function loadProjects(): Promise<Project[]> {
             version: project.manifest.version ?? '',
             private: project.manifest.private ?? false,
             workspaceDependencies: workspaceDependencies,
-            scripts: project.manifest.scripts ? Object.keys(project.manifest.scripts) : []
-        }
+            scripts: project.manifest.scripts
+                ? Object.keys(project.manifest.scripts)
+                : [],
+        };
 
         res.push(node);
     }

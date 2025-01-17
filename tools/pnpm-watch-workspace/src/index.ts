@@ -1,10 +1,10 @@
-import { program } from "commander";
+import { program } from 'commander';
 
-import { filterProjects } from "./filterProjects.ts";
-import { loadProjects } from "./loadProjects.ts";
-import { runWatch } from "./runWatch.ts";
-import { setMaxListeners } from "node:events";
-import chalk from "chalk";
+import { filterProjects } from './filterProjects.ts';
+import { loadProjects } from './loadProjects.ts';
+import { runWatch } from './runWatch.ts';
+import { setMaxListeners } from 'node:events';
+import chalk from 'chalk';
 
 interface Options {
     successPattern: string;
@@ -19,9 +19,7 @@ process.on('SIGINT', function () {
     abortController.abort('SIGINT');
 });
 
-program
-    .version("1.0.0")
-    .description("watch-tree");
+program.version('1.0.0').description('watch-tree');
 
 program
     .command('run <target>')
@@ -34,7 +32,7 @@ program
             projects: filtered,
             target: target,
             signal: abortController.signal,
-            successPattern: successPattern
+            successPattern: successPattern,
         });
 
         console.log(chalk.green('Finished'));

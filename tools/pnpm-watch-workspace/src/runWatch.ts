@@ -1,8 +1,8 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
-import { type Project } from "./types.ts";
-import { runOne, type RunOneCleanupHandle } from "./runOne.ts";
-import { createChalkLibrary } from "./createChalkLibrary.ts";
+import { type Project } from './types.ts';
+import { runOne, type RunOneCleanupHandle } from './runOne.ts';
+import { createChalkLibrary } from './createChalkLibrary.ts';
 
 export interface WatchOptions {
     projects: Project[];
@@ -11,18 +11,27 @@ export interface WatchOptions {
     signal: AbortSignal;
 }
 
-export async function runWatch({ projects, target, successPattern, signal }: WatchOptions): Promise<void> {
+export async function runWatch({
+    projects,
+    target,
+    successPattern,
+    signal,
+}: WatchOptions): Promise<void> {
     console.log(chalk.green('Starting watch...'));
 
-    const successPatternRegExp: RegExp | null = successPattern ? new RegExp(successPattern) : null;
+    const successPatternRegExp: RegExp | null = successPattern
+        ? new RegExp(successPattern)
+        : null;
 
-    const roots = projects.filter(x => x.workspaceDependencies.length == 0);
+    const roots = projects.filter((x) => x.workspaceDependencies.length == 0);
     if (roots.length < 1) {
-        throw new Error('No roots found, this could indicate a circular dependency.');
+        throw new Error(
+            'No roots found, this could indicate a circular dependency.',
+        );
     }
 
-    const alreadyFinished = new Set<string>;
-    const notProcessed = new Map(projects.map(proj => [proj.name, proj])); // copy
+    const alreadyFinished = new Set<string>();
+    const notProcessed = new Map(projects.map((proj) => [proj.name, proj])); // copy
     const currentlyProcessing = new Map<string, Promise<Project>>();
     const processed: Project[] = [];
 
@@ -38,10 +47,13 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
 
                 const log = (data: string) => {
                     console.log(loan.chalk.prefix(prefix) + data);
-                }
+                };
                 const header = (data: string) => {
-                    console.log(loan.chalk.prefix(prefix) + loan.chalk.header('== ' + data + ' =='));
-                }
+                    console.log(
+                        loan.chalk.prefix(prefix) +
+                            loan.chalk.header('== ' + data + ' =='),
+                    );
+                };
 
                 const handle = await runOne({
                     project,
@@ -49,14 +61,13 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
                     successPatternRegExp,
                     log,
                     header,
-                    signal
+                    signal,
                 });
 
                 cleanups.push(handle);
 
                 return project;
-            }
-            finally {
+            } finally {
                 loan.return();
             }
         }
@@ -70,13 +81,17 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
             // Wait for any to complete
             const finished = await Promise.any(currentlyProcessing.values());
             signal.throwIfAborted();
-            
+
             alreadyFinished.add(finished.name);
             processed.push(finished);
             currentlyProcessing.delete(finished.name);
 
             for (const [name, node] of notProcessed) {
-                if (node.workspaceDependencies.every(x => alreadyFinished.has(x))) {
+                if (
+                    node.workspaceDependencies.every((x) =>
+                        alreadyFinished.has(x),
+                    )
+                ) {
                     currentlyProcessing.set(name, start(node));
                     notProcessed.delete(name);
                 }
@@ -90,29 +105,24 @@ export async function runWatch({ projects, target, successPattern, signal }: Wat
         console.log(chalk.green('==== All watchers have been started ===='));
 
         // Wait for the abort signal
-        await new Promise(
-            resolve => {
-                signal.addEventListener(
-                    'abort', 
-                    () => {
-                        void resolve(void 0)
-                    }
-                );
-            }
-        )
-    }
-    finally {
+        await new Promise((resolve) => {
+            signal.addEventListener('abort', () => {
+                void resolve(void 0);
+            });
+        });
+    } finally {
         console.log(chalk.yellowBright('Terminating all child processes'));
 
         for (const current of cleanups) {
             try {
                 await current.cleanup();
-            }
-            catch (ex) {
+            } catch (ex) {
                 console.error('Error caught while cleaning up', ex);
             }
         }
 
-        console.log(chalk.yellowBright('All child processes have been terminated'));
+        console.log(
+            chalk.yellowBright('All child processes have been terminated'),
+        );
     }
 }

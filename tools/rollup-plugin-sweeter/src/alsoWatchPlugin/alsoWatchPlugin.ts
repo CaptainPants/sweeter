@@ -7,7 +7,6 @@ export interface AlsoWatchPluginOptions {
     debug?: boolean;
 }
 
-
 export function alsoWatchPlugin(options: AlsoWatchPluginOptions): RollupPlugin;
 export function alsoWatchPlugin({
     globs,
@@ -47,7 +46,9 @@ export function alsoWatchPlugin({
             }
         },
         watchChange(id) {
-            this.info(`File ${id} changed (note that this includes files that are being watched directly/outside the alsoWatchPlugin).`);
+            this.info(
+                `File ${id} changed (note that this includes files that are being watched directly/outside the alsoWatchPlugin).`,
+            );
         },
     };
 }

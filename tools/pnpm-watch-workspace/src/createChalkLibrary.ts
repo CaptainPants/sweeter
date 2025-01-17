@@ -1,4 +1,4 @@
-import chalk, { type ChalkInstance } from "chalk";
+import chalk, { type ChalkInstance } from 'chalk';
 
 export interface ChalkSet {
     prefix: ChalkInstance;
@@ -20,7 +20,7 @@ const baseSets: ChalkSet[] = [
 
 const fallback: ChalkSet = {
     prefix: chalk.white,
-    header: chalk.black.bgWhite
+    header: chalk.black.bgWhite,
 };
 
 export function createChalkLibrary() {
@@ -30,7 +30,7 @@ export function createChalkLibrary() {
         if (chalks.size === 0) {
             return {
                 chalk: fallback,
-                return: () => void 0
+                return: () => void 0,
             };
         }
 
@@ -42,16 +42,16 @@ export function createChalkLibrary() {
             chalk: next,
             return: () => {
                 if (returned) return;
-                
+
                 chalks.add(next);
                 returned = true;
-            }
-        }
+            },
+        };
     }
 
     return {
-        loan: rent
-    }
+        loan: rent,
+    };
 }
 
 function first<T>(iterable: Iterable<T>): T | undefined {

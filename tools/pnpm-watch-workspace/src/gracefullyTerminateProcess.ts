@@ -19,53 +19,63 @@ function wait(timeoutMs: number, signal?: AbortSignal): Promise<void> {
     });
 }
 
-function waitForExit(childProcess: child_process.ChildProcess, signal: NodeJS.Signals, abortSignal?: AbortSignal): Promise<number> {
-    return new Promise<number>(
-        (resolve, reject) => {
-            // If a process has alreadyed exited, resolve with the exitCode
-            if (childProcess.exitCode !== null) {
-                resolve(childProcess.exitCode);
-                return;
-            }
-
-            // Otherwise listen for the close event or for the passed AbortSignal
-            function aborted() {
-                reject(abortSignal?.reason);
-            }
-
-            function cleanup() {
-                childProcess.off('close', closeHandler);
-                abortSignal?.removeEventListener('abort', aborted);
-            }
-
-            function closeHandler(code: number | null, signal: NodeJS.Signals) {
-                cleanup();
-                resolve(code ?? 0); // not sure why this is allowed to null
-            }
-
-            abortSignal?.addEventListener('abort', aborted);
-            childProcess.on('close', closeHandler);
+function waitForExit(
+    childProcess: child_process.ChildProcess,
+    signal: NodeJS.Signals,
+    abortSignal?: AbortSignal,
+): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+        // If a process has alreadyed exited, resolve with the exitCode
+        if (childProcess.exitCode !== null) {
+            resolve(childProcess.exitCode);
+            return;
         }
-    )
+
+        // Otherwise listen for the close event or for the passed AbortSignal
+        function aborted() {
+            reject(abortSignal?.reason);
+        }
+
+        function cleanup() {
+            childProcess.off('close', closeHandler);
+            abortSignal?.removeEventListener('abort', aborted);
+        }
+
+        function closeHandler(code: number | null, signal: NodeJS.Signals) {
+            cleanup();
+            resolve(code ?? 0); // not sure why this is allowed to null
+        }
+
+        abortSignal?.addEventListener('abort', aborted);
+        childProcess.on('close', closeHandler);
+    });
 }
 
-export async function gracefullyTerminateProcess(childProcess: child_process.ChildProcess, signal: NodeJS.Signals, abortSignal?: AbortSignal): Promise<number> {
+export async function gracefullyTerminateProcess(
+    childProcess: child_process.ChildProcess,
+    signal: NodeJS.Signals,
+    abortSignal?: AbortSignal,
+): Promise<number> {
     // Any associated streams need to be closed
     childProcess.stdout?.destroy();
     childProcess.stderr?.destroy();
     childProcess.stdin?.destroy();
-    
+
     const res = childProcess.kill('SIGINT');
-    
+
     if (!res) {
-        console.warn(`kill(${childProcess.pid}, ${JSON.stringify(signal)}) returned false`);
+        console.warn(
+            `kill(${childProcess.pid}, ${JSON.stringify(signal)}) returned false`,
+        );
     }
 
     const result = await Promise.any([
         waitForExit(childProcess, signal, abortSignal),
         wait(5000).then(() => {
-            throw new Error(`Timed out while killing process ${childProcess.pid}.`);
-        })
+            throw new Error(
+                `Timed out while killing process ${childProcess.pid}.`,
+            );
+        }),
     ]);
 
     return result;

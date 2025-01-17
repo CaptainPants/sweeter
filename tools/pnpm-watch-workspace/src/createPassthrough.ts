@@ -1,7 +1,10 @@
-import { Readable } from "node:stream";
+import { Readable } from 'node:stream';
 import stripAnsi from 'strip-ansi';
 
-export function createPassthrough(source: Readable, callback: (strippger: string, original: string) => void) {
+export function createPassthrough(
+    source: Readable,
+    callback: (strippger: string, original: string) => void,
+) {
     function invokeCallback(line: string) {
         const stripped = stripAnsi(line);
         callback(stripped, line);
@@ -21,7 +24,7 @@ export function createPassthrough(source: Readable, callback: (strippger: string
 
             invokeCallback(line);
         }
-    };
+    }
 
     source.setEncoding('utf-8');
     source.addListener('data', listener);
@@ -41,7 +44,11 @@ export function createPassthrough(source: Readable, callback: (strippger: string
     return { flush: flush, remove };
 }
 
-function createLineProcessor(): { add(data: string): void; readCompleteLine(): string | null, readToEnd(): string[] } {
+function createLineProcessor(): {
+    add(data: string): void;
+    readCompleteLine(): string | null;
+    readToEnd(): string[];
+} {
     let remaining: string | null = null;
 
     function readCompleteLine() {
@@ -59,7 +66,7 @@ function createLineProcessor(): { add(data: string): void; readCompleteLine(): s
         return res;
     }
 
-    function readToEnd(): string [] {
+    function readToEnd(): string[] {
         const temp = remaining;
         remaining = null;
         if (temp === null) {
@@ -73,8 +80,8 @@ function createLineProcessor(): { add(data: string): void; readCompleteLine(): s
     }
 
     return {
-        readCompleteLine, 
-        add, 
-        readToEnd
-    }
+        readCompleteLine,
+        add,
+        readToEnd,
+    };
 }

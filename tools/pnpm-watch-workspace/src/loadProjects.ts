@@ -1,12 +1,9 @@
 import { findWorkspacePackages } from '@pnpm/find-workspace-packages';
 
 import { type Project } from './types.ts';
-import { findWorkspaceRoot } from './findWorkspaceRoot.ts';
 
 export async function loadProjects(workspaceRoot: string): Promise<Project[]> {
-    const root = await findWorkspaceRoot(workspaceRoot);
-
-    const projects = await findWorkspacePackages(root);
+    const projects = await findWorkspacePackages(workspaceRoot);
 
     const rootIsADependency = projects.some((x) =>
         Object.keys(x.manifest.dependencies ?? {})

@@ -3,25 +3,27 @@ import chalk from 'chalk';
 import { type Project } from './types.ts';
 import { runOne, type RunOneCleanupHandle } from './runOne.ts';
 import { createChalkLibrary } from './createChalkLibrary.ts';
+import { type WatchConfigFileJson } from './loadWatchJson.ts';
 
 export interface WatchOptions {
     projects: Project[];
     target: string;
-    successPattern?: string;
+    group?: string | undefined | null;
     signal: AbortSignal;
+    configFile: WatchConfigFileJson;
 }
 
 export async function runWatch({
     projects,
     target,
-    successPattern,
+    group,
     signal,
+    configFile,
 }: WatchOptions): Promise<void> {
     console.log(chalk.green('Starting watch...'));
-
-    const successPatternRegExp: RegExp | null = successPattern
-        ? new RegExp(successPattern)
-        : null;
+    if (group) {
+        console.log(chalk.green(`Using group: ${group}`));
+    }
 
     const roots = projects.filter((x) => x.workspaceDependencies.length == 0);
     if (roots.length < 1) {
@@ -29,9 +31,18 @@ export async function runWatch({
             'No roots found, this could indicate a circular dependency.',
         );
     }
+    
+    const groupConfig = group ? (configFile.groups?.[group] ?? null) : null;
+    const projectsToProcess = groupConfig?.projects ? new Set(groupConfig?.projects) : null;
 
-    const alreadyFinished = new Set<string>();
-    const notProcessed = new Map(projects.map((proj) => [proj.name, proj])); // copy
+    if (projectsToProcess) {
+        projects = projects.filter(x => projectsToProcess.has(x.name));
+    }
+
+    const incomplete = new Set<string>(projects.map(x => x.name));
+    const completed = new Set<string>();
+
+    const notStarted = new Map(projects.map((proj) => [proj.name, proj])); // copy
     const currentlyProcessing = new Map<string, Promise<Project>>();
     const processed: Project[] = [];
 
@@ -48,11 +59,21 @@ export async function runWatch({
                 const log = (data: string) => {
                     console.log(loan.chalk.prefix(prefix) + data);
                 };
+                const passthrough = (data: string) => {
+                    console.log(loan.chalk.prefix(prefix) + '>> ' + data);
+                };
                 const header = (data: string) => {
                     console.log(
                         loan.chalk.prefix(prefix) + loan.chalk.header('== ' + data + ' =='),
                     );
                 };
+
+                const projectConfig = configFile.projects?.[project.name];
+                const successPattern = projectConfig?.successPattern;
+
+                const successPatternRegExp: RegExp | null = successPattern
+                    ? new RegExp(successPattern)
+                    : null;
 
                 const handle = await runOne({
                     project,
@@ -60,6 +81,7 @@ export async function runWatch({
                     successPatternRegExp,
                     log,
                     header,
+                    passthrough,
                     signal,
                 });
 
@@ -73,7 +95,7 @@ export async function runWatch({
 
         for (const root of roots) {
             currentlyProcessing.set(root.name, start(root));
-            notProcessed.delete(root.name);
+            notStarted.delete(root.name);
         }
 
         while (currentlyProcessing.size > 0) {
@@ -81,23 +103,28 @@ export async function runWatch({
             const finished = await Promise.any(currentlyProcessing.values());
             signal.throwIfAborted();
 
-            alreadyFinished.add(finished.name);
+            incomplete.delete(finished.name)
+            completed.add(finished.name);
+            
             processed.push(finished);
             currentlyProcessing.delete(finished.name);
 
-            for (const [name, node] of notProcessed) {
+            for (const [name, node] of notStarted) {
+                // Some dependencies may not be included in the group we are building
+                // so we only check to make sure that any we are waiting on are still
+                // in the incomplete set
                 if (
-                    node.workspaceDependencies.every((x) =>
-                        alreadyFinished.has(x),
+                    !node.workspaceDependencies.some((x) =>
+                        incomplete.has(x),
                     )
                 ) {
                     currentlyProcessing.set(name, start(node));
-                    notProcessed.delete(name);
+                    notStarted.delete(name);
                 }
             }
         }
 
-        if (notProcessed.size > 0) {
+        if (notStarted.size > 0) {
             // Something didn't get processed
         }
 

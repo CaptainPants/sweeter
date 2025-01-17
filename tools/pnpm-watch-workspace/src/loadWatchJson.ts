@@ -5,23 +5,25 @@ import { parse, type ParseError } from "jsonc-parser";
 
 import { checkFileExists } from "./checkFileExists.ts";
 
-export const schema = type({
-    'groups?': type.Record(type.string, type.string.array()),
-    'projects?': type({
+export const watchConfigFileJsonSchema = type({
+    'groups?': type.Record(type.string, type({
+        'projects': type.string.array()
+    })),
+    'projects?': type.Record(type.string, type({
         'successPattern?': 'string'
-    })
+    }))
 });
 
-export type WatchJson = type.infer<typeof schema>;
+export type WatchConfigFileJson = type.infer<typeof watchConfigFileJsonSchema>;
 
-export async function loadWatchJson(workspaceRoot: string): Promise<WatchJson> {
+export async function loadWatchJson(workspaceRoot: string): Promise<WatchConfigFileJson> {
     const candidate = path.join(workspaceRoot, 'pnpm-watch-workspace.json');
 
     if (!await checkFileExists(candidate)) {
         return {};
     }
 
-    const content = await fs.readFile(candidate, { encoding: 'utf-8'});
+    const content = await fs.readFile(candidate, { encoding: 'utf-8' });
 
     const errors: ParseError[] = [];
     const parsed = parse(content, errors);
@@ -30,11 +32,11 @@ export async function loadWatchJson(workspaceRoot: string): Promise<WatchJson> {
         throw new Error(`Error parsing pnpm-watch-workspace.json: ${errors.join(', ')}`);
     }
 
-    const processed = schema(parsed);
+    const processed = watchConfigFileJsonSchema(parsed);
 
     if (processed instanceof ArkErrors) {
         throw new Error(processed.message);
-    } 
+    }
 
     return processed;
 }

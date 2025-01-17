@@ -6,9 +6,10 @@ import { runWatch } from './runWatch.ts';
 import { setMaxListeners } from 'node:events';
 import chalk from 'chalk';
 import { loadWatchJson } from './loadWatchJson.ts';
+import { findWorkspaceRoot } from './findWorkspaceRoot.ts';
 
 interface Options {
-    successPattern: string;
+    group?: string;
 }
 
 const abortController = new AbortController();
@@ -24,22 +25,22 @@ program.version('1.0.0').description('watch-tree');
 
 program
     .command('run <target>')
-    .requiredOption('--successPattern <successPattern>')
-    .action(async (target: string, { successPattern }: Options) => {
+    .option<string | null>('--group <group>', 'The group to build', value => value)
+    .action(async (target: string, { group }: Options) => {
         const cwd = process.cwd();
 
-        const projects = await loadProjects(cwd);
-        const watchJson = await loadWatchJson(cwd);
-
-        console.error(JSON.stringify(watchJson));
+        const workspaceRoot = await findWorkspaceRoot(cwd);
+        const projects = await loadProjects(workspaceRoot);
+        const configFile = await loadWatchJson(workspaceRoot);
 
         const filtered = filterProjects(projects, target);
 
         await runWatch({
             projects: filtered,
             target: target,
+            group: group,
             signal: abortController.signal,
-            successPattern: successPattern,
+            configFile: configFile
         });
 
         console.log(chalk.green('Finished'));

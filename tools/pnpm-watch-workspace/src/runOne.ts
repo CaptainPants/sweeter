@@ -11,6 +11,7 @@ export interface RunOneArgs {
     successPatternRegExp: RegExp | null;
     log: (text: string) => void;
     header: (text: string) => void;
+    passthrough: (text: string) => void;
     signal: AbortSignal;
 }
 
@@ -21,13 +22,15 @@ export interface RunOneCleanupHandle {
 export function runOne({
     project,
     target,
-    successPatternRegExp: successPattern,
+    successPatternRegExp,
     log,
     header,
+    passthrough,
     signal,
 }: RunOneArgs): Promise<RunOneCleanupHandle> {
     return new Promise<RunOneCleanupHandle>((resolve, reject) => {
         header('STARTING');
+        log('successPattern: ' + successPatternRegExp)
 
         const child = child_process.spawn(`pnpm run ${target}`, {
             shell: true,
@@ -60,10 +63,10 @@ export function runOne({
         }
 
         const { flush } = createPassthrough(child.stdout, (line, original) => {
-            log(original);
+            passthrough(original);
 
-            if (successPattern) {
-                const match = line.match(successPattern);
+            if (successPatternRegExp) {
+                const match = line.match(successPatternRegExp);
                 if (match) {
                     finishedStartup(true);
                 }

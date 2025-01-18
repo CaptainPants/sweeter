@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 
-import { type Project } from './types.ts';
-import { runOne, type RunOneCleanupHandle } from './runOne.ts';
 import { createChalkLibrary } from './createChalkLibrary.ts';
 import { type WatchConfigFileJson } from './loadWatchJson.ts';
+import { runOne, type RunOneCleanupHandle } from './runOne.ts';
+import { type Project } from './types.ts';
 
 export interface WatchOptions {
     projects: Project[];
@@ -20,9 +20,13 @@ export async function runWatch({
     signal,
     configFile,
 }: WatchOptions): Promise<void> {
-    console.log(chalk.green('Starting watch...'));
+    function topLevelLog(data: string) {
+        console.log(chalk.green(data));
+    }
+
+    topLevelLog('Starting watch...');
     if (group) {
-        console.log(chalk.green(`Using group: ${group}`));
+        topLevelLog(`Using group: ${group}`);
     }
 
     const roots = projects.filter((x) => x.workspaceDependencies.length == 0);
@@ -93,10 +97,16 @@ export async function runWatch({
             }
         }
 
+        function outputProgress() {
+            topLevelLog(`Processed ${completed.size}/${projects.length} projects`);
+        }
+
         for (const root of roots) {
             currentlyProcessing.set(root.name, start(root));
             notStarted.delete(root.name);
         }
+
+        outputProgress();
 
         while (currentlyProcessing.size > 0) {
             // Wait for any to complete
@@ -122,13 +132,15 @@ export async function runWatch({
                     notStarted.delete(name);
                 }
             }
+
+            outputProgress();
         }
 
         if (notStarted.size > 0) {
             // Something didn't get processed
         }
 
-        console.log(chalk.green('==== All watchers have been started ===='));
+        topLevelLog('All watchers have been started.');
 
         // Wait for the abort signal
         await new Promise((resolve) => {

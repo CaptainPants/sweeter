@@ -1,9 +1,9 @@
-import chalk from 'chalk';
-import child_process from 'node:child_process';
+import child_process, { type ChildProcessByStdio } from 'node:child_process';
 
 import { createPassthrough } from './createPassthrough.ts';
 import { gracefullyTerminateProcess } from './gracefullyTerminateProcess.ts';
 import { type Project } from './types.ts';
+import { Readable } from 'node:stream';
 
 export interface RunOneArgs {
     project: Project;
@@ -15,8 +15,10 @@ export interface RunOneArgs {
     signal: AbortSignal;
 }
 
-export interface RunOneCleanupHandle {
-    cleanup(): Promise<void>;
+export interface RunOneResult {
+    outcome: 'success' | 'failed' | 'aborted';
+    error?: unknown;
+    cleanup?: () => Promise<void>;
 }
 
 export function runOne({
@@ -27,60 +29,89 @@ export function runOne({
     header,
     passthrough,
     signal,
-}: RunOneArgs): Promise<RunOneCleanupHandle> {
-    return new Promise<RunOneCleanupHandle>((resolve, reject) => {
-        header('STARTING');
-        log('successPattern: ' + successPatternRegExp);
+}: RunOneArgs): Promise<RunOneResult> {
+    return new Promise<RunOneResult>((resolve) => {
+        let child: ChildProcessByStdio<null, Readable, null> | undefined;
 
-        const child = child_process.spawn(`pnpm run ${target}`, {
-            shell: true,
-            cwd: project.location,
-            stdio: ['inherit', 'pipe', 'inherit'],
-        });
+        let terminating = false;
+
+        async function terminate() {
+            if (!child) {
+                return;
+            }
+
+            if (child.exitCode !== null) {
+                header('ALREADY TERMINATED');
+                return;
+            }
+
+            terminating = true;
+            header('TERMINATING');
+            await gracefullyTerminateProcess(child, 'SIGTERM');
+            header('TERMINATED');
+        }
 
         const abortHandler = () => {
             unsubscribeFromAbort();
-            child.kill('SIGINT');
-        };
-        signal.addEventListener('abort', abortHandler);
-        const unsubscribeFromAbort = () =>
-            void signal.removeEventListener('abort', abortHandler);
-
-        function finishedStartup(becauseOfSuccess: boolean) {
-            unsubscribeFromAbort();
-
-            if (becauseOfSuccess) {
-                header('SUCCESS!!');
-            }
-
             resolve({
-                cleanup: async () => {
-                    header('TERMINATING');
-                    await gracefullyTerminateProcess(child, 'SIGTERM');
-                    header('TERMINATED');
-                },
+                outcome: 'aborted',
+                cleanup: terminate
             });
+        };
+
+        signal.addEventListener('abort', abortHandler);
+        function unsubscribeFromAbort() {
+            void signal.removeEventListener('abort', abortHandler);
         }
 
-        const { flush } = createPassthrough(child.stdout, (line, original) => {
-            passthrough(original);
+        try {
+            header('STARTING');
+            log('successPattern: ' + successPatternRegExp);
 
-            if (successPatternRegExp) {
-                const match = line.match(successPatternRegExp);
-                if (match) {
-                    finishedStartup(true);
+            child = child_process.spawn(`pnpm run ${target}`, {
+                shell: true,
+                cwd: project.location,
+                stdio: ['inherit', 'pipe', 'inherit'],
+            });
+
+            const { flush } = createPassthrough(child.stdout, (line, original) => {
+                passthrough(original);
+
+                if (successPatternRegExp) {
+                    const match = line.match(successPatternRegExp);
+                    if (match) {
+                        header('SUCCESS!!');
+
+                        resolve({
+                            outcome: 'success',
+                            cleanup: terminate
+                        });
+                    }
                 }
-            }
-        });
+            });
 
-        child.addListener('close', (code, signal) => {
-            unsubscribeFromAbort();
-            flush();
+            child.addListener('close', (code, signal) => {
+                // Ignore the event if we caused it while terminating
+                if (terminating) {
+                    return;
+                }
 
-            if (signal != 'SIGINT' && code !== 0) {
-                reject(`Child process closed with status ${code}`);
-            }
-            finishedStartup(false);
-        });
+                flush();
+
+                header('CLOSED');
+
+                // Note that this does nothing if already resolved
+                // We don't need to clean up as the process is closed
+                resolve({
+                    outcome: 'aborted'
+                });
+            });
+        }
+        catch (err) {
+            resolve({
+                outcome: 'failed',
+                error: err
+            })
+        }
     });
 }

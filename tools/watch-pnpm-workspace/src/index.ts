@@ -18,7 +18,7 @@ const abortController = new AbortController();
 setMaxListeners(100, abortController.signal);
 
 process.on('SIGINT', function () {
-    abortController.abort('SIGINT');
+    abortController.abort();
 });
 
 program.version('1.0.0').description('watch-tree');

@@ -131,7 +131,7 @@ for (let i = 0; i < allColClasses.length; ++i) {
         gridStylesheetCss.append(', ');
     }
 
-    gridStylesheetCss.append(stylesheet`.${allColClasses[i]!}`);
+    gridStylesheetCss.append(stylesheet`.${allColClasses[i]}`);
 }
 gridStylesheetCss.appendLine(stylesheet`
     {

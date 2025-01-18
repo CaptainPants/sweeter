@@ -1,7 +1,7 @@
-import path from "node:path";
 import fs from 'node:fs/promises';
+import path from 'node:path';
 
-import { checkFileExists } from "./checkFileExists.ts";
+import { checkFileExists } from './checkFileExists.ts';
 
 export async function findWorkspaceRoot(startFrom: string) {
     const filename = 'pnpm-workspace.yaml';

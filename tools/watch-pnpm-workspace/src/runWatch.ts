@@ -35,15 +35,17 @@ export async function runWatch({
             'No roots found, this could indicate a circular dependency.',
         );
     }
-    
+
     const groupConfig = group ? (configFile.groups?.[group] ?? null) : null;
-    const projectsToProcess = groupConfig?.projects ? new Set(groupConfig?.projects) : null;
+    const projectsToProcess = groupConfig?.projects
+        ? new Set(groupConfig?.projects)
+        : null;
 
     if (projectsToProcess) {
-        projects = projects.filter(x => projectsToProcess.has(x.name));
+        projects = projects.filter((x) => projectsToProcess.has(x.name));
     }
 
-    const incomplete = new Set<string>(projects.map(x => x.name));
+    const incomplete = new Set<string>(projects.map((x) => x.name));
     const completed = new Set<string>();
 
     const notStarted = new Map(projects.map((proj) => [proj.name, proj])); // copy
@@ -68,7 +70,8 @@ export async function runWatch({
                 };
                 const header = (data: string) => {
                     console.log(
-                        loan.chalk.prefix(prefix) + loan.chalk.header('== ' + data + ' =='),
+                        loan.chalk.prefix(prefix) +
+                            loan.chalk.header('== ' + data + ' =='),
                     );
                 };
 
@@ -98,7 +101,9 @@ export async function runWatch({
         }
 
         function outputProgress() {
-            topLevelLog(`Processed ${completed.size}/${projects.length} projects`);
+            topLevelLog(
+                `Processed ${completed.size}/${projects.length} projects`,
+            );
         }
 
         for (const root of roots) {
@@ -113,9 +118,9 @@ export async function runWatch({
             const finished = await Promise.any(currentlyProcessing.values());
             signal.throwIfAborted();
 
-            incomplete.delete(finished.name)
+            incomplete.delete(finished.name);
             completed.add(finished.name);
-            
+
             processed.push(finished);
             currentlyProcessing.delete(finished.name);
 
@@ -124,9 +129,7 @@ export async function runWatch({
                 // so we only check to make sure that any we are waiting on are still
                 // in the incomplete set
                 if (
-                    !node.workspaceDependencies.some((x) =>
-                        incomplete.has(x),
-                    )
+                    !node.workspaceDependencies.some((x) => incomplete.has(x))
                 ) {
                     currentlyProcessing.set(name, start(node));
                     notStarted.delete(name);

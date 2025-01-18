@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import circularDependency from 'vite-plugin-circular-dependency';
-import sweeterPlugin from '@captainpants/rollup-plugin-sweeter';
+import sweeterPlugin, { alsoWatchPlugin } from '@captainpants/rollup-plugin-sweeter';
 
 export default defineConfig({
     build: {
@@ -10,7 +10,8 @@ export default defineConfig({
         },
         target: "ESNext"
     },
-    plugins: [circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-arktype-example', roots: [__dirname] })],
+    plugins: [circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-arktype-example', roots: [__dirname] }),
+    alsoWatchPlugin({ globs: ['node_modules/@captainpants/*/dist/**/*'] })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

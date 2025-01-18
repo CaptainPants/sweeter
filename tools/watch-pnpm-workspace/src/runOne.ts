@@ -1,9 +1,9 @@
-import child_process from 'node:child_process';
-import { createPassthrough } from './createPassthrough.ts';
-
-import { type Project } from './types.ts';
 import chalk from 'chalk';
+import child_process from 'node:child_process';
+
+import { createPassthrough } from './createPassthrough.ts';
 import { gracefullyTerminateProcess } from './gracefullyTerminateProcess.ts';
+import { type Project } from './types.ts';
 
 export interface RunOneArgs {
     project: Project;
@@ -30,7 +30,7 @@ export function runOne({
 }: RunOneArgs): Promise<RunOneCleanupHandle> {
     return new Promise<RunOneCleanupHandle>((resolve, reject) => {
         header('STARTING');
-        log('successPattern: ' + successPatternRegExp)
+        log('successPattern: ' + successPatternRegExp);
 
         const child = child_process.spawn(`pnpm run ${target}`, {
             shell: true,

@@ -17,16 +17,16 @@
     },
     "build": {
       "dependsOn": [
-        "^build"
+        "^build",
+        {
+            "projects": "@captainpants/rollup-plugin-sweeter",
+            "target": "build"
+        }
       ],
       "outputs": [
-        "{projectRoot}/build"
-      ]
-    },
-    "watch": {
-      "dependsOn": [
-        "build"
-      ]
+        "{projectRoot}/dist"
+      ],
+      "cache": true
     }
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",

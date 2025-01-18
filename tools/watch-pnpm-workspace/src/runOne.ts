@@ -55,7 +55,7 @@ export function runOne({
             unsubscribeFromAbort();
             resolve({
                 outcome: 'aborted',
-                cleanup: terminate
+                cleanup: terminate,
             });
         };
 
@@ -74,21 +74,24 @@ export function runOne({
                 stdio: ['ignore', 'pipe', 'inherit'],
             });
 
-            const { flush } = createPassthrough(child.stdout, (line, original) => {
-                passthrough(original);
+            const { flush } = createPassthrough(
+                child.stdout,
+                (line, original) => {
+                    passthrough(original);
 
-                if (successPatternRegExp) {
-                    const match = line.match(successPatternRegExp);
-                    if (match) {
-                        header('SUCCESS!!');
+                    if (successPatternRegExp) {
+                        const match = line.match(successPatternRegExp);
+                        if (match) {
+                            header('SUCCESS!!');
 
-                        resolve({
-                            outcome: 'success',
-                            cleanup: terminate
-                        });
+                            resolve({
+                                outcome: 'success',
+                                cleanup: terminate,
+                            });
+                        }
                     }
-                }
-            });
+                },
+            );
 
             child.addListener('close', (code, signal) => {
                 // Ignore the event if we caused it while terminating
@@ -103,15 +106,14 @@ export function runOne({
                 // Note that this does nothing if already resolved
                 // We don't need to clean up as the process is closed
                 resolve({
-                    outcome: 'aborted'
+                    outcome: 'aborted',
                 });
             });
-        }
-        catch (err) {
+        } catch (err) {
             resolve({
                 outcome: 'failed',
-                error: err
-            })
+                error: err,
+            });
         }
     });
 }

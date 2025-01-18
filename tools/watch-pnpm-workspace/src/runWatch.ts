@@ -110,6 +110,8 @@ export async function runWatch({
         }
 
         for (const root of roots) {
+            signal.throwIfAborted();
+
             currentlyProcessing.set(root.name, start(root));
             notStarted.delete(root.name);
         }

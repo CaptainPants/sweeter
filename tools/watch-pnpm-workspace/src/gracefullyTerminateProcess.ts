@@ -61,7 +61,7 @@ export async function gracefullyTerminateProcess(
     childProcess.stderr?.destroy();
     childProcess.stdin?.destroy();
 
-    const res = childProcess.kill('SIGTERM');
+    const res = childProcess.kill(signal);
 
     if (!res) {
         console.warn(

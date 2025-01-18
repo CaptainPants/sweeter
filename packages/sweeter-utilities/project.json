@@ -11,17 +11,6 @@
                 "projects": "@captainpants/rollup-plugin-sweeter",
                 "target": "build"
             }]
-        },
-        "watch-test": {
-            "dependsOn": [{
-                "projects": "@captainpants/rollup-plugin-sweeter",
-                "target": "build"
-            }],
-            "executor": "@captainpants/nx-fire-and-forget:watch-and-return",
-            "options": {
-                "command": "pnpm run watch",
-                "successPattern": "^built in ([0-9]+)ms\\."
-            }
         }
     }
   }

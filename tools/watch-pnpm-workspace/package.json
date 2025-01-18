@@ -22,7 +22,7 @@
         "verify:fix": "corepack pnpm run lint --fix && corepack pnpm run format && corepack pnpm run test && corepack pnpm run typecheck",
         "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
         "build": "pnpm run typecheck && vite build",
-        "test-run": "node --experimental-strip-types ./src/index.ts run watch-test"
+        "test-run": "node --experimental-strip-types ./src/index.ts run watch --group watch-pnpm-workspace-test"
     },
     "engines": {
         "pnpm": "9.15.3"

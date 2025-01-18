@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/pnpm-watch-workspace",
+    "name": "@captainpants/watch-pnpm-workspace",
     "version": "0.0.5",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
@@ -8,8 +8,9 @@
     "type": "module",
     "packageManager": "pnpm@9.15.3",
     "bin": {
-        "watch-tree": "./dist/index.js"
+        "watch-pnpm-workspace": "./dist/index.js"
     },
+    "main": "dist/index.js",
     "scripts": {
         "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",

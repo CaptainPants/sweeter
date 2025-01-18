@@ -17,7 +17,7 @@ export const watchConfigFileJsonSchema = type({
 export type WatchConfigFileJson = type.infer<typeof watchConfigFileJsonSchema>;
 
 export async function loadWatchJson(workspaceRoot: string): Promise<WatchConfigFileJson> {
-    const candidate = path.join(workspaceRoot, 'pnpm-watch-workspace.json');
+    const candidate = path.join(workspaceRoot, 'watch-pnpm-workspace.json');
 
     if (!await checkFileExists(candidate)) {
         return {};
@@ -29,7 +29,7 @@ export async function loadWatchJson(workspaceRoot: string): Promise<WatchConfigF
     const parsed = parse(content, errors);
 
     if (errors.length > 0) {
-        throw new Error(`Error parsing pnpm-watch-workspace.json: ${errors.join(', ')}`);
+        throw new Error(`Error parsing watch-pnpm-workspace.json: ${errors.join(', ')}`);
     }
 
     const processed = watchConfigFileJsonSchema(parsed);

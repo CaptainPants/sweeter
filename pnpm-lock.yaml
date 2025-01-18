@@ -281,7 +281,7 @@ importers:
         specifier: ^1.15.8
         version: 1.15.8
 
-  tools/pnpm-watch-workspace:
+  tools/watch-pnpm-workspace:
     dependencies:
       '@pnpm/find-workspace-packages':
         specifier: ^6.0.9

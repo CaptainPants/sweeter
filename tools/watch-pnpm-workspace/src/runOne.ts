@@ -71,7 +71,7 @@ export function runOne({
             child = child_process.spawn(`pnpm run ${target}`, {
                 shell: true,
                 cwd: project.location,
-                stdio: ['inherit', 'pipe', 'inherit'],
+                stdio: ['ignore', 'pipe', 'inherit'],
             });
 
             const { flush } = createPassthrough(child.stdout, (line, original) => {

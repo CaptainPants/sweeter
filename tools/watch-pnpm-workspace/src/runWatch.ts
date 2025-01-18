@@ -2,7 +2,7 @@ import chalk from 'chalk';
 
 import { createChalkLibrary } from './createChalkLibrary.ts';
 import { type WatchConfigFileJson } from './loadWatchJson.ts';
-import { runOne, type RunOneCleanupHandle } from './runOne.ts';
+import { runOne, type RunOneResult } from './runOne.ts';
 import { type Project } from './types.ts';
 
 export interface WatchOptions {
@@ -54,7 +54,7 @@ export async function runWatch({
 
     const chalks = createChalkLibrary();
 
-    const cleanups: RunOneCleanupHandle[] = [];
+    const handles: RunOneResult[] = [];
     try {
         async function start(project: Project) {
             const loan = chalks.loan();
@@ -91,8 +91,11 @@ export async function runWatch({
                     passthrough,
                     signal,
                 });
+                if (handle.outcome === 'failed') {
+                    throw handle.error;
+                }
 
-                cleanups.push(handle);
+                handles.push(handle);
 
                 return project;
             } finally {
@@ -107,6 +110,8 @@ export async function runWatch({
         }
 
         for (const root of roots) {
+            signal.throwIfAborted();
+
             currentlyProcessing.set(root.name, start(root));
             notStarted.delete(root.name);
         }
@@ -151,12 +156,17 @@ export async function runWatch({
                 void resolve(void 0);
             });
         });
+    } catch (err) {
+        // This is expected if the process is cancelled
+        if (!(err instanceof DOMException && err.name === 'AbortError')) {
+            throw err;
+        }
     } finally {
         console.log(chalk.yellowBright('Terminating all child processes'));
 
-        for (const current of cleanups) {
+        for (const current of handles) {
             try {
-                await current.cleanup();
+                await current.cleanup?.();
             } catch (ex) {
                 console.error('Error caught while cleaning up', ex);
             }

@@ -1,8 +1,8 @@
-
 node_modules
 
 # build output
 build
+dist
 docs/generated
 
 # error logs from yarn
@@ -17,3 +17,5 @@ msbuild.binlog
 **/vite.config.js.timestamp-*.mjs
 
 .nx
+vite.config.*.timestamp*
+vitest.config.*.timestamp*

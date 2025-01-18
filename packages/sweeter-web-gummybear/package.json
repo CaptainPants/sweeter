@@ -6,13 +6,13 @@
     "license": "MIT",
     "private": false,
     "type": "module",
-    "packageManager": "pnpm@8.14.1",
-    "main": "./build/index.js",
-    "types": "./build/index.d.ts",
+    "packageManager": "pnpm@9.15.3",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
-            "import": "./build/index.js",
-            "require": "./build/index.js"
+            "import": "./dist/index.js",
+            "require": "./dist/index.js"
         }
     },
     "scripts": {
@@ -29,18 +29,18 @@
         "build": "pnpm run typecheck && vite build"
     },
     "engines": {
-        "pnpm": "8.14.1"
+        "pnpm": "9.15.3"
     },
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",
         "@captainpants/sweeter-utilities": "workspace:^",
         "@captainpants/sweeter-web": "workspace:^",
         "@popperjs/core": "^2.11.8",
-        "sortablejs": "^1.15.2",
+        "sortablejs": "^1.15.6",
         "tinycolor2": "^1.6.0"
     },
     "devDependencies": {
         "@captainpants/rollup-plugin-sweeter": "workspace:^",
-        "@types/sortablejs": "^1.15.7"
+        "@types/sortablejs": "^1.15.8"
     }
 }

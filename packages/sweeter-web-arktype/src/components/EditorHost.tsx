@@ -1,5 +1,3 @@
-import * as assert from 'typed-assert';
-
 import {
     type ContextualValueCalculationContext,
     createTypeMatcher,
@@ -16,6 +14,7 @@ import {
     type ComponentInit,
     isSignal,
 } from '@captainpants/sweeter-core';
+import { assertNotNullOrUndefined } from '@captainpants/sweeter-utilities';
 
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { SetupContextualValueCallbacksHook } from '../hooks/SetupContextualValueCallbacksHook.js';
@@ -43,7 +42,7 @@ function createRenderFunction(
     // In reverse order from last to first, create a render function that calls the next ('previous' in reverse) render function as its 'next'
     for (let i = matches.length - 1; i >= 0; --i) {
         const Editor = matches[i]?.result;
-        assert.isNotUndefined(Editor);
+        assertNotNullOrUndefined(Editor);
 
         const innerNext = renderFunction;
 

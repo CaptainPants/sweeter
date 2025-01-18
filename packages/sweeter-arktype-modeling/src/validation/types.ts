@@ -1,4 +1,4 @@
-import { type Maybe } from '../utility/index.js';
+import { Maybe } from '@captainpants/sweeter-utilities';
 
 export type ValidatorResult =
     | string[]

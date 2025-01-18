@@ -20,11 +20,7 @@ export function bindDOMStyleProp(
 
         if (stylesValue) {
             for (const key of Object.getOwnPropertyNames(stylesValue)) {
-                const rawValue = stylesValue[key as keyof ElementCssStyles] as
-                    | string
-                    | number
-                    | Signal<string | number>
-                    | undefined;
+                const rawValue = stylesValue[key as keyof ElementCssStyles];
 
                 if (rawValue) {
                     let value = $val(rawValue);

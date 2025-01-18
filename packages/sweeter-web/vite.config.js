@@ -3,7 +3,7 @@ import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
 import circularDependency from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
-import sweeterPlugin from '../rollup-plugin-sweeter/build';
+import sweeterPlugin, { alsoWatchPlugin } from '@captainpants/rollup-plugin-sweeter';
 
 export default defineConfig({
     build: {
@@ -13,13 +13,14 @@ export default defineConfig({
             entry: [resolve(__dirname, './src/index.ts'), resolve(__dirname, './src/jsx-runtime.ts'), resolve(__dirname, './src/jsx-dev-runtime.ts')],
             formats: ['es'],
         },
-        outDir: 'build',
+        outDir: 'dist',
         minify: false,
         rollupOptions: {
         },
         target: "ESNext"
     },
-    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-web', roots: [__dirname] })],
+    plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-web', roots: [__dirname] }),
+    alsoWatchPlugin({ globs: ['node_modules/@captainpants/*/dist/**/*'] })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

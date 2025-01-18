@@ -21,7 +21,7 @@ export default defineConfig({
             name: '[name]',
             formats: ['es'],
         },
-        outDir: 'build',
+        outDir: 'dist',
         minify: false,
         rollupOptions: {
         },

@@ -6,23 +6,23 @@
     "license": "MIT",
     "private": false,
     "type": "module",
-    "packageManager": "pnpm@8.14.1",
-    "main": "./build/index.js",
+    "packageManager": "pnpm@9.15.3",
+    "main": "./dist/index.js",
     "exports": {
         ".": {
-            "types": "./build/index.d.ts",
-            "import": "./build/index.js",
-            "require": "./build/index.cjs"
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
         },
         "./jsx-runtime": {
-            "types": "./build/jsx-runtime.d.ts",
-            "import": "./build/jsx-runtime.js",
-            "require": "./build/jsx-runtime.cjs"
+            "types": "./dist/jsx-runtime.d.ts",
+            "import": "./dist/jsx-runtime.js",
+            "require": "./dist/jsx-runtime.cjs"
         },
         "./jsx-dev-runtime": {
-            "types": "./build/jsx-dev-runtime.d.ts",
-            "import": "./build/jsx-dev-runtime.js",
-            "require": "./build/jsx-dev-runtime.cjs"
+            "types": "./dist/jsx-dev-runtime.d.ts",
+            "import": "./dist/jsx-dev-runtime.js",
+            "require": "./dist/jsx-dev-runtime.cjs"
         }
     },
     "scripts": {
@@ -39,7 +39,7 @@
         "build": "pnpm run typecheck && vite build"
     },
     "engines": {
-        "pnpm": "8.14.1"
+        "pnpm": "9.15.3"
     },
     "dependencies": {
         "@captainpants/sweeter-core": "workspace:^",

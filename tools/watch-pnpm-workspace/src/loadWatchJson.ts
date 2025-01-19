@@ -1,5 +1,5 @@
 import { ArkErrors, type } from 'arktype';
-import { parse, type ParseError } from 'jsonc-parser';
+import { parse, type ParseError, printParseErrorCode } from 'jsonc-parser';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -34,11 +34,11 @@ export async function loadWatchJson(
     const content = await fs.readFile(candidate, { encoding: 'utf-8' });
 
     const errors: ParseError[] = [];
-    const parsed = parse(content, errors);
+    const parsed = parse(content, errors) as unknown;
 
     if (errors.length > 0) {
         throw new Error(
-            `Error parsing watch-pnpm-workspace.json: ${errors.join(', ')}`,
+            `Error parsing watch-pnpm-workspace.json: ${errors.map((item) => `(Offset: ${item.offset}): ${printParseErrorCode(item.error)}`).join(', ')}`,
         );
     }
 

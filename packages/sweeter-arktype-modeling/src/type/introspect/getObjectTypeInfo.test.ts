@@ -21,7 +21,7 @@ test('general', () => {
     expect(fixedProps.size).toStrictEqual(1);
     expect(
         isLiteralValue(
-            fixedProps.get('test') ?? throwError('Expected a match'),
+            fixedProps.get('test')?.type ?? throwError('Expected a match'),
             1,
         ),
     );
@@ -30,7 +30,7 @@ test('general', () => {
     // TODO: tests about mapped keys
 });
 
-test.only('should not be an object', () => {
+test('should not be an object', () => {
     const schema = type.string.array();
 
     const info = tryGetObjectTypeInfo(schema);

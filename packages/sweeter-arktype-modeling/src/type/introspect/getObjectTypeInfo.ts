@@ -2,7 +2,7 @@ import { type BaseRoot } from '@ark/schema';
 
 import { throwError } from '@captainpants/sweeter-utilities';
 
-import { type UnknownType } from '../types.js';
+import { type PropertyInfo, type UnknownType } from '../types.js';
 
 import { asIntersectionNode } from './internal/arktypeInternals.js';
 
@@ -10,7 +10,7 @@ export interface ObjectTypeInfo {
     /**
      * Map of properties by name (excludes indexers).
      */
-    getFixedProperties(): ReadonlyMap<string | symbol, UnknownType>;
+    getFixedProperties(): ReadonlyMap<string | symbol, PropertyInfo>;
     getMappedKeys(): ReadonlyMap<UnknownType, UnknownType>;
 }
 
@@ -26,10 +26,13 @@ export function tryGetObjectTypeInfo(
 
     return {
         getFixedProperties() {
-            const result: Map<string | symbol, UnknownType> = new Map();
+            const result: Map<string | symbol, PropertyInfo> = new Map();
 
             for (const prop of asObject.props) {
-                result.set(prop.key, prop.value as never);
+                result.set(prop.key, {
+                    type: prop.value as unknown as UnknownType,
+                    optional: prop.optional ?? false,
+                });
             }
 
             return result;
@@ -38,7 +41,9 @@ export function tryGetObjectTypeInfo(
             const result = new Map<UnknownType, UnknownType>();
             const keys = node.keyof().branches;
             for (const key of keys) {
-                result.set(key as never, node.get(key) as never);
+                const current = node.get(key);
+
+                result.set(key as never, current as unknown as UnknownType);
             }
             return result;
         },

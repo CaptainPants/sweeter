@@ -32,7 +32,12 @@
         "pnpm": "9.15.3"
     },
     "dependencies": {
-        "@captainpants/sweeter-arktype-modeling": "workspace:^",
-        "arktype": "2.0.0-rc.21"
+        "@captainpants/sweeter-arktype-modeling": "workspace:^"
+    },
+    "devDependencies": {
+        "arktype": "2.0.0"
+    },
+    "peerDependencies": {
+        "arktype": "2.0.0"
     }
 }

@@ -1,15 +1,12 @@
 import { introspect } from '../type/index.js';
-import {
-    type AnyTypeConstraint,
-    type UnknownObjectType,
-} from '../type/types.js';
+import { type PropertyInfo, type UnknownObjectType } from '../type/types.js';
 
 import { sortProperties } from './sortProperties.js';
 
 export interface CategorizedPropertyDefinition {
     name: string | symbol;
     order?: number;
-    propertyType: AnyTypeConstraint;
+    propertyInfo: PropertyInfo;
 }
 
 /**
@@ -39,8 +36,8 @@ export function categorizeFixedProperties(
         .getObjectTypeInfo(objectType)
         .getFixedProperties()) {
         const category =
-            (propertyTyped.hasAnnotations()
-                ? propertyTyped.annotations()?.category()
+            (propertyTyped.type.hasAnnotations()
+                ? propertyTyped.type.annotations()?.category()
                 : undefined) ?? 'Misc';
 
         let list = categoryMap.get(category);
@@ -49,7 +46,7 @@ export function categorizeFixedProperties(
             categoryMap.set(category, list);
         }
 
-        list.push({ name, order: 0, propertyType: propertyTyped });
+        list.push({ name, order: 0, propertyInfo: propertyTyped });
     }
 
     const keys = [...categoryMap.keys()];

@@ -1,4 +1,4 @@
-import { BaseNode } from '@ark/schema';
+import { BaseMeta, BaseNode } from '@ark/schema';
 
 import { AnnotationsBuilderImpl } from '../annotations/internal/AnnotationBuilderImpl.js';
 // Concrete classes here will cause arktype to be imported in full
@@ -29,10 +29,10 @@ export class AnnotationDispatcherImpl implements AnnotationDispatcher {
         );
         const result = (schema as unknown as BaseNode).withMeta({
             annotations: annotations,
-        });
+        } as BaseMeta);
         return result as never;
     }
     annotations(schema: AnyTypeConstraint): Annotations | undefined {
-        return schema.meta.annotations;
+        return (schema.meta as BaseMeta).annotations;
     }
 }

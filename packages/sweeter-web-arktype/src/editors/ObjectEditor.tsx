@@ -229,7 +229,7 @@ export function ObjectEditor(
                                         >
                                             <Column xs={4}>
                                                 <Label for={id}>
-                                                    {property.propertyType
+                                                    {property.propertyInfo.type
                                                         .annotations()
                                                         ?.displayName() ??
                                                         String(property.name)}
@@ -377,7 +377,7 @@ export function ObjectEditor(
                                 introspect.isStringType(tuple[0]),
                         );
 
-                        return stringKeys.map(([keyType, valueType]) => {
+                        return stringKeys.map(([keyType, type]) => {
                             const title =
                                 stringKeys.length === 1
                                     ? localize('Add')
@@ -406,7 +406,8 @@ export function ObjectEditor(
                                     <ObjectEditorAddMappedModal
                                         isOpen={isOpen}
                                         keyType={keyType}
-                                        valueType={valueType}
+                                        valueType={type}
+                                        isOptional={false}
                                         validate={validate}
                                         onCancelled={() =>
                                             (isOpen.value = false)

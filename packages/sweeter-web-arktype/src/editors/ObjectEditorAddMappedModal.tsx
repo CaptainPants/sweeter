@@ -24,6 +24,7 @@ export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
 
     keyType: Type<string>;
     valueType: UnknownType;
+    isOptional: boolean;
 
     validate: (name: string) => Promise<string | null>;
 

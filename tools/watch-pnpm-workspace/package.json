@@ -32,7 +32,7 @@
     },
     "dependencies": {
         "@pnpm/find-workspace-packages": "^6.0.9",
-        "arktype": "2.0.0-rc.21",
+        "arktype": "2.0.0",
         "chalk": "^5.4.1",
         "commander": "^13.0.0",
         "jsonc-parser": "^3.3.1",

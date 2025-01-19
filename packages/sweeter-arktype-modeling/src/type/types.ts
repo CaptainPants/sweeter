@@ -9,3 +9,8 @@ export type UnknownType = Type<unknown>;
 export type AnyObjectTypeConstraint = ObjectType<object, any>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UnknownObjectType = ObjectType<object, any>;
+
+export interface PropertyInfo<TSchema = Type<unknown>> {
+    type: TSchema;
+    optional: boolean;
+}

@@ -59,13 +59,15 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
         valueSchema: TValueArkType,
         fallback: type.infer<TValueArkType>,
     ): type.infer<TValueArkType> {
-        if (!this.#attributes) return fallback;
-        if (!this.#attributes.has(name)) return fallback;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
+        if (!this.#attributes || !this.#attributes.has(name)) return fallback;
 
         const value = this.#attributes.get(name);
 
         const parsed = safeParse(value, valueSchema);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         if (parsed.success) return parsed.data;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return fallback;
     }
 
@@ -146,6 +148,8 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
                 }
                 throw new Error('Incorrect type value provided.');
             }
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
             return value.value;
         });
 
@@ -188,6 +192,8 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
                 }
                 throw new Error('Incorrect type value provided.');
             }
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
             return value.value;
         });
 

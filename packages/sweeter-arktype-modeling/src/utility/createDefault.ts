@@ -11,6 +11,7 @@ import { serializeSchemaForDisplay } from './serializeSchemaForDisplay.js';
 export function createDefault<TSchema extends AnyTypeConstraint>(
     schema: TSchema,
 ): type.infer<TSchema> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
     return createDefaultImplementation(schema, descend.defaultDepth);
 }
 
@@ -28,9 +29,9 @@ function createDefaultImplementation<TSchema extends AnyTypeConstraint>(
     if (objectTypeInfo) {
         const instance: Record<string | symbol, unknown> = {};
 
-        for (const [key, propType] of objectTypeInfo.getFixedProperties()) {
+        for (const [key, propertyInfo] of objectTypeInfo.getFixedProperties()) {
             instance[key] = createDefaultImplementation(
-                propType,
+                propertyInfo.type,
                 descend(depth),
             );
         }
@@ -48,15 +49,20 @@ function createDefaultImplementation<TSchema extends AnyTypeConstraint>(
             descend(depth),
         ) as never;
     } else if (introspect.isArrayType(schema)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return [] as type.infer<TSchema>;
     } else if (introspect.isStringType(schema)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return '' as type.infer<TSchema>;
     } else if (introspect.isNumberType(schema)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return 0 as type.infer<TSchema>;
     } else if (introspect.isBooleanType(schema)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return false as type.infer<TSchema>;
     } else if (introspect.isLiteralType(schema)) {
         const info = getUnitTypeInfo(schema);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         if (info) return info.value as type.infer<TSchema>;
         throw new TypeError('Unexpected');
     } else {

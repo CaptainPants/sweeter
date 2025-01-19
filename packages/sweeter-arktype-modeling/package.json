@@ -36,9 +36,15 @@
         "pnpm": "9.15.3"
     },
     "dependencies": {
-        "@ark/schema": "^0.21.0",
         "@captainpants/sweeter-core": "workspace:^",
-        "@captainpants/sweeter-utilities": "workspace:^",
+        "@captainpants/sweeter-utilities": "workspace:^"
+    },
+    "devDependencies": {
+        "@ark/schema": "^0.21.0",
+        "arktype": "2.0.0-rc.21"
+    },
+    "peerDependencies": {
+        "@ark/schema": "^0.21.0",
         "arktype": "2.0.0-rc.21"
     }
 }

@@ -24,8 +24,11 @@ export function bindDOMStyleProp(
 
                 if (rawValue) {
                     let value = $val(rawValue);
-
-                    if (typeof value === 'number') {
+                    
+                    if (typeof value === 'undefined') { // Not 100% sure if this is wise, but there's no sensible general solution..
+                        continue;
+                    }
+                    else if (typeof value === 'number') {
                         value = translateNumericPropertyValue(key, value);
                     }
 

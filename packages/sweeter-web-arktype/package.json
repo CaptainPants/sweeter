@@ -38,7 +38,6 @@
         "@captainpants/sweeter-web": "workspace:^",
         "@captainpants/sweeter-web-gummybear": "workspace:^",
         "@popperjs/core": "^2.11.8",
-        "arktype": "2.0.0-rc.21",
         "tinycolor2": "^1.6.0"
     },
     "optionalDependencies": {
@@ -46,5 +45,8 @@
     },
     "devDependencies": {
         "@captainpants/rollup-plugin-sweeter": "workspace:^"
+    },
+    "peerDependencies": {
+        "arktype": "2.0.0-rc.21"
     }
 }

@@ -113,6 +113,7 @@ importers:
       '@captainpants/sweeter-arktype-modeling':
         specifier: workspace:^
         version: link:../../packages/sweeter-arktype-modeling
+    devDependencies:
       arktype:
         specifier: 2.0.0-rc.21
         version: 2.0.0-rc.21
@@ -173,15 +174,16 @@ importers:
 
   packages/sweeter-arktype-modeling:
     dependencies:
-      '@ark/schema':
-        specifier: ^0.21.0
-        version: 0.21.0
       '@captainpants/sweeter-core':
         specifier: workspace:^
         version: link:../sweeter-core
       '@captainpants/sweeter-utilities':
         specifier: workspace:^
         version: link:../sweeter-utilities
+    devDependencies:
+      '@ark/schema':
+        specifier: ^0.21.0
+        version: 0.21.0
       arktype:
         specifier: 2.0.0-rc.21
         version: 2.0.0-rc.21
@@ -281,34 +283,6 @@ importers:
         specifier: ^1.15.8
         version: 1.15.8
 
-  tools/watch-pnpm-workspace:
-    dependencies:
-      '@pnpm/find-workspace-packages':
-        specifier: ^6.0.9
-        version: 6.0.9(@pnpm/logger@5.2.0)
-      arktype:
-        specifier: 2.0.0-rc.21
-        version: 2.0.0-rc.21
-      chalk:
-        specifier: ^5.4.1
-        version: 5.4.1
-      commander:
-        specifier: ^13.0.0
-        version: 13.0.0
-      jsonc-parser:
-        specifier: ^3.3.1
-        version: 3.3.1
-      ora:
-        specifier: ^8.1.1
-        version: 8.1.1
-      strip-ansi:
-        specifier: ^7.1.0
-        version: 7.1.0
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.5
-        version: 22.10.5
-
   tools/rollup-plugin-sweeter:
     dependencies:
       '@rollup/pluginutils':
@@ -339,6 +313,34 @@ importers:
       vite-plugin-inspect:
         specifier: ^0.10.6
         version: 0.10.6(rollup@4.30.1)(vite@6.0.7(@types/node@22.10.5)(yaml@2.7.0))
+
+  tools/watch-pnpm-workspace:
+    dependencies:
+      '@pnpm/find-workspace-packages':
+        specifier: ^6.0.9
+        version: 6.0.9(@pnpm/logger@5.2.0)
+      arktype:
+        specifier: 2.0.0-rc.21
+        version: 2.0.0-rc.21
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
+      commander:
+        specifier: ^13.0.0
+        version: 13.0.0
+      jsonc-parser:
+        specifier: ^3.3.1
+        version: 3.3.1
+      ora:
+        specifier: ^8.1.1
+        version: 8.1.1
+      strip-ansi:
+        specifier: ^7.1.0
+        version: 7.1.0
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.5
+        version: 22.10.5
 
 packages:
 

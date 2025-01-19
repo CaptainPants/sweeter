@@ -35,9 +35,9 @@
         "@captainpants/sweeter-arktype-modeling": "workspace:^"
     },
     "devDependencies": {
-        "arktype": "2.0.0-rc.21"
+        "arktype": "2.0.0"
     },
     "peerDependencies": {
-        "arktype": "2.0.0-rc.21"
+        "arktype": "2.0.0"
     }
 }

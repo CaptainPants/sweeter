@@ -47,6 +47,6 @@
         "@captainpants/rollup-plugin-sweeter": "workspace:^"
     },
     "peerDependencies": {
-        "arktype": "2.0.0-rc.21"
+        "arktype": "2.0.0"
     }
 }

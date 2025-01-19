@@ -41,10 +41,10 @@
     },
     "devDependencies": {
         "@ark/schema": "^0.21.0",
-        "arktype": "2.0.0-rc.21"
+        "arktype": "2.0.0"
     },
     "peerDependencies": {
         "@ark/schema": "^0.21.0",
-        "arktype": "2.0.0-rc.21"
+        "arktype": "2.0.0"
     }
 }

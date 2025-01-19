@@ -1,6 +1,6 @@
 import { type } from 'arktype';
 
-import { type AnyTypeConstraint,UnknownType } from '../types.js';
+import { type AnyTypeConstraint, UnknownType } from '../types.js';
 
 import {
     isArrayType,

@@ -50,6 +50,5 @@ export const safeParseAsync = async <TSchema extends AnyTypeConstraint>(
     schema: TSchema,
     // eslint-disable-next-line  @typescript-eslint/require-await -- We currently fake the async-ness of this, but will be investigating if there is a proper way to do it
 ): Promise<SafeParseResult<TSchema>> => {
-     
     return safeParse(value, schema);
 };

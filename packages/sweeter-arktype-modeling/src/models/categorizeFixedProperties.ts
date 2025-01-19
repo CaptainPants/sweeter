@@ -1,8 +1,5 @@
 import { introspect } from '../type/index.js';
-import {
-    type PropertyInfo,
-    type UnknownObjectType,
-} from '../type/types.js';
+import { type PropertyInfo, type UnknownObjectType } from '../type/types.js';
 
 import { sortProperties } from './sortProperties.js';
 

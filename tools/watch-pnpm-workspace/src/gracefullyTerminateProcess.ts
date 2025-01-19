@@ -13,6 +13,7 @@ function wait(timeoutMs: number, signal?: AbortSignal): Promise<void> {
 
         function abortHandler() {
             cleanup();
+            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- This should be an error..
             reject(signal?.reason);
         }
         signal?.addEventListener('abort', abortHandler);
@@ -32,6 +33,7 @@ function waitForExit(
 
         // Otherwise listen for the close event or for the passed AbortSignal
         function aborted() {
+            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- This should be an error..
             reject(abortSignal?.reason);
         }
 
@@ -40,7 +42,7 @@ function waitForExit(
             abortSignal?.removeEventListener('abort', aborted);
         }
 
-        function closeHandler(code: number | null, signal: NodeJS.Signals) {
+        function closeHandler(code: number | null) {
             cleanup();
             resolve(code ?? 0); // not sure why this is allowed to null
         }

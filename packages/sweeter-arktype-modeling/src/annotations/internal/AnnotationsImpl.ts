@@ -148,12 +148,11 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
                 }
                 throw new Error('Incorrect type value provided.');
             }
-            
+
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
             return value.value;
         });
 
-         
         return this.#getAssociatedValueTyped(name, typed, context);
     }
 
@@ -193,7 +192,7 @@ export class AnnotationsImpl<TSchema extends AnyTypeConstraint>
                 }
                 throw new Error('Incorrect type value provided.');
             }
-            
+
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
             return value.value;
         });

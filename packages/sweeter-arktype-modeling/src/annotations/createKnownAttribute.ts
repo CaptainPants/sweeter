@@ -33,7 +33,7 @@ export function createKnownAttribute<
         if (value === undefined || !is(value, schema)) {
             return undefined;
         }
-        
+
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return value;
     }

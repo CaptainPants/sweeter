@@ -34,7 +34,7 @@ export async function loadWatchJson(
     const content = await fs.readFile(candidate, { encoding: 'utf-8' });
 
     const errors: ParseError[] = [];
-    const parsed = parse(content, errors);
+    const parsed = parse(content, errors) as unknown;
 
     if (errors.length > 0) {
         throw new Error(

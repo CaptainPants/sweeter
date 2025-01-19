@@ -9,7 +9,6 @@ import {
 } from '../internal/utilityTypes.js';
 import {
     type AnyTypeConstraint as BaseAnyTypeConstraint,
-    PropertyInfo,
 } from '../type/types.js';
 import { type ReadonlyRecord } from '../types.js';
 

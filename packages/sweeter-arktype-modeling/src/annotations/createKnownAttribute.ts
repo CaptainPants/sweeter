@@ -29,9 +29,12 @@ export function createKnownAttribute<
     function result(from: TSchema): type.infer<TSchema> | undefined {
         if (!from.hasAnnotations()) return undefined;
         const value = from.annotations()?.attr(name, undefined);
+
         if (value === undefined || !is(value, schema)) {
             return undefined;
         }
+        
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return value;
     }
 
@@ -39,11 +42,14 @@ export function createKnownAttribute<
     result.get = (from: TSchema): type.infer<TSchema> => {
         if (!from.hasAnnotations()) throw new TypeError(`MetaData not found`);
         const value = from.annotations()?.attr(name, notFound);
+
         if (value === notFound || !is(value, schema)) {
             throw new TypeError(
                 `Expected ${serializeSchemaForDisplay(schema)}.`,
             );
         }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return value;
     };
 
@@ -51,11 +57,16 @@ export function createKnownAttribute<
         from: TSchema,
         fallback: type.infer<TSchema>,
     ): type.infer<TSchema> {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         if (!from.hasAnnotations()) return fallback;
+
         const value = from.annotations()?.attr(name, notFound);
+
         if (value === notFound || !is(value, schema)) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
             return fallback;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
         return value;
     };
     result.getOrUndefined = result;

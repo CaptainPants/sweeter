@@ -7,7 +7,6 @@ import {
     type ContextualValueCalculationContext,
     createDefault,
     introspect,
-    PropertyInfo,
     StandardAssociatedValueKeys,
     type UnknownModel,
     type UnknownObjectModel,

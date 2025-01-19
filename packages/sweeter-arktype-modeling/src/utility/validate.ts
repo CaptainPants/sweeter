@@ -45,6 +45,7 @@ export async function validateAndThrow<TSchema extends AnyTypeConstraint>(
         throw new Error('Parse error: ' + res.issues.message);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- linter is choking
     return res.data;
 }
 

@@ -1,7 +1,6 @@
 import { introspect } from '../type/index.js';
 import {
-    PropertyInfo,
-    type AnyTypeConstraint,
+    type PropertyInfo,
     type UnknownObjectType,
 } from '../type/types.js';
 

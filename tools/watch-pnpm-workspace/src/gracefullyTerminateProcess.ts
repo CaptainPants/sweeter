@@ -21,7 +21,6 @@ function wait(timeoutMs: number, signal?: AbortSignal): Promise<void> {
 
 function waitForExit(
     childProcess: child_process.ChildProcess,
-    signal: NodeJS.Signals,
     abortSignal?: AbortSignal,
 ): Promise<number> {
     return new Promise<number>((resolve, reject) => {
@@ -70,7 +69,7 @@ export async function gracefullyTerminateProcess(
     }
 
     const result = await Promise.any([
-        waitForExit(childProcess, signal, abortSignal),
+        waitForExit(childProcess, abortSignal),
         wait(5000).then(() => {
             throw new Error(
                 `Timed out while killing process ${childProcess.pid}.`,

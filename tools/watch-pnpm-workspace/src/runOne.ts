@@ -93,7 +93,7 @@ export function runOne({
                 },
             );
 
-            child.addListener('close', (code, signal) => {
+            child.addListener('close', () => {
                 // Ignore the event if we caused it while terminating
                 if (terminating) {
                     return;

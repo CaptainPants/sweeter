@@ -26,13 +26,13 @@ export function is<TSchema extends AnyTypeConstraint>(
 export function isObjectType(
     schema: AnyTypeConstraint,
 ): schema is Type<{ readonly [key: string]: unknown }> {
-    return asIntersectionNode(schema as never)?.domain?.domain === 'object';
+    return asIntersectionNode(schema as never)?.inner.domain?.domain === 'object';
 }
 
 export function isArrayType(
     schema: AnyTypeConstraint,
 ): schema is Type<unknown[]> {
-    return asIntersectionNode(schema as never)?.proto?.builtinName === 'Array';
+    return asIntersectionNode(schema as never)?.inner.proto?.builtinName === 'Array';
 }
 
 export function isUnionType(schema: AnyTypeConstraint): boolean {

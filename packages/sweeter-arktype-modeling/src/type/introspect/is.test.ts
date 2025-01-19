@@ -1,6 +1,6 @@
 import { type } from 'arktype';
 
-import { type AnyTypeConstraint } from '../types.js';
+import { UnknownType, type AnyTypeConstraint } from '../types.js';
 
 import {
     isArrayType,
@@ -34,7 +34,7 @@ const isFuncs = {
     isNullConstant,
     isUndefinedConstant,
     isUnknownType,
-} satisfies Record<string, (input: AnyTypeConstraint) => boolean>;
+} satisfies Record<string, (input: UnknownType) => boolean>;
 
 function tryAll(
     input: AnyTypeConstraint,
@@ -89,30 +89,4 @@ test('is', () => {
     tryAll(schemas.null, ['isNullConstant']);
     tryAll(schemas.undefined, ['isUndefinedConstant']);
     tryAll(schemas.unknown, ['isUnknownType']);
-});
-
-test('is (structural)', () => {
-    tryAll(schemas.object.optional(), ['isObjectType']);
-    tryAll(schemas.array.optional(), ['isArrayType']);
-    tryAll(schemas.union.optional(), ['isUnionType']);
-    tryAll(schemas.number.optional(), ['isNumberType']);
-    tryAll(schemas.string.optional(), ['isStringType']);
-    tryAll(schemas.boolean.optional(), ['isBooleanType', 'isUnionType']);
-    tryAll(schemas.number_literal.optional(), ['isNumberLiteralType']);
-    tryAll(schemas.string_literal.optional(), ['isStringLiteralType']);
-    tryAll(schemas.boolean_literal.optional(), [
-        'isBooleanLiteralType',
-        'isBooleanFalseLiteral',
-    ]);
-    tryAll(schemas.true.optional(), [
-        'isBooleanLiteralType',
-        'isBooleanTrueLiteral',
-    ]);
-    tryAll(schemas.false.optional(), [
-        'isBooleanLiteralType',
-        'isBooleanFalseLiteral',
-    ]);
-    tryAll(schemas.null.optional(), ['isNullConstant']);
-    tryAll(schemas.undefined.optional(), ['isUndefinedConstant']);
-    tryAll(schemas.unknown.optional(), ['isUnknownType']);
 });

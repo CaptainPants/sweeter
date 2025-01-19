@@ -9,6 +9,7 @@ import {
 } from '@captainpants/sweeter-utilities';
 
 import {
+    PropertyInfo,
     type AnyObjectTypeConstraint,
     type AnyTypeConstraint,
     type ReadonlyRecord,

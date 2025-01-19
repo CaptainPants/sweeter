@@ -28,9 +28,9 @@ function createDefaultImplementation<TSchema extends AnyTypeConstraint>(
     if (objectTypeInfo) {
         const instance: Record<string | symbol, unknown> = {};
 
-        for (const [key, propType] of objectTypeInfo.getFixedProperties()) {
+        for (const [key, propertyInfo] of objectTypeInfo.getFixedProperties()) {
             instance[key] = createDefaultImplementation(
-                propType,
+                propertyInfo.type,
                 descend(depth),
             );
         }

@@ -40,11 +40,11 @@
         "@captainpants/sweeter-utilities": "workspace:^"
     },
     "devDependencies": {
-        "@ark/schema": "^0.21.0",
+        "@ark/schema": "^0.35.0",
         "arktype": "2.0.0"
     },
     "peerDependencies": {
-        "@ark/schema": "^0.21.0",
+        "@ark/schema": "^0.35.0",
         "arktype": "2.0.0"
     }
 }

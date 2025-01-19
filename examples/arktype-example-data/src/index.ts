@@ -43,8 +43,8 @@ export const complex = type({
     arrayOfStrings: type.string
         .annotate((add) => add.displayName('String'))
         .array()
-        .default(() => ['item 1', 'item 2'])
-        .annotate((add) => add.displayName('Array of Strings')),
+        .annotate((add) => add.displayName('Array of Strings'))
+        .default(() => ['item 1', 'item 2']),
     object: type({
         name: type.string.annotate((add) => add.displayName('Name')),
     }).annotate((add) => add.displayName('Object')),
@@ -54,12 +54,12 @@ export const complex = type({
             last: type.string.annotate((add) => add.displayName('Last name')),
         }),
     })
+    .annotate((add) => add.displayName('Map'))
         .default(() => {
             return {
                 test: { first: 'John', last: 'Smith' },
             };
-        })
-        .annotate((add) => add.displayName('Map')),
+        }),
     constUnion: type
         .unit('a')
         .or(type.unit('b'))

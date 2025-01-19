@@ -5,6 +5,7 @@ import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { introspect } from '../../type/index.js';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import {
+    PropertyInfo,
     type AnyObjectTypeConstraint,
     type UnknownType,
 } from '../../type/types.js';
@@ -59,10 +60,37 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
 
         for (const [
             propertyName,
-            propertyType,
+            propertyInfo,
         ] of typeInfo.getFixedProperties()) {
             const propertyValue = source[propertyName];
             delete source[propertyName];
+
+            const propertyValueModel = ModelFactory.createModelPart({
+                value: propertyValue,
+                schema: propertyInfo.type,
+                parentInfo: {
+                    relationship: { type: 'property', property: propertyName },
+                    type: schema,
+                    parentInfo,
+                },
+                depth: descend(depth),
+            });
+
+            propertyModels[propertyName] = {
+                name: propertyName,
+                valueModel: propertyValueModel,
+                isOptional: propertyInfo.optional ?? false,
+            };
+        }
+
+        const mapped = [...typeInfo.getMappedKeys().entries()];
+        for (const [propertyName, propertyValue] of entries(source)) {
+            const match = mapped.find(([keySchema]) =>
+                keySchema.allows(propertyName),
+            );
+
+            // If we don't have type information, so unknown is the best we can do
+            const propertyType: UnknownType = match ? match[1] : type.unknown;
 
             const propertyValueModel = ModelFactory.createModelPart({
                 value: propertyValue,
@@ -78,34 +106,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
             propertyModels[propertyName] = {
                 name: propertyName,
                 valueModel: propertyValueModel,
-                isOptional: propertyType.meta.optional ?? false,
-            };
-        }
-
-        const mapped = [...typeInfo.getMappedKeys().entries()];
-        for (const [propertyName, propertyValue] of entries(source)) {
-            const match = mapped.find(([keySchema]) =>
-                keySchema.allows(propertyName),
-            );
-
-            // If we don't have type information, so unknown is the best we can do
-            const propertyValueSchema = match ? match[1] : type.unknown;
-
-            const propertyValueModel = ModelFactory.createModelPart({
-                value: propertyValue,
-                schema: propertyValueSchema,
-                parentInfo: {
-                    relationship: { type: 'property', property: propertyName },
-                    type: schema,
-                    parentInfo,
-                },
-                depth: descend(depth),
-            });
-
-            propertyModels[propertyName] = {
-                name: propertyName,
-                valueModel: propertyValueModel,
-                isOptional: propertyValueSchema.meta.optional ?? false,
+                isOptional: false,
             };
         }
 
@@ -137,35 +138,36 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
     }
 
     public getCatchallType(): arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema> {
-        return getObjectTypeInfo(
-            this.type,
-        ).getMappedKeys() as arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema>;
+        return this.unknownGetCatchallType() as arkTypeUtilityTypes.CatchallPropertyMap<TObjectSchema>;
     }
 
-    private schemaForKey(key: string | symbol) {
+    private propertyInfoForKey(key: string | symbol) {
         const info = getObjectTypeInfo(this.type);
         const fixedProps = info.getFixedProperties();
 
-        let type: UnknownType | undefined = fixedProps.get(key);
-        if (!type) {
+        let propertyInfo: PropertyInfo | undefined = fixedProps.get(key);
+        if (!propertyInfo) {
             const mappedKeys = info.getMappedKeys();
             if (mappedKeys) {
                 const matchingKey = [...mappedKeys.entries()].filter(
                     ([indexerKey]) => indexerKey.allows(key),
                 )[0];
                 if (matchingKey) {
-                    type = matchingKey[1];
+                    propertyInfo = {
+                        type: matchingKey[1],
+                        optional: false
+                    };
                 }
             }
         }
 
-        if (!type) {
+        if (!propertyInfo) {
             throw new Error(
                 `Property ${key.toString()} not found and no catchall type provided.`,
             );
         }
 
-        return type;
+        return propertyInfo;
     }
 
     public async unknownSetProperty(
@@ -173,13 +175,13 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- The redundant type here offers documentation for developers
         value: unknown | UnknownModel,
     ): Promise<this> {
-        const schema = this.schemaForKey(key);
+        const propertyInfo = this.propertyInfoForKey(key);
 
         const existing = this.unknownGetProperty(key);
 
         const adopted = await validateAndMakeModel(
             value,
-            schema,
+            propertyInfo.type,
             existing?.valueModel
                 .parentInfo /* keep the existing parentInfo if possible */ ?? {
                 type: this.type,
@@ -199,7 +201,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
             ...this.#properties,
             [key]: {
                 name: key,
-                isOptional: schema.meta.optional ?? false,
+                isOptional: propertyInfo.optional ?? false,
                 valueModel: adopted,
             },
         };

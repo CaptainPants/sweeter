@@ -11,6 +11,7 @@ declare module 'arktype/internal/methods/base.ts' {
         hasAnnotations(): boolean;
     }
 }
+
 declare module '@ark/schema' {
     export interface BaseMeta {
         annotations?: Annotations | undefined;

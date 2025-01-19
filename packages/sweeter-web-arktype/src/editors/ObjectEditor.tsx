@@ -230,8 +230,8 @@ export function ObjectEditor(
                                         >
                                             <Column xs={4}>
                                                 <Label for={id}>
-                                                    {property.propertyInfo
-                                                        .type.annotations()
+                                                    {property.propertyInfo.type
+                                                        .annotations()
                                                         ?.displayName() ??
                                                         String(property.name)}
                                                 </Label>

@@ -54,7 +54,7 @@ export const complex = type({
             last: type.string.annotate((add) => add.displayName('Last name')),
         }),
     })
-    .annotate((add) => add.displayName('Map'))
+        .annotate((add) => add.displayName('Map'))
         .default(() => {
             return {
                 test: { first: 'John', last: 'Smith' },

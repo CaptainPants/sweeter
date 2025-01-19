@@ -5,8 +5,8 @@ import { descend, hasOwnProperty } from '@captainpants/sweeter-utilities';
 import { introspect } from '../../type/index.js';
 import { getObjectTypeInfo } from '../../type/introspect/getObjectTypeInfo.js';
 import {
-    PropertyInfo,
     type AnyObjectTypeConstraint,
+    PropertyInfo,
     type UnknownType,
 } from '../../type/types.js';
 import { type arkTypeUtilityTypes } from '../../utility/arkTypeUtilityTypes.js';
@@ -155,7 +155,7 @@ export class ObjectImpl<TObjectSchema extends AnyObjectTypeConstraint>
                 if (matchingKey) {
                     propertyInfo = {
                         type: matchingKey[1],
-                        optional: false
+                        optional: false,
                     };
                 }
             }

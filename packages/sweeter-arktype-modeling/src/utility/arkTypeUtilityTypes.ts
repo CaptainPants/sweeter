@@ -7,7 +7,10 @@ import {
     type GetExpandoValueType as GetExpandoValueType,
     type GetNonExpandoKeys,
 } from '../internal/utilityTypes.js';
-import { PropertyInfo, type AnyTypeConstraint as BaseAnyTypeConstraint } from '../type/types.js';
+import {
+    type AnyTypeConstraint as BaseAnyTypeConstraint,
+    PropertyInfo,
+} from '../type/types.js';
 import { type ReadonlyRecord } from '../types.js';
 
 /**
@@ -49,7 +52,7 @@ export namespace arkTypeUtilityTypes {
             ? undefined
             : ReadonlyMap<
                   CatchallPropertyKeySchemas<TSchemaObjectType>,
-                CatchallPropertyValueSchemas<TSchemaObjectType>
+                  CatchallPropertyValueSchemas<TSchemaObjectType>
               >;
 
     export type PropertyType<TSchemaObjectType, Property extends string> =

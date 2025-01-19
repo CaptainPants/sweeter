@@ -29,7 +29,10 @@ export function tryGetObjectTypeInfo(
             const result: Map<string | symbol, PropertyInfo> = new Map();
 
             for (const prop of asObject.props) {
-                result.set(prop.key, { type: prop.value as unknown as UnknownType, optional: prop.optional ?? false });
+                result.set(prop.key, {
+                    type: prop.value as unknown as UnknownType,
+                    optional: prop.optional ?? false,
+                });
             }
 
             return result;

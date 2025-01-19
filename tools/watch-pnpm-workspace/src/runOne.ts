@@ -1,9 +1,9 @@
 import child_process, { type ChildProcessByStdio } from 'node:child_process';
+import { Readable } from 'node:stream';
 
 import { createPassthrough } from './createPassthrough.ts';
 import { gracefullyTerminateProcess } from './gracefullyTerminateProcess.ts';
 import { type Project } from './types.ts';
-import { Readable } from 'node:stream';
 
 export interface RunOneArgs {
     project: Project;

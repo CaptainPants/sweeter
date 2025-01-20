@@ -1,10 +1,10 @@
-import { FSWatcher, watch } from 'chokidar';
+import { FSWatcher, FSWatcherEventMap, watch } from 'chokidar';
 import { Plugin as RollupPlugin } from 'rollup';
-import micromatch from 'micromatch';
-import path from 'node:path';
 import { createFilter } from '@rollup/pluginutils';
+import path from 'path';
 
 export interface AlsoWatchPluginOptions {
+    watchRoot: string;
     include: string[];
     exclude?: string[];
     debug?: boolean;
@@ -12,11 +12,18 @@ export interface AlsoWatchPluginOptions {
 
 export function alsoWatchPlugin(options: AlsoWatchPluginOptions): RollupPlugin;
 export function alsoWatchPlugin({
+    watchRoot,
     include,
     exclude,
     debug,
 }: AlsoWatchPluginOptions): RollupPlugin {
-    const filter = createFilter(include, exclude);
+    // We accept a path with '/'s in it regardless of platform, and normalize them all to the platform seperator
+    watchRoot = path.resolve(
+        process.cwd().replace(/\\|\//g, path.sep), 
+        watchRoot.replace(/\\|\//g, path.sep)
+    );
+
+    const filter = createFilter(include, exclude, { resolve: watchRoot });
 
     // Common state here
     let watcher: FSWatcher | undefined;
@@ -25,35 +32,41 @@ export function alsoWatchPlugin({
         name: 'rollup-plugin-sweeter/alsoWatchPlugin',
         // https://stackoverflow.com/questions/63373804/rollup-watch-include-directory/63548394#63548394
         buildStart() {
-            const log: (message: string) => void = debug //debug
+            const log: (message: string) => void = debug
                 ? (message) => this.info(message)
                 : () => {};
-
-            const watchRoot = process.cwd();
 
             if (!this.meta.watchMode) {
                 log('Not in watch mode..');
                 return;
             }
 
-            log('Watch mode started.');
-            
-            watcher = watch(watchRoot, {
-                awaitWriteFinish: true,
+            log(`Watching ${(include.map(x => path.posix.join(watchRoot, x)).join(', '))}`)
+
+            watcher = watch(watchRoot.replace(/\//g, path.sep), {
+                //awaitWriteFinish: true,
                 followSymlinks: true,
                 ignoreInitial: true,
+                alwaysStat: true,
             });
-            log(`Watching ${watchRoot}.`);
 
-            watcher.addListener('all', (eventName, modifiedFilePath, stats) => {
-                const relativePath = path.relative(watchRoot, modifiedFilePath);
+            const listener: (...args: FSWatcherEventMap['all']) => void = (eventName, modifiedFilePath, stats) => {
+                // Seems to not be the full path
+                modifiedFilePath = path.resolve(modifiedFilePath);
 
-                // emit a dummy file / update
-                log(`FS event ${eventName} at ${relativePath}`);
-                
-                const matched = filter(relativePath);
-                log(`Matched: ${matched}`);
-            });
+                // filter expects an absolute path
+                const matched = filter(modifiedFilePath);
+
+                // const specificTargetExample = 'C:\\workspace\\sweeter\\examples\\rollup-sweeter-plugin-usage\\node_modules\\@captainpants\\rollup-plugin-sweeter\\dist\\index.js';
+
+                if (matched) {
+                    log(`Change detected on file ${modifiedFilePath}`);
+                    // emit a dummy file / update, ideally debounced
+                    return;
+                }
+            }
+
+            watcher.addListener('all', listener);
         },
         async closeWatcher(): Promise<void> {
             if (watcher) {
@@ -68,3 +81,5 @@ export function alsoWatchPlugin({
         },
     };
 }
+
+export function BANANA2345_123() {}

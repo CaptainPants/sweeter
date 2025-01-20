@@ -21,7 +21,7 @@ export default defineConfig({
         target: "ESNext",
     },
     plugins: [dts(), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-web-gummybear', roots: [__dirname] }),
-    alsoWatchPlugin({ watchRoot: 'node_modules/@captainpants', include: ['*/dist/**/*'], exclude: ['**/node_modules/**/*'] })],
+    alsoWatchPlugin({ watchRoot: 'node_modules/@captainpants', include: ['dist/**/*'], exclude: [] })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

@@ -103,6 +103,16 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
 
+  examples/rollup-sweeter-plugin-usage:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-core
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../../tools/rollup-plugin-sweeter
+
   examples/sweeter-arktype-example:
     dependencies:
       '@captainpants/arktype-example-data':
@@ -142,16 +152,6 @@ importers:
       '@captainpants/sweeter-web-gummybear':
         specifier: workspace:^
         version: link:../../packages/sweeter-web-gummybear
-    devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
-        specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
-
-  examples/sweeter-rollup-plugin-usage:
-    dependencies:
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-core
     devDependencies:
       '@captainpants/rollup-plugin-sweeter':
         specifier: workspace:^

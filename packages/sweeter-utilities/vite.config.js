@@ -31,6 +31,6 @@ export default defineConfig({
         dts({ clearPureImport: false }), 
         nodeExternals(), 
         circularDependency({ circleImportThrowErr: true }), 
-        alsoWatchPlugin({ watchRoot: 'node_modules/@captainpants', include: ['*/dist/**/*'], exclude: ['**/node_modules/**/*'] })
+        alsoWatchPlugin({ watchRoot: 'node_modules/@captainpants', include: ['dist/**/*'], exclude: [] })
     ]
 });

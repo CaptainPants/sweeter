@@ -33,6 +33,6 @@ export default defineConfig({
         nodeExternals(), 
         circularDependency({ circleImportThrowErr: true }), 
         sweeterPlugin({ projectName: '@captainpants/sweeter-core', roots: [__dirname] }),
-        alsoWatchPlugin({ globs: ['node_modules/@captainpants/*/dist/**/*'] })
+        alsoWatchPlugin({ watchRoot: 'node_modules/@captainpants', globs: ['*/dist/**/*'] })
     ]
 });

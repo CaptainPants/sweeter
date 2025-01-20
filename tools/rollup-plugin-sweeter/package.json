@@ -39,6 +39,7 @@
     },
     "dependencies": {
         "@rollup/pluginutils": "^5.1.4",
+        "chokidar": "^4.0.3",
         "estree-toolkit": "^1.7.8",
         "glob": "^11.0.1",
         "magic-string": "^0.30.17",

@@ -72,13 +72,12 @@ export function alsoWatchPlugin({
                 if (matched) {
                     log(`Change detected on file ${modifiedFilePath}, writing to dummy ${dummy}`);
                     fs.writeFileSync(dummy, `${Date.now()}`);
-                    // emit a dummy file / update, ideally debounced
                     return;
                 }
             }
-            const debounced = debounce(listener, 500);
+            const debouncedFileListener = debounce(listener, 500);
 
-            watcher.addListener('all', debounced);
+            watcher.addListener('all', debouncedFileListener);
         },
         async closeWatcher(): Promise<void> {
             if (watcher) {

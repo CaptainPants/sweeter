@@ -2,6 +2,8 @@ import { FSWatcher, FSWatcherEventMap, watch } from 'chokidar';
 import { Plugin as RollupPlugin } from 'rollup';
 import { createFilter } from '@rollup/pluginutils';
 import path from 'path';
+import debounce from 'debounce';
+import fs from 'node:fs';
 
 export interface AlsoWatchPluginOptions {
     watchRoot: string;
@@ -23,6 +25,11 @@ export function alsoWatchPlugin({
         watchRoot.replace(/\\|\//g, path.sep)
     );
 
+    const dummy = path.resolve(
+        process.cwd(),
+        `alsoWatch_${Date.now()}.txt`
+    );
+
     const filter = createFilter(include, exclude, { resolve: watchRoot });
 
     // Common state here
@@ -41,13 +48,16 @@ export function alsoWatchPlugin({
                 return;
             }
 
-            log(`Watching ${(include.map(x => path.posix.join(watchRoot, x)).join(', '))}`)
+            log(`Watching ${(include.map(include => path.posix.join(watchRoot.replace(/\\|\//g, '/'), 'xxxx', include)).join(', '))}`);
+
+            this.addWatchFile(dummy);
 
             watcher = watch(watchRoot.replace(/\//g, path.sep), {
                 //awaitWriteFinish: true,
                 followSymlinks: true,
                 ignoreInitial: true,
                 alwaysStat: true,
+                usePolling: true // reliability issue
             });
 
             const listener: (...args: FSWatcherEventMap['all']) => void = (eventName, modifiedFilePath, stats) => {
@@ -60,26 +70,32 @@ export function alsoWatchPlugin({
                 // const specificTargetExample = 'C:\\workspace\\sweeter\\examples\\rollup-sweeter-plugin-usage\\node_modules\\@captainpants\\rollup-plugin-sweeter\\dist\\index.js';
 
                 if (matched) {
-                    log(`Change detected on file ${modifiedFilePath}`);
+                    log(`Change detected on file ${modifiedFilePath}, writing to dummy ${dummy}`);
+                    fs.writeFileSync(dummy, `${Date.now()}`);
                     // emit a dummy file / update, ideally debounced
                     return;
                 }
             }
+            const debounced = debounce(listener, 500);
 
-            watcher.addListener('all', listener);
+            watcher.addListener('all', debounced);
         },
         async closeWatcher(): Promise<void> {
             if (watcher) {
                 await watcher.close();
                 watcher = undefined;
             }
+
+            if (fs.statSync(dummy, { throwIfNoEntry: false })) {
+                fs.unlinkSync(dummy);
+            }
         },
         watchChange(id) {
             this.info(
-                `File ${id} changed (note that this includes files that are being watched directly/outside the alsoWatchPlugin).`,
+                `File ${id} changed.`,
             );
         },
     };
 }
 
-export function BANANA2345_123() {}
+// dfgsadgad

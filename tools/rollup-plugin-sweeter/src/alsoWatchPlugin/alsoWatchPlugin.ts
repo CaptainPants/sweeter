@@ -1,69 +1,59 @@
 import { FSWatcher, watch } from 'chokidar';
-import { glob } from 'glob';
-import fs from 'node:fs/promises';
 import { Plugin as RollupPlugin } from 'rollup';
+import micromatch from 'micromatch';
+import path from 'node:path';
+import { createFilter } from '@rollup/pluginutils';
 
 export interface AlsoWatchPluginOptions {
-    watchRoot: string,
-    globs: string[];
+    include: string[];
+    exclude?: string[];
     debug?: boolean;
 }
 
 export function alsoWatchPlugin(options: AlsoWatchPluginOptions): RollupPlugin;
 export function alsoWatchPlugin({
-    watchRoot,
-    globs,
+    include,
+    exclude,
     debug,
 }: AlsoWatchPluginOptions): RollupPlugin {
+    const filter = createFilter(include, exclude);
+
     // Common state here
     let watcher: FSWatcher | undefined;
 
     return {
         name: 'rollup-plugin-sweeter/alsoWatchPlugin',
         // https://stackoverflow.com/questions/63373804/rollup-watch-include-directory/63548394#63548394
-        async buildStart() {
-
-            if (!this.meta.watchMode) {
-                return;
-            }
-            
-            watcher = watch(watchRoot, {
-                cwd: watchRoot,
-                awaitWriteFinish: true,
-                followSymlinks: true
-            });
-            watcher.addListener('all', () => {
-                // emit a dummy file / update
-            })
-
-            const log: (message: string) => void = debug
+        buildStart() {
+            const log: (message: string) => void = debug //debug
                 ? (message) => this.info(message)
                 : () => {};
-                
-            if (process.argv.includes('--watch')) {
-                if (debug) {
-                    log(`Adding files to watch based on globs:`);
-                    for (const current of globs) {
-                        log(`- ${current}`);
-                    }
-                }
 
-                for await (const file of glob.globIterate(globs, {
-                    nodir: true,
-                })) {
-                    // Example id:
-                    //   C:/workspace/sweeter/packages/sweeter-core/src/signals/internal/Signal-implementations/DerivedSignal.ts
-                    //   C:/workspace/sweeter/packages/sweeter-core/node_modules/@captainpants/rollup-plugin-sweeter/build/index.js
-                    const resolved = (await fs.realpath(file)).replace(
-                        /\\/g,
-                        '/',
-                    );
+            const watchRoot = process.cwd();
 
-                    log(`+ Watching ${resolved}`);
-                    // According to the rollup docs, you can use a relative path https://rollupjs.org/plugin-development/#this-addwatchfile
-                    this.addWatchFile(resolved);
-                }
+            if (!this.meta.watchMode) {
+                log('Not in watch mode..');
+                return;
             }
+
+            log('Watch mode started.');
+            
+            watcher = watch(watchRoot, {
+                awaitWriteFinish: true,
+                followSymlinks: true,
+                ignoreInitial: true,
+            });
+            log(`Watching ${watchRoot}.`);
+
+            watcher.addListener('all', (eventName, modifiedFilePath, stats) => {
+                const relativePath = path.relative(watchRoot, modifiedFilePath);
+
+                // emit a dummy file / update
+                log(`FS event ${eventName} at ${relativePath}`);
+                
+                const matched = filter(relativePath);
+                log(`Matched: ${matched}`);
+            });
         },
         async closeWatcher(): Promise<void> {
             if (watcher) {

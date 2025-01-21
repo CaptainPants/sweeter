@@ -1,4 +1,4 @@
-import sweeterPlugin, { alsoWatchPlugin } from '@captainpants/rollup-plugin-sweeter';
+import sweeterPlugin, { watchDependenciesPlugin } from '@captainpants/rollup-plugin-sweeter';
 import { resolve } from 'path';
 import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
@@ -33,6 +33,6 @@ export default defineConfig({
         nodeExternals(), 
         circularDependency({ circleImportThrowErr: true }), 
         sweeterPlugin({ projectName: '@captainpants/sweeter-core', roots: [__dirname] }),
-        alsoWatchPlugin({ watchRoot: 'node_modules/@captainpants', include: ['*/dist/**/*'], exclude: ['**/node_modules/**/*'] })
+        watchDependenciesPlugin({ dependencies: ['@captainpants/*'], debug: true })
     ]
 });

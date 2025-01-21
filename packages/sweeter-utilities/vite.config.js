@@ -3,7 +3,7 @@ import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
 import circularDependency from 'vite-plugin-circular-dependency';
 import dts from 'vite-plugin-dts';
-import { alsoWatchPlugin } from '@captainpants/rollup-plugin-sweeter';
+import { watchDependenciesPlugin } from '@captainpants/rollup-plugin-sweeter';
 
 export default defineConfig({
     build: {
@@ -31,6 +31,6 @@ export default defineConfig({
         dts({ clearPureImport: false }), 
         nodeExternals(), 
         circularDependency({ circleImportThrowErr: true }), 
-        alsoWatchPlugin({ watchRoot: 'node_modules/@captainpants', include: ['*/dist/**/*'], exclude: ['**/node_modules/**/*'] })
+        watchDependenciesPlugin({ dependencies: ['@captainpants/*'], debug: true })
     ]
 });

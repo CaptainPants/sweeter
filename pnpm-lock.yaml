@@ -103,6 +103,16 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
 
+  examples/rollup-sweeter-plugin-usage:
+    dependencies:
+      '@captainpants/sweeter-core':
+        specifier: workspace:^
+        version: link:../../packages/sweeter-core
+    devDependencies:
+      '@captainpants/rollup-plugin-sweeter':
+        specifier: workspace:^
+        version: link:../../tools/rollup-plugin-sweeter
+
   examples/sweeter-arktype-example:
     dependencies:
       '@captainpants/arktype-example-data':
@@ -142,16 +152,6 @@ importers:
       '@captainpants/sweeter-web-gummybear':
         specifier: workspace:^
         version: link:../../packages/sweeter-web-gummybear
-    devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
-        specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
-
-  examples/sweeter-rollup-plugin-usage:
-    dependencies:
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-core
     devDependencies:
       '@captainpants/rollup-plugin-sweeter':
         specifier: workspace:^
@@ -282,6 +282,9 @@ importers:
       magic-string:
         specifier: ^0.30.17
         version: 0.30.17
+      picomatch:
+        specifier: 4.0.2
+        version: 4.0.2
       source-map:
         specifier: ^0.7.4
         version: 0.7.4
@@ -295,6 +298,9 @@ importers:
       '@types/node':
         specifier: ^22.10.5
         version: 22.10.5
+      '@types/picomatch':
+        specifier: ^3.0.2
+        version: 3.0.2
       rollup:
         specifier: ^4.30.1
         version: 4.30.1
@@ -1473,6 +1479,9 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
+
+  '@types/picomatch@3.0.2':
+    resolution: {integrity: sha512-n0i8TD3UDB7paoMMxA3Y65vUncFJXjcUf7lQY7YyKGl6031FNjfsLs6pdLFCy2GNFxItPJG8GvvpbZc2skH7WA==}
 
   '@types/sortablejs@1.15.8':
     resolution: {integrity: sha512-b79830lW+RZfwaztgs1aVPgbasJ8e7AXtZYHTELNXZPsERt4ymJdjV4OccDbHQAvHrCcFpbF78jkm0R6h/pZVg==}
@@ -6244,6 +6253,8 @@ snapshots:
       undici-types: 6.20.0
 
   '@types/normalize-package-data@2.4.4': {}
+
+  '@types/picomatch@3.0.2': {}
 
   '@types/sortablejs@1.15.8': {}
 

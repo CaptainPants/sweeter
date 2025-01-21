@@ -35,6 +35,7 @@
         "@types/estraverse": "^5.1.7",
         "@types/micromatch": "^4.0.9",
         "@types/node": "^22.10.5",
+        "@types/picomatch": "^3.0.2",
         "rollup": "^4.30.1",
         "vite-plugin-inspect": "^0.10.6"
     },
@@ -43,6 +44,7 @@
         "chokidar": "^4.0.3",
         "estree-toolkit": "^1.7.8",
         "magic-string": "^0.30.17",
+        "picomatch": "4.0.2",
         "source-map": "^0.7.4"
     }
 }

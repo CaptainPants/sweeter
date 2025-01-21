@@ -20,7 +20,7 @@ export default defineConfig({
         target: "ESNext"
     },
     plugins: [dts({ clearPureImport: false }), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-web', roots: [__dirname] }),
-    watchDependenciesPlugin({ dependencies: ['@captainpants/*'], debug: true })],
+    watchDependenciesPlugin({ dependencies: [{ namePattern: '@captainpants/*' }], debug: true })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

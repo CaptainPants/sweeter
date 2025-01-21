@@ -276,6 +276,9 @@ importers:
       chokidar:
         specifier: ^4.0.3
         version: 4.0.3
+      debounce:
+        specifier: ^2.2.0
+        version: 2.2.0
       estree-toolkit:
         specifier: ^1.7.8
         version: 1.7.8
@@ -289,6 +292,9 @@ importers:
         specifier: ^0.7.4
         version: 0.7.4
     devDependencies:
+      '@types/debounce':
+        specifier: ^1.2.4
+        version: 1.2.4
       '@types/estraverse':
         specifier: ^5.1.7
         version: 5.1.7
@@ -1447,6 +1453,9 @@ packages:
   '@types/braces@3.0.5':
     resolution: {integrity: sha512-SQFof9H+LXeWNz8wDe7oN5zu7ket0qwMu5vZubW4GCJ8Kkeh6nBWUz87+KTz/G3Kqsrp0j/W253XJb3KMEeg3w==}
 
+  '@types/debounce@1.2.4':
+    resolution: {integrity: sha512-jBqiORIzKDOToaF63Fm//haOCHuwQuLa2202RK4MozpA6lh93eCBc+/8+wZn5OzjJt3ySdc+74SXWXB55Ewtyw==}
+
   '@types/estraverse@5.1.7':
     resolution: {integrity: sha512-JRVtdKYZz7VkNp7hMC/WKoiZ8DS3byw20ZGoMZ1R8eBrBPIY7iBaDAS1zcrnXQCwK44G4vbXkimeU7R0VLG8UQ==}
 
@@ -2134,6 +2143,10 @@ packages:
 
   de-indent@1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
+
+  debounce@2.2.0:
+    resolution: {integrity: sha512-Xks6RUDLZFdz8LIdR6q0MTH44k7FikOmnh5xkSjMig6ch45afc8sjTjRQf3P6ax8dMgcQrYO/AR2RGWURrruqw==}
+    engines: {node: '>=18'}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -6222,6 +6235,8 @@ snapshots:
 
   '@types/braces@3.0.5': {}
 
+  '@types/debounce@1.2.4': {}
+
   '@types/estraverse@5.1.7':
     dependencies:
       '@types/estree': 1.0.6
@@ -7016,6 +7031,8 @@ snapshots:
   dateformat@3.0.3: {}
 
   de-indent@1.0.2: {}
+
+  debounce@2.2.0: {}
 
   debug@3.2.7:
     dependencies:

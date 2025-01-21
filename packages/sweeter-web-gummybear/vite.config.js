@@ -21,7 +21,7 @@ export default defineConfig({
         target: "ESNext",
     },
     plugins: [dts(), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-web-gummybear', roots: [__dirname] }),
-    watchDependenciesPlugin({ dependencies: ['@captainpants/*'], debug: true })],
+    watchDependenciesPlugin({ dependencies: [{ namePattern: '@captainpants/*' }], debug: true })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

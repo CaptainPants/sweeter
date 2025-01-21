@@ -31,6 +31,6 @@ export default defineConfig({
         dts({ clearPureImport: false }), 
         nodeExternals(), 
         circularDependency({ circleImportThrowErr: true }), 
-        watchDependenciesPlugin({ dependencies: ['@captainpants/*'], debug: true })
+        watchDependenciesPlugin({ dependencies: [{ namePattern: '@captainpants/*' }], debug: true })
     ]
 });

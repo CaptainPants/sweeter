@@ -134,6 +134,11 @@ export function watchDependenciesPlugin({
             }
         },
         async closeWatcher(): Promise<void> {
+            if (!this.meta.watchMode) {
+                debuglog('Not in watch mode, no cleanup required.');
+                return;
+            }
+
             this.info('Cleaning up');
 
             while (cleanup.length > 0) {

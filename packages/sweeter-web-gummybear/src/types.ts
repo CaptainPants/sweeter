@@ -9,9 +9,20 @@ export type ThemeOptionDefinition = {
     defaultValue: string | number | undefined;
 };
 
-export type ThemeOptionOrGroupDefinition =
+export type ThemeOptionDefinitionGroup = {
+    readonly [key: string]: ThemeOptionDefinitionOrGroupDefinition
+}
+
+export type ThemeOptionDefinitionOrGroupDefinition =
     | ThemeOptionDefinition
-    | { [key: string]: ThemeOptionOrGroupDefinition };
+    | ThemeOptionDefinitionGroup;
+
+export type ThemeOptionGroup = { [key: string]: ThemeOptionValueOrGroup }
+
+export type ThemeOptionValueOrGroup =
+    | ThemeOptionGroup
+    | string
+    | number;
 
 export type ColumnWidth = Exclude<
     (typeof columnWidths)[number] | 'auto',

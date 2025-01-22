@@ -19,3 +19,6 @@ msbuild.binlog
 .nx
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
+
+# files used to communicate between watchers in watch-pnpm-workspace
+*.notice

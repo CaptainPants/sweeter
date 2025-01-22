@@ -1,4 +1,4 @@
-import sweeterPlugin, { alsoWatchPlugin } from '@captainpants/rollup-plugin-sweeter';
+import sweeterPlugin, { watchDependenciesPlugin } from '@captainpants/rollup-plugin-sweeter';
 import { resolve } from 'path';
 import nodeExternals from 'rollup-plugin-node-externals';
 import { defineConfig } from 'vite';
@@ -21,7 +21,7 @@ export default defineConfig({
         target: "ESNext",
     },
     plugins: [dts(), nodeExternals(), circularDependency({ circleImportThrowErr: true }), sweeterPlugin({ projectName: '@captainpants/sweeter-web-arktype', roots: [__dirname] }),
-    alsoWatchPlugin({ globs: ['node_modules/@captainpants/*/dist/**/*'] })],
+    watchDependenciesPlugin({ dependencies: [{ namePattern: '@captainpants/*', filesPattern: 'dist/build-complete.notice', buildCompleteNoticePath: 'dist/build-complete.notice' }] })],
     test: {
         environmentMatchGlobs: [
             ['**', 'jsdom'],

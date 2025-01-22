@@ -7,7 +7,7 @@ const filePath = path.resolve(process.argv[2]);
 const dir = path.dirname(filePath);
 let viteconf = undefined;
 
-let current = dir;
+let current = dir; // find the relevant vite.config.js by searching upwards
 while(current) {
     const candidate = path.join(current, 'vite.config.js');
     if (fs.existsSync(candidate)) {
@@ -23,7 +23,7 @@ if (!viteconf) {
     process.exit(1);
 }
 
-process.cwd(dir);
+process.chdir(dir);
 
 // Rewrite
 const scriptPath = path.resolve("./node_modules/vitest/vitest.mjs");

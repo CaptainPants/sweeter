@@ -1,5 +1,5 @@
 {
-    "name": "@captainpants/rollup-plugin-sweeter-usage",
+    "name": "@captainpants/rollup-sweeter-plugin-usage",
     "version": "0.0.5",
     "repository": "https://github.com/CaptainPants/sweeter",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",

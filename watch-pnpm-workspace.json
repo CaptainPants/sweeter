@@ -37,7 +37,7 @@
         "rollup-plugin-usage": {
             "projects": [
                 "@captainpants/rollup-plugin-sweeter",
-                "@captainpants/rollup-plugin-usage"
+                "@captainpants/rollup-sweeter-plugin-usage"
             ]
         },
         "watch-pnpm-workspace-test": {

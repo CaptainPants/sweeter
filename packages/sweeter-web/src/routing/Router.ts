@@ -26,7 +26,7 @@ export function Router(
 
     return $derived(() => {
         // Allow for '/' as a base path
-        let basePathResolved = $val(basePath) ?? "";
+        let basePathResolved = $val(basePath) ?? '';
         if (basePathResolved.startsWith('/')) {
             basePathResolved = basePathResolved.substring(1);
         }

@@ -11,5 +11,11 @@ it('StackTrace returns a consistent result', () => {
 
     const trace = test1();
 
-    expect(trace.getNice({ truncate: 3 })).toMatchSnapshot();
+    const nice = trace.getNice({ truncate: 3 });
+
+    const pathRemoved = nice
+        .replaceAll(process.cwd(), '<< PATH >>')
+        .replaceAll('\\', '/');
+
+    expect(pathRemoved).toMatchSnapshot();
 });

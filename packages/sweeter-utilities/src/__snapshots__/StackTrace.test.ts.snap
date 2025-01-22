@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`StackTrace returns a consistent result 1`] = `
-"test2 C:\\workspace\\sweeter\\packages\\sweeter-utilities\\src\\StackTrace.test.ts (row: 5 col: 16)
-test1 C:\\workspace\\sweeter\\packages\\sweeter-utilities\\src\\StackTrace.test.ts (row: 9 col: 16)
-(anonymous/top level function) C:\\workspace\\sweeter\\packages\\sweeter-utilities\\src\\StackTrace.test.ts (row: 12 col: 19)"
+"test2 << PATH >>/src/StackTrace.test.ts (row: 5 col: 16)
+test1 << PATH >>/src/StackTrace.test.ts (row: 9 col: 16)
+(anonymous/top level function) << PATH >>/src/StackTrace.test.ts (row: 12 col: 19)"
 `;

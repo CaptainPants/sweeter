@@ -273,6 +273,9 @@ importers:
       '@rollup/pluginutils':
         specifier: ^5.1.4
         version: 5.1.4(rollup@4.30.1)
+      arktype:
+        specifier: 2.0.0
+        version: 2.0.0
       chokidar:
         specifier: ^4.0.3
         version: 4.0.3

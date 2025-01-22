@@ -16,7 +16,7 @@ import { Router } from './Router.js';
 
 it('General', async () => {
     const routes = [
-        $route(pathTemplate`/this/is/a/${match.segment}`, () => {
+        $route(pathTemplate`this/is/a/${match.segment}`, () => {
             const Component = $lazyComponentType(() =>
                 Promise.resolve<Component<{ text: string }>>((props) => {
                     return `Text: ${props.text}`;
@@ -29,15 +29,15 @@ it('General', async () => {
         }),
     ];
 
-    const path = $mutable('/this/is/a/banana');
+    const path = $mutable('this/is/a/banana');
 
     const res = testRender(() => (
         <Suspense fallback={() => 'Loading'}>
             {() => (
                 <Router
                     routes={routes}
-                    basePath={path}
-                    url={$derived(() => `https://google.com${path.value}`)}
+                    fallback={() => "No match"}
+                    url={$derived(() => `https://google.com/${path.value}`)}
                 />
             )}
         </Suspense>

@@ -36,7 +36,7 @@ it('General', async () => {
             {() => (
                 <Router
                     routes={routes}
-                    fallback={() => "No match"}
+                    fallback={() => 'No match'}
                     url={$derived(() => `https://google.com/${path.value}`)}
                 />
             )}

@@ -30,6 +30,7 @@
         "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",
+        "format:check": "prettier --check src",
         "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
         "test:watch": "vitest --globals",
         "test": "vitest --globals --watch=false",

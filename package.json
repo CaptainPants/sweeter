@@ -9,6 +9,7 @@
     "verify:fix": "lerna run verify:fix",
     "verify": "lerna run verify",
     "format": "lerna run format",
+    "format:check": "lerna run format:check",
     "lint": "lerna run lint",
     "lint:fix": "lerna run lint -- --fix",
     "test": "lerna run test",

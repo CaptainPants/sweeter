@@ -4,6 +4,7 @@ import {
 } from '@captainpants/sweeter-core';
 import { $derived, $val } from '@captainpants/sweeter-core';
 
+import { getPath } from './implementation/getPath.js';
 import { pathDoesNotMatch } from './pathDoesNotMatch.js';
 import { type Route } from './types.js';
 
@@ -21,18 +22,25 @@ export function Router(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     init: ComponentInit,
 ): JSX.Element {
-    // TODO: currently not using basePath
     const asUrl = $derived(() => new URL($val(url)));
 
     return $derived(() => {
-        const path = asUrl.value.pathname; // Should use $val(basePath) to create a root relative path;
+        // Allow for '/' as a base path
+        let basePathResolved = $val(basePath);
+        if (basePathResolved.startsWith('/')) {
+            basePathResolved = basePathResolved.substring(1);
+        }
 
-        for (const route of $val(routes)) {
-            // basePath should be removed from path
-            const match = route.match(path, asUrl.value);
+        const path = getPath(asUrl.value, basePathResolved);
 
-            if (match !== pathDoesNotMatch) {
-                return match;
+        if (path !== null) {
+            for (const route of $val(routes)) {
+                // basePath should be removed from path
+                const match = route.match(path, asUrl.value);
+    
+                if (match !== pathDoesNotMatch) {
+                    return match;
+                }
             }
         }
 

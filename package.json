@@ -13,7 +13,7 @@
     "lint:fix": "lerna run lint -- --fix",
     "test": "lerna run test",
     "watch-libs": "node --experimental-strip-types ./tools/watch-pnpm-workspace/src/index.ts run watch --group libs",
-    "watch-example": "node --experimental-strip-types ./tools/watch-pnpm-workspace/src/index.ts run watch --group arktype",
+    "watch-example": "node --experimental-strip-types ./tools/watch-pnpm-workspace/src/index.ts run watch --group example",
     "watch-arktype-example": "node --experimental-strip-types ./tools/watch-pnpm-workspace/src/index.ts run watch --group arktype-example",
     "watch-rollup-plugin-usage": "node --experimental-strip-types ./tools/watch-pnpm-workspace/src/index.ts run watch --group rollup-plugin-usage",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",

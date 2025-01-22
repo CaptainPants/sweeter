@@ -19,9 +19,9 @@ const { IncludeThemeStylesheets } = createTheme({});
 
 const routes = () => {
     return [
-        $route(pathTemplate`/`, () => () => <HomePage />),
-        $route(pathTemplate`/page1`, () => () => <Page1 />),
-        $route(pathTemplate`/page2`, () => () => <Page2 />),
+        $route(pathTemplate``, () => () => <HomePage />),
+        $route(pathTemplate`page1`, () => () => <Page1 />),
+        $route(pathTemplate`page2`, () => () => <Page2 />),
     ];
 };
 

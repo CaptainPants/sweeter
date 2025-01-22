@@ -13,7 +13,9 @@ it('StackTrace returns a consistent result', () => {
 
     const nice = trace.getNice({ truncate: 3 });
 
-    const pathRemoved = nice.replaceAll(process.cwd(), '<< PATH >>').replaceAll('\\', '/');
+    const pathRemoved = nice
+        .replaceAll(process.cwd(), '<< PATH >>')
+        .replaceAll('\\', '/');
 
     expect(pathRemoved).toMatchSnapshot();
 });

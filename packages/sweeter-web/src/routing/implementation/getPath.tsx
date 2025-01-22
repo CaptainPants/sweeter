@@ -1,13 +1,13 @@
-
 /**
- * 
- * @param url 
- * @param basePath 
- * @returns 
+ *
+ * @param url
+ * @param basePath
+ * @returns
  */
 export function getPath(url: URL, basePath: string): string | null {
     let path = url.pathname;
-    if (path.startsWith('/')) { // I think it always will, but whatever
+    if (path.startsWith('/')) {
+        // I think it always will, but whatever
         path = path.substring(1);
     }
 

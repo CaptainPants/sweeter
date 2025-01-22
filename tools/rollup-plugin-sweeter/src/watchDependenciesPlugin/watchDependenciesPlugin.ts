@@ -15,20 +15,24 @@ import { gatherDependencies } from './gatherDependencies.js';
 
 const watchDependencySchema = type({
     'namePattern?': 'string | RegExp',
-    'filesPattern?': 'string | RegExp'
+    'filesPattern?': 'string | RegExp',
 });
 const watchDependencyPluginOptionsSchema = type({
-    'dependencies': watchDependencySchema.array(),
+    dependencies: watchDependencySchema.array(),
     'debounceTimeout?': 'number',
     'buildCompleteNoticePath?': 'string',
-    'debug?': 'boolean'
+    'debug?': 'boolean',
 });
 
-export type WatchDependenciesPluginOptions = type.infer<typeof watchDependencyPluginOptionsSchema>;
+export type WatchDependenciesPluginOptions = type.infer<
+    typeof watchDependencyPluginOptionsSchema
+>;
 
 const matchNodeModules = picomatch('node_modules/**/*');
 
-export function watchDependenciesPlugin(options: WatchDependenciesPluginOptions): RollupPlugin {
+export function watchDependenciesPlugin(
+    options: WatchDependenciesPluginOptions,
+): RollupPlugin {
     const parsed = watchDependencyPluginOptionsSchema(options);
     if (parsed instanceof ArkErrors) {
         throw new Error(`Error parsing options: ${parsed.message}`);

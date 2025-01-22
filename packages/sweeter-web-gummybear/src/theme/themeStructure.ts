@@ -1,4 +1,7 @@
-import { ThemeOptionDefinition, type ThemeOptionDefinitionOrGroupDefinition } from '../types.js';
+import {
+    ThemeOptionDefinition,
+    type ThemeOptionDefinitionOrGroupDefinition,
+} from '../types.js';
 
 export const themeStructure = {
     bodyBackground: {
@@ -225,7 +228,11 @@ export const themeStructure = {
 type ExtractThemeOptionsFromDefinition<T> = T extends {
     defaultValue: infer S;
 } & Omit<ThemeOptionDefinition, 'defaultValue'>
-    ? (S extends number ? number : S extends string ? string : never)
+    ? S extends number
+        ? number
+        : S extends string
+          ? string
+          : never
     : {
           -readonly [Key in keyof T]?: ExtractThemeOptionsFromDefinition<
               T[Key]

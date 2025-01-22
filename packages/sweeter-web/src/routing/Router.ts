@@ -9,7 +9,7 @@ import { pathDoesNotMatch } from './pathDoesNotMatch.js';
 import { type Route } from './types.js';
 
 export interface RouterProps {
-    basePath: string;
+    basePath?: string;
     url: string;
 
     routes: readonly Route<readonly string[]>[];
@@ -26,7 +26,7 @@ export function Router(
 
     return $derived(() => {
         // Allow for '/' as a base path
-        let basePathResolved = $val(basePath);
+        let basePathResolved = $val(basePath) ?? "";
         if (basePathResolved.startsWith('/')) {
             basePathResolved = basePathResolved.substring(1);
         }
@@ -37,7 +37,7 @@ export function Router(
             for (const route of $val(routes)) {
                 // basePath should be removed from path
                 const match = route.match(path, asUrl.value);
-    
+
                 if (match !== pathDoesNotMatch) {
                     return match;
                 }

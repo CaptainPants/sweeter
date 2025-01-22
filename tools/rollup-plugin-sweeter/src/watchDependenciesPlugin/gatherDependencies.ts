@@ -11,8 +11,6 @@ export async function gatherDependencies(projectRoot: string): Promise<{ name: s
     projectRoot = normalizePath(projectRoot, path.sep);
     const nodeModulesPath = path.resolve(projectRoot, 'node_modules');
 
-    console.warn('Starting at ' + nodeModulesPath)
-
     const dependencies: { name: string, realPath: string }[] = [];
 
     const topLevelEntries = await fsPromises.readdir(nodeModulesPath, { withFileTypes: true });

@@ -42,6 +42,7 @@
     },
     "dependencies": {
         "@rollup/pluginutils": "^5.1.4",
+        "arktype": "2.0.0",
         "chokidar": "^4.0.3",
         "debounce": "^2.2.0",
         "estree-toolkit": "^1.7.8",

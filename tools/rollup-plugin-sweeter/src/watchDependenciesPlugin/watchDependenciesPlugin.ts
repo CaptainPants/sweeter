@@ -1,3 +1,4 @@
+import { ArkErrors, type } from 'arktype';
 import { FSWatcherEventMap, watch } from 'chokidar';
 import debounce from 'debounce';
 import fs from 'node:fs';
@@ -12,30 +13,34 @@ import { normalizePath } from '../utility/implementation/normalizePath.js';
 
 import { gatherDependencies } from './gatherDependencies.js';
 
-// TODO: we can Arktype this
-export interface WatchDependendeny {
-    namePattern: string | RegExp;
-    filesPattern?: string | RegExp;
-}
+const watchDependencySchema = type({
+    'namePattern?': 'string | RegExp',
+    'filesPattern?': 'string | RegExp'
+});
+const watchDependencyPluginOptionsSchema = type({
+    'dependencies': watchDependencySchema.array(),
+    'debounceTimeout?': 'number',
+    'buildCompleteNoticePath?': 'string',
+    'debug?': 'boolean'
+});
 
-export interface WatchDependenciesPluginOptions {
-    dependencies: WatchDependendeny[];
-    debounceTimeout?: number;
-    buildCompleteNoticePath?: string;
-    debug?: boolean;
-}
+export type WatchDependenciesPluginOptions = type.infer<typeof watchDependencyPluginOptionsSchema>;
 
 const matchNodeModules = picomatch('node_modules/**/*');
 
-export function watchDependenciesPlugin(
-    options: WatchDependenciesPluginOptions,
-): RollupPlugin;
-export function watchDependenciesPlugin({
-    dependencies: dependencyRules,
-    debounceTimeout = 2000,
-    buildCompleteNoticePath,
-    debug,
-}: WatchDependenciesPluginOptions): RollupPlugin {
+export function watchDependenciesPlugin(options: WatchDependenciesPluginOptions): RollupPlugin {
+    const parsed = watchDependencyPluginOptionsSchema(options);
+    if (parsed instanceof ArkErrors) {
+        throw new Error(`Error parsing options: ${parsed.message}`);
+    }
+
+    const {
+        dependencies: dependencyRules,
+        debounceTimeout = 2000,
+        buildCompleteNoticePath,
+        debug,
+    } = options;
+
     const cleanup: (() => Promise<void>)[] = [];
 
     const dummyPath = resolve(process.cwd(), `watch-trigger-dummy-file.notice`);

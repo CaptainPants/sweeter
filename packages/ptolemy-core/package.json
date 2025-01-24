@@ -1,0 +1,41 @@
+{
+    "name": "@serpentis/ptolemy-core",
+    "version": "0.0.5",
+    "repository": "https://github.com/serpentis-software/ptolemy",
+    "author": "Serpentis Software <captainpantsnpm@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "type": "module",
+    "packageManager": "pnpm@9.15.3",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "scripts": {
+        "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
+        "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
+        "typecheck": "tsc --noEmit",
+        "format": "prettier --write src",
+        "format:check": "prettier --check src",
+        "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
+        "test:watch": "vitest --globals",
+        "test": "vitest --globals --watch=false",
+        "verify:fix": "corepack pnpm run lint --fix && corepack pnpm run format && corepack pnpm run test && corepack pnpm run typecheck",
+        "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
+        "watch": "vite build --watch",
+        "build": "pnpm run typecheck && vite build"
+    },
+    "engines": {
+        "pnpm": "9.15.3"
+    },
+    "dependencies": {
+        "@serpentis/ptolemy-utilities": "workspace:^"
+    },
+    "devDependencies": {
+        "@serpentis/rollup-plugin-ptolemy": "workspace:^"
+    }
+}

@@ -32,8 +32,8 @@ export default (tsconfigPath) => tseslint.config(
                     // \u0000 suffix for type imports
                     groups: [
                         // Any other packages that aren't internal and aren't side effects
-                        ['^(?!~/|@captainpants|\\.|\u0000).*'],
-                        ['^@captainpants.*'],
+                        ['^(?!~/|@serpentis|\\.|\u0000).*'],
+                        ['^@serpentis.*'],
                         // @app points to the root of an application, might use this for example app
                         ['^~/.*'],
                         // Parent paths

@@ -1,0 +1,13 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+    ],
+    "compilerOptions": {
+        "rootDir": "src",
+        "jsxImportSource": "@serpentis/ptolemy-web",
+        "jsx": "react-jsx",
+        "noEmit": true,
+    }
+}

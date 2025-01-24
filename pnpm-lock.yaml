@@ -95,76 +95,76 @@ importers:
 
   examples/arktype-example-data:
     dependencies:
-      '@captainpants/sweeter-arktype-modeling':
+      '@serpentis/ptolemy-arktype-modeling':
         specifier: workspace:^
-        version: link:../../packages/sweeter-arktype-modeling
+        version: link:../../packages/ptolemy-arktype-modeling
     devDependencies:
       arktype:
         specifier: 2.0.0
         version: 2.0.0
 
-  examples/rollup-sweeter-plugin-usage:
+  examples/ptolemy-arktype-example:
     dependencies:
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../../packages/sweeter-core
-    devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
-        specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
-
-  examples/sweeter-arktype-example:
-    dependencies:
-      '@captainpants/arktype-example-data':
+      '@serpentis/arktype-example-data':
         specifier: workspace:^
         version: link:../arktype-example-data
-      '@captainpants/sweeter-arktype-modeling':
+      '@serpentis/ptolemy-arktype-modeling':
         specifier: workspace:^
-        version: link:../../packages/sweeter-arktype-modeling
-      '@captainpants/sweeter-core':
+        version: link:../../packages/ptolemy-arktype-modeling
+      '@serpentis/ptolemy-core':
         specifier: workspace:^
-        version: link:../../packages/sweeter-core
-      '@captainpants/sweeter-web':
+        version: link:../../packages/ptolemy-core
+      '@serpentis/ptolemy-web':
         specifier: workspace:^
-        version: link:../../packages/sweeter-web
-      '@captainpants/sweeter-web-arktype':
+        version: link:../../packages/ptolemy-web
+      '@serpentis/ptolemy-web-arktype':
         specifier: workspace:^
-        version: link:../../packages/sweeter-web-arktype
-      '@captainpants/sweeter-web-gummybear':
+        version: link:../../packages/ptolemy-web-arktype
+      '@serpentis/ptolemy-web-stardust':
         specifier: workspace:^
-        version: link:../../packages/sweeter-web-gummybear
+        version: link:../../packages/ptolemy-web-stardust
       arktype:
         specifier: 2.0.0
         version: 2.0.0
     devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
+        version: link:../../tools/rollup-plugin-ptolemy
 
-  examples/sweeter-example:
+  examples/ptolemy-example:
     dependencies:
-      '@captainpants/sweeter-core':
+      '@serpentis/ptolemy-core':
         specifier: workspace:^
-        version: link:../../packages/sweeter-core
-      '@captainpants/sweeter-web':
+        version: link:../../packages/ptolemy-core
+      '@serpentis/ptolemy-web':
         specifier: workspace:^
-        version: link:../../packages/sweeter-web
-      '@captainpants/sweeter-web-gummybear':
+        version: link:../../packages/ptolemy-web
+      '@serpentis/ptolemy-web-stardust':
         specifier: workspace:^
-        version: link:../../packages/sweeter-web-gummybear
+        version: link:../../packages/ptolemy-web-stardust
     devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
+        version: link:../../tools/rollup-plugin-ptolemy
 
-  packages/sweeter-arktype-modeling:
+  examples/rollup-ptolemy-plugin-usage:
     dependencies:
-      '@captainpants/sweeter-core':
+      '@serpentis/ptolemy-core':
         specifier: workspace:^
-        version: link:../sweeter-core
-      '@captainpants/sweeter-utilities':
+        version: link:../../packages/ptolemy-core
+    devDependencies:
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../sweeter-utilities
+        version: link:../../tools/rollup-plugin-ptolemy
+
+  packages/ptolemy-arktype-modeling:
+    dependencies:
+      '@serpentis/ptolemy-core':
+        specifier: workspace:^
+        version: link:../ptolemy-core
+      '@serpentis/ptolemy-utilities':
+        specifier: workspace:^
+        version: link:../ptolemy-utilities
     devDependencies:
       '@ark/schema':
         specifier: ^0.35.0
@@ -173,58 +173,58 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
 
-  packages/sweeter-core:
+  packages/ptolemy-core:
     dependencies:
-      '@captainpants/sweeter-utilities':
+      '@serpentis/ptolemy-utilities':
         specifier: workspace:^
-        version: link:../sweeter-utilities
+        version: link:../ptolemy-utilities
     devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
+        version: link:../../tools/rollup-plugin-ptolemy
 
-  packages/sweeter-utilities:
+  packages/ptolemy-utilities:
     devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
+        version: link:../../tools/rollup-plugin-ptolemy
 
-  packages/sweeter-web:
+  packages/ptolemy-web:
     dependencies:
-      '@captainpants/sweeter-core':
+      '@serpentis/ptolemy-core':
         specifier: workspace:^
-        version: link:../sweeter-core
-      '@captainpants/sweeter-utilities':
+        version: link:../ptolemy-core
+      '@serpentis/ptolemy-utilities':
         specifier: workspace:^
-        version: link:../sweeter-utilities
+        version: link:../ptolemy-utilities
       csstype:
         specifier: ^3.1.3
         version: 3.1.3
     devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
+        version: link:../../tools/rollup-plugin-ptolemy
 
-  packages/sweeter-web-arktype:
+  packages/ptolemy-web-arktype:
     dependencies:
-      '@captainpants/sweeter-arktype-modeling':
-        specifier: workspace:^
-        version: link:../sweeter-arktype-modeling
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../sweeter-core
-      '@captainpants/sweeter-utilities':
-        specifier: workspace:^
-        version: link:../sweeter-utilities
-      '@captainpants/sweeter-web':
-        specifier: workspace:^
-        version: link:../sweeter-web
-      '@captainpants/sweeter-web-gummybear':
-        specifier: workspace:^
-        version: link:../sweeter-web-gummybear
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
+      '@serpentis/ptolemy-arktype-modeling':
+        specifier: workspace:^
+        version: link:../ptolemy-arktype-modeling
+      '@serpentis/ptolemy-core':
+        specifier: workspace:^
+        version: link:../ptolemy-core
+      '@serpentis/ptolemy-utilities':
+        specifier: workspace:^
+        version: link:../ptolemy-utilities
+      '@serpentis/ptolemy-web':
+        specifier: workspace:^
+        version: link:../ptolemy-web
+      '@serpentis/ptolemy-web-stardust':
+        specifier: workspace:^
+        version: link:../ptolemy-web-stardust
       arktype:
         specifier: 2.0.0
         version: 2.0.0
@@ -236,24 +236,24 @@ importers:
         specifier: ^0.319.0
         version: 0.319.0
     devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
+        version: link:../../tools/rollup-plugin-ptolemy
 
-  packages/sweeter-web-gummybear:
+  packages/ptolemy-web-stardust:
     dependencies:
-      '@captainpants/sweeter-core':
-        specifier: workspace:^
-        version: link:../sweeter-core
-      '@captainpants/sweeter-utilities':
-        specifier: workspace:^
-        version: link:../sweeter-utilities
-      '@captainpants/sweeter-web':
-        specifier: workspace:^
-        version: link:../sweeter-web
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
+      '@serpentis/ptolemy-core':
+        specifier: workspace:^
+        version: link:../ptolemy-core
+      '@serpentis/ptolemy-utilities':
+        specifier: workspace:^
+        version: link:../ptolemy-utilities
+      '@serpentis/ptolemy-web':
+        specifier: workspace:^
+        version: link:../ptolemy-web
       sortablejs:
         specifier: ^1.15.6
         version: 1.15.6
@@ -261,14 +261,14 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
     devDependencies:
-      '@captainpants/rollup-plugin-sweeter':
+      '@serpentis/rollup-plugin-ptolemy':
         specifier: workspace:^
-        version: link:../../tools/rollup-plugin-sweeter
+        version: link:../../tools/rollup-plugin-ptolemy
       '@types/sortablejs':
         specifier: ^1.15.8
         version: 1.15.8
 
-  tools/rollup-plugin-sweeter:
+  tools/rollup-plugin-ptolemy:
     dependencies:
       '@rollup/pluginutils':
         specifier: ^5.1.4

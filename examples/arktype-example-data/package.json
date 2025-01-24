@@ -1,8 +1,8 @@
 {
-    "name": "@captainpants/arktype-example-data",
+    "name": "@serpentis/arktype-example-data",
     "version": "0.0.5",
-    "repository": "https://github.com/CaptainPants/sweeter",
-    "author": "Stuart Murray <captainpantsnpm@gmail.com>",
+    "repository": "https://github.com/serpentis-software/ptolemy",
+    "author": "Serpentis Software <captainpantsnpm@gmail.com>",
     "license": "MIT",
     "private": true,
     "type": "module",
@@ -33,7 +33,7 @@
         "pnpm": "9.15.3"
     },
     "dependencies": {
-        "@captainpants/sweeter-arktype-modeling": "workspace:^"
+        "@serpentis/ptolemy-arktype-modeling": "workspace:^"
     },
     "devDependencies": {
         "arktype": "2.0.0"

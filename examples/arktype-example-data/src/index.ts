@@ -6,9 +6,9 @@ import {
     introspect,
     ModelFactory,
     UnknownModel,
-} from '@captainpants/sweeter-arktype-modeling';
+} from '@serpentis/ptolemy-arktype-modeling';
 
-import '@captainpants/sweeter-arktype-modeling/extendArkTypes';
+import '@serpentis/ptolemy-arktype-modeling/extendArkTypes';
 
 export const stringOnly = type.string;
 export const numberOnly = type.number;

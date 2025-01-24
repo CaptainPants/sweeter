@@ -1,7 +1,0 @@
-{
-    "entryPoints": [
-        "src/index.ts",
-        //"src/jsx-globals.ts",
-        "src/SweeterExtensionPoints.ts"
-    ],
-}

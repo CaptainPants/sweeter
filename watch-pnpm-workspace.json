@@ -2,83 +2,83 @@
     "groups": {
         "libs": {
             "projects": [
-                "@captainpants/rollup-plugin-sweeter",
-                "@captainpants/sweeter-utilities",
-                "@captainpants/sweeter-core",
-                "@captainpants/sweeter-arktype-modeling",
-                "@captainpants/sweeter-web",
-                "@captainpants/sweeter-web-arktype",
-                "@captainpants/sweeter-web-gummybear"
+                "@serpentis/rollup-plugin-ptolemy",
+                "@serpentis/ptolemy-utilities",
+                "@serpentis/ptolemy-core",
+                "@serpentis/ptolemy-arktype-modeling",
+                "@serpentis/ptolemy-web",
+                "@serpentis/ptolemy-web-arktype",
+                "@serpentis/ptolemy-web-stardust"
             ]
         },
         "example": {
             "projects": [
-                "@captainpants/rollup-plugin-sweeter",
-                "@captainpants/sweeter-utilities",
-                "@captainpants/sweeter-core",
-                "@captainpants/sweeter-web",
-                "@captainpants/sweeter-web-gummybear",
-                "@captainpants/sweeter-example"
+                "@serpentis/rollup-plugin-ptolemy",
+                "@serpentis/ptolemy-utilities",
+                "@serpentis/ptolemy-core",
+                "@serpentis/ptolemy-web",
+                "@serpentis/ptolemy-web-stardust",
+                "@serpentis/ptolemy-example"
             ]
         },
         "arktype-example": {
             "projects": [
-                "@captainpants/rollup-plugin-sweeter",
-                "@captainpants/sweeter-utilities",
-                "@captainpants/sweeter-core",
-                "@captainpants/sweeter-arktype-modeling",
-                "@captainpants/sweeter-web",
-                "@captainpants/sweeter-web-arktype",
-                "@captainpants/sweeter-web-gummybear",
-                "@captainpants/sweeter-web-example-data",
-                "@captainpants/sweeter-arktype-example"
+                "@serpentis/rollup-plugin-ptolemy",
+                "@serpentis/ptolemy-utilities",
+                "@serpentis/ptolemy-core",
+                "@serpentis/ptolemy-arktype-modeling",
+                "@serpentis/ptolemy-web",
+                "@serpentis/ptolemy-web-arktype",
+                "@serpentis/ptolemy-web-stardust",
+                "@serpentis/ptolemy-web-example-data",
+                "@serpentis/ptolemy-arktype-example"
             ]
         },
         "rollup-plugin-usage": {
             "projects": [
-                "@captainpants/rollup-plugin-sweeter",
-                "@captainpants/rollup-sweeter-plugin-usage"
+                "@serpentis/rollup-plugin-ptolemy",
+                "@serpentis/rollup-ptolemy-plugin-usage"
             ]
         },
         "watch-pnpm-workspace-test": {
             "projects": [
-                "@captainpants/rollup-plugin-sweeter",
-                "@captainpants/sweeter-utilities"
+                "@serpentis/rollup-plugin-ptolemy",
+                "@serpentis/ptolemy-utilities"
             ]
         }
     },
     "projects": {
-        "@captainpants/rollup-plugin-sweeter": {
+        "@serpentis/rollup-plugin-ptolemy": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/sweeter-utilities": {
+        "@serpentis/ptolemy-utilities": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/sweeter-core": {
+        "@serpentis/ptolemy-core": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/sweeter-arktype-modeling": {
+        "@serpentis/ptolemy-arktype-modeling": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/sweeter-web": {
+        "@serpentis/ptolemy-web": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/sweeter-web-arktype": {
+        "@serpentis/ptolemy-web-arktype": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/sweeter-web-gummybear": {
+        "@serpentis/ptolemy-web-stardust": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/arktype-example-data": {
+        "@serpentis/arktype-example-data": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         },
-        "@captainpants/sweeter-example": {
+        "@serpentis/ptolemy-example": {
             "successPattern": "press h \\+ enter to show help"
         },
-        "@captainpants/sweeter-arktype-example": {
+        "@serpentis/ptolemy-arktype-example": {
             "successPattern": "press h \\+ enter to show help"
         },
-        "@captainpants/sweeter-rollup-plugin-usage": {
+        "@serpentis/ptolemy-rollup-plugin-usage": {
             "successPattern": "^built in [1-9][0-9]*ms\\.$"
         }
     }

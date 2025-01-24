@@ -1,5 +1,5 @@
 
-# Sweeter
+# Ptolemy
 This is an experimental UI project built on principles learnt from React and SolidJS.
 
 See [here](docs/index.md) for more documentation.
@@ -81,7 +81,7 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
 ```
 
 A few things you might note:
-1. Sigil ($) prefixed functions are special Sweeter building blocks.
+1. Sigil ($) prefixed functions are special Ptolemy building blocks.
 2. The init parameter that gives access to what in other frameworks are called 'hooks' - these are methods that only work during initial wireup that give access to attaching lifecycle methods.
 3. init.hook is used to instantiate 'hooks' - which are components that have access to the component lifecycle to provide some functionality. They may also create their own hook instances.
 4. Components can be mounted, unmounted and remounted - make sure to take that into account when authoring your components. Suspense will mount the component in its incomplete state 'offscreen'.
@@ -123,4 +123,4 @@ A couple of things that I don't love about SolidJS
 7. Contribute lessons learned back to the community - E.g. how typescript JSX works documentation is a bit garbage and we can help improve that
 
 ## Modern technology
-Sweeter relies on WeakRef which is only supported in quite recent browsers. The hope is that this becomes less of a limitation over time. For my personal usage I intend to use Sweeter in desktop applications inside WebView2 and similar components where this is less of an issue.
+Ptolemy relies on WeakRef which is only supported in quite recent browsers. The hope is that this becomes less of a limitation over time. For my personal usage I intend to use Ptolemy in desktop applications inside WebView2 and similar components where this is less of an issue.

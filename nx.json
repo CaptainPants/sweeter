@@ -29,7 +29,7 @@
       "dependsOn": [
         "^build",
         {
-            "projects": "@captainpants/rollup-plugin-sweeter",
+            "projects": "@serpentis/rollup-plugin-ptolemy",
             "target": "build"
         }
       ],

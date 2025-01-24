@@ -1,0 +1,7 @@
+{
+    "entryPoints": [
+        "src/index.ts",
+        //"src/jsx-globals.ts",
+        "src/PtolemyExtensionPoints.ts"
+    ],
+}

@@ -1,0 +1,53 @@
+{
+    "name": "@serpentis/ptolemy-web",
+    "version": "0.0.5",
+    "repository": "https://github.com/serpentis-software/ptolemy",
+    "author": "Serpentis Software <captainpantsnpm@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "type": "module",
+    "packageManager": "pnpm@9.15.3",
+    "main": "./dist/index.js",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./jsx-runtime": {
+            "types": "./dist/jsx-runtime.d.ts",
+            "import": "./dist/jsx-runtime.js",
+            "require": "./dist/jsx-runtime.cjs"
+        },
+        "./jsx-dev-runtime": {
+            "types": "./dist/jsx-dev-runtime.d.ts",
+            "import": "./dist/jsx-dev-runtime.js",
+            "require": "./dist/jsx-dev-runtime.cjs"
+        }
+    },
+    "scripts": {
+        "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
+        "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
+        "typecheck": "tsc --noEmit",
+        "format": "prettier --write src",
+        "format:check": "prettier --check src",
+        "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
+        "test:watch": "vitest --globals",
+        "test": "vitest --globals --watch=false",
+        "verify:fix": "corepack pnpm run lint --fix && corepack pnpm run format && corepack pnpm run test && corepack pnpm run typecheck",
+        "verify": "corepack pnpm run lint && corepack pnpm run test && corepack pnpm run typecheck",
+        "watch": "vite build --watch",
+        "build": "pnpm run typecheck && vite build"
+    },
+    "engines": {
+        "pnpm": "9.15.3"
+    },
+    "dependencies": {
+        "@serpentis/ptolemy-core": "workspace:^",
+        "@serpentis/ptolemy-utilities": "workspace:^",
+        "csstype": "^3.1.3"
+    },
+    "devDependencies": {
+        "@serpentis/rollup-plugin-ptolemy": "workspace:^"
+    }
+}

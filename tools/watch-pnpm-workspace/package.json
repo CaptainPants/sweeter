@@ -1,8 +1,8 @@
 {
-    "name": "@captainpants/watch-pnpm-workspace",
+    "name": "@serpentis/watch-pnpm-workspace",
     "version": "0.0.5",
-    "repository": "https://github.com/CaptainPants/sweeter",
-    "author": "Stuart Murray <captainpantsnpm@gmail.com>",
+    "repository": "https://github.com/serpentis-software/ptolemy",
+    "author": "Serpentis Software <captainpantsnpm@gmail.com>",
     "license": "MIT",
     "private": true,
     "type": "module",

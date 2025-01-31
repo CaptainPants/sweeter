@@ -3,21 +3,19 @@ import { $mutable } from '../signals/$mutable.js';
 import { $val } from '../signals/$val.js';
 import {
     type Component,
-    type ComponentInit,
-    type PropertiesMightBeSignals,
 } from '../types.js';
 import { $insertLocation } from '../utility/$insertLocation.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
 
-export type SuspenseProps = PropertiesMightBeSignals<{
+export interface SuspenseProps {
     fallback: () => JSX.Element;
     children: () => JSX.Element;
-}>;
+};
 
 export const Suspense: Component<SuspenseProps> = (
-    { fallback, children }: SuspenseProps,
-    init: ComponentInit,
+    { fallback, children },
+    init,
 ): JSX.Element => {
     // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = $mutable(0);

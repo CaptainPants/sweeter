@@ -2,14 +2,13 @@ import { getRuntime } from '../runtime/Runtime.js';
 import {
     type Component,
     type MightBeSignal,
-    type PropertiesMightBeSignals,
     type RuntimeRootHostElement,
 } from '../types.js';
 
-export type PortalProps = PropertiesMightBeSignals<{
+export interface PortalProps {
     target: RuntimeRootHostElement;
     children?: JSX.Element;
-}>;
+};
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
     const runtime = init.runtime;

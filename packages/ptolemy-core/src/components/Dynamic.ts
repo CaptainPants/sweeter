@@ -1,9 +1,9 @@
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
-import { PropsDef, TreatAsSignalOverride } from '../types.js';
+import { PropsDef, PropTreatment } from '../types.js';
 
 export interface DynamicProps<T> {
-    value: TreatAsSignalOverride<T, false>;
+    value: PropTreatment<T, true>;
     /**
      * This is called inside a $derived, so 1) you cannot directly mutate signals in the children callback unless you use untrack, and 2) any signals used will be subscribed to.
      * @param value

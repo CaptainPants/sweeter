@@ -1,14 +1,14 @@
-import { type Component, type ComponentInit } from '../types.js';
+import { type Component, PropTreatment } from '../types.js';
 
 export interface WithIdProps {
-    basis?: string;
+    basis: PropTreatment<string, false>;
 
-    children: (id: string) => JSX.Element;
+    children: PropTreatment<(id: string) => JSX.Element, false>;
 }
 
 export const WithId: Component<WithIdProps> = (
-    { basis, children }: WithIdProps,
-    init: ComponentInit,
+    { basis, children },
+    init,
 ): JSX.Element => {
     const id = init.idGenerator.next(basis);
 

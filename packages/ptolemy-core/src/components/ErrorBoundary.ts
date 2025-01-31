@@ -7,14 +7,12 @@ import { flattenElements } from '../utility/flattenElements.js';
 export interface ErrorBoundaryProps {
     renderError: (error: unknown) => JSX.Element;
 
-    // TODO: I think the type of children should be Signal<JSX.Element> | TreatAsSignalOverride<() => JSX.Element, false>, but currently the result type from that is wrong
-
     /**
      * Not that passing in a JSX.Element is probably a mistake as it won't act as if its in the ErrorBoundary. In these cases you probable want a $derived.
      *
      * Note that a function here will be wrapped in a $derived.
      */
-    children: Signal<JSX.Element>;
+    children: Signal<JSX.Element> | (() => JSX.Element);
 }
 
 export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
@@ -23,7 +21,10 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
 }) => {
     // Calls .value on any signals, which should cause the catch to trigger
     const flattennedChildrenSignal = $derived(() => {
-        const flattened = flattenElements(children.value);
+        const value = children.value;
+        const resolved = (typeof value === 'function') ? $derived(value) : value;
+
+        const flattened = flattenElements(resolved);
         return flattened.value;
     });
 

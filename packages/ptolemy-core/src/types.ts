@@ -92,9 +92,11 @@ export interface ComponentInit {
 export type NoProps = {};
 
 export type Component<TProps = NoProps> = (
-    props: TProps,
+    props: PropsDef<TProps>,
     init: ComponentInit,
 ) => JSX.Element;
+
+export type TreatAsSignalOverride<T, ValBool extends boolean> = { "__TREAT_AS_SIGNAL__": ValBool, "__UNDERLYING__": T };
 
 export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,17 +111,46 @@ export type JSXResultForComponentOrElementType<
     ? PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>[keyof PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>]
     : JSXElement;
 
+/**
+ * The usage of a Props object, for creating the actual component.
+ * 
+ * If the property is a signal, allow a non-signal and we'll wrap it
+ */
+export type PropInput<Props> = {
+    [Key in keyof Props]: 
+        Props[Key] extends TreatAsSignalOverride<infer S, true> ? S // Is a signal, DO NOT transform
+        : Props[Key] extends TreatAsSignalOverride<infer S, false> ? (S | Signal<S>) // Is NOT a signal, DO transform
+        : Props[Key] extends Signal<infer _> ? Props[Key]  // Is a signal, DO NOT transform
+        : (Props[Key] | Signal<Props[Key]>); // Otherwise not a signal, DO transform
+}
+
+/**
+ * The definition of a Props object, for creating a component definition function.
+ * 
+ * All properties should be signals, make them signals if not
+ */
+export type PropsDef<Props> = {
+    [Key in keyof Props]: 
+        Props[Key] extends TreatAsSignalOverride<infer S, true> ? S // Is a signal, DO NOT transform
+        : Props[Key] extends TreatAsSignalOverride<infer S, false> ? Signal<S> // Is NOT a signal, DO transform
+        : Props[Key] extends Signal<infer _> ? Props[Key]  // Is a signal, DO NOT transform
+        :  Signal<Props[Key]>; // Otherwise not a signal, DO transform
+}
+
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > =
     ComponentOrIntrinsicElementTypeString extends Component<infer Props>
-        ? Props
+        ? PropInput<Props>
         : ComponentOrIntrinsicElementTypeString extends string
           ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
           : never;
 
-export type PropsWithIntrinsicAttributesFor<
+/**
+ * 
+ */
+export type PropsAndIntrinsicAttributesFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > = PropsFor<ComponentOrIntrinsicElementTypeString> & JSX.IntrinsicAttributes;

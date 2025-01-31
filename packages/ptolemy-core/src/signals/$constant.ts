@@ -1,5 +1,5 @@
-import { DerivedSignal } from './internal/Signal-implementations/DerivedSignal.js';
+import { ConstantSignal } from './internal/Signal-implementations/ConstantSignal.js';
 
 export function $constant<T>(value: T) {
-    return new DerivedSignal(() => value);
+    return new ConstantSignal(() => value);
 }

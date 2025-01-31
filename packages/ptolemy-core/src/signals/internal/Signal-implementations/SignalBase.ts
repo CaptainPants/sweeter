@@ -1,7 +1,6 @@
 import { StackTrace } from '@serpentis/ptolemy-utilities';
 
 import { dev } from '../../../dev.js';
-import { announceSignalUsage } from '../../ambient.js';
 import { SignalState } from '../../SignalState.js';
 import {
     type DebugDependencyNode,
@@ -12,33 +11,24 @@ import {
 import { signalMarker } from '../markers.js';
 import { SignalChangeListenerSet } from '../SignalChangeListenerSet.js';
 
-interface ChangeAnnouncerStackNode {
-    signal: Signal<unknown>;
-    previous: ChangeAnnouncerStackNode | undefined;
-}
+import { nextId } from './nextId.js';
 
-let develChangeAnnouncerStack: ChangeAnnouncerStackNode | undefined;
-let signalCounter = 0;
-
-const debugStackTracesFlag = 'signal.debugStackTraces';
+export const debugStackTracesFlag = 'signal.debugStackTraces';
 
 export abstract class SignalBase<T> implements Signal<T> {
-    constructor(state: SignalState<T>) {
-        this.#state = state;
-
+    constructor() {
         if (dev.flag(debugStackTracesFlag)) {
             this.createdAtStack = new StackTrace({ skipFrames: 1 });
         }
     }
 
-    #state: SignalState<T>;
     #listeners = new SignalChangeListenerSet<T>();
 
     public get [signalMarker]() {
         return true as const;
     }
 
-    public readonly id: number = ++signalCounter;
+    public readonly id: number = nextId();
 
     public name?: string | undefined;
     public sourceFile?: string | undefined;
@@ -47,153 +37,27 @@ export abstract class SignalBase<T> implements Signal<T> {
     public sourceCol?: number | undefined;
     public readonly createdAtStack?: StackTrace;
 
-    public get value(): T {
-        announceSignalUsage(this);
-        return this.peek();
-    }
+    public abstract get value(): T;
 
-    public peek(): T {
-        return SignalState.getValue(this.peekState());
-    }
+    public abstract peek(): T;
 
-    public peekState(ensureInit = true): SignalState<T> {
-        if (ensureInit) {
-            this.#ensureInited();
-        }
-        this._peeking();
-        if (ensureInit && this.#state.mode === 'INITIALISING') {
-            throw new TypeError('Expected signal to be initialized.');
-        }
-        return this.#state;
-    }
+    public abstract peekState(ensureInit?: boolean): SignalState<T>;
 
-    public get inited(): boolean {
-        return this.#state.mode !== 'INITIALISING';
-    }
+    public abstract get inited(): boolean;
 
-    public get failed(): boolean {
-        return this.#state.mode === 'ERROR';
-    }
+    public abstract get failed(): boolean;
 
-    /**
-     * Should never throw.
-     * @param state
-     */
-    protected _updateAndAnnounce(state: SignalState<T>) {
-        const previous = this.#state;
+    public abstract listen(listener: SignalListener<T>): () => void;
 
-        if (SignalState.isEqual(previous, state)) {
-            return; // Don't announce the change if the values were equal
-        }
+    public abstract listenWeak(listener: SignalListener<T>): () => void;
 
-        // Prevent accidental mutation of internal state by caller
-        Object.freeze(state);
-        this.#state = state;
+    public abstract unlisten(listener: SignalListener<T>): void;
 
-        this.#announceChange(previous, state);
-    }
+    public abstract unlistenWeak(listener: SignalListener<T>): void;
 
-    #ensureInited(): void {
-        if (this.#state.mode === 'INITIALISING') {
-            this._init();
-        }
-    }
+    public abstract clearListeners(): void;
 
-    protected _init(): void {
-        throw new TypeError(
-            '_init not implemented, so the signal must be initialized at construction.',
-        );
-    }
-
-    protected _peeking(): void {
-        // If its a calculated signal that has been marked as dirty, this will be called at the end of the current batch
-    }
-
-    #announceChange(previous: SignalState<T>, next: SignalState<T>) {
-        // It is reasonably common that there might not be any listeners yet, e.g. during
-        // delayed initialisation of a DerivedSignal
-        if (!this.#listeners.any()) {
-            return;
-        }
-
-        if (dev.flag(debugStackTracesFlag)) {
-            const saved = develChangeAnnouncerStack;
-            develChangeAnnouncerStack = {
-                signal: this,
-                previous: develChangeAnnouncerStack,
-            };
-
-            const reverse = dev.monitorOperation(
-                'Signal change announcement',
-                1000,
-                () => this.#getPanicContent(),
-            );
-            try {
-                this.#listeners.announce(next, previous, this);
-            } finally {
-                reverse();
-                develChangeAnnouncerStack = saved;
-            }
-            return;
-        }
-
-        // Don't accidentally subscribe to signals used within listener callbacks, that would be dumb
-        // also prevents all kinds of cases that aren't allowed like updating a mutable signal within a recalculation
-        this.#listeners.announce(next, previous, this);
-    }
-
-    public listen(listener: SignalListener<T>): () => void {
-        this.#ensureInited();
-
-        this.#listeners.add(listener, true);
-
-        return () => {
-            this.unlisten(listener);
-        };
-    }
-
-    public listenWeak(listener: SignalListener<T>): () => void {
-        this.#ensureInited();
-
-        this.#listeners.add(listener, false);
-
-        return () => {
-            this.unlistenWeak(listener);
-        };
-    }
-
-    public unlisten(listener: SignalListener<T>): void {
-        this.#listeners.remove(listener, true);
-    }
-
-    public unlistenWeak(listener: SignalListener<T>): void {
-        this.#listeners.remove(listener, false);
-    }
-
-    public clearListeners(): void {
-        this.#listeners.clear();
-    }
-
-    #getPanicContent(): string {
-        const res: string[] = [];
-
-        let current = develChangeAnnouncerStack;
-        while (current) {
-            res.push(
-                current.signal.createdAtStack?.getNice() ?? '<not captured>',
-            );
-            current = current.previous;
-        }
-
-        return (
-            '╚══════════════════╣ Signal dependents took too long to run: ╠══════════════════════╗ \n' +
-            res.join(
-                '\n═══════════════════════════════════ TRIGGERED BY ═══════════════════════════════════ \n',
-            )
-        );
-    }
-
-    debugGetListenerTree(): DebugDependencyNode {
+    public debugGetListenerTree(): DebugDependencyNode {
         const dependents = this.#listeners
             .debugGetAllListeners()
             .map((child): DebugDependencyNode => {
@@ -221,7 +85,7 @@ export abstract class SignalBase<T> implements Signal<T> {
     /**
      * This is basically just convenience in your chrome developer console.
      */
-    debugLogListenerTree(): void {
+    public debugLogListenerTree(): void {
         const writeToConsole = (node: DebugDependencyNode) => {
             if (node.type === 'signal') {
                 console.group(`Signal ${node.signal.getDebugIdentity()}`);
@@ -250,7 +114,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         writeToConsole(node);
     }
 
-    identify(
+    public identify(
         name: string,
         sourceFile?: string,
         sourceMethod?: string,
@@ -265,18 +129,13 @@ export abstract class SignalBase<T> implements Signal<T> {
         return this;
     }
 
-    doNotIdentify(): this {
+    public doNotIdentify(): this {
         return this;
     }
 
-    getDebugIdentity() {
+    public getDebugIdentity() {
         return `[${this.name}: ${this.sourceMethod}, ${this.sourceFile} at ${this.sourceRow}:${this.sourceCol}]`;
     }
 
-    getDebugListenerInfo(): DebugListenerInfo {
-        return {
-            liveCount: this.#listeners.getLiveCount(),
-            getDetail: () => this.#listeners.getDebugDetail(),
-        };
-    }
+    public abstract getDebugListenerInfo(): DebugListenerInfo;
 }

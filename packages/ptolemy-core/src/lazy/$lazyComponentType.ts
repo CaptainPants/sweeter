@@ -3,7 +3,7 @@ import { getRuntime } from '../runtime/Runtime.js';
 import { $val } from '../signals/$val.js';
 import {
     type Component,
-    type PropsWithIntrinsicAttributesFor,
+    type PropsAndIntrinsicAttributesFor,
 } from '../types.js';
 
 import { $lazy } from './$lazy.js';
@@ -24,7 +24,7 @@ export function $lazyComponentType<TProps>(
             (LoadedComponent) => {
                 return getRuntime().jsx(
                     $val(LoadedComponent),
-                    props as PropsWithIntrinsicAttributesFor<Component<TProps>>,
+                    props as PropsAndIntrinsicAttributesFor<Component<TProps>>,
                 );
             },
         );

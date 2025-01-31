@@ -1,5 +1,5 @@
-import { $derived } from './$derived.js';
 import { announceSignalUsage } from './ambient.js';
+import { ConstantSignal } from './internal/Signal-implementations/ConstantSignal.js';
 import { isSignal } from './isSignal.js';
 import { type Signal, type UnsignalAll } from './types.js';
 
@@ -19,7 +19,7 @@ export function $val<T>(value: T | Signal<T>): T {
  * Use this in interfaces that require a signal, often with prop values passed via MightBeSignals.
  */
 export function $wrap<T>(value: T | Signal<T>): Signal<T> {
-    return isSignal(value) ? value : $derived(() => value);
+    return isSignal(value) ? value : new ConstantSignal(value);
 }
 
 /**

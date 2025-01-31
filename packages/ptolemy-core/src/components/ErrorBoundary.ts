@@ -1,30 +1,29 @@
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
-import { isSignal } from '../signals/isSignal.js';
-import { type Signal } from '../signals/types.js';
-import { type Component, type PropertiesMightBeSignals } from '../types.js';
+import { Signal } from '../signals/types.js';
+import { type Component } from '../types.js';
 import { flattenElements } from '../utility/flattenElements.js';
 
-export type ErrorBoundaryProps = PropertiesMightBeSignals<{
+export interface ErrorBoundaryProps {
     renderError: (error: unknown) => JSX.Element;
-}> & {
+
+    // TODO: I think the type of children should be Signal<JSX.Element> | TreatAsSignalOverride<() => JSX.Element, false>, but currently the result type from that is wrong
+
     /**
-     * We don't take a constant as that defeats the purpose of an ErrorBoundary, but it can be the result of a function call or a signal.
+     * Not that passing in a JSX.Element is probably a mistake as it won't act as if its in the ErrorBoundary. In these cases you probable want a $derived.
      *
      * Note that a function here will be wrapped in a $derived.
      */
-    children: (() => JSX.Element) | Signal<JSX.Element>;
-};
+    children: Signal<JSX.Element>;
+}
 
 export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
     renderError,
     children,
 }) => {
-    const childrenSignal = isSignal(children) ? children : $derived(children);
-
     // Calls .value on any signals, which should cause the catch to trigger
     const flattennedChildrenSignal = $derived(() => {
-        const flattened = flattenElements(childrenSignal);
+        const flattened = flattenElements(children.value);
         return flattened.value;
     });
 

@@ -3,7 +3,6 @@ import {
     $insertLocation,
     ComponentFaultContext,
     Context,
-    ContextSnapshot,
     dev,
     type PropsAndIntrinsicAttributesFor,
     type Signal,
@@ -16,8 +15,8 @@ import { type WebRuntime } from '../types.js';
 
 import { addJsxChildren } from './addJsxChildren.js';
 import { bindDOMMiscProps } from './bindDOMMiscProps.js';
-import { addMountedCallback } from './mounting.js';
 import { bindRef } from './bindRef.js';
+import { addMountedCallback } from './mounting.js';
 
 export function createDOMElement<TElementTypeString extends string>(
     type: TElementTypeString,

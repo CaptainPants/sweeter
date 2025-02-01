@@ -1,5 +1,5 @@
-import { SignalState } from '../../SignalState.js';
 import { announceSignalUsage } from '../../ambient.js';
+import { SignalState } from '../../SignalState.js';
 import { DebugListenerInfo, SignalListener } from '../../types.js';
 
 import { SignalBase } from './SignalBase.js';

@@ -1,6 +1,6 @@
-import { type Component } from '../types.js';
-import { isConstantSignal } from '../signals/isSignal.js';
 import { $derived } from '../signals/$derived.js';
+import { isConstantSignal } from '../signals/isSignal.js';
+import { type Component } from '../types.js';
 
 export interface WithIdProps {
     basis: string;

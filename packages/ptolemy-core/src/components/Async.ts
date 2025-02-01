@@ -1,12 +1,13 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
-import { $val, $wrap } from '../signals/$val.js';
+import { $val } from '../signals/$val.js';
 import { type Signal } from '../signals/types.js';
 import {
     type ComponentInit,
     type MightBeSignal,
     type PropsDef,
+    type PropsFor,
 } from '../types.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
@@ -124,8 +125,10 @@ export function $async<T>(
      */
     render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
 ): JSX.Element {
-    return getRuntime().jsx(Async<T>, {
-        loadData: $wrap(loadData),
-        children: $wrap(render),
-    });
+    const inputProps: PropsFor<typeof Async<T>> = {
+        loadData: loadData,
+        children: render,
+    };
+
+    return getRuntime().jsx(Async<T>, inputProps);
 }

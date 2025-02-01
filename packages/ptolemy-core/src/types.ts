@@ -99,10 +99,10 @@ export type Component<TProps = NoProps> = {
     (props: PropsDef<TProps>, init: ComponentInit): JSX.Element;
 };
 
-export type PropTreatment<TInput, TOutput> = {
-    readonly __INPUT__: TInput;
-    readonly __OUTPUT__: TOutput;
-    readonly __TREATMENT__: '__TREATMENT__';
+export type PropOverride<TInput, TOutput> = TOutput & {
+    readonly __PROP_TREATMENT__: {
+        input: TInput;
+    };
 };
 
 export type ComponentOrIntrinsicElementTypeConstraint =
@@ -118,47 +118,53 @@ export type JSXResultForComponentOrElementType<
     ? PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>[keyof PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>]
     : JSXElement;
 
-export type PropInput<Prop> =
-    IsAny<Prop> extends true
-        ? MightBeSignal<Prop>
-        : IsNever<Prop> extends true
-          ? MightBeSignal<never>
-          : [Prop] extends [PropTreatment<infer Input, infer _Output>]
-            ? Input
-            : MightBeSignal<Prop>;
+// The [] extends [] pattern and the _RemoveUndefined pattern is required because boolean becomes true | false at the drop of a hat
+// In an ideal world we might work out an alternative..
+type _RemoveUndefined<T> = Exclude<T, undefined>;
+
+export type PropInputFromDefinition<PropDefinition> =
+    IsAny<PropDefinition> extends true // Deal with any explicitly so it doesn't do anything weird
+        ? PropDefinition
+        : [_RemoveUndefined<PropDefinition>] extends [
+                PropOverride<infer Input, infer _Output>,
+            ] // If there was an override, use its input type
+          ? Input
+          : [_RemoveUndefined<PropDefinition>] extends [Signal<infer S>] // If it was a signal, allow either the signal or the signals value type
+            ? MightBeSignal<S>
+            : PropDefinition; // Otherwise just use as is
+
 export type PropDef<Prop> =
-    IsAny<Prop> extends true
+    IsAny<Prop> extends true // Deal with any explicitly so it doesn't do anything weird
         ? Signal<Prop>
-        : IsNever<Prop> extends true
+        : IsNever<Prop> extends true // never => Signal<never>, mostly so the empty JSX types on ptolemy-core work nicely
           ? Signal<never>
-          : [Prop] extends [PropTreatment<infer _Input, infer Output>]
-            ? Output
-            : Signal<Prop>;
+          : [Prop] extends [PropOverride<infer _Input, infer _Output>] // If its a PropOverride, keep it
+            ? Prop // Preserve the PropInput structure
+            : Signal<Prop>; // Otherwise make it a signal
 
 /**
  * The usage of a Props object, for creating the actual component.
  *
  * If the property is a signal, allow a non-signal and we'll wrap it
  */
-export type PropsInput<Props> = {
-    [Key in keyof Props]: PropInput<Props[Key]>;
+export type PropsInputFromDef<DefinedProps> = {
+    [Key in keyof DefinedProps]: PropInputFromDefinition<DefinedProps[Key]>;
 };
 
-/**
- * The definition of a Props object, for creating a component definition function.
- *
- * All properties should be signals, make them signals if not
- */
-export type PropsDef<Props> = {
-    [Key in keyof Props]: PropDef<Props[Key]>;
+export type PropsDef<DefinedProps> = {
+    [Key in keyof DefinedProps]: PropDef<DefinedProps[Key]>;
 };
 
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > =
-    ComponentOrIntrinsicElementTypeString extends Component<infer Props>
-        ? PropsInput<Props>
+    ComponentOrIntrinsicElementTypeString extends Component<
+        infer _PropsDefinition
+    >
+        ? PropsInputFromDef<
+              Parameters<ComponentOrIntrinsicElementTypeString>[0]
+          >
         : ComponentOrIntrinsicElementTypeString extends string
           ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
           : never;

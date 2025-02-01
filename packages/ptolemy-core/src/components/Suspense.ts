@@ -1,21 +1,13 @@
-import { Signal } from '../index.js';
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
-import { $val } from '../signals/$val.js';
-import { PropTreatment, type Component, MightBeSignal } from '../types.js';
+import { type Component } from '../types.js';
 import { $insertLocation } from '../utility/$insertLocation.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
 
 export interface SuspenseProps {
-    fallback: PropTreatment<
-        MightBeSignal<() => JSX.Element>,
-        Signal<() => JSX.Element>
-    >;
-    children: PropTreatment<
-        MightBeSignal<() => JSX.Element>,
-        Signal<() => JSX.Element>
-    >;
+    fallback: () => JSX.Element;
+    children: () => JSX.Element;
 }
 
 export const Suspense: Component<SuspenseProps> = (
@@ -56,7 +48,7 @@ export const Suspense: Component<SuspenseProps> = (
 
                 if (counter.value > 0) {
                     return [
-                        $val(fallback)(),
+                        fallback.value(),
                         runtime.renderOffscreen(evaluatedChildren),
                     ];
                 }

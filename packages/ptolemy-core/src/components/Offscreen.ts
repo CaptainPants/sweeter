@@ -1,12 +1,9 @@
 import { getRuntime } from '../runtime/Runtime.js';
-import {
-    type Component,
-    type MightBeSignal,
-} from '../types.js';
+import { type Component, type MightBeSignal } from '../types.js';
 
 export interface OffscreenProps {
     children?: JSX.Element;
-};
+}
 
 export const Offscreen: Component<OffscreenProps> = ({ children }, init) => {
     return init.runtime.renderOffscreen(children);

@@ -1,6 +1,7 @@
 import { type StackTrace } from '@serpentis/ptolemy-utilities';
 
 import {
+    constantSignalMarker,
     type signalMarker,
     type writableSignalMarker,
 } from './internal/markers.js';
@@ -121,6 +122,10 @@ export interface WritableSignal<T> extends SignalCommon<T> {
 
     // there is no way to mark this as write only, but logically it is
     value: T;
+}
+
+export interface ConstantSignal<T> extends Signal<T> {
+    readonly [constantSignalMarker]: true;
 }
 
 export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {

@@ -1,4 +1,8 @@
-import { IsNever, type UnionToIntersection } from '@serpentis/ptolemy-utilities';
+import {
+    IsAny,
+    IsNever,
+    type UnionToIntersection,
+} from '@serpentis/ptolemy-utilities';
 
 import { type Context } from './context/Context.js';
 import { type Runtime } from './runtime/Runtime.js';
@@ -96,14 +100,11 @@ export type Component<TProps = NoProps> = (
     init: ComponentInit,
 ) => JSX.Element;
 
-export type PropTreatment<T, Transform extends boolean | undefined> = { "__TRANSFORM__": Transform, raw: T };
-
-type HasUndefined<T> = true extends (T extends undefined ? true : false) ? true : false;
-
-export type FixOptionalPropTreatment<T> =
-    [undefined] extends [T] ? 
-        [T] extends [PropTreatment<infer S, infer U> | undefined] ? Exclude<T, PropTreatment<S, U> | undefined> | PropTreatment<S | undefined, U> : T
-    : T;
+export type PropTreatment<TInput, TOutput> = {
+    readonly __INPUT__: TInput;
+    readonly __OUTPUT__: TOutput;
+    readonly __TREATMENT__: '__TREATMENT__';
+};
 
 export type ComponentOrIntrinsicElementTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,37 +119,40 @@ export type JSXResultForComponentOrElementType<
     ? PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>[keyof PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>]
     : JSXElement;
 
-export type PropInput<Prop> = 
-    IsNever<Prop> extends true ? MightBeSignal<Prop>
-    : [FixOptionalPropTreatment<Prop>] extends [PropTreatment<infer S, false>] ? S // Is a signal, DO NOT transform
-    : [FixOptionalPropTreatment<Prop>] extends [PropTreatment<infer S, true>] ? MightBeSignal<S> // Is NOT a signal, DO transform
-    : [Prop] extends [Signal<infer _>] ? Prop  // Is a signal, DO NOT transform
-    : MightBeSignal<Prop>; // Otherwise not a signal, DO transform
+export type PropInput<Prop> =
+    IsAny<Prop> extends true
+        ? MightBeSignal<Prop>
+        : IsNever<Prop> extends true
+          ? MightBeSignal<never>
+          : [Prop] extends [PropTreatment<infer Input, infer _Output>]
+            ? Input
+            : MightBeSignal<Prop>;
+export type PropDef<Prop> =
+    IsAny<Prop> extends true
+        ? Signal<Prop>
+        : IsNever<Prop> extends true
+          ? Signal<never>
+          : [Prop] extends [PropTreatment<infer _Input, infer Output>]
+            ? Output
+            : Signal<Prop>;
 
 /**
  * The usage of a Props object, for creating the actual component.
- * 
+ *
  * If the property is a signal, allow a non-signal and we'll wrap it
  */
 export type PropsInput<Props> = {
-    [Key in keyof Props]: PropInput<Props[Key]>
-}
-
-export type PropDef<Prop> = 
-    IsNever<Prop> extends true ? Signal<Prop>
-    : [FixOptionalPropTreatment<Prop>] extends [PropTreatment<infer S, false>] ? S // Is a signal, DO NOT transform
-    : [FixOptionalPropTreatment<Prop>] extends [PropTreatment<infer S, true>] ? Signal<S> // Is NOT a signal, DO transform
-    : [Prop] extends [Signal<infer _>] ? Prop  // Is a signal, DO NOT transform
-    : Signal<Prop>; // Otherwise not a signal, DO transform
+    [Key in keyof Props]: PropInput<Props[Key]>;
+};
 
 /**
  * The definition of a Props object, for creating a component definition function.
- * 
+ *
  * All properties should be signals, make them signals if not
  */
 export type PropsDef<Props> = {
-    [Key in keyof Props]: PropDef<Props[Key]>
-}
+    [Key in keyof Props]: PropDef<Props[Key]>;
+};
 
 export type PropsFor<
     ComponentOrIntrinsicElementTypeString extends
@@ -161,7 +165,7 @@ export type PropsFor<
           : never;
 
 /**
- * 
+ *
  */
 export type PropsAndIntrinsicAttributesFor<
     ComponentOrIntrinsicElementTypeString extends

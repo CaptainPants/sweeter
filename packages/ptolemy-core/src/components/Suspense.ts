@@ -1,9 +1,7 @@
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
 import { $val } from '../signals/$val.js';
-import {
-    type Component,
-} from '../types.js';
+import { type Component } from '../types.js';
 import { $insertLocation } from '../utility/$insertLocation.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
@@ -11,7 +9,7 @@ import { SuspenseContext } from './SuspenseContext.js';
 export interface SuspenseProps {
     fallback: () => JSX.Element;
     children: () => JSX.Element;
-};
+}
 
 export const Suspense: Component<SuspenseProps> = (
     { fallback, children },

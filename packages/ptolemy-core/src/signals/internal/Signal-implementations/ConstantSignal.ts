@@ -1,7 +1,7 @@
-import { SignalState } from "../../SignalState.js";
-import { DebugListenerInfo, SignalListener } from "../../types.js";
+import { SignalState } from '../../SignalState.js';
+import { DebugListenerInfo, SignalListener } from '../../types.js';
 
-import { SignalBase } from "./SignalBase.js";
+import { SignalBase } from './SignalBase.js';
 
 /**
  * Optimised implementation of Signal for wrapping a constant.
@@ -20,20 +20,24 @@ export class ConstantSignal<T> extends SignalBase<T> {
         return this.#value;
     }
 
-    get inited(): boolean { return true; }
-    get failed(): boolean { return false; }
-    
+    get inited(): boolean {
+        return true;
+    }
+    get failed(): boolean {
+        return false;
+    }
+
     public override peek(): T {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
     public override peekState(_ensureInit?: boolean): SignalState<T> {
         if (!this.#stateCache) {
             this.#stateCache = Object.freeze({
-                mode: 'SUCCESS', 
-                value: this.#value
+                mode: 'SUCCESS',
+                value: this.#value,
             });
         }
-        
+
         return this.#stateCache;
     }
 
@@ -45,24 +49,18 @@ export class ConstantSignal<T> extends SignalBase<T> {
         return nothing;
     }
 
-    public override unlisten(_listener: SignalListener<T>): void {
-    }
+    public override unlisten(_listener: SignalListener<T>): void {}
 
-    public override unlistenWeak(_listener: SignalListener<T>): void {
-    }
+    public override unlistenWeak(_listener: SignalListener<T>): void {}
 
-    public override clearListeners(): void {
-    }
+    public override clearListeners(): void {}
 
     public override getDebugListenerInfo(): DebugListenerInfo {
         return {
             liveCount: 0,
-            getDetail: () => "== NO LISTENERS THIS SIGNAL IS A CONSTANT =="
+            getDetail: () => '== NO LISTENERS THIS SIGNAL IS A CONSTANT ==',
         };
     }
-
 }
 
-function nothing () {
-
-}
+function nothing() {}

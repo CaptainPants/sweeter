@@ -8,7 +8,7 @@ import {
 export interface PortalProps {
     target: RuntimeRootHostElement;
     children?: JSX.Element;
-};
+}
 
 export const Portal: Component<PortalProps> = ({ target, children }, init) => {
     const runtime = init.runtime;

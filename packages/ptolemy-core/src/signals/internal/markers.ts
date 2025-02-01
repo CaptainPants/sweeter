@@ -2,3 +2,4 @@
 // is a signal from another library.
 export const signalMarker = '__SIGNAL__';
 export const writableSignalMarker = '__WRITABLE_SIGNAL__';
+export const constantSignalMarker = '__CONSTANT_SIGNAL__';

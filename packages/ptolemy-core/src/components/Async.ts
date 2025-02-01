@@ -19,7 +19,7 @@ export interface AsyncProps<T> {
      * @returns
      */
     children: (data: Signal<T>) => JSX.Element;
-};
+}
 
 export function Async<T>(
     props: PropsDef<AsyncProps<T>>,
@@ -29,7 +29,6 @@ export function Async<T>(
     { loadData: callback, children }: PropsDef<AsyncProps<T>>,
     init: ComponentInit,
 ): JSX.Element {
-    
     const suspenseContext = SuspenseContext.getCurrent();
 
     const data = $mutable<
@@ -125,5 +124,8 @@ export function $async<T>(
      */
     render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
 ): JSX.Element {
-    return getRuntime().jsx(Async<T>, { loadData: $wrap(loadData), children: $wrap(render) });
+    return getRuntime().jsx(Async<T>, {
+        loadData: $wrap(loadData),
+        children: $wrap(render),
+    });
 }

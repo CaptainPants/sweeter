@@ -1,16 +1,22 @@
+import { $derived, Signal, isConstantSignal } from '../index.js';
 import { type Component, PropTreatment } from '../types.js';
 
 export interface WithIdProps {
-    basis: PropTreatment<string, false>;
+    basis: string;
 
-    children: PropTreatment<(id: string) => JSX.Element, false>;
+    children: (id: string) => JSX.Element;
 }
 
 export const WithId: Component<WithIdProps> = (
     { basis, children },
     init,
 ): JSX.Element => {
-    const id = init.idGenerator.next(basis);
+    const id = init.idGenerator.next(basis.peek());
 
-    return children(id);
+    // Shortcut to avoid a calculated signal
+    if (isConstantSignal(children)) {
+        return children.peek()(id);
+    }
+
+    return $derived(() => children.value(id));
 };

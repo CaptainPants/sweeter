@@ -171,7 +171,7 @@ export abstract class NormalSignalBase<T> extends SignalBase<T> {
             )
         );
     }
-    
+
     public override getDebugListenerInfo(): DebugListenerInfo {
         return {
             liveCount: this.#listeners.getLiveCount(),

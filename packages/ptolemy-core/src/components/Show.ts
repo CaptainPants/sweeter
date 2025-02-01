@@ -1,10 +1,7 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
-import {
-    type Component,
-    type MightBeSignal,
-} from '../types.js';
+import { type Component, type MightBeSignal } from '../types.js';
 
 export interface ShowProps {
     /**
@@ -26,7 +23,7 @@ export interface ShowProps {
      * This is invoked inside a $derived.
      */
     otherwise?: (() => JSX.Element) | undefined;
-};
+}
 
 /**
  * Dynamic component - display children when condition is true.

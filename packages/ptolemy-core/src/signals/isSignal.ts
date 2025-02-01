@@ -1,4 +1,9 @@
-import { signalMarker, writableSignalMarker } from './internal/markers.js';
+import { ConstantSignal } from './internal/Signal-implementations/ConstantSignal.js';
+import {
+    constantSignalMarker,
+    signalMarker,
+    writableSignalMarker,
+} from './internal/markers.js';
 import {
     type ReadWriteSignal,
     type Signal,
@@ -30,5 +35,16 @@ export function isReadWriteSignal(
         !!value[signalMarker] &&
         writableSignalMarker in value &&
         !!value[writableSignalMarker]
+    );
+}
+
+export function isConstantSignal(
+    value: unknown,
+): value is ConstantSignal<unknown> {
+    return (
+        !!value &&
+        typeof value === 'object' &&
+        signalMarker in value &&
+        constantSignalMarker in value
     );
 }

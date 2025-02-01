@@ -44,20 +44,24 @@ export function createDOMElement<TElementTypeString extends string>(
         const contextSnapshot = Context.createSnapshot();
 
         // This has to be before bindDOMMiscProps as value for HTMLSelectElement is dependent on the child element 'option's
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- We seem to just be choking the lint rule
         addJsxChildren(contextSnapshot, ele, props.children, webRuntime);
 
         // Assign attributes and set up signals
         bindDOMMiscProps(ele, props, webRuntime);
 
         if (props.ref) {
-            bindRef(ele, props.ref);
+            bindRef(ele, props.ref); // TODO: the typing on ref is not correct
         }
 
         if (props.class) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- We seem to just be choking the lint rule
             bindDOMClassProp(contextSnapshot, ele, props.class, webRuntime);
         }
 
         if (props.style) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- We seem to just be choking the lint rule
             bindDOMStyleProp(ele, props.style);
         }
 

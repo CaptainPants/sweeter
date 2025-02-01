@@ -1,7 +1,7 @@
 import { type DerivationCallback } from '../../$derived.js';
 import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
 import { DerivedSignalOptions, type ReadWriteSignal } from '../../types.js';
-import { writableSignalMarker } from '../markers.js';
+import { PTOLEMY_IS_WRITABLE_SIGNAL } from '../markers.js';
 
 import { DerivedSignal } from './DerivedSignal.js';
 
@@ -21,7 +21,7 @@ export class MutableDerivedSignal<T>
 
     #mutate: (value: T) => void;
 
-    public get [writableSignalMarker]() {
+    public get [PTOLEMY_IS_WRITABLE_SIGNAL]() {
         return true as const;
     }
 

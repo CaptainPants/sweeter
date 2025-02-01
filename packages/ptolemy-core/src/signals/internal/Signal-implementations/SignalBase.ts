@@ -8,7 +8,7 @@ import {
     type Signal,
     type SignalListener,
 } from '../../types.js';
-import { signalMarker } from '../markers.js';
+import { PTOLEMY_IS_SIGNAL } from '../markers.js';
 import { SignalChangeListenerSet } from '../SignalChangeListenerSet.js';
 
 import { nextId } from './nextId.js';
@@ -24,7 +24,7 @@ export abstract class SignalBase<T> implements Signal<T> {
 
     #listeners = new SignalChangeListenerSet<T>();
 
-    public get [signalMarker]() {
+    public get [PTOLEMY_IS_SIGNAL]() {
         return true as const;
     }
 

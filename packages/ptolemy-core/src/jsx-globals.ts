@@ -16,6 +16,11 @@ declare global {
             children: {}; // specify children name to use
         }
 
+        // This is not documented, but looks like it should work from the typescript source-code
+        // The constructor signature and first parameter is passed in.
+        // Refer to https://github.com/microsoft/TypeScript 739d729ecce60771c23723aad932ab35a34df82d src/checker.ts function createTypeChecker -> getJsxPropsTypeFromCallSignature
+        type LibraryManagedAttributes<Ctor, RawProps> = types.PropsInput<RawProps>
+
         /**
          * Extended by declaration merging into IntrinsicElementNames.
          */

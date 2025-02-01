@@ -76,7 +76,7 @@ export interface SignalCommon<T> {
     /**
      * Globally unique id of signal, used only for debugging.
      */
-    readonly id: number;
+    readonly debugId: number;
 
     /**
      * If enabled, this will contain a stack trace created in the constructor of the signature, allowing

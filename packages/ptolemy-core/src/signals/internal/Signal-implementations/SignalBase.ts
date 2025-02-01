@@ -28,7 +28,7 @@ export abstract class SignalBase<T> implements Signal<T> {
         return true as const;
     }
 
-    public readonly id: number = nextId();
+    public readonly debugId: number = nextId();
 
     public name?: string | undefined;
     public sourceFile?: string | undefined;

@@ -97,8 +97,6 @@ export type NoProps = {};
 
 export type Component<TProps = NoProps> = {
     (props: PropsDef<TProps>, init: ComponentInit): JSX.Element;
-
-    props?: TProps;
 };
 
 export type PropTreatment<TInput, TOutput> = {

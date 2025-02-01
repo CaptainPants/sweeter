@@ -18,13 +18,13 @@ const Component1: Component<Component1Props> = (props, _init) => {
     return $async(
         (_abort) => {
             return new Promise<string>((resolve) => {
-                props.dataLoadComplete.addEventListener('abort', () => {
+                props.dataLoadComplete.peek().addEventListener('abort', () => {
                     resolve('RESOLVED!');
                 });
             });
         },
         (asyncInitializerResult) => {
-            props.rendered.abort();
+            props.rendered.peek().abort();
             return <div>RESULT: {$val(asyncInitializerResult)}</div>;
         },
     );

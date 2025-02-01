@@ -1,4 +1,4 @@
-import { SignalBase } from './internal/Signal-implementations/SignalBase.js';
+import { NormalSignalBase } from './internal/Signal-implementations/NormalSignalBase.js';
 import { type InitiatedSignalState, type SignalState } from './SignalState.js';
 import { type Signal } from './types.js';
 
@@ -42,7 +42,7 @@ export class SignalController<T> {
 /** Private protocol for communicating from controller to signal */
 const notifySymbol: unique symbol = Symbol('Update');
 
-class ControlledSignal<T> extends SignalBase<T> {
+class ControlledSignal<T> extends NormalSignalBase<T> {
     constructor(owner: SignalController<T>, initialState: SignalState<T>) {
         super(initialState);
 

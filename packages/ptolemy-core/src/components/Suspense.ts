@@ -1,14 +1,21 @@
+import { Signal } from '../index.js';
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
 import { $val } from '../signals/$val.js';
-import { type Component } from '../types.js';
+import { PropTreatment, type Component, MightBeSignal } from '../types.js';
 import { $insertLocation } from '../utility/$insertLocation.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
 
 export interface SuspenseProps {
-    fallback: () => JSX.Element;
-    children: () => JSX.Element;
+    fallback: PropTreatment<
+        MightBeSignal<() => JSX.Element>,
+        Signal<() => JSX.Element>
+    >;
+    children: PropTreatment<
+        MightBeSignal<() => JSX.Element>,
+        Signal<() => JSX.Element>
+    >;
 }
 
 export const Suspense: Component<SuspenseProps> = (
@@ -39,11 +46,9 @@ export const Suspense: Component<SuspenseProps> = (
         },
         $insertLocation(),
         () => {
-            const evaluatedChildren = $derived(() => {
-                return $val(children)();
-            });
-
             const suspenseCalculation = (): JSX.Element => {
+                const evaluatedChildren = children.value();
+
                 // Important to always call the children callback
                 // as it will control the visibility of the fallback
                 // must be a callback (called within a calc that
@@ -52,11 +57,11 @@ export const Suspense: Component<SuspenseProps> = (
                 if (counter.value > 0) {
                     return [
                         $val(fallback)(),
-                        runtime.renderOffscreen(evaluatedChildren.value),
+                        runtime.renderOffscreen(evaluatedChildren),
                     ];
                 }
 
-                return evaluatedChildren.value;
+                return evaluatedChildren;
             };
 
             // calc captures the ambient executionContext

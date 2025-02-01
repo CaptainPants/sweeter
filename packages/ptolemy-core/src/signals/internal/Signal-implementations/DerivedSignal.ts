@@ -18,9 +18,9 @@ import {
 } from '../../types.js';
 import { type SignalChangeListenerSetCallback } from '../SignalChangeListenerSet.js';
 
-import { SignalBase } from './SignalBase.js';
+import { NormalSignalBase } from './NormalSignalBase.js';
 
-export class DerivedSignal<T> extends SignalBase<T> {
+export class DerivedSignal<T> extends NormalSignalBase<T> {
     constructor(
         calculation: DerivationCallback<T>,
         options?: DerivedSignalOptions,

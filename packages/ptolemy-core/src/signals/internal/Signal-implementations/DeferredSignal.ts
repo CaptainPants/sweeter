@@ -1,9 +1,8 @@
 import { deferForBatchEnd, isBatching } from '../../batching.js';
 import { type CallbackDelayedRunner, type Signal } from '../../types.js';
+import { NormalSignalBase } from './NormalSignalBase.js';
 
-import { SignalBase } from './SignalBase.js';
-
-export class DeferredSignal<T> extends SignalBase<T> {
+export class DeferredSignal<T> extends NormalSignalBase<T> {
     constructor(
         inner: Signal<T>,
         later: CallbackDelayedRunner = queueMicrotask,

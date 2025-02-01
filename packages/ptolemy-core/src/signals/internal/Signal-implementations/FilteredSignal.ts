@@ -3,10 +3,9 @@ import {
     type Signal,
     SignalUpdateValuesAreEqualCallback,
 } from '../../types.js';
+import { NormalSignalBase } from './NormalSignalBase.js';
 
-import { SignalBase } from './SignalBase.js';
-
-export class FilteredSignal<T> extends SignalBase<T> {
+export class FilteredSignal<T> extends NormalSignalBase<T> {
     constructor(
         inner: Signal<T>,
         equals: SignalUpdateValuesAreEqualCallback<T>,

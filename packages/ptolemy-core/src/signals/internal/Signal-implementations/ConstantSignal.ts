@@ -1,4 +1,5 @@
 import { SignalState } from '../../SignalState.js';
+import { announceSignalUsage } from '../../ambient.js';
 import { DebugListenerInfo, SignalListener } from '../../types.js';
 
 import { SignalBase } from './SignalBase.js';
@@ -17,6 +18,7 @@ export class ConstantSignal<T> extends SignalBase<T> {
     }
 
     get value(): T {
+        announceSignalUsage(this);
         return this.#value;
     }
 
@@ -28,8 +30,9 @@ export class ConstantSignal<T> extends SignalBase<T> {
     }
 
     public override peek(): T {
-        throw new Error('Method not implemented.');
+        return this.#value;
     }
+
     public override peekState(_ensureInit?: boolean): SignalState<T> {
         if (!this.#stateCache) {
             this.#stateCache = Object.freeze({

@@ -95,10 +95,9 @@ export interface ComponentInit {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- utility to represent that a component has no props
 export type NoProps = {};
 
-export type Component<TProps = NoProps> = (
-    props: PropsDef<TProps>,
-    init: ComponentInit,
-) => JSX.Element;
+export type Component<TProps = NoProps> = {
+    (props: PropsDef<TProps>, init: ComponentInit): JSX.Element;
+};
 
 export type PropTreatment<TInput, TOutput> = {
     readonly __INPUT__: TInput;

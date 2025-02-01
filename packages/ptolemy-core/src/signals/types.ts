@@ -1,7 +1,7 @@
 import { type StackTrace } from '@serpentis/ptolemy-utilities';
 
 import {
-    constantSignalMarker,
+    type constantSignalMarker,
     type signalMarker,
     type writableSignalMarker,
 } from './internal/markers.js';

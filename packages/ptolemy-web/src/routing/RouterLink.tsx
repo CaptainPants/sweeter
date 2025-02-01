@@ -1,23 +1,24 @@
 /* @jsxImportSource .. */
 
 import {
-    $peek,
     type Component,
-    type IntrinsicElementAttributes,
-    type PropertiesMightBeSignals,
+    type IntrinsicRawElementAttributes,
 } from '@serpentis/ptolemy-core';
 
 import { type TypedEvent } from '../IntrinsicAttributes.js';
 
 import { NavigateHook } from './NavigateHook.js';
 
-export type RouterLinkProps = PropertiesMightBeSignals<{
+export interface RouterLinkProps {
     href?: string | undefined;
-}> &
-    Omit<IntrinsicElementAttributes<'a'>, 'href'>;
+
+    onClick?: (evt: TypedEvent<HTMLAnchorElement, MouseEvent>) => void;
+
+    passthrough?: Omit<IntrinsicRawElementAttributes<'a'>, 'href'>;
+}
 
 export const RouterLink: Component<RouterLinkProps> = (
-    { href, onclick: onclickProp, ...rest },
+    { href, onClick: onClickProp, passthrough },
     init,
 ) => {
     const { navigate } = init.hook(NavigateHook);
@@ -30,15 +31,15 @@ export const RouterLink: Component<RouterLinkProps> = (
             // Left mouse button
             evt.preventDefault(); // Preventes normal browser navigation
 
-            const hrefResolved = $peek(href);
+            const hrefResolved = href?.peek();
             if (hrefResolved) {
                 navigate(hrefResolved);
             }
             return;
         }
-
-        onclickProp?.call(this, evt);
+        
+        onClickProp?.value?.call(this, evt);
     }
 
-    return <a href={href} onclick={onClick} {...rest} />;
+    return <a href={href} onclick={onClick} {...passthrough} />;
 };

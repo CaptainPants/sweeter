@@ -7,7 +7,7 @@ import {
     Context,
     type IdGenerator,
     initializeHook,
-    type PropsWithIntrinsicAttributesFor,
+    type PropsAndIntrinsicAttributesFor,
     type Signal,
     SignalState,
     subscribeToChanges,
@@ -174,7 +174,7 @@ export function createComponentInstance<
     TComponentType extends ComponentTypeConstraint,
 >(
     Component: TComponentType,
-    props: PropsWithIntrinsicAttributesFor<TComponentType>,
+    props: PropsAndIntrinsicAttributesFor<TComponentType>,
     webRuntime: WebRuntime,
 ): Signal<JSX.Element> {
     const resultController = $controller<JSX.Element>();

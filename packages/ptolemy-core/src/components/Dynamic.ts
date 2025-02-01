@@ -3,7 +3,7 @@ import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
 import { PropsDef } from '../types.js';
 
-export interface DynamicProps<T extends number> {
+export interface DynamicProps<T> {
     value: T;
     /**
      * This is called inside a $derived, so 1) you cannot directly mutate signals in the children callback unless you use untrack, and 2) any signals used will be subscribed to.
@@ -18,7 +18,7 @@ export interface DynamicProps<T extends number> {
  * @param props
  * @returns
  */
-export function Dynamic<T extends number>(
+export function Dynamic<T>(
     props: PropsDef<DynamicProps<T>>,
 ): JSX.Element;
 export function Dynamic<T extends number>({

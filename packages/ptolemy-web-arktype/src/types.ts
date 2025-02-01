@@ -5,10 +5,9 @@ import {
 } from '@serpentis/ptolemy-arktype-modeling';
 import {
     type Component,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 
-export type EditorLikeProps = PropertiesMightBeSignals<{
+export interface EditorLikeProps {
     id?: string | undefined;
     model: UnknownModel;
     replace: UnknownReplacer;
@@ -18,25 +17,25 @@ export type EditorLikeProps = PropertiesMightBeSignals<{
 
     idPath: string | undefined;
     local?: LocalValueCallback | undefined;
-}>;
+}
 
 export type EditorSettings = Readonly<Record<string, unknown>>;
 
 export type RenderNextFunction = (props: RenderNextFunctionArgs) => JSX.Element;
 
 export type EditorCommonProps = EditorLikeProps &
-    PropertiesMightBeSignals<{
+    {
         settings: EditorSettings;
-    }>;
+    };
 
 export interface RenderNextFunctionArgs extends EditorCommonProps {
     key?: string;
 }
 
 export type EditorProps = EditorCommonProps &
-    PropertiesMightBeSignals<{
+    {
         next: RenderNextFunction;
-    }>;
+    };
 
 export type EditorHostProps = EditorLikeProps;
 
@@ -45,7 +44,7 @@ export type EditorComponentType = Component<EditorProps>;
 /**
  * Abstraction around different modal implementations
  */
-export type ModalProps = PropertiesMightBeSignals<{
+export type ModalProps = {
     onClose: () => void;
 
     commitEnabled?: boolean;
@@ -55,7 +54,7 @@ export type ModalProps = PropertiesMightBeSignals<{
     children?: JSX.Element | undefined;
 
     isOpen: boolean;
-}>;
+};
 
 export type ModalComponentType = Component<ModalProps>;
 

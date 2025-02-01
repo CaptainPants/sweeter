@@ -2,10 +2,7 @@ import Sortable from 'sortablejs';
 
 import {
     $derived,
-    $peek,
-    $val,
     type Component,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
 import {
@@ -13,13 +10,13 @@ import {
     type ElementCssStyles,
 } from '@serpentis/ptolemy-web';
 
-export type SortableListProps = PropertiesMightBeSignals<{
+export interface SortableListProps {
     class?: ElementCssClasses;
     style?: ElementCssStyles;
     children?: JSX.Element;
     useHandle?: boolean;
     onSortEnd?: (fromIndex: number, toIndex: number) => void;
-}>;
+};
 
 const handleSelector = '[data-is-knob]';
 
@@ -28,7 +25,7 @@ export const SortableList: Component<SortableListProps> = (
     init,
 ) => {
     const style = $derived<ElementCssStyles>(() => {
-        const result = { ...$val(styleProp) };
+        const result = { ...styleProp?.value };
 
         result.position = 'relative';
 
@@ -61,7 +58,7 @@ export const SortableList: Component<SortableListProps> = (
                     );
                 }
 
-                $peek(onSortEnd)?.(evt.oldIndex, evt.newIndex);
+                onSortEnd?.peek()?.(evt.oldIndex, evt.newIndex);
             },
         });
 

@@ -3,7 +3,6 @@ import {
     $val,
     type Component,
     type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -14,7 +13,7 @@ import { combineStyles } from '../../internal/combineStyles.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type LabelProps = PropertiesMightBeSignals<{
+export type LabelProps = {
     children?: JSX.Element | undefined;
 
     disabled?: boolean | undefined;
@@ -25,7 +24,7 @@ export type LabelProps = PropertiesMightBeSignals<{
 
     class?: ElementCssClasses | undefined;
     style?: ElementCssStyles | undefined;
-}> & {
+} & {
     passthroughProps?: IntrinsicElementProps<'label'> | undefined;
 };
 
@@ -33,7 +32,7 @@ export const Label: Component<LabelProps> = ({
     children,
     id,
     for: forProp,
-    disabled = false,
+    disabled,
     fillWidth,
     class: classProp,
     style,
@@ -48,8 +47,8 @@ export const Label: Component<LabelProps> = ({
         const result: ElementCssClasses = [];
 
         applyStandardClasses(result, {
-            disabled: $val(disabled),
-            fillWidth: $val(fillWidth),
+            disabled: disabled?.value ?? false,
+            fillWidth: fillWidth?.value ?? false,
         });
 
         return result;

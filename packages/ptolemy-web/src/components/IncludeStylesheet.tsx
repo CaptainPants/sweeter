@@ -5,7 +5,6 @@ import {
     $val,
     type Component,
     type MightBeSignal,
-    type PropertiesMightBeSignals,
     type Signal,
 } from '@serpentis/ptolemy-core';
 import { arrayExcept } from '@serpentis/ptolemy-utilities';
@@ -16,9 +15,9 @@ import {
     type StylesheetInclude,
 } from '../styles/index.js';
 
-export type IncludeStylesheetProps = PropertiesMightBeSignals<{
+export interface IncludeStylesheetProps {
     stylesheet: StylesheetInclude;
-}>;
+};
 
 export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
     { stylesheet },

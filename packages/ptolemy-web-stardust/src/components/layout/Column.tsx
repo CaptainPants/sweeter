@@ -3,7 +3,6 @@ import {
     $val,
     type Component,
     type IntrinsicElementAttributes,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
 import {
@@ -15,7 +14,7 @@ import { columnWidthToIdentifier } from '../../stylesheets/columnWidthToIdentifi
 import { columns } from '../../stylesheets/grid.js';
 import { type ColumnWidth } from '../../types.js';
 
-export type ColumnProps = PropertiesMightBeSignals<{
+export interface ColumnProps {
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
@@ -28,7 +27,7 @@ export type ColumnProps = PropertiesMightBeSignals<{
     md?: ColumnWidth | undefined;
     lg?: ColumnWidth | undefined;
     xl?: ColumnWidth | undefined;
-}> & {
+
     passthrough?: IntrinsicElementAttributes<'div'>;
 };
 

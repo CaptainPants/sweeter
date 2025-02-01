@@ -6,16 +6,15 @@ import {
     Async,
     type Component,
     type Lazy,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 
 import { type StylesheetInclude } from '../styles/index.js';
 
 import { IncludeStylesheet } from './IncludeStylesheet.js';
 
-export type IncludeStylesheetAsyncProps = PropertiesMightBeSignals<{
+export interface IncludeStylesheetAsyncProps {
     stylesheet: Lazy<StylesheetInclude>;
-}>;
+}
 
 export const IncludeStylesheetAsync: Component<IncludeStylesheetAsyncProps> = ({
     stylesheet,

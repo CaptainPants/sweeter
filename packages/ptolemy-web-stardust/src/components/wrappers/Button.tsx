@@ -3,7 +3,6 @@ import {
     $val,
     type Component,
     type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -17,7 +16,7 @@ import { type VariantName } from '../../internal/constants.js';
 import { button } from '../../stylesheets/button.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type ButtonProps = PropertiesMightBeSignals<{
+export type ButtonProps = {
     children?: JSX.Element | undefined;
 
     variant?: VariantName | undefined;
@@ -33,7 +32,7 @@ export type ButtonProps = PropertiesMightBeSignals<{
     onclick?:
         | ((evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void)
         | undefined;
-}> & {
+
     passthroughProps?: IntrinsicElementProps<'button'> | undefined;
 };
 

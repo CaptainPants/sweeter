@@ -3,7 +3,6 @@ import {
     $val,
     type Component,
     type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -19,7 +18,7 @@ import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type CheckBoxProps = PropertiesMightBeSignals<{
+export type CheckBoxProps = {
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     readOnly?: boolean | undefined;
@@ -36,7 +35,7 @@ export type CheckBoxProps = PropertiesMightBeSignals<{
     style?: ElementCssStyles | undefined;
 
     onInput?: ((evt: TypedEvent<HTMLInputElement, Event>) => void) | undefined;
-}> & {
+
     'bind:checked'?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 
     passthroughProps?: IntrinsicElementProps<'input'> | undefined;

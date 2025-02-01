@@ -4,7 +4,7 @@ import {
     ComponentFaultContext,
     Context,
     dev,
-    type PropsWithIntrinsicAttributesFor,
+    type PropsAndIntrinsicAttributesFor,
     type Signal,
     SignalState,
 } from '@serpentis/ptolemy-core';
@@ -19,7 +19,7 @@ import { addMountedCallback } from './mounting.js';
 
 export function createDOMElement<TElementTypeString extends string>(
     type: TElementTypeString,
-    props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
+    props: PropsAndIntrinsicAttributesFor<TElementTypeString>,
     webRuntime: WebRuntime,
 ): Signal<HTMLElement | SVGElement> {
     const resultController = $controller<HTMLElement | SVGElement>();

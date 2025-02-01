@@ -2,7 +2,6 @@ import {
     $derived,
     $val,
     Component,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -11,13 +10,13 @@ import {
 
 import { box } from '../../stylesheets/box.js';
 
-export type BoxProps = PropertiesMightBeSignals<{
+export interface BoxProps {
     level?: number | undefined;
     children?: JSX.Element | undefined;
 
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
-}>;
+}
 
 export const Box: Component<BoxProps> = ({
     children,
@@ -26,7 +25,7 @@ export const Box: Component<BoxProps> = ({
     style,
 }) => {
     const className = $derived(() => {
-        const resolvedLevel = $val(level);
+        const resolvedLevel = level?.value;
 
         if (
             resolvedLevel === undefined ||

@@ -6,9 +6,7 @@ See [here](docs/index.md) for more documentation.
 
 An example component that shows a few assorted functions:
 ```tsx
-// PropertiesMightBeSignals<T> enables all the properties in the provided type to either be a constant OR a signal
-// we then use $val or $peek to access those values within the component.
-export type ExampleProps = PropertiesMightBeSignals<{
+export interface ExampleProps {
     // In the type ExampleProps this will be `url: string | Signal<string>`
     url: string;
 }>;
@@ -43,9 +41,9 @@ const Example: Component<ExampleProps> = ({ url }, init) => {
     // The AbortSignal parameter is provided by the AsyncRunnerHook to allow it to cancel execution
     // in progress.
     const asyncAction = async (signal: AbortSignal): Promise<void> => {
-        // $peek reads a signal/constant without subscribing to changes, useful 
+        // .peek() reads a signal/constant without subscribing to changes, useful 
         // when reading the current state of a signal within a callback
-        const data = await fetch($peek(url), { signal: abort });
+        const data = await fetch(url.peek(), { signal: abort });
 
         // Assign value to the signal
         serverValue.value = data;

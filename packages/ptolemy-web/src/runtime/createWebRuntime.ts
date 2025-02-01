@@ -8,7 +8,7 @@ import {
     type JSXMiddleware,
     type JSXMiddlewareCallback,
     type JSXResultForComponentOrElementType,
-    type PropsWithIntrinsicAttributesFor,
+    type PropsAndIntrinsicAttributesFor,
     type Runtime,
     type RuntimeRootHostElement,
     type Signal,
@@ -131,7 +131,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
     jsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
         type: TComponentType,
-        props: PropsWithIntrinsicAttributesFor<TComponentType>,
+        props: PropsAndIntrinsicAttributesFor<TComponentType>,
     ): JSXResultForComponentOrElementType<TComponentType> {
         return this.#jsxWithMiddleware(
             type,
@@ -141,7 +141,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
     #endJsx<TComponentType extends ComponentOrIntrinsicElementTypeConstraint>(
         type: TComponentType,
-        props: PropsWithIntrinsicAttributesFor<TComponentType>,
+        props: PropsAndIntrinsicAttributesFor<TComponentType>,
     ): JSXResultForComponentOrElementType<TComponentType> {
         // Its reasonably certain that people will trigger side effects when wiring up a component
         // and that these might update signals. We also don't want to accidentally subscribe to these
@@ -157,7 +157,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
                     // intrinsic
                     const element = createDOMElement(
                         type,
-                        props as PropsWithIntrinsicAttributesFor<
+                        props as PropsAndIntrinsicAttributesFor<
                             TComponentType & string
                         >,
                         this,

@@ -1,6 +1,6 @@
 import {
     listenWhileNotCollected,
-    type PropsWithIntrinsicAttributesFor,
+    type PropsAndIntrinsicAttributesFor,
     SignalState,
 } from '@serpentis/ptolemy-core';
 import { isReadWriteSignal, isSignal } from '@serpentis/ptolemy-core';
@@ -67,7 +67,7 @@ const specialHandlingProps = ['children', 'ref', 'class', 'style'];
 
 export function bindDOMMiscProps<TElementType extends string>(
     node: SVGElement | HTMLElement,
-    props: PropsWithIntrinsicAttributesFor<TElementType>,
+    props: PropsAndIntrinsicAttributesFor<TElementType>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     webRuntime: WebRuntime,
 ): void {

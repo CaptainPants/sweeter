@@ -1,9 +1,9 @@
 import {
     $derived,
     $val,
+    PropOverride,
     type Component,
     type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -23,7 +23,7 @@ export interface SelectOption {
     disabled?: boolean;
 }
 
-export type SelectProps = PropertiesMightBeSignals<{
+export type SelectProps = {
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     fillWidth?: boolean | undefined;
@@ -41,8 +41,8 @@ export type SelectProps = PropertiesMightBeSignals<{
     options: SelectOption[];
 
     onInput?: ((evt: TypedEvent<HTMLSelectElement, Event>) => void) | undefined;
-}> & {
-    'bind:value'?: ReadWriteSignal<string> | undefined;
+
+    'bind:value'?: PropOverride<ReadWriteSignal<string> | undefined, ReadWriteSignal<string> | undefined>;
 
     passthrough?: IntrinsicElementProps<'select'> | undefined;
 };

@@ -3,7 +3,6 @@ import {
     type Component,
     type IntrinsicElementAttributes,
     isSignal,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -18,7 +17,7 @@ import {
     type BreakpointSizeName,
 } from '../../stylesheets/internal/constants.js';
 
-export type ContainerProps = PropertiesMightBeSignals<{
+export interface ContainerProps{
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
@@ -27,9 +26,9 @@ export type ContainerProps = PropertiesMightBeSignals<{
 
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
-}> & {
+
     passthrough?: IntrinsicElementAttributes<'div'>;
-};
+}
 
 export const Container: Component<ContainerProps> = ({
     id,

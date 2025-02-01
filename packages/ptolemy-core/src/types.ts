@@ -155,7 +155,7 @@ export type PropsDef<DefinedProps> = {
     [Key in keyof DefinedProps]: PropDef<DefinedProps[Key]>;
 };
 
-export type PropsFor<
+export type PropsInputFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > =
@@ -175,13 +175,13 @@ export type PropsFor<
 export type PropsAndIntrinsicAttributesFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = PropsFor<ComponentOrIntrinsicElementTypeString> & JSX.IntrinsicAttributes;
+> = PropsInputFor<ComponentOrIntrinsicElementTypeString> & JSX.IntrinsicAttributes;
 
 export type ChildrenTypeFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > =
-    PropsFor<ComponentOrIntrinsicElementTypeString> extends {
+    PropsInputFor<ComponentOrIntrinsicElementTypeString> extends {
         children: infer Children;
     }
         ? Children
@@ -200,7 +200,7 @@ export type PropertiesMightBeSignals<TProps> = {
 /**
  * Extended by declaration merging into IntrinsicElementNames and IntrinsicElementAttributeParts.
  */
-export type IntrinsicElementAttributes<TElementTypeString extends string> =
+export type IntrinsicRawElementAttributes<TElementTypeString extends string> =
     JSXIntrinsicAttributes &
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
         UnionToIntersection<
@@ -210,7 +210,7 @@ export type IntrinsicElementAttributes<TElementTypeString extends string> =
 /**
  * Extended by declaration merging into RuntimeRootHostElementTypes.
  */
-export type IntrinsicElementDoNotSignalifyAttributes<
+export type IntrinsicElementSkipSignalifyingAttributes<
     TElementTypeString extends string,
 > =
     PtolemyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>[keyof PtolemyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>];
@@ -221,17 +221,17 @@ export type IntrinsicElementDoNotSignalifyAttributes<
 export type IntrinsicElementProps<TElementTypeString extends string> =
     PropertiesMightBeSignals<
         Omit<
-            IntrinsicElementAttributes<TElementTypeString>,
+            IntrinsicRawElementAttributes<TElementTypeString>,
             // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString> &
-                keyof IntrinsicElementAttributes<TElementTypeString>
+            IntrinsicElementSkipSignalifyingAttributes<TElementTypeString> &
+                keyof IntrinsicRawElementAttributes<TElementTypeString>
         >
     > &
         Pick<
-            IntrinsicElementAttributes<TElementTypeString>,
+            IntrinsicRawElementAttributes<TElementTypeString>,
             // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-            IntrinsicElementDoNotSignalifyAttributes<TElementTypeString> &
-                keyof IntrinsicElementAttributes<TElementTypeString>
+            IntrinsicElementSkipSignalifyingAttributes<TElementTypeString> &
+                keyof IntrinsicRawElementAttributes<TElementTypeString>
         >;
 
 /**

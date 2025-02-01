@@ -5,14 +5,11 @@ import {
     type TypeMatcherRule,
 } from '@serpentis/ptolemy-arktype-modeling';
 import {
-    $constant,
     $derived,
-    $peek,
     $val,
     $valProperties,
     Component,
     type ComponentInit,
-    isSignal,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
 
@@ -57,24 +54,17 @@ function createRenderFunction(
 /**
  * Renders an editor for a model within another editor.
  */
-export function EditorHost(
-    props: EditorHostProps,
+export const EditorHost: Component<EditorHostProps> = (
+    { model, local: localProp, ...passThroughToRenderProps },
     init: ComponentInit,
-): JSX.Element;
-export function EditorHost(
-    { model, local: localProp, ...passThroughToRenderProps }: EditorHostProps,
-    init: ComponentInit,
-): JSX.Element {
+) => {
     const { rules, settings } = init.getContext(EditorRootContext);
 
-    if (!isSignal(model)) {
-        model = $constant(model);
-    }
     const modelType = $derived(() => {
-        return $val(model).type;
+        return model.value.type;
     });
     const parentInfo = $derived(() => {
-        return $val(model).parentInfo;
+        return model.value.parentInfo;
     });
 
     const calculateLocal = (
@@ -82,14 +72,14 @@ export function EditorHost(
         context: ContextualValueCalculationContext,
     ) => {
         // Look at the model, and then the parent's property model (which is passed via the localProp)
-        const found = $val(modelType)
+        const found = modelType.value
             .annotations()
             ?.getAssociatedValue(name, model, context);
         if (found !== notFound) {
             return found;
         }
 
-        const localPropResolved = $peek(localProp);
+        const localPropResolved = localProp?.peek();
         if (!localPropResolved) {
             return notFound;
         }

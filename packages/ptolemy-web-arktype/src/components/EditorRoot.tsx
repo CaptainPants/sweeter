@@ -11,7 +11,6 @@ import {
     $derived,
     $insertLocation,
     $val,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { Button, Modal } from '@serpentis/ptolemy-web-stardust';
 
@@ -26,7 +25,7 @@ import { AmbientValues } from './AmbientValues.js';
 import { EditorHost } from './EditorHost.js';
 
 export type EditorRootProps<TSchema extends AnyTypeConstraint> =
-    PropertiesMightBeSignals<{
+    {
         id?: string | undefined;
         model: Model<TSchema>;
         replace: Replacer<TSchema>;
@@ -37,7 +36,7 @@ export type EditorRootProps<TSchema extends AnyTypeConstraint> =
         getAmbientValue?: (name: string) => unknown;
 
         rules?: Array<TypeMatcherRule<EditorComponentType>>;
-    }>;
+    };
 
 /**
  * Constant default settings so that the default value doesn't cause constant re-renders from updating the context value.

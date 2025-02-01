@@ -7,7 +7,7 @@ import {
     type ComponentInit,
     type MightBeSignal,
     type PropsDef,
-    type PropsFor,
+    type PropsInputFor,
 } from '../types.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
@@ -125,7 +125,7 @@ export function $async<T>(
      */
     render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
 ): JSX.Element {
-    const inputProps: PropsFor<typeof Async<T>> = {
+    const inputProps: PropsInputFor<typeof Async<T>> = {
         loadData: loadData,
         children: render,
     };

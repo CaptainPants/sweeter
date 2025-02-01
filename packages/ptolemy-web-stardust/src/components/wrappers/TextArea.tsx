@@ -1,8 +1,7 @@
-import { $derived, $val } from '@serpentis/ptolemy-core';
+import { $derived, PropOverride } from '@serpentis/ptolemy-core';
 import {
     type Component,
     type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -17,7 +16,7 @@ import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type TextAreaProps = PropertiesMightBeSignals<{
+export interface TextAreaProps {
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     readOnly?: boolean | undefined;
@@ -37,8 +36,8 @@ export type TextAreaProps = PropertiesMightBeSignals<{
     onInput?:
         | ((evt: TypedEvent<HTMLTextAreaElement, Event>) => void)
         | undefined;
-}> & {
-    'bind:value'?: ReadWriteSignal<string> | undefined;
+
+    'bind:value'?: PropOverride<ReadWriteSignal<string> | undefined, ReadWriteSignal<string> | undefined>;
 
     passthroughProps?: IntrinsicElementProps<'textarea'> | undefined;
 };
@@ -75,7 +74,7 @@ export const TextArea: Component<TextAreaProps> = ({
                 fillWidth: $val(fillWidth),
                 invalid: $val(invalid),
             },
-            $val(variant),
+            variant?.value,
         );
 
         return result;

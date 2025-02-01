@@ -1,7 +1,6 @@
 import {
     type Component,
     type IntrinsicElementAttributes,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -10,14 +9,14 @@ import {
 
 import { row } from '../../stylesheets/grid.js';
 
-export type RowProps = PropertiesMightBeSignals<{
+export type RowProps = {
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
 
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
-}> & {
+} & {
     passthrough?: IntrinsicElementAttributes<'div'>;
 };
 

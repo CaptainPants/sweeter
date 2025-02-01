@@ -1,9 +1,9 @@
-import { ConstantSignal } from './internal/Signal-implementations/ConstantSignal.js';
 import {
     constantSignalMarker,
     signalMarker,
     writableSignalMarker,
 } from './internal/markers.js';
+import { ConstantSignal } from './internal/Signal-implementations/ConstantSignal.js';
 import {
     type ReadWriteSignal,
     type Signal,

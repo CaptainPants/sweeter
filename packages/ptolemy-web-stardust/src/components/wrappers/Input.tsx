@@ -3,7 +3,6 @@ import {
     $val,
     type Component,
     type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -19,7 +18,7 @@ import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type InputProps = PropertiesMightBeSignals<{
+export type InputProps = {
     type?: InputType | undefined;
 
     variant?: VariantName | undefined;
@@ -39,7 +38,7 @@ export type InputProps = PropertiesMightBeSignals<{
     style?: ElementCssStyles | undefined;
 
     onInput?: ((evt: TypedEvent<HTMLInputElement, Event>) => void) | undefined;
-}> & {
+} & {
     'bind:value'?: ReadWriteSignal<string> | undefined;
 
     passthroughProps?: IntrinsicElementProps<'input'> | undefined;

@@ -7,6 +7,7 @@ import {
     createMiddlewarePipeline,
     type JSXMiddleware,
     type JSXMiddlewareCallback,
+    JSXMiddlewareUnknownProps,
     type JSXResultForComponentOrElementType,
     type PropsAndIntrinsicAttributesFor,
     type Runtime,
@@ -135,7 +136,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     ): JSXResultForComponentOrElementType<TComponentType> {
         return this.#jsxWithMiddleware(
             type,
-            props,
+            props as JSXMiddlewareUnknownProps,
         ) as JSXResultForComponentOrElementType<TComponentType>;
     }
 

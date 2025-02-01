@@ -2,7 +2,7 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementProps,
+    type IntrinsicElementPropsInput,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -33,7 +33,7 @@ export type ButtonProps = {
         | ((evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void)
         | undefined;
 
-    passthroughProps?: IntrinsicElementProps<'button'> | undefined;
+    passthroughProps?: IntrinsicElementPropsInput<'button'> | undefined;
 };
 
 export const Button: Component<ButtonProps> = ({

@@ -11,7 +11,7 @@ import { type Theme } from './types.js';
 export interface ThemeProviderProps {
     theme: Theme;
     children?: () => JSX.Element;
-};
+}
 
 export const ThemeProvider: Component<ThemeProviderProps> = ({
     theme,

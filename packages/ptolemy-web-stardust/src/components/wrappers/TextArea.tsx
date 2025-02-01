@@ -1,7 +1,7 @@
 import { $derived, PropOverride } from '@serpentis/ptolemy-core';
 import {
     type Component,
-    type IntrinsicElementProps,
+    type IntrinsicElementPropsInput,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -37,10 +37,13 @@ export interface TextAreaProps {
         | ((evt: TypedEvent<HTMLTextAreaElement, Event>) => void)
         | undefined;
 
-    'bind:value'?: PropOverride<ReadWriteSignal<string> | undefined, ReadWriteSignal<string> | undefined>;
+    'bind:value'?: PropOverride<
+        ReadWriteSignal<string> | undefined,
+        ReadWriteSignal<string> | undefined
+    >;
 
-    passthroughProps?: IntrinsicElementProps<'textarea'> | undefined;
-};
+    passthroughProps?: IntrinsicElementPropsInput<'textarea'> | undefined;
+}
 
 export const TextArea: Component<TextAreaProps> = ({
     variant,

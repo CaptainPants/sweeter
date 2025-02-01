@@ -17,7 +17,7 @@ import {
 
 export interface IncludeStylesheetProps {
     stylesheet: StylesheetInclude;
-};
+}
 
 export const IncludeStylesheet: Component<IncludeStylesheetProps> = (
     { stylesheet },

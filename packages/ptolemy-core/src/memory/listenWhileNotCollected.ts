@@ -16,7 +16,7 @@ import { Signal } from '../signals/types.js';
 export function listenWhileNotCollected<TElement extends object, T>(
     lifetimeElement: TElement,
     signal: Signal<T>,
-    callback: (state: SignalState<T>) => void,
+    callback: (state: SignalState<T>, previousState: SignalState<T>) => void,
 ) {
     // Need to keep alive signal and onChange as long as lifetimeElement
     // stays alive. When parentNode is garbage collected we no longer care

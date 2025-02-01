@@ -18,9 +18,7 @@ export interface DynamicProps<T> {
  * @param props
  * @returns
  */
-export function Dynamic<T>(
-    props: PropsDef<DynamicProps<T>>,
-): JSX.Element;
+export function Dynamic<T>(props: PropsDef<DynamicProps<T>>): JSX.Element;
 export function Dynamic<T extends number>({
     children,
     value: valueSignal,

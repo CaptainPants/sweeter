@@ -2,7 +2,7 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementProps,
+    type IntrinsicElementPropsInput,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -25,7 +25,7 @@ export type LabelProps = {
     class?: ElementCssClasses | undefined;
     style?: ElementCssStyles | undefined;
 } & {
-    passthroughProps?: IntrinsicElementProps<'label'> | undefined;
+    passthroughProps?: IntrinsicElementPropsInput<'label'> | undefined;
 };
 
 export const Label: Component<LabelProps> = ({

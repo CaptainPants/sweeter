@@ -210,7 +210,3 @@ export type ElementAttributes<TElement extends Element> =
         AllElementAttributes<TElement>;
 
 export type NonSpecificElementAttributes = ElementAttributes<Element>;
-
-export type WebSkipSignalifyingIntrinsicElementAttributes<
-    _TElementTypeString extends string,
-> = 'ref' | 'class' | `bind:${string}`;

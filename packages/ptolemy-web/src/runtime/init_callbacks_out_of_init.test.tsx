@@ -13,9 +13,9 @@ interface CallerProps {
 const Caller: Component<CallerProps> = ({ callback, handleError }, init) => {
     queueMicrotask(() => {
         try {
-            callback(init);
+            callback.peek()(init);
         } catch (ex) {
-            handleError(ex);
+            handleError.peek()(ex);
         }
     });
 

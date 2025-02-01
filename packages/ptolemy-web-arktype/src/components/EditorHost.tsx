@@ -135,4 +135,4 @@ export const EditorHost: Component<EditorHostProps> = (
             </AmbientValues>
         );
     });
-}
+};

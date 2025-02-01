@@ -1,8 +1,4 @@
-import {
-    $derived,
-    $val,
-    Component,
-} from '@serpentis/ptolemy-core';
+import { $derived, $val, Component } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
     type ElementCssStyles,

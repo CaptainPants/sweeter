@@ -7,11 +7,7 @@ import {
     type TypeMatcherRule,
     type UnknownReplacer,
 } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $insertLocation,
-    $val,
-} from '@serpentis/ptolemy-core';
+import { $derived, $insertLocation, $val } from '@serpentis/ptolemy-core';
 import { Button, Modal } from '@serpentis/ptolemy-web-stardust';
 
 import {
@@ -24,19 +20,18 @@ import { type EditorComponentType, type EditorSettings } from '../types.js';
 import { AmbientValues } from './AmbientValues.js';
 import { EditorHost } from './EditorHost.js';
 
-export type EditorRootProps<TSchema extends AnyTypeConstraint> =
-    {
-        id?: string | undefined;
-        model: Model<TSchema>;
-        replace: Replacer<TSchema>;
-        settings?: EditorSettings;
+export type EditorRootProps<TSchema extends AnyTypeConstraint> = {
+    id?: string | undefined;
+    model: Model<TSchema>;
+    replace: Replacer<TSchema>;
+    settings?: EditorSettings;
 
-        idPath?: string;
+    idPath?: string;
 
-        getAmbientValue?: (name: string) => unknown;
+    getAmbientValue?: (name: string) => unknown;
 
-        rules?: Array<TypeMatcherRule<EditorComponentType>>;
-    };
+    rules?: Array<TypeMatcherRule<EditorComponentType>>;
+};
 
 /**
  * Constant default settings so that the default value doesn't cause constant re-renders from updating the context value.

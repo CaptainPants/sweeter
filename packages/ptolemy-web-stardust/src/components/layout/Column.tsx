@@ -2,7 +2,11 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementAttributes,
+    IntrinsicRawElementAttributes,
+    PropertiesAreSignals,
+    PropertiesMightBeSignals,
+    PropOverride,
+    wrapPropertiesAreSignals,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
 import {
@@ -13,6 +17,11 @@ import {
 import { columnWidthToIdentifier } from '../../stylesheets/columnWidthToIdentifier.js';
 import { columns } from '../../stylesheets/grid.js';
 import { type ColumnWidth } from '../../types.js';
+
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'div'>,
+    'class'
+>;
 
 export interface ColumnProps {
     id?: string | undefined;
@@ -28,8 +37,11 @@ export interface ColumnProps {
     lg?: ColumnWidth | undefined;
     xl?: ColumnWidth | undefined;
 
-    passthrough?: IntrinsicElementAttributes<'div'>;
-};
+    passthrough?: PropOverride<
+        PropertiesMightBeSignals<OverridableHtmlAttributes>,
+        PropertiesAreSignals<OverridableHtmlAttributes>
+    >;
+}
 
 const mappedClasses = [
     columns.xs,
@@ -49,7 +61,7 @@ export const Column: Component<ColumnProps> = ({
     xl,
     style,
     class: classProp,
-    passthrough: { class: classFromPassthroughProps, ...passthroughProps } = {},
+    passthrough,
 }) => {
     const classesFromProps = $derived(() => {
         const result: ElementCssClasses[] = [];
@@ -72,14 +84,27 @@ export const Column: Component<ColumnProps> = ({
         return result;
     });
 
+    const props: PropertiesAreSignals<IntrinsicRawElementAttributes<'div'>> = {
+        ...passthrough,
+    };
+
     return (
         <div
             id={id}
-            class={[classesFromProps, classFromPassthroughProps, classProp]}
+            class={[classesFromProps, classProp]}
             style={style}
-            {...passthroughProps}
+            {...props}
         >
             {children}
         </div>
     );
+};
+Column.propMapping = {
+    passthrough: (input) => {
+        const typed = input as PropertiesMightBeSignals<
+            IntrinsicRawElementAttributes<'div'>
+        >;
+        const res = wrapPropertiesAreSignals(typed);
+        return res;
+    },
 };

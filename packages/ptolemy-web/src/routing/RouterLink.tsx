@@ -3,6 +3,10 @@
 import {
     type Component,
     type IntrinsicRawElementAttributes,
+    type PropertiesAreSignals,
+    PropertiesMightBeSignals,
+    type PropOverride,
+    wrapPropertiesAreSignals,
 } from '@serpentis/ptolemy-core';
 
 import { type TypedEvent } from '../IntrinsicAttributes.js';
@@ -14,7 +18,10 @@ export interface RouterLinkProps {
 
     onClick?: (evt: TypedEvent<HTMLAnchorElement, MouseEvent>) => void;
 
-    passthrough?: Omit<IntrinsicRawElementAttributes<'a'>, 'href'>;
+    passthrough?: PropOverride<
+        PropertiesAreSignals<Omit<IntrinsicRawElementAttributes<'a'>, 'href'>>,
+        Omit<IntrinsicRawElementAttributes<'a'>, 'href'>
+    >;
 }
 
 export const RouterLink: Component<RouterLinkProps> = (
@@ -37,9 +44,17 @@ export const RouterLink: Component<RouterLinkProps> = (
             }
             return;
         }
-        
+
         onClickProp?.value?.call(this, evt);
     }
 
     return <a href={href} onclick={onClick} {...passthrough} />;
+};
+RouterLink.propMapping = {
+    passthrough: (input) =>
+        wrapPropertiesAreSignals(
+            input as PropertiesMightBeSignals<
+                IntrinsicRawElementAttributes<'a'>
+            >,
+        ),
 };

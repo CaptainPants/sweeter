@@ -14,7 +14,7 @@ import { getWebRuntime } from '../runtime/getWebRuntime.js';
 
 export interface CommentProps {
     content?: string | undefined;
-};
+}
 
 export const Comment: Component<CommentProps> = ({ content }, init) => {
     const comment = getWebRuntime().createComment();

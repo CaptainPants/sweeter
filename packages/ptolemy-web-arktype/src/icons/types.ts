@@ -11,7 +11,7 @@ export interface IconProps {
     hoverable?: boolean | undefined;
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
-};
+}
 
 export interface IconSet {
     readonly Child: Component<IconProps>;

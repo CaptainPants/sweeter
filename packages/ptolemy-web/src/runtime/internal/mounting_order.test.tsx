@@ -1,8 +1,6 @@
 /* @jsxImportSource ../.. */
 
-import {
-    type ComponentInit,
-} from '@serpentis/ptolemy-core';
+import { type ComponentInit } from '@serpentis/ptolemy-core';
 import { $val } from '@serpentis/ptolemy-core';
 
 import { testRender } from '../../test/testRender.js';
@@ -12,7 +10,7 @@ interface TestingComponentWithChildrenProps {
     children?: JSX.Element;
     onMount: (num: number) => void;
     onUnMount: (num: number) => void;
-};
+}
 
 function TestingComponentWithChildren(
     props: TestingComponentWithChildrenProps,

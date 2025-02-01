@@ -17,7 +17,7 @@ import {
     type BreakpointSizeName,
 } from '../../stylesheets/internal/constants.js';
 
-export interface ContainerProps{
+export interface ContainerProps {
     id?: string | undefined;
 
     children?: JSX.Element | undefined;

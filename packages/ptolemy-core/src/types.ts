@@ -6,7 +6,11 @@ import {
 
 import { type Context } from './context/Context.js';
 import { type Runtime } from './runtime/Runtime.js';
-import { type Signal, type UnsignalAll } from './signals/types.js';
+import {
+    type Signal,
+    type UnsignalAll,
+    type WritableSignal,
+} from './signals/types.js';
 
 export type JSXKey = string | number;
 
@@ -18,12 +22,11 @@ export type JSXElement =
 export type JSXIntrinsicElements = {
     // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     [Key in PtolemyExtensionPoints.IntrinsicElementNames[keyof PtolemyExtensionPoints.IntrinsicElementNames] &
-        string]: IntrinsicElementProps<Key>;
+        string]: IntrinsicElementPropsInput<Key>;
 };
 
-export interface JSXIntrinsicAttributes {
-    readonly key?: JSXKey | undefined;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface JSXAllElementAttributes {}
 
 export type HookFactory<TArgs extends readonly unknown[], TResult> = (
     setup: ComponentInit,
@@ -97,6 +100,10 @@ export type NoProps = {};
 
 export type Component<TProps = NoProps> = {
     (props: PropsDef<TProps>, init: ComponentInit): JSX.Element;
+
+    propMapping?: Partial<
+        Record<keyof TProps, false | ((raw: unknown) => unknown)>
+    >;
 };
 
 export type PropOverride<TInput, TOutput> = TOutput & {
@@ -138,7 +145,9 @@ export type PropDef<Prop> =
         ? Signal<Prop>
         : IsNever<Prop> extends true // never => Signal<never>, mostly so the empty JSX types on ptolemy-core work nicely
           ? Signal<never>
-          : [Prop] extends [PropOverride<infer _Input, infer _Output>] // If its a PropOverride, keep it
+          : [_RemoveUndefined<Prop>] extends [
+                  PropOverride<infer _Input, infer _Output>,
+              ] // If its a PropOverride, keep it
             ? Prop // Preserve the PropInput structure
             : Signal<Prop>; // Otherwise make it a signal
 
@@ -166,7 +175,7 @@ export type PropsInputFor<
               Parameters<ComponentOrIntrinsicElementTypeString>[0]
           >
         : ComponentOrIntrinsicElementTypeString extends string
-          ? IntrinsicElementProps<ComponentOrIntrinsicElementTypeString>
+          ? IntrinsicElementPropsInput<ComponentOrIntrinsicElementTypeString>
           : never;
 
 /**
@@ -175,7 +184,8 @@ export type PropsInputFor<
 export type PropsAndIntrinsicAttributesFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> = PropsInputFor<ComponentOrIntrinsicElementTypeString> & JSX.IntrinsicAttributes;
+> = PropsInputFor<ComponentOrIntrinsicElementTypeString> &
+    JSX.IntrinsicAttributes;
 
 export type ChildrenTypeFor<
     ComponentOrIntrinsicElementTypeString extends
@@ -196,43 +206,53 @@ export type MightBeSignal<T> = T | Signal<T>;
 export type PropertiesMightBeSignals<TProps> = {
     [Key in keyof TProps]: Signal<TProps[Key]> | TProps[Key];
 };
+export type PropertiesAreSignals<TProps> = {
+    [Key in keyof TProps]: Signal<TProps[Key]>;
+};
 
 /**
  * Extended by declaration merging into IntrinsicElementNames and IntrinsicElementAttributeParts.
  */
 export type IntrinsicRawElementAttributes<TElementTypeString extends string> =
-    JSXIntrinsicAttributes &
+    JSXAllElementAttributes &
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
         UnionToIntersection<
             PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
-        >;
+        > & { children?: JSXElement };
 
-/**
- * Extended by declaration merging into RuntimeRootHostElementTypes.
- */
-export type IntrinsicElementSkipSignalifyingAttributes<
-    TElementTypeString extends string,
-> =
-    PtolemyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>[keyof PtolemyExtensionPoints.SkipSignalifyingIntrinsicElementAttributes<TElementTypeString>];
+type _BindPrefixedKeys<T> = keyof T extends `bind:${infer _S}`
+    ? keyof T
+    : never;
+type _NonBindKeys<T> = Exclude<keyof T, _BindPrefixedKeys<T>>;
+type _BindProperties<T> = {
+    [Key in keyof _BindPrefixedKeys<T>]: WritableSignal<
+        _BindPrefixedKeys<T>[Key]
+    >;
+};
 
 /**
  * Props for intrinsic elements, based on the type string.
  */
-export type IntrinsicElementProps<TElementTypeString extends string> =
+export type IntrinsicElementPropsInput<TElementTypeString extends string> =
     PropertiesMightBeSignals<
-        Omit<
-            IntrinsicRawElementAttributes<TElementTypeString>,
-            // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-            IntrinsicElementSkipSignalifyingAttributes<TElementTypeString> &
-                keyof IntrinsicRawElementAttributes<TElementTypeString>
-        >
-    > &
         Pick<
             IntrinsicRawElementAttributes<TElementTypeString>,
-            // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-            IntrinsicElementSkipSignalifyingAttributes<TElementTypeString> &
-                keyof IntrinsicRawElementAttributes<TElementTypeString>
-        >;
+            _NonBindKeys<IntrinsicRawElementAttributes<TElementTypeString>>
+        >
+    > &
+        _BindProperties<IntrinsicRawElementAttributes<TElementTypeString>>;
+
+/**
+ * Props for intrinsic elements, based on the type string.
+ */
+export type IntrinsicElementPropsDef<TElementTypeString extends string> =
+    PropertiesAreSignals<
+        Omit<
+            IntrinsicRawElementAttributes<TElementTypeString>,
+            _NonBindKeys<IntrinsicRawElementAttributes<TElementTypeString>>
+        >
+    > &
+        _BindProperties<IntrinsicRawElementAttributes<TElementTypeString>>;
 
 /**
  * Extended by declaration merging into RuntimeRootHostElementTypes.

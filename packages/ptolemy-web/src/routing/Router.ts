@@ -42,4 +42,4 @@ export const Router: Component<RouterProps> = (
 
         return fallback?.value?.();
     });
-}
+};

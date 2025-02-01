@@ -1,7 +1,4 @@
-import {
-    type ElementAttributesByName,
-    type WebSkipSignalifyingIntrinsicElementAttributes,
-} from './IntrinsicAttributes.js';
+import { type ElementAttributesByName } from './IntrinsicAttributes.js';
 import { type IntrinsicElementTypeMap } from './IntrinsicElementTypeMap.js';
 
 declare global {
@@ -33,12 +30,6 @@ declare global {
 
         interface RuntimeRootHostElementTypes {
             'wireui-web': HTMLElement | SVGElement;
-        }
-
-        interface SkipSignalifyingIntrinsicElementAttributes<
-            TElementTypeString extends string,
-        > {
-            'wireui-web': WebSkipSignalifyingIntrinsicElementAttributes<TElementTypeString>;
         }
     }
 }

@@ -2,7 +2,7 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementProps,
+    type IntrinsicElementPropsInput,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -38,7 +38,7 @@ export type CheckBoxProps = {
 
     'bind:checked'?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 
-    passthroughProps?: IntrinsicElementProps<'input'> | undefined;
+    passthroughProps?: IntrinsicElementPropsInput<'input'> | undefined;
 };
 
 export const CheckBox: Component<CheckBoxProps> = ({

@@ -1,9 +1,6 @@
 import Sortable from 'sortablejs';
 
-import {
-    $derived,
-    type Component,
-} from '@serpentis/ptolemy-core';
+import { $derived, type Component } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
 import {
     type ElementCssClasses,
@@ -16,7 +13,7 @@ export interface SortableListProps {
     children?: JSX.Element;
     useHandle?: boolean;
     onSortEnd?: (fromIndex: number, toIndex: number) => void;
-};
+}
 
 const handleSelector = '[data-is-knob]';
 

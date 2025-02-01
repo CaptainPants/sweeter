@@ -42,18 +42,6 @@ declare global {
         interface IntrinsicElementNames {}
 
         /**
-         * Use this to extend IntrinsicElementDoNotSignalifyAttributes.
-         *
-         * Merge into this interface using properties with structure:
-         * '{library-name}': 'attribute-1' | 'attribute-2'
-         */
-        // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-        interface SkipSignalifyingIntrinsicElementAttributes<
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            TElementTypeString extends string,
-        > {}
-
-        /**
          * Use this to add to the IntrinsicElements union.
          *
          * Merge into this interface using properties with structure:

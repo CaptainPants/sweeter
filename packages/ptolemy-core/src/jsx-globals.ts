@@ -6,7 +6,7 @@ declare global {
         /**
          * Props that apply to all elements.
          */
-        type IntrinsicAttributes = types.JSXIntrinsicAttributes;
+        type IntrinsicAttributes = types.JSXAllElementAttributes;
 
         /**
          * This tells typescript what property to use for children.

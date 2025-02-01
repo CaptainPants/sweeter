@@ -3,7 +3,7 @@ import {
     $val,
     PropOverride,
     type Component,
-    type IntrinsicElementProps,
+    type IntrinsicElementPropsInput,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -42,9 +42,12 @@ export type SelectProps = {
 
     onInput?: ((evt: TypedEvent<HTMLSelectElement, Event>) => void) | undefined;
 
-    'bind:value'?: PropOverride<ReadWriteSignal<string> | undefined, ReadWriteSignal<string> | undefined>;
+    'bind:value'?: PropOverride<
+        ReadWriteSignal<string> | undefined,
+        ReadWriteSignal<string> | undefined
+    >;
 
-    passthrough?: IntrinsicElementProps<'select'> | undefined;
+    passthrough?: IntrinsicElementPropsInput<'select'> | undefined;
 };
 
 export const Select: Component<SelectProps> = ({

@@ -106,7 +106,7 @@ export type Component<TProps = NoProps> = {
     >;
 };
 
-export type PropOverride<TInput, TOutput> = TOutput & {
+export type Prop<TInput, TOutput> = TOutput & {
     readonly __PROP_TREATMENT__: {
         input: TInput;
     };
@@ -133,23 +133,23 @@ export type PropInputFromDefinition<PropDefinition> =
     IsAny<PropDefinition> extends true // Deal with any explicitly so it doesn't do anything weird
         ? PropDefinition
         : [_RemoveUndefined<PropDefinition>] extends [
-                PropOverride<infer Input, infer _Output>,
+                Prop<infer Input, infer _Output>,
             ] // If there was an override, use its input type
           ? Input
           : [_RemoveUndefined<PropDefinition>] extends [Signal<infer S>] // If it was a signal, allow either the signal or the signals value type
             ? MightBeSignal<S>
             : PropDefinition; // Otherwise just use as is
 
-export type PropDef<Prop> =
-    IsAny<Prop> extends true // Deal with any explicitly so it doesn't do anything weird
-        ? Signal<Prop>
-        : IsNever<Prop> extends true // never => Signal<never>, mostly so the empty JSX types on ptolemy-core work nicely
+export type PropDef<TProp> =
+    IsAny<TProp> extends true // Deal with any explicitly so it doesn't do anything weird
+        ? Signal<TProp>
+        : IsNever<TProp> extends true // never => Signal<never>, mostly so the empty JSX types on ptolemy-core work nicely
           ? Signal<never>
-          : [_RemoveUndefined<Prop>] extends [
-                  PropOverride<infer _Input, infer _Output>,
-              ] // If its a PropOverride, keep it
-            ? Prop // Preserve the PropInput structure
-            : Signal<Prop>; // Otherwise make it a signal
+          : [_RemoveUndefined<TProp>] extends [
+                  Prop<infer _Input, infer _Output>,
+              ] // If its a Prop, keep it
+            ? TProp // Preserve the PropInput structure
+            : Signal<TProp>; // Otherwise make it a signal
 
 /**
  * The usage of a Props object, for creating the actual component.

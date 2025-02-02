@@ -1,4 +1,4 @@
-import { $derived, PropOverride } from '@serpentis/ptolemy-core';
+import { $derived, Prop } from '@serpentis/ptolemy-core';
 import {
     type Component,
     type IntrinsicElementPropsInput,
@@ -37,7 +37,7 @@ export interface TextAreaProps {
         | ((evt: TypedEvent<HTMLTextAreaElement, Event>) => void)
         | undefined;
 
-    'bind:value'?: PropOverride<
+    'bind:value'?: Prop<
         ReadWriteSignal<string> | undefined,
         ReadWriteSignal<string> | undefined
     >;

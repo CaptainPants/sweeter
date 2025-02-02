@@ -5,7 +5,7 @@ import {
     type IntrinsicRawElementAttributes,
     type PropertiesAreSignals,
     PropertiesMightBeSignals,
-    type PropOverride,
+    type Prop,
     wrapPropertiesAreSignals,
 } from '@serpentis/ptolemy-core';
 
@@ -18,7 +18,7 @@ export interface RouterLinkProps {
 
     onClick?: (evt: TypedEvent<HTMLAnchorElement, MouseEvent>) => void;
 
-    passthrough?: PropOverride<
+    passthrough?: Prop<
         PropertiesAreSignals<Omit<IntrinsicRawElementAttributes<'a'>, 'href'>>,
         Omit<IntrinsicRawElementAttributes<'a'>, 'href'>
     >;

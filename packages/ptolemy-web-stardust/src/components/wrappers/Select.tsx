@@ -1,7 +1,7 @@
 import {
     $derived,
     $val,
-    PropOverride,
+    Prop,
     type Component,
     type IntrinsicElementPropsInput,
     type ReadWriteSignal,
@@ -42,7 +42,7 @@ export type SelectProps = {
 
     onInput?: ((evt: TypedEvent<HTMLSelectElement, Event>) => void) | undefined;
 
-    'bind:value'?: PropOverride<
+    'bind:value'?: Prop<
         ReadWriteSignal<string> | undefined,
         ReadWriteSignal<string> | undefined
     >;

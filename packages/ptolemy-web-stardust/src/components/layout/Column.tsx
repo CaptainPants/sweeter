@@ -5,7 +5,7 @@ import {
     IntrinsicRawElementAttributes,
     PropertiesAreSignals,
     PropertiesMightBeSignals,
-    PropOverride,
+    Prop,
     wrapPropertiesAreSignals,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
@@ -37,7 +37,7 @@ export interface ColumnProps {
     lg?: ColumnWidth | undefined;
     xl?: ColumnWidth | undefined;
 
-    passthrough?: PropOverride<
+    passthrough?: Prop<
         PropertiesMightBeSignals<OverridableHtmlAttributes>,
         PropertiesAreSignals<OverridableHtmlAttributes>
     >;

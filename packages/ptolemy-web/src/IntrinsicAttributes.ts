@@ -1,6 +1,8 @@
 import { type StandardPropertiesHyphen } from 'csstype';
 
 import {
+    Prop,
+    PropsInputFor,
     type MightBeSignal,
     type ReadWriteSignal,
     type Signal,
@@ -82,7 +84,7 @@ type AllElementAttributes<TElement> = {
     style?: ElementCssStyles | undefined;
     children?: JSX.Element | undefined;
 
-    ref?: ((value: TElement) => void) | WritableSignal<TElement>;
+    ref?: (value: TElement) => void;
 
     autofocus?: boolean | undefined;
     tabindex?: number | undefined;

@@ -103,7 +103,7 @@ export type Component<TProps = NoProps> = {
     >;
 };
 
-export type Prop<TInput, TOutput> = TOutput & {
+export type Prop<TInput, TOutput = TInput> = TOutput & {
     readonly __PROP_TREATMENT__: {
         input: TInput;
     };
@@ -207,39 +207,15 @@ export type IntrinsicRawElementAttributes<TElementTypeString extends string> =
             PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
         > & { children?: JSXElement };
 
-type _BindPrefixedKeys<T> = keyof T extends `bind:${infer _S}`
-    ? keyof T
-    : never;
-type _NonBindKeys<T> = Exclude<keyof T, _BindPrefixedKeys<T>>;
-type _BindProperties<T> = {
-    [Key in keyof _BindPrefixedKeys<T>]: WritableSignal<
-        _BindPrefixedKeys<T>[Key]
-    >;
-};
+/**
+ * Props for intrinsic elements, based on the type string.
+ */
+export type IntrinsicElementPropsInput<TElementTypeString extends string> = PropsInputFromDef<IntrinsicElementPropsDef<TElementTypeString>>;
 
 /**
  * Props for intrinsic elements, based on the type string.
  */
-export type IntrinsicElementPropsInput<TElementTypeString extends string> =
-    PropertiesMightBeSignals<
-        Pick<
-            IntrinsicRawElementAttributes<TElementTypeString>,
-            _NonBindKeys<IntrinsicRawElementAttributes<TElementTypeString>>
-        >
-    > &
-        _BindProperties<IntrinsicRawElementAttributes<TElementTypeString>>;
-
-/**
- * Props for intrinsic elements, based on the type string.
- */
-export type IntrinsicElementPropsDef<TElementTypeString extends string> =
-    PropertiesAreSignals<
-        Omit<
-            IntrinsicRawElementAttributes<TElementTypeString>,
-            _NonBindKeys<IntrinsicRawElementAttributes<TElementTypeString>>
-        >
-    > &
-        _BindProperties<IntrinsicRawElementAttributes<TElementTypeString>>;
+export type IntrinsicElementPropsDef<TElementTypeString extends string> = PropsDef<IntrinsicRawElementAttributes<TElementTypeString>>
 
 /**
  * Extended by declaration merging into RuntimeRootHostElementTypes.

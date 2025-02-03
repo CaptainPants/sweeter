@@ -1,7 +1,7 @@
 import { Signal } from '../index.js';
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
-import { PropsDef } from '../types.js';
+import { PropsDef } from '../types/index.js';
 
 export interface DynamicProps<T> {
     value: T;

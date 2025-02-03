@@ -1,7 +1,7 @@
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
 import { Signal } from '../signals/types.js';
-import { type Component } from '../types.js';
+import { type Component } from '../types/index.js';
 import { flattenElements } from '../utility/flattenElements.js';
 
 export interface ErrorBoundaryProps {

@@ -3,7 +3,7 @@ import {
     type HookConstructor,
     type HookFactory,
     type HookInitializer,
-} from '../types.js';
+} from '../types/index.js';
 
 export function initializeHook<TArgs extends readonly unknown[], TResult>(
     init: ComponentInit,

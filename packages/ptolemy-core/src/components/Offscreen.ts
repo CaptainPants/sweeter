@@ -1,5 +1,5 @@
 import { getRuntime } from '../runtime/Runtime.js';
-import { type Component, type MightBeSignal } from '../types.js';
+import { type Component, type MightBeSignal } from '../types/index.js';
 
 export interface OffscreenProps {
     children?: JSX.Element | undefined;

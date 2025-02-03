@@ -2,7 +2,7 @@ import { $wrap } from '../signals/$wrap.js';
 import {
     type ComponentPropMappings,
     type PropsInputFromDef,
-} from '../types.js';
+} from '../types/index.js';
 
 export function mapProps<TPropsDef>(
     mappings: ComponentPropMappings<TPropsDef> | undefined,

@@ -1,4 +1,4 @@
-import { type ComponentOrIntrinsicElementTypeConstraint } from '../types.js';
+import { type ComponentOrIntrinsicElementTypeConstraint } from '../types/index.js';
 
 export type JSXMiddlewareUnknownProps = Readonly<Record<string, unknown>>;
 

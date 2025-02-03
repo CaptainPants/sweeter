@@ -1,4 +1,4 @@
-import type * as types from './types.js';
+import type * as types from './types/index.js';
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace

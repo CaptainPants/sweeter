@@ -4,7 +4,7 @@ import {
     type JSXResultForComponentOrElementType,
     type PropsInputFor,
     type RuntimeRootHostElement,
-} from '../types.js';
+} from '../types/index.js';
 
 export interface Runtime {
     renderOffscreen(content: JSX.Element): JSX.Element;

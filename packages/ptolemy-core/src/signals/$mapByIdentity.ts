@@ -5,7 +5,7 @@ import {
 } from '@serpentis/ptolemy-utilities';
 
 import { type Signal } from '../signals/types.js';
-import { type MightBeSignal } from '../types.js';
+import { type MightBeSignal } from '../types/index.js';
 
 import { $controller } from './$controller.js';
 import { $derived } from './$derived.js';

@@ -1,6 +1,6 @@
 import { interpolatePlaceholders } from '@serpentis/ptolemy-utilities';
 
-import { type ComponentInit } from '../types.js';
+import { type ComponentInit } from '../types/index.js';
 
 export type LocalizationTemplateCallback = (key: string) => string;
 

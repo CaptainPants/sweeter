@@ -3,7 +3,7 @@ import {
     type Component,
     type MightBeSignal,
     type RuntimeRootHostElement,
-} from '../types.js';
+} from '../types/index.js';
 
 export interface PortalProps {
     target: RuntimeRootHostElement;

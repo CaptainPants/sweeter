@@ -1,6 +1,6 @@
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
-import { type Component } from '../types.js';
+import { type Component } from '../types/index.js';
 import { $insertLocation } from '../utility/$insertLocation.js';
 
 import { SuspenseContext } from './SuspenseContext.js';

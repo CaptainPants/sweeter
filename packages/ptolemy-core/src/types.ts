@@ -25,9 +25,6 @@ export type JSXIntrinsicElements = {
         string]: IntrinsicElementPropsInput<Key>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface JSXAllElementAttributes {}
-
 export type HookFactory<TArgs extends readonly unknown[], TResult> = (
     setup: ComponentInit,
     ...args: TArgs
@@ -178,16 +175,7 @@ export type PropsInputFor<
           ? IntrinsicElementPropsInput<ComponentOrIntrinsicElementTypeString>
           : never;
 
-/**
- *
- */
-export type PropsAndIntrinsicAttributesFor<
-    ComponentOrIntrinsicElementTypeString extends
-        ComponentOrIntrinsicElementTypeConstraint,
-> = PropsInputFor<ComponentOrIntrinsicElementTypeString> &
-    JSX.IntrinsicAttributes;
-
-export type ChildrenTypeFor<
+          export type ChildrenTypeFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > =
@@ -214,7 +202,6 @@ export type PropertiesAreSignals<TProps> = {
  * Extended by declaration merging into IntrinsicElementNames and IntrinsicElementAttributeParts.
  */
 export type IntrinsicRawElementAttributes<TElementTypeString extends string> =
-    JSXAllElementAttributes &
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
         UnionToIntersection<
             PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]

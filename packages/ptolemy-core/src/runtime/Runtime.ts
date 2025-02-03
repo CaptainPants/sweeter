@@ -2,7 +2,7 @@ import { ExecutionContextVariable } from '../executionContext/ExecutionContextVa
 import {
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXResultForComponentOrElementType,
-    type PropsAndIntrinsicAttributesFor,
+    type PropsInputFor,
     type RuntimeRootHostElement,
 } from '../types.js';
 
@@ -18,7 +18,7 @@ export interface Runtime {
          * Note that middleware is allowed to modify the props object, the
          * caller needs to make a defensive copy if they are reusing it.
          */
-        props: PropsAndIntrinsicAttributesFor<TComponentType>,
+        props: PropsInputFor<TComponentType>,
     ): JSXResultForComponentOrElementType<TComponentType>;
     dispose(): void;
     readonly type: symbol;

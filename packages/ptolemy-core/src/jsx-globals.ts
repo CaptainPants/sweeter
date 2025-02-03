@@ -4,11 +4,6 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace JSX {
         /**
-         * Props that apply to all elements.
-         */
-        type IntrinsicAttributes = types.JSXAllElementAttributes;
-
-        /**
          * This tells typescript what property to use for children.
          */
         interface ElementChildrenAttribute {

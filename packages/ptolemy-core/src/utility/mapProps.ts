@@ -1,11 +1,9 @@
 import { $wrap } from '../signals/$wrap.js';
-import {
-    type ComponentPropMappings,
-    type PropsInputFromDef,
-} from '../types/index.js';
+import { type PropsInputFromDef } from '../types/index.js';
+import { PropertyMapping } from '../types/internal/utility.js';
 
 export function mapProps<TPropsDef>(
-    mappings: ComponentPropMappings<TPropsDef> | undefined,
+    mappings: PropertyMapping<TPropsDef> | undefined,
     props: PropsInputFromDef<TPropsDef>,
 ): TPropsDef {
     const output: Record<string, unknown> = {};

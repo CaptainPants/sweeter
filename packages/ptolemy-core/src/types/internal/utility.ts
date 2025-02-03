@@ -9,10 +9,11 @@ export type PropertiesThatRequireMapping<TProps> = {
         : never;
 }[keyof TProps];
 
+// TODO: THIS IS NEXT
 export type PropertyMapping<TProps> = { test: TProps };
 
 export type PropertyMappingSubset<TProps> = [
     PropertiesThatRequireMapping<TProps>,
 ] extends [never]
-    ? { propMappings?: never }
+    ? unknown
     : { propMappings: PropertyMapping<TProps> };

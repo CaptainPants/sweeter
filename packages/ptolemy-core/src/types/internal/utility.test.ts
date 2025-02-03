@@ -25,10 +25,7 @@ test('MappedProperties', () => {
 });
 
 test('PropertyMappingSubset', () => {
-    typeAssert.equal<
-        PropertyMappingSubset<Example1>,
-        { propMappings?: never }
-    >();
+    typeAssert.equal<PropertyMappingSubset<Example1>, unknown>();
     typeAssert.equal<
         PropertyMappingSubset<Example2>,
         { propMappings: PropertyMapping<Example2> }

@@ -3,6 +3,7 @@ import {
     type Component,
     type IntrinsicElementAttributes,
     isSignal,
+    PropsInputFor,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -27,7 +28,7 @@ export interface ContainerProps {
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
 
-    passthrough?: IntrinsicElementAttributes<'div'>;
+    passthrough?: PropsInputFor<'div'>;
 }
 
 export const Container: Component<ContainerProps> = ({

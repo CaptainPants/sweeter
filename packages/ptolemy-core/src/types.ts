@@ -6,11 +6,7 @@ import {
 
 import { type Context } from './context/Context.js';
 import { type Runtime } from './runtime/Runtime.js';
-import {
-    type Signal,
-    type UnsignalAll,
-    type WritableSignal,
-} from './signals/types.js';
+import { type Signal, type UnsignalAll } from './signals/types.js';
 
 export type JSXKey = string | number;
 
@@ -95,12 +91,15 @@ export interface ComponentInit {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- utility to represent that a component has no props
 export type NoProps = {};
 
+// TODO: strongly type this if possible...
+export type ComponentPropMappings<TProps> = Partial<
+    Record<keyof TProps, false | ((raw: unknown) => unknown)>
+>;
+
 export type Component<TProps = NoProps> = {
     (props: PropsDef<TProps>, init: ComponentInit): JSX.Element;
 
-    propMapping?: Partial<
-        Record<keyof TProps, false | ((raw: unknown) => unknown)>
-    >;
+    propMapping?: ComponentPropMappings<TProps>;
 };
 
 export type Prop<TInput, TOutput = TInput> = TOutput & {
@@ -109,12 +108,12 @@ export type Prop<TInput, TOutput = TInput> = TOutput & {
     };
 };
 
-export type ComponentOrIntrinsicElementTypeConstraint =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Component<any> | string;
 export type ComponentTypeConstraint =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component<any>;
+export type ComponentOrIntrinsicElementTypeConstraint =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ComponentTypeConstraint | string;
 
 export type JSXResultForComponentOrElementType<
     ComponentType extends ComponentOrIntrinsicElementTypeConstraint,
@@ -157,25 +156,31 @@ export type PropsInputFromDef<DefinedProps> = {
     [Key in keyof DefinedProps]: PropInputFromDefinition<DefinedProps[Key]>;
 };
 
-export type PropsDef<DefinedProps> = {
-    [Key in keyof DefinedProps]: PropDef<DefinedProps[Key]>;
+export type PropsDef<RawProps> = {
+    [Key in keyof RawProps]: PropDef<RawProps[Key]>;
 };
+
+export type PropsDefForComponent<
+    ComponentType extends ComponentTypeConstraint,
+> =
+    ComponentType extends Component<infer _PropsDefinition>
+        ? Parameters<ComponentType>[0]
+        : never;
+
+export type PropsInputForComponent<
+    ComponentType extends ComponentTypeConstraint,
+> = PropsInputFromDef<PropsDefForComponent<ComponentType>>;
 
 export type PropsInputFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
-> =
-    ComponentOrIntrinsicElementTypeString extends Component<
-        infer _PropsDefinition
-    >
-        ? PropsInputFromDef<
-              Parameters<ComponentOrIntrinsicElementTypeString>[0]
-          >
-        : ComponentOrIntrinsicElementTypeString extends string
-          ? IntrinsicElementPropsInput<ComponentOrIntrinsicElementTypeString>
-          : never;
+> = ComponentOrIntrinsicElementTypeString extends ComponentTypeConstraint
+    ? PropsInputForComponent<ComponentOrIntrinsicElementTypeString>
+    : ComponentOrIntrinsicElementTypeString extends string
+      ? IntrinsicElementPropsInput<ComponentOrIntrinsicElementTypeString>
+      : never;
 
-          export type ChildrenTypeFor<
+export type ChildrenTypeFor<
     ComponentOrIntrinsicElementTypeString extends
         ComponentOrIntrinsicElementTypeConstraint,
 > =
@@ -202,20 +207,22 @@ export type PropertiesAreSignals<TProps> = {
  * Extended by declaration merging into IntrinsicElementNames and IntrinsicElementAttributeParts.
  */
 export type IntrinsicRawElementAttributes<TElementTypeString extends string> =
-        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-        UnionToIntersection<
-            PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
-        > & { children?: JSXElement };
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+    UnionToIntersection<
+        PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
+    > & { children?: JSXElement };
 
 /**
  * Props for intrinsic elements, based on the type string.
  */
-export type IntrinsicElementPropsInput<TElementTypeString extends string> = PropsInputFromDef<IntrinsicElementPropsDef<TElementTypeString>>;
+export type IntrinsicElementPropsInput<TElementTypeString extends string> =
+    PropsInputFromDef<IntrinsicElementPropsDef<TElementTypeString>>;
 
 /**
  * Props for intrinsic elements, based on the type string.
  */
-export type IntrinsicElementPropsDef<TElementTypeString extends string> = PropsDef<IntrinsicRawElementAttributes<TElementTypeString>>
+export type IntrinsicElementPropsDef<TElementTypeString extends string> =
+    PropsDef<IntrinsicRawElementAttributes<TElementTypeString>>;
 
 /**
  * Extended by declaration merging into RuntimeRootHostElementTypes.

@@ -1,13 +1,10 @@
-import {
-    listenWhileNotCollected,
-    Signal,
-} from '@serpentis/ptolemy-core';
+import { listenWhileNotCollected, Signal } from '@serpentis/ptolemy-core';
 
 export function bindRef(
     ele: HTMLElement | SVGElement,
-    ref: 
-        | ((value: Element) => void) 
-        | Signal<((value: Element) => void) | undefined>
+    ref:
+        | ((value: Element) => void)
+        | Signal<((value: Element) => void) | undefined>,
 ) {
     if (typeof ref === 'function') {
         ref(ele);

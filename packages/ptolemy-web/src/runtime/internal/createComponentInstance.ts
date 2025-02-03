@@ -7,6 +7,8 @@ import {
     Context,
     type IdGenerator,
     initializeHook,
+    mapProps,
+    type PropsDefForComponent,
     type PropsInputFor,
     type Signal,
     SignalState,
@@ -191,7 +193,9 @@ export function createComponentInstance<
         () => {
             const init = createComponentInstanceInit(Component, webRuntime);
 
-            const componentContent = Component(props, init);
+            const defProps = mapProps<PropsDefForComponent<TComponentType>>(Component.propMapping, props);
+
+            const componentContent = Component(defProps, init);
 
             // Makes all init calls throw from now on
             init.isValid = false;

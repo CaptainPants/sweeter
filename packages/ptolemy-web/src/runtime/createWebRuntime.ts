@@ -158,9 +158,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
                     // intrinsic
                     const element = createDOMElement(
                         type,
-                        props as PropsInputFor<
-                            TComponentType & string
-                        >,
+                        props as PropsInputFor<TComponentType & string>,
                         this,
                     );
 

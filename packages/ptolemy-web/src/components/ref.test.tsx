@@ -20,11 +20,9 @@ it('Ref assigned (callback)', () => {
 
 it('Ref assigned (signal)', () => {
     const value = $mutable('test-1');
-    const callbackSignal = $mutable<(ele: HTMLInputElement) => void>(
-        (ele) => {
-            storedIn.value = ele
-        }
-    );
+    const callbackSignal = $mutable<(ele: HTMLInputElement) => void>((ele) => {
+        storedIn.value = ele;
+    });
     const storedIn = $mutable<HTMLInputElement>();
 
     const res = testRender(() => {

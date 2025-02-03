@@ -1,7 +1,11 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import { $mapByIndex } from '../signals/$mapByIndex.js';
 import { type Signal } from '../signals/types.js';
-import { type ComponentInit, type MightBeSignal, PropsDef } from '../types/index.js';
+import {
+    type ComponentInit,
+    type MightBeSignal,
+    PropsDef,
+} from '../types/index.js';
 
 export interface ForProps<T> {
     each: readonly T[];

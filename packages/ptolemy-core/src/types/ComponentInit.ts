@@ -1,10 +1,9 @@
-import { type Context } from "../context/Context.js";
-import { type Runtime } from "../runtime/Runtime.js";
-import { type UnsignalAll } from "../signals/types.js";
+import { type Context } from '../context/Context.js';
+import { type Runtime } from '../runtime/Runtime.js';
+import { type UnsignalAll } from '../signals/types.js';
 
-import { type HookInitializer } from "./hooks.js";
-import { type IdGenerator } from "./misc.js";
-
+import { type HookInitializer } from './hooks.js';
+import { type IdGenerator } from './misc.js';
 
 /**
  * Object passed to Component functions for initialization. Gives access to mount/unMount callbacks, as well as subscribeToChanges for subscribing to signals with automatic cleanup.

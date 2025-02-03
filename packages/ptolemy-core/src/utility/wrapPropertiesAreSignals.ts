@@ -1,6 +1,9 @@
 import { $wrap } from '../signals/$wrap.js';
 import { Signal } from '../signals/types.js';
-import { PropertiesAreSignals, PropertiesMightBeSignals } from '../types/index.js';
+import {
+    PropertiesAreSignals,
+    PropertiesMightBeSignals,
+} from '../types/index.js';
 
 // TODO: does this duplicate mapProps without the propMappings parameter - and therefore it should be the same..
 export function wrapPropertiesAreSignals<T>(

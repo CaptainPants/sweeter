@@ -1,4 +1,4 @@
-import { type ComponentInit } from "./ComponentInit.js";
+import { type ComponentInit } from './ComponentInit.js';
 
 export type HookFactory<TArgs extends readonly unknown[], TResult> = (
     setup: ComponentInit,

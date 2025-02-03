@@ -1,4 +1,3 @@
-
 export * from './Component.js';
 export * from './ComponentInit.js';
 export * from './constraints.js';

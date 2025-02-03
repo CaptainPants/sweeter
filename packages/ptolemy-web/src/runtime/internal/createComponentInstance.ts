@@ -193,7 +193,10 @@ export function createComponentInstance<
         () => {
             const init = createComponentInstanceInit(Component, webRuntime);
 
-            const defProps = mapProps<PropsDefForComponent<TComponentType>>(Component.propMapping, props);
+            const defProps = mapProps<PropsDefForComponent<TComponentType>>(
+                Component.propMapping,
+                props,
+            );
 
             const componentContent = Component(defProps, init);
 

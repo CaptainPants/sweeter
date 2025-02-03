@@ -1,6 +1,4 @@
-import {
-    type UnionToIntersection,
-} from '@serpentis/ptolemy-utilities';
+import { type UnionToIntersection } from '@serpentis/ptolemy-utilities';
 
 import { type Signal } from '../signals/types.js';
 
@@ -30,7 +28,6 @@ export type JSXResultForComponentOrElementType<
     ? PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>[keyof PtolemyExtensionPoints.IntrinsicElementNameToType<ComponentType>]
     : JSXElement;
 
-
 export type MightBeSignal<T> = T | Signal<T>;
 
 /**
@@ -52,7 +49,6 @@ export type IntrinsicRawElementAttributes<TElementTypeString extends string> =
     UnionToIntersection<
         PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>[keyof PtolemyExtensionPoints.IntrinsicElementAttributeByElementNameString<TElementTypeString>]
     > & { children?: JSXElement };
-
 
 /**
  * Extended by declaration merging into RuntimeRootHostElementTypes.

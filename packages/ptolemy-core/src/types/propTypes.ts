@@ -1,10 +1,16 @@
-import { type IsAny, type IsNever } from "@serpentis/ptolemy-utilities";
+import { type IsAny, type IsNever } from '@serpentis/ptolemy-utilities';
 
-import { type Signal } from "../signals/types.js";
+import { type Signal } from '../signals/types.js';
 
-import { type Component } from "./Component.js";
-import { type ComponentOrIntrinsicElementTypeConstraint, type ComponentTypeConstraint } from "./constraints.js";
-import { type IntrinsicRawElementAttributes, type MightBeSignal } from "./misc.js";
+import { type Component } from './Component.js';
+import {
+    type ComponentOrIntrinsicElementTypeConstraint,
+    type ComponentTypeConstraint,
+} from './constraints.js';
+import {
+    type IntrinsicRawElementAttributes,
+    type MightBeSignal,
+} from './misc.js';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- utility to represent that a component has no props
 export type NoProps = {};

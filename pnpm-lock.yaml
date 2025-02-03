@@ -71,9 +71,6 @@ importers:
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
-      type-expand:
-        specifier: ^1.0.0
-        version: 1.0.0
       typedoc:
         specifier: ^0.27.6
         version: 0.27.6(typescript@5.7.3)
@@ -4610,9 +4607,6 @@ packages:
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
-
-  type-expand@1.0.0:
-    resolution: {integrity: sha512-1fO/mIOl7QRreOBn83x07v8TL6OqhYKr/CHwFOI70D9cIr9YJ2PM/57Uazi9GbKSQJHB9yNXzYaE14wqQ4kmeQ==}
 
   type-fest@0.18.1:
     resolution: {integrity: sha512-OIAYXk8+ISY+qTOwkHtKqzAuxchoMiD9Udx+FSGQDuiRR+PJKJHc2NJAXlbhkGwTt/4/nKZxELY1w3ReWOL8mw==}
@@ -9817,8 +9811,6 @@ snapshots:
   type-check@0.4.0:
     dependencies:
       prelude-ls: 1.2.1
-
-  type-expand@1.0.0: {}
 
   type-fest@0.18.1: {}
 

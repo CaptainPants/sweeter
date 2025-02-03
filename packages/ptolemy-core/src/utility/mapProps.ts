@@ -6,7 +6,7 @@ import {
 
 export function mapProps<TPropsDef>(
     mappings: ComponentPropMappings<TPropsDef> | undefined,
-    props: PropsInputFromDef<TPropsDef>
+    props: PropsInputFromDef<TPropsDef>,
 ): TPropsDef {
     const output: Record<string, unknown> = {};
 

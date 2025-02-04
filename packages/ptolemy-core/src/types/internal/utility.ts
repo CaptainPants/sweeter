@@ -2,7 +2,11 @@ import { type Expand } from 'type-expand';
 
 import { type Signal } from '../../signals/types.js';
 import { type MightBeSignal } from '../misc.js';
-import { type Prop, type PropInputFromParam, type PropParamFromRaw } from '../propTypes.js';
+import {
+    type Prop,
+    type PropInputFromParam,
+    type PropParamFromRaw,
+} from '../propTypes.js';
 
 // In an ideal world we might work out an alternative..
 export type RemoveUndefined<T> = Exclude<T, undefined>;
@@ -34,7 +38,7 @@ export type PropOutputFromRaw<T> = PropOutputFromParam<PropParamFromRaw<T>>;
 
 export type PropertyMap<TPropsRaw> = Expand<{
     [Key in PropertiesThatRequireMapping<TPropsRaw>]-?: (
-        input: PropInputFromRaw<TPropsRaw[Key]>
+        input: PropInputFromRaw<TPropsRaw[Key]>,
     ) => PropOutputFromRaw<TPropsRaw[Key]>;
 }>;
 

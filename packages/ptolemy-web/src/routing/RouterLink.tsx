@@ -49,13 +49,3 @@ export const RouterLink: Component<RouterLinkProps> = (
 
     return <a href={href} onclick={onClick} {...passthrough} />;
 };
-RouterLink.propMappings = {
-    passthrough: (input) => {
-        return {
-            autofocus
-        }
-    }
-    test: input => {
-        return input;
-    }
-};

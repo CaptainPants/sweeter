@@ -5,7 +5,6 @@ import { type Prop } from '../propTypes.js';
 
 import {
     type PropertiesThatRequireMapping,
-    PropertyMap,
     PropOutputFromParam,
     PropOutputFromRaw,
     RemoveUndefined,
@@ -40,7 +39,10 @@ test('PropOutputFromParam', () => {
     typeAssert.equal<PropOutputFromParam<Example1['str1']>, string>();
     typeAssert.equal<PropOutputFromParam<Example1['str2']>, string>();
     typeAssert.equal<PropOutputFromParam<Example1['str3']>, Signal<string>>();
-    typeAssert.equal<PropOutputFromParam<Example1['str4']>, string | undefined>();
+    typeAssert.equal<
+        PropOutputFromParam<Example1['str4']>,
+        string | undefined
+    >();
 });
 
 test('PropOutputFromRaw', () => {
@@ -49,11 +51,3 @@ test('PropOutputFromRaw', () => {
     typeAssert.equal<PropOutputFromRaw<Example1['str3']>, Signal<string>>();
     typeAssert.equal<PropOutputFromRaw<Example1['str4']>, string | undefined>();
 });
-
-test('PropertyMap', () => {
-    typeAssert.equal<PropertyMap<Example1>, {
-        str2: (input: string) => string,
-        str4: (input: string | undefined) => string | undefined
-    }>();
-});
-

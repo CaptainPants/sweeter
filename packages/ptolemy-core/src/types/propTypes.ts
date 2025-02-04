@@ -1,3 +1,5 @@
+import { type Expand } from 'type-expand';
+
 import { type IsAny, type IsNever } from '@serpentis/ptolemy-utilities';
 
 import { type Signal } from '../signals/types.js';
@@ -8,10 +10,23 @@ import {
     type ComponentTypeConstraint,
 } from './constraints.js';
 import {
+    type PropertiesThatRequireMapping,
+    type PropInputFromRaw,
     type PropOutputFromParam,
     type RemoveUndefined,
 } from './internal/utility.js';
-import { type IntrinsicRawElementAttributes,type MightBeSignal } from './misc.js';
+import {
+    type IntrinsicRawElementAttributes,
+    type MightBeSignal,
+} from './misc.js';
+
+// == SOME QUICK TERMINOLOGY ==
+// - Prop -- general term with a few variations
+//   - PropRaw - The defined interface for the props, which may include individual properties of type Prop<in, out>
+//   - PropParam - The type used as a parameter to the actual component function, which has props transformed according to Prop<in, out> markings
+//   - PropInput - The type of the props passed into JSX, which is similar to PropParam but is typically of type Signal<T> | T
+//   - PropOutput - This is the same as PropParam but without the Prop markings, which is important when doing manual transformations as these markings are ficticious properties
+// ============================
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- utility to represent that a component has no props
 export type NoProps = {};
@@ -21,7 +36,9 @@ export type PropParamFromRaw<TPropRaw> =
         ? Signal<TPropRaw>
         : IsNever<TPropRaw> extends true // never => Signal<never>, mostly so the empty JSX types on ptolemy-core work nicely
           ? Signal<never>
-          : [RemoveUndefined<TPropRaw>] extends [Prop<infer _Input, infer _Output>] // If its a Prop, keep it
+          : [RemoveUndefined<TPropRaw>] extends [
+                  Prop<infer _Input, infer _Output>,
+              ] // If its a Prop, keep it
             ? TPropRaw // Preserve the PropInput structure
             : Signal<TPropRaw>; // Otherwise make it a signal
 
@@ -36,12 +53,15 @@ export type PropInputFromParam<TPropParam> =
             ? MightBeSignal<S>
             : TPropParam; // Otherwise just use as is
 
+export const PROP_TREATMENT = Symbol('PTOLEMY_PROP_TREATMENT');
+
 /**
  * This is used to provide information about a prop outside the default mapping and handling.
  */
 export type Prop<TInput, TOutput = TInput> = TOutput & {
-    readonly __PROP_TREATMENT__: {
+    readonly [PROP_TREATMENT]: {
         input: TInput;
+        output: TOutput;
     };
 };
 
@@ -103,3 +123,13 @@ export type IntrinsicElementPropsInput<TElementTypeString extends string> =
  */
 export type IntrinsicElementPropsDef<TElementTypeString extends string> =
     PropsParam<IntrinsicRawElementAttributes<TElementTypeString>>;
+
+export type PropertyMapping<TPropParam> = (
+    input: PropInputFromParam<TPropParam>,
+) => PropOutputFromParam<TPropParam>;
+
+export type PropertyMap<TPropsRaw> = Expand<{
+    [Key in PropertiesThatRequireMapping<TPropsRaw>]-?: PropertyMapping<
+        PropParamFromRaw<TPropsRaw[Key]>
+    >;
+}>;

@@ -1,23 +1,25 @@
 import { $wrap } from '../signals/$wrap.js';
 import {
-    type PropInputFromParam,
-    type PropParamFromRaw,
+    PropertyMap,
+    PropertyMapping,
+    PropInputFromParam,
     type PropsInputFromParam,
     type PropsOutputFromParam,
 } from '../types/index.js';
-import { PropertyMap } from '../types/internal/utility.js';
 
-export function mapProps<TPropsDef>(
-    mappings: PropertyMap<TPropsDef> | undefined,
-    props: PropsInputFromParam<TPropsDef>,
-): PropsOutputFromParam<TPropsDef> {
+export function mapProps<TPropParam>(
+    mappings: PropertyMap<TPropParam> | undefined,
+    props: PropsInputFromParam<TPropParam>,
+): PropsOutputFromParam<TPropParam> {
     const output: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(props)) {
-        const mapping = mappings?.[key as keyof PropertyMap<TPropsDef>];
+        const mapping = mappings?.[key as keyof PropertyMap<TPropParam>] as
+            | PropertyMapping<TPropParam[keyof TPropParam]>
+            | undefined;
         if (mapping) {
             const typedValue = value as PropInputFromParam<
-                PropParamFromRaw<TPropsDef[keyof TPropsDef]>
+                TPropParam[keyof TPropParam]
             >;
             output[key] = mapping(typedValue);
         } else {
@@ -25,6 +27,5 @@ export function mapProps<TPropsDef>(
         }
     }
 
-    return output as PropsOutputFromParam<TPropsDef>;
+    return output as PropsOutputFromParam<TPropParam>;
 }
-

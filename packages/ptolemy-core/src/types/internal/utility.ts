@@ -1,11 +1,11 @@
-import { type Expand } from 'type-expand';
-
 import { type Signal } from '../../signals/types.js';
 import { type MightBeSignal } from '../misc.js';
 import {
     type Prop,
+    PropertyMap,
     type PropInputFromParam,
     type PropParamFromRaw,
+    PropsParam,
 } from '../propTypes.js';
 
 // In an ideal world we might work out an alternative..
@@ -36,14 +36,8 @@ export type PropOutputFromParam<TPropParam> = [TPropParam] extends [
 
 export type PropOutputFromRaw<T> = PropOutputFromParam<PropParamFromRaw<T>>;
 
-export type PropertyMap<TPropsRaw> = Expand<{
-    [Key in PropertiesThatRequireMapping<TPropsRaw>]-?: (
-        input: PropInputFromRaw<TPropsRaw[Key]>,
-    ) => PropOutputFromRaw<TPropsRaw[Key]>;
-}>;
-
-export type RequiredPropMappings<TProps> = [
-    PropertiesThatRequireMapping<TProps>,
+export type RequiredPropMappings<TPropsParam> = [
+    PropertiesThatRequireMapping<TPropsParam>,
 ] extends [never]
     ? unknown
-    : { propMappings: PropertyMap<TProps> };
+    : { propMappings: PropertyMap<PropsParam<TPropsParam>> };

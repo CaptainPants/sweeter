@@ -128,8 +128,8 @@ export type PropertyMapping<TPropParam> = (
     input: PropInputFromParam<TPropParam>,
 ) => PropOutputFromParam<TPropParam>;
 
-export type PropertyMap<TPropsRaw> = Expand<{
-    [Key in PropertiesThatRequireMapping<TPropsRaw>]-?: PropertyMapping<
-        PropParamFromRaw<TPropsRaw[Key]>
+export type PropertyMap<TPropParam> = Expand<{
+    [Key in PropertiesThatRequireMapping<TPropParam>]-?: PropertyMapping<
+        TPropParam[Key]
     >;
 }>;

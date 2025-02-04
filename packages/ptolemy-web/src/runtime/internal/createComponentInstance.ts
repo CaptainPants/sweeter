@@ -8,8 +8,8 @@ import {
     type IdGenerator,
     initializeHook,
     mapProps,
-    type PropsParamForComponent,
     type PropsInputFor,
+    type PropsParamForComponent,
     type Signal,
     SignalState,
     subscribeToChanges,
@@ -193,12 +193,13 @@ export function createComponentInstance<
         () => {
             const init = createComponentInstanceInit(Component, webRuntime);
 
-            const defProps = mapProps<PropsParamForComponent<TComponentType>>(
+            // The typing on propMappings here is a bit dodgy
+            const propsParam = mapProps(
                 Component.propMappings,
                 props,
-            );
+            ) as unknown as PropsParamForComponent<TComponentType>; // This is a cheat, it caters to the fictional properties on the parameter for custom conversions
 
-            const componentContent = Component(defProps, init);
+            const componentContent = Component(propsParam, init);
 
             // Makes all init calls throw from now on
             init.isValid = false;

@@ -23,6 +23,7 @@ export function mapProps<TPropParam>(
             >;
             output[key] = mapping(typedValue);
         } else {
+            // Default mapping
             output[key] = $wrap(value);
         }
     }

@@ -1,8 +1,12 @@
 import {
     $derived,
     type Component,
-    type IntrinsicElementAttributes,
+    type IntrinsicRawElementAttributes,
     isSignal,
+    mapProps,
+    Prop,
+    PropertiesAreSignals,
+    PropertiesMightBeSignals,
     PropsInputFor,
 } from '@serpentis/ptolemy-core';
 import {
@@ -18,6 +22,11 @@ import {
     type BreakpointSizeName,
 } from '../../stylesheets/internal/constants.js';
 
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'div'>,
+    'class'
+>;
+
 export interface ContainerProps {
     id?: string | undefined;
 
@@ -28,7 +37,10 @@ export interface ContainerProps {
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
 
-    passthrough?: PropsInputFor<'div'>;
+    passthrough?: Prop<
+        PropertiesMightBeSignals<OverridableHtmlAttributes>,
+        PropertiesAreSignals<OverridableHtmlAttributes>
+    >;
 }
 
 export const Container: Component<ContainerProps> = ({
@@ -73,3 +85,7 @@ const css = new GlobalCssClass({
         margin: 0 auto;
     `,
 });
+
+Container.propMappings = {
+    passthrough: input => mapProps<PropertiesAreSignals<OverridableHtmlAttributes>>(undefined, input)
+}

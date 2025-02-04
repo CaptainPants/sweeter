@@ -6,7 +6,8 @@ import {
     PropertiesAreSignals,
     PropertiesMightBeSignals,
     Prop,
-    wrapPropertiesAreSignals,
+    mapProps,
+    PropsParam,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
 import {
@@ -99,12 +100,9 @@ export const Column: Component<ColumnProps> = ({
         </div>
     );
 };
-Column.propMapping = {
+Column.propMappings = {
     passthrough: (input) => {
-        const typed = input as PropertiesMightBeSignals<
-            IntrinsicRawElementAttributes<'div'>
-        >;
-        const res = wrapPropertiesAreSignals(typed);
-        return res;
+        const mapped = mapProps<PropertiesAreSignals<OverridableHtmlAttributes>>(undefined, input);
+        return mapped;
     },
 };

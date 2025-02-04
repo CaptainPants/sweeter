@@ -11,6 +11,7 @@ export function mapProps<TPropParam>(
     mappings: PropertyMap<TPropParam> | undefined,
     props: PropsInputFromParam<TPropParam>,
 ): PropsOutputFromParam<TPropParam> {
+    // If the map is a function it maps the whole inpuut prop to the whole output prop
     if (typeof mappings === 'function') {
         return mappings(props);
     }

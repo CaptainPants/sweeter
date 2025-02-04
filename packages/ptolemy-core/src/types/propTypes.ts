@@ -11,7 +11,6 @@ import {
 } from './constraints.js';
 import {
     type PropertiesThatRequireMapping,
-    type PropInputFromRaw,
     type PropOutputFromParam,
     type RemoveUndefined,
 } from './internal/utility.js';
@@ -128,8 +127,12 @@ export type PropertyMapping<TPropParam> = (
     input: PropInputFromParam<TPropParam>,
 ) => PropOutputFromParam<TPropParam>;
 
-export type PropertyMap<TPropParam> = Expand<{
-    [Key in PropertiesThatRequireMapping<TPropParam>]-?: PropertyMapping<
-        TPropParam[Key]
-    >;
-}>;
+export type PropertyMap<TPropsParam> =
+    | Expand<{
+          [Key in PropertiesThatRequireMapping<TPropsParam>]-?: PropertyMapping<
+              TPropsParam[Key]
+          >;
+      }>
+    | ((
+          input: PropsInputFromParam<TPropsParam>,
+      ) => PropsOutputFromParam<TPropsParam>);

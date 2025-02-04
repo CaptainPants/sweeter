@@ -21,10 +21,10 @@ test('PropsInputFromParam', () => {
 });
 
 test('PropertyMap', () => {
-    typeAssert.equal<
-        PropertyMap<Example1>,
+    typeAssert.extends<
         {
             str2: (input: string | undefined) => string | undefined;
-        }
+        },
+        PropertyMap<Example1>
     >();
 });

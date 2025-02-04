@@ -11,6 +11,10 @@ export function mapProps<TPropParam>(
     mappings: PropertyMap<TPropParam> | undefined,
     props: PropsInputFromParam<TPropParam>,
 ): PropsOutputFromParam<TPropParam> {
+    if (typeof mappings === 'function') {
+        return mappings(props);
+    }
+
     const output: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(props)) {

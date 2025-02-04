@@ -1,7 +1,12 @@
 import { $async } from '../components/Async.js';
 import { getRuntime } from '../runtime/Runtime.js';
 import { $val } from '../signals/$val.js';
-import { type Component, type PropsInputFor } from '../types/index.js';
+import {
+    PropsOutputFromParam,
+    PropsParam,
+    type Component,
+    type PropsInputFor,
+} from '../types/index.js';
 
 import { $lazy } from './$lazy.js';
 
@@ -15,20 +20,20 @@ export function $lazyComponentType<TProps>(
 ): Component<TProps> {
     const lazy = $lazy(callback);
 
-    // TODO: this component ideally shouldn't map the props at all and just pass them through unchanged
-    // but we don't currently have a mechanism for that..
-    // might need to add that as a property on Component
-    const result: Component<TProps> = (props) => {
+    // This is a lot simpler if the prop type is unknown
+    // so we do this and then assert it to the correct type later
+    const result: Component<unknown> = (props) => {
         return $async(
             () => lazy.promise,
             (LoadedComponent) => {
                 return getRuntime().jsx(
-                    $val(LoadedComponent),
+                    LoadedComponent.value,
                     props as PropsInputFor<Component<TProps>>,
                 );
             },
         );
     };
+    result.propMappings = (input) => input;
 
-    return result;
+    return result as Component<TProps>;
 }

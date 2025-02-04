@@ -107,7 +107,7 @@ export function Async<T>(
             // Suspense should be showing
             return undefined;
         } else {
-            return $val(children)(latestResult);
+            return children.value(latestResult);
         }
     });
 }

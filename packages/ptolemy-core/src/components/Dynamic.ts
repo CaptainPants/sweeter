@@ -1,7 +1,7 @@
 import { Signal } from '../index.js';
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
-import { PropsDef } from '../types/index.js';
+import { PropsParam } from '../types/index.js';
 
 export interface DynamicProps<T> {
     value: T;
@@ -18,11 +18,11 @@ export interface DynamicProps<T> {
  * @param props
  * @returns
  */
-export function Dynamic<T>(props: PropsDef<DynamicProps<T>>): JSX.Element;
+export function Dynamic<T>(props: PropsParam<DynamicProps<T>>): JSX.Element;
 export function Dynamic<T extends number>({
     children,
     value: valueSignal,
-}: PropsDef<DynamicProps<T>> & { value: Signal<T> }): JSX.Element {
+}: PropsParam<DynamicProps<T>> & { value: Signal<T> }): JSX.Element {
     const showCalculation = (): JSX.Element => {
         const value = valueSignal.value;
         return $val(children)(value);

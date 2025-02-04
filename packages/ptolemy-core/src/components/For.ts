@@ -4,7 +4,7 @@ import { type Signal } from '../signals/types.js';
 import {
     type ComponentInit,
     type MightBeSignal,
-    PropsDef,
+    PropsParam,
 } from '../types/index.js';
 
 export interface ForProps<T> {
@@ -13,13 +13,13 @@ export interface ForProps<T> {
 }
 
 export function For<T>(
-    props: PropsDef<ForProps<T>>,
+    props: PropsParam<ForProps<T>>,
     init: ComponentInit,
 ): JSX.Element;
 export function For<T>({
     each: items,
     children: renderItem,
-}: PropsDef<ForProps<T>>): JSX.Element {
+}: PropsParam<ForProps<T>>): JSX.Element {
     return $mapByIndex(items, renderItem);
 }
 

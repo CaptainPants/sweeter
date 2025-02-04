@@ -3,10 +3,9 @@
 import {
     type Component,
     type IntrinsicRawElementAttributes,
-    type PropertiesAreSignals,
-    PropertiesMightBeSignals,
+    mapProps,
     type Prop,
-    wrapPropertiesAreSignals,
+    type PropertiesAreSignals,
 } from '@serpentis/ptolemy-core';
 
 import { type TypedEvent } from '../IntrinsicAttributes.js';
@@ -50,11 +49,13 @@ export const RouterLink: Component<RouterLinkProps> = (
 
     return <a href={href} onclick={onClick} {...passthrough} />;
 };
-RouterLink.propMapping = {
-    passthrough: (input) =>
-        wrapPropertiesAreSignals(
-            input as PropertiesMightBeSignals<
-                IntrinsicRawElementAttributes<'a'>
-            >,
-        ),
+RouterLink.propMappings = {
+    passthrough: (input) => {
+        return {
+            autofocus
+        }
+    }
+    test: input => {
+        return input;
+    }
 };

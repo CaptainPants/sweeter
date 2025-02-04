@@ -8,7 +8,7 @@ import {
     type IdGenerator,
     initializeHook,
     mapProps,
-    type PropsDefForComponent,
+    type PropsParamForComponent,
     type PropsInputFor,
     type Signal,
     SignalState,
@@ -193,8 +193,8 @@ export function createComponentInstance<
         () => {
             const init = createComponentInstanceInit(Component, webRuntime);
 
-            const defProps = mapProps<PropsDefForComponent<TComponentType>>(
-                Component.propMapping,
+            const defProps = mapProps<PropsParamForComponent<TComponentType>>(
+                Component.propMappings,
                 props,
             );
 

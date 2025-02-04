@@ -6,7 +6,7 @@ import { type Signal } from '../signals/types.js';
 import {
     type ComponentInit,
     type MightBeSignal,
-    type PropsDef,
+    type PropsParam,
     type PropsInputFor,
 } from '../types/index.js';
 
@@ -23,11 +23,11 @@ export interface AsyncProps<T> {
 }
 
 export function Async<T>(
-    props: PropsDef<AsyncProps<T>>,
+    props: PropsParam<AsyncProps<T>>,
     init: ComponentInit,
 ): JSX.Element;
 export function Async<T>(
-    { loadData: callback, children }: PropsDef<AsyncProps<T>>,
+    { loadData: callback, children }: PropsParam<AsyncProps<T>>,
     init: ComponentInit,
 ): JSX.Element {
     const suspenseContext = SuspenseContext.getCurrent();

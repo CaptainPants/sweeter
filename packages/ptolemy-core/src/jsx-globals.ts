@@ -17,7 +17,7 @@ declare global {
         // The constructor signature and first parameter is passed in.
         // Refer to https://github.com/microsoft/TypeScript 739d729ecce60771c23723aad932ab35a34df82d src/checker.ts function createTypeChecker -> getJsxPropsTypeFromCallSignature
         type LibraryManagedAttributes<_Ctor, DeclaredProps> =
-            types.PropsInputFromDef<DeclaredProps>;
+            types.PropsInputFromParam<DeclaredProps>;
 
         /**
          * Extended by declaration merging into IntrinsicElementNames.

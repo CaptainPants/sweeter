@@ -36,8 +36,8 @@ export type PropOutputFromParam<TPropParam> = [TPropParam] extends [
 
 export type PropOutputFromRaw<T> = PropOutputFromParam<PropParamFromRaw<T>>;
 
-export type RequiredPropMappings<TPropsParam> = [
-    PropertiesThatRequireMapping<TPropsParam>,
+export type RequiredPropMappingsIfAny<TProps> = [
+    PropertiesThatRequireMapping<TProps>,
 ] extends [never]
     ? unknown
-    : { propMappings: PropertyMap<PropsParam<TPropsParam>> };
+    : { propMappings: PropertyMap<PropsParam<TProps>> };

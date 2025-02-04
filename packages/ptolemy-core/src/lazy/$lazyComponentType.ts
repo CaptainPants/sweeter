@@ -15,6 +15,9 @@ export function $lazyComponentType<TProps>(
 ): Component<TProps> {
     const lazy = $lazy(callback);
 
+    // TODO: this component ideally shouldn't map the props at all and just pass them through unchanged
+    // but we don't currently have a mechanism for that..
+    // might need to add that as a property on Component
     const result: Component<TProps> = (props) => {
         return $async(
             () => lazy.promise,

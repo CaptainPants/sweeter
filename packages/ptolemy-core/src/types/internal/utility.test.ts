@@ -5,10 +5,11 @@ import { type Prop } from '../propTypes.js';
 
 import {
     type PropertiesThatRequireMapping,
-    PropOutputFromParam,
-    PropOutputFromRaw,
-    RemoveUndefined,
+    type PropOutputFromParam,
+    type PropOutputFromRaw,
+    type RemoveUndefined,
 } from './utility.js';
+import { Component } from '../Component.js';
 
 interface Example1 {
     str1: string;

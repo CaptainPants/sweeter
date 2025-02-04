@@ -1,6 +1,11 @@
 import {
     $derived,
     $val,
+    IntrinsicRawElementAttributes,
+    mapProps,
+    Prop,
+    PropertiesAreSignals,
+    PropertiesMightBeSignals,
     type Component,
     type IntrinsicElementPropsInput,
     type ReadWriteSignal,
@@ -17,6 +22,8 @@ import { combineStyles } from '../../internal/combineStyles.js';
 import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+
+type OverridableHtmlAttributes = Exclude<IntrinsicRawElementAttributes<'input'>, 'id'>;
 
 export type CheckBoxProps = {
     variant?: VariantName | undefined;
@@ -38,7 +45,7 @@ export type CheckBoxProps = {
 
     'bind:checked'?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 
-    passthroughProps?: IntrinsicElementPropsInput<'input'> | undefined;
+    passthrough?: Prop<PropertiesMightBeSignals<OverridableHtmlAttributes>, PropertiesAreSignals<OverridableHtmlAttributes>>;
 };
 
 export const CheckBox: Component<CheckBoxProps> = ({
@@ -55,7 +62,7 @@ export const CheckBox: Component<CheckBoxProps> = ({
     class: classProp,
     style,
     onInput,
-    passthroughProps: {
+    passthrough: {
         class: classFromPassthroughProps,
         style: styleFromPassthroughProps,
         oninput: oninputFromPassthroughProps,
@@ -99,4 +106,7 @@ export const CheckBox: Component<CheckBoxProps> = ({
             {...passthroughProps}
         />
     );
+};
+CheckBox.propMappings = {
+    passthrough: input => mapProps<PropertiesAreSignals<OverridableHtmlAttributes>>(undefined, input)
 };

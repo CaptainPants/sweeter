@@ -7,7 +7,6 @@ import {
     Prop,
     PropertiesAreSignals,
     PropertiesMightBeSignals,
-    PropsInputFor,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,

@@ -7,7 +7,6 @@ import {
     PropertiesMightBeSignals,
     Prop,
     mapProps,
-    PropsParam,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
 import {

@@ -13,7 +13,7 @@ const OnMountThrows: Component = (_, init) => {
     return undefined;
 };
 
-it.only('onMount', () => {
+it('onMount', () => {
     const res = testRender(() => (
         <ErrorBoundary
             renderError={(err) => <div class="error">{String(err)}</div>}

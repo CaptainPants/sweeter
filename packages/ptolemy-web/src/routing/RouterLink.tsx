@@ -6,7 +6,7 @@ import {
     mapProps,
     type Prop,
     type PropertiesAreSignals,
-    PropertiesMightBeSignals,
+    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 
 import { type TypedEvent } from '../IntrinsicAttributes.js';

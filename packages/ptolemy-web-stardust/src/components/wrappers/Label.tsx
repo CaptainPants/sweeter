@@ -1,8 +1,11 @@
 import {
     $derived,
-    $val,
     type Component,
-    type IntrinsicElementPropsInput,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    type PropertiesAreSignals,
+    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -12,6 +15,11 @@ import {
 import { combineStyles } from '../../internal/combineStyles.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'label'>,
+    'id'
+>;
 
 export type LabelProps = {
     children?: JSX.Element | undefined;
@@ -24,8 +32,12 @@ export type LabelProps = {
 
     class?: ElementCssClasses | undefined;
     style?: ElementCssStyles | undefined;
-} & {
-    passthroughProps?: IntrinsicElementPropsInput<'label'> | undefined;
+
+    passthrough?: Prop<
+        | PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>
+        | undefined,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined> | undefined
+    >;
 };
 
 export const Label: Component<LabelProps> = ({
@@ -36,7 +48,7 @@ export const Label: Component<LabelProps> = ({
     fillWidth,
     class: classProp,
     style,
-    passthroughProps: {
+    passthrough: {
         class: classFromPassthroughProps,
         style: styleFromPassthroughProps,
         onclick: onclickFromPassthroughProps,
@@ -70,4 +82,12 @@ export const Label: Component<LabelProps> = ({
             {children}
         </label>
     );
+};
+Label.propMappings = {
+    passthrough: (input) =>
+        input
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : undefined,
 };

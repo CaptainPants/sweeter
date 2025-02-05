@@ -2,10 +2,10 @@ import { type Signal } from '../../signals/types.js';
 import { type MightBeSignal } from '../misc.js';
 import {
     type Prop,
-    PropertyMap,
+    type PropertyMap,
     type PropInputFromParam,
     type PropParamFromRaw,
-    PropsParam,
+    type PropsParam,
 } from '../propTypes.js';
 
 // In an ideal world we might work out an alternative..

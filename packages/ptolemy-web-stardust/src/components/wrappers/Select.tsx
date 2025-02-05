@@ -1,9 +1,12 @@
 import {
     $derived,
     $val,
-    Prop,
     type Component,
-    type IntrinsicElementPropsInput,
+    IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    PropertiesAreSignals,
+    PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -16,6 +19,11 @@ import { combineStyles } from '../../internal/combineStyles.js';
 import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'select'>,
+    'id'
+>;
 
 export interface SelectOption {
     text?: string | undefined;
@@ -47,7 +55,11 @@ export type SelectProps = {
         ReadWriteSignal<string> | undefined
     >;
 
-    passthrough?: IntrinsicElementPropsInput<'select'> | undefined;
+    passthrough?: Prop<
+        | PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>
+        | undefined,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined> | undefined
+    >;
 };
 
 export const Select: Component<SelectProps> = ({
@@ -116,4 +128,14 @@ export const Select: Component<SelectProps> = ({
             {children}
         </select>
     );
+};
+
+Select.propMappings = {
+    passthrough: (input) =>
+        input
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : undefined,
+    'bind:value': (input) => input,
 };

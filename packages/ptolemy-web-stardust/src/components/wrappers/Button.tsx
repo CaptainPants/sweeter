@@ -1,13 +1,12 @@
 import {
     $derived,
     $val,
+    type Component,
     type IntrinsicRawElementAttributes,
     mapProps,
     type Prop,
     type PropertiesAreSignals,
     type PropertiesMightBeSignals,
-    type Component,
-    type IntrinsicElementPropsInput,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -21,7 +20,10 @@ import { type VariantName } from '../../internal/constants.js';
 import { button } from '../../stylesheets/button.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-type OverridableHtmlAttributes = Exclude<IntrinsicRawElementAttributes<'button'>, 'id'>;
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'button'>,
+    'id'
+>;
 
 export type ButtonProps = {
     children?: JSX.Element | undefined;
@@ -41,8 +43,8 @@ export type ButtonProps = {
         | undefined;
 
     passthrough?: Prop<
-        PropertiesMightBeSignals<OverridableHtmlAttributes>,
-        PropertiesAreSignals<OverridableHtmlAttributes>
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
     >;
 };
 
@@ -73,7 +75,7 @@ export const Button: Component<ButtonProps> = ({
                 disabled: $val(disabled),
                 fillWidth: $val(fillWidth),
             },
-            $val(variant) ?? 'secondary',
+            variant?.value ?? 'secondary',
         );
 
         return result;
@@ -98,5 +100,9 @@ export const Button: Component<ButtonProps> = ({
     );
 };
 Button.propMappings = {
-    passthrough: input => mapProps<PropertiesAreSignals<OverridableHtmlAttributes>>(undefined, input)
+    passthrough: (input) =>
+        mapProps<PropertiesAreSignals<OverridableHtmlAttributes | undefined>>(
+            undefined,
+            input,
+        ),
 };

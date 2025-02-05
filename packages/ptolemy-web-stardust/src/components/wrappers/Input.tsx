@@ -2,7 +2,11 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementPropsInput,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    Prop,
+    type PropertiesAreSignals,
+    type PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -17,6 +21,11 @@ import { combineStyles } from '../../internal/combineStyles.js';
 import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
+
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'input'>,
+    'id' | 'bind:value'
+>;
 
 export type InputProps = {
     type?: InputType | undefined;
@@ -38,10 +47,17 @@ export type InputProps = {
     style?: ElementCssStyles | undefined;
 
     onInput?: ((evt: TypedEvent<HTMLInputElement, Event>) => void) | undefined;
-} & {
-    'bind:value'?: ReadWriteSignal<string> | undefined;
 
-    passthroughProps?: IntrinsicElementPropsInput<'input'> | undefined;
+    'bind:value'?: Prop<
+        ReadWriteSignal<string> | undefined,
+        ReadWriteSignal<string> | undefined
+    >;
+
+    passthrough?: Prop<
+        | PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>
+        | undefined,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined> | undefined
+    >;
 };
 
 export const Input: Component<InputProps> = ({
@@ -60,7 +76,7 @@ export const Input: Component<InputProps> = ({
     onInput,
     class: classProp,
     style,
-    passthroughProps: {
+    passthrough: {
         class: classFromPassthroughProps,
         style: styleFromPassthroughProps,
         oninput: oninputFromPassthroughProps,
@@ -105,4 +121,13 @@ export const Input: Component<InputProps> = ({
             {...passthroughProps}
         />
     );
+};
+Input.propMappings = {
+    passthrough: (input) =>
+        input
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : undefined,
+    'bind:value': (input) => input,
 };

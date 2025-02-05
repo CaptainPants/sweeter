@@ -1,12 +1,6 @@
 import { $async } from '../components/Async.js';
 import { getRuntime } from '../runtime/Runtime.js';
-import { $val } from '../signals/$val.js';
-import {
-    PropsOutputFromParam,
-    PropsParam,
-    type Component,
-    type PropsInputFor,
-} from '../types/index.js';
+import { type Component, type PropsInputFor } from '../types/index.js';
 
 import { $lazy } from './$lazy.js';
 

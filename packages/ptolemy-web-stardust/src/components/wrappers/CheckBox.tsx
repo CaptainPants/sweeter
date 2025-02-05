@@ -23,7 +23,10 @@ import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-type OverridableHtmlAttributes = Exclude<IntrinsicRawElementAttributes<'input'>, 'id'>;
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'input'>,
+    'id'
+>;
 
 export type CheckBoxProps = {
     variant?: VariantName | undefined;
@@ -45,7 +48,10 @@ export type CheckBoxProps = {
 
     'bind:checked'?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 
-    passthrough?: Prop<PropertiesMightBeSignals<OverridableHtmlAttributes>, PropertiesAreSignals<OverridableHtmlAttributes>>;
+    passthrough?: Prop<
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+    >;
 };
 
 export const CheckBox: Component<CheckBoxProps> = ({
@@ -108,5 +114,9 @@ export const CheckBox: Component<CheckBoxProps> = ({
     );
 };
 CheckBox.propMappings = {
-    passthrough: input => mapProps<PropertiesAreSignals<OverridableHtmlAttributes>>(undefined, input)
+    passthrough: (input) =>
+        mapProps<PropertiesAreSignals<OverridableHtmlAttributes | undefined>>(
+            undefined,
+            input,
+        ),
 };

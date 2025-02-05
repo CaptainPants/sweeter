@@ -9,7 +9,6 @@ import {
     type PropOutputFromRaw,
     type RemoveUndefined,
 } from './utility.js';
-import { Component } from '../Component.js';
 
 interface Example1 {
     str1: string;

@@ -2,11 +2,10 @@ import {
     $derived,
     type Component,
     type IntrinsicRawElementAttributes,
-    isSignal,
     mapProps,
-    Prop,
-    PropertiesAreSignals,
-    PropertiesMightBeSignals,
+    type Prop,
+    type PropertiesAreSignals,
+    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
@@ -23,7 +22,7 @@ import {
 
 type OverridableHtmlAttributes = Exclude<
     IntrinsicRawElementAttributes<'div'>,
-    'class'
+    'id'
 >;
 
 export interface ContainerProps {
@@ -37,8 +36,8 @@ export interface ContainerProps {
     class?: ElementCssClasses | undefined;
 
     passthrough?: Prop<
-        PropertiesMightBeSignals<OverridableHtmlAttributes>,
-        PropertiesAreSignals<OverridableHtmlAttributes>
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
     >;
 }
 
@@ -55,15 +54,13 @@ export const Container: Component<ContainerProps> = ({
     } = {},
 }) => {
     const sizeStyle: ElementCssStyles = {
-        'max-width': isSignal(size)
+        'max-width': size
             ? $derived(() =>
                   size.value
                       ? `${breakpointNameToSizeMap[size.value]}px`
                       : undefined,
               )
-            : typeof size !== 'undefined'
-              ? `${breakpointNameToSizeMap[size]}px`
-              : undefined,
+            : undefined,
     };
 
     return (
@@ -86,5 +83,10 @@ const css = new GlobalCssClass({
 });
 
 Container.propMappings = {
-    passthrough: input => mapProps<PropertiesAreSignals<OverridableHtmlAttributes>>(undefined, input)
-}
+    passthrough: (input) =>
+        input !== undefined
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : undefined,
+};

@@ -10,10 +10,10 @@ const OnMountThrows: Component = (_, init) => {
         throw new Error('Error thrown on mount');
     });
 
-    return <></>;
+    return undefined;
 };
 
-it('onMount', () => {
+it.only('onMount', () => {
     const res = testRender(() => (
         <ErrorBoundary
             renderError={(err) => <div class="error">{String(err)}</div>}

@@ -22,7 +22,7 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
     // Calls .value on any signals, which should cause the catch to trigger
     const flattennedChildrenSignal = $derived(() => {
         const value = children.value;
-        const resolved = typeof value === 'function' ? $derived(value) : value;
+        const resolved = typeof value === 'function' ? value() : value;
 
         const flattened = flattenElements(resolved).identify('flattened', ...$insertLocation());
         return flattened.value;

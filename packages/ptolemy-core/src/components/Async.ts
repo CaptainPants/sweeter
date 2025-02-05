@@ -1,13 +1,12 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
-import { $val } from '../signals/$val.js';
 import { type Signal } from '../signals/types.js';
 import {
     type ComponentInit,
     type MightBeSignal,
-    type PropsParam,
     type PropsInputFor,
+    type PropsParam,
 } from '../types/index.js';
 
 import { SuspenseContext } from './SuspenseContext.js';

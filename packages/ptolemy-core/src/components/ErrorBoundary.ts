@@ -1,7 +1,7 @@
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
-import { Signal } from '../signals/types.js';
 import { type Component } from '../types/index.js';
+import { $insertLocation } from '../utility/$insertLocation.js';
 import { flattenElements } from '../utility/flattenElements.js';
 
 export interface ErrorBoundaryProps {
@@ -12,7 +12,7 @@ export interface ErrorBoundaryProps {
      *
      * Note that a function here will be wrapped in a $derived.
      */
-    children: Signal<JSX.Element> | (() => JSX.Element);
+    children: JSX.Element | (() => JSX.Element);
 }
 
 export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
@@ -24,7 +24,7 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
         const value = children.value;
         const resolved = typeof value === 'function' ? $derived(value) : value;
 
-        const flattened = flattenElements(resolved);
+        const flattened = flattenElements(resolved).identify('flattened', ...$insertLocation());
         return flattened.value;
     });
 

@@ -135,9 +135,7 @@ export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {
 }
 
 export type Unsignal<T> = T extends Signal<infer S> ? S : T;
-export type UnsignalAll<
-    T extends readonly unknown[] | object
-> = {
+export type UnsignalAll<T extends readonly unknown[] | object> = {
     [Key in keyof T]: Unsignal<T[Key]>;
 };
 

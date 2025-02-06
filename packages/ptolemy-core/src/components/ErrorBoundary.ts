@@ -24,7 +24,10 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
         const value = children.value;
         const resolved = typeof value === 'function' ? value() : value;
 
-        const flattened = flattenElements(resolved).identify('flattened', ...$insertLocation());
+        const flattened = flattenElements(resolved).identify(
+            'flattened',
+            ...$insertLocation(),
+        );
         return flattened.value;
     });
 

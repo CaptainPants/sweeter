@@ -1,13 +1,12 @@
 import {
     $derived,
     $val,
-    IntrinsicRawElementAttributes,
+    type Component,
+    type IntrinsicRawElementAttributes,
     mapProps,
     Prop,
     PropertiesAreSignals,
     PropertiesMightBeSignals,
-    type Component,
-    type IntrinsicElementPropsInput,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {

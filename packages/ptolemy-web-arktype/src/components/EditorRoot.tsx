@@ -7,7 +7,12 @@ import {
     type TypeMatcherRule,
     type UnknownReplacer,
 } from '@serpentis/ptolemy-arktype-modeling';
-import { $derived, $insertLocation, $val, PropsParam } from '@serpentis/ptolemy-core';
+import {
+    $derived,
+    $insertLocation,
+    $val,
+    PropsParam,
+} from '@serpentis/ptolemy-core';
 import { Button, Modal } from '@serpentis/ptolemy-web-stardust';
 
 import {

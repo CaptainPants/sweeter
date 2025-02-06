@@ -12,4 +12,4 @@ export const ConstantEditor: Component<EditorProps> = ({ model }) => {
             value={$lastGood(() => String($val(model).value))}
         />
     );
-}
+};

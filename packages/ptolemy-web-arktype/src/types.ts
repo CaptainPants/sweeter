@@ -3,7 +3,7 @@ import {
     type UnknownModel,
     type UnknownReplacer,
 } from '@serpentis/ptolemy-arktype-modeling';
-import { PropertiesAreSignals, type Component } from '@serpentis/ptolemy-core';
+import { type Component,PropertiesAreSignals } from '@serpentis/ptolemy-core';
 
 export interface EditorLikeProps {
     id?: string | undefined;
@@ -25,7 +25,7 @@ export type EditorCommonProps = EditorLikeProps & {
     settings: EditorSettings;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+ 
 export type RenderNextFunctionArgs = PropertiesAreSignals<EditorCommonProps>;
 
 export type EditorProps = EditorCommonProps & {

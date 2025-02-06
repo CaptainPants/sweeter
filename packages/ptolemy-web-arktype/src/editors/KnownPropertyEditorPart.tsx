@@ -22,19 +22,11 @@ export interface KnownPropertyEditorPartProps {
 
     indent: number;
     ownerIdPath: string | undefined;
-};
+}
 
-export const KnownPropertyEditorPart: Component<KnownPropertyEditorPartProps> = (
-    {
-        id,
-        property,
-        value,
-        updateValue,
-        indent,
-        ownerIdPath,
-    },
-    init,
-) =>  {
+export const KnownPropertyEditorPart: Component<
+    KnownPropertyEditorPartProps
+> = ({ id, property, value, updateValue, indent, ownerIdPath }, init) => {
     const idPath = $derived(() => {
         return idPaths.key($val(ownerIdPath), String($val(property)));
     });
@@ -65,4 +57,4 @@ export const KnownPropertyEditorPart: Component<KnownPropertyEditorPartProps> = 
             />
         );
     });
-}
+};

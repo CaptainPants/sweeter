@@ -17,16 +17,10 @@ export interface ElementEditorPartProps {
 
     indent: number;
     ownerIdPath: string | undefined;
-};
+}
 
 export const ElementEditorPart: Component<ElementEditorPartProps> = (
-    {
-        index,
-        elementModel,
-        updateElement,
-        indent,
-        ownerIdPath,
-    },
+    { index, elementModel, updateElement, indent, ownerIdPath },
     init,
 ) => {
     const replace = async (value: UnknownModel) => {
@@ -48,4 +42,4 @@ export const ElementEditorPart: Component<ElementEditorPartProps> = (
             )}
         />
     );
-}
+};

@@ -1,8 +1,8 @@
 import { $wrap } from '../signals/$constant.js';
 import {
-    PropertyMap,
-    PropertyMapping,
-    PropInputFromParam,
+    type PropertyMap,
+    type PropertyMapping,
+    type PropInputFromParam,
     type PropsInputFromParam,
     type PropsOutputFromParam,
 } from '../types/index.js';
@@ -13,7 +13,7 @@ export function mapProps<TPropParam>(
 ): PropsOutputFromParam<TPropParam> {
     // If the map is a function it maps the whole inpuut prop to the whole output prop
     if (typeof mappings === 'function') {
-        return mappings(props);
+        return mappings(props) as PropsOutputFromParam<TPropParam>;
     }
 
     const output: Record<string, unknown> = {};

@@ -79,4 +79,4 @@ export const NumberEditor: Component<EditorProps> = (
             <ValidationDisplay errors={validationErrors} />
         </>
     );
-}
+};

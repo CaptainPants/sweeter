@@ -12,7 +12,7 @@ import {
 import { IconButton } from '../components/IconButton.js';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
-import { type EditorProps,RenderNextFunctionArgs } from '../types.js';
+import { type EditorProps, RenderNextFunctionArgs } from '../types.js';
 
 export const ModalEditor: Component<EditorProps> = (
     {
@@ -46,7 +46,7 @@ export const ModalEditor: Component<EditorProps> = (
             modelSnapshot.value = replacement;
             return Promise.resolve();
         }),
-        isRoot: true
+        isRoot: true,
     });
 
     const onCommit = async (): Promise<void> => {
@@ -107,4 +107,4 @@ export const ModalEditor: Component<EditorProps> = (
             </>
         );
     });
-}
+};

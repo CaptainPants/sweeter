@@ -5,5 +5,5 @@ export type ComponentTypeConstraint =
     Component<any>;
 
 export type ComponentOrIntrinsicElementTypeConstraint =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     ComponentTypeConstraint | string;

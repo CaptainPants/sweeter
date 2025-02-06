@@ -187,7 +187,7 @@ export const ArrayEditor: Component<EditorProps> = (
             </div>
         </>
     );
-}
+};
 
 const css = {
     editorPropertyDisplayName: new GlobalCssClass({

@@ -17,7 +17,7 @@ export interface IconButtonProps {
     text?: string | undefined;
     onLeftClick?: () => void;
     hoverable?: boolean;
-};
+}
 
 export const IconButton: Component<IconButtonProps> = (
     { hoverable, text, icon, onLeftClick },

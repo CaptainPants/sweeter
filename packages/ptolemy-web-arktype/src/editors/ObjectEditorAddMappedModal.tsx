@@ -29,7 +29,7 @@ export interface ObjectEditorAddMappedModalProps {
 
     onCancelled: () => void;
     onFinished: (name: string, type: UnknownType) => Promise<void>;
-};
+}
 
 export const ObjectEditorAddMappedModal: Component<
     ObjectEditorAddMappedModalProps

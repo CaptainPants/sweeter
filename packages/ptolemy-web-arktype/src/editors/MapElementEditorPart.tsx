@@ -22,16 +22,10 @@ export interface MapElementEditorPartProps {
 
     indent: number;
     ownerIdPath: string | undefined;
-};
+}
 
 export const MapElementEditorPart: Component<MapElementEditorPartProps> = (
-    {
-        property,
-        value,
-        updateElement,
-        indent,
-        ownerIdPath,
-    },
+    { property, value, updateElement, indent, ownerIdPath },
     init,
 ) => {
     const replace = async (value: UnknownModel) => {
@@ -55,4 +49,4 @@ export const MapElementEditorPart: Component<MapElementEditorPartProps> = (
             )}
         />
     );
-}
+};

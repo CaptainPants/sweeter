@@ -153,108 +153,102 @@ export const ObjectEditor: Component<EditorProps> = (
 
         const anyCategories = categorizedProperties.length > 0;
 
-        const result = categorizedProperties.map(
-            ({ category, properties }) => {
-                const propertyVisiblePerProperty = $derived(() => {
-                    const individualVisibility = properties.map(
-                        ({ property }) => {
-                            const propertyModel =
-                                draft.value.unknownGetProperty(property.name);
-                            assertNotNullOrUndefined(propertyModel);
-
-                            const visibility =
-                                propertyModel.valueModel.type
-                                    .annotations()
-                                    ?.getAssociatedValue(
-                                        StandardAssociatedValueKeys.property_visible,
-                                        $wrap(propertyModel.valueModel),
-                                        calculationContext,
-                                    ) !== false;
-
-                            return visibility; // likely values are notFound and false
-                        },
+        const result = categorizedProperties.map(({ category, properties }) => {
+            const propertyVisiblePerProperty = $derived(() => {
+                const individualVisibility = properties.map(({ property }) => {
+                    const propertyModel = draft.value.unknownGetProperty(
+                        property.name,
                     );
+                    assertNotNullOrUndefined(propertyModel);
 
-                    return individualVisibility;
+                    const visibility =
+                        propertyModel.valueModel.type
+                            .annotations()
+                            ?.getAssociatedValue(
+                                StandardAssociatedValueKeys.property_visible,
+                                $wrap(propertyModel.valueModel),
+                                calculationContext,
+                            ) !== false;
+
+                    return visibility; // likely values are notFound and false
                 });
 
-                const anyVisibleInCategory = $derived(() =>
-                    propertyVisiblePerProperty.value.some((x) => x),
-                );
+                return individualVisibility;
+            });
 
-                // If no properties in the category are visible the whole category should be hidden
-                return $if(anyVisibleInCategory, () => (
-                    <div class={css.category}>
-                        {anyCategories ? (
-                            <Row>
-                                <Column xl="auto">
-                                    <Label
-                                        style={{
-                                            'font-weight': 'bold',
-                                        }}
-                                        class={css.categoryHeader}
-                                        fillWidth
-                                    >
-                                        {category}
-                                    </Label>
-                                </Column>
-                            </Row>
-                        ) : undefined}
-                        {/* Note that properties is based on the definition and not the model,
+            const anyVisibleInCategory = $derived(() =>
+                propertyVisiblePerProperty.value.some((x) => x),
+            );
+
+            // If no properties in the category are visible the whole category should be hidden
+            return $if(anyVisibleInCategory, () => (
+                <div class={css.category}>
+                    {anyCategories ? (
+                        <Row>
+                            <Column xl="auto">
+                                <Label
+                                    style={{
+                                        'font-weight': 'bold',
+                                    }}
+                                    class={css.categoryHeader}
+                                    fillWidth
+                                >
+                                    {category}
+                                </Label>
+                            </Column>
+                        </Row>
+                    ) : undefined}
+                    {/* Note that properties is based on the definition and not the model,
                             so will not be re-calculated when the model is updated. */}
-                        {properties.map(({ property, id }, index) => {
-                            return $if(
-                                $derived(
-                                    () =>
-                                        propertyVisiblePerProperty.value[
-                                            index
-                                        ] ?? true,
-                                ),
-                                () => {
-                                    const value = $derived(
-                                        // NOTE: this depends on draft.value
-                                        () => {
-                                            const res =
-                                                draft.value.unknownGetProperty(
-                                                    property.name,
-                                                )?.valueModel;
-                                            assertNotNullOrUndefined(res);
-                                            return res;
-                                        },
-                                    );
-                                    return (
-                                        <Row
-                                            class={css.property}
-                                        >
-                                            <Column xs={4}>
-                                                <Label for={id}>
-                                                    {property.propertyInfo.type
-                                                        .annotations()
-                                                        ?.displayName() ??
-                                                        String(property.name)}
-                                                </Label>
-                                            </Column>
-                                            <Column xs={8}>
-                                                <KnownPropertyEditorPart
-                                                    id={id}
-                                                    property={property.name}
-                                                    value={value}
-                                                    updateValue={
-                                                        updatePropertyValue
-                                                    }
-                                                    indent={childIndent}
-                                                    ownerIdPath={idPath}
-                                                />
-                                            </Column>
-                                        </Row>
-                                    );
-                                },
-                            );
-                        })}
-                    </div>
-                ));
-            },
-        );
+                    {properties.map(({ property, id }, index) => {
+                        return $if(
+                            $derived(
+                                () =>
+                                    propertyVisiblePerProperty.value[index] ??
+                                    true,
+                            ),
+                            () => {
+                                const value = $derived(
+                                    // NOTE: this depends on draft.value
+                                    () => {
+                                        const res =
+                                            draft.value.unknownGetProperty(
+                                                property.name,
+                                            )?.valueModel;
+                                        assertNotNullOrUndefined(res);
+                                        return res;
+                                    },
+                                );
+                                return (
+                                    <Row class={css.property}>
+                                        <Column xs={4}>
+                                            <Label for={id}>
+                                                {property.propertyInfo.type
+                                                    .annotations()
+                                                    ?.displayName() ??
+                                                    String(property.name)}
+                                            </Label>
+                                        </Column>
+                                        <Column xs={8}>
+                                            <KnownPropertyEditorPart
+                                                id={id}
+                                                property={property.name}
+                                                value={value}
+                                                updateValue={
+                                                    updatePropertyValue
+                                                }
+                                                indent={childIndent}
+                                                ownerIdPath={idPath}
+                                            />
+                                        </Column>
+                                    </Row>
+                                );
+                            },
+                        );
+                    })}
+                </div>
+            ));
+        });
 
         return result;
     });
@@ -437,7 +431,7 @@ export const ObjectEditor: Component<EditorProps> = (
             <div class={css.editorIndentContainer}>{content}</div>
         </Box>
     );
-}
+};
 
 const css = {
     editorOuter: new GlobalCssClass({

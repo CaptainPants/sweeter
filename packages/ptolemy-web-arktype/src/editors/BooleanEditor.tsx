@@ -69,4 +69,4 @@ export const BooleanEditor: Component<EditorProps> = (
             <ValidationDisplay errors={validationErrors} />
         </>
     );
-}
+};

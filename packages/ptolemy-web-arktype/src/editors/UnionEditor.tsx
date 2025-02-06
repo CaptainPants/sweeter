@@ -8,7 +8,14 @@ import {
     type UnknownModel,
     UnknownType,
 } from '@serpentis/ptolemy-arktype-modeling';
-import { $derived, $if, $lastGood, $peek, $val, Component } from '@serpentis/ptolemy-core';
+import {
+    $derived,
+    $if,
+    $lastGood,
+    $peek,
+    $val,
+    Component,
+} from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 import { Select } from '@serpentis/ptolemy-web-stardust';
 
@@ -103,4 +110,4 @@ export const UnionEditor: Component<EditorProps> = ({
             )}
         </div>
     );
-}
+};

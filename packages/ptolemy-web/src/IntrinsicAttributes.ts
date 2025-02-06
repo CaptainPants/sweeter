@@ -1,12 +1,9 @@
 import { type StandardPropertiesHyphen } from 'csstype';
 
 import {
-    Prop,
-    PropsInputFor,
     type MightBeSignal,
     type ReadWriteSignal,
     type Signal,
-    type WritableSignal,
 } from '@serpentis/ptolemy-core';
 
 import { type ThreeValueBoolean } from './indeterminate.js';

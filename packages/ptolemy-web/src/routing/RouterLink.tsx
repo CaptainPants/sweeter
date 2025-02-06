@@ -53,7 +53,11 @@ export const RouterLink: Component<RouterLinkProps> = (
         onClickProp?.value?.call(this, evt);
     }
 
-    return <a href={href} onclick={onClick} {...passthrough}>{children}</a>;
+    return (
+        <a href={href} onclick={onClick} {...passthrough}>
+            {children}
+        </a>
+    );
 };
 
 RouterLink.propMappings = {

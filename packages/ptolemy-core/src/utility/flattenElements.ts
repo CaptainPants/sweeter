@@ -1,4 +1,5 @@
 import { equals } from '@serpentis/ptolemy-utilities';
+
 import { $derived } from '../signals/$derived.js';
 import { $filtered } from '../signals/$filtered.js';
 import { isSignal } from '../signals/isSignal.js';
@@ -9,14 +10,9 @@ export type FlattenedElement = Exclude<
     readonly JSX.Element[] | null | undefined | Signal<JSX.Element> | boolean
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isArray(item: unknown): item is readonly any[] {
+function isArray(item: unknown): item is (readonly unknown[]) {
     // Annoyingly Array.isArray is not using readonly
     return Array.isArray(item);
-}
-
-function shallowEqualArray<T>(a: readonly T[], b: readonly T[]) {
-    return a.length === b.length && a.every((item, index) => item === b[index]);
 }
 
 /**

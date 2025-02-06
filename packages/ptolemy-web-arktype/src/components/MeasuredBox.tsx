@@ -1,7 +1,4 @@
-import {
-    $mutable,
-    type Component,
-} from '@serpentis/ptolemy-core';
+import { $mutable, type Component } from '@serpentis/ptolemy-core';
 import { debounce } from '@serpentis/ptolemy-utilities';
 import {
     type ElementCssClasses,
@@ -20,7 +17,7 @@ export interface MeasuredBoxProps {
     style?: ElementCssStyles;
 
     debounceTimeout?: number | undefined;
-};
+}
 
 const defaultTimeout = 250;
 

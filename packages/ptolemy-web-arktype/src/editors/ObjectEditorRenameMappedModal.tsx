@@ -24,7 +24,7 @@ export interface ObjectEditorRenameMappedModalProps {
 
     onCancelled: () => void;
     onFinished: (from: string, to: string) => Promise<void>;
-};
+}
 
 export const ObjectEditorRenameMappedModal: Component<
     ObjectEditorRenameMappedModalProps

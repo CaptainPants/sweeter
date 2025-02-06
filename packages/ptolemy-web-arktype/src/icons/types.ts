@@ -1,6 +1,5 @@
 import {
     type Component,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,

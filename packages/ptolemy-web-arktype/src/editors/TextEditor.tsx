@@ -70,4 +70,4 @@ export const TextEditor: Component<EditorProps> = (
             <ValidationDisplay errors={validationErrors} />
         </>
     );
-}
+};

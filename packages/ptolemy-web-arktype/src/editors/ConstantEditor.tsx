@@ -1,9 +1,9 @@
-import { $lastGood, $val } from '@serpentis/ptolemy-core';
+import { $lastGood, $val, Component } from '@serpentis/ptolemy-core';
 import { TextArea } from '@serpentis/ptolemy-web-stardust';
 
 import { type EditorProps } from '../types.js';
 
-export function ConstantEditor({ model }: Readonly<EditorProps>): JSX.Element {
+export const ConstantEditor: Component<EditorProps> = ({ model }) => {
     return (
         <TextArea
             disabled

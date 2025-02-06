@@ -22,7 +22,7 @@ import {
     $peek,
     $val,
     $wrap,
-    type ComponentInit,
+    Component,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
 import {
@@ -44,10 +44,10 @@ import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { ObjectEditorAddMappedModal } from './ObjectEditorAddMappedModal.js';
 import { ObjectEditorRenameMappedModal } from './ObjectEditorRenameMappedModal.js';
 
-export function ObjectEditor(
-    { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const ObjectEditor: Component<EditorProps> = (
+    { model, replace, local, idPath, indent, isRoot },
+    init,
+) => {
     const typedModel = $lastGood(() => {
         return cast($val(model), asObject);
     });
@@ -154,7 +154,7 @@ export function ObjectEditor(
         const anyCategories = categorizedProperties.length > 0;
 
         const result = categorizedProperties.map(
-            ({ category, properties }, categoryIndex) => {
+            ({ category, properties }) => {
                 const propertyVisiblePerProperty = $derived(() => {
                     const individualVisibility = properties.map(
                         ({ property }) => {
@@ -184,7 +184,7 @@ export function ObjectEditor(
 
                 // If no properties in the category are visible the whole category should be hidden
                 return $if(anyVisibleInCategory, () => (
-                    <div class={css.category} key={`cat-${categoryIndex}`}>
+                    <div class={css.category}>
                         {anyCategories ? (
                             <Row>
                                 <Column xl="auto">
@@ -225,7 +225,6 @@ export function ObjectEditor(
                                     return (
                                         <Row
                                             class={css.property}
-                                            key={`prop-${String(property.name)}`}
                                         >
                                             <Column xs={4}>
                                                 <Label for={id}>

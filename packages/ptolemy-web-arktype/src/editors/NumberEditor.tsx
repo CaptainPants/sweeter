@@ -10,7 +10,7 @@ import {
     $lastGood,
     $peek,
     $val,
-    type ComponentInit,
+    type Component,
 } from '@serpentis/ptolemy-core';
 import { Input } from '@serpentis/ptolemy-web-stardust';
 
@@ -19,10 +19,10 @@ import { type EditorProps } from '../types.js';
 
 import { ValidationDisplay } from './ValidationDisplay.js';
 
-export function NumberEditor(
-    { model, replace, propertyDisplayName, idPath }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const NumberEditor: Component<EditorProps> = (
+    { model, replace, propertyDisplayName, idPath },
+    init,
+) => {
     const typedModel = $lastGood(() => {
         return cast($val(model), asNumber);
     });

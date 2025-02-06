@@ -8,20 +8,19 @@ import {
     type UnknownModel,
     UnknownType,
 } from '@serpentis/ptolemy-arktype-modeling';
-import { $derived, $if, $lastGood, $peek, $val } from '@serpentis/ptolemy-core';
+import { $derived, $if, $lastGood, $peek, $val, Component } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 import { Select } from '@serpentis/ptolemy-web-stardust';
 
 import { EditorHost } from '../components/EditorHost.js';
 import { type EditorProps } from '../types.js';
 
-export function UnionEditor(props: Readonly<EditorProps>): JSX.Element;
-export function UnionEditor({
+export const UnionEditor: Component<EditorProps> = ({
     model,
     replace,
     idPath,
     indent,
-}: Readonly<EditorProps>): JSX.Element {
+}) => {
     const typedModel = $lastGood(() => cast($val(model), asUnion));
 
     const type = $derived(() => typedModel.value.type);

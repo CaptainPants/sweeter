@@ -121,9 +121,9 @@ export const EditorHost: Component<EditorHostProps> = (
             {},
             $valProperties(passThroughToRenderProps),
             {
-                model,
-                local,
-                settings,
+                model: model.value,
+                local: local.value,
+                settings: settings,
             },
         );
 

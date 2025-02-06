@@ -14,6 +14,7 @@ import {
     $mapByIndex,
     $peek,
     $val,
+    type Component,
     type ComponentInit,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
@@ -28,10 +29,10 @@ import { type EditorProps } from '../types.js';
 import { ElementEditorPart } from './ElementEditorPart.js';
 import { ValidationDisplay } from './ValidationDisplay.js';
 
-export function ArrayEditor(
-    { model, replace, idPath, indent }: Readonly<EditorProps>,
+export const ArrayEditor: Component<EditorProps> = (
+    { model, replace, idPath, indent },
     init: ComponentInit,
-): JSX.Element {
+) => {
     const typedModel = $lastGood(() => {
         return cast($val(model), asArray);
     });

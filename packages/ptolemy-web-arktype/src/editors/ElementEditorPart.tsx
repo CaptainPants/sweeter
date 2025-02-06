@@ -3,37 +3,32 @@ import {
     $derived,
     $peek,
     $val,
-    type ComponentInit,
+    type Component,
     LocalizerHook,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 
 import { EditorHost } from '../components/EditorHost.js';
 
-export type ElementEditorPartProps = PropertiesMightBeSignals<{
+export interface ElementEditorPartProps {
     index: number;
     elementModel: UnknownModel;
     updateElement: (index: number, value: UnknownModel) => Promise<void>;
 
     indent: number;
     ownerIdPath: string | undefined;
-}>;
+};
 
-export function ElementEditorPart(
-    props: ElementEditorPartProps,
-    init: ComponentInit,
-): JSX.Element;
-export function ElementEditorPart(
+export const ElementEditorPart: Component<ElementEditorPartProps> = (
     {
         index,
         elementModel,
         updateElement,
         indent,
         ownerIdPath,
-    }: ElementEditorPartProps,
-    init: ComponentInit,
-): JSX.Element {
+    },
+    init,
+) => {
     const replace = async (value: UnknownModel) => {
         await $peek(updateElement)($peek(index), value);
     };

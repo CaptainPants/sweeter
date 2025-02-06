@@ -1,8 +1,6 @@
 import {
     $mutable,
-    $peek,
     type Component,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { debounce } from '@serpentis/ptolemy-utilities';
 import {
@@ -12,7 +10,7 @@ import {
 
 import { observeSize } from '../internal/observeSize.js';
 
-export type MeasuredBoxProps = PropertiesMightBeSignals<{
+export interface MeasuredBoxProps {
     children?: JSX.Element | undefined;
 
     onInitialLayout: (width: number, height: number) => void;
@@ -22,7 +20,7 @@ export type MeasuredBoxProps = PropertiesMightBeSignals<{
     style?: ElementCssStyles;
 
     debounceTimeout?: number | undefined;
-}>;
+};
 
 const defaultTimeout = 250;
 
@@ -51,13 +49,13 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
 
             const size = element.getBoundingClientRect();
 
-            $peek(onInitialLayout)(size.width, size.height);
+            onInitialLayout.peek()(size.width, size.height);
 
             const debouncedCallback = debounce(
                 debounceTimeout ?? defaultTimeout,
                 (entry: ResizeObserverEntry) => {
                     const { width, height } = entry.contentRect;
-                    $peek(onLayout)(width, height);
+                    onLayout.peek()(width, height);
                 },
             );
             const stopObserving = observeSize(element, (size) => {
@@ -66,7 +64,7 @@ export const MeasuredBox: Component<MeasuredBoxProps> = (
                 // In current testing the size is 0x0 when onInitialLayout is called.
                 if (first) {
                     first = false;
-                    $peek(onLayout)(
+                    onLayout.peek()(
                         size.contentRect.width,
                         size.contentRect.height,
                     );

@@ -3,7 +3,6 @@ import {
     $mutable,
     $val,
     Component,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 
 import { MeasuredBox } from '../components/MeasuredBox.js';
@@ -12,7 +11,7 @@ import { type EditorProps } from '../types.js';
 import { ModalEditor } from './ModalEditor.js';
 
 export type ConditionalModelEditorProps = EditorProps &
-    PropertiesMightBeSignals<{ minWidth?: number }>;
+    { minWidth?: number };
 
 export const ModalEditorIfTooSmall: Component<ConditionalModelEditorProps> = ({
     minWidth = 200,

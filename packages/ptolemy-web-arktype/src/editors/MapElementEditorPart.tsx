@@ -3,15 +3,14 @@ import {
     $derived,
     $peek,
     $val,
-    type ComponentInit,
+    Component,
     LocalizerHook,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 
 import { EditorHost } from '../components/EditorHost.js';
 
-export type MapElementEditorPartProps = PropertiesMightBeSignals<{
+export interface MapElementEditorPartProps {
     id: string;
 
     property: string | symbol;
@@ -23,22 +22,18 @@ export type MapElementEditorPartProps = PropertiesMightBeSignals<{
 
     indent: number;
     ownerIdPath: string | undefined;
-}>;
+};
 
-export function MapElementEditorPart(
-    props: MapElementEditorPartProps,
-    init: ComponentInit,
-): JSX.Element;
-export function MapElementEditorPart(
+export const MapElementEditorPart: Component<MapElementEditorPartProps> = (
     {
         property,
         value,
         updateElement,
         indent,
         ownerIdPath,
-    }: MapElementEditorPartProps,
-    init: ComponentInit,
-): JSX.Element {
+    },
+    init,
+) => {
     const replace = async (value: UnknownModel) => {
         await $peek(updateElement)($peek(property), value);
     };

@@ -3,15 +3,14 @@ import {
     $derived,
     $peek,
     $val,
-    type ComponentInit,
+    Component,
     LocalizerHook,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 
 import { EditorHost } from '../components/EditorHost.js';
 
-export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
+export interface KnownPropertyEditorPartProps {
     id: string;
 
     property: string | symbol;
@@ -23,9 +22,9 @@ export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
 
     indent: number;
     ownerIdPath: string | undefined;
-}>;
+};
 
-export function KnownPropertyEditorPart(
+export const KnownPropertyEditorPart: Component<KnownPropertyEditorPartProps> = (
     {
         id,
         property,
@@ -33,9 +32,9 @@ export function KnownPropertyEditorPart(
         updateValue,
         indent,
         ownerIdPath,
-    }: KnownPropertyEditorPartProps,
-    init: ComponentInit,
-): JSX.Element {
+    },
+    init,
+) =>  {
     const idPath = $derived(() => {
         return idPaths.key($val(ownerIdPath), String($val(property)));
     });

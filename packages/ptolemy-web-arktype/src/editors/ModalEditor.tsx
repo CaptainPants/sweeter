@@ -5,6 +5,7 @@ import {
     $peek,
     $val,
     $valProperties,
+    Component,
     type ComponentInit,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
@@ -14,7 +15,7 @@ import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
 import { type EditorProps } from '../types.js';
 
-export function ModalEditor(
+export const ModalEditor: Component<EditorProps> = (
     {
         next,
         indent: _ignoreIndent,
@@ -22,9 +23,9 @@ export function ModalEditor(
         replace,
         propertyDisplayName,
         ...passthrough
-    }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+    },
+    init,
+) => {
     const isOpen = $mutable(false);
 
     const modelSnapshot = $mutable($peek(model));

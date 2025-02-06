@@ -7,7 +7,6 @@ import {
     $peek,
     $val,
     type Component,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { type TypedEvent } from '@serpentis/ptolemy-web';
 import {
@@ -19,7 +18,7 @@ import {
     Row,
 } from '@serpentis/ptolemy-web-stardust';
 
-export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
+export interface ObjectEditorAddMappedModalProps {
     isOpen: boolean;
 
     keyType: Type<string>;
@@ -30,7 +29,7 @@ export type ObjectEditorAddMappedModalProps = PropertiesMightBeSignals<{
 
     onCancelled: () => void;
     onFinished: (name: string, type: UnknownType) => Promise<void>;
-}>;
+};
 
 export const ObjectEditorAddMappedModal: Component<
     ObjectEditorAddMappedModalProps

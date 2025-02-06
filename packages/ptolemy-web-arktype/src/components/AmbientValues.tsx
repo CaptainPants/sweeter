@@ -6,8 +6,7 @@ import {
     $derived,
     $insertLocation,
     $val,
-    Component,
-    type ComponentInit,
+    type Component,
 } from '@serpentis/ptolemy-core';
 
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
@@ -19,7 +18,7 @@ export type AmbientValuesProps = {
 
 export const AmbientValues: Component<AmbientValuesProps> = (
     { callback: newCallback, children },
-    init: ComponentInit,
+    init,
 ) => {
     const existingContext = init.getContext(AmbientValuesContext);
 

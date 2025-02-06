@@ -2,12 +2,7 @@ import {
     joinSingleValidationResults,
     type ValidationSingleResult,
 } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $val,
-    Component,
-    type PropertiesMightBeSignals,
-} from '@serpentis/ptolemy-core';
+import { $derived, $val, type Component } from '@serpentis/ptolemy-core';
 import { GlobalCssClass, stylesheet } from '@serpentis/ptolemy-web';
 
 const css = new GlobalCssClass({
@@ -17,9 +12,9 @@ const css = new GlobalCssClass({
     `,
 });
 
-export type ValidationDisplayProps = PropertiesMightBeSignals<{
+export interface ValidationDisplayProps {
     errors: ValidationSingleResult[] | null | undefined;
-}>;
+}
 
 export const ValidationDisplay: Component<ValidationDisplayProps> = (props) => {
     return $derived(() => {

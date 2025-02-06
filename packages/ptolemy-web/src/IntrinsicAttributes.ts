@@ -4,7 +4,6 @@ import {
     type MightBeSignal,
     type ReadWriteSignal,
     type Signal,
-    type WritableSignal,
 } from '@serpentis/ptolemy-core';
 
 import { type ThreeValueBoolean } from './indeterminate.js';
@@ -82,7 +81,7 @@ type AllElementAttributes<TElement> = {
     style?: ElementCssStyles | undefined;
     children?: JSX.Element | undefined;
 
-    ref?: ((value: TElement) => void) | WritableSignal<TElement>;
+    ref?: (value: TElement) => void;
 
     autofocus?: boolean | undefined;
     tabindex?: number | undefined;
@@ -210,7 +209,3 @@ export type ElementAttributes<TElement extends Element> =
         AllElementAttributes<TElement>;
 
 export type NonSpecificElementAttributes = ElementAttributes<Element>;
-
-export type WebSkipSignalifyingIntrinsicElementAttributes<
-    _TElementTypeString extends string,
-> = 'ref' | 'class' | `bind:${string}`;

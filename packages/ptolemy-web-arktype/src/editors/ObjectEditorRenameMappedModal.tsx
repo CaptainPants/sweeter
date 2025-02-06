@@ -1,11 +1,4 @@
-import {
-    $derived,
-    $mutable,
-    $peek,
-    $val,
-    type Component,
-    type PropertiesMightBeSignals,
-} from '@serpentis/ptolemy-core';
+import { $derived, $mutable, type Component } from '@serpentis/ptolemy-core';
 import { type TypedEvent } from '@serpentis/ptolemy-web';
 import {
     Button,
@@ -16,7 +9,7 @@ import {
     Row,
 } from '@serpentis/ptolemy-web-stardust';
 
-export type ObjectEditorRenameMappedModalProps = PropertiesMightBeSignals<{
+export interface ObjectEditorRenameMappedModalProps {
     isOpen: boolean;
 
     from: string;
@@ -25,13 +18,13 @@ export type ObjectEditorRenameMappedModalProps = PropertiesMightBeSignals<{
 
     onCancelled: () => void;
     onFinished: (from: string, to: string) => Promise<void>;
-}>;
+}
 
 export const ObjectEditorRenameMappedModal: Component<
     ObjectEditorRenameMappedModalProps
 > = ({ isOpen, from, validate, onCancelled, onFinished }) => {
     const title = $derived(() => {
-        return `Renaming '${$val(from)}'`;
+        return `Renaming '${from.value}'`;
     });
 
     const to = $mutable('');
@@ -56,16 +49,16 @@ export const ObjectEditorRenameMappedModal: Component<
         to.value = '';
         failedValidationMessage.value = null;
 
-        $peek(onCancelled)();
+        onCancelled.peek();
     };
 
     const onOK = async (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
         if (evt.button === 0) {
             evt.preventDefault();
 
-            if ($peek(from) !== to.peek()) {
-                const validationResult = await $peek(validate)(
-                    $peek(from),
+            if (from.peek() !== to.peek()) {
+                const validationResult = await validate.peek()(
+                    from.peek(),
                     to.peek(),
                 );
 
@@ -76,7 +69,7 @@ export const ObjectEditorRenameMappedModal: Component<
                 }
             }
 
-            await $peek(onFinished)($peek(from), to.peek());
+            await onFinished.peek()(from.peek(), to.peek());
         }
     };
 

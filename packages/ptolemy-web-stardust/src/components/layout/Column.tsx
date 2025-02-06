@@ -2,7 +2,10 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementAttributes,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    type PropertiesAreSignals,
     type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { assertNotNullOrUndefined } from '@serpentis/ptolemy-utilities';
@@ -15,7 +18,12 @@ import { columnWidthToIdentifier } from '../../stylesheets/columnWidthToIdentifi
 import { columns } from '../../stylesheets/grid.js';
 import { type ColumnWidth } from '../../types.js';
 
-export type ColumnProps = PropertiesMightBeSignals<{
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'div'>,
+    'id'
+>;
+
+export interface ColumnProps {
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
@@ -28,9 +36,12 @@ export type ColumnProps = PropertiesMightBeSignals<{
     md?: ColumnWidth | undefined;
     lg?: ColumnWidth | undefined;
     xl?: ColumnWidth | undefined;
-}> & {
-    passthrough?: IntrinsicElementAttributes<'div'>;
-};
+
+    passthrough?: Prop<
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+    >;
+}
 
 const mappedClasses = [
     columns.xs,
@@ -50,7 +61,10 @@ export const Column: Component<ColumnProps> = ({
     xl,
     style,
     class: classProp,
-    passthrough: { class: classFromPassthroughProps, ...passthroughProps } = {},
+    passthrough: {
+        class: classFromPassthroughProps,
+        ...restPassthroughProps
+    } = {},
 }) => {
     const classesFromProps = $derived(() => {
         const result: ElementCssClasses[] = [];
@@ -78,9 +92,22 @@ export const Column: Component<ColumnProps> = ({
             id={id}
             class={[classesFromProps, classFromPassthroughProps, classProp]}
             style={style}
-            {...passthroughProps}
+            {...restPassthroughProps}
         >
             {children}
         </div>
     );
+};
+Column.propMappings = {
+    passthrough: (input) => {
+        const mapped =
+            input !== undefined
+                ? mapProps<
+                      PropertiesAreSignals<
+                          OverridableHtmlAttributes | undefined
+                      >
+                  >(undefined, input)
+                : undefined;
+        return mapped;
+    },
 };

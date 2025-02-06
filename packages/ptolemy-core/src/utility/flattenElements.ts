@@ -1,4 +1,7 @@
+import { equals } from '@serpentis/ptolemy-utilities';
+
 import { $derived } from '../signals/$derived.js';
+import { $filtered } from '../signals/$filtered.js';
 import { isSignal } from '../signals/isSignal.js';
 import { type Signal } from '../signals/types.js';
 
@@ -7,14 +10,9 @@ export type FlattenedElement = Exclude<
     readonly JSX.Element[] | null | undefined | Signal<JSX.Element> | boolean
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isArray(item: unknown): item is readonly any[] {
+function isArray(item: unknown): item is readonly unknown[] {
     // Annoyingly Array.isArray is not using readonly
     return Array.isArray(item);
-}
-
-function shallowEqualArray<T>(a: readonly T[], b: readonly T[]) {
-    return a.length === b.length && a.every((item, index) => item === b[index]);
 }
 
 /**
@@ -25,22 +23,14 @@ function shallowEqualArray<T>(a: readonly T[], b: readonly T[]) {
 export function flattenElements(
     children: JSX.Element,
 ): Signal<FlattenedElement[]> {
-    // cache the last value and return it if every element is the same
-    let previous: FlattenedElement[] | undefined = undefined;
-
     const flattenElements_calc = () => {
         const next: FlattenedElement[] = [];
-
         flattenElementImplementation(children, next);
-
-        if (previous && shallowEqualArray(previous, next)) {
-            return previous;
-        }
-
-        return (previous = next);
+        return next;
     };
     const result = $derived(flattenElements_calc);
-    return result;
+    const memoized = $filtered(result, equals.arrayElements);
+    return memoized;
 }
 
 function flattenElementImplementation(

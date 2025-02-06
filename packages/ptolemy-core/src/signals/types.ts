@@ -1,8 +1,9 @@
 import { type StackTrace } from '@serpentis/ptolemy-utilities';
 
 import {
-    type signalMarker,
-    type writableSignalMarker,
+    type PTOLEMY_IS_CONSTANT_SIGNAL,
+    type PTOLEMY_IS_SIGNAL,
+    type PTOLEMY_IS_WRITABLE_SIGNAL,
 } from './internal/markers.js';
 import { type SignalState } from './SignalState.js';
 
@@ -75,7 +76,7 @@ export interface SignalCommon<T> {
     /**
      * Globally unique id of signal, used only for debugging.
      */
-    readonly id: number;
+    readonly debugId: number;
 
     /**
      * If enabled, this will contain a stack trace created in the constructor of the signature, allowing
@@ -90,7 +91,7 @@ export interface SignalCommon<T> {
 }
 
 export interface Signal<T> extends SignalCommon<T> {
-    readonly [signalMarker]: true;
+    readonly [PTOLEMY_IS_SIGNAL]: true;
 
     /**
      * Get the current value of the signal and subscribe for updates. If the result of the signal
@@ -117,22 +118,24 @@ export interface Signal<T> extends SignalCommon<T> {
 }
 
 export interface WritableSignal<T> extends SignalCommon<T> {
-    readonly [writableSignalMarker]: true;
+    readonly [PTOLEMY_IS_WRITABLE_SIGNAL]: true;
 
     // there is no way to mark this as write only, but logically it is
     value: T;
 }
 
+export interface ConstantSignal<T> extends Signal<T> {
+    readonly [PTOLEMY_IS_CONSTANT_SIGNAL]: true;
+}
+
 export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {
-    readonly [signalMarker]: true;
+    readonly [PTOLEMY_IS_SIGNAL]: true;
 
     value: T;
 }
 
 export type Unsignal<T> = T extends Signal<infer S> ? S : T;
-export type UnsignalAll<
-    T extends readonly unknown[] | Readonly<Record<string, unknown>>,
-> = {
+export type UnsignalAll<T extends readonly unknown[] | object> = {
     [Key in keyof T]: Unsignal<T[Key]>;
 };
 

@@ -1,13 +1,9 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import { $derived } from '../signals/$derived.js';
 import { $val } from '../signals/$val.js';
-import {
-    type Component,
-    type MightBeSignal,
-    type PropertiesMightBeSignals,
-} from '../types.js';
+import { type Component, type MightBeSignal } from '../types/index.js';
 
-export type ShowProps = PropertiesMightBeSignals<{
+export interface ShowProps {
     /**
      * Condition, used to decide whether or not to render 'children'.
      */
@@ -27,7 +23,7 @@ export type ShowProps = PropertiesMightBeSignals<{
      * This is invoked inside a $derived.
      */
     otherwise?: (() => JSX.Element) | undefined;
-}>;
+}
 
 /**
  * Dynamic component - display children when condition is true.
@@ -38,7 +34,7 @@ export const Show: Component<ShowProps> = ({
     if: condition,
     children,
     otherwise,
-}: ShowProps) => {
+}) => {
     const showCalculation = (): JSX.Element => {
         if ($val(condition)) {
             return $val(children)();

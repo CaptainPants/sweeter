@@ -19,10 +19,8 @@ import {
     $lastGood,
     $mapByIdentity,
     $mutable,
-    $peek,
-    $val,
     $wrap,
-    type ComponentInit,
+    Component,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
 import {
@@ -44,17 +42,17 @@ import { MapElementEditorPart } from './MapElementEditorPart.js';
 import { ObjectEditorAddMappedModal } from './ObjectEditorAddMappedModal.js';
 import { ObjectEditorRenameMappedModal } from './ObjectEditorRenameMappedModal.js';
 
-export function ObjectEditor(
-    { model, replace, local, idPath, indent, isRoot }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const ObjectEditor: Component<EditorProps> = (
+    { model, replace, local, idPath, indent, isRoot },
+    init,
+) => {
     const typedModel = $lastGood(() => {
-        return cast($val(model), asObject);
+        return cast(model.value, asObject);
     });
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $derived(() => $val(indent) + 1);
+    const childIndent = $derived(() => indent.value + 1);
 
     const idGenerator = init.idGenerator;
 
@@ -70,7 +68,7 @@ export function ObjectEditor(
                 };
             },
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             validate: async (converted) => {
                 const res = await validate(
@@ -153,109 +151,102 @@ export function ObjectEditor(
 
         const anyCategories = categorizedProperties.length > 0;
 
-        const result = categorizedProperties.map(
-            ({ category, properties }, categoryIndex) => {
-                const propertyVisiblePerProperty = $derived(() => {
-                    const individualVisibility = properties.map(
-                        ({ property }) => {
-                            const propertyModel =
-                                draft.value.unknownGetProperty(property.name);
-                            assertNotNullOrUndefined(propertyModel);
-
-                            const visibility =
-                                propertyModel.valueModel.type
-                                    .annotations()
-                                    ?.getAssociatedValue(
-                                        StandardAssociatedValueKeys.property_visible,
-                                        $wrap(propertyModel.valueModel),
-                                        calculationContext,
-                                    ) !== false;
-
-                            return visibility; // likely values are notFound and false
-                        },
+        const result = categorizedProperties.map(({ category, properties }) => {
+            const propertyVisiblePerProperty = $derived(() => {
+                const individualVisibility = properties.map(({ property }) => {
+                    const propertyModel = draft.value.unknownGetProperty(
+                        property.name,
                     );
+                    assertNotNullOrUndefined(propertyModel);
 
-                    return individualVisibility;
+                    const visibility =
+                        propertyModel.valueModel.type
+                            .annotations()
+                            ?.getAssociatedValue(
+                                StandardAssociatedValueKeys.property_visible,
+                                $wrap(propertyModel.valueModel),
+                                calculationContext,
+                            ) !== false;
+
+                    return visibility; // likely values are notFound and false
                 });
 
-                const anyVisibleInCategory = $derived(() =>
-                    propertyVisiblePerProperty.value.some((x) => x),
-                );
+                return individualVisibility;
+            });
 
-                // If no properties in the category are visible the whole category should be hidden
-                return $if(anyVisibleInCategory, () => (
-                    <div class={css.category} key={`cat-${categoryIndex}`}>
-                        {anyCategories ? (
-                            <Row>
-                                <Column xl="auto">
-                                    <Label
-                                        style={{
-                                            'font-weight': 'bold',
-                                        }}
-                                        class={css.categoryHeader}
-                                        fillWidth
-                                    >
-                                        {category}
-                                    </Label>
-                                </Column>
-                            </Row>
-                        ) : undefined}
-                        {/* Note that properties is based on the definition and not the model,
+            const anyVisibleInCategory = $derived(() =>
+                propertyVisiblePerProperty.value.some((x) => x),
+            );
+
+            // If no properties in the category are visible the whole category should be hidden
+            return $if(anyVisibleInCategory, () => (
+                <div class={css.category}>
+                    {anyCategories ? (
+                        <Row>
+                            <Column xl="auto">
+                                <Label
+                                    style={{
+                                        'font-weight': 'bold',
+                                    }}
+                                    class={css.categoryHeader}
+                                    fillWidth
+                                >
+                                    {category}
+                                </Label>
+                            </Column>
+                        </Row>
+                    ) : undefined}
+                    {/* Note that properties is based on the definition and not the model,
                             so will not be re-calculated when the model is updated. */}
-                        {properties.map(({ property, id }, index) => {
-                            return $if(
-                                $derived(
-                                    () =>
-                                        propertyVisiblePerProperty.value[
-                                            index
-                                        ] ?? true,
-                                ),
-                                () => {
-                                    const value = $derived(
-                                        // NOTE: this depends on draft.value
-                                        () => {
-                                            const res =
-                                                draft.value.unknownGetProperty(
-                                                    property.name,
-                                                )?.valueModel;
-                                            assertNotNullOrUndefined(res);
-                                            return res;
-                                        },
-                                    );
-                                    return (
-                                        <Row
-                                            class={css.property}
-                                            key={`prop-${String(property.name)}`}
-                                        >
-                                            <Column xs={4}>
-                                                <Label for={id}>
-                                                    {property.propertyInfo.type
-                                                        .annotations()
-                                                        ?.displayName() ??
-                                                        String(property.name)}
-                                                </Label>
-                                            </Column>
-                                            <Column xs={8}>
-                                                <KnownPropertyEditorPart
-                                                    id={id}
-                                                    property={property.name}
-                                                    value={value}
-                                                    updateValue={
-                                                        updatePropertyValue
-                                                    }
-                                                    indent={childIndent}
-                                                    ownerIdPath={idPath}
-                                                />
-                                            </Column>
-                                        </Row>
-                                    );
-                                },
-                            );
-                        })}
-                    </div>
-                ));
-            },
-        );
+                    {properties.map(({ property, id }, index) => {
+                        return $if(
+                            $derived(
+                                () =>
+                                    propertyVisiblePerProperty.value[index] ??
+                                    true,
+                            ),
+                            () => {
+                                const value = $derived(
+                                    // NOTE: this depends on draft.value
+                                    () => {
+                                        const res =
+                                            draft.value.unknownGetProperty(
+                                                property.name,
+                                            )?.valueModel;
+                                        assertNotNullOrUndefined(res);
+                                        return res;
+                                    },
+                                );
+                                return (
+                                    <Row class={css.property}>
+                                        <Column xs={4}>
+                                            <Label for={id}>
+                                                {property.propertyInfo.type
+                                                    .annotations()
+                                                    ?.displayName() ??
+                                                    String(property.name)}
+                                            </Label>
+                                        </Column>
+                                        <Column xs={8}>
+                                            <KnownPropertyEditorPart
+                                                id={id}
+                                                property={property.name}
+                                                value={value}
+                                                updateValue={
+                                                    updatePropertyValue
+                                                }
+                                                indent={childIndent}
+                                                ownerIdPath={idPath}
+                                            />
+                                        </Column>
+                                    </Row>
+                                );
+                            },
+                        );
+                    })}
+                </div>
+            ));
+        });
 
         return result;
     });
@@ -315,7 +306,7 @@ export function ObjectEditor(
     const content = (
         <>
             {$if(
-                $derived(() => !$val(isRoot)),
+                $derived(() => !isRoot?.value),
                 () => (
                     <div
                         class={css.editorIndent}
@@ -438,7 +429,7 @@ export function ObjectEditor(
             <div class={css.editorIndentContainer}>{content}</div>
         </Box>
     );
-}
+};
 
 const css = {
     editorOuter: new GlobalCssClass({

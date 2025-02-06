@@ -19,7 +19,7 @@ it('General', async () => {
         $route(pathTemplate`this/is/a/${match.segment}`, () => {
             const Component = $lazyComponentType(() =>
                 Promise.resolve<Component<{ text: string }>>((props) => {
-                    return `Text: ${props.text}`;
+                    return `Text: ${props.text.peek()}`;
                 }),
             );
 

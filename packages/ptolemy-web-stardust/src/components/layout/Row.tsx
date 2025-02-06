@@ -1,6 +1,9 @@
 import {
     type Component,
-    type IntrinsicElementAttributes,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    type PropertiesAreSignals,
     type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
@@ -10,15 +13,23 @@ import {
 
 import { row } from '../../stylesheets/grid.js';
 
-export type RowProps = PropertiesMightBeSignals<{
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'div'>,
+    'id'
+>;
+
+export type RowProps = {
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
 
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
-}> & {
-    passthrough?: IntrinsicElementAttributes<'div'>;
+} & {
+    passthrough?: Prop<
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+    >;
 };
 
 export const Row: Component<RowProps> = ({
@@ -38,4 +49,13 @@ export const Row: Component<RowProps> = ({
             {children}
         </div>
     );
+};
+
+Row.propMappings = {
+    passthrough: (input) =>
+        input !== undefined
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : input,
 };

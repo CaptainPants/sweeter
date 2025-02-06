@@ -11,7 +11,7 @@ import {
     $derived,
     $insertLocation,
     $val,
-    type PropertiesMightBeSignals,
+    PropsParam,
 } from '@serpentis/ptolemy-core';
 import { Button, Modal } from '@serpentis/ptolemy-web-stardust';
 
@@ -25,19 +25,18 @@ import { type EditorComponentType, type EditorSettings } from '../types.js';
 import { AmbientValues } from './AmbientValues.js';
 import { EditorHost } from './EditorHost.js';
 
-export type EditorRootProps<TSchema extends AnyTypeConstraint> =
-    PropertiesMightBeSignals<{
-        id?: string | undefined;
-        model: Model<TSchema>;
-        replace: Replacer<TSchema>;
-        settings?: EditorSettings;
+export type EditorRootProps<TSchema extends AnyTypeConstraint> = {
+    id?: string | undefined;
+    model: Model<TSchema>;
+    replace: Replacer<TSchema>;
+    settings?: EditorSettings;
 
-        idPath?: string;
+    idPath?: string;
 
-        getAmbientValue?: (name: string) => unknown;
+    getAmbientValue?: (name: string) => unknown;
 
-        rules?: Array<TypeMatcherRule<EditorComponentType>>;
-    }>;
+    rules?: Array<TypeMatcherRule<EditorComponentType>>;
+};
 
 /**
  * Constant default settings so that the default value doesn't cause constant re-renders from updating the context value.
@@ -49,7 +48,7 @@ const defaultSettings = Object.freeze({});
  * @param props
  */
 export function EditorRoot<TSchema extends AnyTypeConstraint>(
-    props: Readonly<EditorRootProps<TSchema>>,
+    props: PropsParam<EditorRootProps<TSchema>>,
 ): JSX.Element;
 export function EditorRoot<TSchema extends AnyTypeConstraint>({
     id,
@@ -59,7 +58,7 @@ export function EditorRoot<TSchema extends AnyTypeConstraint>({
     idPath,
     getAmbientValue,
     rules: rulesProp,
-}: Readonly<EditorRootProps<TSchema>>): JSX.Element {
+}: PropsParam<EditorRootProps<TSchema>>): JSX.Element {
     const typedModel = $derived(() => {
         const val = $val(model);
         const result = asUnknown(val);

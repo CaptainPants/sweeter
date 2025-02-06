@@ -1,17 +1,15 @@
 import { type UnknownModel } from '@serpentis/ptolemy-arktype-modeling';
 import {
     $derived,
-    $peek,
     $val,
-    type ComponentInit,
+    Component,
     LocalizerHook,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 
 import { EditorHost } from '../components/EditorHost.js';
 
-export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
+export interface KnownPropertyEditorPartProps {
     id: string;
 
     property: string | symbol;
@@ -23,26 +21,18 @@ export type KnownPropertyEditorPartProps = PropertiesMightBeSignals<{
 
     indent: number;
     ownerIdPath: string | undefined;
-}>;
+}
 
-export function KnownPropertyEditorPart(
-    {
-        id,
-        property,
-        value,
-        updateValue,
-        indent,
-        ownerIdPath,
-    }: KnownPropertyEditorPartProps,
-    init: ComponentInit,
-): JSX.Element {
+export const KnownPropertyEditorPart: Component<
+    KnownPropertyEditorPartProps
+> = ({ id, property, value, updateValue, indent, ownerIdPath }, init) => {
     const idPath = $derived(() => {
-        return idPaths.key($val(ownerIdPath), String($val(property)));
+        return idPaths.key(ownerIdPath.value, String(property.value));
     });
 
     const replace = async (value: UnknownModel) => {
-        const name = $peek(property);
-        await $peek(updateValue)(name, value);
+        const name = property.peek();
+        await updateValue.peek()(name, value);
     };
 
     const { localize } = init.hook(LocalizerHook);
@@ -66,4 +56,4 @@ export function KnownPropertyEditorPart(
             />
         );
     });
-}
+};

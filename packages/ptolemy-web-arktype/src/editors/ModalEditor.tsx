@@ -2,32 +2,31 @@ import { type UnknownModel } from '@serpentis/ptolemy-arktype-modeling';
 import {
     $derived,
     $mutable,
-    $peek,
-    $val,
-    $valProperties,
-    type ComponentInit,
+    $wrap,
+    Component,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
 
 import { IconButton } from '../components/IconButton.js';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
-import { type EditorProps } from '../types.js';
+import { type EditorProps, RenderNextFunctionArgs } from '../types.js';
 
-export function ModalEditor(
+export const ModalEditor: Component<EditorProps> = (
     {
         next,
-        indent: _ignoreIndent,
+        // The indentation for the new modal is set back to zero
+        indent: _indentIsReset,
         model,
         replace,
         propertyDisplayName,
         ...passthrough
-    }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+    },
+    init,
+) => {
     const isOpen = $mutable(false);
 
-    const modelSnapshot = $mutable($peek(model));
+    const modelSnapshot = $mutable(model.peek());
 
     const isRoot = passthrough.isRoot;
 
@@ -38,16 +37,14 @@ export function ModalEditor(
 
     const { validated, isValid } = init.hook(ValidationContainerHook);
 
-    const nextProps = $derived(() => {
-        return Object.assign({}, $valProperties(passthrough), {
-            indent: 0,
-            model: modelSnapshot,
-            replace: (replacement: UnknownModel): Promise<void> => {
-                modelSnapshot.value = replacement;
-                return Promise.resolve();
-            },
-            isRoot: true,
-        });
+    const nextProps: RenderNextFunctionArgs = Object.assign({}, passthrough, {
+        indent: $wrap(0),
+        model: modelSnapshot,
+        replace: $wrap((replacement: UnknownModel): Promise<void> => {
+            modelSnapshot.value = replacement;
+            return Promise.resolve();
+        }),
+        isRoot: true,
     });
 
     const onCommit = async (): Promise<void> => {
@@ -57,14 +54,14 @@ export function ModalEditor(
         }
 
         // async
-        await $peek(replace)(modelSnapshot.value);
+        await replace.peek()(modelSnapshot.value);
 
         isOpen.value = false;
     };
 
     const onCancel = (): void => {
         // Reset value
-        modelSnapshot.value = $peek(model);
+        modelSnapshot.value = model.peek();
 
         isOpen.value = false;
     };
@@ -75,7 +72,7 @@ export function ModalEditor(
 
     const content = $derived(() => {
         return validated(() => {
-            return $val(next)(nextProps.value);
+            return next.peek()(nextProps);
         });
     });
 
@@ -83,7 +80,9 @@ export function ModalEditor(
         () =>
             localize('Edit') +
             ' ' +
-            ($val(isRoot) ? 'root' : ($val(propertyDisplayName) ?? 'unknown')),
+            (isRoot?.value
+                ? 'root'
+                : (propertyDisplayName?.value ?? 'unknown')),
     );
 
     return $derived(() => {
@@ -97,7 +96,6 @@ export function ModalEditor(
                     }}
                 />
                 <Modal
-                    key="dialog"
                     isOpen={isOpen}
                     title={propertyDisplayName}
                     commitEnabled={isValid}
@@ -109,4 +107,4 @@ export function ModalEditor(
             </>
         );
     });
-}
+};

@@ -7,14 +7,19 @@ import {
     Context,
     type IdGenerator,
     initializeHook,
-    type PropsWithIntrinsicAttributesFor,
+    mapProps,
+    type PropsInputFor,
+    type PropsParamForComponent,
     type Signal,
     SignalState,
     subscribeToChanges,
     type UnsignalAll,
     untrack,
 } from '@serpentis/ptolemy-core';
-import { whenGarbageCollected } from '@serpentis/ptolemy-utilities';
+import {
+    createLogger,
+    whenGarbageCollected,
+} from '@serpentis/ptolemy-utilities';
 
 import { type WebRuntime } from '../types.js';
 
@@ -170,11 +175,13 @@ function createComponentInstanceInit<
     return init;
 }
 
+const logger = createLogger($insertLocation(), createComponentInstance);
+
 export function createComponentInstance<
     TComponentType extends ComponentTypeConstraint,
 >(
     Component: TComponentType,
-    props: PropsWithIntrinsicAttributesFor<TComponentType>,
+    props: PropsInputFor<TComponentType>,
     webRuntime: WebRuntime,
 ): Signal<JSX.Element> {
     const resultController = $controller<JSX.Element>();
@@ -182,8 +189,10 @@ export function createComponentInstance<
     const result = ComponentFaultContext.invokeWith(
         {
             reportFaulted(err) {
-                // This might be undefined
-                console.log('Faulted (createComponentInstance): ', result);
+                logger.warning.formatted`Faulted: ${result.getDebugIdentity()}`(
+                    err,
+                );
+
                 resultController.updateState(SignalState.error(err));
             },
         },
@@ -191,7 +200,13 @@ export function createComponentInstance<
         () => {
             const init = createComponentInstanceInit(Component, webRuntime);
 
-            const componentContent = Component(props, init);
+            // The typing on propMappings here is a bit dodgy
+            const propsParam = mapProps(
+                Component.propMappings,
+                props,
+            ) as unknown as PropsParamForComponent<TComponentType>; // This is a cheat, it caters to the fictional properties on the parameter for custom conversions
+
+            const componentContent = Component(propsParam, init);
 
             // Makes all init calls throw from now on
             init.isValid = false;

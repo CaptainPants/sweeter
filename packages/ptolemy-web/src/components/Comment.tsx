@@ -6,16 +6,15 @@ import {
     ComponentFaultContext,
     isSignal,
     listenWhileNotCollected,
-    PropertiesMightBeSignals,
     Signal,
     SignalState,
 } from '@serpentis/ptolemy-core';
 
 import { getWebRuntime } from '../runtime/getWebRuntime.js';
 
-export type CommentProps = PropertiesMightBeSignals<{
+export interface CommentProps {
     content?: string | undefined;
-}>;
+}
 
 export const Comment: Component<CommentProps> = ({ content }, init) => {
     const comment = getWebRuntime().createComment();

@@ -5,14 +5,15 @@ import {
 } from '@serpentis/ptolemy-utilities';
 
 import { type Signal } from '../signals/types.js';
-import { type MightBeSignal } from '../types.js';
+import { type MightBeSignal } from '../types/index.js';
 
+import { $wrap } from './$constant.js';
 import { $controller } from './$controller.js';
 import { $derived } from './$derived.js';
 import { $filtered } from './$filtered.js';
-import { $peek, $val, $wrap } from './$val.js';
+import { $peek, $val } from './$val.js';
 import { isSignal } from './isSignal.js';
-import { SignalController } from './SignalController.js';
+import { type SignalController } from './SignalController.js';
 import { SignalState } from './SignalState.js';
 
 type IdentityCacheItem<TInput, TIdentity, TMapped> = {

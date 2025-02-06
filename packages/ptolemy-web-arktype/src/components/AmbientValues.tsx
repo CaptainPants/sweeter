@@ -6,25 +6,24 @@ import {
     $derived,
     $insertLocation,
     $val,
-    type ComponentInit,
-    type PropertiesMightBeSignals,
+    type Component,
 } from '@serpentis/ptolemy-core';
 
 import { AmbientValuesContext } from '../context/AmbientValuesContext.js';
 
-export type AmbientValuesProps = PropertiesMightBeSignals<{
+export type AmbientValuesProps = {
     callback: AmbientValueCallback | undefined;
     children?: () => JSX.Element;
-}>;
+};
 
-export function AmbientValues(
-    { callback: newCallback, children }: AmbientValuesProps,
-    init: ComponentInit,
-): JSX.Element {
+export const AmbientValues: Component<AmbientValuesProps> = (
+    { callback: newCallback, children },
+    init,
+) => {
     const existingContext = init.getContext(AmbientValuesContext);
 
     const ambientValueCallback = $derived<AmbientValueCallback>(() => {
-        const newCallbackResolved = $val(newCallback);
+        const newCallbackResolved = newCallback.value;
         const existingContextResolved = $val(existingContext);
 
         // Shortcut for the 'do nothing' flow variation
@@ -56,4 +55,4 @@ export function AmbientValues(
             });
         },
     );
-}
+};

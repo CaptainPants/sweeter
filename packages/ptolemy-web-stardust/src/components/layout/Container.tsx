@@ -1,8 +1,10 @@
 import {
     $derived,
     type Component,
-    type IntrinsicElementAttributes,
-    isSignal,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    type PropertiesAreSignals,
     type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
@@ -18,7 +20,12 @@ import {
     type BreakpointSizeName,
 } from '../../stylesheets/internal/constants.js';
 
-export type ContainerProps = PropertiesMightBeSignals<{
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'div'>,
+    'id'
+>;
+
+export interface ContainerProps {
     id?: string | undefined;
 
     children?: JSX.Element | undefined;
@@ -27,9 +34,12 @@ export type ContainerProps = PropertiesMightBeSignals<{
 
     style?: ElementCssStyles | undefined;
     class?: ElementCssClasses | undefined;
-}> & {
-    passthrough?: IntrinsicElementAttributes<'div'>;
-};
+
+    passthrough?: Prop<
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+    >;
+}
 
 export const Container: Component<ContainerProps> = ({
     id,
@@ -44,15 +54,13 @@ export const Container: Component<ContainerProps> = ({
     } = {},
 }) => {
     const sizeStyle: ElementCssStyles = {
-        'max-width': isSignal(size)
+        'max-width': size
             ? $derived(() =>
                   size.value
                       ? `${breakpointNameToSizeMap[size.value]}px`
                       : undefined,
               )
-            : typeof size !== 'undefined'
-              ? `${breakpointNameToSizeMap[size]}px`
-              : undefined,
+            : undefined,
     };
 
     return (
@@ -73,3 +81,12 @@ const css = new GlobalCssClass({
         margin: 0 auto;
     `,
 });
+
+Container.propMappings = {
+    passthrough: (input) =>
+        input !== undefined
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : undefined,
+};

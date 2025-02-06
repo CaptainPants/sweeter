@@ -2,9 +2,9 @@ import { ExecutionContextVariable } from '../executionContext/ExecutionContextVa
 import {
     type ComponentOrIntrinsicElementTypeConstraint,
     type JSXResultForComponentOrElementType,
-    type PropsWithIntrinsicAttributesFor,
+    type PropsInputFor,
     type RuntimeRootHostElement,
-} from '../types.js';
+} from '../types/index.js';
 
 export interface Runtime {
     renderOffscreen(content: JSX.Element): JSX.Element;
@@ -18,7 +18,7 @@ export interface Runtime {
          * Note that middleware is allowed to modify the props object, the
          * caller needs to make a defensive copy if they are reusing it.
          */
-        props: PropsWithIntrinsicAttributesFor<TComponentType>,
+        props: PropsInputFor<TComponentType>,
     ): JSXResultForComponentOrElementType<TComponentType>;
     dispose(): void;
     readonly type: symbol;

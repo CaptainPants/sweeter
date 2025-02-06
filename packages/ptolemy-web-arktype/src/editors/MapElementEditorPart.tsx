@@ -1,17 +1,10 @@
 import { type UnknownModel } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $peek,
-    $val,
-    type ComponentInit,
-    LocalizerHook,
-    type PropertiesMightBeSignals,
-} from '@serpentis/ptolemy-core';
+import { $derived, Component, LocalizerHook } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 
 import { EditorHost } from '../components/EditorHost.js';
 
-export type MapElementEditorPartProps = PropertiesMightBeSignals<{
+export interface MapElementEditorPartProps {
     id: string;
 
     property: string | symbol;
@@ -23,41 +16,31 @@ export type MapElementEditorPartProps = PropertiesMightBeSignals<{
 
     indent: number;
     ownerIdPath: string | undefined;
-}>;
+}
 
-export function MapElementEditorPart(
-    props: MapElementEditorPartProps,
-    init: ComponentInit,
-): JSX.Element;
-export function MapElementEditorPart(
-    {
-        property,
-        value,
-        updateElement,
-        indent,
-        ownerIdPath,
-    }: MapElementEditorPartProps,
-    init: ComponentInit,
-): JSX.Element {
+export const MapElementEditorPart: Component<MapElementEditorPartProps> = (
+    { property, value, updateElement, indent, ownerIdPath },
+    init,
+) => {
     const replace = async (value: UnknownModel) => {
-        await $peek(updateElement)($peek(property), value);
+        await updateElement.peek()(property.peek(), value);
     };
 
     const { localize } = init.hook(LocalizerHook);
 
-    const propertyNameAsString = $derived(() => String($val(property)));
+    const propertyNameAsString = $derived(() => String(property.value));
 
     return (
         <EditorHost
             model={value}
             replace={replace}
             propertyDisplayName={$derived(() =>
-                localize($val(propertyNameAsString)),
+                localize(propertyNameAsString.value),
             )}
             indent={indent}
             idPath={$derived(() =>
-                idPaths.key($val(ownerIdPath), $val(propertyNameAsString)),
+                idPaths.key(ownerIdPath.value, propertyNameAsString.value),
             )}
         />
     );
-}
+};

@@ -1,10 +1,12 @@
-import { $derived, $val } from '@serpentis/ptolemy-core';
 import {
-    type Component,
-    type IntrinsicElementProps,
+    $derived,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    type PropertiesAreSignals,
     type PropertiesMightBeSignals,
-    type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
+import { type Component, type ReadWriteSignal } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
     type ElementCssStyles,
@@ -17,7 +19,12 @@ import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type TextAreaProps = PropertiesMightBeSignals<{
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'textarea'>,
+    'id' | 'bind:value'
+>;
+
+export interface TextAreaProps {
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     readOnly?: boolean | undefined;
@@ -37,11 +44,18 @@ export type TextAreaProps = PropertiesMightBeSignals<{
     onInput?:
         | ((evt: TypedEvent<HTMLTextAreaElement, Event>) => void)
         | undefined;
-}> & {
-    'bind:value'?: ReadWriteSignal<string> | undefined;
 
-    passthroughProps?: IntrinsicElementProps<'textarea'> | undefined;
-};
+    'bind:value'?: Prop<
+        ReadWriteSignal<string> | undefined,
+        ReadWriteSignal<string> | undefined
+    >;
+
+    passthrough?: Prop<
+        | PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>
+        | undefined,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined> | undefined
+    >;
+}
 
 export const TextArea: Component<TextAreaProps> = ({
     variant,
@@ -58,7 +72,7 @@ export const TextArea: Component<TextAreaProps> = ({
     class: classProp,
     style,
     onInput,
-    passthroughProps: {
+    passthrough: {
         class: classFromPassthroughProps,
         oninput: oninputFromPassthroughProps,
         style: styleFromPassthroughProps,
@@ -71,11 +85,11 @@ export const TextArea: Component<TextAreaProps> = ({
         applyStandardClasses(
             result,
             {
-                disabled: $val(disabled),
-                fillWidth: $val(fillWidth),
-                invalid: $val(invalid),
+                disabled: disabled?.value,
+                fillWidth: fillWidth?.value,
+                invalid: invalid?.value,
             },
-            $val(variant),
+            variant?.value,
         );
 
         return result;
@@ -102,4 +116,13 @@ export const TextArea: Component<TextAreaProps> = ({
             {...passthroughProps}
         />
     );
+};
+TextArea.propMappings = {
+    passthrough: (input) =>
+        input
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : undefined,
+    'bind:value': (input) => input,
 };

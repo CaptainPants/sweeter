@@ -2,7 +2,10 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementProps,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    type PropertiesAreSignals,
     type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import {
@@ -17,7 +20,12 @@ import { type VariantName } from '../../internal/constants.js';
 import { button } from '../../stylesheets/button.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type ButtonProps = PropertiesMightBeSignals<{
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'button'>,
+    'id'
+>;
+
+export type ButtonProps = {
     children?: JSX.Element | undefined;
 
     variant?: VariantName | undefined;
@@ -33,8 +41,11 @@ export type ButtonProps = PropertiesMightBeSignals<{
     onclick?:
         | ((evt: TypedEvent<HTMLButtonElement, MouseEvent>) => void)
         | undefined;
-}> & {
-    passthroughProps?: IntrinsicElementProps<'button'> | undefined;
+
+    passthrough?: Prop<
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+    >;
 };
 
 export const Button: Component<ButtonProps> = ({
@@ -47,7 +58,7 @@ export const Button: Component<ButtonProps> = ({
     fillWidth,
     class: classProp,
     style,
-    passthroughProps: {
+    passthrough: {
         class: classFromPassthroughProps,
         style: styleFromPassthroughProps,
         onclick: onclickFromPassthroughProps,
@@ -64,7 +75,7 @@ export const Button: Component<ButtonProps> = ({
                 disabled: $val(disabled),
                 fillWidth: $val(fillWidth),
             },
-            $val(variant) ?? 'secondary',
+            variant?.value ?? 'secondary',
         );
 
         return result;
@@ -87,4 +98,11 @@ export const Button: Component<ButtonProps> = ({
             {children}
         </button>
     );
+};
+Button.propMappings = {
+    passthrough: (input) =>
+        mapProps<PropertiesAreSignals<OverridableHtmlAttributes | undefined>>(
+            undefined,
+            input,
+        ),
 };

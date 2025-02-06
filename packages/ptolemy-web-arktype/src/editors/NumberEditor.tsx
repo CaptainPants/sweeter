@@ -5,13 +5,7 @@ import {
     type NumberModel,
     validate,
 } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $lastGood,
-    $peek,
-    $val,
-    type ComponentInit,
-} from '@serpentis/ptolemy-core';
+import { $derived, $lastGood, type Component } from '@serpentis/ptolemy-core';
 import { Input } from '@serpentis/ptolemy-web-stardust';
 
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -19,12 +13,12 @@ import { type EditorProps } from '../types.js';
 
 import { ValidationDisplay } from './ValidationDisplay.js';
 
-export function NumberEditor(
-    { model, replace, propertyDisplayName, idPath }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const NumberEditor: Component<EditorProps> = (
+    { model, replace, propertyDisplayName, idPath },
+    init,
+) => {
     const typedModel = $lastGood(() => {
-        return cast($val(model), asNumber);
+        return cast(model.value, asNumber);
     });
 
     const { draft, validationErrors } = init.hook(
@@ -32,7 +26,7 @@ export function NumberEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             convertIn: (model) => String(model.value),
             convertOut: (draft) => {
@@ -79,4 +73,4 @@ export function NumberEditor(
             <ValidationDisplay errors={validationErrors} />
         </>
     );
-}
+};

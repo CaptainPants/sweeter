@@ -4,7 +4,6 @@ import {
     $val,
     type Component,
     Portal,
-    type PropertiesMightBeSignals,
 } from '@serpentis/ptolemy-core';
 import { GlobalCssClass, stylesheet } from '@serpentis/ptolemy-web';
 
@@ -131,7 +130,7 @@ const classes = {
     }),
 } as const;
 
-export type ModalProps = PropertiesMightBeSignals<{
+export type ModalProps = {
     title?: JSX.Element | (() => JSX.Element);
     footer?: JSX.Element | (() => JSX.Element);
 
@@ -140,7 +139,7 @@ export type ModalProps = PropertiesMightBeSignals<{
     isOpen?: boolean;
 
     onClose?: (() => void) | undefined;
-}>;
+};
 
 export const Modal: Component<ModalProps> = (
     { title, children, footer, isOpen, onClose },

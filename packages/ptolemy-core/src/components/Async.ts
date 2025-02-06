@@ -1,17 +1,17 @@
 import { getRuntime } from '../runtime/Runtime.js';
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
-import { $val } from '../signals/$val.js';
 import { type Signal } from '../signals/types.js';
 import {
     type ComponentInit,
     type MightBeSignal,
-    type PropertiesMightBeSignals,
-} from '../types.js';
+    type PropsInputFor,
+    type PropsParam,
+} from '../types/index.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
 
-export type AsyncProps<T> = PropertiesMightBeSignals<{
+export interface AsyncProps<T> {
     loadData: (abort: AbortSignal) => Promise<T>;
     /**
      * Note that this is called inside a $derived, so signals can be subscribed without additionally wrapping in another $derived.
@@ -19,14 +19,14 @@ export type AsyncProps<T> = PropertiesMightBeSignals<{
      * @returns
      */
     children: (data: Signal<T>) => JSX.Element;
-}>;
+}
 
 export function Async<T>(
-    props: AsyncProps<T>,
+    props: PropsParam<AsyncProps<T>>,
     init: ComponentInit,
 ): JSX.Element;
 export function Async<T>(
-    { loadData: callback, children }: AsyncProps<T>,
+    { loadData: callback, children }: PropsParam<AsyncProps<T>>,
     init: ComponentInit,
 ): JSX.Element {
     const suspenseContext = SuspenseContext.getCurrent();
@@ -106,7 +106,7 @@ export function Async<T>(
             // Suspense should be showing
             return undefined;
         } else {
-            return $val(children)(latestResult);
+            return children.value(latestResult);
         }
     });
 }
@@ -124,5 +124,10 @@ export function $async<T>(
      */
     render: MightBeSignal<(data: Signal<T>) => JSX.Element>,
 ): JSX.Element {
-    return getRuntime().jsx(Async<T>, { loadData, children: render });
+    const inputProps: PropsInputFor<typeof Async<T>> = {
+        loadData: loadData,
+        children: render,
+    };
+
+    return getRuntime().jsx(Async<T>, inputProps);
 }

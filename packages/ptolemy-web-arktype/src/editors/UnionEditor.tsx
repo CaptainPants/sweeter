@@ -8,21 +8,20 @@ import {
     type UnknownModel,
     UnknownType,
 } from '@serpentis/ptolemy-arktype-modeling';
-import { $derived, $if, $lastGood, $peek, $val } from '@serpentis/ptolemy-core';
+import { $derived, $if, $lastGood, Component } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 import { Select } from '@serpentis/ptolemy-web-stardust';
 
 import { EditorHost } from '../components/EditorHost.js';
 import { type EditorProps } from '../types.js';
 
-export function UnionEditor(props: Readonly<EditorProps>): JSX.Element;
-export function UnionEditor({
+export const UnionEditor: Component<EditorProps> = ({
     model,
     replace,
     idPath,
     indent,
-}: Readonly<EditorProps>): JSX.Element {
-    const typedModel = $lastGood(() => cast($val(model), asUnion));
+}) => {
+    const typedModel = $lastGood(() => cast(model.value, asUnion));
 
     const type = $derived(() => typedModel.value.type);
 
@@ -52,7 +51,7 @@ export function UnionEditor({
             value: defaultValue,
             schema: typedModel.peek().type,
         });
-        await $peek(replace)(defaultModel);
+        await replace.peek()(defaultModel);
     };
 
     const resolved = $derived(() => typedModel.value.unknownResolve());
@@ -63,7 +62,7 @@ export function UnionEditor({
         const defaultModel = await typedModel
             .peek()
             .replace(newResolvedModel, false);
-        await $peek(replace)(defaultModel);
+        await replace.peek()(defaultModel);
     };
 
     const typeIndex = $derived(() =>
@@ -97,11 +96,11 @@ export function UnionEditor({
                         replace={replaceResolved}
                         indent={indent}
                         idPath={$derived(() =>
-                            idPaths.union($val(idPath), typeIndex.value ?? -1),
+                            idPaths.union(idPath.value, typeIndex.value ?? -1),
                         )}
                     />
                 ),
             )}
         </div>
     );
-}
+};

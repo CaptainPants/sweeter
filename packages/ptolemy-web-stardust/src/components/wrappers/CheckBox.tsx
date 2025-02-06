@@ -2,8 +2,11 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
+    type IntrinsicRawElementAttributes,
+    mapProps,
+    Prop,
+    PropertiesAreSignals,
+    PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -19,7 +22,12 @@ import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
-export type CheckBoxProps = PropertiesMightBeSignals<{
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'input'>,
+    'id'
+>;
+
+export type CheckBoxProps = {
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     readOnly?: boolean | undefined;
@@ -36,10 +44,13 @@ export type CheckBoxProps = PropertiesMightBeSignals<{
     style?: ElementCssStyles | undefined;
 
     onInput?: ((evt: TypedEvent<HTMLInputElement, Event>) => void) | undefined;
-}> & {
+
     'bind:checked'?: ReadWriteSignal<ThreeValueBoolean> | undefined;
 
-    passthroughProps?: IntrinsicElementProps<'input'> | undefined;
+    passthrough?: Prop<
+        PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+    >;
 };
 
 export const CheckBox: Component<CheckBoxProps> = ({
@@ -56,7 +67,7 @@ export const CheckBox: Component<CheckBoxProps> = ({
     class: classProp,
     style,
     onInput,
-    passthroughProps: {
+    passthrough: {
         class: classFromPassthroughProps,
         style: styleFromPassthroughProps,
         oninput: oninputFromPassthroughProps,
@@ -100,4 +111,11 @@ export const CheckBox: Component<CheckBoxProps> = ({
             {...passthroughProps}
         />
     );
+};
+CheckBox.propMappings = {
+    passthrough: (input) =>
+        mapProps<PropertiesAreSignals<OverridableHtmlAttributes | undefined>>(
+            undefined,
+            input,
+        ),
 };

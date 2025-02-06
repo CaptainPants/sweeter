@@ -2,8 +2,11 @@ import {
     $derived,
     $val,
     type Component,
-    type IntrinsicElementProps,
-    type PropertiesMightBeSignals,
+    IntrinsicRawElementAttributes,
+    mapProps,
+    type Prop,
+    PropertiesAreSignals,
+    PropertiesMightBeSignals,
     type ReadWriteSignal,
 } from '@serpentis/ptolemy-core';
 import {
@@ -17,13 +20,18 @@ import { type VariantName } from '../../internal/constants.js';
 import { forms } from '../../stylesheets/index.js';
 import { applyStandardClasses } from '../internal/applyStandardClasses.js';
 
+type OverridableHtmlAttributes = Exclude<
+    IntrinsicRawElementAttributes<'select'>,
+    'id'
+>;
+
 export interface SelectOption {
     text?: string | undefined;
     value: string;
     disabled?: boolean;
 }
 
-export type SelectProps = PropertiesMightBeSignals<{
+export type SelectProps = {
     variant?: VariantName | undefined;
     disabled?: boolean | undefined;
     fillWidth?: boolean | undefined;
@@ -41,10 +49,17 @@ export type SelectProps = PropertiesMightBeSignals<{
     options: SelectOption[];
 
     onInput?: ((evt: TypedEvent<HTMLSelectElement, Event>) => void) | undefined;
-}> & {
-    'bind:value'?: ReadWriteSignal<string> | undefined;
 
-    passthrough?: IntrinsicElementProps<'select'> | undefined;
+    'bind:value'?: Prop<
+        ReadWriteSignal<string> | undefined,
+        ReadWriteSignal<string> | undefined
+    >;
+
+    passthrough?: Prop<
+        | PropertiesMightBeSignals<OverridableHtmlAttributes | undefined>
+        | undefined,
+        PropertiesAreSignals<OverridableHtmlAttributes | undefined> | undefined
+    >;
 };
 
 export const Select: Component<SelectProps> = ({
@@ -113,4 +128,14 @@ export const Select: Component<SelectProps> = ({
             {children}
         </select>
     );
+};
+
+Select.propMappings = {
+    passthrough: (input) =>
+        input
+            ? mapProps<
+                  PropertiesAreSignals<OverridableHtmlAttributes | undefined>
+              >(undefined, input)
+            : undefined,
+    'bind:value': (input) => input,
 };

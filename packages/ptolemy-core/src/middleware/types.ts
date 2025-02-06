@@ -1,6 +1,6 @@
-import { type ComponentOrIntrinsicElementTypeConstraint } from '../types.js';
+import { type ComponentOrIntrinsicElementTypeConstraint } from '../types/index.js';
 
-export type JSXMiddlewareUnknownProps = Record<string, unknown>;
+export type JSXMiddlewareUnknownProps = Readonly<Record<string, unknown>>;
 
 export type JSXMiddlewareCallback = (
     type: ComponentOrIntrinsicElementTypeConstraint,

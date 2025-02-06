@@ -8,9 +8,8 @@ import {
 import {
     $derived,
     $lastGood,
-    $peek,
     $val,
-    type ComponentInit,
+    type Component,
 } from '@serpentis/ptolemy-core';
 import { CheckBox } from '@serpentis/ptolemy-web-stardust';
 
@@ -19,10 +18,10 @@ import { type EditorProps } from '../types.js';
 
 import { ValidationDisplay } from './ValidationDisplay.js';
 
-export function BooleanEditor(
-    { model, replace, idPath }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const BooleanEditor: Component<EditorProps> = (
+    { model, replace, idPath },
+    init,
+) => {
     const typedModel = $lastGood(() => {
         return cast($val(model), asBoolean);
     });
@@ -32,7 +31,7 @@ export function BooleanEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             convertIn: (model) => model.value,
             convertOut: (draft) => {
@@ -69,4 +68,4 @@ export function BooleanEditor(
             <ValidationDisplay errors={validationErrors} />
         </>
     );
-}
+};

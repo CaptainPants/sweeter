@@ -1,12 +1,12 @@
 import { announceMutatingSignal, announceSignalUsage } from '../../ambient.js';
 import { SignalState } from '../../SignalState.js';
 import { type ReadWriteSignal } from '../../types.js';
-import { writableSignalMarker } from '../markers.js';
+import { PTOLEMY_IS_WRITABLE_SIGNAL } from '../markers.js';
 
-import { SignalBase } from './SignalBase.js';
+import { NormalSignalBase } from './NormalSignalBase.js';
 
 export class MutableValueSignal<T>
-    extends SignalBase<T>
+    extends NormalSignalBase<T>
     implements ReadWriteSignal<T>
 {
     constructor(value?: T) {
@@ -17,7 +17,7 @@ export class MutableValueSignal<T>
         );
     }
 
-    public get [writableSignalMarker]() {
+    public get [PTOLEMY_IS_WRITABLE_SIGNAL]() {
         return true as const;
     }
 

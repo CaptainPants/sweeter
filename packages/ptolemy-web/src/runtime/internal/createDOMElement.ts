@@ -4,7 +4,7 @@ import {
     ComponentFaultContext,
     Context,
     dev,
-    type PropsWithIntrinsicAttributesFor,
+    type PropsInputFor,
     type Signal,
     SignalState,
 } from '@serpentis/ptolemy-core';
@@ -15,11 +15,12 @@ import { type WebRuntime } from '../types.js';
 
 import { addJsxChildren } from './addJsxChildren.js';
 import { bindDOMMiscProps } from './bindDOMMiscProps.js';
+import { bindRef } from './bindRef.js';
 import { addMountedCallback } from './mounting.js';
 
 export function createDOMElement<TElementTypeString extends string>(
     type: TElementTypeString,
-    props: PropsWithIntrinsicAttributesFor<TElementTypeString>,
+    props: PropsInputFor<TElementTypeString>,
     webRuntime: WebRuntime,
 ): Signal<HTMLElement | SVGElement> {
     const resultController = $controller<HTMLElement | SVGElement>();
@@ -43,17 +44,14 @@ export function createDOMElement<TElementTypeString extends string>(
         const contextSnapshot = Context.createSnapshot();
 
         // This has to be before bindDOMMiscProps as value for HTMLSelectElement is dependent on the child element 'option's
+
         addJsxChildren(contextSnapshot, ele, props.children, webRuntime);
 
         // Assign attributes and set up signals
         bindDOMMiscProps(ele, props, webRuntime);
 
         if (props.ref) {
-            if (typeof props.ref === 'function') {
-                props.ref(ele);
-            } else {
-                props.ref.value = ele;
-            }
+            bindRef(ele, props.ref);
         }
 
         if (props.class) {

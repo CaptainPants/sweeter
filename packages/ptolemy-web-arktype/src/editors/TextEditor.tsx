@@ -5,13 +5,7 @@ import {
     type StringModel,
     validate,
 } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $lastGood,
-    $peek,
-    $val,
-    type ComponentInit,
-} from '@serpentis/ptolemy-core';
+import { $derived, $lastGood, Component } from '@serpentis/ptolemy-core';
 import { TextArea } from '@serpentis/ptolemy-web-stardust';
 
 import { DraftHook } from '../hooks/DraftHook.js';
@@ -19,12 +13,12 @@ import { type EditorProps } from '../types.js';
 
 import { ValidationDisplay } from './ValidationDisplay.js';
 
-export function TextEditor(
-    { model, replace, propertyDisplayName, idPath }: Readonly<EditorProps>,
-    init: ComponentInit,
-): JSX.Element {
+export const TextEditor: Component<EditorProps> = (
+    { model, replace, propertyDisplayName, idPath },
+    init,
+) => {
     const typedModel = $lastGood(() => {
-        return cast($val(model), asString);
+        return cast(model.value, asString);
     });
 
     const { draft, validationErrors } = init.hook(
@@ -32,7 +26,7 @@ export function TextEditor(
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             convertIn: (model) => model.value,
             convertOut: (draft) => ({
@@ -70,4 +64,4 @@ export function TextEditor(
             <ValidationDisplay errors={validationErrors} />
         </>
     );
-}
+};

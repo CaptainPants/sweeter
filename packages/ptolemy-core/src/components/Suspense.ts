@@ -1,23 +1,18 @@
 import { $derived } from '../signals/$derived.js';
 import { $mutable } from '../signals/$mutable.js';
-import { $val } from '../signals/$val.js';
-import {
-    type Component,
-    type ComponentInit,
-    type PropertiesMightBeSignals,
-} from '../types.js';
+import { type Component } from '../types/index.js';
 import { $insertLocation } from '../utility/$insertLocation.js';
 
 import { SuspenseContext } from './SuspenseContext.js';
 
-export type SuspenseProps = PropertiesMightBeSignals<{
+export interface SuspenseProps {
     fallback: () => JSX.Element;
     children: () => JSX.Element;
-}>;
+}
 
 export const Suspense: Component<SuspenseProps> = (
-    { fallback, children }: SuspenseProps,
-    init: ComponentInit,
+    { fallback, children },
+    init,
 ): JSX.Element => {
     // Component renders are specifically untracked, so this doesn't subscribe yay.
     const counter = $mutable(0);
@@ -43,19 +38,22 @@ export const Suspense: Component<SuspenseProps> = (
         },
         $insertLocation(),
         () => {
+            // This is separately signalified from suspenseCalculation so that it
+            // is not rerun any time counter.value changes (and triggers
+            // suspenseCalculation) to rerun.
             const evaluatedChildren = $derived(() => {
-                return $val(children)();
+                // Important to always call the children callback
+                // inside the suspense context, as it will control
+                // the visibility of the fallback must be a callback
+                // (called within a calc that captures the
+                // SuspenseContext)
+                return children.value();
             });
 
             const suspenseCalculation = (): JSX.Element => {
-                // Important to always call the children callback
-                // as it will control the visibility of the fallback
-                // must be a callback (called within a calc that
-                // captures the SuspenseContext)
-
                 if (counter.value > 0) {
                     return [
-                        $val(fallback)(),
+                        fallback.value(),
                         runtime.renderOffscreen(evaluatedChildren.value),
                     ];
                 }

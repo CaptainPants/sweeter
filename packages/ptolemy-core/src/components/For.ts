@@ -4,19 +4,22 @@ import { type Signal } from '../signals/types.js';
 import {
     type ComponentInit,
     type MightBeSignal,
-    type PropertiesMightBeSignals,
-} from '../types.js';
+    PropsParam,
+} from '../types/index.js';
 
-export type ForProps<T> = PropertiesMightBeSignals<{
+export interface ForProps<T> {
     each: readonly T[];
     children: (item: Signal<T>, index: number) => JSX.Element;
-}>;
+}
 
-export function For<T>(props: ForProps<T>, init: ComponentInit): JSX.Element;
+export function For<T>(
+    props: PropsParam<ForProps<T>>,
+    init: ComponentInit,
+): JSX.Element;
 export function For<T>({
     each: items,
     children: renderItem,
-}: ForProps<T>): JSX.Element {
+}: PropsParam<ForProps<T>>): JSX.Element {
     return $mapByIndex(items, renderItem);
 }
 

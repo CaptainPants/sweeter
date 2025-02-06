@@ -16,7 +16,10 @@ import {
     type UnsignalAll,
     untrack,
 } from '@serpentis/ptolemy-core';
-import { whenGarbageCollected } from '@serpentis/ptolemy-utilities';
+import {
+    createLogger,
+    whenGarbageCollected,
+} from '@serpentis/ptolemy-utilities';
 
 import { type WebRuntime } from '../types.js';
 
@@ -172,6 +175,8 @@ function createComponentInstanceInit<
     return init;
 }
 
+const logger = createLogger($insertLocation(), createComponentInstance);
+
 export function createComponentInstance<
     TComponentType extends ComponentTypeConstraint,
 >(
@@ -184,8 +189,10 @@ export function createComponentInstance<
     const result = ComponentFaultContext.invokeWith(
         {
             reportFaulted(err) {
-                // This might be undefined
-                console.log('Faulted (createComponentInstance): ', result);
+                logger.warning.formatted`Faulted: ${result.getDebugIdentity()}`(
+                    err,
+                );
+
                 resultController.updateState(SignalState.error(err));
             },
         },

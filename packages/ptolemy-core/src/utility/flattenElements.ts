@@ -10,7 +10,7 @@ export type FlattenedElement = Exclude<
     readonly JSX.Element[] | null | undefined | Signal<JSX.Element> | boolean
 >;
 
-function isArray(item: unknown): item is (readonly unknown[]) {
+function isArray(item: unknown): item is readonly unknown[] {
     // Annoyingly Array.isArray is not using readonly
     return Array.isArray(item);
 }

@@ -5,5 +5,5 @@ export type ComponentTypeConstraint =
     Component<any>;
 
 export type ComponentOrIntrinsicElementTypeConstraint =
-     
-    ComponentTypeConstraint | string;
+    | ComponentTypeConstraint
+    | string;

@@ -1,6 +1,4 @@
-import {
-    type Component,
-} from '@serpentis/ptolemy-core';
+import { type Component } from '@serpentis/ptolemy-core';
 import {
     type ElementCssClasses,
     type ElementCssStyles,

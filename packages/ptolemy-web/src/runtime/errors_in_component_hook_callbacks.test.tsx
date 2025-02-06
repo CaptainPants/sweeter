@@ -13,7 +13,7 @@ const OnMountThrows: Component = (_, init) => {
     return undefined;
 };
 
-it('onMount', () => {
+test('onMount', () => {
     const res = testRender(() => (
         <ErrorBoundary
             renderError={(err) => <div class="error">{String(err)}</div>}
@@ -37,7 +37,7 @@ const TrackSignalsThrows: Component = (_, init) => {
     return <></>;
 };
 
-it('trackSignals', () => {
+test('trackSignals', () => {
     const res = testRender(() => (
         <ErrorBoundary
             renderError={(err) => <div class="error">{String(err)}</div>}

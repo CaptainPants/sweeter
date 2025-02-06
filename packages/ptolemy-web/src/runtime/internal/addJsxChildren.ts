@@ -26,10 +26,13 @@ export function addJsxChildren(
     getContext: ContextSnapshot,
     parentNode: Node,
     children: JSX.Element,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Consistency, and planned future use
     webRuntime: WebRuntime,
 ): () => void {
-    const flattenedChildrenSignal = flattenElements(children);
+    const flattenedChildrenSignal = flattenElements(children).identify(
+        'flattenedChildrenSignal',
+        ...$insertLocation(),
+    );
     const original = flattenedChildrenSignal.peek();
 
     logger.trace('Adding children');

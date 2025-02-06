@@ -1,4 +1,3 @@
-import { assertNotNullOrUndefined } from '../../assertNotNullOrUndefined.js';
 import { LogLevel } from '../LogLevels.js';
 import { Logger, LogMethod } from '../types.js';
 
@@ -36,9 +35,9 @@ function createLogMethod(logLevel: LogLevel): LogMethod {
             ) => {
                 const formatted = template
                     .map((item, i) => {
-                        const val = parms[i];
-                        assertNotNullOrUndefined(val);
-                        return item + String(val);
+                        return (
+                            item + (i < parms.length ? String(parms[i]) : '')
+                        );
                     })
                     .join('');
 

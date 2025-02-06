@@ -19,7 +19,8 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
     renderError,
     children,
 }) => {
-    // Calls .value on any signals, which should cause the catch to trigger
+    // This is only dependent on children, so changes to the result of flattened are not caught here
+    // this is important so we don't cause value() to rerun all the time.
     const flattennedChildrenSignal = $derived(() => {
         const value = children.value;
         const resolved = typeof value === 'function' ? value() : value;
@@ -28,7 +29,7 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
             'flattened',
             ...$insertLocation(),
         );
-        return flattened.value;
+        return flattened; // IMPORTANT: we do NOT subscribe to flattened here. If we do, throws from flattened.value will cause value() to be called, building a whole new child tree. This can lead to infinit loops.
     });
 
     const errorBoundaryCalculation = () => {
@@ -39,7 +40,7 @@ export const ErrorBoundary: Component<ErrorBoundaryProps> = ({
             // and get its value - so that any errors stored
             // in a calculated signal are caught by this try/
             // catch.
-            const result = flattennedChildrenSignal.value;
+            const result = flattennedChildrenSignal.value.value; // Note the unpleasant .value.value (twice) is intentional and important.
             return result;
         } catch (ex) {
             return $val(renderError)(ex);

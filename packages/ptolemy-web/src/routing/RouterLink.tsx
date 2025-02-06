@@ -3,6 +3,7 @@
 import {
     type Component,
     type IntrinsicRawElementAttributes,
+    type JSXElement,
     mapProps,
     type Prop,
     type PropertiesAreSignals,
@@ -24,10 +25,12 @@ export interface RouterLinkProps {
         PropertiesMightBeSignals<PassthoughProps>,
         PropertiesAreSignals<PassthoughProps>
     >;
+
+    children?: JSXElement;
 }
 
 export const RouterLink: Component<RouterLinkProps> = (
-    { href, onClick: onClickProp, passthrough },
+    { href, onClick: onClickProp, passthrough, children },
     init,
 ) => {
     const { navigate } = init.hook(NavigateHook);
@@ -50,7 +53,7 @@ export const RouterLink: Component<RouterLinkProps> = (
         onClickProp?.value?.call(this, evt);
     }
 
-    return <a href={href} onclick={onClick} {...passthrough} />;
+    return <a href={href} onclick={onClick} {...passthrough}>{children}</a>;
 };
 
 RouterLink.propMappings = {

@@ -64,6 +64,11 @@ export type Prop<TInput, TOutput = TInput> = TOutput & {
     };
 };
 
+/**
+ * This is the mapped type used for the function parameter to your component function. It is implicitly
+ * applied when using Component<TProps>, but if you are creating generic components you will need to apply
+ * it directly.
+ */
 export type PropsParam<PropsRaw> = {
     [Key in keyof PropsRaw]: PropParamFromRaw<PropsRaw[Key]>;
 };

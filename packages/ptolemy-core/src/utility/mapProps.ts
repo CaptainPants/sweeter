@@ -1,4 +1,4 @@
-import { $wrap } from '../signals/$wrap.js';
+import { $wrap } from '../signals/$constant.js';
 import {
     PropertyMap,
     PropertyMapping,

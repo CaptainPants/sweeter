@@ -7,7 +7,7 @@ import {
 import {
     $derived,
     $val,
-    $valProperties,
+    $wrap,
     Component,
     type ComponentInit,
 } from '@serpentis/ptolemy-core';
@@ -116,17 +116,17 @@ export const EditorHost: Component<EditorHostProps> = (
         return createRenderFunction(matches);
     });
 
-    return $derived(() => {
-        const args: RenderNextFunctionArgs = Object.assign(
-            {},
-            $valProperties(passThroughToRenderProps),
-            {
-                model: model.value,
-                local: local.value,
-                settings: settings,
-            },
-        );
+    const args: RenderNextFunctionArgs = Object.assign(
+        {},
+        passThroughToRenderProps,
+        {
+            model: model,
+            local: local,
+            settings: $wrap(settings),
+        },
+    );
 
+    return $derived(() => {
         return (
             <AmbientValues callback={ambient}>
                 {() => {

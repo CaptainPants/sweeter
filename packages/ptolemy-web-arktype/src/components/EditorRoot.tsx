@@ -7,7 +7,7 @@ import {
     type TypeMatcherRule,
     type UnknownReplacer,
 } from '@serpentis/ptolemy-arktype-modeling';
-import { $derived, $insertLocation, $val } from '@serpentis/ptolemy-core';
+import { $derived, $insertLocation, $val, PropsParam } from '@serpentis/ptolemy-core';
 import { Button, Modal } from '@serpentis/ptolemy-web-stardust';
 
 import {
@@ -43,7 +43,7 @@ const defaultSettings = Object.freeze({});
  * @param props
  */
 export function EditorRoot<TSchema extends AnyTypeConstraint>(
-    props: Readonly<EditorRootProps<TSchema>>,
+    props: PropsParam<EditorRootProps<TSchema>>,
 ): JSX.Element;
 export function EditorRoot<TSchema extends AnyTypeConstraint>({
     id,
@@ -53,7 +53,7 @@ export function EditorRoot<TSchema extends AnyTypeConstraint>({
     idPath,
     getAmbientValue,
     rules: rulesProp,
-}: Readonly<EditorRootProps<TSchema>>): JSX.Element {
+}: PropsParam<EditorRootProps<TSchema>>): JSX.Element {
     const typedModel = $derived(() => {
         const val = $val(model);
         const result = asUnknown(val);

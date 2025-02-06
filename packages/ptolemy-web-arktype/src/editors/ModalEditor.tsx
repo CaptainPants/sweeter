@@ -4,7 +4,7 @@ import {
     $mutable,
     $peek,
     $val,
-    $valProperties,
+    $wrap,
     Component,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
@@ -12,12 +12,13 @@ import {
 import { IconButton } from '../components/IconButton.js';
 import { EditorRootContext } from '../context/EditorRootContext.js';
 import { ValidationContainerHook } from '../hooks/ValidationContainerHook.js';
-import { type EditorProps } from '../types.js';
+import { type EditorProps,RenderNextFunctionArgs } from '../types.js';
 
 export const ModalEditor: Component<EditorProps> = (
     {
         next,
-        indent: _ignoreIndent,
+        // The indentation for the new modal is set back to zero
+        indent: _indentIsReset,
         model,
         replace,
         propertyDisplayName,
@@ -38,16 +39,14 @@ export const ModalEditor: Component<EditorProps> = (
 
     const { validated, isValid } = init.hook(ValidationContainerHook);
 
-    const nextProps = $derived(() => {
-        return Object.assign({}, $valProperties(passthrough), {
-            indent: 0,
-            model: modelSnapshot,
-            replace: (replacement: UnknownModel): Promise<void> => {
-                modelSnapshot.value = replacement;
-                return Promise.resolve();
-            },
-            isRoot: true,
-        });
+    const nextProps: RenderNextFunctionArgs = Object.assign({}, passthrough, {
+        indent: $wrap(0),
+        model: modelSnapshot,
+        replace: $wrap((replacement: UnknownModel): Promise<void> => {
+            modelSnapshot.value = replacement;
+            return Promise.resolve();
+        }),
+        isRoot: true
     });
 
     const onCommit = async (): Promise<void> => {
@@ -75,7 +74,7 @@ export const ModalEditor: Component<EditorProps> = (
 
     const content = $derived(() => {
         return validated(() => {
-            return $val(next)(nextProps.value);
+            return next.peek()(nextProps);
         });
     });
 

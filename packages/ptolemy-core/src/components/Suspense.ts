@@ -38,22 +38,27 @@ export const Suspense: Component<SuspenseProps> = (
         },
         $insertLocation(),
         () => {
-            const suspenseCalculation = (): JSX.Element => {
-                const evaluatedChildren = children.value();
-
+            // This is separately signalified from suspenseCalculation so that it
+            // is not rerun any time counter.value changes (and triggers
+            // suspenseCalculation) to rerun.
+            const evaluatedChildren = $derived(() => {
                 // Important to always call the children callback
-                // as it will control the visibility of the fallback
-                // must be a callback (called within a calc that
-                // captures the SuspenseContext)
+                // inside the suspense context, as it will control
+                // the visibility of the fallback must be a callback
+                // (called within a calc that captures the
+                // SuspenseContext)
+                return children.value();
+            });
 
+            const suspenseCalculation = (): JSX.Element => {
                 if (counter.value > 0) {
                     return [
                         fallback.value(),
-                        runtime.renderOffscreen(evaluatedChildren),
+                        runtime.renderOffscreen(evaluatedChildren.value),
                     ];
                 }
 
-                return evaluatedChildren;
+                return evaluatedChildren.value;
             };
 
             // calc captures the ambient executionContext

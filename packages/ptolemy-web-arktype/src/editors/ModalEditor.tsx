@@ -6,7 +6,6 @@ import {
     $val,
     $valProperties,
     Component,
-    type ComponentInit,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
 
@@ -98,7 +97,6 @@ export const ModalEditor: Component<EditorProps> = (
                     }}
                 />
                 <Modal
-                    key="dialog"
                     isOpen={isOpen}
                     title={propertyDisplayName}
                     commitEnabled={isValid}

@@ -5,11 +5,7 @@ import {
     type StringModel,
     validate,
 } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $lastGood,
-    Component,
-} from '@serpentis/ptolemy-core';
+import { $derived, $lastGood, Component } from '@serpentis/ptolemy-core';
 import { TextArea } from '@serpentis/ptolemy-web-stardust';
 
 import { DraftHook } from '../hooks/DraftHook.js';

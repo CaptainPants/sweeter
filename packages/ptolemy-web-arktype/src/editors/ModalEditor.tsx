@@ -80,7 +80,9 @@ export const ModalEditor: Component<EditorProps> = (
         () =>
             localize('Edit') +
             ' ' +
-            (isRoot?.value ? 'root' : (propertyDisplayName?.value ?? 'unknown')),
+            (isRoot?.value
+                ? 'root'
+                : (propertyDisplayName?.value ?? 'unknown')),
     );
 
     return $derived(() => {

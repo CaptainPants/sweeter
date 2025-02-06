@@ -1,11 +1,7 @@
 import { Type } from 'arktype';
 
 import { type UnknownType } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $mutable,
-    type Component,
-} from '@serpentis/ptolemy-core';
+import { $derived, $mutable, type Component } from '@serpentis/ptolemy-core';
 import { type TypedEvent } from '@serpentis/ptolemy-web';
 import {
     Button,

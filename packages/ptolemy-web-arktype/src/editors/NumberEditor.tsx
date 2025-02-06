@@ -5,11 +5,7 @@ import {
     type NumberModel,
     validate,
 } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    $lastGood,
-    type Component,
-} from '@serpentis/ptolemy-core';
+import { $derived, $lastGood, type Component } from '@serpentis/ptolemy-core';
 import { Input } from '@serpentis/ptolemy-web-stardust';
 
 import { DraftHook } from '../hooks/DraftHook.js';

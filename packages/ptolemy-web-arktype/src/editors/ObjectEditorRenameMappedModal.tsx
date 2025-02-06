@@ -1,8 +1,4 @@
-import {
-    $derived,
-    $mutable,
-    type Component,
-} from '@serpentis/ptolemy-core';
+import { $derived, $mutable, type Component } from '@serpentis/ptolemy-core';
 import { type TypedEvent } from '@serpentis/ptolemy-web';
 import {
     Button,

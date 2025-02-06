@@ -1,9 +1,5 @@
 import { type UnknownModel } from '@serpentis/ptolemy-arktype-modeling';
-import {
-    $derived,
-    Component,
-    LocalizerHook,
-} from '@serpentis/ptolemy-core';
+import { $derived, Component, LocalizerHook } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
 
 import { EditorHost } from '../components/EditorHost.js';

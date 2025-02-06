@@ -12,8 +12,6 @@ import {
     $derived,
     $if,
     $lastGood,
-    $peek,
-    $val,
     Component,
 } from '@serpentis/ptolemy-core';
 import { idPaths } from '@serpentis/ptolemy-utilities';
@@ -28,7 +26,7 @@ export const UnionEditor: Component<EditorProps> = ({
     idPath,
     indent,
 }) => {
-    const typedModel = $lastGood(() => cast($val(model), asUnion));
+    const typedModel = $lastGood(() => cast(model.value, asUnion));
 
     const type = $derived(() => typedModel.value.type);
 
@@ -58,7 +56,7 @@ export const UnionEditor: Component<EditorProps> = ({
             value: defaultValue,
             schema: typedModel.peek().type,
         });
-        await $peek(replace)(defaultModel);
+        await replace.peek()(defaultModel);
     };
 
     const resolved = $derived(() => typedModel.value.unknownResolve());
@@ -69,7 +67,7 @@ export const UnionEditor: Component<EditorProps> = ({
         const defaultModel = await typedModel
             .peek()
             .replace(newResolvedModel, false);
-        await $peek(replace)(defaultModel);
+        await replace.peek()(defaultModel);
     };
 
     const typeIndex = $derived(() =>
@@ -103,7 +101,7 @@ export const UnionEditor: Component<EditorProps> = ({
                         replace={replaceResolved}
                         indent={indent}
                         idPath={$derived(() =>
-                            idPaths.union($val(idPath), typeIndex.value ?? -1),
+                            idPaths.union(idPath.value, typeIndex.value ?? -1),
                         )}
                     />
                 ),

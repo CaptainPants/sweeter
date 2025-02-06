@@ -19,8 +19,6 @@ import {
     $lastGood,
     $mapByIdentity,
     $mutable,
-    $peek,
-    $val,
     $wrap,
     Component,
     LocalizerHook,
@@ -49,12 +47,12 @@ export const ObjectEditor: Component<EditorProps> = (
     init,
 ) => {
     const typedModel = $lastGood(() => {
-        return cast($val(model), asObject);
+        return cast(model.value, asObject);
     });
 
     const ambient = init.getContext(AmbientValuesContext);
     const { indentWidth } = init.getContext(EditorSizesContext);
-    const childIndent = $derived(() => $val(indent) + 1);
+    const childIndent = $derived(() => indent.value + 1);
 
     const idGenerator = init.idGenerator;
 
@@ -70,7 +68,7 @@ export const ObjectEditor: Component<EditorProps> = (
                 };
             },
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             validate: async (converted) => {
                 const res = await validate(
@@ -308,7 +306,7 @@ export const ObjectEditor: Component<EditorProps> = (
     const content = (
         <>
             {$if(
-                $derived(() => !$val(isRoot)),
+                $derived(() => !isRoot?.value),
                 () => (
                     <div
                         class={css.editorIndent}

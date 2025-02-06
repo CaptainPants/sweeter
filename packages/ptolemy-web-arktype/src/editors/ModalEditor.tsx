@@ -2,8 +2,6 @@ import { type UnknownModel } from '@serpentis/ptolemy-arktype-modeling';
 import {
     $derived,
     $mutable,
-    $peek,
-    $val,
     $wrap,
     Component,
     LocalizerHook,
@@ -28,7 +26,7 @@ export const ModalEditor: Component<EditorProps> = (
 ) => {
     const isOpen = $mutable(false);
 
-    const modelSnapshot = $mutable($peek(model));
+    const modelSnapshot = $mutable(model.peek());
 
     const isRoot = passthrough.isRoot;
 
@@ -56,14 +54,14 @@ export const ModalEditor: Component<EditorProps> = (
         }
 
         // async
-        await $peek(replace)(modelSnapshot.value);
+        await replace.peek()(modelSnapshot.value);
 
         isOpen.value = false;
     };
 
     const onCancel = (): void => {
         // Reset value
-        modelSnapshot.value = $peek(model);
+        modelSnapshot.value = model.peek();
 
         isOpen.value = false;
     };
@@ -82,7 +80,7 @@ export const ModalEditor: Component<EditorProps> = (
         () =>
             localize('Edit') +
             ' ' +
-            ($val(isRoot) ? 'root' : ($val(propertyDisplayName) ?? 'unknown')),
+            (isRoot?.value ? 'root' : (propertyDisplayName?.value ?? 'unknown')),
     );
 
     return $derived(() => {

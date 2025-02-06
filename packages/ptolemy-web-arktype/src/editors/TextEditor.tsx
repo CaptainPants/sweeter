@@ -8,8 +8,6 @@ import {
 import {
     $derived,
     $lastGood,
-    $peek,
-    $val,
     Component,
 } from '@serpentis/ptolemy-core';
 import { TextArea } from '@serpentis/ptolemy-web-stardust';
@@ -24,7 +22,7 @@ export const TextEditor: Component<EditorProps> = (
     init,
 ) => {
     const typedModel = $lastGood(() => {
-        return cast($val(model), asString);
+        return cast(model.value, asString);
     });
 
     const { draft, validationErrors } = init.hook(
@@ -32,7 +30,7 @@ export const TextEditor: Component<EditorProps> = (
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             convertIn: (model) => model.value,
             convertOut: (draft) => ({

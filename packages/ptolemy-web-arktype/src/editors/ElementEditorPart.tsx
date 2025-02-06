@@ -1,7 +1,6 @@
 import { type UnknownModel } from '@serpentis/ptolemy-arktype-modeling';
 import {
     $derived,
-    $peek,
     $val,
     type Component,
     LocalizerHook,
@@ -24,7 +23,7 @@ export const ElementEditorPart: Component<ElementEditorPartProps> = (
     init,
 ) => {
     const replace = async (value: UnknownModel) => {
-        await $peek(updateElement)($peek(index), value);
+        await updateElement.peek()(index.peek(), value);
     };
 
     const { localize } = init.hook(LocalizerHook);

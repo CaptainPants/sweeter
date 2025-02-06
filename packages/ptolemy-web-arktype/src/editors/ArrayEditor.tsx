@@ -12,7 +12,6 @@ import {
     $if,
     $lastGood,
     $mapByIndex,
-    $peek,
     $val,
     type Component,
     type ComponentInit,
@@ -42,7 +41,7 @@ export const ArrayEditor: Component<EditorProps> = (
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             convertIn: (model) => {
                 return model;

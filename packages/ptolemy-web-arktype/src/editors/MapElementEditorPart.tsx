@@ -1,8 +1,6 @@
 import { type UnknownModel } from '@serpentis/ptolemy-arktype-modeling';
 import {
     $derived,
-    $peek,
-    $val,
     Component,
     LocalizerHook,
 } from '@serpentis/ptolemy-core';
@@ -29,23 +27,23 @@ export const MapElementEditorPart: Component<MapElementEditorPartProps> = (
     init,
 ) => {
     const replace = async (value: UnknownModel) => {
-        await $peek(updateElement)($peek(property), value);
+        await updateElement.peek()(property.peek(), value);
     };
 
     const { localize } = init.hook(LocalizerHook);
 
-    const propertyNameAsString = $derived(() => String($val(property)));
+    const propertyNameAsString = $derived(() => String(property.value));
 
     return (
         <EditorHost
             model={value}
             replace={replace}
             propertyDisplayName={$derived(() =>
-                localize($val(propertyNameAsString)),
+                localize(propertyNameAsString.value),
             )}
             indent={indent}
             idPath={$derived(() =>
-                idPaths.key($val(ownerIdPath), $val(propertyNameAsString)),
+                idPaths.key(ownerIdPath.value, propertyNameAsString.value),
             )}
         />
     );

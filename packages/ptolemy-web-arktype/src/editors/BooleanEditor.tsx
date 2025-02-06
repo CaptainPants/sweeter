@@ -8,7 +8,6 @@ import {
 import {
     $derived,
     $lastGood,
-    $peek,
     $val,
     type Component,
 } from '@serpentis/ptolemy-core';
@@ -32,7 +31,7 @@ export const BooleanEditor: Component<EditorProps> = (
         {
             model: typedModel,
             onValid: async (validated) => {
-                await $peek(replace)(validated);
+                await replace.peek()(validated);
             },
             convertIn: (model) => model.value,
             convertOut: (draft) => {

@@ -4,8 +4,6 @@ import { type UnknownType } from '@serpentis/ptolemy-arktype-modeling';
 import {
     $derived,
     $mutable,
-    $peek,
-    $val,
     type Component,
 } from '@serpentis/ptolemy-core';
 import { type TypedEvent } from '@serpentis/ptolemy-web';
@@ -35,7 +33,7 @@ export const ObjectEditorAddMappedModal: Component<
     ObjectEditorAddMappedModalProps
 > = ({ isOpen, valueType, validate, onCancelled, onFinished }) => {
     const title = $derived(() => {
-        const typeResolved = $val(valueType);
+        const typeResolved = valueType.value;
         const title = typeResolved.annotations()?.getBestDisplayName();
         return title;
     });
@@ -56,14 +54,14 @@ export const ObjectEditorAddMappedModal: Component<
         name.value = '';
         failedValidationMessage.value = null;
 
-        $peek(onCancelled)();
+        onCancelled.peek()();
     };
 
     const onOK = async (evt: TypedEvent<HTMLButtonElement, MouseEvent>) => {
         if (evt.button === 0) {
             evt.preventDefault();
 
-            const validationResult = await $peek(validate)($peek(name));
+            const validationResult = await validate.peek()(name.peek());
 
             failedValidationMessage.value = validationResult;
 
@@ -71,7 +69,7 @@ export const ObjectEditorAddMappedModal: Component<
                 return;
             }
 
-            await $peek(onFinished)(name.peek(), $peek(valueType));
+            await onFinished.peek()(name.peek(), valueType.peek());
         }
     };
 

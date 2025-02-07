@@ -1,5 +1,7 @@
 
-# Ptolemy
+<img src="assets/ptolemy-with-text.png" alt="Ptolemy" title="Ptolemy" />
+
+## What is Ptolemy?
 This is an experimental UI project built on principles learnt from React and SolidJS.
 
 See [here](docs/index.md) for more documentation.
@@ -84,10 +86,10 @@ A few things you might note:
 3. init.hook is used to instantiate 'hooks' - which are components that have access to the component lifecycle to provide some functionality. They may also create their own hook instances.
 4. Components can be mounted, unmounted and remounted - make sure to take that into account when authoring your components. Suspense will mount the component in its incomplete state 'offscreen'.
 
-# Why not use X
+## Why not use X
 As with many projects, the main answer is: because I felt like giving it a go.
 
-## React
+### React
 React has proven some powerful UI paradigms, and is an amazing framework.
 
 Positives:
@@ -104,14 +106,14 @@ Challenges:
 4. Performance issues in some spaces
 5. Hooks break the React rule of sticking to idiomatic JavaScript
 
-## Solid JS
+### Solid JS
 Solid JS is a very good proof of concept.
 
 A couple of things that I don't love about SolidJS
 1. Limited out of the box functionality with a limited but growing community
 2. I don't love having an additional preprocessor and magic to 'hide' calculated signals created during component creation
 
-# Principles:
+## Principles:
 1. Limit dependencies as much as possible
 2. Include everything you need for a basic SPA application
 3. Do not do 'magic' - everything should be (reasonably) idiomatic typescript with JSX, and therefore be relatively easy to understand for newcomers

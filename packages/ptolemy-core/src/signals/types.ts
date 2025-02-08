@@ -40,6 +40,9 @@ export interface SignalCommon<T> {
      * Use this to check if a signal has been initialized. This can be useful in a $derived that references itself.
      */
     readonly inited: boolean;
+    /**
+     * Use this to check if the signal is currently in a failed state, which means .peek()/.value would throw if called.
+     */
     readonly failed: boolean;
 
     /**
@@ -85,20 +88,13 @@ export interface SignalCommon<T> {
     readonly createdAtStack?: StackTrace;
 
     /**
-     * Gets a JSON tree of dependents of the current signal.
+     * Associate location information with the signal for debugging. This is readable via this.getDebugIdentity()
+     * @param name
+     * @param sourceFile
+     * @param sourceMethod
+     * @param row
+     * @param col
      */
-    debugGetListenerTree(): DebugDependencyNode;
-}
-
-export interface Signal<T> extends SignalCommon<T> {
-    readonly [PTOLEMY_IS_SIGNAL]: true;
-
-    /**
-     * Get the current value of the signal and subscribe for updates. If the result of the signal
-     * is an exception, it is rethrown.
-     */
-    readonly value: T;
-
     identify(
         name: string,
         sourceFile?: string,
@@ -112,9 +108,33 @@ export interface Signal<T> extends SignalCommon<T> {
      */
     doNotIdentify(): this;
 
+    /**
+     * Retrieve declaration information about the signal if present.
+     */
     getDebugIdentity(): string;
 
+    /**
+     * Retrieve information about listeners that are currently registered.
+     */
     getDebugListenerInfo(): DebugListenerInfo;
+
+    /**
+     * Gets a JSON tree of dependents of the current signal.
+     */
+    debugGetListenerTree(): DebugDependencyNode;
+}
+
+export interface Signal<T> extends SignalCommon<T> {
+    /**
+     * Marker used for type assertions
+     */
+    readonly [PTOLEMY_IS_SIGNAL]: true;
+
+    /**
+     * Get the current value of the signal and subscribe for updates. If the result of the signal
+     * is an exception, it is rethrown.
+     */
+    readonly value: T;
 }
 
 export interface WritableSignal<T> extends SignalCommon<T> {
@@ -129,8 +149,6 @@ export interface ConstantSignal<T> extends Signal<T> {
 }
 
 export interface ReadWriteSignal<T> extends Signal<T>, WritableSignal<T> {
-    readonly [PTOLEMY_IS_SIGNAL]: true;
-
     value: T;
 }
 

@@ -2,7 +2,7 @@
     "entryPoints": [
         "packages/ptolemy-core",
         "packages/ptolemy-web",
-        "packages/ptolemy-gummybear",
+        "packages/ptolemy-stardust",
         "packages/ptolemy-arktype-modeling"
     ],
     "entryPointStrategy": "packages",

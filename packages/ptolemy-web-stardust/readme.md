@@ -1,4 +1,4 @@
-# Ptolemy Gummybear Theme
+# Ptolemy Stardust Theme
 
 The base theme for Ptolemy.
 

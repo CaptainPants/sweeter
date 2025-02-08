@@ -1,7 +1,7 @@
 # Signals
 There are three basic types of signals:
 - Readable signals: `Signal<T>`
-- Writable signals: `WritableSignal<T>`
+- Writable signals: `WritableSignal<T>` (you are unlikely to use this by itself)
 - The combination of both is `ReadWriteSignal<T>`
 
 ## The Interfaces
@@ -43,6 +43,10 @@ export interface Signal<T> {
      * Use this to check if a signal has been initialized. This can be useful in a $derived that references itself.
      */
     readonly inited: boolean;
+    /**
+     * Use this to check if the signal is currently in a failed state, which means .peek()/.value would throw if called.
+     */
+    readonly failed: boolean;
 
     /**
      * Add a callback to be invoked when the signal's value changes. 
@@ -78,31 +82,51 @@ export interface Signal<T> {
     /**
      * Globally unique id of signal, used only for debugging.
      */
-    readonly id: number;
+    readonly debugId: number;
 
     /**
-     * If enabled, this will contain a stack trace created in the constructor of the signature, allowing 
+     * If enabled, this will contain a stack trace created in the constructor of the signature, allowing
      * you to work out where the signal was created.
      */
     readonly createdAtStack?: StackTrace;
 
     /**
+     * Associate location information with the signal for debugging. This is readable via this.getDebugIdentity()
+     * @param name 
+     * @param sourceFile 
+     * @param sourceMethod 
+     * @param row 
+     * @param col 
+     */
+    identify(
+        name: string,
+        sourceFile?: string,
+        sourceMethod?: string,
+        row?: number,
+        col?: number,
+    ): this;
+
+    /**
+     * Marks that this signal should not be annotated with information about where it was created. This is used by the rollup plugin.
+     */
+    doNotIdentify(): this;
+
+    /**
+     * Retrieve declaration information about the signal if present. 
+     */
+    getDebugIdentity(): string;
+
+    /**
+     * Retrieve information about listeners that are currently registered.
+     */
+    getDebugListenerInfo(): DebugListenerInfo;
+
+    /**
      * Gets a JSON tree of dependents of the current signal.
-    */
+     */
     debugGetListenerTree(): DebugDependencyNode;
 }
 ```
-
-Writable signals:
-```tsx
-export interface WritableSignal<T> {
-    /**
-     * Update the value of the signal. 
-     */
-    update(value: T): void;
-}
-```
-This can be useful sometimes one way binding, for example the intrinsic ref attribute.
 
 A signal that is both readable and writable:
 ```tsx
@@ -212,18 +236,22 @@ import { $constant } from '@serpentis/ptolemy-core';
 const constant = $constant(1);
 ```
 
+This signal is unique in that it doesn't announce itself for change tracking - as this is not necessary because the value
+is never allowed to change.
+
 ### $controlled
 This creates a signal that is readonly, but can be updated by the holder of a reference to its 'controller'.
 
 Example:
 ```tsx
-import { SignalController, $controlled } from '@serpentis/ptolemy-core';
+import { $controller } from '@serpentis/ptolemy-core';
 
-const controller = new SignalController<number>();
+const controller1 = $controller<number>(); // Starts in the INITIALISING state
+const controller2 = $controller<number>(SignalState.success(1)); // Starts with a value
 
-const signal = $controlled(controller);
+const signal2 = controller2.signal;
 
-controller.update(SignalState.success(1))
+controller.update(SignalState.success(2)); // Triggers updates to anything subscrived to signal2
 ```
 
 ### $deferred
@@ -241,3 +269,12 @@ console.log(deferred.peek()); // will output 1
 ```
 
 This may be removed as its not that useful.
+
+### $filtered
+This is used to memoize values according to an equality function.
+
+```tsx
+import { $deferred, $filtered } from '@serpentis/ptolemy-core';
+
+const array    = $derived(() => /* some calculation */);
+const filtered = $filtered(array, equals.deep); // If the result of array has an identical structure (but not necessarily referential equality), then filtered will keep its previous result.

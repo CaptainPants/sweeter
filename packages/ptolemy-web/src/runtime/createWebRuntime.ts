@@ -5,6 +5,7 @@ import {
     type ComponentOrIntrinsicElementTypeConstraint,
     Context,
     createMiddlewarePipeline,
+    Fragment,
     type JSXMiddleware,
     type JSXMiddlewareCallback,
     JSXMiddlewareUnknownProps,
@@ -30,7 +31,6 @@ import {
     announceUnMountedRecursive,
 } from './internal/mounting.js';
 import { webRuntimeSymbol } from './internal/webRuntimeSymbol.js';
-import { jsx } from './jsx.js';
 import { type WebRuntime } from './types.js';
 
 /**
@@ -124,7 +124,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
     }
 
     renderOffscreen(content: JSX.Element): JSX.Element {
-        return jsx('div', {
+        return this.jsx('div', {
             style: { display: 'none' },
             children: content,
         });
@@ -144,6 +144,11 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
         type: TComponentType,
         props: PropsInputFor<TComponentType>,
     ): JSXResultForComponentOrElementType<TComponentType> {
+        // Slightly optimized path for Fragment as it has defined behaviour (always returns children unchanged)
+        if (type === Fragment) {
+            return props.children as JSXResultForComponentOrElementType<TComponentType>;
+        }
+
         // Its reasonably certain that people will trigger side effects when wiring up a component
         // and that these might update signals. We also don't want to accidentally subscribe to these
         // signals -- hence untrack the actual render
@@ -156,6 +161,9 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
                 case 'string': {
                     // intrinsic
+                    // This shouldn't need to be inside trackingIsAnError as we control it and
+                    // can theoretically test it to avoid pitfalls. Perhaps we should make it
+                    // conditional on a DEBUG flag.
                     const element = createDOMElement(
                         type,
                         props as PropsInputFor<TComponentType & string>,

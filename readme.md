@@ -2,7 +2,16 @@
 <img src="assets/ptolemy-with-text.png" alt="Ptolemy" title="Ptolemy" />
 
 ## What is Ptolemy?
-This is an experimental UI project built on principles learnt from React and SolidJS.
+This is an experimental UI project built on principles borrowed from React, SolidJS, Vue and Angular.
+
+Some key focus areas that make it unique:
+1. We explicitly do not support outdated browsers. Our minimum requirement is support for WeakRef and FinalisationRegistry.
+2. We do not like compiler magic. You should be able to use Ptolemy without plugins on top of TypeScript. We may offer improvements to performance or debugging via plugins to e.g. Vite.
+3. Have few dependencies.
+4. You should reasonably be able to implement a full SPA application without any additional 3rd party libraries.
+5. Debugging tools are (will be) included.
+6. We plan to contribute back knowledge to the community (E.g. some poorly documented magic on JSX like JSX.LibraryManagedAttributes)
+7. You should be able to extend the framework.
 
 See [here](docs/index.md) for more documentation.
 
@@ -85,42 +94,3 @@ A few things you might note:
 2. The init parameter that gives access to what in other frameworks are called 'hooks' - these are methods that only work during initial wireup that give access to attaching lifecycle methods.
 3. init.hook is used to instantiate 'hooks' - which are components that have access to the component lifecycle to provide some functionality. They may also create their own hook instances.
 4. Components can be mounted, unmounted and remounted - make sure to take that into account when authoring your components. Suspense will mount the component in its incomplete state 'offscreen'.
-
-## Why not use X
-As with many projects, the main answer is: because I felt like giving it a go.
-
-### React
-React has proven some powerful UI paradigms, and is an amazing framework.
-
-Positives:
-1. Well established
-2. Proved a nice easy to use, reasonably performant, declarative paradigm to modern reactive web UI
-3. Huge community
-4. Lots of job opportunity
-5. Hooks are a very interesting approach to bundling reusable functionality
-
-Challenges:
-1. Slow improvement release cadence (18 months since last release as of Jan 2024)
-2. Enhancement focus on SSR and technologies more suited to server side Node / NextJS
-3. Pushing core functionality (Suspence data loading) to 3rd party components
-4. Performance issues in some spaces
-5. Hooks break the React rule of sticking to idiomatic JavaScript
-
-### Solid JS
-Solid JS is a very good proof of concept.
-
-A couple of things that I don't love about SolidJS
-1. Limited out of the box functionality with a limited but growing community
-2. I don't love having an additional preprocessor and magic to 'hide' calculated signals created during component creation
-
-## Principles:
-1. Limit dependencies as much as possible
-2. Include everything you need for a basic SPA application
-3. Do not do 'magic' - everything should be (reasonably) idiomatic typescript with JSX, and therefore be relatively easy to understand for newcomers
-4. Do not target 'old' browsers: we will not support IE11, or out of date mobile browsers
-5. Include debugging tools
-6. Be open and extensible
-7. Contribute lessons learned back to the community - E.g. how typescript JSX works documentation is a bit garbage and we can help improve that
-
-## Modern technology
-Ptolemy relies on WeakRef which is only supported in quite recent browsers. The hope is that this becomes less of a limitation over time. For my personal usage I intend to use Ptolemy in desktop applications inside WebView2 and similar components where this is less of an issue.

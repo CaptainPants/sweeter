@@ -5,5 +5,7 @@ export interface FragmentProps {
 }
 
 export const Fragment: Component<FragmentProps> = () => {
-    throw new Error('Fragment code should never run, as its handled by the renderer.')
+    throw new Error(
+        'Fragment code should never run, as its handled by the renderer.',
+    );
 };

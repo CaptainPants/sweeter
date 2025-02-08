@@ -161,7 +161,7 @@ class WebRuntimeImplementation implements WebRuntime, Runtime {
 
                 case 'string': {
                     // intrinsic
-                    // This shouldn't need to be inside trackingIsAnError as we control it and 
+                    // This shouldn't need to be inside trackingIsAnError as we control it and
                     // can theoretically test it to avoid pitfalls. Perhaps we should make it
                     // conditional on a DEBUG flag.
                     const element = createDOMElement(

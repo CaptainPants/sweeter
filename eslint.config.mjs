@@ -1,13 +1,18 @@
+// @ts-check
+
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import tseslint from 'typescript-eslint';
 
-export default (tsconfigPath) => tseslint.config(
+/**
+ * @type {(path: string) => import('typescript-eslint').ConfigArray}
+ */
+const commonConfig = (tsconfigPath) => tseslint.config(
     eslint.configs.recommended,
     tseslint.configs.recommendedTypeChecked,
     {
-        files: ["**/*.ts", "**/*.tsx"],
+        files: ["**/*.ts", "**/*.tsx", "**/*.mjs"],
         plugins: {
             "simple-import-sort": simpleImportSort,
             "import": importPlugin
@@ -63,3 +68,13 @@ export default (tsconfigPath) => tseslint.config(
         }
     },
 );
+
+export { commonConfig };
+
+/**
+ * @type {import('typescript-eslint').ConfigArray}
+ */
+const rootConfig = [{ ignores: ['examples/**/*.*', 'packages/**/*.*', 'tools/**/*.*'] }, ...commonConfig(import.meta.url)];
+
+// This should only be used by tooling operating outside a sub-project (which will have its own eslint.config.mjs)
+export default rootConfig;

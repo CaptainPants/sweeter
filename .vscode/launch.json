@@ -11,7 +11,7 @@
         "type": "node",
         "request": "launch",
         "name": "Debug Node File",
-        "autoAttachChildProcesses": true,
+        "autoAttachChildProcesses": false,
         //"skipFiles": ["**/node_modules/**"],
         "program": "${relativeFile}",
         "args": ["1.1.1"],

@@ -26,8 +26,7 @@ function run(command: string): string {
 output('== PLEASE REVIEW FOR ANY UNCOMMITTED CHANGES ==');
 
 const diff = run('git diff --name-only --raw')?.trim();
-console.warn(diff);
-const changedFiles = diff.split('\n');
+const changedFiles = diff === '' ? [] : diff.split('\n');
 if (changedFiles.length > 0) {
     output(`Changes found, please commit or revert them to continue: \n- ${changedFiles.join('\n- ')}`);
     exit(0);

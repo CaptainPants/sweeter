@@ -39,8 +39,6 @@ run(`pnpm run set-versions ${ver}`);
 run('git add -A');
 run('git commit -m "Version numbers"');
 
-run(`pnpm run set-versions ${ver}`);
-
 if (dryRun) {
     output('PUBLISHING (DRY RUN)');
     run('pnpm run publish-all:dry-run');

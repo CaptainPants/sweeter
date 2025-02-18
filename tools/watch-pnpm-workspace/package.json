@@ -1,6 +1,6 @@
 {
     "name": "@serpentis/watch-pnpm-workspace",
-    "version": "0.0.5",
+    "version": "1.1.1",
     "repository": "https://github.com/serpentis-software/ptolemy",
     "author": "Serpentis Software <captainpantsnpm@gmail.com>",
     "license": "MIT",

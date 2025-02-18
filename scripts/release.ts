@@ -9,17 +9,15 @@ if (args.length < 1) {
 
 const [ver, dryRun = true] = args;
 
-const debug = false;
-
 function output(text: string) {
     console.log(text);
 }
 
-function runAndReturn(command: string, writeOutput = true): string {
-    if (debug) {
-        console.log('RUNNING ', command);
-        return '';
+function runAndReturn(command: string, { writeOutput = true, logCommand = false } = {}): string {
+    if (logCommand) {
+        output('Running> ' + command);
     }
+
     const res = execSync(command, { encoding: 'utf-8' });
     if (writeOutput){
         output(res);
@@ -37,10 +35,10 @@ async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
     )
 }
 
-const currentBranch = runAndReturn('git rev-parse --abbrev-ref HEAD', false);
+const currentBranch = runAndReturn('git rev-parse --abbrev-ref HEAD', { writeOutput: false });
 output(`Releasing based on branch ${currentBranch}.`);
 
-const diff = runAndReturn('git diff --name-only --raw', false)?.trim();
+const diff = runAndReturn('git diff --name-only --raw', { writeOutput: false })?.trim();
 const changedFiles = diff === '' ? [] : diff.split('\n');
 if (changedFiles.length > 0) {
     output(`Changes found, please commit or revert them to continue: \n- ${changedFiles.join('\n- ')}`);
@@ -48,6 +46,7 @@ if (changedFiles.length > 0) {
 }
 
 runAndReturn('git branch temp_release -c -f');
+runAndReturn('git switch temp_release');
 
 runAndReturn(`pnpm run set-versions ${ver}`);
 

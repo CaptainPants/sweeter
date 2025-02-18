@@ -15,17 +15,22 @@ function output(text: string) {
     console.log(text);
 }
 
-function run(command: string): string {
+function run(command: string, writeOutput = true): string {
     if (debug) {
         console.log('RUNNING ', command);
         return '';
     }
-    return execSync(command, { encoding: 'utf-8' });
+    const res = execSync(command, { encoding: 'utf-8' });
+    if (writeOutput){
+        output(res);
+    }
+    return res;
 }
 
-output('== PLEASE REVIEW FOR ANY UNCOMMITTED CHANGES ==');
+const currentBranch = run('git rev-parse --abbrev-ref HEAD', false);
+output(`Releasing based on branch ${currentBranch}.`);
 
-const diff = run('git diff --name-only --raw')?.trim();
+const diff = run('git diff --name-only --raw', false)?.trim();
 const changedFiles = diff === '' ? [] : diff.split('\n');
 if (changedFiles.length > 0) {
     output(`Changes found, please commit or revert them to continue: \n- ${changedFiles.join('\n- ')}`);

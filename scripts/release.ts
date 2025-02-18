@@ -30,7 +30,7 @@ function runAndReturn(command: string, writeOutput = true): string {
 async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
     return new Promise<void>(
         (resolve, reject) => {
-            const proc = spawn(command, { stdio: "overlapped" });
+            const proc = spawn(command, { stdio: "overlapped", shell: true });
 
             proc.on('close', (code, signal) => code == 0 ? resolve(void 0) : reject(new Error(`Killed ${code} (${signal})`)));
         }
@@ -47,7 +47,7 @@ if (changedFiles.length > 0) {
     exit(0);
 }
 
-runAndReturn('git branch temp_release -m -f');
+runAndReturn('git branch temp_release -c -f');
 
 runAndReturn(`pnpm run set-versions ${ver}`);
 

@@ -21,7 +21,8 @@
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
     "set-versions": "pnpm -r exec npm version",
     "generate-docs": "pnpm run build && typedoc --options typedoc.json",
-    "rebuild": "pnpm run clean && pnpm run build"
+    "rebuild": "pnpm run clean && pnpm run build",
+    "release-test": "node --experimental-strip-types ./scripts/release.ts 1.1.1"
   },
   "devDependencies": {
     "@types/node": "22.10.5",

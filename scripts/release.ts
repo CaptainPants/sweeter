@@ -42,7 +42,7 @@ const diff = runAndReturn('git diff --name-only --raw', { writeOutput: false })?
 const changedFiles = diff === '' ? [] : diff.split('\n');
 if (changedFiles.length > 0) {
     output(`Changes found, please commit or revert them to continue: \n- ${changedFiles.join('\n- ')}`);
-    exit(0);
+    exit(1);
 }
 
 runAndReturn('git branch temp_release -c -f');

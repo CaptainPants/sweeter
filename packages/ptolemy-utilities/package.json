@@ -1,6 +1,6 @@
 {
     "name": "@serpentis/ptolemy-utilities",
-    "version": "0.0.5",
+    "version": "0.0.0",
     "repository": "https://github.com/serpentis-software/ptolemy",
     "author": "Serpentis Software <captainpantsnpm@gmail.com>",
     "license": "MIT",
@@ -17,7 +17,7 @@
     },
     "scripts": {
         "trace": "tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 20 --skipMillis 10",
-        "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
+        "clean": "rimraf dist; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",
         "format:check": "prettier --check src",

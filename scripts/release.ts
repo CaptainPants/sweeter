@@ -34,7 +34,7 @@ async function main(args: readonly string[]) {
     
     const [ver, dryRun = true] = args;
 
-    const currentBranch = runAndReturn('git rev-parse --abbrev-ref HEAD', { writeOutput: false });
+    const currentBranch = runAndReturn('git rev-parse --abbrev-ref HEAD', { writeOutput: false }).trim();
     output(`Releasing based on branch ${currentBranch}.`);
 
     const diff = runAndReturn('git diff --name-only --raw', { writeOutput: false })?.trim();
@@ -65,7 +65,7 @@ async function main(args: readonly string[]) {
     }
     finally {
         // Return to original branch
-        runAndReturn(`git switch ${currentBranch}`);
+        runAndReturn(`git switch ${currentBranch}`, { logCommand: true });
     }
 
     return;

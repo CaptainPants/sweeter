@@ -22,7 +22,7 @@
     "set-versions": "pnpm -r exec npm version --allow-same-version",
     "generate-docs": "pnpm run build && typedoc --options typedoc.json",
     "rebuild": "pnpm run clean && pnpm run build",
-    "release-test": "node --experimental-strip-types ./scripts/release.ts 1.1.1"
+    "release": "node --experimental-strip-types ./scripts/release.ts"
   },
   "devDependencies": {
     "@inquirer/prompts": "^7.3.2",

@@ -33,7 +33,7 @@ async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
     )
 }
 
-async function main(this: Command, { version, dryRun }: Options): Promise<void> {
+async function main(this: Command, { version, dryRun = true }: Options): Promise<void> {
     if (version === null) {
         throw new Error('Expected at least one argument');
     }
@@ -92,8 +92,7 @@ program
     )
     .option(
         '--dryrun <dryRun>',
-        'Version number to use',
-        true
+        'Version number to use'
     )
     .hook('preAction', async (_, actionCommand) => {
         // Any missing parameters that can be meaningfully input by the user

@@ -1,5 +1,7 @@
+import { input } from '@inquirer/prompts';
 import chalk from 'chalk';
 import { execSync, spawn } from "child_process";
+import { Command, program } from 'commander';
 import { stdout } from "process";
 
 function output(text: string) {
@@ -31,29 +33,29 @@ async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
     )
 }
 
-async function main(args: readonly string[]) {
-    if (args.length < 1) {
+async function main(this: Command, { version, dryRun }: Options): Promise<void> {
+    if (version === null) {
         throw new Error('Expected at least one argument');
     }
-    
-    const [ver, dryRun = true] = args;
+
+    banner(`Releasing version ${version} (${(dryRun ? 'DRY RUN' : 'NOT A TEST')})`);
 
     const currentBranch = runAndReturn('git rev-parse --abbrev-ref HEAD', { writeOutput: false }).trim();
-    banner(`Releasing based on branch ${currentBranch}.`);
+    banner(`Based on branch ${currentBranch}.`);
 
     const diff = runAndReturn('git diff --name-only --raw', { writeOutput: false })?.trim();
     const changedFiles = diff === '' ? [] : diff.split('\n');
     if (changedFiles.length > 0) {
         const message = `Changes found, please commit or revert them to continue: \n- ${changedFiles.join('\n- ')}`;
-        output(message);
-        throw new Error(message);
+        this.error(message);
+        return;
     }
 
     try {
         runAndReturn('git branch temp_release -c -f');
         runAndReturn('git switch temp_release');
 
-        runAndReturn(`pnpm run set-versions ${ver}`);
+        runAndReturn(`pnpm run set-versions ${version}`);
 
         runAndReturn('git add -A');
         runAndReturn('git commit -m "Version numbers"');
@@ -76,4 +78,32 @@ async function main(args: readonly string[]) {
     return;
 }
 
-await main(process.argv.slice(2));
+interface Options {
+    version: number | null;
+    dryRun: boolean;
+}
+
+program.description('release.ts - Ptolemy release process');
+
+program
+    .option(
+        '-v, --version <version>',
+        'Version number to use'
+    )
+    .option(
+        '--dryrun <dryRun>',
+        'Version number to use',
+        true
+    )
+    .hook('preAction', async (_, actionCommand) => {
+        // Any missing parameters that can be meaningfully input by the user
+
+        const readVersion = actionCommand.getOptionValue('version') as string | undefined;
+        if (!readVersion) {
+            const prompted = await input({ message: 'Enter version number to use' });
+            actionCommand.setOptionValue('version', prompted);
+        }
+    })
+    .action(main);
+
+await program.parseAsync();

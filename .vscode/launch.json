@@ -14,7 +14,7 @@
         "autoAttachChildProcesses": false,
         //"skipFiles": ["**/node_modules/**"],
         "program": "${relativeFile}",
-        "args": ["1.1.1"],
+        "args": [],
         "console": "integratedTerminal",
         "runtimeArgs": ["--experimental-strip-types"]
       },

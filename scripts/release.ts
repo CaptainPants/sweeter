@@ -1,8 +1,12 @@
+import chalk from 'chalk';
 import { execSync, spawn } from "child_process";
 import { stdout } from "process";
 
 function output(text: string) {
-    stdout.write(text);
+    stdout.write(text + '\n');
+}
+function banner(text: string) {
+    stdout.write(chalk.bgBlue(text) + '\n');
 }
 
 function runAndReturn(command: string, { writeOutput = true, logCommand = false } = {}): string {
@@ -35,7 +39,7 @@ async function main(args: readonly string[]) {
     const [ver, dryRun = true] = args;
 
     const currentBranch = runAndReturn('git rev-parse --abbrev-ref HEAD', { writeOutput: false }).trim();
-    output(`Releasing based on branch ${currentBranch}.`);
+    banner(`Releasing based on branch ${currentBranch}.`);
 
     const diff = runAndReturn('git diff --name-only --raw', { writeOutput: false })?.trim();
     const changedFiles = diff === '' ? [] : diff.split('\n');
@@ -55,15 +59,16 @@ async function main(args: readonly string[]) {
         runAndReturn('git commit -m "Version numbers"');
 
         if (dryRun) {
-            output('PUBLISHING (DRY RUN)');
+            banner('Publishing (DRY RUN)');
             await runAsyncWithStdoutPassthrough('pnpm run publish-all:dry-run');
         }
         else {
-            output('PUBLISHING (REAL)');
+            banner('Publishing (REAL)');
             await runAsyncWithStdoutPassthrough('pnpm run publish-all:dry-run');
         }
     }
     finally {
+        banner('Finished');
         // Return to original branch
         runAndReturn(`git switch ${currentBranch}`, { logCommand: true });
     }

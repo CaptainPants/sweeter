@@ -28,7 +28,7 @@ function runAndReturn(command: string, { writeOutput = true, logCommand = false 
 async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
     return new Promise<void>(
         (resolve, reject) => {
-            const proc = spawn(command, { stdio: "overlapped", shell: true });
+            const proc = spawn(command, { stdio: "inherit", shell: true });
 
             proc.on('close', (code, signal) => code == 0 ? resolve(void 0) : reject(new Error(`Killed ${code} (${signal})`)));
         }

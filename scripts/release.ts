@@ -6,7 +6,7 @@ function output(text: string) {
     stdout.write(text + '\n');
 }
 function banner(text: string) {
-    stdout.write(chalk.bgBlue(text) + '\n');
+    stdout.write(chalk.bgBlue(` ==== ${text} ==== `) + '\n');
 }
 
 function runAndReturn(command: string, { writeOutput = true, logCommand = false } = {}): string {

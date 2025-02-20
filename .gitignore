@@ -9,14 +9,12 @@ docs/generated
 yarn-error.log
 msbuild.binlog
 
-**/*.tsbuildinfo
-**/.rollup.cache
-**/.trace
-
-# Temp config files while vite is being compiled
-**/vite.config.js.timestamp-*.mjs
+*.tsbuildinfo
+.rollup.cache
+.trace
 
 .nx
+#vite temp files
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
 

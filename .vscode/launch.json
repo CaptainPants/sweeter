@@ -8,11 +8,15 @@
           "processId": "${command:PickProcess}"
       },
       {
-        "name": "Debug Windows",
-        "cwd": "${workspaceFolder}",
-        "type": "reactnative",
+        "type": "node",
         "request": "launch",
-        "platform": "windows"
+        "name": "Debug Node File",
+        "autoAttachChildProcesses": false,
+        //"skipFiles": ["**/node_modules/**"],
+        "program": "${relativeFile}",
+        "args": [],
+        "console": "integratedTerminal",
+        "runtimeArgs": ["--experimental-strip-types"]
       },
       {
         "type": "node",

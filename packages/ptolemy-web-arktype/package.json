@@ -1,7 +1,11 @@
 {
     "name": "@serpentis/ptolemy-web-arktype",
-    "version": "0.0.5",
+    "version": "0.0.0",
     "repository": "https://github.com/serpentis-software/ptolemy",
+    "files": [
+        "src/",
+        "dist/"
+    ],
     "author": "Serpentis Software <captainpantsnpm@gmail.com>",
     "license": "MIT",
     "private": false,
@@ -17,7 +21,7 @@
     },
     "scripts": {
         "trace": "pnpm exec tsc --noEmit --incremental false --generateTrace .trace && pnpm exec analyze-trace .trace --forceMillis 1000 --skipMillis 200",
-        "clean": "rimraf build; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
+        "clean": "rimraf dist; rimraf *.tsbuildinfo; rimraf .rollup.cache; :",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write src",
         "format:check": "prettier --check src",

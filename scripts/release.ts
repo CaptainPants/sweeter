@@ -33,12 +33,11 @@ async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
     )
 }
 
-async function main(this: Command, { version, dryRun = true }: Options): Promise<void> {
-    if (version === null) {
-        throw new Error('Expected at least one argument');
-    }
+const dryRunReleaseCommand = 'pnpm run publish-all:dry-run';
+const realReleaseCommand = 'pnpm run publish-all:dry-run';
 
-    banner(`Releasing version ${version} (${(dryRun ? 'DRY RUN' : 'NOT A TEST')})`);
+async function main(this: Command, { version, dryRun = true, interactive = true }: Options): Promise<void> {
+    banner(`Releasing version ${version} (${(dryRun ? 'DRY RUN' : 'REAL / NOT A TEST')})`);
 
     const currentBranch = runAndReturn('git rev-parse --abbrev-ref HEAD', { writeOutput: false }).trim();
     banner(`Based on branch ${currentBranch}.`);
@@ -62,12 +61,25 @@ async function main(this: Command, { version, dryRun = true }: Options): Promise
 
         if (dryRun) {
             banner('Publishing (DRY RUN)');
-            await runAsyncWithStdoutPassthrough('pnpm run publish-all:dry-run');
+            await runAsyncWithStdoutPassthrough(dryRunReleaseCommand);
+
+            if (interactive) {
+                const upgradePromptInput = await input({ message: 'Dry run successful, do you want to upgrade to REAL release? (y/n*)' });
+
+                // Allow Y or Y, anything else is a no
+                const upgrade = upgradePromptInput === 'y' || upgradePromptInput === 'Y';
+
+                if (upgrade) {
+                    banner('Upgraded: Publishing (REAL)');
+                    await runAsyncWithStdoutPassthrough(realReleaseCommand);
+                }
+            }
         }
         else {
             banner('Publishing (REAL)');
-            await runAsyncWithStdoutPassthrough('pnpm run publish-all:dry-run');
+            await runAsyncWithStdoutPassthrough(realReleaseCommand);
         }
+
     }
     finally {
         banner('Finished');
@@ -79,8 +91,9 @@ async function main(this: Command, { version, dryRun = true }: Options): Promise
 }
 
 interface Options {
-    version: number | null;
+    version: number | undefined;
     dryRun: boolean;
+    interactive: boolean | undefined;
 }
 
 program.description('release.ts - Ptolemy release process');

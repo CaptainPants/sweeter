@@ -8,7 +8,7 @@
     ],
     "author": "Serpentis Software <captainpantsnpm@gmail.com>",
     "license": "MIT",
-    "private": true,
+    "private": false,
     "type": "module",
     "packageManager": "pnpm@9.15.3",
     "bin": {

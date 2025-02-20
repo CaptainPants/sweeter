@@ -2,6 +2,10 @@
     "name": "@serpentis/ptolemy-arktype-modeling",
     "version": "0.0.0",
     "repository": "https://github.com/serpentis-software/ptolemy",
+    "files": [
+        "src/",
+        "dist/"
+    ],
     "author": "Serpentis Software <captainpantsnpm@gmail.com>",
     "license": "MIT",
     "private": false,

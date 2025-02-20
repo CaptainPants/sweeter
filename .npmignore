@@ -1,10 +1,5 @@
 node_modules
 
-# build output
-build
-dist
-docs/generated
-
 # error logs from yarn
 yarn-error.log
 msbuild.binlog

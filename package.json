@@ -18,6 +18,7 @@
     "watch-arktype-example": "node --experimental-strip-types ./tools/watch-pnpm-workspace/src/index.ts run watch --group arktype-example",
     "watch-rollup-plugin-usage": "node --experimental-strip-types ./tools/watch-pnpm-workspace/src/index.ts run watch --group rollup-plugin-usage",
     "publish-all": "lerna run clean && lerna run verify && pnpm -r publish --access public",
+    "publish-all:unsafe-as-is": "pnpm -r publish --access public --dry-run",
     "publish-all:dry-run": "pnpm run publish-all --dry-run",
     "set-versions": "pnpm -r exec npm version --allow-same-version",
     "generate-docs": "pnpm run build && typedoc --options typedoc.json",

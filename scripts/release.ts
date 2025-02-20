@@ -33,8 +33,11 @@ async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
     )
 }
 
-const dryRunReleaseCommand = 'pnpm run publish-all:dry-run';
-const realReleaseCommand = 'pnpm run publish-all:dry-run';
+const publishCommands = {
+    dryRunReleaseCommand: 'pnpm run publish-all:dry-run',
+    realReleaseCommand: 'pnpm run publish-all:dry-run',
+    upgradedRelease: 'pnpm run publish-all:unsafe-as-is'
+};
 
 async function main(this: Command, { version, dryRun = true, interactive = true }: Options): Promise<void> {
     banner(`Releasing version ${version} (${(dryRun ? 'DRY RUN' : 'REAL / NOT A TEST')})`);
@@ -61,7 +64,7 @@ async function main(this: Command, { version, dryRun = true, interactive = true 
 
         if (dryRun) {
             banner('Publishing (DRY RUN)');
-            await runAsyncWithStdoutPassthrough(dryRunReleaseCommand);
+            await runAsyncWithStdoutPassthrough(publishCommands.dryRunReleaseCommand);
 
             if (interactive) {
                 const upgradePromptInput = await input({ message: 'Dry run successful, do you want to upgrade to REAL release? (y/n*)' });
@@ -71,13 +74,13 @@ async function main(this: Command, { version, dryRun = true, interactive = true 
 
                 if (upgrade) {
                     banner('Upgraded: Publishing (REAL)');
-                    await runAsyncWithStdoutPassthrough(realReleaseCommand);
+                    await runAsyncWithStdoutPassthrough(publishCommands.upgradedRelease);
                 }
             }
         }
         else {
             banner('Publishing (REAL)');
-            await runAsyncWithStdoutPassthrough(realReleaseCommand);
+            await runAsyncWithStdoutPassthrough(publishCommands.realReleaseCommand);
         }
 
     }

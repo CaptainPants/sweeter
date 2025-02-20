@@ -35,7 +35,7 @@ async function runAsyncWithStdoutPassthrough(command: string): Promise<void> {
 
 const publishCommands = {
     dryRunReleaseCommand: 'pnpm run publish-all:dry-run',
-    realReleaseCommand: 'pnpm run publish-all:dry-run',
+    realReleaseCommand: 'pnpm run publish-all',
     upgradedRelease: 'pnpm run publish-all:unsafe-as-is'
 };
 
